@@ -101,6 +101,7 @@ $(document).ready(function(){initNavTree('osm__o5m_8c.html',''); initResizable()
 <code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;time.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="maptool_8h_source.html">maptool.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -111,7 +112,7 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a8dab7a92a3fb403becd5e0fe38fa270b" id="r_a8dab7a92a3fb403becd5e0fe38fa270b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__o5m_8c.html#a8dab7a92a3fb403becd5e0fe38fa270b">buffer_end</a>(o,  x)&#160;&#160;&#160;((o)-&gt;buffer_start+(x) &gt; (o)-&gt;buffer_end &amp;&amp; !<a class="el" href="osm__o5m_8c.html#ae94bc72bce6809e13c620ae50d0d7a28">fill_buffer</a>((o), (x)))</td></tr>
+<tr class="memitem:a8dab7a92a3fb403becd5e0fe38fa270b" id="r_a8dab7a92a3fb403becd5e0fe38fa270b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__o5m_8c.html#a8dab7a92a3fb403becd5e0fe38fa270b">buffer_end</a>(o,  x)&#160;&#160;&#160;((o)-&gt;buffer_start + (x) &gt; (o)-&gt;buffer_end &amp;&amp; !<a class="el" href="osm__o5m_8c.html#ae94bc72bce6809e13c620ae50d0d7a28">fill_buffer</a>((o), (x)))</td></tr>
 <tr class="separator:a8dab7a92a3fb403becd5e0fe38fa270b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -143,11 +144,11 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:ae87c9065eb23621da3b62c32c1d11b31" id="r_ae87c9065eb23621da3b62c32c1d11b31"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__o5m_8c.html#ae87c9065eb23621da3b62c32c1d11b31">print</a></td></tr>
 <tr class="separator:ae87c9065eb23621da3b62c32c1d11b31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a174d11d46dcffc2cdb825b28262fa25a" id="r_a174d11d46dcffc2cdb825b28262fa25a"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__o5m_8c.html#a174d11d46dcffc2cdb825b28262fa25a">types</a> [] = {&quot;node&quot;,&quot;way&quot;,&quot;relation&quot;}</td></tr>
+<tr class="memitem:a174d11d46dcffc2cdb825b28262fa25a" id="r_a174d11d46dcffc2cdb825b28262fa25a"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__o5m_8c.html#a174d11d46dcffc2cdb825b28262fa25a">types</a> [] = {&quot;node&quot;, &quot;way&quot;, &quot;relation&quot;}</td></tr>
 <tr class="separator:a174d11d46dcffc2cdb825b28262fa25a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3657e678c14acf7c402af830586e995" id="r_ac3657e678c14acf7c402af830586e995"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structstring__table.html">string_table</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__o5m_8c.html#ac3657e678c14acf7c402af830586e995">st</a></td></tr>
 <tr class="separator:ac3657e678c14acf7c402af830586e995"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a933d758f17d6368d11d83b13dfedac41" id="r_a933d758f17d6368d11d83b13dfedac41"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__o5m_8c.html#a933d758f17d6368d11d83b13dfedac41">latlon_scale</a> =10000000.0</td></tr>
+<tr class="memitem:a933d758f17d6368d11d83b13dfedac41" id="r_a933d758f17d6368d11d83b13dfedac41"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__o5m_8c.html#a933d758f17d6368d11d83b13dfedac41">latlon_scale</a> = 10000000.0</td></tr>
 <tr class="separator:a933d758f17d6368d11d83b13dfedac41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
@@ -172,7 +173,7 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;((o)-&gt;buffer_start+(x) &gt; (o)-&gt;buffer_end &amp;&amp; !<a class="el" href="osm__o5m_8c.html#ae94bc72bce6809e13c620ae50d0d7a28">fill_buffer</a>((o), (x)))</td>
+          <td></td><td>&#160;&#160;&#160;((o)-&gt;buffer_start + (x) &gt; (o)-&gt;buffer_end &amp;&amp; !<a class="el" href="osm__o5m_8c.html#ae94bc72bce6809e13c620ae50d0d7a28">fill_buffer</a>((o), (x)))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -595,7 +596,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double latlon_scale =10000000.0</td>
+          <td class="memname">double latlon_scale = 10000000.0</td>
         </tr>
       </table>
   </td>
@@ -667,7 +668,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">char* types[] = {&quot;node&quot;,&quot;way&quot;,&quot;relation&quot;}</td>
+          <td class="memname">char* types[] = {&quot;node&quot;, &quot;way&quot;, &quot;relation&quot;}</td>
         </tr>
       </table>
   </td>

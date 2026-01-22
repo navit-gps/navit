@@ -96,27 +96,24 @@ $(document).ready(function(){initNavTree('maptool_2misc_8c.html',''); initResiza
   <div class="headertitle"><div class="title">misc.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;stdlib.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="attr__type__def_8h_source.html">attr_type_def.h</a>&quot;</code><br />
+<code>#include &quot;config.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="geom_8h_source.html">geom.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="item__type__def_8h_source.html">item_type_def.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="maptool_8h_source.html">maptool.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
+<code>#include &lt;fcntl.h&gt;</code><br />
 <code>#include &lt;glib.h&gt;</code><br />
-<code>#include &lt;assert.h&gt;</code><br />
-<code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;signal.h&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;getopt.h&gt;</code><br />
 <code>#include &lt;unistd.h&gt;</code><br />
-<code>#include &lt;fcntl.h&gt;</code><br />
-<code>#include &lt;sys/stat.h&gt;</code><br />
-<code>#include &lt;zlib.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="main_8h_source.html">main.h</a>&quot;</code><br />
-<code>#include &quot;config.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="zipfile_8h_source.html">zipfile.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="linguistics_8h_source.html">linguistics.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="maptool_8h_source.html">maptool.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -960,13 +957,13 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    { <a class="code hl_define" href="map_8h.html#a9e0c5c959b1a06f90c551c785337f817">WORLD_BOUNDINGBOX_MIN_X</a>, <a class="code hl_define" href="map_8h.html#a75bbd087b7538154ca4af73ea87ff7f5">WORLD_BOUNDINGBOX_MIN_Y</a>},</div>
-<div class="line">    { <a class="code hl_define" href="map_8h.html#abb70b58f472425b0bf52fbd375d26f90">WORLD_BOUNDINGBOX_MAX_X</a>, <a class="code hl_define" href="map_8h.html#aa30d735c414cefebdc18c4562a6039a4">WORLD_BOUNDINGBOX_MAX_Y</a>},</div>
+<div class="line">    {<a class="code hl_define" href="map_8h.html#a9e0c5c959b1a06f90c551c785337f817">WORLD_BOUNDINGBOX_MIN_X</a>, <a class="code hl_define" href="map_8h.html#a75bbd087b7538154ca4af73ea87ff7f5">WORLD_BOUNDINGBOX_MIN_Y</a>},</div>
+<div class="line">    {<a class="code hl_define" href="map_8h.html#abb70b58f472425b0bf52fbd375d26f90">WORLD_BOUNDINGBOX_MAX_X</a>, <a class="code hl_define" href="map_8h.html#aa30d735c414cefebdc18c4562a6039a4">WORLD_BOUNDINGBOX_MAX_Y</a>},</div>
 <div class="line">}</div>
-<div class="ttc" id="amap_8h_html_a75bbd087b7538154ca4af73ea87ff7f5"><div class="ttname"><a href="map_8h.html#a75bbd087b7538154ca4af73ea87ff7f5">WORLD_BOUNDINGBOX_MIN_Y</a></div><div class="ttdeci">#define WORLD_BOUNDINGBOX_MIN_Y</div><div class="ttdef"><b>Definition</b> map.h:44</div></div>
-<div class="ttc" id="amap_8h_html_a9e0c5c959b1a06f90c551c785337f817"><div class="ttname"><a href="map_8h.html#a9e0c5c959b1a06f90c551c785337f817">WORLD_BOUNDINGBOX_MIN_X</a></div><div class="ttdeci">#define WORLD_BOUNDINGBOX_MIN_X</div><div class="ttdef"><b>Definition</b> map.h:42</div></div>
-<div class="ttc" id="amap_8h_html_aa30d735c414cefebdc18c4562a6039a4"><div class="ttname"><a href="map_8h.html#aa30d735c414cefebdc18c4562a6039a4">WORLD_BOUNDINGBOX_MAX_Y</a></div><div class="ttdeci">#define WORLD_BOUNDINGBOX_MAX_Y</div><div class="ttdef"><b>Definition</b> map.h:45</div></div>
-<div class="ttc" id="amap_8h_html_abb70b58f472425b0bf52fbd375d26f90"><div class="ttname"><a href="map_8h.html#abb70b58f472425b0bf52fbd375d26f90">WORLD_BOUNDINGBOX_MAX_X</a></div><div class="ttdeci">#define WORLD_BOUNDINGBOX_MAX_X</div><div class="ttdef"><b>Definition</b> map.h:43</div></div>
+<div class="ttc" id="amap_8h_html_a75bbd087b7538154ca4af73ea87ff7f5"><div class="ttname"><a href="map_8h.html#a75bbd087b7538154ca4af73ea87ff7f5">WORLD_BOUNDINGBOX_MIN_Y</a></div><div class="ttdeci">#define WORLD_BOUNDINGBOX_MIN_Y</div><div class="ttdef"><b>Definition</b> map.h:49</div></div>
+<div class="ttc" id="amap_8h_html_a9e0c5c959b1a06f90c551c785337f817"><div class="ttname"><a href="map_8h.html#a9e0c5c959b1a06f90c551c785337f817">WORLD_BOUNDINGBOX_MIN_X</a></div><div class="ttdeci">#define WORLD_BOUNDINGBOX_MIN_X</div><div class="ttdef"><b>Definition</b> map.h:47</div></div>
+<div class="ttc" id="amap_8h_html_aa30d735c414cefebdc18c4562a6039a4"><div class="ttname"><a href="map_8h.html#aa30d735c414cefebdc18c4562a6039a4">WORLD_BOUNDINGBOX_MAX_Y</a></div><div class="ttdeci">#define WORLD_BOUNDINGBOX_MAX_Y</div><div class="ttdef"><b>Definition</b> map.h:50</div></div>
+<div class="ttc" id="amap_8h_html_abb70b58f472425b0bf52fbd375d26f90"><div class="ttname"><a href="map_8h.html#abb70b58f472425b0bf52fbd375d26f90">WORLD_BOUNDINGBOX_MAX_X</a></div><div class="ttdeci">#define WORLD_BOUNDINGBOX_MAX_X</div><div class="ttdef"><b>Definition</b> map.h:48</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="maptool_8h.html#a703eec300527a640ef737e3311f1f170">sort_countries()</a>, <a class="el" href="maptool_8h.html#affee5934cbc077e16c80b1403eef1de8">tile()</a>, <a class="el" href="binfile_8c.html#a08d052fdeea94682eb4b313fc02e0fc7">tile_bbox()</a>, <a class="el" href="maptool_8h.html#a6cfbc60a9b795b641aaec883f7c92cc1">tile_bbox()</a>, and <a class="el" href="maptool_8h.html#a2b78b466cce3fd5aaddcf69ffbcfd422">write_tilesdir()</a>.</p>
 

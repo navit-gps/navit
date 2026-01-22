@@ -96,9 +96,9 @@ $(document).ready(function(){initNavTree('util_8h.html',''); initResizable(); })
   <div class="headertitle"><div class="title">util.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;ctype.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;config.h&quot;</code><br />
+<code>#include &lt;ctype.h&gt;</code><br />
 <code>#include &lt;time.h&gt;</code><br />
-<code>#include &quot;config.h&quot;</code><br />
 </div>
 <p><a href="util_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -110,17 +110,17 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:a94d96b8b944dc9436b819510f4e19cf0" id="r_a94d96b8b944dc9436b819510f4e19cf0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0">escape_mode</a> { <br />
-&#160;&#160;<a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0ac3491dfed19997951a2521d081f93053">escape_mode_none</a> =0
-, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a5c421371b58acbb430e6d026630f26e4">escape_mode_string</a> =1
-, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a75ee2d4962461465dd5bb726ef617685">escape_mode_quote</a> =2
-, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0ab428db9211150fab8b00b9710de44e06">escape_mode_html_amp</a> =4
+&#160;&#160;<a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0ac3491dfed19997951a2521d081f93053">escape_mode_none</a> = 0
+, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a5c421371b58acbb430e6d026630f26e4">escape_mode_string</a> = 1
+, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a75ee2d4962461465dd5bb726ef617685">escape_mode_quote</a> = 2
+, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0ab428db9211150fab8b00b9710de44e06">escape_mode_html_amp</a> = 4
 , <br />
-&#160;&#160;<a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a87484cfcdad0d6a95e70fcaf1aec3aa3">escape_mode_html_quote</a> =8
-, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a1e68d57d837f9eb3d553ea672d0e0d0a">escape_mode_html_apos</a> =16
-, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0ac1927ed5b1e56c5609fa2ecd27022060">escape_mode_html_lt</a> =32
-, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a2d794d816a61b00558a57ac068639006">escape_mode_html_gt</a> =64
+&#160;&#160;<a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a87484cfcdad0d6a95e70fcaf1aec3aa3">escape_mode_html_quote</a> = 8
+, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a1e68d57d837f9eb3d553ea672d0e0d0a">escape_mode_html_apos</a> = 16
+, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0ac1927ed5b1e56c5609fa2ecd27022060">escape_mode_html_lt</a> = 32
+, <a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a2d794d816a61b00558a57ac068639006">escape_mode_html_gt</a> = 64
 , <br />
-&#160;&#160;<a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a7681db286e4f4a4323acd5c8f4a4cf4e">escape_mode_html</a> =escape_mode_html_amp|escape_mode_html_quote|escape_mode_html_apos|escape_mode_html_lt|escape_mode_html_gt
+&#160;&#160;<a class="el" href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0a7681db286e4f4a4323acd5c8f4a4cf4e">escape_mode_html</a>
 <br />
  }</td></tr>
 <tr class="memdesc:a94d96b8b944dc9436b819510f4e19cf0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Escape modes for function <a class="el" href="util_8h.html#a576918ee2d8dc9cac4a971949f34cf67" title="Escape special characters from a string.">str_escape()</a>  <a href="util_8h.html#a94d96b8b944dc9436b819510f4e19cf0">More...</a><br /></td></tr>

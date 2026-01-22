@@ -119,16 +119,15 @@ $(document).ready(function(){initNavTree('garmin_8h_source.html',''); initResiza
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment"></span> </div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="garmin_8h.html#a3e0f0fa3888a7188799ecb01b02cf519">   23</a></span><span class="preprocessor">#define dlog(x,y ...) logfn(__FILE__,__LINE__,x, ##y)</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="garmin_8h.html#aa395aec39056dfc23a214e854cc6847b">   23</a></span><span class="preprocessor">#define dlog(x, y...) logfn(__FILE__, __LINE__, x, ##y)</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#ifdef HARDDEBUG</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#define ddlog(x,y ...) logfn(__FILE__,__LINE__,x, ##y)</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#    define ddlog(x, y...) logfn(__FILE__, __LINE__, x, ##y)</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="garmin_8h.html#a7c82e106f6ed96894509ac9a5e8906af">   27</a></span><span class="preprocessor">#define ddlog(x,y ...)</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="garmin_8h.html#a3649d8ae82bcc7c608c1ed9cd6e64d9e">   27</a></span><span class="preprocessor">#    define ddlog(x, y...)</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="garmin_8h.html#a859a8e1f336e6b2fae7334c1590a37c8">garmin_debug</a>;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keywordtype">void</span> <a class="code hl_function" href="garmin_8h.html#a1702a7b388b7106e27e99456ce163f86">logfn</a>(<span class="keywordtype">char</span> *<a class="code hl_struct" href="structfile.html">file</a>, <span class="keywordtype">int</span> line, <span class="keywordtype">int</span> <a class="code hl_struct" href="structlevel.html">level</a>, <span class="keywordtype">char</span> *fmt, ...);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
 <div class="ttc" id="agarmin_8h_html_a1702a7b388b7106e27e99456ce163f86"><div class="ttname"><a href="garmin_8h.html#a1702a7b388b7106e27e99456ce163f86">logfn</a></div><div class="ttdeci">void logfn(char *file, int line, int level, char *fmt,...)</div><div class="ttdef"><b>Definition</b> garmin.c:79</div></div>
 <div class="ttc" id="agarmin_8h_html_a859a8e1f336e6b2fae7334c1590a37c8"><div class="ttname"><a href="garmin_8h.html#a859a8e1f336e6b2fae7334c1590a37c8">garmin_debug</a></div><div class="ttdeci">int garmin_debug</div><div class="ttdef"><b>Definition</b> garmin.c:77</div></div>
 <div class="ttc" id="astructfile_html"><div class="ttname"><a href="structfile.html">file</a></div><div class="ttdef"><b>Definition</b> file.h:38</div></div>

@@ -99,7 +99,7 @@ $(document).ready(function(){initNavTree('structmenu__methods.html',''); initRes
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a740584f307b340248684b0a6f0690faa" id="r_a740584f307b340248684b0a6f0690faa"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmenu__priv.html">menu_priv</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmenu__methods.html#a740584f307b340248684b0a6f0690faa">add</a> )(struct <a class="el" href="structmenu__priv.html">menu_priv</a> *<a class="el" href="structmenu.html">menu</a>, struct <a class="el" href="structmenu__methods.html">menu_methods</a> *meth, char *<a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, enum <a class="el" href="menu_8h.html#a6bbf4baf5018b0d76aab6c2e6bf85e62">menu_type</a> <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, struct <a class="el" href="structcallback.html">callback</a> *cb)</td></tr>
+<tr class="memitem:a740584f307b340248684b0a6f0690faa" id="r_a740584f307b340248684b0a6f0690faa"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structmenu__priv.html">menu_priv</a> *(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmenu__methods.html#a740584f307b340248684b0a6f0690faa">add</a> )(struct <a class="el" href="structmenu__priv.html">menu_priv</a> *<a class="el" href="structmenu.html">menu</a>, struct <a class="el" href="structmenu__methods.html">menu_methods</a> *<a class="el" href="plugin__def_8h.html#a92198641624af2d240432b6d0bbe7318">meth</a>, char *<a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, enum <a class="el" href="menu_8h.html#a6bbf4baf5018b0d76aab6c2e6bf85e62">menu_type</a> <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, struct <a class="el" href="structcallback.html">callback</a> *cb)</td></tr>
 <tr class="separator:a740584f307b340248684b0a6f0690faa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22c07bbb4527d549af2c2f7f77efde17" id="r_a22c07bbb4527d549af2c2f7f77efde17"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmenu__methods.html#a22c07bbb4527d549af2c2f7f77efde17">set_toggle</a> )(struct <a class="el" href="structmenu__priv.html">menu_priv</a> *<a class="el" href="structmenu.html">menu</a>, int <a class="el" href="speech_8c.html#a0924606e49ec00b2f1e75281f4a19694">active</a>)</td></tr>
 <tr class="separator:a22c07bbb4527d549af2c2f7f77efde17"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -116,7 +116,7 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct <a class="el" href="structmenu__priv.html">menu_priv</a> *(* menu_methods::add) (struct <a class="el" href="structmenu__priv.html">menu_priv</a> *<a class="el" href="structmenu.html">menu</a>, struct <a class="el" href="structmenu__methods.html">menu_methods</a> *meth, char *<a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, enum <a class="el" href="menu_8h.html#a6bbf4baf5018b0d76aab6c2e6bf85e62">menu_type</a> <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, struct <a class="el" href="structcallback.html">callback</a> *cb)</td>
+          <td class="memname">struct <a class="el" href="structmenu__priv.html">menu_priv</a> *(* menu_methods::add) (struct <a class="el" href="structmenu__priv.html">menu_priv</a> *<a class="el" href="structmenu.html">menu</a>, struct <a class="el" href="structmenu__methods.html">menu_methods</a> *<a class="el" href="plugin__def_8h.html#a92198641624af2d240432b6d0bbe7318">meth</a>, char *<a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, enum <a class="el" href="menu_8h.html#a6bbf4baf5018b0d76aab6c2e6bf85e62">menu_type</a> <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, struct <a class="el" href="structcallback.html">callback</a> *cb)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -151,7 +151,7 @@ Data Fields</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="gui__gtk__action_8c.html#a61b22a34124f6044981840c22372ac4f">gui_gtk_ui_new()</a>, <a class="el" href="menu_8c.html#a601673c3f806ec8ab92d793b314fcbee">menu_popup()</a>, and <a class="el" href="gui__win32_8c.html#adc3584691db6e39bea52883268a94aca">win32_gui_popup_new()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="menu_8c.html#a601673c3f806ec8ab92d793b314fcbee">menu_popup()</a>.</p>
 
 </div>
 </div>

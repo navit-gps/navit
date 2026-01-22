@@ -95,23 +95,22 @@ $(document).ready(function(){initNavTree('textfile_8c.html',''); initResizable()
   <div class="headertitle"><div class="title">textfile.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="textfile_8h_source.html">textfile.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
 <code>#include &quot;config.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="item__type__def_8h_source.html">item_type_def.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="layer_8h_source.html">layer.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="maptype_8h_source.html">maptype.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
 <code>#include &lt;errno.h&gt;</code><br />
 <code>#include &lt;glib.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="textfile_8h_source.html">textfile.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -141,7 +140,7 @@ Functions</h2></td></tr>
 <tr class="separator:a03b4c08b344db4bb24ed563698db9e34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3bdbe258602991357fe703f991bcfa15" id="r_a3bdbe258602991357fe703f991bcfa15"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structitem.html">item</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="textfile_8c.html#a3bdbe258602991357fe703f991bcfa15">map_rect_get_item_byid_textfile</a> (struct <a class="el" href="structmap__rect__priv.html">map_rect_priv</a> *mr, int id_hi, int id_lo)</td></tr>
 <tr class="separator:a3bdbe258602991357fe703f991bcfa15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a027fef7dc2e8f695478f56f0d3e2b5ca" id="r_a027fef7dc2e8f695478f56f0d3e2b5ca"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structmap__priv.html">map_priv</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="textfile_8c.html#a027fef7dc2e8f695478f56f0d3e2b5ca">map_new_textfile</a> (struct <a class="el" href="structmap__methods.html">map_methods</a> *meth, struct <a class="el" href="structattr.html">attr</a> **attrs, struct <a class="el" href="structcallback__list.html">callback_list</a> *<a class="el" href="main_8c.html#a0bb9aea6e64415d105ad710731075fa4">cbl</a>)</td></tr>
+<tr class="memitem:a027fef7dc2e8f695478f56f0d3e2b5ca" id="r_a027fef7dc2e8f695478f56f0d3e2b5ca"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structmap__priv.html">map_priv</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="textfile_8c.html#a027fef7dc2e8f695478f56f0d3e2b5ca">map_new_textfile</a> (struct <a class="el" href="structmap__methods.html">map_methods</a> *<a class="el" href="plugin__def_8h.html#a92198641624af2d240432b6d0bbe7318">meth</a>, struct <a class="el" href="structattr.html">attr</a> **<a class="el" href="plugin__def_8h.html#a1e9137a65e787557962d1ff72828fa16">attrs</a>, struct <a class="el" href="structcallback__list.html">callback_list</a> *<a class="el" href="main_8c.html#a0bb9aea6e64415d105ad710731075fa4">cbl</a>)</td></tr>
 <tr class="separator:a027fef7dc2e8f695478f56f0d3e2b5ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1eaae939034896b436dffbf5e93c0da1" id="r_a1eaae939034896b436dffbf5e93c0da1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="textfile_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init</a> (void)</td></tr>
 <tr class="separator:a1eaae939034896b436dffbf5e93c0da1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -254,7 +253,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="attr_8c.html#a6856661cad6d733fcf80ea590ba52afb">attr_search()</a>, <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="structmap__methods.html#af1b08a1287899114eba4a47645799da6">map_methods::charset</a>, <a class="el" href="structmap__priv.html#adbc8803857348b8e9fe16048f6deec4c">map_priv::charset</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="file_8c.html#a869780562fd6e32de697eae8c2e524e6">file_wordexp_destroy()</a>, <a class="el" href="file_8c.html#a2ae9a173fa06deae23fe5247f3229517">file_wordexp_get_array()</a>, <a class="el" href="file_8c.html#a84eec9a55c554f449e8288a2b0f7c95d">file_wordexp_new()</a>, <a class="el" href="structmap__priv.html#a4658248cfb752e347d19c65a914c1e69">map_priv::filename</a>, <a class="el" href="structmap__priv.html#a37f285ed865368cd6285426055c292fd">map_priv::flags</a>, <a class="el" href="structmap__priv.html#aa66f57489b1b501ca5e235d49beb5cee">map_priv::id</a>, <a class="el" href="structmap__priv.html#a2efdca525cc87f294eccde186790a504">map_priv::is_pipe</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="textfile_8c.html#a65a7601de6f346ef6b38b0dde0552bc2">map_id</a>, <a class="el" href="textfile_8c.html#a1b4b1c1813a7ad622e428d23cb45d0da">map_methods_textfile</a>, <a class="el" href="structmap__priv.html#ada21580aacc179dfa592b8cd99780f12">map_priv::no_warning_if_map_file_missing</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, and <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>.</p>
+<p class="reference">References <a class="el" href="attr_8c.html#a6856661cad6d733fcf80ea590ba52afb">attr_search()</a>, <a class="el" href="plugin__def_8h.html#a1e9137a65e787557962d1ff72828fa16">attrs</a>, <a class="el" href="structmap__priv.html#adbc8803857348b8e9fe16048f6deec4c">map_priv::charset</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="file_8c.html#a869780562fd6e32de697eae8c2e524e6">file_wordexp_destroy()</a>, <a class="el" href="file_8c.html#a2ae9a173fa06deae23fe5247f3229517">file_wordexp_get_array()</a>, <a class="el" href="file_8c.html#a84eec9a55c554f449e8288a2b0f7c95d">file_wordexp_new()</a>, <a class="el" href="structmap__priv.html#a4658248cfb752e347d19c65a914c1e69">map_priv::filename</a>, <a class="el" href="structmap__priv.html#a37f285ed865368cd6285426055c292fd">map_priv::flags</a>, <a class="el" href="structmap__priv.html#aa66f57489b1b501ca5e235d49beb5cee">map_priv::id</a>, <a class="el" href="structmap__priv.html#a2efdca525cc87f294eccde186790a504">map_priv::is_pipe</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="textfile_8c.html#a65a7601de6f346ef6b38b0dde0552bc2">map_id</a>, <a class="el" href="textfile_8c.html#a1b4b1c1813a7ad622e428d23cb45d0da">map_methods_textfile</a>, <a class="el" href="plugin__def_8h.html#a92198641624af2d240432b6d0bbe7318">meth</a>, <a class="el" href="structmap__priv.html#ada21580aacc179dfa592b8cd99780f12">map_priv::no_warning_if_map_file_missing</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, and <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="textfile_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init()</a>.</p>
 
@@ -700,10 +699,6 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Navit, a modular navigation system. Copyright (C) 2005-2008 Navit Team</p>
-<p>This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.</p>
-<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. </p>
 
 <p class="reference">Referenced by <a class="el" href="textfile_8c.html#a027fef7dc2e8f695478f56f0d3e2b5ca">map_new_textfile()</a>.</p>
 
@@ -738,11 +733,11 @@ Variables</h2></td></tr>
 <div class="line">    <a class="code hl_function" href="textfile_8c.html#a3bdbe258602991357fe703f991bcfa15">map_rect_get_item_byid_textfile</a>,</div>
 <div class="line">}</div>
 <div class="ttc" id="aprojection_8h_html_a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064"><div class="ttname"><a href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a></div><div class="ttdeci">@ projection_mg</div><div class="ttdef"><b>Definition</b> projection.h:25</div></div>
-<div class="ttc" id="atextfile_8c_html_a03b4c08b344db4bb24ed563698db9e34"><div class="ttname"><a href="textfile_8c.html#a03b4c08b344db4bb24ed563698db9e34">map_rect_get_item_textfile</a></div><div class="ttdeci">static struct item * map_rect_get_item_textfile(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> textfile.c:226</div></div>
-<div class="ttc" id="atextfile_8c_html_a0b7320b2265f155e5d396b8f86d86e20"><div class="ttname"><a href="textfile_8c.html#a0b7320b2265f155e5d396b8f86d86e20">map_destroy_textfile</a></div><div class="ttdeci">static void map_destroy_textfile(struct map_priv *m)</div><div class="ttdef"><b>Definition</b> textfile.c:66</div></div>
-<div class="ttc" id="atextfile_8c_html_a3bdbe258602991357fe703f991bcfa15"><div class="ttname"><a href="textfile_8c.html#a3bdbe258602991357fe703f991bcfa15">map_rect_get_item_byid_textfile</a></div><div class="ttdeci">static struct item * map_rect_get_item_byid_textfile(struct map_rect_priv *mr, int id_hi, int id_lo)</div><div class="ttdef"><b>Definition</b> textfile.c:304</div></div>
-<div class="ttc" id="atextfile_8c_html_ac4ca548a02afb734b341480e4cdf34dc"><div class="ttname"><a href="textfile_8c.html#ac4ca548a02afb734b341480e4cdf34dc">map_rect_destroy_textfile</a></div><div class="ttdeci">static void map_rect_destroy_textfile(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> textfile.c:213</div></div>
-<div class="ttc" id="atextfile_8c_html_ae64939f3f7e40204cee45a3b93559dd1"><div class="ttname"><a href="textfile_8c.html#ae64939f3f7e40204cee45a3b93559dd1">map_rect_new_textfile</a></div><div class="ttdeci">static struct map_rect_priv * map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)</div><div class="ttdef"><b>Definition</b> textfile.c:161</div></div>
+<div class="ttc" id="atextfile_8c_html_a03b4c08b344db4bb24ed563698db9e34"><div class="ttname"><a href="textfile_8c.html#a03b4c08b344db4bb24ed563698db9e34">map_rect_get_item_textfile</a></div><div class="ttdeci">static struct item * map_rect_get_item_textfile(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> textfile.c:227</div></div>
+<div class="ttc" id="atextfile_8c_html_a0b7320b2265f155e5d396b8f86d86e20"><div class="ttname"><a href="textfile_8c.html#a0b7320b2265f155e5d396b8f86d86e20">map_destroy_textfile</a></div><div class="ttdeci">static void map_destroy_textfile(struct map_priv *m)</div><div class="ttdef"><b>Definition</b> textfile.c:67</div></div>
+<div class="ttc" id="atextfile_8c_html_a3bdbe258602991357fe703f991bcfa15"><div class="ttname"><a href="textfile_8c.html#a3bdbe258602991357fe703f991bcfa15">map_rect_get_item_byid_textfile</a></div><div class="ttdeci">static struct item * map_rect_get_item_byid_textfile(struct map_rect_priv *mr, int id_hi, int id_lo)</div><div class="ttdef"><b>Definition</b> textfile.c:305</div></div>
+<div class="ttc" id="atextfile_8c_html_ac4ca548a02afb734b341480e4cdf34dc"><div class="ttname"><a href="textfile_8c.html#ac4ca548a02afb734b341480e4cdf34dc">map_rect_destroy_textfile</a></div><div class="ttdeci">static void map_rect_destroy_textfile(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> textfile.c:214</div></div>
+<div class="ttc" id="atextfile_8c_html_ae64939f3f7e40204cee45a3b93559dd1"><div class="ttname"><a href="textfile_8c.html#ae64939f3f7e40204cee45a3b93559dd1">map_rect_new_textfile</a></div><div class="ttdeci">static struct map_rect_priv * map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)</div><div class="ttdef"><b>Definition</b> textfile.c:162</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="textfile_8c.html#a027fef7dc2e8f695478f56f0d3e2b5ca">map_new_textfile()</a>.</p>
 
@@ -773,10 +768,10 @@ Variables</h2></td></tr>
 <div class="line">    <a class="code hl_function" href="textfile_8c.html#a6a946cfd4c2b0a5dc924c4e58ee0a97b">textfile_attr_rewind</a>,</div>
 <div class="line">    <a class="code hl_function" href="textfile_8c.html#aa4ffa513bbac4d1826017746a6ba91a9">textfile_attr_get</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="atextfile_8c_html_a6a946cfd4c2b0a5dc924c4e58ee0a97b"><div class="ttname"><a href="textfile_8c.html#a6a946cfd4c2b0a5dc924c4e58ee0a97b">textfile_attr_rewind</a></div><div class="ttdeci">static void textfile_attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> textfile.c:110</div></div>
-<div class="ttc" id="atextfile_8c_html_aa4ffa513bbac4d1826017746a6ba91a9"><div class="ttname"><a href="textfile_8c.html#aa4ffa513bbac4d1826017746a6ba91a9">textfile_attr_get</a></div><div class="ttdeci">static int textfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> textfile.c:123</div></div>
-<div class="ttc" id="atextfile_8c_html_aace0016a69e2823d324bf6e1ef9adb04"><div class="ttname"><a href="textfile_8c.html#aace0016a69e2823d324bf6e1ef9adb04">textfile_coord_get</a></div><div class="ttdeci">static int textfile_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition</b> textfile.c:87</div></div>
-<div class="ttc" id="atextfile_8c_html_ae72a609e7f7005ab5364732537ab943d"><div class="ttname"><a href="textfile_8c.html#ae72a609e7f7005ab5364732537ab943d">textfile_coord_rewind</a></div><div class="ttdeci">static void textfile_coord_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> textfile.c:74</div></div>
+<div class="ttc" id="atextfile_8c_html_a6a946cfd4c2b0a5dc924c4e58ee0a97b"><div class="ttname"><a href="textfile_8c.html#a6a946cfd4c2b0a5dc924c4e58ee0a97b">textfile_attr_rewind</a></div><div class="ttdeci">static void textfile_attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> textfile.c:111</div></div>
+<div class="ttc" id="atextfile_8c_html_aa4ffa513bbac4d1826017746a6ba91a9"><div class="ttname"><a href="textfile_8c.html#aa4ffa513bbac4d1826017746a6ba91a9">textfile_attr_get</a></div><div class="ttdeci">static int textfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> textfile.c:124</div></div>
+<div class="ttc" id="atextfile_8c_html_aace0016a69e2823d324bf6e1ef9adb04"><div class="ttname"><a href="textfile_8c.html#aace0016a69e2823d324bf6e1ef9adb04">textfile_coord_get</a></div><div class="ttdeci">static int textfile_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition</b> textfile.c:88</div></div>
+<div class="ttc" id="atextfile_8c_html_ae72a609e7f7005ab5364732537ab943d"><div class="ttname"><a href="textfile_8c.html#ae72a609e7f7005ab5364732537ab943d">textfile_coord_rewind</a></div><div class="ttdeci">static void textfile_coord_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> textfile.c:75</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="textfile_8c.html#ae64939f3f7e40204cee45a3b93559dd1">map_rect_new_textfile()</a>.</p>
 

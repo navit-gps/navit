@@ -97,17 +97,17 @@ $(document).ready(function(){initNavTree('gpx2navit__txt_8h.html',''); initResiz
   <div class="headertitle"><div class="title">gpx2navit_txt.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;ctype.h&gt;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
-<code>#include &lt;unistd.h&gt;</code><br />
-<code>#include &lt;libgen.h&gt;</code><br />
-<code>#include &lt;getopt.h&gt;</code><br />
-<code>#include &lt;time.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="errorcode_8h_source.html">errorcode.h</a>&quot;</code><br />
 <code>#include &lt;assert.h&gt;</code><br />
+<code>#include &lt;ctype.h&gt;</code><br />
 <code>#include &lt;expat.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="errorcode_8h_source.html">errorcode.h</a>&quot;</code><br />
+<code>#include &lt;getopt.h&gt;</code><br />
+<code>#include &lt;libgen.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
 </div>
 <p><a href="gpx2navit__txt_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -132,9 +132,9 @@ Data Structures</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:a60a12235056da679c8976cec1faa66e2" id="r_a60a12235056da679c8976cec1faa66e2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gpx2navit__txt_8h.html#a60a12235056da679c8976cec1faa66e2">PROG</a>&#160;&#160;&#160;gpx2navit_txt</td></tr>
 <tr class="separator:a60a12235056da679c8976cec1faa66e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0e84d3ca169a12ca46389d5d2d33e52" id="r_ab0e84d3ca169a12ca46389d5d2d33e52"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gpx2navit__txt_8h.html#ab0e84d3ca169a12ca46389d5d2d33e52">FILENAMELENGTH</a>&#160;&#160;&#160;255	/* 255 is <a class="el" href="garmin_8c.html#affe776513b24d84b39af8ab0930fef7f">max</a> <a class="el" href="garmin__img_8c.html#a9f59b34b1f25fe00023291b678246bcc">length</a> for dbf string column */</td></tr>
+<tr class="memitem:ab0e84d3ca169a12ca46389d5d2d33e52" id="r_ab0e84d3ca169a12ca46389d5d2d33e52"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gpx2navit__txt_8h.html#ab0e84d3ca169a12ca46389d5d2d33e52">FILENAMELENGTH</a>&#160;&#160;&#160;255 /* 255 is <a class="el" href="garmin_8c.html#affe776513b24d84b39af8ab0930fef7f">max</a> <a class="el" href="garmin__img_8c.html#a9f59b34b1f25fe00023291b678246bcc">length</a> for dbf string column */</td></tr>
 <tr class="separator:ab0e84d3ca169a12ca46389d5d2d33e52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84f776a0e9cb781280a358080149d1c1" id="r_a84f776a0e9cb781280a358080149d1c1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gpx2navit__txt_8h.html#a84f776a0e9cb781280a358080149d1c1">COMMENTLENGTH</a>&#160;&#160;&#160;255	/* 255 is <a class="el" href="garmin_8c.html#affe776513b24d84b39af8ab0930fef7f">max</a> <a class="el" href="garmin__img_8c.html#a9f59b34b1f25fe00023291b678246bcc">length</a> for dbf string column */</td></tr>
+<tr class="memitem:a84f776a0e9cb781280a358080149d1c1" id="r_a84f776a0e9cb781280a358080149d1c1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gpx2navit__txt_8h.html#a84f776a0e9cb781280a358080149d1c1">COMMENTLENGTH</a>&#160;&#160;&#160;255  /* 255 is <a class="el" href="garmin_8c.html#affe776513b24d84b39af8ab0930fef7f">max</a> <a class="el" href="garmin__img_8c.html#a9f59b34b1f25fe00023291b678246bcc">length</a> for dbf string column */</td></tr>
 <tr class="separator:a84f776a0e9cb781280a358080149d1c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a705aaddab1ccc73f063282e9bacd3ff8" id="r_a705aaddab1ccc73f063282e9bacd3ff8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gpx2navit__txt_8h.html#a705aaddab1ccc73f063282e9bacd3ff8">NAMELENGTH</a>&#160;&#160;&#160;32</td></tr>
 <tr class="separator:a705aaddab1ccc73f063282e9bacd3ff8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -146,7 +146,7 @@ Macros</h2></td></tr>
 <tr class="separator:a39912bfe2a55f30e269196f9141d845d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0981e1f4a19f848f0bb2ba8a1909c8d" id="r_aa0981e1f4a19f848f0bb2ba8a1909c8d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gpx2navit__txt_8h.html#aa0981e1f4a19f848f0bb2ba8a1909c8d">DATABUFSIZE</a>&#160;&#160;&#160;16</td></tr>
 <tr class="separator:aa0981e1f4a19f848f0bb2ba8a1909c8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c7d2000fbfe075b4d0ae7c98b32a840" id="r_a3c7d2000fbfe075b4d0ae7c98b32a840"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gpx2navit__txt_8h.html#a3c7d2000fbfe075b4d0ae7c98b32a840">failToWriteAttr</a>(S,  T)&#160;&#160;&#160;<a class="el" href="gpx2navit__txt_8h.html#a29b4907543ad84078a98a49afff18733">failToWriteAttrRep</a>((S), (T),__FILE__, __LINE__ )</td></tr>
+<tr class="memitem:a3c7d2000fbfe075b4d0ae7c98b32a840" id="r_a3c7d2000fbfe075b4d0ae7c98b32a840"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gpx2navit__txt_8h.html#a3c7d2000fbfe075b4d0ae7c98b32a840">failToWriteAttr</a>(S,  T)&#160;&#160;&#160;<a class="el" href="gpx2navit__txt_8h.html#a29b4907543ad84078a98a49afff18733">failToWriteAttrRep</a>((S), (T), __FILE__, __LINE__)</td></tr>
 <tr class="separator:a3c7d2000fbfe075b4d0ae7c98b32a840"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad72dbcf6d0153db1b8d8a58001feed83" id="r_ad72dbcf6d0153db1b8d8a58001feed83"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gpx2navit__txt_8h.html#ad72dbcf6d0153db1b8d8a58001feed83">DEBUG</a>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:ad72dbcf6d0153db1b8d8a58001feed83"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -249,7 +249,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define COMMENTLENGTH&#160;&#160;&#160;255	/* 255 is <a class="el" href="garmin_8c.html#affe776513b24d84b39af8ab0930fef7f">max</a> <a class="el" href="garmin__img_8c.html#a9f59b34b1f25fe00023291b678246bcc">length</a> for dbf string column */</td>
+          <td class="memname">#define COMMENTLENGTH&#160;&#160;&#160;255  /* 255 is <a class="el" href="garmin_8c.html#affe776513b24d84b39af8ab0930fef7f">max</a> <a class="el" href="garmin__img_8c.html#a9f59b34b1f25fe00023291b678246bcc">length</a> for dbf string column */</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -305,7 +305,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="gpx2navit__txt_8h.html#a29b4907543ad84078a98a49afff18733">failToWriteAttrRep</a>((S), (T),__FILE__, __LINE__ )</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="gpx2navit__txt_8h.html#a29b4907543ad84078a98a49afff18733">failToWriteAttrRep</a>((S), (T), __FILE__, __LINE__)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -319,7 +319,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define FILENAMELENGTH&#160;&#160;&#160;255	/* 255 is <a class="el" href="garmin_8c.html#affe776513b24d84b39af8ab0930fef7f">max</a> <a class="el" href="garmin__img_8c.html#a9f59b34b1f25fe00023291b678246bcc">length</a> for dbf string column */</td>
+          <td class="memname">#define FILENAMELENGTH&#160;&#160;&#160;255 /* 255 is <a class="el" href="garmin_8c.html#affe776513b24d84b39af8ab0930fef7f">max</a> <a class="el" href="garmin__img_8c.html#a9f59b34b1f25fe00023291b678246bcc">length</a> for dbf string column */</td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -102,19 +102,19 @@ $(document).ready(function(){initNavTree('event__sdl_8h_source.html',''); initRe
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#define __EVENT_SDL_H</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;SDL.h&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;config.h&quot;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="callback_8h.html">callback.h</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="callback_8h.html">callback.h</a>&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;config.h&quot;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="event_8h.html">event.h</a>&quot;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="graphics__sdl_8h.html">graphics_sdl.h</a>&quot;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#ifdef USE_WEBOS</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor"># define SDL_USEREVENT_CODE_TIMER 0x1</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor"># define SDL_USEREVENT_CODE_CALL_CALLBACK 0x2</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor"># define SDL_USEREVENT_CODE_IDLE_EVENT 0x4</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor"># define SDL_USEREVENT_CODE_WATCH 0x8</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor"># ifdef USE_WEBOS_ACCELEROMETER</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#  define SDL_USEREVENT_CODE_ROTATE 0xA</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor"># endif</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#    define SDL_USEREVENT_CODE_TIMER 0x1</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#    define SDL_USEREVENT_CODE_CALL_CALLBACK 0x2</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#    define SDL_USEREVENT_CODE_IDLE_EVENT 0x4</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#    define SDL_USEREVENT_CODE_WATCH 0x8</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#    ifdef USE_WEBOS_ACCELEROMETER</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#        define SDL_USEREVENT_CODE_ROTATE 0xA</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#    endif</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">struct </span><a class="code hl_struct" href="structevent__timeout.html">event_timeout</a> {</div>
@@ -133,10 +133,10 @@ $(document).ready(function(){initNavTree('event__sdl_8h_source.html',''); initRe
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">struct </span><a class="code hl_struct" href="structcallback.html">callback</a> *<a class="code hl_variable" href="structevent__watch.html#ace71f4cea6ff3e7f8e0592c2e970d4c4">cb</a>;</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>};</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="event__sdl_8h.html#abb328802cc94f86b34e7e629e947d783">   37</a></span><span class="keywordtype">int</span> <a class="code hl_variable" href="event__sdl_8h.html#abb328802cc94f86b34e7e629e947d783">quit_event_loop</a>             = 0; <span class="comment">// quit the main event loop</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="event__sdl_8h.html#a6953fbcb99c7d88b64a067c5e47910f9">   38</a></span><span class="keyword">static</span> GPtrArray *<a class="code hl_variable" href="event__sdl_8h.html#a6953fbcb99c7d88b64a067c5e47910f9">idle_tasks</a>    = NULL;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="event__sdl_8h.html#abb328802cc94f86b34e7e629e947d783">   37</a></span><span class="keywordtype">int</span> <a class="code hl_variable" href="event__sdl_8h.html#abb328802cc94f86b34e7e629e947d783">quit_event_loop</a> = 0;  <span class="comment">// quit the main event loop</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="event__sdl_8h.html#a6953fbcb99c7d88b64a067c5e47910f9">   38</a></span><span class="keyword">static</span> GPtrArray *<a class="code hl_variable" href="event__sdl_8h.html#a6953fbcb99c7d88b64a067c5e47910f9">idle_tasks</a> = NULL;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keywordtype">void</span> <a class="code hl_function" href="event__sdl_8h.html#a9f579d8bce9fd2c69f1c5d0e34ca07cd">event_sdl_watch_thread</a> (GPtrArray *);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keywordtype">void</span> <a class="code hl_function" href="event__sdl_8h.html#a9f579d8bce9fd2c69f1c5d0e34ca07cd">event_sdl_watch_thread</a>(GPtrArray *);</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keywordtype">void</span> <a class="code hl_function" href="event__sdl_8h.html#aa94393dbd1040a063fc7f214c5fac5f8">event_sdl_register</a>(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>

@@ -105,7 +105,7 @@ $(document).ready(function(){initNavTree('profile_8h_source.html',''); initResiz
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#ifdef _MSC_VER</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#define __PRETTY_FUNCTION__ __FUNCTION__</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#    define __PRETTY_FUNCTION__ __FUNCTION__</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="profile_8h.html#ae7d0205eae61719c157056eda01d9bf7">   29</a></span><span class="preprocessor">#define profile_str2(x) #x</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="profile_8h.html#a5ca09e02025f492aae2019ffccabb0b6">   30</a></span><span class="preprocessor">#define profile_str1(x) profile_str2(x)</span></div>
@@ -114,14 +114,13 @@ $(document).ready(function(){initNavTree('profile_8h_source.html',''); initResiz
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment"> * Macro for logging timing information.</span></div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="comment"> * See function profile_timer for more information.</span></div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="profile_8h.html#a7135a9f7aaa8602a6e2cc1d9ab3c1573">   36</a></span><span class="preprocessor">#define profile(level,...) profile_timer(level,profile_module,__PRETTY_FUNCTION__,__VA_ARGS__)</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="profile_8h.html#a7135a9f7aaa8602a6e2cc1d9ab3c1573">   36</a></span><span class="preprocessor">#define profile(level, ...) profile_timer(level, profile_module, __PRETTY_FUNCTION__, __VA_ARGS__)</span></div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keywordtype">void</span> <a class="code hl_function" href="profile_8h.html#aa76650cead3782aa2905f4a573598d6a">profile_timer</a>(<span class="keywordtype">int</span> <a class="code hl_struct" href="structlevel.html">level</a>, <span class="keyword">const</span> <span class="keywordtype">char</span> *module, <span class="keyword">const</span> <span class="keywordtype">char</span> *function, <span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, ...);</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#ifdef __cplusplus</span></div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>}</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
 <div class="ttc" id="aprofile_8h_html_aa76650cead3782aa2905f4a573598d6a"><div class="ttname"><a href="profile_8h.html#aa76650cead3782aa2905f4a573598d6a">profile_timer</a></div><div class="ttdeci">void profile_timer(int level, const char *module, const char *function, const char *fmt,...)</div><div class="ttdoc">Log timing information.</div><div class="ttdef"><b>Definition</b> profile.c:56</div></div>
 <div class="ttc" id="astructlevel_html"><div class="ttname"><a href="structlevel.html">level</a></div><div class="ttdef"><b>Definition</b> garmin_img.c:476</div></div>
 </div><!-- fragment --></div><!-- contents -->

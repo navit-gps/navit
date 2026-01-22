@@ -110,9 +110,9 @@ Macros</h2></td></tr>
 <tr class="separator:ab574e88dbe8195db84940f29a5bd0fe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4170720203b058030370af11ee9267fa" id="r_a4170720203b058030370af11ee9267fa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a4170720203b058030370af11ee9267fa">dbg_module</a>&#160;&#160;&#160;<a class="el" href="debug_8h.html#ab574e88dbe8195db84940f29a5bd0fe6">dbg_str1</a>(MODULE)</td></tr>
 <tr class="separator:a4170720203b058030370af11ee9267fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba3c0ccefe6daa8941b173073268729e" id="r_aba3c0ccefe6daa8941b173073268729e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>(<a class="el" href="structlevel.html">level</a>, ...)&#160;&#160;&#160;{ if (<a class="el" href="debug_8c.html#ae6a5410a3f6ce467cccb058b86ed663e">max_debug_level</a> &gt;= <a class="el" href="structlevel.html">level</a>) <a class="el" href="debug_8c.html#a0216fe3aae211a3db82a5f53d20d62a1">debug_printf</a>(<a class="el" href="structlevel.html">level</a>,<a class="el" href="debug_8h.html#a4170720203b058030370af11ee9267fa">dbg_module</a>,strlen(<a class="el" href="debug_8h.html#a4170720203b058030370af11ee9267fa">dbg_module</a>),__PRETTY_FUNCTION__, strlen(__PRETTY_FUNCTION__),1,__VA_ARGS__); }</td></tr>
+<tr class="memitem:aba3c0ccefe6daa8941b173073268729e" id="r_aba3c0ccefe6daa8941b173073268729e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>(<a class="el" href="structlevel.html">level</a>, ...)</td></tr>
 <tr class="separator:aba3c0ccefe6daa8941b173073268729e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1ea27a449d096a072c270f9276a8f9f" id="r_aa1ea27a449d096a072c270f9276a8f9f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#aa1ea27a449d096a072c270f9276a8f9f">dbg_assert</a>(expr)&#160;&#160;&#160;((expr) ? (void) 0 : <a class="el" href="debug_8c.html#adf74b10840627ad7fda59d4ddb70abbd">debug_assert_fail</a>(<a class="el" href="debug_8h.html#a4170720203b058030370af11ee9267fa">dbg_module</a>,strlen(<a class="el" href="debug_8h.html#a4170720203b058030370af11ee9267fa">dbg_module</a>),__PRETTY_FUNCTION__, strlen(__PRETTY_FUNCTION__),__FILE__,__LINE__,<a class="el" href="debug_8h.html#ab574e88dbe8195db84940f29a5bd0fe6">dbg_str1</a>(expr)))</td></tr>
+<tr class="memitem:aa1ea27a449d096a072c270f9276a8f9f" id="r_aa1ea27a449d096a072c270f9276a8f9f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#aa1ea27a449d096a072c270f9276a8f9f">dbg_assert</a>(expr)</td></tr>
 <tr class="separator:aa1ea27a449d096a072c270f9276a8f9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3f2738185193d0a5ca09a7b2734c05e" id="r_ae3f2738185193d0a5ca09a7b2734c05e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#ae3f2738185193d0a5ca09a7b2734c05e">DEBUG_MODULE_GLOBAL</a>&#160;&#160;&#160;&quot;global&quot;</td></tr>
 <tr class="separator:ae3f2738185193d0a5ca09a7b2734c05e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -124,7 +124,7 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:a3ce13c42b29fe2a7552478859b7f3c25" id="r_a3ce13c42b29fe2a7552478859b7f3c25"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25">dbg_level</a> { <br />
-&#160;&#160;<a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aae2dc85ebf9ab0dd80152e134ee40c80">lvl_unset</a> =-1
+&#160;&#160;<a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aae2dc85ebf9ab0dd80152e134ee40c80">lvl_unset</a> = -1
 , <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>
 , <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25ae8f0c4875bfa25147150a74f41c86c53">lvl_warning</a>
 , <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a6e67a0649f81060a391cfe102acbd707">lvl_info</a>
@@ -140,7 +140,7 @@ Functions</h2></td></tr>
 <tr class="separator:af6d578b0504da81ebf1c0bb0b5d57952"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9b547b2d788ff9d24e2ee9f25f5718e" id="r_af9b547b2d788ff9d24e2ee9f25f5718e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#af9b547b2d788ff9d24e2ee9f25f5718e">debug_level_set</a> (const char *<a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25">dbg_level</a> <a class="el" href="structlevel.html">level</a>)</td></tr>
 <tr class="separator:af9b547b2d788ff9d24e2ee9f25f5718e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f3679c22ea6d6694f202b89df041244" id="r_a5f3679c22ea6d6694f202b89df041244"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="garmin__img_8c.html#ac3e1795766a80ec63b157951b4b9a7d4">debug</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a5f3679c22ea6d6694f202b89df041244">debug_new</a> (struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
+<tr class="memitem:a5f3679c22ea6d6694f202b89df041244" id="r_a5f3679c22ea6d6694f202b89df041244"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="garmin__img_8c.html#ac3e1795766a80ec63b157951b4b9a7d4">debug</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a5f3679c22ea6d6694f202b89df041244">debug_new</a> (struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structattr.html">attr</a> **<a class="el" href="plugin__def_8h.html#a1e9137a65e787557962d1ff72828fa16">attrs</a>)</td></tr>
 <tr class="separator:a5f3679c22ea6d6694f202b89df041244"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a8d30aba205c347a6c4533deda2b80f" id="r_a9a8d30aba205c347a6c4533deda2b80f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25">dbg_level</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8h.html#a9a8d30aba205c347a6c4533deda2b80f">debug_level_get</a> (const char *<a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>)</td></tr>
 <tr class="separator:a9a8d30aba205c347a6c4533deda2b80f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -203,11 +203,19 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;{ if (<a class="el" href="debug_8c.html#ae6a5410a3f6ce467cccb058b86ed663e">max_debug_level</a> &gt;= <a class="el" href="structlevel.html">level</a>) <a class="el" href="debug_8c.html#a0216fe3aae211a3db82a5f53d20d62a1">debug_printf</a>(<a class="el" href="structlevel.html">level</a>,<a class="el" href="debug_8h.html#a4170720203b058030370af11ee9267fa">dbg_module</a>,strlen(<a class="el" href="debug_8h.html#a4170720203b058030370af11ee9267fa">dbg_module</a>),__PRETTY_FUNCTION__, strlen(__PRETTY_FUNCTION__),1,__VA_ARGS__); }</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
+<b>Value:</b><div class="fragment"><div class="line">    {                                                                                                                  \</div>
+<div class="line">        if (<a class="code hl_variable" href="debug_8h.html#ae6a5410a3f6ce467cccb058b86ed663e">max_debug_level</a> &gt;= <a class="code hl_struct" href="structlevel.html">level</a>)                                                                                  \</div>
+<div class="line">            debug_printf(<a class="code hl_struct" href="structlevel.html">level</a>, <a class="code hl_define" href="debug_8h.html#a4170720203b058030370af11ee9267fa">dbg_module</a>, strlen(<a class="code hl_define" href="debug_8h.html#a4170720203b058030370af11ee9267fa">dbg_module</a>), __PRETTY_FUNCTION__, strlen(__PRETTY_FUNCTION__), 1,   \</div>
+<div class="line">                         __VA_ARGS__);                                                                                 \</div>
+<div class="line">    }</div>
+<div class="ttc" id="adebug_8h_html_a4170720203b058030370af11ee9267fa"><div class="ttname"><a href="debug_8h.html#a4170720203b058030370af11ee9267fa">dbg_module</a></div><div class="ttdeci">#define dbg_module</div><div class="ttdef"><b>Definition</b> debug.h:58</div></div>
+<div class="ttc" id="adebug_8h_html_ae6a5410a3f6ce467cccb058b86ed663e"><div class="ttname"><a href="debug_8h.html#ae6a5410a3f6ce467cccb058b86ed663e">max_debug_level</a></div><div class="ttdeci">dbg_level max_debug_level</div><div class="ttdef"><b>Definition</b> debug.c:56</div></div>
+<div class="ttc" id="astructlevel_html"><div class="ttname"><a href="structlevel.html">level</a></div><div class="ttdef"><b>Definition</b> garmin_img.c:476</div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="aa1ea27a449d096a072c270f9276a8f9f" name="aa1ea27a449d096a072c270f9276a8f9f"></a>
@@ -221,11 +229,16 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">expr</td><td>)</td>
-          <td>&#160;&#160;&#160;((expr) ? (void) 0 : <a class="el" href="debug_8c.html#adf74b10840627ad7fda59d4ddb70abbd">debug_assert_fail</a>(<a class="el" href="debug_8h.html#a4170720203b058030370af11ee9267fa">dbg_module</a>,strlen(<a class="el" href="debug_8h.html#a4170720203b058030370af11ee9267fa">dbg_module</a>),__PRETTY_FUNCTION__, strlen(__PRETTY_FUNCTION__),__FILE__,__LINE__,<a class="el" href="debug_8h.html#ab574e88dbe8195db84940f29a5bd0fe6">dbg_str1</a>(expr)))</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
+<b>Value:</b><div class="fragment"><div class="line">    ((expr) ? (<span class="keywordtype">void</span>)0                                                                                                  \</div>
+<div class="line">            : <a class="code hl_function" href="debug_8h.html#adf74b10840627ad7fda59d4ddb70abbd">debug_assert_fail</a>(<a class="code hl_define" href="debug_8h.html#a4170720203b058030370af11ee9267fa">dbg_module</a>, strlen(<a class="code hl_define" href="debug_8h.html#a4170720203b058030370af11ee9267fa">dbg_module</a>), __PRETTY_FUNCTION__, strlen(__PRETTY_FUNCTION__),      \</div>
+<div class="line">                                __FILE__, __LINE__, <a class="code hl_define" href="debug_8h.html#ab574e88dbe8195db84940f29a5bd0fe6">dbg_str1</a>(expr)))</div>
+<div class="ttc" id="adebug_8h_html_ab574e88dbe8195db84940f29a5bd0fe6"><div class="ttname"><a href="debug_8h.html#ab574e88dbe8195db84940f29a5bd0fe6">dbg_str1</a></div><div class="ttdeci">#define dbg_str1(x)</div><div class="ttdef"><b>Definition</b> debug.h:57</div></div>
+<div class="ttc" id="adebug_8h_html_adf74b10840627ad7fda59d4ddb70abbd"><div class="ttname"><a href="debug_8h.html#adf74b10840627ad7fda59d4ddb70abbd">debug_assert_fail</a></div><div class="ttdeci">void debug_assert_fail(const char *module, const int mlen, const char *function, const int flen, const char *file, int line, const char *expr)</div><div class="ttdef"><b>Definition</b> debug.c:464</div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a22486e4059e2a356632d39b66f443015" name="a22486e4059e2a356632d39b66f443015"></a>
@@ -776,7 +789,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="attr_8c.html#a6856661cad6d733fcf80ea590ba52afb">attr_search()</a>, <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="garmin__img_8c.html#ac3e1795766a80ec63b157951b4b9a7d4">debug</a>, <a class="el" href="debug_8c.html#af9b547b2d788ff9d24e2ee9f25f5718e">debug_level_set()</a>, <a class="el" href="debug_8c.html#a7c1d654b7b6114d7a0abc8d351dd1bcd">dummy</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aae2dc85ebf9ab0dd80152e134ee40c80">lvl_unset</a>, <a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="debug_8c.html#aaa8f23c0b24005dc922f64070cad60a3">parse_dbg_level()</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, and <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>.</p>
+<p class="reference">References <a class="el" href="attr_8c.html#a6856661cad6d733fcf80ea590ba52afb">attr_search()</a>, <a class="el" href="plugin__def_8h.html#a1e9137a65e787557962d1ff72828fa16">attrs</a>, <a class="el" href="garmin__img_8c.html#ac3e1795766a80ec63b157951b4b9a7d4">debug</a>, <a class="el" href="debug_8c.html#af9b547b2d788ff9d24e2ee9f25f5718e">debug_level_set()</a>, <a class="el" href="debug_8c.html#a7c1d654b7b6114d7a0abc8d351dd1bcd">dummy</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aae2dc85ebf9ab0dd80152e134ee40c80">lvl_unset</a>, <a class="el" href="street_8c.html#afd3f693e384b1ee0a0c44d58351eb87d">name</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="debug_8c.html#aaa8f23c0b24005dc922f64070cad60a3">parse_dbg_level()</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, and <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>.</p>
 
 </div>
 </div>

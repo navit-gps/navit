@@ -101,7 +101,7 @@ $(document).ready(function(){initNavTree('data_8h.html',''); initResizable(); })
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a7577d49f3bfffb1cf048eef843177784" id="r_a7577d49f3bfffb1cf048eef843177784"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a7577d49f3bfffb1cf048eef843177784">L</a>(x)&#160;&#160;&#160;({ unsigned char *t=(unsigned char *)&amp;(x); t[0] | (t[1] &lt;&lt; 8) | (t[2] &lt;&lt; 16) | (t[3] &lt;&lt; 24); })</td></tr>
+<tr class="memitem:a7577d49f3bfffb1cf048eef843177784" id="r_a7577d49f3bfffb1cf048eef843177784"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="data_8h.html#a7577d49f3bfffb1cf048eef843177784">L</a>(x)</td></tr>
 <tr class="separator:a7577d49f3bfffb1cf048eef843177784"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -135,11 +135,15 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">x</td><td>)</td>
-          <td>&#160;&#160;&#160;({ unsigned char *t=(unsigned char *)&amp;(x); t[0] | (t[1] &lt;&lt; 8) | (t[2] &lt;&lt; 16) | (t[3] &lt;&lt; 24); })</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
+<b>Value:</b><div class="fragment"><div class="line">    ({                                                                                                                 \</div>
+<div class="line">        <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *t = (<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *)&amp;(x);                                                                      \</div>
+<div class="line">        t[0] | (t[1] &lt;&lt; 8) | (t[2] &lt;&lt; 16) | (t[3] &lt;&lt; 24);                                                              \</div>
+<div class="line">    })</div>
+</div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>

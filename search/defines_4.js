@@ -15,7 +15,7 @@ var searchData=
   ['dbg_5fstr2_12',['dbg_str2',['../debug_8h.html#a34e1f8f7f7c4c092929b4bd73b060ce3',1,'debug.h']]],
   ['dbgdriverstat_13',['DBGDRIVERSTAT',['../ceglue_8c.html#ad457e69b2ae2cf47ce4b588cceaa53da',1,'ceglue.c']]],
   ['dbus_5fapi_5fsubject_5fto_5fchange_14',['dbus_api_subject_to_change',['../vehicle__gpsd__dbus_8c.html#a2cc11b99c924d554a8ab1bb8e768c3cf',1,'DBUS_API_SUBJECT_TO_CHANGE:&#160;vehicle_gpsd_dbus.c'],['../binding__dbus_8c.html#a2cc11b99c924d554a8ab1bb8e768c3cf',1,'DBUS_API_SUBJECT_TO_CHANGE:&#160;binding_dbus.c']]],
-  ['ddlog_15',['ddlog',['../garmin_8h.html#a7c82e106f6ed96894509ac9a5e8906af',1,'garmin.h']]],
+  ['ddlog_15',['ddlog',['../garmin_8h.html#a3649d8ae82bcc7c608c1ed9cd6e64d9e',1,'garmin.h']]],
   ['debug_16',['DEBUG',['../gpx2navit__txt_8h.html#ad72dbcf6d0153db1b8d8a58001feed83',1,'gpx2navit_txt.h']]],
   ['debug_5fcoord_5fget_17',['DEBUG_COORD_GET',['../pedestrian_8c.html#ad3d9a6c7f688f0ce18974caf00071474',1,'pedestrian.c']]],
   ['debug_5fitembin_18',['debug_itembin',['../maptool_8h.html#aeb8d09c6c0a14f8889c966e141250da2',1,'maptool.h']]],
@@ -27,6 +27,6 @@ var searchData=
   ['disable_5foverlay_24',['DISABLE_OVERLAY',['../osd_8h.html#a8b5f41c0866df244674438b93a75257c',1,'osd.h']]],
   ['display_5fh_25',['DISPLAY_H',['../graphics__sdl_8c.html#a895152e89a26d775212c88dafb8c50ca',1,'graphics_sdl.c']]],
   ['display_5fw_26',['DISPLAY_W',['../graphics__sdl_8c.html#a78f89e91b5365676ca7a0d937946b854',1,'graphics_sdl.c']]],
-  ['dlog_27',['dlog',['../garmin_8h.html#a3e0f0fa3888a7188799ecb01b02cf519',1,'dlog:&#160;garmin.h'],['../gentypes_8c.html#aa395aec39056dfc23a214e854cc6847b',1,'dlog:&#160;gentypes.c']]],
+  ['dlog_27',['dlog',['../garmin_8h.html#aa395aec39056dfc23a214e854cc6847b',1,'dlog:&#160;garmin.h'],['../gentypes_8c.html#aa395aec39056dfc23a214e854cc6847b',1,'dlog:&#160;gentypes.c']]],
   ['dtol_28',['DTOL',['../geod__inv_8c.html#a64861cabb9a7f45c303406c97c30afc5',1,'geod_inv.c']]]
 ];

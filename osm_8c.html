@@ -98,20 +98,28 @@ $(document).ready(function(){initNavTree('osm_8c.html',''); initResizable(); });
   <div class="headertitle"><div class="title">osm.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="navit__lfs_8h_source.html">navit_lfs.h</a>&quot;</code><br />
-<code>#include &lt;unistd.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="country_8h_source.html">country.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="linguistics_8h_source.html">linguistics.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="maptool_8h_source.html">maptool.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="profile_8h_source.html">profile.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;unistd.h&gt;</code><br />
 <code>#include &lt;ctype.h&gt;</code><br />
+<code>#include &lt;fcntl.h&gt;</code><br />
+<code>#include &lt;limits.h&gt;</code><br />
 <code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdarg.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;strings.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="attr__type__def_8h_source.html">attr_type_def.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="country_8h_source.html">country.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="geom_8h_source.html">geom.h</a>&quot;</code><br />
+<code>#include &quot;glib.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="item__type__def_8h_source.html">item_type_def.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="maptool_8h_source.html">maptool.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -635,8 +643,8 @@ Variables</h2></td></tr>
 <div class="line">        (<a class="code hl_variable" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).x = <a class="code hl_define" href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a> | ((<a class="code hl_typedef" href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a>)(ref) &gt;&gt; 31);                                                                     \</div>
 <div class="line">        (<a class="code hl_variable" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).y = (<a class="code hl_typedef" href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a>)(ref) &amp; 0x7fffffffull;                                                                          \</div>
 <div class="line">    } <span class="keywordflow">while</span> (0)</div>
-<div class="ttc" id="amaptool_8h_html_abe8b7806b2d8aaf7604b547999ebc45a"><div class="ttname"><a href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a></div><div class="ttdeci">unsigned long long int osmid</div><div class="ttdef"><b>Definition</b> maptool.h:131</div></div>
-<div class="ttc" id="aosm_8c_html_ad8ff47ec415b43267adb3f1fe87a2dc4"><div class="ttname"><a href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a></div><div class="ttdeci">#define REF_MARKER</div><div class="ttdef"><b>Definition</b> osm.c:126</div></div>
+<div class="ttc" id="amaptool_8h_html_abe8b7806b2d8aaf7604b547999ebc45a"><div class="ttname"><a href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a></div><div class="ttdeci">unsigned long long int osmid</div><div class="ttdef"><b>Definition</b> maptool.h:135</div></div>
+<div class="ttc" id="aosm_8c_html_ad8ff47ec415b43267adb3f1fe87a2dc4"><div class="ttname"><a href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a></div><div class="ttdeci">#define REF_MARKER</div><div class="ttdef"><b>Definition</b> osm.c:139</div></div>
 <div class="ttc" id="apopup_8c_html_aafe71b070668214be9b4b4849985dc6b"><div class="ttname"><a href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a></div><div class="ttdeci">static struct pcoord c</div><div class="ttdef"><b>Definition</b> popup.c:375</div></div>
 </div><!-- fragment -->
 </div>

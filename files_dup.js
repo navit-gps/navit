@@ -107,7 +107,7 @@ var files_dup =
     [ "phrase.h", "phrase_8h.html", "phrase_8h" ],
     [ "plugin.c", "plugin_8c.html", "plugin_8c" ],
     [ "plugin.h", "plugin_8h.html", "plugin_8h" ],
-    [ "plugin_def.h", "plugin__def_8h.html", null ],
+    [ "plugin_def.h", "plugin__def_8h.html", "plugin__def_8h" ],
     [ "point.h", "point_8h.html", "point_8h" ],
     [ "popup.c", "popup_8c.html", "popup_8c" ],
     [ "popup.h", "popup_8h.html", "popup_8h" ],

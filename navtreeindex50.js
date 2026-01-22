@@ -1,5 +1,9 @@
 var NAVTREEINDEX50 =
 {
+"vehicle__demo_8c.html#a9e8aaccf8c944a651a3e7f528cf7fc71":[3,0,14,1,0,5],
+"vehicle__demo_8c.html#ad6cf23d2b0d1611d83f6ac4dad2e4a15":[3,0,14,1,0,3],
+"vehicle__file_8c.html":[3,0,14,2,0],
+"vehicle__geoclue_8c.html":[3,0,14,3,0],
 "vehicle__gpsd_8c.html":[3,0,14,4,0],
 "vehicle__gpsd__dbus_8c.html":[3,0,14,5,0],
 "vehicle__gpsd__dbus_8c.html#a2cc11b99c924d554a8ab1bb8e768c3cf":[3,0,14,5,0,0],

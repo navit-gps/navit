@@ -85,7 +85,7 @@ var searchData=
   ['poi_5ftypes_82',['poi_types',['../garmin__img_8c.html#aed123f6c0d2d9a4882ab433978dcfe7a',1,'poi_types:&#160;garmin_img.c'],['../structlabel__header.html#ab592d915b5f3f0103762851c24f6df7a',1,'label_header::poi_types']]],
   ['point_83',['point',['../structpathattr.html#ac2128c62780bb72549dbac4e5578de04',1,'pathattr::point'],['../structmap__rect__priv.html#aaf45946261cf5515695aec19fc98c8ff',1,'map_rect_priv::point'],['../structtree__header.html#a1f2368b8f30e6c22356a09a95ddb2597',1,'tree_header::point'],['../structelement.html#a7448b95949b0b5fce8cf49b1ae9b4f23',1,'element::point']]],
   ['points_84',['points',['../structg2scolumns.html#a8c9d43c5f6b80c472fd23572f37117c1',1,'g2scolumns::points'],['../structgar2nav__conv.html#abac6637e63b9db1e90e95dc19de58e41',1,'gar2nav_conv::points']]],
-  ['pois_85',['pois',['../classBackend.html#a81eeec800db7df2081694641fed26116',1,'Backend']]],
+  ['pois_85',['pois',['../classBackend.html#a88603e24f96b961c72d11d25f092da1c',1,'Backend']]],
   ['poly_86',['poly',['../structslicerpolygon.html#a8c9eb5a3c0764b3d5d28a0b0888504b9',1,'slicerpolygon::poly'],['../structmap__rect__priv.html#aeb0c591a520519f34a25ec6f44687fc0',1,'map_rect_priv::poly']]],
   ['poly2poi_87',['poly2poi',['../structmaptool__osm.html#a6a3aa6471a384e1fe6d0a7c0680118ef',1,'maptool_osm']]],
   ['poly_5fhole_88',['poly_hole',['../structattr.html#a638b672a3e8d210b0b77e73b9bc1957d',1,'attr']]],

@@ -98,9 +98,9 @@ $(document).ready(function(){initNavTree('coord_8h.html',''); initResizable(); }
   <div class="headertitle"><div class="title">coord.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &quot;config.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;config.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
 </div>
 <p><a href="coord_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -127,7 +127,7 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ab7fc727d53e80c018f1bea9a4ad5434b" id="r_ab7fc727d53e80c018f1bea9a4ad5434b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="coord_8h.html#ab7fc727d53e80c018f1bea9a4ad5434b">coord_is_equal</a>(a,  b)&#160;&#160;&#160;((a).x==(b).x &amp;&amp; (a).y==(b).y)</td></tr>
+<tr class="memitem:ab7fc727d53e80c018f1bea9a4ad5434b" id="r_ab7fc727d53e80c018f1bea9a4ad5434b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="coord_8h.html#ab7fc727d53e80c018f1bea9a4ad5434b">coord_is_equal</a>(a,  b)&#160;&#160;&#160;((a).x == (b).x &amp;&amp; (a).y == (b).y)</td></tr>
 <tr class="separator:ab7fc727d53e80c018f1bea9a4ad5434b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07311124cec6ec2103e729fbb4ebcc5c" id="r_a07311124cec6ec2103e729fbb4ebcc5c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="coord_8h.html#a07311124cec6ec2103e729fbb4ebcc5c">navit_sin</a>(x)&#160;&#160;&#160;sin(x)</td></tr>
 <tr class="separator:a07311124cec6ec2103e729fbb4ebcc5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -168,7 +168,7 @@ Functions</h2></td></tr>
 <tr class="separator:ga070022fd4aaf0fd34bd7307078a4eeac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaeb489edd13309353cb486f855c00dbe5" id="r_gaeb489edd13309353cb486f855c00dbe5"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcoord.html">coord</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__coord.html#gaeb489edd13309353cb486f855c00dbe5">coord_new</a> (int x, int y)</td></tr>
 <tr class="separator:gaeb489edd13309353cb486f855c00dbe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac1e499de39c791dcf39f1fe89c1351ff" id="r_gac1e499de39c791dcf39f1fe89c1351ff"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcoord.html">coord</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__coord.html#gac1e499de39c791dcf39f1fe89c1351ff">coord_new_from_attrs</a> (struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
+<tr class="memitem:gac1e499de39c791dcf39f1fe89c1351ff" id="r_gac1e499de39c791dcf39f1fe89c1351ff"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcoord.html">coord</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__coord.html#gac1e499de39c791dcf39f1fe89c1351ff">coord_new_from_attrs</a> (struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structattr.html">attr</a> **<a class="el" href="plugin__def_8h.html#a1e9137a65e787557962d1ff72828fa16">attrs</a>)</td></tr>
 <tr class="separator:gac1e499de39c791dcf39f1fe89c1351ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad191c6f8f958bfe80345f76549c00dea" id="r_gad191c6f8f958bfe80345f76549c00dea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__coord.html#gad191c6f8f958bfe80345f76549c00dea">coord_destroy</a> (struct <a class="el" href="structcoord.html">coord</a> *<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)</td></tr>
 <tr class="separator:gad191c6f8f958bfe80345f76549c00dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -234,7 +234,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;((a).x==(b).x &amp;&amp; (a).y==(b).y)</td>
+          <td></td><td>&#160;&#160;&#160;((a).x == (b).x &amp;&amp; (a).y == (b).y)</td>
         </tr>
       </table>
 </div><div class="memdoc">

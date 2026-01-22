@@ -191,7 +191,7 @@ var searchData=
   ['vehicleprofiles_188',['vehicleprofiles',['../structnavit.html#a89e9933b5ee23cd797a3f0957dd0f7b7',1,'navit']]],
   ['vehicleproxy_189',['vehicleProxy',['../structgui__priv.html#a57ae76f590f7520edd3bd8078f055ddf',1,'gui_priv']]],
   ['vehicleproxy_2eh_190',['vehicleProxy.h',['../vehicleProxy_8h.html',1,'']]],
-  ['vehicles_191',['vehicles',['../structnavit.html#a5e8bda803d6541a8004edae6f0fe3614',1,'navit::vehicles'],['../classBackend.html#a30846d07613ecb27de4707486a0bc5c4',1,'Backend::vehicles'],['../classBackend.html#a68107d1f3b2a52906967a85f0669f357',1,'Backend::vehicles']]],
+  ['vehicles_191',['vehicles',['../structnavit.html#a5e8bda803d6541a8004edae6f0fe3614',1,'navit::vehicles'],['../classBackend.html#a30846d07613ecb27de4707486a0bc5c4',1,'Backend::vehicles'],['../classBackend.html#ada5410b0d0761ffaf421cf875a47a449',1,'Backend::vehicles']]],
   ['vehicleschanged_192',['vehiclesChanged',['../classBackend.html#a45df13f133df423fad7d9605a6d07c6b',1,'Backend']]],
   ['vendor_5fid1_193',['vendor_id1',['../structzip__enc.html#abe192de12f78517bb1c7470b7f469dbd',1,'zip_enc']]],
   ['vendor_5fid2_194',['vendor_id2',['../structzip__enc.html#ad3f136d07bdfc01d60893b7751f42203',1,'zip_enc']]],

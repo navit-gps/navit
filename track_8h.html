@@ -94,9 +94,9 @@ $(document).ready(function(){initNavTree('track_8h.html',''); initResizable(); }
   <div class="headertitle"><div class="title">track.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;time.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
 </div>
 <p><a href="track_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -127,7 +127,7 @@ Functions</h2></td></tr>
 <tr class="separator:a3ee6ea7d424a17edf786a24f5ea9e3a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd09243f8109cac67d9d5f5ee02fc711" id="r_afd09243f8109cac67d9d5f5ee02fc711"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="track_8h.html#afd09243f8109cac67d9d5f5ee02fc711">tracking_set_attr</a> (struct <a class="el" href="structtracking.html">tracking</a> *tr, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
 <tr class="separator:afd09243f8109cac67d9d5f5ee02fc711"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac61382911e7dc2cd318d962f50f12aae" id="r_ac61382911e7dc2cd318d962f50f12aae"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structtracking.html">tracking</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="track_8h.html#ac61382911e7dc2cd318d962f50f12aae">tracking_new</a> (struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
+<tr class="memitem:ac61382911e7dc2cd318d962f50f12aae" id="r_ac61382911e7dc2cd318d962f50f12aae"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structtracking.html">tracking</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="track_8h.html#ac61382911e7dc2cd318d962f50f12aae">tracking_new</a> (struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structattr.html">attr</a> **<a class="el" href="plugin__def_8h.html#a1e9137a65e787557962d1ff72828fa16">attrs</a>)</td></tr>
 <tr class="separator:ac61382911e7dc2cd318d962f50f12aae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af96196a2a4719af29790b86bbf784e6b" id="r_af96196a2a4719af29790b86bbf784e6b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="track_8h.html#af96196a2a4719af29790b86bbf784e6b">tracking_set_mapset</a> (struct <a class="el" href="structtracking.html">tracking</a> *this_, struct <a class="el" href="structmapset.html">mapset</a> *ms)</td></tr>
 <tr class="separator:af96196a2a4719af29790b86bbf784e6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -369,7 +369,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="destination_8c.html#aad98f5b9c75ecce7814b8b3cd323232c">description()</a>, <a class="el" href="structtracking.html#a59cad978950015fa5d32f92b2d6ed40f">tracking::map</a>, <a class="el" href="map_8c.html#a397a9ad42674f121ab88aaafb77a489b">map_new()</a>, <a class="el" href="structattr.html#a29f2bd8e2bb08429d7f319414c600bfc">attr::navigation</a>, and <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>.</p>
+<p class="reference">References <a class="el" href="plugin__def_8h.html#a1e9137a65e787557962d1ff72828fa16">attrs</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="destination_8c.html#aad98f5b9c75ecce7814b8b3cd323232c">description()</a>, <a class="el" href="structtracking.html#a59cad978950015fa5d32f92b2d6ed40f">tracking::map</a>, <a class="el" href="map_8c.html#a397a9ad42674f121ab88aaafb77a489b">map_new()</a>, <a class="el" href="structattr.html#a29f2bd8e2bb08429d7f319414c600bfc">attr::navigation</a>, and <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="group__navit.html#ga31c95e8cc4ef3f3eaf9719c755505582">navit_init()</a>.</p>
 
@@ -511,7 +511,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="attr_8c.html#adf6574ad1a34ce7251c34d2ea903c076">attr_generic_get_attr()</a>, <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="callback_8c.html#a5a67e77117ca1b8eb81f9866ce5905bc">callback_list_new()</a>, <a class="el" href="xmlconfig_8c.html#aaf5d0d4afa6fc99f63e55be0ca05cce8">navit_object_ref()</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="track_8c.html#adee02887f45fa0745c408f29f2d9880c">tracking_func</a>, <a class="el" href="track_8c.html#a74a439e6ff8266744dfa1010464c343e">tracking_init_cdf()</a>, <a class="el" href="track_8c.html#a9f6a3c7ae03db4b36f7eb100101f3295">tracking_set_attr_do()</a>, and <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>.</p>
+<p class="reference">References <a class="el" href="attr_8c.html#adf6574ad1a34ce7251c34d2ea903c076">attr_generic_get_attr()</a>, <a class="el" href="plugin__def_8h.html#a1e9137a65e787557962d1ff72828fa16">attrs</a>, <a class="el" href="callback_8c.html#a5a67e77117ca1b8eb81f9866ce5905bc">callback_list_new()</a>, <a class="el" href="xmlconfig_8c.html#aaf5d0d4afa6fc99f63e55be0ca05cce8">navit_object_ref()</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="track_8c.html#adee02887f45fa0745c408f29f2d9880c">tracking_func</a>, <a class="el" href="track_8c.html#a74a439e6ff8266744dfa1010464c343e">tracking_init_cdf()</a>, <a class="el" href="track_8c.html#a9f6a3c7ae03db4b36f7eb100101f3295">tracking_set_attr_do()</a>, and <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>.</p>
 
 </div>
 </div>

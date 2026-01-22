@@ -59,7 +59,7 @@ var searchData=
   ['bmih_5ftrans_56',['bmih_trans',['../structXPM2BMP__TAG.html#aa047afbaad760d63babf9e2a7c74ac9c',1,'XPM2BMP_TAG']]],
   ['bookmark_57',['bookmark',['../structbookmarks.html#aba783a2a5c99eb456cbf8a7e79e9d899',1,'bookmarks']]],
   ['bookmark_5ffile_58',['bookmark_file',['../structbookmarks.html#a84150e2e7884fae09c767f78c80c2fae',1,'bookmarks']]],
-  ['bookmarks_59',['bookmarks',['../structnavit.html#ae635fe5f570a3ffbb1bfd9f294f56b0b',1,'navit::bookmarks'],['../classBackend.html#acc3a5d0adc9626ec442699afa7a73f60',1,'Backend::bookmarks'],['../structattr.html#a1075170f522c70bc3c75543259d80145',1,'attr::bookmarks']]],
+  ['bookmarks_59',['bookmarks',['../structnavit.html#ae635fe5f570a3ffbb1bfd9f294f56b0b',1,'navit::bookmarks'],['../classBackend.html#ad0ad262712447d535ca4a8d05af04449',1,'Backend::bookmarks'],['../structattr.html#a1075170f522c70bc3c75543259d80145',1,'attr::bookmarks']]],
   ['bookmarks_5fhash_60',['bookmarks_hash',['../structbookmarks.html#ae8138e6236abdb2681880bdf12f6e264',1,'bookmarks']]],
   ['bookmarks_5flist_61',['bookmarks_list',['../structbookmarks.html#a2a8fd5ed85762119649846441d48b945',1,'bookmarks']]],
   ['bookmarks_5fmenuitems_62',['bookmarks_menuitems',['../structgui__priv.html#a554860c22b1e9f195fee79e2c48327d6',1,'gui_priv']]],

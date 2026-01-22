@@ -101,53 +101,53 @@ $(document).ready(function(){initNavTree('sunriset_8h.html',''); initResizable()
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:afd84489cd7914daf53c9714f40c8abf1" id="r_afd84489cd7914daf53c9714f40c8abf1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#afd84489cd7914daf53c9714f40c8abf1">TMOD</a>(x)&#160;&#160;&#160;((x)&lt;0?(x)+24:((x)&gt;=24?(x)-24:(x)))</td></tr>
+<tr class="memitem:afd84489cd7914daf53c9714f40c8abf1" id="r_afd84489cd7914daf53c9714f40c8abf1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#afd84489cd7914daf53c9714f40c8abf1">TMOD</a>(x)&#160;&#160;&#160;((x) &lt; 0 ? (x) + 24 : ((x) &gt;= 24 ? (x) - 24 : (x)))</td></tr>
 <tr class="separator:afd84489cd7914daf53c9714f40c8abf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc5a63df083c374936d1810953395411" id="r_afc5a63df083c374936d1810953395411"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#afc5a63df083c374936d1810953395411">DAYSOFF</a>(x)&#160;&#160;&#160;((x)&lt;0?&quot;(-1) &quot;:((x)&gt;=24?&quot;(+1) &quot;:&quot;&quot;))</td></tr>
+<tr class="memitem:afc5a63df083c374936d1810953395411" id="r_afc5a63df083c374936d1810953395411"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#afc5a63df083c374936d1810953395411">DAYSOFF</a>(x)&#160;&#160;&#160;((x) &lt; 0 ? &quot;(-1) &quot; : ((x) &gt;= 24 ? &quot;(+1) &quot; : &quot;&quot;))</td></tr>
 <tr class="separator:afc5a63df083c374936d1810953395411"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adddd21815fe708193316433d6e6fc5ae" id="r_adddd21815fe708193316433d6e6fc5ae"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#adddd21815fe708193316433d6e6fc5ae">HOURS</a>(h)&#160;&#160;&#160;((int)(floor(h)))</td></tr>
 <tr class="separator:adddd21815fe708193316433d6e6fc5ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fe21947ab99e7dec580c3ff526394e9" id="r_a7fe21947ab99e7dec580c3ff526394e9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a7fe21947ab99e7dec580c3ff526394e9">MINUTES</a>(h)&#160;&#160;&#160;((int)(60*(h-floor(h))))</td></tr>
+<tr class="memitem:a7fe21947ab99e7dec580c3ff526394e9" id="r_a7fe21947ab99e7dec580c3ff526394e9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a7fe21947ab99e7dec580c3ff526394e9">MINUTES</a>(h)&#160;&#160;&#160;((int)(60 * (h - floor(h))))</td></tr>
 <tr class="separator:a7fe21947ab99e7dec580c3ff526394e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a996f7be338ccb40d1a2a5abc1ad61759" id="r_a996f7be338ccb40d1a2a5abc1ad61759"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a996f7be338ccb40d1a2a5abc1ad61759">ABS</a>(x)&#160;&#160;&#160;((x)&lt;0?-(x):(x))</td></tr>
+<tr class="memitem:a996f7be338ccb40d1a2a5abc1ad61759" id="r_a996f7be338ccb40d1a2a5abc1ad61759"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a996f7be338ccb40d1a2a5abc1ad61759">ABS</a>(x)&#160;&#160;&#160;((x) &lt; 0 ? -(x) : (x))</td></tr>
 <tr class="separator:a996f7be338ccb40d1a2a5abc1ad61759"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7bd37054eab4de28d200fe630368a235" id="r_a7bd37054eab4de28d200fe630368a235"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a7bd37054eab4de28d200fe630368a235">days_since_2000_Jan_0</a>(y,  m,  d)&#160;&#160;&#160;    (367<a class="el" href="data_8h.html#a7577d49f3bfffb1cf048eef843177784">L</a>*(y)-((7*((y)+(((m)+9)/12)))/4)+((275*(m))/9)+(d)-730530L)</td></tr>
+<tr class="memitem:a7bd37054eab4de28d200fe630368a235" id="r_a7bd37054eab4de28d200fe630368a235"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a7bd37054eab4de28d200fe630368a235">days_since_2000_Jan_0</a>(y,  m,  d)&#160;&#160;&#160;    (367<a class="el" href="data_8h.html#a7577d49f3bfffb1cf048eef843177784">L</a> * (y) - ((7 * ((y) + (((m) + 9) / 12))) / 4) + ((275 * (m)) / 9) + (d) - 730530L)</td></tr>
 <tr class="separator:a7bd37054eab4de28d200fe630368a235"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a598a3330b3c21701223ee0ca14316eca" id="r_a598a3330b3c21701223ee0ca14316eca"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a598a3330b3c21701223ee0ca14316eca">PI</a>&#160;&#160;&#160;3.1415926535897932384</td></tr>
 <tr class="separator:a598a3330b3c21701223ee0ca14316eca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e4b7f46121b1e51bb52ac02671598e4" id="r_a0e4b7f46121b1e51bb52ac02671598e4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a>&#160;&#160;&#160;( 180.0 / <a class="el" href="sunriset_8h.html#a598a3330b3c21701223ee0ca14316eca">PI</a> )</td></tr>
+<tr class="memitem:a0e4b7f46121b1e51bb52ac02671598e4" id="r_a0e4b7f46121b1e51bb52ac02671598e4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a>&#160;&#160;&#160;(180.0 / <a class="el" href="sunriset_8h.html#a598a3330b3c21701223ee0ca14316eca">PI</a>)</td></tr>
 <tr class="separator:a0e4b7f46121b1e51bb52ac02671598e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac377a5fa64fdef02d0048cf0e27aca2c" id="r_ac377a5fa64fdef02d0048cf0e27aca2c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#ac377a5fa64fdef02d0048cf0e27aca2c">DEGRAD</a>&#160;&#160;&#160;( <a class="el" href="sunriset_8h.html#a598a3330b3c21701223ee0ca14316eca">PI</a> / 180.0 )</td></tr>
+<tr class="memitem:ac377a5fa64fdef02d0048cf0e27aca2c" id="r_ac377a5fa64fdef02d0048cf0e27aca2c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#ac377a5fa64fdef02d0048cf0e27aca2c">DEGRAD</a>&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a598a3330b3c21701223ee0ca14316eca">PI</a> / 180.0)</td></tr>
 <tr class="separator:ac377a5fa64fdef02d0048cf0e27aca2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0827f80a4727ba1e433b37a59b61571" id="r_ad0827f80a4727ba1e433b37a59b61571"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#ad0827f80a4727ba1e433b37a59b61571">sind</a>(x)&#160;&#160;&#160;sin((x)*<a class="el" href="sunriset_8h.html#ac377a5fa64fdef02d0048cf0e27aca2c">DEGRAD</a>)</td></tr>
+<tr class="memitem:ad0827f80a4727ba1e433b37a59b61571" id="r_ad0827f80a4727ba1e433b37a59b61571"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#ad0827f80a4727ba1e433b37a59b61571">sind</a>(x)&#160;&#160;&#160;sin((x) * <a class="el" href="sunriset_8h.html#ac377a5fa64fdef02d0048cf0e27aca2c">DEGRAD</a>)</td></tr>
 <tr class="separator:ad0827f80a4727ba1e433b37a59b61571"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1625c90afe10ff713ffaa43a64e137ad" id="r_a1625c90afe10ff713ffaa43a64e137ad"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a1625c90afe10ff713ffaa43a64e137ad">cosd</a>(x)&#160;&#160;&#160;cos((x)*<a class="el" href="sunriset_8h.html#ac377a5fa64fdef02d0048cf0e27aca2c">DEGRAD</a>)</td></tr>
+<tr class="memitem:a1625c90afe10ff713ffaa43a64e137ad" id="r_a1625c90afe10ff713ffaa43a64e137ad"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a1625c90afe10ff713ffaa43a64e137ad">cosd</a>(x)&#160;&#160;&#160;cos((x) * <a class="el" href="sunriset_8h.html#ac377a5fa64fdef02d0048cf0e27aca2c">DEGRAD</a>)</td></tr>
 <tr class="separator:a1625c90afe10ff713ffaa43a64e137ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01a862be86e92b083de9bff9c0326769" id="r_a01a862be86e92b083de9bff9c0326769"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a01a862be86e92b083de9bff9c0326769">tand</a>(x)&#160;&#160;&#160;tan((x)*<a class="el" href="sunriset_8h.html#ac377a5fa64fdef02d0048cf0e27aca2c">DEGRAD</a>)</td></tr>
+<tr class="memitem:a01a862be86e92b083de9bff9c0326769" id="r_a01a862be86e92b083de9bff9c0326769"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a01a862be86e92b083de9bff9c0326769">tand</a>(x)&#160;&#160;&#160;tan((x) * <a class="el" href="sunriset_8h.html#ac377a5fa64fdef02d0048cf0e27aca2c">DEGRAD</a>)</td></tr>
 <tr class="separator:a01a862be86e92b083de9bff9c0326769"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7e632ef989b90ae1f316c7aa7e3d285" id="r_aa7e632ef989b90ae1f316c7aa7e3d285"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#aa7e632ef989b90ae1f316c7aa7e3d285">atand</a>(x)&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a>*atan(x))</td></tr>
+<tr class="memitem:aa7e632ef989b90ae1f316c7aa7e3d285" id="r_aa7e632ef989b90ae1f316c7aa7e3d285"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#aa7e632ef989b90ae1f316c7aa7e3d285">atand</a>(x)&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a> * atan(x))</td></tr>
 <tr class="separator:aa7e632ef989b90ae1f316c7aa7e3d285"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2989b0173de9d9a55c40a22a9aae86e7" id="r_a2989b0173de9d9a55c40a22a9aae86e7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a2989b0173de9d9a55c40a22a9aae86e7">asind</a>(x)&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a>*asin(x))</td></tr>
+<tr class="memitem:a2989b0173de9d9a55c40a22a9aae86e7" id="r_a2989b0173de9d9a55c40a22a9aae86e7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a2989b0173de9d9a55c40a22a9aae86e7">asind</a>(x)&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a> * asin(x))</td></tr>
 <tr class="separator:a2989b0173de9d9a55c40a22a9aae86e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6ba8c99d207e527579b6953498682a7" id="r_ab6ba8c99d207e527579b6953498682a7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#ab6ba8c99d207e527579b6953498682a7">acosd</a>(x)&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a>*acos(x))</td></tr>
+<tr class="memitem:ab6ba8c99d207e527579b6953498682a7" id="r_ab6ba8c99d207e527579b6953498682a7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#ab6ba8c99d207e527579b6953498682a7">acosd</a>(x)&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a> * acos(x))</td></tr>
 <tr class="separator:ab6ba8c99d207e527579b6953498682a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53d5f059d22537584b94fa671ec91cb1" id="r_a53d5f059d22537584b94fa671ec91cb1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a53d5f059d22537584b94fa671ec91cb1">atan2d</a>(y,  x)&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a>*atan2(y,x))</td></tr>
+<tr class="memitem:a53d5f059d22537584b94fa671ec91cb1" id="r_a53d5f059d22537584b94fa671ec91cb1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a53d5f059d22537584b94fa671ec91cb1">atan2d</a>(y,  x)&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a> * atan2(y, x))</td></tr>
 <tr class="separator:a53d5f059d22537584b94fa671ec91cb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e1b43abb8674ff912def7b5b70b6f8a" id="r_a8e1b43abb8674ff912def7b5b70b6f8a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a8e1b43abb8674ff912def7b5b70b6f8a">day_length</a>(year,  month,  day,  lon,  <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>)&#160;&#160;&#160;        <a class="el" href="sunriset_8c.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>( year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -50.0/60.0, 1 )</td></tr>
+<tr class="memitem:a8e1b43abb8674ff912def7b5b70b6f8a" id="r_a8e1b43abb8674ff912def7b5b70b6f8a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a8e1b43abb8674ff912def7b5b70b6f8a">day_length</a>(year,  month,  day,  lon,  <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>)&#160;&#160;&#160;<a class="el" href="sunriset_8c.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>(year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -50.0 / 60.0, 1)</td></tr>
 <tr class="separator:a8e1b43abb8674ff912def7b5b70b6f8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c47a990544396c156411d02a443ae0b" id="r_a9c47a990544396c156411d02a443ae0b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a9c47a990544396c156411d02a443ae0b">day_civil_twilight_length</a>(year,  month,  day,  lon,  <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>)&#160;&#160;&#160;        <a class="el" href="sunriset_8c.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>( year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -6.0, 0 )</td></tr>
+<tr class="memitem:a9c47a990544396c156411d02a443ae0b" id="r_a9c47a990544396c156411d02a443ae0b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a9c47a990544396c156411d02a443ae0b">day_civil_twilight_length</a>(year,  month,  day,  lon,  <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>)&#160;&#160;&#160;<a class="el" href="sunriset_8c.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>(year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -6.0, 0)</td></tr>
 <tr class="separator:a9c47a990544396c156411d02a443ae0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe252bf3434d2105c0d2f13caf9e3568" id="r_afe252bf3434d2105c0d2f13caf9e3568"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#afe252bf3434d2105c0d2f13caf9e3568">day_nautical_twilight_length</a>(year,  month,  day,  lon,  <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>)&#160;&#160;&#160;        <a class="el" href="sunriset_8c.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>( year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -12.0, 0 )</td></tr>
+<tr class="memitem:afe252bf3434d2105c0d2f13caf9e3568" id="r_afe252bf3434d2105c0d2f13caf9e3568"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#afe252bf3434d2105c0d2f13caf9e3568">day_nautical_twilight_length</a>(year,  month,  day,  lon,  <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>)&#160;&#160;&#160;<a class="el" href="sunriset_8c.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>(year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -12.0, 0)</td></tr>
 <tr class="separator:afe252bf3434d2105c0d2f13caf9e3568"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6a0e6132c420ab0f0430ac7c79dfc32" id="r_ad6a0e6132c420ab0f0430ac7c79dfc32"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#ad6a0e6132c420ab0f0430ac7c79dfc32">day_astronomical_twilight_length</a>(year,  month,  day,  lon,  <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>)&#160;&#160;&#160;        <a class="el" href="sunriset_8c.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>( year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -18.0, 0 )</td></tr>
+<tr class="memitem:ad6a0e6132c420ab0f0430ac7c79dfc32" id="r_ad6a0e6132c420ab0f0430ac7c79dfc32"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#ad6a0e6132c420ab0f0430ac7c79dfc32">day_astronomical_twilight_length</a>(year,  month,  day,  lon,  <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>)&#160;&#160;&#160;<a class="el" href="sunriset_8c.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>(year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -18.0, 0)</td></tr>
 <tr class="separator:ad6a0e6132c420ab0f0430ac7c79dfc32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2636008bf742109698546b22b41b2de4" id="r_a2636008bf742109698546b22b41b2de4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a2636008bf742109698546b22b41b2de4">sun_rise_set</a>(year,  month,  day,  lon,  <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>,  rise,  set)&#160;&#160;&#160;        <a class="el" href="sunriset_8c.html#a378f425438c050c0372be68fd6b0eee8">__sunriset__</a>( year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -35.0/60.0, 1, rise, set )</td></tr>
+<tr class="memitem:a2636008bf742109698546b22b41b2de4" id="r_a2636008bf742109698546b22b41b2de4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#a2636008bf742109698546b22b41b2de4">sun_rise_set</a>(year,  month,  day,  lon,  <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>,  rise,  set)&#160;&#160;&#160;    <a class="el" href="sunriset_8c.html#a378f425438c050c0372be68fd6b0eee8">__sunriset__</a>(year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -35.0 / 60.0, 1, rise, set)</td></tr>
 <tr class="separator:a2636008bf742109698546b22b41b2de4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb292c3b427fd0df1fe008d2b5224e09" id="r_abb292c3b427fd0df1fe008d2b5224e09"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#abb292c3b427fd0df1fe008d2b5224e09">civil_twilight</a>(year,  month,  day,  lon,  <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>,  start,  end)&#160;&#160;&#160;        <a class="el" href="sunriset_8c.html#a378f425438c050c0372be68fd6b0eee8">__sunriset__</a>( year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -6.0, 0, start, end )</td></tr>
+<tr class="memitem:abb292c3b427fd0df1fe008d2b5224e09" id="r_abb292c3b427fd0df1fe008d2b5224e09"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#abb292c3b427fd0df1fe008d2b5224e09">civil_twilight</a>(year,  month,  day,  lon,  <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>,  start,  end)&#160;&#160;&#160;    <a class="el" href="sunriset_8c.html#a378f425438c050c0372be68fd6b0eee8">__sunriset__</a>(year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -6.0, 0, start, end)</td></tr>
 <tr class="separator:abb292c3b427fd0df1fe008d2b5224e09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7da82ee35cbcce25b751b1e16de70ec" id="r_ab7da82ee35cbcce25b751b1e16de70ec"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#ab7da82ee35cbcce25b751b1e16de70ec">nautical_twilight</a>(year,  month,  day,  lon,  <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>,  start,  end)&#160;&#160;&#160;        <a class="el" href="sunriset_8c.html#a378f425438c050c0372be68fd6b0eee8">__sunriset__</a>( year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -12.0, 0, start, end )</td></tr>
+<tr class="memitem:ab7da82ee35cbcce25b751b1e16de70ec" id="r_ab7da82ee35cbcce25b751b1e16de70ec"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#ab7da82ee35cbcce25b751b1e16de70ec">nautical_twilight</a>(year,  month,  day,  lon,  <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>,  start,  end)&#160;&#160;&#160;    <a class="el" href="sunriset_8c.html#a378f425438c050c0372be68fd6b0eee8">__sunriset__</a>(year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -12.0, 0, start, end)</td></tr>
 <tr class="separator:ab7da82ee35cbcce25b751b1e16de70ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add9e41b2709b3851d453aaa9aa0c662a" id="r_add9e41b2709b3851d453aaa9aa0c662a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#add9e41b2709b3851d453aaa9aa0c662a">astronomical_twilight</a>(year,  month,  day,  lon,  <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>,  start,  end)&#160;&#160;&#160;        <a class="el" href="sunriset_8c.html#a378f425438c050c0372be68fd6b0eee8">__sunriset__</a>( year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -18.0, 0, start, end )</td></tr>
+<tr class="memitem:add9e41b2709b3851d453aaa9aa0c662a" id="r_add9e41b2709b3851d453aaa9aa0c662a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sunriset_8h.html#add9e41b2709b3851d453aaa9aa0c662a">astronomical_twilight</a>(year,  month,  day,  lon,  <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>,  start,  end)&#160;&#160;&#160;    <a class="el" href="sunriset_8c.html#a378f425438c050c0372be68fd6b0eee8">__sunriset__</a>(year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -18.0, 0, start, end)</td></tr>
 <tr class="separator:add9e41b2709b3851d453aaa9aa0c662a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -186,7 +186,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">x</td><td>)</td>
-          <td>&#160;&#160;&#160;((x)&lt;0?-(x):(x))</td>
+          <td>&#160;&#160;&#160;((x) &lt; 0 ? -(x) : (x))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -204,7 +204,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">x</td><td>)</td>
-          <td>&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a>*acos(x))</td>
+          <td>&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a> * acos(x))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -222,7 +222,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">x</td><td>)</td>
-          <td>&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a>*asin(x))</td>
+          <td>&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a> * asin(x))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -280,7 +280,7 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;        <a class="el" href="sunriset_8c.html#a378f425438c050c0372be68fd6b0eee8">__sunriset__</a>( year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -18.0, 0, start, end )</td>
+          <td></td><td>&#160;&#160;&#160;    <a class="el" href="sunriset_8c.html#a378f425438c050c0372be68fd6b0eee8">__sunriset__</a>(year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -18.0, 0, start, end)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -308,7 +308,7 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a>*atan2(y,x))</td>
+          <td></td><td>&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a> * atan2(y, x))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -326,7 +326,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">x</td><td>)</td>
-          <td>&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a>*atan(x))</td>
+          <td>&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a0e4b7f46121b1e51bb52ac02671598e4">RADEG</a> * atan(x))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -384,7 +384,7 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;        <a class="el" href="sunriset_8c.html#a378f425438c050c0372be68fd6b0eee8">__sunriset__</a>( year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -6.0, 0, start, end )</td>
+          <td></td><td>&#160;&#160;&#160;    <a class="el" href="sunriset_8c.html#a378f425438c050c0372be68fd6b0eee8">__sunriset__</a>(year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -6.0, 0, start, end)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -402,7 +402,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">x</td><td>)</td>
-          <td>&#160;&#160;&#160;cos((x)*<a class="el" href="sunriset_8h.html#ac377a5fa64fdef02d0048cf0e27aca2c">DEGRAD</a>)</td>
+          <td>&#160;&#160;&#160;cos((x) * <a class="el" href="sunriset_8h.html#ac377a5fa64fdef02d0048cf0e27aca2c">DEGRAD</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -448,7 +448,7 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;        <a class="el" href="sunriset_8c.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>( year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -18.0, 0 )</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="sunriset_8c.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>(year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -18.0, 0)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -494,7 +494,7 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;        <a class="el" href="sunriset_8c.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>( year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -6.0, 0 )</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="sunriset_8c.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>(year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -6.0, 0)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -540,7 +540,7 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;        <a class="el" href="sunriset_8c.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>( year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -50.0/60.0, 1 )</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="sunriset_8c.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>(year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -50.0 / 60.0, 1)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -586,7 +586,7 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;        <a class="el" href="sunriset_8c.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>( year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -12.0, 0 )</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="sunriset_8c.html#a0cddeee5e46ec5968eebf87fd85f045a">__daylen__</a>(year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -12.0, 0)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -620,7 +620,7 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;    (367<a class="el" href="data_8h.html#a7577d49f3bfffb1cf048eef843177784">L</a>*(y)-((7*((y)+(((m)+9)/12)))/4)+((275*(m))/9)+(d)-730530L)</td>
+          <td></td><td>&#160;&#160;&#160;    (367<a class="el" href="data_8h.html#a7577d49f3bfffb1cf048eef843177784">L</a> * (y) - ((7 * ((y) + (((m) + 9) / 12))) / 4) + ((275 * (m)) / 9) + (d) - 730530L)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -638,7 +638,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">x</td><td>)</td>
-          <td>&#160;&#160;&#160;((x)&lt;0?&quot;(-1) &quot;:((x)&gt;=24?&quot;(+1) &quot;:&quot;&quot;))</td>
+          <td>&#160;&#160;&#160;((x) &lt; 0 ? &quot;(-1) &quot; : ((x) &gt;= 24 ? &quot;(+1) &quot; : &quot;&quot;))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -652,7 +652,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define DEGRAD&#160;&#160;&#160;( <a class="el" href="sunriset_8h.html#a598a3330b3c21701223ee0ca14316eca">PI</a> / 180.0 )</td>
+          <td class="memname">#define DEGRAD&#160;&#160;&#160;(<a class="el" href="sunriset_8h.html#a598a3330b3c21701223ee0ca14316eca">PI</a> / 180.0)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -688,7 +688,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">h</td><td>)</td>
-          <td>&#160;&#160;&#160;((int)(60*(h-floor(h))))</td>
+          <td>&#160;&#160;&#160;((int)(60 * (h - floor(h))))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -746,7 +746,7 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;        <a class="el" href="sunriset_8c.html#a378f425438c050c0372be68fd6b0eee8">__sunriset__</a>( year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -12.0, 0, start, end )</td>
+          <td></td><td>&#160;&#160;&#160;    <a class="el" href="sunriset_8c.html#a378f425438c050c0372be68fd6b0eee8">__sunriset__</a>(year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -12.0, 0, start, end)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -774,7 +774,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define RADEG&#160;&#160;&#160;( 180.0 / <a class="el" href="sunriset_8h.html#a598a3330b3c21701223ee0ca14316eca">PI</a> )</td>
+          <td class="memname">#define RADEG&#160;&#160;&#160;(180.0 / <a class="el" href="sunriset_8h.html#a598a3330b3c21701223ee0ca14316eca">PI</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -792,7 +792,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">x</td><td>)</td>
-          <td>&#160;&#160;&#160;sin((x)*<a class="el" href="sunriset_8h.html#ac377a5fa64fdef02d0048cf0e27aca2c">DEGRAD</a>)</td>
+          <td>&#160;&#160;&#160;sin((x) * <a class="el" href="sunriset_8h.html#ac377a5fa64fdef02d0048cf0e27aca2c">DEGRAD</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -850,7 +850,7 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;        <a class="el" href="sunriset_8c.html#a378f425438c050c0372be68fd6b0eee8">__sunriset__</a>( year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -35.0/60.0, 1, rise, set )</td>
+          <td></td><td>&#160;&#160;&#160;    <a class="el" href="sunriset_8c.html#a378f425438c050c0372be68fd6b0eee8">__sunriset__</a>(year, month, day, lon, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, -35.0 / 60.0, 1, rise, set)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -868,7 +868,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">x</td><td>)</td>
-          <td>&#160;&#160;&#160;tan((x)*<a class="el" href="sunriset_8h.html#ac377a5fa64fdef02d0048cf0e27aca2c">DEGRAD</a>)</td>
+          <td>&#160;&#160;&#160;tan((x) * <a class="el" href="sunriset_8h.html#ac377a5fa64fdef02d0048cf0e27aca2c">DEGRAD</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -886,7 +886,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">x</td><td>)</td>
-          <td>&#160;&#160;&#160;((x)&lt;0?(x)+24:((x)&gt;=24?(x)-24:(x)))</td>
+          <td>&#160;&#160;&#160;((x) &lt; 0 ? (x) + 24 : ((x) &gt;= 24 ? (x) - 24 : (x)))</td>
         </tr>
       </table>
 </div><div class="memdoc">

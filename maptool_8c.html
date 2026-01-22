@@ -97,31 +97,27 @@ $(document).ready(function(){initNavTree('maptool_8c.html',''); initResizable();
   <div class="headertitle"><div class="title">maptool.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;config.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="navit__lfs_8h_source.html">navit_lfs.h</a>&quot;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
-<code>#include &lt;glib.h&gt;</code><br />
-<code>#include &lt;assert.h&gt;</code><br />
-<code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;signal.h&gt;</code><br />
-<code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
-<code>#include &lt;errno.h&gt;</code><br />
-<code>#include &lt;getopt.h&gt;</code><br />
-<code>#include &lt;unistd.h&gt;</code><br />
-<code>#include &lt;sys/time.h&gt;</code><br />
-<code>#include &lt;fcntl.h&gt;</code><br />
-<code>#include &lt;sys/stat.h&gt;</code><br />
-<code>#include &lt;zlib.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="maptool_8h_source.html">maptool.h</a>&quot;</code><br />
+<code>#include &quot;config.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="main_8h_source.html">main.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="zipfile_8h_source.html">zipfile.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="linguistics_8h_source.html">linguistics.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="main_8h_source.html">main.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="util_8h_source.html">util.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="maptool_8h_source.html">maptool.h</a>&quot;</code><br />
+<code>#include &lt;assert.h&gt;</code><br />
+<code>#include &lt;errno.h&gt;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
+<code>#include &lt;limits.h&gt;</code><br />
+<code>#include &lt;signal.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;getopt.h&gt;</code><br />
+<code>#include &lt;sys/time.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -196,13 +192,13 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ab39aa82e524b09e12c730e5acaeeea55" id="r_ab39aa82e524b09e12c730e5acaeeea55"><td class="memItemLeft" align="right" valign="top">long long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#ab39aa82e524b09e12c730e5acaeeea55">slice_size</a> =<a class="el" href="maptool_8c.html#aacd1f96904d8ef8a1bf9de7e7a63add1">SLIZE_SIZE_DEFAULT_GB</a>*1024ll*1024*1024</td></tr>
+<tr class="memitem:ab39aa82e524b09e12c730e5acaeeea55" id="r_ab39aa82e524b09e12c730e5acaeeea55"><td class="memItemLeft" align="right" valign="top">long long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#ab39aa82e524b09e12c730e5acaeeea55">slice_size</a> = <a class="el" href="maptool_8c.html#aacd1f96904d8ef8a1bf9de7e7a63add1">SLIZE_SIZE_DEFAULT_GB</a> * 1024ll * 1024 * 1024</td></tr>
 <tr class="separator:ab39aa82e524b09e12c730e5acaeeea55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f702f579f67fb9804d08a2eaec25baa" id="r_a5f702f579f67fb9804d08a2eaec25baa"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a5f702f579f67fb9804d08a2eaec25baa">attr_debug_level</a> =1</td></tr>
+<tr class="memitem:a5f702f579f67fb9804d08a2eaec25baa" id="r_a5f702f579f67fb9804d08a2eaec25baa"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a5f702f579f67fb9804d08a2eaec25baa">attr_debug_level</a> = 1</td></tr>
 <tr class="separator:a5f702f579f67fb9804d08a2eaec25baa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c17423814c5e3ff353e37deed653a17" id="r_a3c17423814c5e3ff353e37deed653a17"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a3c17423814c5e3ff353e37deed653a17">ignore_unknown</a> = 0</td></tr>
 <tr class="separator:a3c17423814c5e3ff353e37deed653a17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a774208e1be4f8ad02ea0fbafff834ee8" id="r_a774208e1be4f8ad02ea0fbafff834ee8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a774208e1be4f8ad02ea0fbafff834ee8">thread_count</a> =8</td></tr>
+<tr class="memitem:a774208e1be4f8ad02ea0fbafff834ee8" id="r_a774208e1be4f8ad02ea0fbafff834ee8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a774208e1be4f8ad02ea0fbafff834ee8">thread_count</a> = 8</td></tr>
 <tr class="separator:a774208e1be4f8ad02ea0fbafff834ee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a480dd72b5638bd718de9c1b828da1690" id="r_a480dd72b5638bd718de9c1b828da1690"><td class="memItemLeft" align="right" valign="top">GHashTable *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a480dd72b5638bd718de9c1b828da1690">dedupe_ways_hash</a></td></tr>
 <tr class="separator:a480dd72b5638bd718de9c1b828da1690"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -212,7 +208,7 @@ Variables</h2></td></tr>
 <tr class="separator:ac0314d7115d525af9479178e15c5381f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afbc9fd6521f1f3c7f623dde0fe7bebd6" id="r_afbc9fd6521f1f3c7f623dde0fe7bebd6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#afbc9fd6521f1f3c7f623dde0fe7bebd6">unknown_country</a></td></tr>
 <tr class="separator:afbc9fd6521f1f3c7f623dde0fe7bebd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bced267a3d076c21cfba540e3f4c97b" id="r_a4bced267a3d076c21cfba540e3f4c97b"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a4bced267a3d076c21cfba540e3f4c97b">ch_suffix</a> [] =&quot;r&quot;</td></tr>
+<tr class="memitem:a4bced267a3d076c21cfba540e3f4c97b" id="r_a4bced267a3d076c21cfba540e3f4c97b"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a4bced267a3d076c21cfba540e3f4c97b">ch_suffix</a> [] = &quot;r&quot;</td></tr>
 <tr class="separator:a4bced267a3d076c21cfba540e3f4c97b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a713314f11517dd29053c8836a25ca149" id="r_a713314f11517dd29053c8836a25ca149"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a713314f11517dd29053c8836a25ca149">experimental_feature_description</a></td></tr>
 <tr class="separator:a713314f11517dd29053c8836a25ca149"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -230,7 +226,7 @@ Variables</h2></td></tr>
 <tr class="separator:a38d375c2d3b60cdb921d11bb4de929d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af56803ae7b05d59108fe2ca0288c8a25" id="r_af56803ae7b05d59108fe2ca0288c8a25"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#af56803ae7b05d59108fe2ca0288c8a25">processed_tiles</a></td></tr>
 <tr class="separator:af56803ae7b05d59108fe2ca0288c8a25"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed0a8a19fcd367d13f422c4b53a0b696" id="r_aed0a8a19fcd367d13f422c4b53a0b696"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#aed0a8a19fcd367d13f422c4b53a0b696">overlap</a> =1</td></tr>
+<tr class="memitem:aed0a8a19fcd367d13f422c4b53a0b696" id="r_aed0a8a19fcd367d13f422c4b53a0b696"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#aed0a8a19fcd367d13f422c4b53a0b696">overlap</a> = 1</td></tr>
 <tr class="separator:aed0a8a19fcd367d13f422c4b53a0b696"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e20cac612cf0dd1a1c260f95411d0ee" id="r_a2e20cac612cf0dd1a1c260f95411d0ee"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a2e20cac612cf0dd1a1c260f95411d0ee">bytes_read</a></td></tr>
 <tr class="separator:a2e20cac612cf0dd1a1c260f95411d0ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -242,7 +238,7 @@ Variables</h2></td></tr>
 <tr class="separator:ad69ff48ce7441b9867ae1cedd1194740"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b5b9d3eb40253fc279afc80f504c3a5" id="r_a2b5b9d3eb40253fc279afc80f504c3a5"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structplugins.html">plugins</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a2b5b9d3eb40253fc279afc80f504c3a5">plugins</a></td></tr>
 <tr class="separator:a2b5b9d3eb40253fc279afc80f504c3a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a506884d43beabd29a1aa161442ce8436" id="r_a506884d43beabd29a1aa161442ce8436"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a506884d43beabd29a1aa161442ce8436">debug_ref</a> =0</td></tr>
+<tr class="memitem:a506884d43beabd29a1aa161442ce8436" id="r_a506884d43beabd29a1aa161442ce8436"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maptool_8c.html#a506884d43beabd29a1aa161442ce8436">debug_ref</a> = 0</td></tr>
 <tr class="separator:a506884d43beabd29a1aa161442ce8436"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
@@ -285,7 +281,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="file_8c.html#a986f2900e7344f4fa185c9ec97ff0d91">file_init()</a>, <a class="el" href="group__plugins.html#ga27f93e6ed286fecc11dfbc7356923d54">plugin_new()</a>, <a class="el" href="structattr.html#a832b752a2cb21b7323d4b7abece81bdc">attr::plugins</a>, <a class="el" href="maptool_8c.html#a2b5b9d3eb40253fc279afc80f504c3a5">plugins</a>, <a class="el" href="group__plugins.html#ga45582b97719bb7a2dc6eace3de9bdad1">plugins_new()</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, and <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>.</p>
+<p class="reference">References <a class="el" href="plugin__def_8h.html#a1e9137a65e787557962d1ff72828fa16">attrs</a>, <a class="el" href="file_8c.html#a986f2900e7344f4fa185c9ec97ff0d91">file_init()</a>, <a class="el" href="group__plugins.html#ga27f93e6ed286fecc11dfbc7356923d54">plugin_new()</a>, <a class="el" href="structattr.html#a832b752a2cb21b7323d4b7abece81bdc">attr::plugins</a>, <a class="el" href="maptool_8c.html#a2b5b9d3eb40253fc279afc80f504c3a5">plugins</a>, <a class="el" href="group__plugins.html#ga45582b97719bb7a2dc6eace3de9bdad1">plugins_new()</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, and <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="maptool_8c.html#ade40f66edac4fc4c13a21785ddbf7d8c">parse_option()</a>.</p>
 
@@ -1173,7 +1169,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="maptool_8c.html#a3d590868e4d633f28c728200a255b968">add_plugin()</a>, <a class="el" href="graphics__qt__qpainter_8cpp.html#ad1447518f4372828b8435ae82e48499e">argc</a>, <a class="el" href="graphics__qt__qpainter_8cpp.html#abd1a2cf54950f450187ef24c1cdcac0c">argv</a>, <a class="el" href="maptool_8c.html#a5f702f579f67fb9804d08a2eaec25baa">attr_debug_level</a>, <a class="el" href="attr_8c.html#ae3ad97418331abb806502b2d5bf76579">attr_from_line()</a>, <a class="el" href="attr_8c.html#ac23ea4632eac8e52a2e8372bbf75998f">attr_new_from_text()</a>, <a class="el" href="structattr.html#a464cf684a789545b3ad0242e4e704701">attr::attrs</a>, <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="maptool_8c.html#a480dd72b5638bd718de9c1b828da1690">dedupe_ways_hash</a>, <a class="el" href="garmin__img_8c.html#a2ecc49066a3a7cc32866fdf53805dd1d">exit</a>, <a class="el" href="maptool_8c.html#a54e2108415a31c0d39887c1ae09d2c56">experimental</a>, <a class="el" href="maptool_8c.html#a3c17423814c5e3ff353e37deed653a17">ignore_unknown</a>, <a class="el" href="map_8c.html#a397a9ad42674f121ab88aaafb77a489b">map_new()</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="maptool_8c.html#ab39aa82e524b09e12c730e5acaeeea55">slice_size</a>, <a class="el" href="maptool_8c.html#a774208e1be4f8ad02ea0fbafff834ee8">thread_count</a>, and <a class="el" href="maptool_8c.html#afbc9fd6521f1f3c7f623dde0fe7bebd6">unknown_country</a>.</p>
+<p class="reference">References <a class="el" href="maptool_8c.html#a3d590868e4d633f28c728200a255b968">add_plugin()</a>, <a class="el" href="graphics__qt__qpainter_8cpp.html#ad1447518f4372828b8435ae82e48499e">argc</a>, <a class="el" href="graphics__qt__qpainter_8cpp.html#abd1a2cf54950f450187ef24c1cdcac0c">argv</a>, <a class="el" href="maptool_8c.html#a5f702f579f67fb9804d08a2eaec25baa">attr_debug_level</a>, <a class="el" href="attr_8c.html#ae3ad97418331abb806502b2d5bf76579">attr_from_line()</a>, <a class="el" href="attr_8c.html#ac23ea4632eac8e52a2e8372bbf75998f">attr_new_from_text()</a>, <a class="el" href="plugin__def_8h.html#a1e9137a65e787557962d1ff72828fa16">attrs</a>, <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="maptool_8c.html#a480dd72b5638bd718de9c1b828da1690">dedupe_ways_hash</a>, <a class="el" href="garmin__img_8c.html#a2ecc49066a3a7cc32866fdf53805dd1d">exit</a>, <a class="el" href="maptool_8c.html#a54e2108415a31c0d39887c1ae09d2c56">experimental</a>, <a class="el" href="maptool_8c.html#a3c17423814c5e3ff353e37deed653a17">ignore_unknown</a>, <a class="el" href="map_8c.html#a397a9ad42674f121ab88aaafb77a489b">map_new()</a>, <a class="el" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>, <a class="el" href="maptool_8c.html#ab39aa82e524b09e12c730e5acaeeea55">slice_size</a>, <a class="el" href="maptool_8c.html#a774208e1be4f8ad02ea0fbafff834ee8">thread_count</a>, and <a class="el" href="maptool_8c.html#afbc9fd6521f1f3c7f623dde0fe7bebd6">unknown_country</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="maptool_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
@@ -1389,7 +1385,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int attr_debug_level =1</td>
+          <td class="memname">int attr_debug_level = 1</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1421,7 +1417,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char ch_suffix[] =&quot;r&quot;</td>
+          <td class="memname">char ch_suffix[] = &quot;r&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1461,7 +1457,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int debug_ref =0</td>
+          <td class="memname">int debug_ref = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1512,8 +1508,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">    <span class="stringliteral">&quot;Move coastline data to order 6 tiles. Makes map look more smooth, but may affect drawing/searching performance.&quot;</span></div>
+<b>Initial value:</b><div class="fragment"><div class="line">= <span class="stringliteral">&quot;Move coastline data to order 6 tiles. Makes map look more smooth, but may &quot;</span></div>
+<div class="line">                                         <span class="stringliteral">&quot;affect drawing/searching performance.&quot;</span></div>
 </div><!-- fragment --><p>Textual description of available experimental features, or NULL (=none available). </p>
 
 <p class="reference">Referenced by <a class="el" href="maptool_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="maptool_8c.html#ad96d407a911fbb914fa8e4cfbf2faf0f">usage()</a>.</p>
@@ -1548,7 +1544,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    64*1024*1024,</div>
+<div class="line">    64 * 1024 * 1024,</div>
 <div class="line">}</div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="osm_8c.html#a324e2ce146448c0d66641423c6a9df8d">allocate_node_item_in_buffer()</a>, <a class="el" href="maptool_8h.html#a35792faf148f5c8fee71cca00fe92617">clear_node_item_buffer()</a>, <a class="el" href="maptool_8h.html#a9e537c7d63876ec943f9cd48300c3a4d">flush_nodes()</a>, <a class="el" href="maptool_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="maptool_8c.html#a01a8023a50c47b72cc1e92025aa4dce5">maptool_load_node_table()</a>, <a class="el" href="osm_8c.html#a92d93496e7d9c5cbd543109e29cee001">node_buffer_to_hash()</a>, <a class="el" href="osm_8c.html#a15d515ba1cd262819e992e07f9e14b80">node_item_find_index_in_ordered_list()</a>, <a class="el" href="osm_8c.html#ae2116491913da847a4168f5ec6e05cae">node_item_get()</a>, <a class="el" href="maptool_8h.html#ae71f3d48c70c87462aab963cab03823c">osm_add_node()</a>, <a class="el" href="maptool_8c.html#a0fe4352dda41b14a61340f04c4957620">osm_count_references()</a>, <a class="el" href="maptool_8c.html#a3646d2293954d57abc0e33c57494067a">osm_read_input_data()</a>, <a class="el" href="maptool_8c.html#a5ea560b5f3de3e7c0de81208c607008e">osm_resolve_coords_and_split_at_intersections()</a>, and <a class="el" href="osm_8c.html#a4f9967fd452aed0c702c60ef97c1e2a8">remove_last_node_item_from_buffer()</a>.</p>
@@ -1562,7 +1558,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int overlap =1</td>
+          <td class="memname">int overlap = 1</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1698,7 +1694,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long long slice_size =<a class="el" href="maptool_8c.html#aacd1f96904d8ef8a1bf9de7e7a63add1">SLIZE_SIZE_DEFAULT_GB</a>*1024ll*1024*1024</td>
+          <td class="memname">long long slice_size = <a class="el" href="maptool_8c.html#aacd1f96904d8ef8a1bf9de7e7a63add1">SLIZE_SIZE_DEFAULT_GB</a> * 1024ll * 1024 * 1024</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1778,7 +1774,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int thread_count =8</td>
+          <td class="memname">int thread_count = 8</td>
         </tr>
       </table>
 </div><div class="memdoc">

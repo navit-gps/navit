@@ -104,113 +104,106 @@ $(document).ready(function(){initNavTree('data_8h_source.html',''); initResizabl
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;config.h&quot;</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#ifdef WORDS_BIGENDIAN</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &lt;byteswap.h&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#    include &lt;byteswap.h&gt;</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span></div>
-<div class="foldopen" id="foldopen00030" data-start="{" data-end="}">
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="data_8h.html#a319cfa136ceff5b6d18417a925034c28">   30</a></span><a class="code hl_function" href="data_8h.html#a319cfa136ceff5b6d18417a925034c28">get_u8</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>)</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>{</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="keywordflow">return</span> *((*p)++);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>}</div>
+<div class="foldopen" id="foldopen00029" data-start="{" data-end="}">
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="data_8h.html#a319cfa136ceff5b6d18417a925034c28">   29</a></span><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code hl_function" href="data_8h.html#a319cfa136ceff5b6d18417a925034c28">get_u8</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keywordflow">return</span> *((*p)++);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>}</div>
 </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span></div>
-<div class="foldopen" id="foldopen00036" data-start="{" data-end="}">
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="data_8h.html#a11e13edbfc422b1d2360bccada42170b">   36</a></span><a class="code hl_function" href="data_8h.html#a11e13edbfc422b1d2360bccada42170b">get_u16</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> ret;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        ret=*((<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> *)*<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        *<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>+=<span class="keyword">sizeof</span>(<span class="keywordtype">unsigned</span> short);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#ifdef WORDS_BIGENDIAN</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keywordflow">return</span> <a class="code hl_define" href="endianess_8h.html#a8cccb4a214faded757990fdbc99a0cd3">__bswap_16</a>(ret);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>}</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="foldopen" id="foldopen00033" data-start="{" data-end="}">
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="data_8h.html#a11e13edbfc422b1d2360bccada42170b">   33</a></span><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code hl_function" href="data_8h.html#a11e13edbfc422b1d2360bccada42170b">get_u16</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> ret;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    ret = *((<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> *)*<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    *<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a> += <span class="keyword">sizeof</span>(<span class="keywordtype">unsigned</span> short);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#ifdef WORDS_BIGENDIAN</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordflow">return</span> <a class="code hl_define" href="endianess_8h.html#a8cccb4a214faded757990fdbc99a0cd3">__bswap_16</a>(ret);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>}</div>
 </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span></div>
-<div class="foldopen" id="foldopen00048" data-start="{" data-end="}">
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="data_8h.html#aee3c96cc781921203e4f9d6b3cc77ac7">   48</a></span><a class="code hl_function" href="data_8h.html#aee3c96cc781921203e4f9d6b3cc77ac7">get_u16_unal</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> ret;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        ret=*(*p)++;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        ret|=(*(*p)++) &lt;&lt; 8;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>}</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="foldopen" id="foldopen00044" data-start="{" data-end="}">
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="data_8h.html#aee3c96cc781921203e4f9d6b3cc77ac7">   44</a></span><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code hl_function" href="data_8h.html#aee3c96cc781921203e4f9d6b3cc77ac7">get_u16_unal</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> ret;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    ret = *(*p)++;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    ret |= (*(*p)++) &lt;&lt; 8;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>}</div>
 </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span></div>
-<div class="foldopen" id="foldopen00057" data-start="{" data-end="}">
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="data_8h.html#ad65492415c8bfd7c04c49b39d183495d">   57</a></span><a class="code hl_function" href="data_8h.html#ad65492415c8bfd7c04c49b39d183495d">get_u24</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> ret;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        ret=<a class="code hl_function" href="data_8h.html#a11e13edbfc422b1d2360bccada42170b">get_u16</a>(<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>);</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        ret|=*((*p)++) &lt;&lt; 16;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>}</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="foldopen" id="foldopen00051" data-start="{" data-end="}">
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="data_8h.html#ad65492415c8bfd7c04c49b39d183495d">   51</a></span><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_function" href="data_8h.html#ad65492415c8bfd7c04c49b39d183495d">get_u24</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> ret;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    ret = <a class="code hl_function" href="data_8h.html#a11e13edbfc422b1d2360bccada42170b">get_u16</a>(<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    ret |= *((*p)++) &lt;&lt; 16;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}</div>
 </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="foldopen" id="foldopen00058" data-start="{" data-end="}">
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="data_8h.html#a0d17003775c32d4448822777601840d0">   58</a></span><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_function" href="data_8h.html#a0d17003775c32d4448822777601840d0">get_u24_unal</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> ret;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    ret = <a class="code hl_function" href="data_8h.html#aee3c96cc781921203e4f9d6b3cc77ac7">get_u16_unal</a>(<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    ret |= *((*p)++) &lt;&lt; 16;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>}</div>
+</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span></div>
-<div class="foldopen" id="foldopen00066" data-start="{" data-end="}">
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="data_8h.html#a0d17003775c32d4448822777601840d0">   66</a></span><a class="code hl_function" href="data_8h.html#a0d17003775c32d4448822777601840d0">get_u24_unal</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> ret;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        ret=<a class="code hl_function" href="data_8h.html#aee3c96cc781921203e4f9d6b3cc77ac7">get_u16_unal</a>(<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>);</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        ret|=*((*p)++) &lt;&lt; 16;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>}</div>
+<div class="foldopen" id="foldopen00065" data-start="{" data-end="}">
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="data_8h.html#a11acfaee6045a32738cc4e1e849eecb9">   65</a></span><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_function" href="data_8h.html#a11acfaee6045a32738cc4e1e849eecb9">get_u32</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> ret;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    ret = *((<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> *)*<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    *<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a> += <span class="keyword">sizeof</span>(<span class="keywordtype">unsigned</span> int);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="preprocessor">#ifdef WORDS_BIGENDIAN</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keywordflow">return</span> <a class="code hl_define" href="endianess_8h.html#a130b07d1d1fcbc63e83b346dd74397d5">__bswap_32</a>(ret);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>}</div>
 </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span></div>
-<div class="foldopen" id="foldopen00075" data-start="{" data-end="}">
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="data_8h.html#a11acfaee6045a32738cc4e1e849eecb9">   75</a></span><a class="code hl_function" href="data_8h.html#a11acfaee6045a32738cc4e1e849eecb9">get_u32</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> ret;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        ret=*((<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> *)*<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>);</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        *<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>+=<span class="keyword">sizeof</span>(<span class="keywordtype">unsigned</span> int);</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="preprocessor">#ifdef WORDS_BIGENDIAN</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keywordflow">return</span> <a class="code hl_define" href="endianess_8h.html#a130b07d1d1fcbc63e83b346dd74397d5">__bswap_32</a>(ret);</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>}</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="foldopen" id="foldopen00076" data-start="{" data-end="}">
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="data_8h.html#abdaf132c02169057e06b2a285a20a58a">   76</a></span><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_function" href="data_8h.html#abdaf132c02169057e06b2a285a20a58a">get_u32_unal</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> ret;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    ret = *(*p)++;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    ret |= (*(*p)++) &lt;&lt; 8;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    ret |= (*(*p)++) &lt;&lt; 16;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    ret |= (*(*p)++) &lt;&lt; 24;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>}</div>
 </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span></div>
-<div class="foldopen" id="foldopen00087" data-start="{" data-end="}">
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="data_8h.html#abdaf132c02169057e06b2a285a20a58a">   87</a></span><a class="code hl_function" href="data_8h.html#abdaf132c02169057e06b2a285a20a58a">get_u32_unal</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> ret;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        ret=*(*p)++;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        ret|=(*(*p)++) &lt;&lt; 8;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        ret|=(*(*p)++) &lt;&lt; 16;</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        ret|=(*(*p)++) &lt;&lt; 24;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>}</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="foldopen" id="foldopen00085" data-start="{" data-end="}">
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="data_8h.html#a4df85fabcd6b77bdd8e2a0c11c3e7998">   85</a></span><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">char</span> *<a class="code hl_function" href="data_8h.html#a4df85fabcd6b77bdd8e2a0c11c3e7998">get_string</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) {</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordtype">char</span> *ret = (<span class="keywordtype">char</span> *)(*<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>);</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keywordflow">while</span> (**<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>)</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        (*p)++;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    (*p)++;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>}</div>
 </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">char</span> *</div>
-<div class="foldopen" id="foldopen00097" data-start="{" data-end="}">
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="data_8h.html#a4df85fabcd6b77bdd8e2a0c11c3e7998">   97</a></span><a class="code hl_function" href="data_8h.html#a4df85fabcd6b77bdd8e2a0c11c3e7998">get_string</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> **<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>)</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>{</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="keywordtype">char</span> *ret=(<span class="keywordtype">char</span> *)(*<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <span class="keywordflow">while</span> (**<a class="code hl_variable" href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a>) (*p)++;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        (*p)++;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>}</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="foldopen" id="foldopen00093" data-start="" data-end="">
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno"><a class="line" href="data_8h.html#a7577d49f3bfffb1cf048eef843177784">   93</a></span><span class="preprocessor">#define L(x)                                                                                                           \</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="preprocessor">    ({                                                                                                                 \</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="preprocessor">        unsigned char *t = (unsigned char *)&amp;(x);                                                                      \</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="preprocessor">        t[0] | (t[1] &lt;&lt; 8) | (t[2] &lt;&lt; 16) | (t[3] &lt;&lt; 24);                                                              \</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="preprocessor">    })</span></div>
 </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="data_8h.html#a7577d49f3bfffb1cf048eef843177784">  105</a></span><span class="preprocessor">#define L(x) ({ unsigned char *t=(unsigned char *)&amp;(x); t[0] | (t[1] &lt;&lt; 8) | (t[2] &lt;&lt; 16) | (t[3] &lt;&lt; 24); })</span></div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
-<div class="ttc" id="adata_8h_html_a0d17003775c32d4448822777601840d0"><div class="ttname"><a href="data_8h.html#a0d17003775c32d4448822777601840d0">get_u24_unal</a></div><div class="ttdeci">static unsigned int get_u24_unal(unsigned char **p)</div><div class="ttdef"><b>Definition</b> data.h:66</div></div>
-<div class="ttc" id="adata_8h_html_a11acfaee6045a32738cc4e1e849eecb9"><div class="ttname"><a href="data_8h.html#a11acfaee6045a32738cc4e1e849eecb9">get_u32</a></div><div class="ttdeci">static unsigned int get_u32(unsigned char **p)</div><div class="ttdef"><b>Definition</b> data.h:75</div></div>
-<div class="ttc" id="adata_8h_html_a11e13edbfc422b1d2360bccada42170b"><div class="ttname"><a href="data_8h.html#a11e13edbfc422b1d2360bccada42170b">get_u16</a></div><div class="ttdeci">static unsigned short get_u16(unsigned char **p)</div><div class="ttdef"><b>Definition</b> data.h:36</div></div>
-<div class="ttc" id="adata_8h_html_a319cfa136ceff5b6d18417a925034c28"><div class="ttname"><a href="data_8h.html#a319cfa136ceff5b6d18417a925034c28">get_u8</a></div><div class="ttdeci">static unsigned char get_u8(unsigned char **p)</div><div class="ttdef"><b>Definition</b> data.h:30</div></div>
-<div class="ttc" id="adata_8h_html_a4df85fabcd6b77bdd8e2a0c11c3e7998"><div class="ttname"><a href="data_8h.html#a4df85fabcd6b77bdd8e2a0c11c3e7998">get_string</a></div><div class="ttdeci">static char * get_string(unsigned char **p)</div><div class="ttdef"><b>Definition</b> data.h:97</div></div>
-<div class="ttc" id="adata_8h_html_abdaf132c02169057e06b2a285a20a58a"><div class="ttname"><a href="data_8h.html#abdaf132c02169057e06b2a285a20a58a">get_u32_unal</a></div><div class="ttdeci">static unsigned int get_u32_unal(unsigned char **p)</div><div class="ttdef"><b>Definition</b> data.h:87</div></div>
-<div class="ttc" id="adata_8h_html_ad65492415c8bfd7c04c49b39d183495d"><div class="ttname"><a href="data_8h.html#ad65492415c8bfd7c04c49b39d183495d">get_u24</a></div><div class="ttdeci">static unsigned int get_u24(unsigned char **p)</div><div class="ttdef"><b>Definition</b> data.h:57</div></div>
-<div class="ttc" id="adata_8h_html_aee3c96cc781921203e4f9d6b3cc77ac7"><div class="ttname"><a href="data_8h.html#aee3c96cc781921203e4f9d6b3cc77ac7">get_u16_unal</a></div><div class="ttdeci">static unsigned short get_u16_unal(unsigned char **p)</div><div class="ttdef"><b>Definition</b> data.h:48</div></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="adata_8h_html_a0d17003775c32d4448822777601840d0"><div class="ttname"><a href="data_8h.html#a0d17003775c32d4448822777601840d0">get_u24_unal</a></div><div class="ttdeci">static unsigned int get_u24_unal(unsigned char **p)</div><div class="ttdef"><b>Definition</b> data.h:58</div></div>
+<div class="ttc" id="adata_8h_html_a11acfaee6045a32738cc4e1e849eecb9"><div class="ttname"><a href="data_8h.html#a11acfaee6045a32738cc4e1e849eecb9">get_u32</a></div><div class="ttdeci">static unsigned int get_u32(unsigned char **p)</div><div class="ttdef"><b>Definition</b> data.h:65</div></div>
+<div class="ttc" id="adata_8h_html_a11e13edbfc422b1d2360bccada42170b"><div class="ttname"><a href="data_8h.html#a11e13edbfc422b1d2360bccada42170b">get_u16</a></div><div class="ttdeci">static unsigned short get_u16(unsigned char **p)</div><div class="ttdef"><b>Definition</b> data.h:33</div></div>
+<div class="ttc" id="adata_8h_html_a319cfa136ceff5b6d18417a925034c28"><div class="ttname"><a href="data_8h.html#a319cfa136ceff5b6d18417a925034c28">get_u8</a></div><div class="ttdeci">static unsigned char get_u8(unsigned char **p)</div><div class="ttdef"><b>Definition</b> data.h:29</div></div>
+<div class="ttc" id="adata_8h_html_a4df85fabcd6b77bdd8e2a0c11c3e7998"><div class="ttname"><a href="data_8h.html#a4df85fabcd6b77bdd8e2a0c11c3e7998">get_string</a></div><div class="ttdeci">static char * get_string(unsigned char **p)</div><div class="ttdef"><b>Definition</b> data.h:85</div></div>
+<div class="ttc" id="adata_8h_html_abdaf132c02169057e06b2a285a20a58a"><div class="ttname"><a href="data_8h.html#abdaf132c02169057e06b2a285a20a58a">get_u32_unal</a></div><div class="ttdeci">static unsigned int get_u32_unal(unsigned char **p)</div><div class="ttdef"><b>Definition</b> data.h:76</div></div>
+<div class="ttc" id="adata_8h_html_ad65492415c8bfd7c04c49b39d183495d"><div class="ttname"><a href="data_8h.html#ad65492415c8bfd7c04c49b39d183495d">get_u24</a></div><div class="ttdeci">static unsigned int get_u24(unsigned char **p)</div><div class="ttdef"><b>Definition</b> data.h:51</div></div>
+<div class="ttc" id="adata_8h_html_aee3c96cc781921203e4f9d6b3cc77ac7"><div class="ttname"><a href="data_8h.html#aee3c96cc781921203e4f9d6b3cc77ac7">get_u16_unal</a></div><div class="ttdeci">static unsigned short get_u16_unal(unsigned char **p)</div><div class="ttdef"><b>Definition</b> data.h:44</div></div>
 <div class="ttc" id="aendianess_8h_html_a130b07d1d1fcbc63e83b346dd74397d5"><div class="ttname"><a href="endianess_8h.html#a130b07d1d1fcbc63e83b346dd74397d5">__bswap_32</a></div><div class="ttdeci">#define __bswap_32(__bsx)</div><div class="ttdef"><b>Definition</b> endianess.h:87</div></div>
 <div class="ttc" id="aendianess_8h_html_a8cccb4a214faded757990fdbc99a0cd3"><div class="ttname"><a href="endianess_8h.html#a8cccb4a214faded757990fdbc99a0cd3">__bswap_16</a></div><div class="ttdeci">#define __bswap_16(__bsx)</div><div class="ttdef"><b>Definition</b> endianess.h:86</div></div>
 <div class="ttc" id="amg_8h_html_aaf29c41f2020649a36c2820ffa06119a"><div class="ttname"><a href="mg_8h.html#aaf29c41f2020649a36c2820ffa06119a">p</a></div><div class="ttdeci">unsigned char p[5]</div><div class="ttdef"><b>Definition</b> mg.h:2</div></div>

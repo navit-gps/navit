@@ -32,7 +32,7 @@ var searchData=
   ['vehicleprofile_5ffunc_29',['vehicleprofile_func',['../vehicleprofile_8c.html#ad28b27d1b2cd1462fa59bf5265b2521e',1,'vehicleprofile.c']]],
   ['vehicleprofiles_30',['vehicleprofiles',['../structnavit.html#a89e9933b5ee23cd797a3f0957dd0f7b7',1,'navit']]],
   ['vehicleproxy_31',['vehicleProxy',['../structgui__priv.html#a57ae76f590f7520edd3bd8078f055ddf',1,'gui_priv']]],
-  ['vehicles_32',['vehicles',['../structnavit.html#a5e8bda803d6541a8004edae6f0fe3614',1,'navit::vehicles'],['../classBackend.html#a68107d1f3b2a52906967a85f0669f357',1,'Backend::vehicles']]],
+  ['vehicles_32',['vehicles',['../structnavit.html#a5e8bda803d6541a8004edae6f0fe3614',1,'navit::vehicles'],['../classBackend.html#ada5410b0d0761ffaf421cf875a47a449',1,'Backend::vehicles']]],
   ['vendor_5fid1_33',['vendor_id1',['../structzip__enc.html#abe192de12f78517bb1c7470b7f469dbd',1,'zip_enc']]],
   ['vendor_5fid2_34',['vendor_id2',['../structzip__enc.html#ad3f136d07bdfc01d60893b7751f42203',1,'zip_enc']]],
   ['verbose_35',['verbose',['../structg2sprop.html#ac3bcffbfd3d3e3e6a79e6ffb16cb536d',1,'g2sprop']]],

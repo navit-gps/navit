@@ -102,7 +102,7 @@ $(document).ready(function(){initNavTree('navit_8h.html',''); initResizable(); }
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:af6b53f36e005661f4c9e9c54c4be272c" id="r_af6b53f36e005661f4c9e9c54c4be272c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="navit_8h.html#af6b53f36e005661f4c9e9c54c4be272c">NAVIT_OBJECT</a>&#160;&#160;&#160;struct <a class="el" href="structobject__func.html">object_func</a> *func; int refcount; struct <a class="el" href="structattr.html">attr</a> **attrs;</td></tr>
+<tr class="memitem:af6b53f36e005661f4c9e9c54c4be272c" id="r_af6b53f36e005661f4c9e9c54c4be272c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="navit_8h.html#af6b53f36e005661f4c9e9c54c4be272c">NAVIT_OBJECT</a></td></tr>
 <tr class="separator:af6b53f36e005661f4c9e9c54c4be272c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -156,7 +156,7 @@ Functions</h2></td></tr>
 <tr class="separator:gabe8b57e21a0835fa5070f1dbb07de9f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1b035def8233343661617a8a456f1e84" id="r_ga1b035def8233343661617a8a456f1e84"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__navit.html#ga1b035def8233343661617a8a456f1e84">navit_zoom_out_cursor</a> (struct <a class="el" href="structnavit.html">navit</a> *this_, int factor)</td></tr>
 <tr class="separator:ga1b035def8233343661617a8a456f1e84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaba14b0fb12507ea1776ca5cce9293d08" id="r_gaba14b0fb12507ea1776ca5cce9293d08"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structnavit.html">navit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__navit.html#gaba14b0fb12507ea1776ca5cce9293d08">navit_new</a> (struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structattr.html">attr</a> **attrs)</td></tr>
+<tr class="memitem:gaba14b0fb12507ea1776ca5cce9293d08" id="r_gaba14b0fb12507ea1776ca5cce9293d08"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structnavit.html">navit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__navit.html#gaba14b0fb12507ea1776ca5cce9293d08">navit_new</a> (struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structparent.html">parent</a>, struct <a class="el" href="structattr.html">attr</a> **<a class="el" href="plugin__def_8h.html#a1e9137a65e787557962d1ff72828fa16">attrs</a>)</td></tr>
 <tr class="separator:gaba14b0fb12507ea1776ca5cce9293d08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaadc1fe8e1f303d3cee6f836d7ac6c5fb" id="r_gaadc1fe8e1f303d3cee6f836d7ac6c5fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__navit.html#gaadc1fe8e1f303d3cee6f836d7ac6c5fb">navit_add_message</a> (struct <a class="el" href="structnavit.html">navit</a> *this_, const char *<a class="el" href="structmessage.html">message</a>)</td></tr>
 <tr class="separator:gaadc1fe8e1f303d3cee6f836d7ac6c5fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -298,11 +298,17 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define NAVIT_OBJECT&#160;&#160;&#160;struct <a class="el" href="structobject__func.html">object_func</a> *func; int refcount; struct <a class="el" href="structattr.html">attr</a> **attrs;</td>
+          <td class="memname">#define NAVIT_OBJECT</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Navit, a modular navigation system. Copyright (C) 2005-2008 Navit Team</p>
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keyword">struct </span><a class="code hl_struct" href="structobject__func.html">object_func</a> *func;                                                                                          \</div>
+<div class="line">    <span class="keywordtype">int</span> refcount;                                                                                                      \</div>
+<div class="line">    <span class="keyword">struct </span><a class="code hl_struct" href="structattr.html">attr</a> **<a class="code hl_variable" href="plugin__def_8h.html#a1e9137a65e787557962d1ff72828fa16">attrs</a>;</div>
+<div class="ttc" id="aplugin__def_8h_html_a1e9137a65e787557962d1ff72828fa16"><div class="ttname"><a href="plugin__def_8h.html#a1e9137a65e787557962d1ff72828fa16">attrs</a></div><div class="ttdeci">struct navit struct traffic_methods struct attr ** attrs</div><div class="ttdef"><b>Definition</b> plugin_def.h:36</div></div>
+<div class="ttc" id="astructattr_html"><div class="ttname"><a href="structattr.html">attr</a></div><div class="ttdef"><b>Definition</b> attr.h:138</div></div>
+<div class="ttc" id="astructobject__func_html"><div class="ttname"><a href="structobject__func.html">object_func</a></div><div class="ttdoc">Basic functions for Navit objects.</div><div class="ttdef"><b>Definition</b> xmlconfig.h:84</div></div>
+</div><!-- fragment --><p>Navit, a modular navigation system. Copyright (C) 2005-2008 Navit Team</p>
 <p>This program is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License version 2 as published by the Free Software Foundation.</p>
 <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Library General Public License for more details.</p>
 <p>You should have received a copy of the GNU Library General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. </p>
