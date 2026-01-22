@@ -258,7 +258,7 @@ Austria, Belgium, Denmark, Finland, France, Greece, Hungary, Italy, The Netherla
 
 ### Configuration Notes
 
-- The plugin itself does not handle frequency selection - this is configured in your SDR software, TNC, or receiver hardware
+- The plugin itself does not handle frequency selection - this is configured in your SDR plugin or hardware.
 - Ensure your demodulator (multimon-ng, direwolf, etc.) is tuned to the correct frequency for your region
 - Some regions may have secondary frequencies for specific use cases (e.g., handheld operations)
 
