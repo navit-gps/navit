@@ -23,7 +23,10 @@
 #include <stdio.h>
 #include <glib.h>
 #include "debug.h"
+#include "item.h"
 #include "navit.h"
+#include "color.h"
+#include "point.h"
 #include "osd.h"
 #include "plugin.h"
 #include "map.h"
@@ -31,6 +34,8 @@
 #include "attr.h"
 #include "command.h"
 #include "popup.h"
+#include "aprs.h"
+#include "aprs_db.h"
 
 static void aprs_osd_set_frequency(struct navit *nav, double frequency) {
     struct attr map_attr, freq_attr;
@@ -165,9 +170,7 @@ int aprs_cmd_timeout_180min(struct navit *nav, char *function, struct attr **in,
 int aprs_cmd_timeout_clear_expired(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
     struct attr map_attr;
     struct mapset *ms;
-    struct map *map;
     struct attr_iter *iter;
-    struct map_priv *priv;
     
     if (!nav) return 0;
     
@@ -179,15 +182,15 @@ int aprs_cmd_timeout_clear_expired(struct navit *nav, char *function, struct att
     iter = mapset_attr_iter_new(NULL);
     
     while (mapset_get_attr(ms, attr_map, &map_attr, iter)) {
-        map = map_attr.u.map;
-        if (map_get_attr(map, attr_type, &map_attr, NULL)) {
+        struct map *m = map_attr.u.map;
+        if (map_get_attr(m, attr_type, &map_attr, NULL)) {
             if (map_attr.u.str && !strcmp(map_attr.u.str, "aprs")) {
-                priv = (struct map_priv *)map->priv;
-                if (priv && priv->db) {
-                    int deleted = aprs_db_delete_expired(priv->db, priv->expire_seconds);
-                    dbg(lvl_info, "Cleared %d expired APRS stations", deleted);
-                    aprs_update_items(priv);
-                }
+                /* Use a special attribute to trigger expiration - handled by map_set_attr */
+                struct attr expire_attr;
+                expire_attr.type = attr_timeout;
+                expire_attr.u.num = 0; /* Special value to trigger immediate expiration */
+                map_set_attr(m, &expire_attr);
+                dbg(lvl_info, "Triggered APRS station expiration");
                 break;
             }
         }
@@ -227,36 +230,7 @@ static void aprs_osd_set_device(struct navit *nav, const char *device_type) {
     mapset_attr_iter_destroy(iter);
 }
 
-static void aprs_osd_set_nmea_device(struct navit *nav, const char *device_path) {
-    struct attr map_attr, data_attr;
-    struct mapset *ms;
-    struct map *map;
-    struct attr_iter *iter;
-    
-    if (!nav) return;
-    
-    if (!navit_get_attr(nav, attr_mapset, &map_attr, NULL)) {
-        dbg(lvl_error, "No mapset found");
-        return;
-    }
-    
-    ms = map_attr.u.mapset;
-    iter = mapset_attr_iter_new(NULL);
-    
-    while (mapset_get_attr(ms, attr_map, &map_attr, iter)) {
-        map = map_attr.u.map;
-        if (map_get_attr(map, attr_type, &map_attr, NULL)) {
-            if (map_attr.u.str && !strcmp(map_attr.u.str, "aprs")) {
-                data_attr.type = attr_data;
-                data_attr.u.str = (char *)device_path;
-                map_set_attr(map, &data_attr);
-                dbg(lvl_info, "APRS NMEA device path set to %s via menu", device_path);
-                break;
-            }
-        }
-    }
-    mapset_attr_iter_destroy(iter);
-}
+/* NMEA device path is set via device attribute, not needed separately */
 
 static void aprs_osd_set_nmea_baud(struct navit *nav, int baud_rate) {
     struct attr map_attr, baud_attr;
@@ -415,9 +389,6 @@ static struct command_table aprs_commands[] = {
     {"aprs_nmea_parity_odd", command_cast(aprs_cmd_nmea_parity_odd)},
 };
 
-static void aprs_osd_draw(struct osd_priv *osd, struct navit *navit, struct vehicle *v) {
-}
-
 static void aprs_osd_destroy(struct osd_priv *osd) {
     g_free(osd);
 }
@@ -437,7 +408,7 @@ static struct osd_priv *aprs_osd_new(struct navit *nav, struct osd_methods *meth
     struct osd_priv *priv;
     struct attr cmd_attr;
     
-    priv = g_new0(struct osd_priv, 1);
+    priv = g_malloc0(sizeof(void *)); /* osd_priv is opaque, just allocate pointer-sized memory */
     *meth = aprs_osd_meth;
     
     command_add_table_attr(aprs_commands, sizeof(aprs_commands)/sizeof(struct command_table), nav, &cmd_attr);

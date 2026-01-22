@@ -344,41 +344,82 @@ The APRS plugin provides a comprehensive menu interface accessible from Navit's 
 
 1. Verify packets are being received and decoded
 2. Check database path is accessible
-3. Verify range filtering settings
+3. Verify range filtering settings (150 km maximum, centered on device)
 4. Check expiration timeout settings
+5. Ensure APRS plugin is loaded and active
 
 ### Stations not updating
 
 1. Ensure `aprs_process_packet()` is being called
 2. Check packet decoding is successful
 3. Verify database updates are working
+4. Check if SDR plugin is delivering frames (if using SDR)
 
 ### Performance issues
 
-1. Reduce update frequency
-2. Enable range filtering
-3. Use in-memory database for speed
+1. Reduce update frequency (default 1 second)
+2. Range filtering is always enabled (150 km max)
+3. Use in-memory database for speed (omit data attribute)
 4. Reduce expiration timeout
+
+### SDR plugin not working
+
+1. Verify RTL-SDR device is connected and recognized
+2. Check USB permissions (Linux: add user to plugdev group)
+3. Verify librtlsdr is installed and detected
+4. Check if APRS plugin is loaded (SDR plugin requires it)
+5. Review debug logs for initialization errors
 
 ## API Reference
 
-### Database Functions
+### Database Functions (`aprs_db.h`)
 
 - `aprs_db_new()`: Create database instance
+- `aprs_db_destroy()`: Clean up database
 - `aprs_db_update_station()`: Update/add station
 - `aprs_db_get_station()`: Retrieve station by callsign
+- `aprs_db_delete_station()`: Remove station by callsign
 - `aprs_db_delete_expired()`: Remove expired stations
+- `aprs_db_get_stations_in_range()`: Query stations within distance
+- `aprs_db_get_all_stations()`: Get all stations
+- `aprs_station_new()`: Allocate new station structure
+- `aprs_station_free()`: Free station structure
 
-### Decoding Functions
+### Decoding Functions (`aprs_decode.h`)
 
 - `aprs_decode_ax25()`: Decode AX.25 frame
 - `aprs_parse_position()`: Parse position from information field
 - `aprs_parse_timestamp()`: Extract timestamp
+- `aprs_packet_free()`: Free packet structure
+- `aprs_position_free()`: Free position structure
 
-### Plugin Functions
+### Plugin Functions (`aprs.h`)
 
 - `aprs_process_packet()`: Process complete APRS packet
+- `aprs_update_items()`: Refresh map items from database
 - `plugin_init()`: Initialize plugin (called by Navit)
+
+### Inter-Plugin Interface (`aprs_plugin_interface.h`)
+
+- `aprs_register_packet_source()`: Register external packet source callback
+- `aprs_unregister_packet_source()`: Unregister packet source
+
+## Unit Tests
+
+Comprehensive unit tests are available in the `tests/` directory:
+
+- `test_aprs_db.c` - Database operation tests
+- `test_aprs_decode.c` - Packet decoding tests
+- `test_aprs_dsp.c` - DSP operation tests (SDR plugin)
+
+See `tests/TEST_RESULTS.md` for detailed test documentation and results.
+
+Build and run tests:
+```bash
+cmake .. -DBUILD_APRS_TESTS=ON
+make test_aprs_db test_aprs_decode test_aprs_dsp
+./build/navit/plugin/aprs/tests/test_aprs_db
+```
 
 ## License
 
@@ -388,12 +429,28 @@ This plugin is licensed under the GNU Library General Public License version 2, 
 
 See [APRS_FREQUENCIES.md](APRS_FREQUENCIES.md) for a complete worldwide list of APRS frequencies by region.
 
+## APRS Symbols
+
+The plugin integrates with the hessu/aprs-symbols symbol set for high-quality APRS station icons. Symbols are bundled with the plugin and installed automatically during the Navit build process.
+
+**Station names (callsigns) are displayed as labels** next to each APRS station icon on the map.
+
+See [APRS_SYMBOLS.md](APRS_SYMBOLS.md) for build-time symbol integration details.
+
+## Related Documentation
+
+- [ARCHITECTURE.md](ARCHITECTURE.md) - Detailed architecture documentation
+- [APRS_SYMBOLS.md](APRS_SYMBOLS.md) - APRS symbol integration guide
+- [RTL_SDR_SETUP.md](RTL_SDR_SETUP.md) - Complete RTL-SDR configuration guide
+- [APRS_FREQUENCIES.md](APRS_FREQUENCIES.md) - Worldwide frequency list
+- [tests/TEST_RESULTS.md](tests/TEST_RESULTS.md) - Unit test documentation and results
+- [../aprs_sdr/README.md](../aprs_sdr/README.md) - SDR plugin documentation
+
 ## References
 
 - APRS Protocol Specification: http://www.aprs.org
 - Navit Documentation: http://wiki.navit-project.org
 - SQLite Documentation: https://www.sqlite.org/docs.html
 - IARU Region 1 VHF Manager's Handbook
-- [RTL-SDR Setup Guide](RTL_SDR_SETUP.md) - Complete RTL-SDR configuration
-- [APRS Frequencies Reference](APRS_FREQUENCIES.md) - Worldwide frequency list
+- Direwolf APRS software: https://github.com/wb2osz/direwolf
 

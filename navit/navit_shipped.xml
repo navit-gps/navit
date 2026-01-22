@@ -97,6 +97,53 @@ Navigation</text></img>
 				<img src='gui_vehicle' onclick='setting_vehicle()'><text>Vehicle</text></img>
 				<!-- <a href='#Settings Vehicles'><img src='gui_vehicle'><text>Vehicle</text></img></a> -->
 				<img src='gui_rules' onclick='setting_rules()'><text>Rules</text></img>
+				<a href='#Settings APRS'><img src='gui_settings'><text>APRS</text></img></a>
+			</a>
+			<a name='Settings APRS'><text>APRS Settings</text>
+				<a href='#Settings APRS Frequency'><img src='gui_settings'><text>RX Frequency</text></img></a>
+				<a href='#Settings APRS Timeout'><img src='gui_settings'><text>Station Timeout</text></img></a>
+				<a href='#Settings APRS Device'><img src='gui_settings'><text>Device</text></img></a>
+				<a href='#Settings APRS NMEA'><img src='gui_settings'><text>NMEA Settings</text></img></a>
+			</a>
+			<a name='Settings APRS Frequency'><text>APRS RX Frequency</text>
+				<img src='gui_settings' onclick='aprs_freq_144_39()'><text>144.39 MHz (North America)</text></img>
+				<img src='gui_settings' onclick='aprs_freq_144_8()'><text>144.80 MHz (Europe)</text></img>
+				<img src='gui_settings' onclick='aprs_freq_145_175()'><text>145.175 MHz (Australia)</text></img>
+				<img src='gui_settings' onclick='aprs_freq_144_575()'><text>144.575 MHz (New Zealand)</text></img>
+				<img src='gui_settings' onclick='aprs_freq_144_64()'><text>144.64 MHz (China/Japan)</text></img>
+				<img src='gui_settings' onclick='aprs_freq_144_66()'><text>144.66 MHz (Japan Kyushu)</text></img>
+				<img src='gui_settings' onclick='aprs_freq_144_93()'><text>144.93 MHz (Argentina/Uruguay)</text></img>
+				<img src='gui_settings' onclick='aprs_freq_145_57()'><text>145.57 MHz (Brazil)</text></img>
+			</a>
+			<a name='Settings APRS Timeout'><text>APRS Station Timeout</text>
+				<img src='gui_settings' onclick='aprs_timeout_30min()'><text>30 minutes</text></img>
+				<img src='gui_settings' onclick='aprs_timeout_60min()'><text>60 minutes</text></img>
+				<img src='gui_settings' onclick='aprs_timeout_90min()'><text>90 minutes</text></img>
+				<img src='gui_settings' onclick='aprs_timeout_120min()'><text>120 minutes</text></img>
+				<img src='gui_settings' onclick='aprs_timeout_180min()'><text>180 minutes</text></img>
+				<img src='gui_settings' onclick='aprs_timeout_clear()'><text>Clear Expired</text></img>
+			</a>
+			<a name='Settings APRS Device'><text>APRS Device</text>
+				<img src='gui_settings' onclick='aprs_device_rtlsdr_blog_v3()'><text>RTL-SDR Blog V3</text></img>
+				<img src='gui_settings' onclick='aprs_device_rtlsdr_v4_r828d()'><text>V4 R828D</text></img>
+				<img src='gui_settings' onclick='aprs_device_rtlsdr_nooelec()'><text>Nooelec</text></img>
+				<img src='gui_settings' onclick='aprs_device_rtlsdr_generic()'><text>Generic RTL-SDR</text></img>
+				<img src='gui_settings' onclick='aprs_device_nmea()'><text>NMEA Serial</text></img>
+			</a>
+			<a name='Settings APRS NMEA'><text>APRS NMEA Settings</text>
+				<a href='#Settings APRS NMEA Baud'><img src='gui_settings'><text>Baud Rate</text></img></a>
+				<a href='#Settings APRS NMEA Parity'><img src='gui_settings'><text>Parity</text></img></a>
+			</a>
+			<a name='Settings APRS NMEA Baud'><text>APRS NMEA Baud Rate</text>
+				<img src='gui_settings' onclick='aprs_nmea_baud_4800()'><text>4800</text></img>
+				<img src='gui_settings' onclick='aprs_nmea_baud_9600()'><text>9600</text></img>
+				<img src='gui_settings' onclick='aprs_nmea_baud_19200()'><text>19200</text></img>
+				<img src='gui_settings' onclick='aprs_nmea_baud_38400()'><text>38400</text></img>
+			</a>
+			<a name='Settings APRS NMEA Parity'><text>APRS NMEA Parity</text>
+				<img src='gui_settings' onclick='aprs_nmea_parity_none()'><text>None</text></img>
+				<img src='gui_settings' onclick='aprs_nmea_parity_even()'><text>Even</text></img>
+				<img src='gui_settings' onclick='aprs_nmea_parity_odd()'><text>Odd</text></img>
 			</a>
 			<a name='Settings Display'><text>Display</text>
 				<!-- <img src='gui_display' onclick='setting_layout()'><text>Layout</text></img> -->
@@ -429,6 +476,8 @@ Waypoint</text></img>
 		<!-- If you dont want to use the sample map, either set enabled="no" in the next line or remove the xml file from the maps directory -->
 		<mapset enabled="yes">
 			<xi:include href="$NAVIT_SHAREDIR/maps/*.xml"/>
+			<!-- APRS plugin - displays APRS stations on the map with symbols and station names -->
+			<map type="aprs" enabled="yes" data="$HOME/.navit/aprs.db" timeout="5400"/>
 		</mapset>
 
 		<!-- Mapset template for OpenStreetMap -->

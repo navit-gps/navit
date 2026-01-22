@@ -37,9 +37,12 @@
 #include "aprs_decode.h"
 #include "aprs_nmea.h"
 #include "aprs_plugin_interface.h"
+#include "aprs_symbols.h"
 #include "popup.h"
 #include "vehicle.h"
 #include "mapset.h"
+#include "navit.h"
+#include "menu.h"
 
 extern int aprs_cmd_freq_144_39(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 extern int aprs_cmd_freq_144_8(struct navit *nav, char *function, struct attr **in, struct attr ***out);
@@ -54,6 +57,144 @@ extern int aprs_cmd_timeout_90min(struct navit *nav, char *function, struct attr
 extern int aprs_cmd_timeout_120min(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 extern int aprs_cmd_timeout_180min(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 extern int aprs_cmd_timeout_clear_expired(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+extern int aprs_cmd_device_rtlsdr_blog_v3(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+extern int aprs_cmd_device_rtlsdr_v4_r828d(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+extern int aprs_cmd_device_rtlsdr_nooelec(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+extern int aprs_cmd_device_rtlsdr_generic(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+extern int aprs_cmd_device_nmea(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+extern int aprs_cmd_nmea_baud_4800(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+extern int aprs_cmd_nmea_baud_9600(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+extern int aprs_cmd_nmea_baud_19200(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+extern int aprs_cmd_nmea_baud_38400(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+extern int aprs_cmd_nmea_parity_none(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+extern int aprs_cmd_nmea_parity_even(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+extern int aprs_cmd_nmea_parity_odd(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+
+/* Wrapper functions for popup callbacks */
+static void aprs_cmd_freq_wrapper_144_39(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_freq_144_39(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_freq_wrapper_144_8(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_freq_144_8(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_freq_wrapper_145_175(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_freq_145_175(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_freq_wrapper_144_575(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_freq_144_575(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_freq_wrapper_144_64(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_freq_144_64(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_freq_wrapper_144_93(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_freq_144_93(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_freq_wrapper_145_57(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_freq_145_57(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_timeout_wrapper_30min(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_timeout_30min(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_timeout_wrapper_60min(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_timeout_60min(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_timeout_wrapper_90min(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_timeout_90min(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_timeout_wrapper_120min(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_timeout_120min(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_timeout_wrapper_180min(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_timeout_180min(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_timeout_wrapper_clear(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_timeout_clear_expired(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_device_wrapper_rtlsdr_blog_v3(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_device_rtlsdr_blog_v3(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_device_wrapper_rtlsdr_v4_r828d(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_device_rtlsdr_v4_r828d(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_device_wrapper_rtlsdr_nooelec(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_device_rtlsdr_nooelec(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_device_wrapper_rtlsdr_generic(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_device_rtlsdr_generic(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_device_wrapper_nmea(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_device_nmea(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_nmea_baud_wrapper_4800(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_nmea_baud_4800(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_nmea_baud_wrapper_9600(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_nmea_baud_9600(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_nmea_baud_wrapper_19200(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_nmea_baud_19200(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_nmea_baud_wrapper_38400(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_nmea_baud_38400(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_nmea_parity_wrapper_none(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_nmea_parity_none(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_nmea_parity_wrapper_even(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_nmea_parity_even(nav, NULL, NULL, NULL);
+}
+
+static void aprs_cmd_nmea_parity_wrapper_odd(void *data) {
+    struct navit *nav = (struct navit *)data;
+    aprs_cmd_nmea_parity_odd(nav, NULL, NULL, NULL);
+}
 
 struct aprs_item_priv {
     struct map_rect_priv *mr;
@@ -97,6 +238,22 @@ struct map_priv {
     /* Packet source callbacks (for SDR plugin) */
     GList *packet_sources;
 };
+
+/* Forward declarations */
+static void aprs_update_items(struct map_priv *priv);
+static int aprs_process_packet(struct map_priv *priv, const unsigned char *data, int length);
+
+/* Global list of APRS map instances for inter-plugin communication */
+static GList *aprs_map_instances = NULL;
+
+/* NMEA callback function */
+static void aprs_nmea_callback(void *data, struct aprs_station *station) {
+    struct map_priv *priv = (struct map_priv *)data;
+    if (!priv || !station) return;
+    
+    aprs_db_update_station(priv->db, station);
+    aprs_update_items(priv);
+}
 
 static struct map_methods aprs_map_meth;
 
@@ -195,7 +352,7 @@ static void aprs_item_destroy(struct item *item) {
     aprs_item_unref(item);
 }
 
-void aprs_update_items(struct map_priv *priv) {
+static void aprs_update_items(struct map_priv *priv) {
     GList *l;
     
     for (l = priv->items; l; l = g_list_next(l)) {
@@ -226,7 +383,7 @@ void aprs_update_items(struct map_priv *priv) {
         struct item *new_item = g_new0(struct item, 1);
         struct aprs_item_priv *ip = g_new0(struct aprs_item_priv, 1);
         
-        new_item->type = type_poi;
+        new_item->type = type_poi_custom0; /* Use custom POI type to support icon_src attribute */
         new_item->id_hi = id_hi;
         new_item->id_lo = id_lo++;
         new_item->meth = &aprs_item_methods;
@@ -242,34 +399,44 @@ void aprs_update_items(struct map_priv *priv) {
         int attr_idx = 0;
         
         if (station->callsign) {
-            attrs[attr_idx] = attr_new(attr_label, g_strdup(station->callsign));
-            attr_idx++;
-        }
-        
-        char *info = g_strdup_printf("APRS: %s", station->callsign ? station->callsign : "Unknown");
-        if (station->comment) {
-            char *tmp = g_strdup_printf("%s - %s", info, station->comment);
-            g_free(info);
-            info = tmp;
-        }
-        attrs[attr_idx] = attr_new(attr_information, info);
-        attr_idx++;
-        
-        if (station->speed >= 0) {
-            attrs[attr_idx] = attr_new(attr_speed, &station->speed);
-            attr_idx++;
-        }
-        
-        if (station->course >= 0) {
-            attrs[attr_idx] = attr_new(attr_direction, &station->course);
+            attrs[attr_idx] = g_new0(struct attr, 1);
+            attrs[attr_idx]->type = attr_label;
+            attrs[attr_idx]->u.str = g_strdup(station->callsign);
             attr_idx++;
         }
         
         char timestamp_str[64];
         const struct tm *tm_info = gmtime(&station->timestamp);
         strftime(timestamp_str, sizeof(timestamp_str), "%Y-%m-%d %H:%M:%S UTC", tm_info);
-        attrs[attr_idx] = attr_new(attr_data, g_strdup(timestamp_str));
+        attrs[attr_idx] = g_new0(struct attr, 1);
+        attrs[attr_idx]->type = attr_data;
+        attrs[attr_idx]->u.str = g_strdup(timestamp_str);
         attr_idx++;
+        
+        if (station->speed >= 0) {
+            attrs[attr_idx] = g_new0(struct attr, 1);
+            attrs[attr_idx]->type = attr_speed;
+            attrs[attr_idx]->u.num = (int)station->speed;
+            attr_idx++;
+        }
+        
+        if (station->course >= 0) {
+            attrs[attr_idx] = g_new0(struct attr, 1);
+            attrs[attr_idx]->type = attr_direction;
+            attrs[attr_idx]->u.num = (int)station->course;
+            attr_idx++;
+        }
+        
+        /* Set APRS symbol icon if available */
+        if (station->symbol_table && station->symbol_code) {
+            char *icon_path = aprs_symbol_get_icon(station->symbol_table, station->symbol_code);
+            if (icon_path) {
+                attrs[attr_idx] = g_new0(struct attr, 1);
+                attrs[attr_idx]->type = attr_icon_src;
+                attrs[attr_idx]->u.str = icon_path;
+                attr_idx++;
+            }
+        }
         
         attrs[attr_idx] = NULL;
         ip->attrs = attr_list_dup(attrs);
@@ -292,8 +459,8 @@ static void aprs_expire_callback(void *data) {
     if (!priv || !priv->db) return;
     int deleted = aprs_db_delete_expired(priv->db, priv->expire_seconds);
     if (deleted > 0) {
-        dbg(lvl_info, "Expired %d APRS stations (timeout: %d minutes)", 
-            deleted, priv->expire_seconds / 60);
+        dbg(lvl_info, "Expired %d APRS stations (timeout: %ld minutes)",
+            deleted, (long)(priv->expire_seconds / 60));
         aprs_update_items(priv);
     }
 }
@@ -322,6 +489,7 @@ static void aprs_update_callback(void *data) {
 }
 
 static void aprs_map_destroy(struct map_priv *priv) {
+    aprs_symbol_cleanup();
     if (!priv) return;
     
     GList *l;
@@ -426,8 +594,8 @@ static int aprs_map_set_attr(struct map_priv *priv, struct attr *attr) {
     case attr_timeout:
         if (attr->u.num) {
             priv->expire_seconds = attr->u.num;
-            dbg(lvl_info, "APRS timeout set to %d seconds (%d minutes)", 
-                priv->expire_seconds, priv->expire_seconds / 60);
+            dbg(lvl_info, "APRS timeout set to %ld seconds (%ld minutes)",
+                (long)priv->expire_seconds, (long)(priv->expire_seconds / 60));
             aprs_update_items(priv);
             return 1;
         }
@@ -536,7 +704,7 @@ static int aprs_map_set_attr(struct map_priv *priv, struct attr *attr) {
                 aprs_nmea_set_callback(priv->nmea, aprs_nmea_callback, priv);
                 if (aprs_nmea_start(priv->nmea)) {
                     priv->nmea_enabled = 1;
-                    dbg(lvl_info, "NMEA baud rate changed to %d", attr->u.num);
+                    dbg(lvl_info, "NMEA baud rate changed to %ld", (long)attr->u.num);
                 }
             }
             g_free(nmea_config.device);
@@ -557,11 +725,13 @@ static struct map_methods aprs_map_meth = {
     aprs_map_get_item,
     aprs_map_get_item_byid,
     NULL,
+    NULL,
+    NULL,
     aprs_map_get_attr,
     aprs_map_set_attr,
 };
 
-int aprs_process_packet(struct map_priv *priv, const unsigned char *data, int length) {
+static int aprs_process_packet(struct map_priv *priv, const unsigned char *data, int length) {
     if (!priv || !data || length <= 0) return 0;
     struct aprs_packet packet;
     struct aprs_position pos;
@@ -675,200 +845,23 @@ static struct map_priv *aprs_map_new(struct map_methods *meth, struct attr **att
     ret->expire_timeout = event_add_timeout(60000, 0, callback_new_1(callback_cast(aprs_expire_callback), ret));
     ret->update_timeout = event_add_timeout(1000, 0, callback_new_1(callback_cast(aprs_update_callback), ret));
     
+    /* Initialize APRS symbol lookup system */
+    aprs_symbol_init(NULL, NULL);
+    
     aprs_update_items(ret);
     
     return ret;
 }
 
-static void aprs_cmd_freq_wrapper_144_39(void *data) {
-    struct navit *nav = (struct navit *)data;
-    if (nav) aprs_cmd_freq_144_39(nav, "aprs_freq_144_39", NULL, NULL);
-}
-
-static void aprs_cmd_freq_wrapper_144_8(void *data) {
-    struct navit *nav = (struct navit *)data;
-    if (nav) aprs_cmd_freq_144_8(nav, "aprs_freq_144_8", NULL, NULL);
-}
-
-static void aprs_cmd_freq_wrapper_145_175(void *data) {
-    struct navit *nav = (struct navit *)data;
-    if (nav) aprs_cmd_freq_145_175(nav, "aprs_freq_145_175", NULL, NULL);
-}
-
-static void aprs_cmd_freq_wrapper_144_575(void *data) {
-    struct navit *nav = (struct navit *)data;
-    if (nav) aprs_cmd_freq_144_575(nav, "aprs_freq_144_575", NULL, NULL);
-}
-
-static void aprs_cmd_freq_wrapper_144_64(void *data) {
-    struct navit *nav = (struct navit *)data;
-    if (nav) aprs_cmd_freq_144_64(nav, "aprs_freq_144_64", NULL, NULL);
-}
-
-static void aprs_cmd_freq_wrapper_144_93(void *data) {
-    struct navit *nav = (struct navit *)data;
-    if (nav) aprs_cmd_freq_144_93(nav, "aprs_freq_144_93", NULL, NULL);
-}
-
-static void aprs_cmd_freq_wrapper_145_57(void *data) {
-    struct navit *nav = (struct navit *)data;
-    if (nav) aprs_cmd_freq_145_57(nav, "aprs_freq_145_57", NULL, NULL);
-}
-
-static void aprs_cmd_timeout_wrapper_30min(void *data) {
-    struct navit *nav = (struct navit *)data;
-    if (nav) aprs_cmd_timeout_30min(nav, "aprs_timeout_30min", NULL, NULL);
-}
-
-static void aprs_cmd_timeout_wrapper_60min(void *data) {
-    struct navit *nav = (struct navit *)data;
-    if (nav) aprs_cmd_timeout_60min(nav, "aprs_timeout_60min", NULL, NULL);
-}
-
-static void aprs_cmd_timeout_wrapper_90min(void *data) {
-    struct navit *nav = (struct navit *)data;
-    if (nav) aprs_cmd_timeout_90min(nav, "aprs_timeout_90min", NULL, NULL);
-}
-
-static void aprs_cmd_timeout_wrapper_120min(void *data) {
-    struct navit *nav = (struct navit *)data;
-    if (nav) aprs_cmd_timeout_120min(nav, "aprs_timeout_120min", NULL, NULL);
-}
-
-static void aprs_cmd_timeout_wrapper_180min(void *data) {
-    struct navit *nav = (struct navit *)data;
-    if (nav) aprs_cmd_timeout_180min(nav, "aprs_timeout_180min", NULL, NULL);
-}
-
-static void aprs_cmd_timeout_wrapper_clear(void *data) {
-    struct navit *nav = (struct navit *)data;
-    if (nav) aprs_cmd_timeout_clear_expired(nav, "aprs_timeout_clear", NULL, NULL);
-}
-
-extern int aprs_cmd_timeout_30min(struct navit *nav, char *function, struct attr **in, struct attr ***out);
-extern int aprs_cmd_timeout_60min(struct navit *nav, char *function, struct attr **in, struct attr ***out);
-extern int aprs_cmd_timeout_90min(struct navit *nav, char *function, struct attr **in, struct attr ***out);
-extern int aprs_cmd_timeout_120min(struct navit *nav, char *function, struct attr **in, struct attr ***out);
-extern int aprs_cmd_timeout_180min(struct navit *nav, char *function, struct attr **in, struct attr ***out);
-extern int aprs_cmd_timeout_clear_expired(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+/* Wrapper functions are defined above, no duplicates needed */
 
 static void aprs_popup(struct container *cont, struct map *map, struct popup *popup, struct popup_item **list) {
-    struct navit *nav;
-    struct attr nav_attr;
-    struct attr map_attr;
-    struct mapset *ms;
-    struct attr_iter *iter;
-    int has_aprs = 0;
-    
-    if (!cont || !popup || !list) return;
-    
-    if (!container_get_attr(cont, attr_navit, &nav_attr, NULL)) return;
-    nav = nav_attr.u.navit;
-    
-    if (!navit_get_attr(nav, attr_mapset, &map_attr, NULL)) return;
-    ms = map_attr.u.mapset;
-    iter = mapset_attr_iter_new(NULL);
-    
-    while (mapset_get_attr(ms, attr_map, &map_attr, iter)) {
-        struct map *m = map_attr.u.map;
-        if (map_get_attr(m, attr_type, &map_attr, NULL)) {
-            if (map_attr.u.str && !strcmp(map_attr.u.str, "aprs")) {
-                has_aprs = 1;
-                break;
-            }
-        }
-    }
-    mapset_attr_iter_destroy(iter);
-    
-    if (has_aprs) {
-        struct popup_item *aprs_menu = popup_printf(*list, menu_type_submenu, _("APRS Settings"));
-        
-        struct popup_item *freq_menu = popup_printf(aprs_menu, menu_type_submenu, _("Frequency"));
-        popup_printf_cb(freq_menu, menu_type_menu, 
-                       callback_new_1(callback_cast(aprs_cmd_freq_wrapper_144_39), nav),
-                       "144.390 MHz (North America)");
-        popup_printf_cb(freq_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_freq_wrapper_144_8), nav),
-                       "144.800 MHz (Europe)");
-        popup_printf_cb(freq_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_freq_wrapper_145_175), nav),
-                       "145.175 MHz (Australia)");
-        popup_printf_cb(freq_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_freq_wrapper_144_575), nav),
-                       "144.575 MHz (New Zealand)");
-        popup_printf_cb(freq_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_freq_wrapper_144_64), nav),
-                       "144.640 MHz (China/Japan)");
-        popup_printf_cb(freq_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_freq_wrapper_144_93), nav),
-                       "144.930 MHz (Argentina/Uruguay)");
-        popup_printf_cb(freq_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_freq_wrapper_145_57), nav),
-                       "145.570 MHz (Brazil)");
-        
-        struct popup_item *device_menu = popup_printf(aprs_menu, menu_type_submenu, _("Input Device"));
-        popup_printf_cb(device_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_device_wrapper_rtlsdr_blog_v3), nav),
-                       "RTL-SDR Blog V3");
-        popup_printf_cb(device_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_device_wrapper_rtlsdr_v4_r828d), nav),
-                       "V4 R828D");
-        popup_printf_cb(device_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_device_wrapper_rtlsdr_nooelec), nav),
-                       "Nooelec");
-        popup_printf_cb(device_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_device_wrapper_rtlsdr_generic), nav),
-                       "Generic RTL-SDR");
-        popup_printf_cb(device_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_device_wrapper_nmea), nav),
-                       "NMEA Serial");
-        
-        struct popup_item *nmea_menu = popup_printf(aprs_menu, menu_type_submenu, _("NMEA Settings"));
-        struct popup_item *nmea_baud_menu = popup_printf(nmea_menu, menu_type_submenu, _("Baud Rate"));
-        popup_printf_cb(nmea_baud_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_nmea_baud_wrapper_4800), nav),
-                       "4800");
-        popup_printf_cb(nmea_baud_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_nmea_baud_wrapper_9600), nav),
-                       "9600");
-        popup_printf_cb(nmea_baud_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_nmea_baud_wrapper_19200), nav),
-                       "19200");
-        popup_printf_cb(nmea_baud_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_nmea_baud_wrapper_38400), nav),
-                       "38400");
-        
-        struct popup_item *nmea_parity_menu = popup_printf(nmea_menu, menu_type_submenu, _("Parity"));
-        popup_printf_cb(nmea_parity_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_nmea_parity_wrapper_none), nav),
-                       "None");
-        popup_printf_cb(nmea_parity_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_nmea_parity_wrapper_even), nav),
-                       "Even");
-        popup_printf_cb(nmea_parity_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_nmea_parity_wrapper_odd), nav),
-                       "Odd");
-        
-        struct popup_item *timeout_menu = popup_printf(aprs_menu, menu_type_submenu, _("Station Timeout"));
-        popup_printf_cb(timeout_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_timeout_wrapper_30min), nav),
-                       "30 minutes");
-        popup_printf_cb(timeout_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_timeout_wrapper_60min), nav),
-                       "60 minutes");
-        popup_printf_cb(timeout_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_timeout_wrapper_90min), nav),
-                       "90 minutes");
-        popup_printf_cb(timeout_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_timeout_wrapper_120min), nav),
-                       "120 minutes");
-        popup_printf_cb(timeout_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_timeout_wrapper_180min), nav),
-                       "180 minutes");
-        popup_printf_cb(timeout_menu, menu_type_menu,
-                       callback_new_1(callback_cast(aprs_cmd_timeout_wrapper_clear), nav),
-                       _("Clear Expired Now"));
-    }
+    /* APRS menu is now integrated into Settings via XML configuration */
+    /* This popup function is kept for compatibility but does nothing */
+    (void)cont;
+    (void)map;
+    (void)popup;
+    (void)list;
 }
 
 /* Packet source registration structure */
@@ -877,8 +870,7 @@ struct packet_source_entry {
     void *user_data;
 };
 
-/* Global list of all APRS map instances for packet delivery */
-static GList *aprs_map_instances = NULL;
+/* aprs_map_instances is already defined above */
 
 /**
  * Register a packet source callback
