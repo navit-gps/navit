@@ -156,6 +156,26 @@ Waypoint</text></img>
 								"","navit.layout.layer[@name==%{se}].active=%{d}*",layer.name,!layer.active,"redraw_map();refresh();");
 				</script>
 			</a>
+			<a name='Settings Vehicles' class='clist'><text>Vehicle</text>
+				<script>
+					foreach(vehicle;navit.vehicle)
+						img("centry",navit.vehicle==vehicle?"gui_active":"gui_inactive",vehicle.name,
+							"name=%{se};menu(\"#Settings Vehicle\")",vehicle.name);
+				</script>
+			</a>
+			<a name='Settings Vehicle' class='clist'><script>write(name)</script>
+				<script>
+					foreach(vehicle;navit.vehicle)
+						if (vehicle.name == name) {
+							if (vehicle!=navit.vehicle)
+								img("centry","gui_active","Set as active",
+									"","navit.vehicle=navit.vehicle[@name==%{se}*]",name);
+							foreach(vehicleprofile;navit.vehicleprofile)
+								img("centry",vehicle.profilename==vehicleprofile.name?"gui_active":"gui_inactive",vehicleprofile.name,
+									"","navit.vehicle[@name=%{se}].profilename=%{se}*",name,vehicleprofile.name,"refresh()");
+						}
+				</script>
+			</a>
 			<a name='Satellite Status' class='clist'><text>Satellite Status</text>
 				<script>satellite_status_page()</script>
 			</a>
@@ -397,7 +417,7 @@ Waypoint</text></img>
 		vocabulary_name="0" vocabulary_name_systematic="0" vocabulary_distances="0"/>
 		-->
                 <speech name="Dutch female" type="cmdline" data="espeak-ng -v dutch-mbrola-3 -s 130 %s" vocabulary_name="1" vocabulary_name_systematic="1" vocabulary_distances="1" active="1" />
-                <speech name="Dutch male" type="cmdline" data="espeak-ng -v dutch-mbrola-1 -s 130 %s" vocabulary_name="1" vocabulary_name_systematic="1" vocabulary_distances="1" active="1" />
+                <speech name="Dutch male" type="cmdline" data="espeak-ng -v dutch-mbrola-1 -s 130 %s" vocabulary_name="1" vocabulary_name_systematic="1" vocabulary_distances="0" active="0" />
 
 		<!-- You can only have enabled only one mapset at time, but with as much maps enabled as you want -->
 
