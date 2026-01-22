@@ -185,6 +185,16 @@ The SDR plugin handles Android USB permissions:
 5. **Testing**: Can test plugins independently
 6. **Dependencies**: APRS plugin doesn't require librtlsdr
 
+## Testing
+
+Unit tests are provided for core components:
+
+- Database operations: CRUD, expiration, range filtering
+- Packet decoding: AX.25, position parsing, timestamp extraction
+- DSP operations: Bell 202 demodulation, sample processing
+
+See `tests/TEST_RESULTS.md` for complete test documentation.
+
 ## Future Enhancements
 
 Potential additions to the architecture:

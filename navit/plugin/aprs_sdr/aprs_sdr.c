@@ -37,18 +37,27 @@
 struct map_priv;
 extern int aprs_process_packet(struct map_priv *priv, const unsigned char *data, int length);
 
+/* Forward declaration for frame delivery */
+static void aprs_sdr_frame_delivery_callback(const unsigned char *frame, int frame_length, void *user_data);
+
 struct aprs_sdr_priv {
     struct aprs_sdr_hw *hw;
     struct aprs_sdr_dsp *dsp;
-    aprs_packet_callback_t aprs_callback;
     void *aprs_user_data;
     int initialized;
     int running;
 };
 
-/* Forward declaration */
+/* Forward declarations */
 static void aprs_sdr_hw_data_callback(const unsigned char *samples, int length, void *user_data);
-static void aprs_sdr_dsp_frame_callback(const unsigned char *frame, int frame_length, void *user_data);
+static void aprs_sdr_map_destroy(void *priv);
+static struct map_rect_priv *aprs_sdr_map_rect_new(void *priv, struct map_selection *sel);
+static void aprs_sdr_map_rect_destroy(struct map_rect_priv *mr);
+static struct item *aprs_sdr_map_get_item(struct map_rect_priv *mr);
+static int aprs_sdr_map_get_attr(void *priv, enum attr_type type, struct attr *attr);
+static int aprs_sdr_map_set_attr(void *priv, struct attr *attr);
+
+static struct map_methods aprs_sdr_map_meth;
 
 /**
  * Discover APRS plugin and register packet delivery callback
@@ -97,7 +106,8 @@ static int aprs_sdr_discover_aprs_plugin(struct aprs_sdr_priv *priv) {
         
         /* Register callback - the registration function will store the map_priv */
         if (register_func) {
-            if (register_func(aprs_sdr_dsp_frame_callback, NULL)) {
+            aprs_packet_callback_t callback = aprs_sdr_frame_delivery_callback;
+            if (register_func(callback, NULL)) {
                 priv->aprs_user_data = map_priv_ptr;
                 dbg(lvl_info, "Successfully registered with APRS plugin via function");
                 return 1;
@@ -131,7 +141,7 @@ static void aprs_sdr_hw_data_callback(const unsigned char *samples, int length, 
 /**
  * DSP frame callback - delivers decoded AX.25 frames to APRS plugin
  */
-static void aprs_sdr_dsp_frame_callback(const unsigned char *frame, int frame_length, void *user_data) {
+static void aprs_sdr_frame_delivery_callback(const unsigned char *frame, int frame_length, void *user_data) {
     struct aprs_sdr_priv *priv = (struct aprs_sdr_priv *)user_data;
     
     if (!priv || !frame || frame_length <= 0) return;
@@ -148,12 +158,15 @@ static void aprs_sdr_dsp_frame_callback(const unsigned char *frame, int frame_le
  * Initialize SDR plugin from map attributes
  */
 static void *aprs_sdr_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
+    (void)cbl; /* Unused */
     struct aprs_sdr_priv *priv;
     struct attr *freq_attr, *gain_attr, *ppm_attr, *device_attr;
     struct aprs_sdr_hw_config hw_config;
     struct aprs_sdr_dsp_config dsp_config;
     
     dbg(lvl_debug, "APRS SDR plugin: map_new called");
+    
+    *meth = aprs_sdr_map_meth;
     
     priv = g_new0(struct aprs_sdr_priv, 1);
     if (!priv) {
@@ -223,7 +236,7 @@ static void *aprs_sdr_map_new(struct map_methods *meth, struct attr **attrs, str
     
     /* Set up callbacks */
     aprs_sdr_hw_set_callback(priv->hw, aprs_sdr_hw_data_callback, priv);
-    aprs_sdr_dsp_set_frame_callback(priv->dsp, aprs_sdr_dsp_frame_callback, priv);
+    aprs_sdr_dsp_set_frame_callback(priv->dsp, aprs_sdr_frame_delivery_callback, priv);
     
     /* Discover and register with APRS plugin */
     if (!aprs_sdr_discover_aprs_plugin(priv)) {
@@ -262,6 +275,8 @@ static void aprs_sdr_map_destroy(void *priv) {
 }
 
 static struct map_rect_priv *aprs_sdr_map_rect_new(void *priv, struct map_selection *sel) {
+    (void)priv; /* Unused */
+    (void)sel;  /* Unused */
     /* SDR plugin doesn't render map items - that's APRS plugin's job */
     return NULL;
 }
@@ -327,16 +342,14 @@ static int aprs_sdr_map_set_attr(void *priv, struct attr *attr) {
     }
 }
 
-static struct map_methods aprs_sdr_map_meth = {
-    aprs_sdr_map_destroy,
-    aprs_sdr_map_rect_new,
-    aprs_sdr_map_rect_destroy,
-    aprs_sdr_map_get_item,
-    aprs_sdr_map_get_attr,
-    aprs_sdr_map_set_attr,
-};
-
 void plugin_init(void) {
+    aprs_sdr_map_meth.map_destroy = aprs_sdr_map_destroy;
+    aprs_sdr_map_meth.map_rect_new = aprs_sdr_map_rect_new;
+    aprs_sdr_map_meth.map_rect_destroy = aprs_sdr_map_rect_destroy;
+    aprs_sdr_map_meth.map_rect_get_item = aprs_sdr_map_get_item;
+    aprs_sdr_map_meth.map_get_attr = aprs_sdr_map_get_attr;
+    aprs_sdr_map_meth.map_set_attr = aprs_sdr_map_set_attr;
+    
     dbg(lvl_debug, "APRS SDR plugin initializing");
     plugin_register_category_map("aprs_sdr", aprs_sdr_map_new);
     dbg(lvl_info, "APRS SDR plugin registered");

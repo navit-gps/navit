@@ -1,0 +1,49 @@
+<!-- Example Navit configuration with APRS plugin enabled -->
+<!-- 
+    To enable the APRS plugin in Navit:
+    
+    1. Copy this configuration into your navit.xml file
+       (usually ~/.navit/navit.xml or /etc/navit/navit.xml)
+    
+    2. The plugin will be automatically loaded via the wildcard pattern
+       in the <plugins> section, or you can specify it explicitly.
+    
+    3. Add the APRS map to an enabled <mapset> section.
+    
+    4. Restart Navit to load the plugin.
+-->
+
+<!-- Add to the <plugins> section (usually already exists with wildcard): -->
+<!--
+<plugins>
+    <plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}lib*.so" ondemand="yes"/>
+    <plugin path="$NAVIT_LIBDIR/plugin/libplugin_aprs.so" active="yes"/>
+</plugins>
+-->
+
+<!-- Add to an enabled <mapset> section in <navit>: -->
+<!--
+<mapset enabled="yes">
+    <map type="aprs" enabled="yes" data="$HOME/.navit/aprs.db">
+        <attribute name="timeout" value="5400"/>
+    </map>
+</mapset>
+-->
+
+<!-- Complete example (add to your existing navit.xml): -->
+<config xmlns:xi="http://www.w3.org/2001/XInclude">
+	<plugins>
+		<!-- APRS plugin - will be auto-loaded via wildcard, or specify explicitly: -->
+		<plugin path="$NAVIT_LIBDIR/plugin/libplugin_aprs.so" active="yes"/>
+	</plugins>
+
+	<navit>
+		<!-- Add APRS map to your enabled mapset -->
+		<mapset enabled="yes">
+			<!-- Your other maps here (OSM, etc.) -->
+			
+			<!-- APRS plugin map - displays APRS stations on the map -->
+			<map type="aprs" enabled="yes" data="$HOME/.navit/aprs.db" timeout="5400"/>
+		</mapset>
+	</navit>
+</config>
