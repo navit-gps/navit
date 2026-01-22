@@ -206,7 +206,6 @@ static int navit_cmd_set_center_cursor(struct navit *this_, char *function, stru
 static int navit_cmd_announcer_toggle(struct navit *this_, char *function, struct attr **in, struct attr ***out);
 static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv);
 static int navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp);
-static int navit_set_voiceprofile(struct navit *this_, struct speech *speech);
 static int navit_cmd_switch_layout_day_night(struct navit *this_, char *function, struct attr **in, struct attr ***out);
 struct object_func navit_func;
 
@@ -3118,7 +3117,8 @@ static int navit_add_layout(struct navit *this_, struct layout *layout) {
 
 int navit_add_attr(struct navit *this_, struct attr *attr) {
     int ret=1;
-    struct attr active;
+    struct attr speechattr;
+    struct attr activeattr;
     
     switch (attr->type) {
     case attr_callback:
@@ -3152,8 +3152,13 @@ int navit_add_attr(struct navit *this_, struct attr *attr) {
         break;
     case attr_speech:
         this_->voiceprofiles = g_list_append(this_->voiceprofiles, attr->u.speech);
-        this_->speech=attr->u.speech;
-        break;
+        // TODO Only active voice
+        if (speech_get_attr(attr->u.speech, attr_active, &activeattr, NULL)) {
+            if (activeattr.u.num == 1) {
+                this_->speech = attr->u.speech;
+            }
+		}
+	    break;
     case attr_trackingo:
         this_->tracking = attr->u.tracking;
         break;
@@ -3410,13 +3415,6 @@ void navit_set_position(struct navit *this_, struct pcoord *c) {
     }
     if (this_->ready == 3)
         navit_draw(this_);
-}
-
-static int navit_set_voiceprofile(struct navit *this_, struct speech *speech) {
-    if (this_->speech == speech)
-        return 0;
-    this_->speech = speech;
-    return 1;
 }
 
 static int navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp) {
