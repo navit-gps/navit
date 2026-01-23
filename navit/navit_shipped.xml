@@ -100,20 +100,28 @@ Navigation</text></img>
 				<a href='#Settings APRS'><img src='gui_settings'><text>APRS</text></img></a>
 			</a>
 			<a name='Settings APRS'><text>APRS Settings</text>
-				<a href='#Settings APRS Frequency'><img src='gui_settings'><text>RX Frequency</text></img></a>
+				<a onclick='aprs_refresh_freq_index();menu("#Settings APRS Frequency")'><img src='gui_settings'><text>RX Frequency: </text><script>var idx=get_int_var("aprs_freq_index"); if(idx==0) write("144.39 MHz (North America)"); else if(idx==1) write("144.80 MHz (Europe)"); else if(idx==2) write("145.175 MHz (Australia)"); else if(idx==3) write("144.575 MHz (New Zealand)"); else if(idx==4) write("144.64 MHz (China/Japan)"); else if(idx==5) write("144.66 MHz (Japan Kyushu)"); else if(idx==6) write("144.93 MHz (Argentina/Uruguay)"); else if(idx==7) write("145.57 MHz (Brazil)"); else write("144.39 MHz (North America)");</script></img></a>
 				<a href='#Settings APRS Timeout'><img src='gui_settings'><text>Station Timeout</text></img></a>
 				<a href='#Settings APRS Device'><img src='gui_settings'><text>Device</text></img></a>
 				<a href='#Settings APRS NMEA'><img src='gui_settings'><text>NMEA Settings</text></img></a>
 			</a>
-			<a name='Settings APRS Frequency'><text>APRS RX Frequency</text>
-				<img src='gui_settings' onclick='aprs_freq_144_39()'><text>144.39 MHz (North America)</text></img>
-				<img src='gui_settings' onclick='aprs_freq_144_8()'><text>144.80 MHz (Europe)</text></img>
-				<img src='gui_settings' onclick='aprs_freq_145_175()'><text>145.175 MHz (Australia)</text></img>
-				<img src='gui_settings' onclick='aprs_freq_144_575()'><text>144.575 MHz (New Zealand)</text></img>
-				<img src='gui_settings' onclick='aprs_freq_144_64()'><text>144.64 MHz (China/Japan)</text></img>
-				<img src='gui_settings' onclick='aprs_freq_144_66()'><text>144.66 MHz (Japan Kyushu)</text></img>
-				<img src='gui_settings' onclick='aprs_freq_144_93()'><text>144.93 MHz (Argentina/Uruguay)</text></img>
-				<img src='gui_settings' onclick='aprs_freq_145_57()'><text>145.57 MHz (Brazil)</text></img>
+			<a name='Settings APRS Frequency' onclick='aprs_refresh_freq_index()'><text>APRS RX Frequency</text>
+				<img cond='get_int_var("aprs_freq_index")==0' src='gui_active' onclick='aprs_freq_144_39()'><text>144.39 MHz (North America)</text></img>
+				<img cond='get_int_var("aprs_freq_index")!=0' src='gui_settings' onclick='aprs_freq_144_39()'><text>144.39 MHz (North America)</text></img>
+				<img cond='get_int_var("aprs_freq_index")==1' src='gui_active' onclick='aprs_freq_144_8()'><text>144.80 MHz (Europe)</text></img>
+				<img cond='get_int_var("aprs_freq_index")!=1' src='gui_settings' onclick='aprs_freq_144_8()'><text>144.80 MHz (Europe)</text></img>
+				<img cond='get_int_var("aprs_freq_index")==2' src='gui_active' onclick='aprs_freq_145_175()'><text>145.175 MHz (Australia)</text></img>
+				<img cond='get_int_var("aprs_freq_index")!=2' src='gui_settings' onclick='aprs_freq_145_175()'><text>145.175 MHz (Australia)</text></img>
+				<img cond='get_int_var("aprs_freq_index")==3' src='gui_active' onclick='aprs_freq_144_575()'><text>144.575 MHz (New Zealand)</text></img>
+				<img cond='get_int_var("aprs_freq_index")!=3' src='gui_settings' onclick='aprs_freq_144_575()'><text>144.575 MHz (New Zealand)</text></img>
+				<img cond='get_int_var("aprs_freq_index")==4' src='gui_active' onclick='aprs_freq_144_64()'><text>144.64 MHz (China/Japan)</text></img>
+				<img cond='get_int_var("aprs_freq_index")!=4' src='gui_settings' onclick='aprs_freq_144_64()'><text>144.64 MHz (China/Japan)</text></img>
+				<img cond='get_int_var("aprs_freq_index")==5' src='gui_active' onclick='aprs_freq_144_66()'><text>144.66 MHz (Japan Kyushu)</text></img>
+				<img cond='get_int_var("aprs_freq_index")!=5' src='gui_settings' onclick='aprs_freq_144_66()'><text>144.66 MHz (Japan Kyushu)</text></img>
+				<img cond='get_int_var("aprs_freq_index")==6' src='gui_active' onclick='aprs_freq_144_93()'><text>144.93 MHz (Argentina/Uruguay)</text></img>
+				<img cond='get_int_var("aprs_freq_index")!=6' src='gui_settings' onclick='aprs_freq_144_93()'><text>144.93 MHz (Argentina/Uruguay)</text></img>
+				<img cond='get_int_var("aprs_freq_index")==7' src='gui_active' onclick='aprs_freq_145_57()'><text>145.57 MHz (Brazil)</text></img>
+				<img cond='get_int_var("aprs_freq_index")!=7' src='gui_settings' onclick='aprs_freq_145_57()'><text>145.57 MHz (Brazil)</text></img>
 			</a>
 			<a name='Settings APRS Timeout'><text>APRS Station Timeout</text>
 				<img src='gui_settings' onclick='aprs_timeout_30min()'><text>30 minutes</text></img>

@@ -36,6 +36,59 @@
 #include "popup.h"
 #include "aprs.h"
 #include "aprs_db.h"
+#include "navit.h"
+
+/* Current frequency tracking for menu display */
+/* Frequency index: 0=144.39, 1=144.8, 2=145.175, 3=144.575, 4=144.64, 5=144.66, 6=144.93, 7=145.57 */
+static int current_aprs_freq_index = 0; /* Default to 144.39 MHz (North America) */
+
+/* Map frequency value to index for menu display */
+static int frequency_to_index(double freq) {
+    if (freq >= 144.385 && freq <= 144.395) return 0; /* 144.39 */
+    if (freq >= 144.795 && freq <= 144.805) return 1; /* 144.8 */
+    if (freq >= 145.170 && freq <= 145.180) return 2; /* 145.175 */
+    if (freq >= 144.570 && freq <= 144.580) return 3; /* 144.575 */
+    if (freq >= 144.635 && freq <= 144.645) return 4; /* 144.64 */
+    if (freq >= 144.655 && freq <= 144.665) return 5; /* 144.66 */
+    if (freq >= 144.925 && freq <= 144.935) return 6; /* 144.93 */
+    if (freq >= 145.565 && freq <= 145.575) return 7; /* 145.57 */
+    return 0; /* Default */
+}
+
+static int aprs_osd_get_frequency_index(struct navit *nav) {
+    struct attr map_attr, freq_attr;
+    struct mapset *ms;
+    struct map *map;
+    struct attr_iter *iter;
+    double frequency = 144.39; /* Default */
+    
+    if (!nav) return 0;
+    
+    if (!navit_get_attr(nav, attr_mapset, &map_attr, NULL)) {
+        return 0;
+    }
+    
+    ms = map_attr.u.mapset;
+    iter = mapset_attr_iter_new(NULL);
+    
+    while (mapset_get_attr(ms, attr_map, &map_attr, iter)) {
+        map = map_attr.u.map;
+        if (map_get_attr(map, attr_type, &map_attr, NULL)) {
+            if (map_attr.u.str && !strcmp(map_attr.u.str, "aprs")) {
+                if (map_get_attr(map, attr_frequency, &freq_attr, NULL)) {
+                    if (freq_attr.u.numd) {
+                        frequency = *freq_attr.u.numd;
+                    }
+                }
+                break;
+            }
+        }
+    }
+    mapset_attr_iter_destroy(iter);
+    
+    current_aprs_freq_index = frequency_to_index(frequency);
+    return current_aprs_freq_index;
+}
 
 static void aprs_osd_set_frequency(struct navit *nav, double frequency) {
     struct attr map_attr, freq_attr;
@@ -60,7 +113,19 @@ static void aprs_osd_set_frequency(struct navit *nav, double frequency) {
                 freq_attr.type = attr_frequency;
                 freq_attr.u.numd = &frequency;
                 map_set_attr(map, &freq_attr);
-                dbg(lvl_info, "APRS frequency set to %.3f MHz via menu", frequency);
+                current_aprs_freq_index = frequency_to_index(frequency);
+                
+                /* Store frequency index in command variable for menu access */
+                if (nav) {
+                    struct attr navit_attr;
+                    char cmd_str[128];
+                    navit_attr.type = attr_navit;
+                    navit_attr.u.navit = nav;
+                    snprintf(cmd_str, sizeof(cmd_str), "set_int_var(\"aprs_freq_index\", %d)", current_aprs_freq_index);
+                    command_evaluate_to_void(&navit_attr, cmd_str, NULL);
+                }
+                
+                dbg(lvl_info, "APRS frequency set to %.3f MHz via menu (index %d)", frequency, current_aprs_freq_index);
                 break;
             }
         }
@@ -105,6 +170,20 @@ int aprs_cmd_freq_144_93(struct navit *nav, char *function, struct attr **in, st
 
 int aprs_cmd_freq_145_57(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
     aprs_osd_set_frequency(nav, 145.57);
+    return 1;
+}
+
+/* Command to refresh frequency index for menu display */
+int aprs_cmd_refresh_freq_index(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    int index = aprs_osd_get_frequency_index(nav);
+    if (nav) {
+        struct attr navit_attr;
+        char cmd_str[128];
+        navit_attr.type = attr_navit;
+        navit_attr.u.navit = nav;
+        snprintf(cmd_str, sizeof(cmd_str), "set_int_var(\"aprs_freq_index\", %d)", index);
+        command_evaluate_to_void(&navit_attr, cmd_str, NULL);
+    }
     return 1;
 }
 
@@ -369,6 +448,7 @@ static struct command_table aprs_commands[] = {
     {"aprs_freq_144_66", command_cast(aprs_cmd_freq_144_66)},
     {"aprs_freq_144_93", command_cast(aprs_cmd_freq_144_93)},
     {"aprs_freq_145_57", command_cast(aprs_cmd_freq_145_57)},
+    {"aprs_refresh_freq_index", command_cast(aprs_cmd_refresh_freq_index)},
     {"aprs_timeout_30min", command_cast(aprs_cmd_timeout_30min)},
     {"aprs_timeout_60min", command_cast(aprs_cmd_timeout_60min)},
     {"aprs_timeout_90min", command_cast(aprs_cmd_timeout_90min)},
@@ -413,6 +493,17 @@ static struct osd_priv *aprs_osd_new(struct navit *nav, struct osd_methods *meth
     
     command_add_table_attr(aprs_commands, sizeof(aprs_commands)/sizeof(struct command_table), nav, &cmd_attr);
     navit_add_attr(nav, &cmd_attr);
+    
+    /* Initialize frequency index variable for menu */
+    aprs_osd_get_frequency_index(nav);
+    if (nav) {
+        struct attr navit_attr;
+        char cmd_str[128];
+        navit_attr.type = attr_navit;
+        navit_attr.u.navit = nav;
+        snprintf(cmd_str, sizeof(cmd_str), "set_int_var(\"aprs_freq_index\", %d)", current_aprs_freq_index);
+        command_evaluate_to_void(&navit_attr, cmd_str, NULL);
+    }
     
     dbg(lvl_info, "APRS OSD menu commands registered");
     
