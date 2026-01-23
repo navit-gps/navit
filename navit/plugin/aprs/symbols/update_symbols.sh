@@ -21,10 +21,15 @@ git clone --depth 1 https://github.com/hessu/aprs-symbols.git
 if [ -f "aprs-symbols/png/aprs-symbols-48-0.png" ] && [ -f "aprs-symbols/png/aprs-symbols-48-1.png" ]; then
     echo "Extracting symbols from sprite sheets..."
     
-    # Check if Python3 and PIL are available
+    # Check if Python3, PIL, and PyYAML are available
     if ! python3 -c "from PIL import Image" 2>/dev/null; then
         echo "Error: Python3 with PIL (Pillow) is required"
         echo "Install with: pip3 install Pillow"
+        exit 1
+    fi
+    if ! python3 -c "import yaml" 2>/dev/null; then
+        echo "Error: Python3 with PyYAML is required"
+        echo "Install with: pip3 install PyYAML"
         exit 1
     fi
     
