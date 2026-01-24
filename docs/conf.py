@@ -5,6 +5,7 @@ extensions = [
     'm2r2',
     'sphinx_rtd_theme',
     'sphinx.ext.todo',
+    'sphinx.ext.imgconverter',
 ]
 
 source_suffix = '.rst'
