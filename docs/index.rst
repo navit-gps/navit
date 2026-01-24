@@ -69,23 +69,23 @@ Main Features
    :glob:
    :caption: Old Wiki
 
-   user/community/Main Page_support box
-   user/configuration/Configuration (old)
-   user/configuration/Configuration_Display Options
-   user/configuration/Configuration_Full list of options
-   user/configuration/Configuration_General Options
-   user/configuration/Configuration_Layout Options
-   user/configuration/Configuration_Maps Options
-   user/configuration/Configuration_Vehicle Options
-   user/configuration/Coordinate format
-   user/configuration/Gui internal
+   user/community/Main_Page_support_box
+   user/configuration/Configuration_(old)
+   user/configuration/Configuration_Display_Options
+   user/configuration/Configuration_Full_list_of_options
+   user/configuration/Configuration_General_Options
+   user/configuration/Configuration_Layout_Options
+   user/configuration/Configuration_Maps_Options
+   user/configuration/Configuration_Vehicle_Options
+   user/configuration/Coordinate_format
+   user/configuration/Gui_internal
    user/configuration/Icons
-   user/configuration/Internal GUI
-   user/configuration/Internal GUI_Menu configurations
+   user/configuration/Internal_GUI
+   user/configuration/Internal_GUI_Menu_configurations
    user/configuration/Layout
    user/configuration/Layout_bike
    user/configuration/Layout_detailedcampingbike
-   user/configuration/Layout_hi vis
+   user/configuration/Layout_hi_vis
    user/configuration/Layout_mapnik
    user/configuration/Layout_mapnik-for-hdpi
    user/configuration/Layout_mapnik-for-mdpi
@@ -93,13 +93,13 @@ Main Features
    user/configuration/Menu
    user/configuration/NavitConfigurator
    user/configuration/OSD
-   user/configuration/OSD Layouts
-   user/configuration/QML GUI
-   user/configuration/QML2 GUI
-   user/configuration/QML2 GUI WIP
-   user/configuration/Skinning the SDL GUI
+   user/configuration/OSD_Layouts
+   user/configuration/QML_GUI
+   user/configuration/QML2_GUI
+   user/configuration/QML2_GUI_WIP
+   user/configuration/Skinning_the_SDL_GUI
    user/configuration/Speech
-   user/configuration/Vehicle profile flags
+   user/configuration/Vehicle_profile_flags
    user/configuration/Vehicleprofile
    user/configuration/vehicleprofile/vehicleprofile_bike_cycleway
    user/configuration/vehicleprofile/vehicleprofile_bike_on_asphalt
@@ -107,8 +107,8 @@ Main Features
    user/configuration/vehicleprofile/vehicleprofile_hike_bike_hard
    user/configuration/vehicleprofile/vehicleprofile_hike_bike_on_ground_gravel
    user/configuration/maps/binfile
-   user/faq/Failed to connect graphics to gui
-   user/faq/Gpsd Troubleshooting
+   user/faq/Failed_to_connect_graphics_to_gui
+   user/faq/Gpsd_Troubleshooting
    user/faq/Troubleshooting
 
    
