@@ -240,7 +240,7 @@ static struct zip_eoc *binfile_read_eoc(struct file *fi) {
         eoc_to_cpu(eoc);
         dbg(lvl_debug,"sig 0x%x", eoc->zipesig);
         if (eoc->zipesig != zip_eoc_sig) {
-            dbg(lvl_error,"map file %s: eoc signature check failed: 0x%x vs 0x%x", fi->name, eoc->zipesig,zip_eoc_sig);
+            dbg(lvl_debug,"map file %s: eoc signature check failed: 0x%x vs 0x%x", fi->name, eoc->zipesig,zip_eoc_sig);
             file_data_free(fi,(unsigned char *)eoc);
             eoc=NULL;
         }
@@ -360,7 +360,7 @@ static unsigned char *binfile_read_content(struct map_priv *m, struct file *fi, 
         ret=file_data_read_compressed(fi,offset, lfh->zipsize, lfh->zipuncmp);
         break;
     default:
-        dbg(lvl_error,"map file %s: unknown compression method %d", fi->name, lfh->zipmthd);
+        dbg(lvl_debug,"map file %s: unknown compression method %d", fi->name, lfh->zipmthd);
     }
     return ret;
 }
@@ -747,7 +747,7 @@ static int binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode
     oattr_len=0;
     if (!naoffset) {
         if (mode == change_mode_delete || mode == change_mode_modify) {
-            dbg(lvl_error,"no attribute selected");
+            dbg(lvl_debug,"no attribute selected");
             return 0;
         }
         if (mode == change_mode_append)
@@ -822,10 +822,10 @@ static int binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode
     {
         int *i=tn->pos,j=0;
         dbg(lvl_debug,"After: pos_attr=%td",tn->pos_attr-i);
-        while (i < tn->pos_next)
+        while (i < tn->pos_next) {
             dbg(lvl_debug,"After: pos_attr=%td",tn->pos_attr-i);
-        while (i < tn->pos_next)
             dbg(lvl_debug,"%d:0x%x",j++,*i++);
+        }
     }
     return 1;
 }
@@ -1012,7 +1012,7 @@ static int download_request(struct map_download *download) {
     struct attr *attrs[4];
 
     if(!download->m->download_enabled) {
-        dbg(lvl_error,"Tried downloading while it's not allowed");
+        dbg(lvl_debug,"Tried downloading while it's not allowed");
         return 0;
     }
     attrs[0]=&url;
@@ -1139,7 +1139,7 @@ static int download_eoc(struct map_download *download) {
     download->zip_eoc=(struct zip_eoc *)(download->zip64_eocl+1);
     if (download->zip64_eoc->zip64esig != zip64_eoc_sig || download->zip64_eocl->zip64lsig != zip64_eocl_sig
             || download->zip_eoc->zipesig != zip_eoc_sig) {
-        dbg(lvl_error,"wrong signature on zip64_eoc downloaded from "LONGLONG_FMT"",download->size-98);
+        dbg(lvl_debug,"wrong signature on zip64_eoc downloaded from "LONGLONG_FMT"",download->size-98);
         g_free(download->zip64_eoc);
         return 0;
     }
@@ -1166,7 +1166,7 @@ static int download_directory_do(struct map_download *download) {
         if (!size_ret)
             return 0;
         if (size_ret != sizeof(*cd) || cd->zipcensig != zip_cd_sig) {
-            dbg(lvl_error,"error1 size=%d vs %zu",size_ret, sizeof(*cd));
+            dbg(lvl_debug,"error1 size=%d vs %zu",size_ret, sizeof(*cd));
             return 0;
         }
         file_data_write(download->file, download->offset, sizeof(*cd), (unsigned char *)cd);
@@ -1174,7 +1174,7 @@ static int download_directory_do(struct map_download *download) {
         cd_xlen=cd->zipcfnl+cd->zipcxtl;
         cd_data=file_data_read_special(download->http, cd_xlen, &size_ret);
         if (size_ret != cd_xlen) {
-            dbg(lvl_error,"error2 size=%d vs %d",size_ret,cd_xlen);
+            dbg(lvl_debug,"error2 size=%d vs %d",size_ret,cd_xlen);
             return 0;
         }
         file_data_write(download->file, download->offset, cd_xlen, cd_data);
@@ -1280,7 +1280,7 @@ static struct zip_cd *download(struct map_priv *m, struct map_rect_priv *mr, str
         dbg(lvl_debug,"state=%d",download->state);
         switch (download->state) {
         case 0:
-            dbg(lvl_error,"error");
+            dbg(lvl_debug,"error");
             break;
         case 1:
             if (download_start(download))
@@ -1330,7 +1330,7 @@ static struct zip_cd *download(struct map_priv *m, struct map_rect_priv *mr, str
             if (download_eoc(download))
                 download->state=6;
             else {
-                dbg(lvl_error,"download of eoc failed");
+                dbg(lvl_debug,"download of eoc failed");
                 download->state=0;
             }
             break;
@@ -2423,7 +2423,7 @@ static int map_binfile_zip_setup(struct map_priv *m, char *filename, int mmap) {
     struct zip_cd *first_cd;
     int i;
     if (!(m->eoc=binfile_read_eoc(m->fi))) {
-        dbg(lvl_error,"map file %s: unable to read eoc", filename);
+        dbg(lvl_debug,"map file %s: unable to read eoc", filename);
         return 0;
     }
     dbg_assert(m->eoc->zipedsk == m->eoc->zipecen);
@@ -2442,11 +2442,11 @@ static int map_binfile_zip_setup(struct map_priv *m, char *filename, int mmap) {
     dbg(lvl_debug,"num_disk %d",m->eoc->zipedsk);
     m->eoc64=binfile_read_eoc64(m->fi);
     if (!binfile_get_index(m)) {
-        dbg(lvl_error,"map file %s: no index found", filename);
+        dbg(lvl_debug,"map file %s: no index found", filename);
         return 0;
     }
     if (!(first_cd=binfile_read_cd(m, 0, 0))) {
-        dbg(lvl_error,"map file %s: unable to get first cd", filename);
+        dbg(lvl_debug,"map file %s: unable to get first cd", filename);
         return 0;
     }
     m->cde_size=sizeof(struct zip_cd)+first_cd->zipcfnl+first_cd->zipcxtl;
@@ -2552,7 +2552,7 @@ static int map_binfile_open(struct map_priv *m) {
     if (! m->fi && m->url)
         return 0;
     if (! m->fi) {
-        dbg(lvl_error,"Failed to load '%s'", m->filename);
+        dbg(lvl_debug,"Failed to load '%s'", m->filename);
         return 0;
     }
     if (m->check_version)
@@ -2566,14 +2566,14 @@ static int map_binfile_open(struct map_priv *m) {
     *magic = le32_to_cpu(*magic);
     if (*magic == zip_lfh_sig || *magic == zip_split_sig || *magic == zip_cd_sig || *magic == zip64_eoc_sig) {
         if (!map_binfile_zip_setup(m, m->filename, m->flags & 1)) {
-            dbg(lvl_error,"invalid file format for '%s'", m->filename);
+            dbg(lvl_debug,"invalid file format for '%s'", m->filename);
             file_destroy(m->fi);
             m->fi=NULL;
             return 0;
         }
     } else if (*magic == zip_lfh_sig_rev || *magic == zip_split_sig_rev || *magic == zip_cd_sig_rev
                || *magic == zip64_eoc_sig_rev) {
-        dbg(lvl_error,"endianness mismatch for '%s'", m->filename);
+        dbg(lvl_debug,"endianness mismatch for '%s'", m->filename);
         file_destroy(m->fi);
         m->fi=NULL;
         return 0;
@@ -2600,7 +2600,7 @@ static int map_binfile_open(struct map_priv *m) {
         }
         map_rect_destroy_binfile(mr);
         if (m->map_version >= 16) {
-            dbg(lvl_error,"%s: This map is incompatible with your navit version. Please update navit. (map version %d)",
+            dbg(lvl_debug,"%s: This map is incompatible with your navit version. Please update navit. (map version %d)",
                 m->filename, m->map_version);
             return 0;
         }
@@ -2689,7 +2689,7 @@ static struct map_priv *map_new_binfile(struct map_methods *meth, struct attr **
 void plugin_init(void) {
     dbg(lvl_debug,"binfile: plugin_init");
     if (sizeof(struct zip_cd) != 46) {
-        dbg(lvl_error,"error: sizeof(struct zip_cd)=%zu",sizeof(struct zip_cd));
+        dbg(lvl_debug,"error: sizeof(struct zip_cd)=%zu",sizeof(struct zip_cd));
     }
     plugin_register_category_map("binfile", map_new_binfile);
 }
