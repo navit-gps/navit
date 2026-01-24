@@ -32,6 +32,7 @@ struct country_search *country_search_new(struct attr *search, int partial);
 struct item *country_search_get_item(struct country_search *this_);
 struct attr *country_default(void);
 void country_search_destroy(struct country_search *this_);
+int country_set_default_country(struct attr* attr);
 /* end of prototypes */
 
 #ifdef __cplusplus

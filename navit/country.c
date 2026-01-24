@@ -424,6 +424,17 @@ country_default(void) {
     return &country_default_attr;
 }
 
+int country_set_default_country(struct attr* attr) {
+
+    if(attr->type == attr_country_iso2) {
+        country_default_attr.type=attr_country_iso2;
+        country_default_attr.u.str=iso2;
+        return 1;
+    }
+
+    return 0;
+}
+
 void country_search_destroy(struct country_search *this_) {
     g_free(this_->search.u.str);
     g_free(this_);
