@@ -136,8 +136,10 @@ struct route_graph_segment_data {
 };
 
 struct route_graph_lez {
-    struct coord *next;    /**< Pointer to the next coordinate */
-    unsigned ncoords;       /**< How many coordinates does this lez poly have? */
+    //struct coord *next;         /**< Pointer to the next coordinate */
+    unsigned int ncoords;       /**< How many coordinates does this lez poly have? */
+    struct coord min;           /**< min coordinates */
+    struct coord max;           /**< max coordinates */
     struct coord coord[0];      /**< Pointer to the coords coordinates of this lez */
     /* WARNING: There will be coordinates following here, so do not create new fields after c! */
 };
@@ -161,9 +163,9 @@ struct route_graph_segment {
 
 struct route_graph_lezs {
     struct route_graph_lez *next;    /**< Pointer to the next lez */
-    unsigned nlezs;          /**< How many lezs do we have? */
-    struct route_graph_lez lez[0];     /**< Pointer to the lez structure */
-    /* WARNING: There will be lezs following here, so do not create new fields after c! */
+    unsigned nlezs;                  /**< How many lezs do we have? */
+    struct route_graph_lez *lez[100];   /**< Pointer to the lez structures */
+    /* WARNING: There will be lezs following here, so do not create new fields after lez! */
 };
 
 /**
