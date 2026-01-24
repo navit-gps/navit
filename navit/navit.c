@@ -3275,7 +3275,7 @@ static void navit_vehicle_update_position(struct navit *this_, struct navit_vehi
         if (tracking)
             route_set_position_from_tracking(this_->route, tracking, pro);
         else
-            route_set_position(this_->route, &cursor_pc);
+            route_set_position(this_->route, &cursor_pc, this_->gra);
     }
     callback_list_call_attr_0(this_->attr_cbl, attr_position);
     navit_textfile_debug_log(this_, "type=trackpoint_tracked");
@@ -3364,7 +3364,7 @@ static void navit_vehicle_update_status(struct navit *this_, struct navit_vehicl
 
 void navit_set_position(struct navit *this_, struct pcoord *c) {
     if (this_->route) {
-        route_set_position(this_->route, c);
+        route_set_position(this_->route, c, this_->gra);
         callback_list_call_attr_0(this_->attr_cbl, attr_position);
     }
     if (this_->ready == 3)
@@ -3776,6 +3776,14 @@ int navit_block(struct navit *this_, int block) {
  */
 int navit_get_blocked(struct navit *this_) {
     return this_->blocked;
+}
+
+void navit_store_center(struct navit * this_) {
+    if (this_->bookmarks) {
+            char *center_file = bookmarks_get_center_file(TRUE);
+            bookmarks_write_center_to_file(this_->bookmarks, center_file);
+            g_free(center_file);
+        }
 }
 
 void navit_destroy(struct navit *this_) {
