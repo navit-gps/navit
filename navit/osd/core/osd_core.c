@@ -2888,6 +2888,7 @@ static void osd_cond_speed_warner_draw(struct osd_priv_common *opc, struct navit
     char *condition=g_strdup("");
 
     struct tracking *tracking = NULL;
+    struct route *route = NULL;
     struct graphics_gc *osd_color=this->grey;
     struct graphics_gc *osd_colorcond=this->black;
     struct graphics_image *img = this->img_off;
@@ -2902,6 +2903,7 @@ static void osd_cond_speed_warner_draw(struct osd_priv_common *opc, struct navit
 
     if (navit) {
         tracking = navit_get_tracking(navit);
+        route = navit_get_route(navit);
     }
     if (tracking  && this->active ) {
 
@@ -2930,19 +2932,19 @@ static void osd_cond_speed_warner_draw(struct osd_priv_common *opc, struct navit
         if(tracking_get_attr(tracking, attr_maxspeed_conditional_speed, &maxspeed_attr, NULL)) {
             cond_speed = maxspeed_attr.u.num;
             cond_speed_set=1;
-            dbg(lvl_debug, "attr_maxspeed_conditional_speed: %i", cond_speed);
+            dbg(lvl_error, "attr_maxspeed_conditional_speed: %i", cond_speed);
         }
 
         if(tracking_get_attr(tracking, attr_maxspeed_fwd_conditional_speed, &maxspeed_fwd_attr, NULL)) {
             cond_fwd_speed = maxspeed_fwd_attr.u.num;
             cond_fwd_speed_set=1;
-            dbg(lvl_debug, "attr_maxspeed_fwd_conditional_speed: %i", cond_fwd_speed);
+            dbg(lvl_error, "attr_maxspeed_fwd_conditional_speed: %i", cond_fwd_speed);
         }
 
         if(tracking_get_attr(tracking, attr_maxspeed_bwd_conditional_speed, &maxspeed_bwd_attr, NULL)) {
             cond_bwd_speed = maxspeed_bwd_attr.u.num;
             cond_bwd_speed_set=1;
-            dbg(lvl_debug, "attr_maxspeed_fwd_conditional_speed: %i", cond_bwd_speed);
+            dbg(lvl_error, "attr_maxspeed_bwd_conditional_speed: %i", cond_bwd_speed);
         }
 
         if(tracking_get_attr(tracking, attr_directed, &direction_attr, NULL)) {
@@ -2953,6 +2955,24 @@ static void osd_cond_speed_warner_draw(struct osd_priv_common *opc, struct navit
             dbg(lvl_debug, "%s", maxspeed_cond_attr.u.str);
             g_free(condition);
             condition=g_strdup(maxspeed_cond_attr.u.str);
+        }
+
+        if (tracking_get_attr(tracking, attr_maxspeed_fwd_conditional_condition, &maxspeed_fwd_cond_attr, NULL)) {
+            if (direction >= 0) {
+                if (cond_fwd_speed == -1) {
+                    if (cond_speed > -1)
+                        cond_fwd_speed = cond_speed;
+                }
+            }
+        }
+
+        if (tracking_get_attr(tracking, attr_maxspeed_bwd_conditional_condition, &maxspeed_bwd_cond_attr, NULL)) {
+            if (direction < 0) {
+                if (cond_bwd_speed == -1) {
+                    if (cond_speed > -1)
+                        cond_bwd_speed = cond_speed;
+                }
+            }
         }
 
         flags=tracking_get_current_flags(tracking);
@@ -2974,6 +2994,8 @@ static void osd_cond_speed_warner_draw(struct osd_priv_common *opc, struct navit
                             condition=g_strdup(maxspeed_fwd_cond_attr.u.str);
                         }
                     }
+                } else {
+                    return;
                 }
 
             } else {
