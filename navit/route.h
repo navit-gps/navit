@@ -102,7 +102,7 @@ struct route_info *route_get_dst(struct route *this_);
 int route_get_path_set(struct route *this_);
 int route_contains(struct route *this_, struct item *item);
 int route_destination_reached(struct route *this_);
-void route_set_position(struct route *this_, struct pcoord *pos);
+void route_set_position(struct route *this_, struct pcoord *pos, struct graphics *gra);
 void route_set_position_from_tracking(struct route *this_, struct tracking *tracking, enum projection pro);
 struct map_selection *route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs);
 void route_set_destinations(struct route *this_, struct pcoord *dst, int count, int async);
