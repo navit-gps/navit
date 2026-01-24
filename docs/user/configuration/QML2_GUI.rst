@@ -6,14 +6,16 @@ QML2 GUI
 The QML2 UI is a new UI being currently developed to provide a more
 modern look and feel to Navit.
 
-==================== ====================================
-Tablet / PC          Mobile UI
-==================== ====================================
-.. figure:: Qml2.gif .. figure:: Gui_qml_drawer_popup.gif
-   :alt: Qml2.gif       :alt: Gui_qml_drawer_popup.gif
-                     
-   Qml2.gif             Gui_qml_drawer_popup.gif
-==================== ====================================
+.. only:: html
+
+   ==================== ====================================
+   Tablet / PC          Mobile UI
+   ==================== ====================================
+   .. figure:: Qml2.gif .. figure:: Gui_qml_drawer_popup.gif
+      :alt: Qml2.gif       :alt: Gui_qml_drawer_popup.gif
+                        
+      Qml2.gif             Gui_qml_drawer_popup.gif
+   ==================== ====================================
 
 .. _prebuilt_image:
 
