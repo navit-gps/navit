@@ -83,13 +83,6 @@ Main Features
    user/configuration/Internal_GUI
    user/configuration/Internal_GUI_Menu_configurations
    user/configuration/Layout
-   user/configuration/Layout_bike
-   user/configuration/Layout_detailedcampingbike
-   user/configuration/Layout_hi_vis
-   user/configuration/Layout_mapnik
-   user/configuration/Layout_mapnik-for-hdpi
-   user/configuration/Layout_mapnik-for-mdpi
-   user/configuration/Layout_snow
    user/configuration/Menu
    user/configuration/NavitConfigurator
    user/configuration/OSD
