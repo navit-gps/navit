@@ -137,6 +137,7 @@ enum attr_strings_type {
     attr_string_maxspeed_conditional_condition,
     attr_string_maxspeed_fwd_conditional_condition,
     attr_string_maxspeed_bwd_conditional_condition,
+    attr_string_maxspeed_conditional_raw_condition,
     attr_string_last,
 };
 
@@ -723,7 +724,7 @@ static int convert_length_unit_to_integer(char *value, int multiplier) {
     return result;
 }
 
-// Conversion to metric tons internally, choose multiplier as required. 1 is return value is in metric tons
+// Conversion to metric tons internally, choose multiplier as required. 1 means return value is in metric tons
 static int convert_weight_unit_to_integer(char *value, int multiplier) {
     int result = 0;
     char *ptrst = strstr(value, "st");      //short ton value id
@@ -793,15 +794,15 @@ static void convert_maxspeed_to_integer_and_flags(char *conditiontype, char *val
 
     char temp[strlen(value)];
     char cond[strlen(value)];
-    char *speed, *temp1, *temp2;
+    char *speed, *temp1="", *temp2="";
     int hgv = 0;
 
     if (strstr(conditiontype, ":hgv")) {
-        fprintf(stderr, ANSI_GRN"\nTest -- Node: %lli maxspeed conditional HGV: %s -- %s"ANSI_DEF"\n", getcurrentid(),
+        fprintf(stderr, ANSI_GRN"\nNode: %lli maxspeed conditional HGV: %s -- %s"ANSI_DEF"\n", getcurrentid(),
                     conditiontype, value);
         hgv = 1;
     } else {
-        fprintf(stderr, ANSI_GRN"\nTest -- Node: %lli maxspeed conditional NON HGV: %s -- %s"ANSI_DEF"\n",
+        fprintf(stderr, ANSI_GRN"\nNode: %lli maxspeed conditional NON HGV: %s -- %s"ANSI_DEF"\n",
                     getcurrentid(), conditiontype, value);
     }
 
@@ -817,7 +818,7 @@ static void convert_maxspeed_to_integer_and_flags(char *conditiontype, char *val
             temp2 = malloc(strlen(HGV_WEIGHT_NO_CONDITION_FOUND) + 1);
             strcpy(temp2, HGV_WEIGHT_NO_CONDITION_FOUND); //TODO: 3.5 or 7.5?
             fprintf(stderr,
-                        ANSI_YEL"\nWarning -- :hgv - no condition found. Setting '" "' %lli"ANSI_DEF"\n",
+                        ANSI_YEL"\nWarning -- :hgv - no condition found. Setting '" HGV_WEIGHT_NO_CONDITION_FOUND "' %lli"ANSI_DEF"\n",
                         getcurrentid());
         } else {
             sprintf(cond, "No condition found for this tag %lli", getcurrentid());
@@ -1186,16 +1187,18 @@ void osm_add_tag(char *k, char *v) {
         if (condlimit_attr_value.condition) {
             attr_strings_save(attr_string_maxspeed_conditional_condition, condlimit_attr_value.condition);
             free(condlimit_attr_value.condition);
-
+            flags[0] |= AF_CONDITIONAL_SPEED_LIMIT;
+            attr_strings_save(attr_string_maxspeed_conditional_raw_condition, v);
         }
 
-        flags[0] |= AF_CONDITIONAL_SPEED_LIMIT;
+
         condlimit_attr_value.condition = 0;
 
 
         if (condlimit_fwd_attr_value.condition) {
             attr_strings_save(attr_string_maxspeed_fwd_conditional_condition, condlimit_fwd_attr_value.condition);
             free(condlimit_fwd_attr_value.condition);
+            flags[0] |= AF_CONDITIONAL_SPEED_LIMIT;
         }
 
         condlimit_fwd_attr_value.condition = 0;
@@ -1204,6 +1207,7 @@ void osm_add_tag(char *k, char *v) {
         if (condlimit_bwd_attr_value.condition) {
             attr_strings_save(attr_string_maxspeed_bwd_conditional_condition, condlimit_bwd_attr_value.condition);
             free(condlimit_bwd_attr_value.condition);
+            flags[0] |= AF_CONDITIONAL_SPEED_LIMIT;
         }
 
         condlimit_bwd_attr_value.condition = 0;
@@ -2958,14 +2962,14 @@ struct multipolygon {
 };
 
 /**
- * @brief find the nect matching polygon segment
+ * @brief find the next matching polygon segment
  * This can be used to find the next matching "line" to form a polygon.
  * @param part current line part
  * @param part_used how this part was used
  * @param in_count number of lines passed in parts
  * @parts array of item_bin pointers giving the single parts
  * @parts used int array, one for each part, indicating wheather the part was already used. This
- *        function sets the usage for the mathcing part if one is found. Usage is 0: not used,
+ *        function sets the usage for the matching part if one is found. Usage is 0: not used,
  *        1: used forward 2: used reverse
  * @returns: index of matching part, -1 if none matches or all are consumed already.
  */
