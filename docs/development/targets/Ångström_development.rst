@@ -115,11 +115,11 @@ bitbake
 | bitbake 1.8.12 didn't work as well as 1.8.10.
 | ====Libs==== For my build I had to change the plugins block in
   navit.xml to make the libs found:
-| 
+|
 
-| ``       ``\ 
-| ``       ``\ 
-| `` ``\ 
+| ``       ``\
+| ``       ``\
+| `` ``\
 
 | Please note the '.*' at the end of the first plugin path.
   Alternatively you can attempt to install the navit-dev package which

@@ -106,14 +106,14 @@ Example (from the svn + git era, needs update) :
 | `` git merge trunk``
 | `` git push``
 
--  
+-
 
    -  export that feature as a patch ( a diff between the branch, and
       git trunk).
 
 `` git diff trunk``
 
--  
+-
 
    -  patch svn trunk to merge the code. This will trigger another merge
       to git-trunk and a call to the CI workflow

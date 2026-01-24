@@ -18,9 +18,9 @@ map-Files. It is possible to convert waypoints and tracks.
 
 Insert the text map Files into the navit.xml like this:
 
-| ``        ``\ 
-| ``               ``\ 
-| ``               ``\ 
+| ``        ``\
+| ``               ``\
+| ``               ``\
 
 and you will get the poi-data on the map.
 
@@ -86,24 +86,24 @@ Bash version
        lon=$(echo "$line" | cut -f1 -d',')
        lat=$(echo "$line" | cut -f2 -d',')
        name=$(echo "$line" | cut -f3 -d',')
-       
+
        poi_label="$name"
        poi_desc="$name"
-       
+
        if [ -z "$poi_type" ]; then
            poi_type="poi_attraction"
        fi
-       
+
        echo "type=$poi_type label=\"$poi_label\" description=\"$poi_desc\" gc_type=\"\"" >> $poitxtfile
        echo "$lon $lat" >> $poitxtfile
-               
+
        status="\t$csvfile ($linen/$filelen)"
        if [ $linen -gt 1 ]; then
            for ((k=0; $k < $(expr length "$status"); k++)); do
                echo -n -e "\b"
            done
        fi
-       
+
        if [ $linen != $filelen ]; then
            echo -e -n "$status"
        fi
@@ -148,21 +148,21 @@ Much more quick.
                    lon = cvsparts.group(1)
                    lat = cvsparts.group(2)
                    name = cvsparts.group(3)
-                   
+
                    poi_label = name
                    poi_desc = ""
-                   
+
                    if not poi_type:
                        poi_type = "poi_attraction"
-                   
+
                    outlist.append('type=%s label="%s" description="%s" gc_type=""\n' %
                                                     (poi_type, poi_label, poi_desc))
                    outlist.append("%s %s\n" % (lon, lat))
-               
+
                status = "\t%s (%d/%d)" % (os.path.basename(currentfile), linen, filelen)
                print status,"\r",
                sys.stdout.flush()
-               
+
                linen += 1
            csvfile.close()
 

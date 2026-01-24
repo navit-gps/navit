@@ -77,13 +77,13 @@ install.
 
 ::
 
-    make 
+    make
 
 -  Install Qt
 
 ::
 
-    sudo make install 
+    sudo make install
 
 .. _add_qt_to_your_environment:
 

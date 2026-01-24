@@ -231,18 +231,18 @@ Example of code for a Garmin GPS using gpsd on linux, and write track
 log. The profilename="car" is a choice between car, bike, pedestrian and
 horse in the standard navit.xml file
 
-| `` ``\ 
+| `` ``\
 | `` ``
-| `` ``\ 
-| `` ``\ 
+| `` ``\
+| `` ``\
 
 Example of code for using a GPS with an MTK chip on linux, and write
 track log.
 
-| `` ``\ 
+| `` ``\
 | `` ``
-| `` ``\ 
-| `` ``\ 
+| `` ``\
+| `` ``\
 
 Debugging
 ---------
@@ -303,10 +303,10 @@ An instance looks like the following :
 
 -  A mapset, with one or more maps :
 
-| 
-| 
-| 
-| 
+|
+|
+|
+|
 
 -  And finally, one or more layouts.
 
@@ -318,9 +318,9 @@ The navit instance
 
 The default navit instance looks like this :
 
-| 
-| 
-| 
+|
+|
+|
 
 This will load the gtk gui, using the gtk_drawing_area graphics driver.
 Further graphics drivers include gtk_drawing_area, qt_qpainter and sdl.
@@ -357,28 +357,28 @@ Experimental/less maintained drivers:
 
 The gtk gui looks like the following in the navit.xml:
 
-| 
-| 
+|
+|
 
 or for the `Internal GUI <Internal_GUI>`__ (with gtk graphics):
 
-| 
-| 
+|
+|
 
 or for the `Internal GUI <Internal_GUI>`__ (with sdl graphics):
 
-| 
-| 
+|
+|
 
 or for the `Internal GUI <Internal_GUI>`__ (with Qt graphics):
 
-| 
-| 
+|
+|
 
 or for the internal GUI on Windows:
 
-| 
-| 
+|
+|
 
 For the moment don't attempt other gui / graphics combinations.
 
@@ -503,11 +503,11 @@ The On Screen Display
 
 See `On Screen Display <On_Screen_Display>`__. Some quick examples:
 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
 
 Keybindings
 ~~~~~~~~~~~
@@ -656,7 +656,7 @@ will only be stored if your GPS device actually reports it.
 
 With all options enabled, such as:
 
-``    ``\ 
+``    ``\
 
 a gpx file which looks like the following will be created:
 
@@ -722,14 +722,14 @@ Within the vehicleprofile section, roadprofile sections are used to
 describe the routing behaviour of different roads. Here's a very basic
 example:
 
-| 
-| `` ``\ 
-| `` ``\ 
-| `` ``\ 
-| `` ``\ 
-| `` ``\ 
-| `` ``\ 
-| 
+|
+| `` ``\
+| `` ``\
+| `` ``\
+| `` ``\
+| `` ``\
+| `` ``\
+|
 
 The speeds are configured in km/h.
 
@@ -753,10 +753,10 @@ Reiseplaner Maps
 
 The following example is for the Reiseplaner maps :
 
-| 
-| ``  ``\ 
-| ``  ``\ 
-| 
+|
+| ``  ``\
+| ``  ``\
+|
 
 Here's some more informations about the maps of Reiseplaner :
 
@@ -775,10 +775,10 @@ file that Navit can use from
 `OpenStreetMap <http://www.openstreetmap.org>`__ data. Once you have a
 suitable file, define a mapset using something like:
 
-| 
-| ``  ``\ 
-| ``  ``\ 
-| 
+|
+| ``  ``\
+| ``  ``\
+|
 
 Note that there are `some
 limitations <OpenStreetMap#Problems_with_OSM_and_navit_or_navigation_in_general>`__
@@ -830,10 +830,10 @@ items ("in front").
 
 Defining an itemgra:
 
-| 
-| ``  ``\ 
-| ``  ``\ 
-| 
+|
+| ``  ``\
+| ``  ``\
+|
 
 Here the available options:
 
@@ -859,12 +859,12 @@ Note: Meaningful values for order are between 0 and 18.
 
 You can define an item multiple times. Example :
 
-| 
-| ``  ``\ 
-| 
-| 
-| ``  ``\ 
-| 
+|
+| ``  ``\
+|
+|
+| ``  ``\
+|
 
 Here we define two different widths for the same item depending on the
 order. We could also have changed it's color.
@@ -1028,12 +1028,12 @@ references to the XML-Tag "layer" with attribute "name" of value
 "points" within an XML-Tag "layout" with attribute "name" of value "Car"
 within an XML-Tag "navit" within an XML-Tag "config".
 
-| 
-| 
-| 
-| 
-| 
-| 
+|
+|
+|
+|
+|
+|
 
 Use this as your $HOME/.navit/navit.xml and you will get everything
 under .. except .. (first xi:include), plus as specified plus everything
@@ -1050,7 +1050,7 @@ Essentially, Navit farms out the speech to software which you should
 have installed on your device. For example, if you have eSpeak
 installed, you would have the following line in your navit.xml:
 
-``    ``\ 
+``    ``\
 
 Obviously, that's for those who want Navit to speak to them in English,
 at 150 words per minute. The *%s* is filled in by Navit when sent to the
@@ -1071,12 +1071,12 @@ couple of useable wreapper script samples are at the
 
 You may prefer to use flite. The line would be:
 
-``    ``\ 
+``    ``\
 
 Also Navit is able to compose phrases if you give it a set of
 prerecorded samples. So say you have following line in navit.xml
 
-``    ``\ 
+``    ``\
 
 Directory /path/to/waves should contain audio files which names end with
 .wav. The names of the waves must give the complete sentence together.
@@ -1098,7 +1098,7 @@ can set to 0 so only the minimum set of
 1,2,3,4,5,10,25,50,75,100,150,200,250,300,400,500,750 as numbers is
 used. With these changes, last example will look like this:
 
-``    ``\ 
+``    ``\
 
 See also `Translations <Translations>`__ and
 `FAQ#Navit_speaks.21_But_it.27s_all_English... <FAQ#Navit_speaks.21_But_it.27s_all_English...>`__.

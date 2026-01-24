@@ -104,7 +104,7 @@ Main Features
    user/faq/Gpsd_Troubleshooting
    user/faq/Troubleshooting
 
-   
+
 .. Indices and tables
 .. ------------------
 

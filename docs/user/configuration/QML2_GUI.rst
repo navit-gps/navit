@@ -13,7 +13,7 @@ modern look and feel to Navit.
    ==================== ====================================
    .. figure:: Qml2.gif .. figure:: Gui_qml_drawer_popup.gif
       :alt: Qml2.gif       :alt: Gui_qml_drawer_popup.gif
-                        
+
       Qml2.gif             Gui_qml_drawer_popup.gif
    ==================== ====================================
 

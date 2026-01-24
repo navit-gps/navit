@@ -16,10 +16,10 @@ should go (about 1.2 GB) update your navit.xml file accordingly.
 
 e.g.:
 
-| ``       ``\ 
-| ``               ``\ 
-| ``               ``\ 
-| ``       ``\ 
+| ``       ``\
+| ``               ``\
+| ``               ``\
+| ``       ``\
 
 .. _gelbe_seiten_maproute:
 

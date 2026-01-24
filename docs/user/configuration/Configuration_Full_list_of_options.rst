@@ -1196,7 +1196,7 @@ Insert inbetween \ ``...``\  tags for all other types.
 osd
 ---
 
-.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\ 
+.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags.
 See `OSD <OSD>`__ for comprehensive information on on-screen display
 settings.
@@ -1499,7 +1499,7 @@ settings.
 vehicle
 -------
 
-.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\ 
+.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags.
 
    +-------------+-------------+-------------+-------------+-------------+
@@ -1718,7 +1718,7 @@ tags.
 tracking
 --------
 
-.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\ 
+.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags.
 
    +--------------+--------+--------+----------------+----------------+
@@ -1758,7 +1758,7 @@ tags.
 vehicleprofile
 --------------
 
-.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\ 
+.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags.
 
    +--------------+--------+--------------+--------------+--------------+
@@ -2217,7 +2217,7 @@ tags.
 roadprofile
 -----------
 
-.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\ 
+.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags.
 
    +-----------+-----------+-------+-----------+-----------+---------+
@@ -2334,7 +2334,7 @@ tags.
 announcement
 ------------
 
-.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\ 
+.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags. **Although included in the default navit.xml, ``announcement``
 tags in ``roadprofile`` are currently not honoured. Please use the
 ``announce`` tag within ``navigation`` (see below).**
@@ -2369,19 +2369,19 @@ tags in ``roadprofile`` are currently not honoured. Please use the
 navigation
 ----------
 
-.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\ 
+.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags.
 
    ========= ===== ====== ===== =======
    Attribute Units Values Notes Example
    ========= ===== ====== ===== =======
-   \                            
+   \
    ========= ===== ====== ===== =======
 
 announce
 --------
 
-.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\ 
+.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags.
 
    +-----------+--------+--------+-------------------+-------------------+
@@ -2420,7 +2420,7 @@ tags.
 speech
 ------
 
-.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\ 
+.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags.
 
    +--------------+-------+--------------+--------------+--------------+
@@ -2564,7 +2564,7 @@ tags.
 mapset
 ------
 
-.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\ 
+.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags.
 
    +-----------+-------+------------+-----------------+-----------------+
@@ -2588,7 +2588,7 @@ tags.
 map
 ---
 
-.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\ 
+.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags.
 
    +-----------+-------+---------------+---------------+---------------+
@@ -2631,7 +2631,7 @@ tags.
 maps
 ----
 
-.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\ 
+.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags.
 
    +-----------+-------+------------+-----------------+-----------------+
@@ -2646,7 +2646,7 @@ tags.
 layout
 ------
 
-.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\ 
+.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags.
 
    +-------------+-------------+-------------+-------------+-------------+
@@ -2714,7 +2714,7 @@ tags.
 cursor
 ------
 
-.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\ 
+.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags. Cursor position is controlled by
 
    ========= ====== ====== ================ ==========
@@ -2727,7 +2727,7 @@ tags. Cursor position is controlled by
 itemgra
 -------
 
-.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\ 
+.. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags.
 
    +-------------+-------+--------+----------------+----------------+

@@ -60,10 +60,10 @@ aside. So it may differ a bit.**
       Update your `Configuation <Configuation>`__ accordingly. A sample
       for Germany would be:
 
-| 
-| ``        ``\ 
-| ``        ``\ 
-| 
+|
+| ``        ``\
+| ``        ``\
+|
 
 Optional: You can save some space (up to 2G) by deleting all the \*d60\*
 files. They are not needed.

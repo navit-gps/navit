@@ -71,23 +71,23 @@ Now, here is a sample of the init function :
 .. code:: c
 
     static struct gui_priv *
-    gui_<plugin>_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs) 
+    gui_<plugin>_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
     {
        dbg(1,"Begin initialization of <your plugin>\n");
        struct gui_priv *this_;
            *meth=gui_<plugin>_methods;
-    
+
        this_=g_new0(struct gui_priv, 1);
-    
+
        // Perform initializations specific to your gui
        // ...
-    
+
        // If you want to register a callback function for the vehicle, you can do it so:
        struct callback *cb=callback_new_0(callback_cast(vehicle_callback_handler));
-    
+
        navit_add_vehicle_cb(nav,cb);
        this_->nav=nav;
-       
+
        return this_;
    }
 
@@ -101,13 +101,13 @@ functions (for now). Thoses are requested for GTK.
     {
        return NULL;
     }
-    
+
     static struct statusbar_priv *
     gui_<plugin>_statusbar_new(struct gui_priv *gui, struct statusbar_methods *meth)
     {
        return NULL;
     }
-    
+
     static struct menu_priv *
     gui_<plugin>_popup_new(struct gui_priv *this_, struct menu_methods *meth)
     {
@@ -137,41 +137,41 @@ And, last but not least :
     static int gui_run_main_loop(struct gui_priv *this_)
     {
            // Whatever needs to be done right before beginning the navigation
-           
+
            // Define your viewport
        struct map_selection sel;
-            
+
        memset(&sel, 0, sizeof(sel));
        sel.u.c_rect.rl.x=800;
        sel.u.c_rect.rl.y=600;
-       
+
        transform_set_screen_selection(navit_get_trans(this_->nav), &sel);
-           
-           
+
+
        navit_draw(this_->nav);
-           
+
            // Register the callback to handle navigation instructions updates
        struct navigation *navig;
        navig=navit_get_navigation(navit);
-           
+
        navigation_register_callback(navig,
            attr_navigation_long,
            callback_new_0((void (*)())update_roadbook)
        );
-           
+
        timeout = g_timeout_source_new(100);
        g_source_set_callback(timeout, gui_timeout_cb, NULL, NULL);
        g_source_attach(timeout, NULL);
        while (!must_quit)
        {
            //Poll event, process them
-           
+
            // Call update of gps
            g_main_context_iteration (NULL, TRUE);
-           
+
            // Any other task you may need
-    
+
            }
            g_source_destroy(timeout);
-            
+
     }

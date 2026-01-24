@@ -151,7 +151,7 @@ sub-menus and actions are accessible. The sub menu items are:
 #. `Route <Internal_Gui#Route>`__
 #. `About <Internal_Gui#About>`__
 
-| 
+|
 
 Actions
 ~~~~~~~
@@ -167,7 +167,7 @@ items are:
 #. `Town <Internal_Gui#Town>`__
 #. Quit - Closes Navit
 
-| 
+|
 
 Bookmarks
 ^^^^^^^^^
@@ -233,7 +233,7 @@ on the map. The items contained in this sub menu are:
    `Bookmark <Internal_GUI#Bookmarks>`__ menu.
 -  POIs: Brings up a list of all known POIs around the map point.
 
-| 
+|
 
 POIs
 ''''
@@ -267,7 +267,7 @@ for the GPS position of the device.
 -  View on Map: Re-pans the map to display the current "known" position
    based upon GPS data.
 
-| 
+|
 
 Town
 ^^^^
@@ -312,7 +312,7 @@ The sub menu items are:
 #. `Vehicle <Internal_Gui#Vehicle>`__
 #. `Rules <Internal_Gui#Rules>`__
 
-| 
+|
 
 Display
 ^^^^^^^
@@ -324,7 +324,7 @@ various display features within Navit.
 #. `Fullscreen/Window Mode <Internal_Gui#Window_Mode>`__
 #. `3D <Internal_Gui#3D>`__
 
-| 
+|
 
 Layout
 ''''''
@@ -365,7 +365,7 @@ Vehicle
 currently being used for the current vehicle. Tapping the GPS device
 name opens a menu with available routing profiles.
 
-| 
+|
 
 Rules
 ^^^^^
@@ -390,7 +390,7 @@ will display the active route.
 #. Height Profile, requires a dedicated binfile to providing
    heightlines.
 
-| 
+|
 
 
 Route Description

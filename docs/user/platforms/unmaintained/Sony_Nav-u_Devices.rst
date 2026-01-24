@@ -64,15 +64,15 @@ Upload unlock scripts to the device
    by substituting the relevant lines with the following suggestions for
    this device:
 
-| 
-| 
-| 
-| 
-| 
-| 
-| 
-| 
-| 
+|
+|
+|
+|
+|
+|
+|
+|
+|
 
 .. _test_the_customized_startup_with_unlock_and_automatic_launch_of_navit:
 

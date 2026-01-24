@@ -15,7 +15,7 @@ Reporting a bug
 
 .. note::
 
-   You should also head over to the :ref:`discord` or to the :ref:`irc` if you want to discuss the bug before submitting a report 
+   You should also head over to the :ref:`discord` or to the :ref:`irc` if you want to discuss the bug before submitting a report
    for example, it may just be that your local configuration is wrong, which can quickly be diagnosed by the developers.
 
 #. Head over to https://github.com/navit-gps/navit/issues and search for

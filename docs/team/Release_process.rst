@@ -49,7 +49,7 @@ When we release Navit, here are the steps we have to follow for now
    -  update: https://launchpad.net/navit/+announcements
    -  verify that https://code.launchpad.net/navit is up-to-date
 
--  
+-
 
    -  add the milestone and release on the trunk series, then create the
       release: https://launchpad.net/navit/trunk
