@@ -188,25 +188,25 @@ this:
 
     # Uncomment if you wish to use the linux input layer event interface
     # module_raw input
-    
+
     # Uncomment if you're using a Sharp Zaurus SL-5500/SL-5000d
     # module_raw collie
-    
+
     # Uncomment if you're using a Sharp Zaurus SL-C700/C750/C760/C860
     # module_raw corgi
-    
+
     # Uncomment if you're using a device with a UCB1200/1300/1400 TS interface
     # module_raw ucb1x00
-    
+
     # Uncomment if you're using an HP iPaq h3600 or similar
     module_raw h3600
-    
+
     # Uncomment if you're using a Hitachi Webpad
     # module_raw mk712
-    
+
     # Uncomment if you're using an IBM Arctic II
     # module_raw arctic2
-    
+
     module pthres pmin=1
     module variance delta=30
     module dejitter delta=100
@@ -381,18 +381,18 @@ start a simple test program:
 .. code:: bash
 
     #!/bin/sh
-    
+
     cd /mnt/sdcard
-    
+
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/mnt/sdcard/navit/lib
-    
+
     export TSLIB_CONSOLEDEVICE=none
     export TSLIB_FBDEVICE=/dev/fb
     export TSLIB_TSDEVICE=/dev/ts
     export TSLIB_CALIBFILE=/mnt/sdcard/navit/ts/pointercal
     export TSLIB_CONFFILE=/mnt/sdcard/navit/ts/ts.conf
     export TSLIB_PLUGINDIR=/mnt/sdcard/navit/lib/ts
-    
+
     /mnt/sdcard/navit/ts/ts_calibrate
     /mnt/sdcard/navit/ts/ts_test
 
@@ -432,7 +432,7 @@ need to create a wrapper script which with the following lines in it:
 .. code:: bash
 
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/mnt/sdcard/navit/lib
-    
+
     export SDL_NOMOUSE=1
     export SDL_FBDEV=/dev/fb
     export SDL_VIDEODRIVER=fbcon
@@ -470,16 +470,16 @@ the following contents:
 .. code:: bash
 
     #!/bin/sh
-    
+
     cd /mnt/sdcard
-    
+
     # Set some paths.
     export PATH=$PATH:/mnt/sdcard/navit/bin
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/mnt/sdcard/navit/lib
     export HOME=/mnt/sdcard/
     export NAVIT_LIBDIR=/mnt/sdcard/navit/lib/navit
     export NAVIT_SHAREDIR=/mnt/sdcard/navit/share
-    
+
     # tslib requirements.
     export TSLIB_CONSOLEDEVICE=none
     export TSLIB_FBDEVICE=/dev/fb
@@ -487,7 +487,7 @@ the following contents:
     export TSLIB_CALIBFILE=/mnt/sdcard/navit/ts/pointercal
     export TSLIB_CONFFILE=/mnt/sdcard/navit/ts/ts.conf
     export TSLIB_PLUGINDIR=/mnt/sdcard/navit/lib/ts
-    
+
     # SDL requirements.
     export SDL_MOUSEDRV=TSLIB
     export SDL_MOUSEDEV=$TSLIB_TSDEVICE
@@ -495,17 +495,17 @@ the following contents:
     export SDL_FBDEV=/dev/fb
     export SDL_VIDEODRIVER=fbcon
     export SDL_AUDIODRIVER=dsp
-    
+
     # fontconfig requirements
     export FC_CONFIG_DIR=/mnt/sdcard/navit/fonts
     export FONTCONFIG_DIR=/mnt/sdcard/navit/fonts
     export FC_CONFIG_FILE=/mnt/sdcard/navit/fonts/fonts.conf
     export FONTCONFIG_FILE=/mnt/sdcard/navit/fonts/fonts.conf
     export FC_DEBUG=0
-    
+
     # Set language.
     export LANG=en_US.utf8
-    
+
     # Run Navit.
     /mnt/sdcard/navit/bin/navit /mnt/sdcard/navit/share/navit.xml 2>/mnt/sdcard/navit/navit.log
 

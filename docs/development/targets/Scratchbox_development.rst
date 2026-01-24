@@ -78,16 +78,16 @@ is to disable face caching in freetype plugin:
    --- navit/navit/font/freetype/font_freetype.c<->(revision 2912)
    +++ navit/navit/font/freetype/font_freetype.c<->(working copy)
    @@ -5,8 +5,8 @@
-    #include <ft2build.h> 
-    #include <glib.h> 
-    #include FT_FREETYPE_H 
-   -#ifndef USE_CACHING 
-   -#define USE_CACHING 1 
-   +#ifdef USE_CACHING 
-   +#undef USE_CACHING 
-    #endif 
-    #if USE_CACHING 
-    #include FT_CACHE_H 
+    #include <ft2build.h>
+    #include <glib.h>
+    #include FT_FREETYPE_H
+   -#ifndef USE_CACHING
+   -#define USE_CACHING 1
+   +#ifdef USE_CACHING
+   +#undef USE_CACHING
+    #endif
+    #if USE_CACHING
+    #include FT_CACHE_H
 
 Long way is to get the fresh freetype2 library(at least 2.3.10), build
 it **statically** under scratchbox and link with Navit, so Navit will
@@ -97,7 +97,7 @@ Maemo 5 introduced a new API for accessing GPS devices and Navit
 supports it as vehicle_maemo, which is disabled by default, don't forget
 to enable it. The tag for maemo could be like this:
 
-`` ``\ 
+`` ``\
 
 -  Source could be:
 

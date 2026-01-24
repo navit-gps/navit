@@ -65,7 +65,7 @@ Features:
 
 Usage: Create scaled layout with:
 
-| ``./scale.pl ``\ \ `` ``\ 
+| ``./scale.pl ``\ \ `` ``\
 | ``./scale.pl 50 ~/.navit/nibbler01/``
 
 then include the -scaled-XX xml file instead of the original.
@@ -76,7 +76,7 @@ get it `here <http://www.wandersleb.net/navit/scale-0.1.tar.gz>`__
 
    <hr style="height: 8px; color:#AB4E3F; background-color:#AB4E3F;" />
 
-| 
+|
 
 Nokia NSeries Tablets
 ---------------------
@@ -283,7 +283,7 @@ NSeries Layout 3
 
    <hr style="height: 10px; color:#AB4E3F; background-color:#AB4E3F;" />
 
-| 
+|
 | ===NSeries Layout 4===
 
 Tested on N900 but should work on any display, as it works nicely on my
@@ -400,7 +400,7 @@ laptop as well. See the Nokia specific page for further configuration.
 
    <hr style="height: 10px; color:#AB4E3F; background-color:#AB4E3F;" />
 
-| 
+|
 | ==Neo FreeRunner==
 
 FreeRunner Layout 1
@@ -785,13 +785,13 @@ Known issues, bugs and TODO
 -  The positioning of the odometer isn't that nice, since all the values
    (distance, time and avg. speed) can only be placed as one object.
 
-| 
+|
 
 .. raw:: html
 
    <hr style="height: 10px; color:#AB4E3F; background-color:#AB4E3F;" />
 
-| 
+|
 
 PC Layouts
 ----------
@@ -804,7 +804,7 @@ Mineque's PC layouts
 | For enabling it you have to edit xml file from the archive in two
   places:
 
-``      ``\ 
+``      ``\
 
 ``      ``\ \ ``  ``
 
@@ -812,7 +812,7 @@ Mineque's PC layouts
   dirname.
 | And last thing edit navit.xml. You have to comment everything between:
 
-``   ``\ 
+``   ``\
 
 and
 
@@ -820,11 +820,11 @@ and
 
 After that paste:
 
-``   ``\ 
+``   ``\
 
 under
 
-``   ``\ 
+``   ``\
 
 with corrected path of your user dirname and choosen skin.
 
@@ -958,7 +958,7 @@ layout:
 
    <hr style="height: 10px; color:#AB4E3F; background-color:#AB4E3F;" />
 
-| 
+|
 
 Nibblers OSD Layouts
 ~~~~~~~~~~~~~~~~~~~~
@@ -1036,7 +1036,7 @@ For an appropriate vehicle include the cursor:
 
    <hr style="height: 10px; color:#AB4E3F; background-color:#AB4E3F;" />
 
-| 
+|
 
 Netbook Layout 1
 ~~~~~~~~~~~~~~~~
@@ -1057,7 +1057,7 @@ are:
    rectangle was actually made by me, so here it is:
    |Transparent_rectangle.png|.
 
-| 
+|
 | The first screenshot shows Navit in tracking mode - i.e. there is no
   route defined, so Navit just follows the driver around, displaying
   current road names, speeds and distances to speed cameras. The second
@@ -1119,7 +1119,7 @@ them under the terms of CC-SA.
 
 t:
 
--  
+-
 
    -  Current vehicle speed using `OSD#text <OSD#text>`__'s
       ``vehicle.position_speed``
@@ -1320,7 +1320,7 @@ There are some hard-coded paths in the markup, especially to the
 
    <hr style="height: 10px; color:#AB4E3F; background-color:#AB4E3F;" />
 
-| 
+|
 
 Netbook Layout 2
 ~~~~~~~~~~~~~~~~
@@ -1553,7 +1553,7 @@ the png versions, make sure you change the path.
 
    <hr style="height: 10px; color:#AB4E3F; background-color:#AB4E3F;" />
 
-| 
+|
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1581,7 +1581,7 @@ the png versions, make sure you change the path.
   navigation is not comprehensible
 | - right: GPS time, time, signal strengh and altitude above sea level
 
-| 
+|
 | \*BOTTOM
 | - routing status, distance left and travel time left
 | - speedwarner, current and average speed
@@ -1770,7 +1770,7 @@ the png versions, make sure you change the path.
 
    <hr style="height: 10px; color:#AB4E3F; background-color:#AB4E3F;" />
 
-| 
+|
 
 Windows Mobile OSD Layouts
 --------------------------
@@ -2129,7 +2129,7 @@ routing <image:Screen-Layout-navit-QVGA-240-240-routing-ok.png>`__
 | In small letters there is the name and/or reference of the street
   you´re actually on.
 
-| 
+|
 | `right|240px|text-top|navit GUI routing
   Menu <image:Screen-Layout-navit-QVGA-240-240-routing-menu.png>`__
   **Selecting "time delay"**
@@ -2146,7 +2146,7 @@ routing <image:Screen-Layout-navit-QVGA-240-240-routing-ok.png>`__
    for scrolling on the map while navigating and looking e.g. for some
    adresses.
 
-| 
+|
 | The time-delay starts after your osd enabled="yes" type="text"
   label="ETA: ${navigation.item.destination_time[arrival]}" x="300"
 
@@ -2155,7 +2155,7 @@ routing <image:Screen-Layout-navit-QVGA-240-240-routing-ok.png>`__
 
 last scrolling-action on the map.
 
-| 
+|
 | `right|240px|text-top|navit GUI routing
   Indicator <image:Screen-Layout-navit-QVGA-240-240-routing-indicator.png>`__
   **Time delay indicator**
@@ -2167,7 +2167,7 @@ last scrolling-action on the map.
 You can **clear the screen** by tapping on the "next-action-arrow" in
 the bottom left corner.
 
-| 
+|
 | `right|240px|text-top|navit GUI
   driving <image:Screen-Layout-navit-QVGA-240-240-driving.png>`__
   **While driving without routing:**
@@ -2585,7 +2585,7 @@ also at similar devices (not tested). --`Bogo10 <User:Bogo10>`__ 20:08,
 
    <hr style="height: 10px; color:#AB4E3F; background-color:#AB4E3F;" />
 
-| 
+|
 
 Layout for Sony nav-u92T
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2677,7 +2677,7 @@ cursor <Layout#2D_Car>`__.
 
    <hr style="height: 10px; color:#AB4E3F; background-color:#AB4E3F;" />
 
-| 
+|
 
 480x800 Portrait
 ----------------
@@ -2773,7 +2773,7 @@ Use osd_configuration="4" in the main navit tag for the initial display.
 
    <hr style="height: 10px; color:#AB4E3F; background-color:#AB4E3F;" />
 
-| 
+|
 
 854x480 (FWVGA)
 ---------------

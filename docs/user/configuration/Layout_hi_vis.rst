@@ -232,7 +232,7 @@ disabled for lower zoom levels
 .. code:: xml
 
                <layer name="POI Symbols">
-                  
+
                    <itemgra item_types="poi_airport" order="8-">
                        <icon src="airport.png"/>
                    </itemgra>

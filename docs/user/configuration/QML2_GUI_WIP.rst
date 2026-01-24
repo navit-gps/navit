@@ -12,7 +12,7 @@ Use only QT 5.7 at the moment
 
 
 .. only:: html
-   
+
    .. _first_look:
 
    First look

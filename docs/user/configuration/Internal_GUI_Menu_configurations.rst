@@ -40,7 +40,7 @@ version of navit.xml.
            <a href='#Route'><img src='gui_settings'><text>Route</text></img></a>
                    <img src='gui_about'  onclick='about()'><text>About</text></img>
        </a>
-               
+
        <a name='Actions'><text>Actions</text>
            <img src='gui_bookmark' onclick='bookmarks()'><text>Bookmarks</text></img>
            <img cond='click_coord_geo' src='gui_map' onclick='position(click_coord_geo,_("Map Point"),8|16|32|64|256)'>
@@ -99,11 +99,11 @@ Netbook Configuration 1
 -  `Tools <Internal_GUI#Tools>`__ and `About <Internal_GUI#About>`__
    have been removed.
 
-| 
+|
 
 ::
 
-           <img cond='flags&amp;2' src='gui_map' onclick='back_to_map()'><text>Show Map</text></img>       
+           <img cond='flags&amp;2' src='gui_map' onclick='back_to_map()'><text>Show Map</text></img>
            <!-- Main Menu -->
            <a name='Main Menu'><text>Main menu</text>
 
@@ -113,9 +113,9 @@ Netbook Configuration 1
                <a href='#Route'><img src='gui_log'><text>Route Info</text></img></a>
                <img src='gui_quit' onclick='quit()'><text>Exit</text></img>
                <img cond='navit.route.route_status&amp;amp;52' src='gui_stop' onclick='abort_navigation()'><text>Stop Navigation</text></img>
-           
+
            </a>
-           
+
            <!-- Actions -->
            <a name='Actions'><text>Go To</text>
 
@@ -123,7 +123,7 @@ Netbook Configuration 1
                <img cond='click_coord_geo' src='gui_map' onclick='position(click_coord_geo,_("Map Point"),8|16|32|64|256|1024)'><script>write(click_coord_geo)</script></img>
                <img cond='position_coord_geo' src='gui_vehicle' onclick='position(position_coord_geo,_("Vehicle Position"),8|32|64|128|256)'><script>write(position_coord_geo)</script></img>
                <img src='gui_town' onclick='town()'><text>Town</text></img>
-               
+
            </a>
 
            <!-- Settings -->
@@ -142,7 +142,7 @@ Netbook Configuration 1
                <img cond='navit.pitch==0' src='gui_map' onclick='navit.pitch=pitch;redraw_map();back_to_map()'><text>3D</text></img>
                <img cond='navit.pitch!=0' src='gui_map' onclick='navit.pitch=0;redraw_map();back_to_map()'><text>2D</text></img>
            </a>
-           
+
            <!-- Route -->
            <a name='Route'><text>Route Information</text>
                <img src='gui_log' onclick='route_description()'><text>Description</text></img>
@@ -197,19 +197,19 @@ Features of this menu:
                    <a cond='navit.route.route_status&amp;amp;52' href='#Route'>
                                          <img src='gui_vehicle'>                    <text>Route</text></img></a>
        </a>
-               
+
        <a name='Actions'><text>Actions</text>
                    <img src='gui_bookmark'                          onclick='bookmarks()'> <text>Bookmarks</text></img>
                    <img src='gui_town'                              onclick='town()'>      <text>Town</text></img>
                    <img cond='click_coord_geo'    src='gui_map'     onclick='position(click_coord_geo,_("Map Point"),8|32|48|128)'>            <script>write(click_coord_geo)</script> </img>
                    <img cond='position_coord_geo' src='gui_vehicle' onclick='position(position_coord_geo,_("Vehicle Position"),8|32|48|128)'>  <script>write(position_coord_geo)</script> </img>
        </a>
-               
+
        <a name='Settings'><text>Settings</text>
                    <img cond='fullscreen==0'  src='gui_fullscreen'       onclick='fullscreen=1'>      <text>Fullscreen</text></img>
                    <img cond='fullscreen==1'  src='gui_leave_fullscreen' onclick='fullscreen=0'>      <text>Window Mode</text></img>
                    <img                       src='gui_maps'             onclick='setting_maps()'>    <text>Maps</text></img>
-                   
+
                    <img cond='navit.pitch==0' src='gui_map'              onclick='navit.pitch=24;  redraw_map();back_to_map()'> <text>3D</text> </img>
                    <img cond='navit.pitch!=0' src='gui_map'              onclick='navit.pitch=0;   redraw_map();back_to_map()'> <text>2D</text> </img>
                    <img                       src='gui_about'            onclick='about()'>           <text>About</text></img>
@@ -217,7 +217,7 @@ Features of this menu:
 
        <a name='Route'><text>Route</text>
                    <img src='gui_vehicle_pedestrian'   onclick='setting_vehicle();back()'>          <text>Vehicle</text></img>
-                 
+
                    <img src='gui_town'     onclick='route_description()'>                           <text>Description</text></img>
                    <img src='gui_zoom_in'  onclick='route_height_profile()'>                        <text>Height Profile</text></img>
                    <img src='gui_stop'     onclick='abort_navigation();redraw_map();back_to_map()'> <text>Stop Navigation</text></img>
@@ -251,7 +251,7 @@ pretty fast.
 -  2.) Tuning => most used setups while navigating
 -  3.) Setup => rarely used (system)settings
 
-| 
+|
 
 `right|240px|text-top|Main-Menu <image:Screenshot-Navit-QVGA-Main-Menu.png>`__
 
@@ -266,7 +266,7 @@ In the **Main-Menu** you can:
 -  1e) Exit navit
 -  1f) Go to the next menu "Tuning"
 
-| 
+|
 | `right|240px|text-top|Tuning-Menu <image:Screenshot-Navit-QVGA-Tuning-Menu.png>`__
 
 In the **Tuning-Menu** you can:
@@ -293,7 +293,7 @@ In the **Setup-Menu** you can:
 -  3d) Delete current navigaition-route (...only visible while
    navigating)
 
-| 
+|
 
 ::
 
@@ -358,86 +358,86 @@ conditional items when not in use.
      <a name='Main Menu'>
        <text>Main menu</text>
        <img src='gui_town' onclick='town()'><text>Town</text></img>
-       
-       <a href='#Actions'><img src='gui_actions'><text>Route</text></img></a>   
-       
+
+       <a href='#Actions'><img src='gui_actions'><text>Route</text></img></a>
+
        <img cond='navit.route.route_status&amp;amp;52' src='gui_actions' onclick='route_description()'><text>Description</text></img>
        <img cond='!(navit.route.route_status&amp;amp;52)' src='heliport'><text></text></img>
-       
+
        <a href='#Settings'><img src='gui_rules'><text>Settings</text></img></a>
-       
+
        <img src='gui_map' onclick='back_to_map()'><text>Show Map</text></img>
-       
+
        <img src='gui_quit' onclick='quit()'><text>Quit</text></img>
      </a>
-     
+
      <a name='Actions'>
        <text>Actions</text>
        <img src='gui_town' onclick='town()'><text>Town</text></img>
-       
+
        <img src='gui_bookmark' onclick='bookmarks()'><text>Bookmarks</text></img>
-       
-       <img cond='click_coord_geo' src='gui_map' onclick='position(click_coord_geo,_("Map Point"),8|16|32|64|256)'><text>Map 
+
+       <img cond='click_coord_geo' src='gui_map' onclick='position(click_coord_geo,_("Map Point"),8|16|32|64|256)'><text>Map
                                                                                                                          Position</text></img>
        <img cond='!click_coord_geo' src='heliport'><text></text></img>
-       
-       <img cond='position_coord_geo' src='gui_vehicle' onclick='position(position_coord_geo,_("Vehicle Position"),8|32|64|128|256)'><text>Vehicle 
+
+       <img cond='position_coord_geo' src='gui_vehicle' onclick='position(position_coord_geo,_("Vehicle Position"),8|32|64|128|256)'><text>Vehicle
                                                                                                                                            Position</text></img>
        <img cond='!position_coord_geo' src='heliport'><text></text></img>
-       
-       <a cond='navit.route.route_status&amp;amp;52' href='#Route'><img src='gui_actions' onclick='route_description()'><text>Route 
+
+       <a cond='navit.route.route_status&amp;amp;52' href='#Route'><img src='gui_actions' onclick='route_description()'><text>Route
                                                                                                                           Info</text></img></a>
        <img cond='!(navit.route.route_status&amp;amp;52)' src='heliport'><text></text></img>
-       
-       <img cond='navit.route.route_status&amp;amp;52' src='gui_stop' onclick='abort_navigation();redraw_map();back_to_map()'><text>Stop 
+
+       <img cond='navit.route.route_status&amp;amp;52' src='gui_stop' onclick='abort_navigation();redraw_map();back_to_map()'><text>Stop
                                                                                                                                 Navigation</text></img>
        <img cond='!(navit.route.route_status&amp;amp;52)' src='heliport'><text></text></img>
      </a>
-     
+
      <a name='Settings'>
        <text>Settings</text>
        <img cond='navit.pitch==0' src='gui_stop' onclick='navit.pitch=60;redraw_map();back_to_map()'><text>3D</text></img>
        <img cond='navit.pitch!=0' src='gui_active' onclick='navit.pitch=0;redraw_map();back_to_map()'><text>3D</text></img>
-       
+
        <img cond='navit.orientation==-1' src='gui_stop' onclick='navit.orientation=0;redraw_map();back_to_map()'><text>Einnorden</text></img>
        <img cond='navit.orientation>=0' src='gui_active' onclick='navit.orientation=-1;redraw_map();back_to_map()'><text>Einnorden</text></img>
-       
+
        <img cond='navit.autozoom_active!=0' src='gui_active' onclick='navit.autozoom_active=0;redraw_map();back_to_map()'><text>AutoZoom</text></img>
        <img cond='navit.autozoom_active==0' src='gui_stop' onclick='navit.autozoom_active=1;redraw_map();back_to_map()'><text>AutoZoom</text></img>
-       
+
        <img cond='navit.tracking==1' src='gui_active' onclick='navit.tracking=0;redraw_map();back_to_map()'><text>Map
                                                                                                                   Tracking</text></img>
        <img cond='navit.tracking==0' src='gui_stop' onclick='navit.tracking=1;redraw_map();back_to_map()'><text>Map
                                                                                                                 Tracking</text></img>
-       
+
        <a href='#Main Menu'><img src='gui_arrow_left'><text>Back</text></img></a>
-       
+
        <a href='#Settings Display'><img src='gui_arrow_right'><text>More</text></img></a>
      </a>
-     
+
      <a name='Settings Display'>
        <text>More Settings</text>
        <img src='gui_vehicle' onclick='setting_vehicle()'><text>Vehicle</text></img>
-       
+
        <img src='gui_maps' onclick='setting_maps()'><text>Maps</text></img>
-       
+
        <img src='gui_display' onclick='setting_layout()'><text>Display
                                                                Layout</text></img>
-       
+
        <img src='gui_about'  onclick='about()'><text>About</text></img>
-       
+
        <a href='#Settings'><img src='gui_arrow_left'> <text>Back</text></img></a>
      </a>
-     
+
      <a name='Tools'>
        <text>Tools</text>
        <img src='gui_actions' onclick='locale()'><text>Show Locale</text></img>
      </a>
-     
+
      <a name='Route'>
        <text>Route</text>
        <img src='gui_actions' onclick='route_description()'><text>Description</text></img>
-       
+
        <img src='gui_actions' onclick='route_height_profile()'><text>Height Profile</text></img>
      </a>
    </html>
@@ -464,7 +464,7 @@ Layout <OSD_Layouts#0606.at_Android_Layout>`__
                        <img src='gui_bookmark' onclick='bookmarks()'><text>Bookmarks</text></img>
                        <img cond='flags&amp;2' src='gui_map' onclick='back_to_map()'><text>Show Map</text></img>
                        <a href='#Settings'><img src='gui_settings'><text>Settings</text></img></a>
-             <a href='#Route'><img src='gui_settings'><text>Route</text></img></a>      
+             <a href='#Route'><img src='gui_settings'><text>Route</text></img></a>
              <img src='gui_quit' onclick='quit()'><text>Quit</text></img>
                    </a>
                <a name='Settings'><text>Settings</text>

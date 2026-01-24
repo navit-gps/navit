@@ -91,10 +91,10 @@ This part is WIP
 
 Typical description of object in .layout file
 
-| ``       ``\ 
-| ``           ``\ 
-| ``           ``\ 
-| ``   ``\ 
+| ``       ``\
+| ``           ``\
+| ``           ``\
+| ``   ``\
 
 -  UnifiedAreaRect - sth here must be added
 -  "UnifiedAreaRect" Value - tell's Navit where parts of skin must be
@@ -150,32 +150,32 @@ Structure of \*.imageset files
 | ``   * XPos, YPos - position (X,Y) of texture parts in image file it is counted from upper left corner``
 | ``   * Width, Height - skin part dimension``
 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
+| ``   ``\
+| ``   ``\
+| ``   ``\
 
-| ``   ``\ 
-| 
+| ``   ``\
+|
 
 It's nice to make code more readable by spliting it like below
 
-``    ``\ 
+``    ``\
 
 ...
 
-``   ``\ 
+``   ``\
 
 ...
 
-``   ``\ 
+``   ``\
 
 ...
 
-``   ``\ 
+``   ``\
 
 ...
 
-``   ``\ 
+``   ``\
 
 ...
 
@@ -185,28 +185,28 @@ And that is example of finished .imageset file
 
    <?xml version="1.0" ?>
 
-| 
+|
 | `` ``
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| ``   ``\ 
-| 
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+| ``   ``\
+|
 
 .. _about_the_looknfeel:
 
