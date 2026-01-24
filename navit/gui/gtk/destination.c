@@ -297,8 +297,9 @@ static void changed(GtkWidget *widget, struct search_param *search) {
         }
     }
 
-    if(! search->partial) {
+    if(! search->partial || search->liststore->length == 1) {
         if( widget == search->entry_country ) {
+            country_set_default_country(&search->attr);
             gtk_widget_set_sensitive(GTK_WIDGET(search->entry_city), TRUE);
         }
         if( widget == search->entry_city ) {
@@ -312,6 +313,7 @@ static void changed(GtkWidget *widget, struct search_param *search) {
         }
     } else {
         if( widget == search->entry_country ) {
+            country_set_default_country(&search->attr);
             gtk_widget_set_sensitive(GTK_WIDGET(search->entry_city), FALSE);
             gtk_widget_set_sensitive(GTK_WIDGET(search->entry_street), FALSE);
             gtk_widget_set_sensitive(GTK_WIDGET(search->entry_number), FALSE);
