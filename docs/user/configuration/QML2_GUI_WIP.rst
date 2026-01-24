@@ -10,15 +10,22 @@ Prerequisites
 
 Use only QT 5.7 at the moment
 
-.. _first_look:
 
-First look
-==========
+.. only:: html
+   
+   .. _first_look:
 
-.. figure:: Gui_qml_drawer_popup.gif
-   :alt: Gui_qml_drawer_popup.gif
+   First look
+   ==========
 
-   Gui_qml_drawer_popup.gif
+   .. todo::
+      Fix Gif's
+
+
+      .. figure:: Gui_qml_drawer_popup.gif
+         :alt: Gui_qml_drawer_popup.gif
+
+         Gui_qml_drawer_popup.gif
 
 Pages
 =====
