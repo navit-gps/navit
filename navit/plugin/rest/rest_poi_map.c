@@ -195,7 +195,8 @@ GList *rest_poi_map_search(struct coord_geo *center, double radius_km,
         while ((item = map_rect_get_item(mr))) {
             /* Check if item type matches requested POI types */
             int matches = 0;
-            for (int i = 0; i < num_types; i++) {
+            int i;
+            for (i = 0; i < num_types; i++) {
                 if (item->type == poi_types[i]) {
                     matches = 1;
                     break;
@@ -350,7 +351,8 @@ GList *rest_poi_map_search_cabins(struct coord_geo *center, double radius_km, st
         struct item *item;
         while ((item = map_rect_get_item(mr))) {
             int matches = 0;
-            for (int i = 0; cabin_types[i] != type_none; i++) {
+            int i;
+            for (i = 0; cabin_types[i] != type_none; i++) {
                 if (item->type == cabin_types[i]) {
                     matches = 1;
                     break;

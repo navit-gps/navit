@@ -59,7 +59,8 @@ static char *build_overpass_query(struct coord_geo *center, int radius_km,
     GString *query = g_string_new("[out:json][timeout:25];(");
     
     /* Build query for each POI category */
-    for (int i = 0; i < num_categories; i++) {
+    int i;
+    for (i = 0; i < num_categories; i++) {
         if (i > 0) {
             g_string_append(query, ";");
         }

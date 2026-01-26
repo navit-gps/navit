@@ -113,7 +113,8 @@ static int rest_db_load_config_value(const char *key, int value, struct rest_con
         maps[14].field = &config->rest_interval_max_hours;
     }
     
-    for (int i = 0; maps[i].key != NULL; i++) {
+    int i;
+    for (i = 0; maps[i].key != NULL; i++) {
         if (!strcmp(key, maps[i].key)) {
             return rest_db_set_config_value(&maps[i], value, loaded_count);
         }
@@ -366,7 +367,8 @@ int rest_db_save_config(struct rest_db *db, struct rest_config *config) {
         config->rest_interval_max_hours
     };
     
-    for (int i = 0; i < G_N_ELEMENTS(keys); i++) {
+    int i;
+    for (i = 0; i < G_N_ELEMENTS(keys); i++) {
         sql = sqlite3_mprintf(
             "INSERT OR REPLACE INTO rest_config (key, value) VALUES (%Q, %d);",
             keys[i], values[i]

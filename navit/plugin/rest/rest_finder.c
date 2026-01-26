@@ -101,7 +101,8 @@ static int is_excluded_landuse(struct coord_geo *coord, struct mapset *ms) {
         if (!mr) continue;
         
         while ((item = map_rect_get_item(mr))) {
-            for (int i = 0; landuse_types[i] != type_none; i++) {
+            int i;
+            for (i = 0; landuse_types[i] != type_none; i++) {
                 if (item->type == landuse_types[i]) {
                     map_rect_destroy(mr);
                     map_selection_destroy(sel);

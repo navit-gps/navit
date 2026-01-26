@@ -135,8 +135,10 @@ GList *srtm_calculate_tiles(double min_lon, double min_lat,
     int max_lat_idx = (int)floor(max_lat);
     
     /* Iterate through all tiles in bounding box */
-    for (int lat = min_lat_idx; lat <= max_lat_idx; lat++) {
-        for (int lon = min_lon_idx; lon <= max_lon_idx; lon++) {
+    int lat;
+    int lon;
+    for (lat = min_lat_idx; lat <= max_lat_idx; lat++) {
+        for (lon = min_lon_idx; lon <= max_lon_idx; lon++) {
             /* Skip if tile already in list */
             int found = 0;
             GList *l = tiles;
@@ -292,7 +294,8 @@ static struct srtm_region srtm_regions[] = {
 GList *srtm_get_regions(void) {
     GList *regions = NULL;
     
-    for (int i = 0; srtm_regions[i].name; i++) {
+    int i;
+    for (i = 0; srtm_regions[i].name; i++) {
         struct srtm_region *region = g_new0(struct srtm_region, 1);
         region->name = g_strdup(srtm_regions[i].name);
         region->bbox_min_lon = srtm_regions[i].bbox_min_lon;

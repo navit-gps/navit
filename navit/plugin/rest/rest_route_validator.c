@@ -55,7 +55,8 @@ static const char *priority_paths[] = {
 int route_validator_is_forbidden_highway(const char *highway_type) {
     if (!highway_type) return 0;
     
-    for (int i = 0; forbidden_highways[i]; i++) {
+    int i;
+    for (i = 0; forbidden_highways[i]; i++) {
         if (!strcmp(highway_type, forbidden_highways[i])) {
             return 1;
         }
@@ -67,7 +68,8 @@ int route_validator_is_forbidden_highway(const char *highway_type) {
 int route_validator_is_priority_path(const char *highway_type) {
     if (!highway_type) return 0;
     
-    for (int i = 0; priority_paths[i]; i++) {
+    int i;
+    for (i = 0; priority_paths[i]; i++) {
         if (!strcmp(highway_type, priority_paths[i])) {
             return 1;
         }
