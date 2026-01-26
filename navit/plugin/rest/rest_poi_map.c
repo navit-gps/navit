@@ -259,6 +259,51 @@ GList *rest_poi_map_search_water(struct coord_geo *center, double radius_km, str
     return rest_poi_map_search(center, radius_km, water_types, 2, ms);
 }
 
+/* Process cabin item and add to POI list if within radius */
+static void process_cabin_item(struct item *item, struct coord_geo *center, double radius_m, GList **pois) {
+    struct coord item_coord;
+    if (!item_coord_get(item, &item_coord, 1)) {
+        return;
+    }
+    
+    struct coord_geo item_geo;
+    transform_to_geo(projection_mg, &item_coord, &item_geo);
+    
+    double distance = coord_distance_geo(center, &item_geo);
+    if (distance > radius_m) {
+        return;
+    }
+    
+    /* Create POI structure */
+    struct rest_poi *poi = g_new0(struct rest_poi, 1);
+    poi->coord = item_geo;
+    poi->distance_from_rest_stop = distance;
+    
+    /* Get name/label */
+    struct attr label_attr;
+    if (item_attr_get(item, attr_label, &label_attr)) {
+        poi->name = g_strdup(map_convert_string(item->map, label_attr.u.str));
+    }
+    
+    poi->type = g_strdup("tourism");
+    poi->category = g_strdup(item_to_name(item->type));
+    
+    /* Check for DNT/network tags */
+    char *network_name = NULL;
+    if (rest_poi_is_network_cabin(item, &network_name)) {
+        if (network_name && poi->name) {
+            char *new_name = g_strdup_printf("%s [%s]", poi->name, network_name);
+            g_free(poi->name);
+            poi->name = new_name;
+        } else if (network_name) {
+            poi->name = g_strdup_printf("[%s]", network_name);
+        }
+        g_free(network_name);
+    }
+    
+    *pois = g_list_append(*pois, poi);
+}
+
 /* Search for cabins/huts in maps (with DNT/network detection) */
 GList *rest_poi_map_search_cabins(struct coord_geo *center, double radius_km, struct mapset *ms) {
     GList *pois = NULL;
@@ -267,21 +312,17 @@ GList *rest_poi_map_search_cabins(struct coord_geo *center, double radius_km, st
         return NULL;
     }
     
-    /* Search for hostels and camping sites which may include huts */
     enum item_type cabin_types[] = {
         type_poi_hostel,
         type_poi_camping,
         type_none
     };
     
-    /* Convert center to map coordinates */
+    double radius_m = radius_km * 1000.0;
     struct coord c;
     transform_from_geo(projection_mg, center, &c);
     
-    /* Create map selection rectangle */
-    double radius_m = radius_km * 1000.0;
-    int radius_internal = (int)(radius_m * 9.0); /* Approximate conversion */
-    
+    int radius_internal = (int)(radius_m * 9.0);
     struct coord_rect rect;
     rect.lu = c;
     rect.rl = c;
@@ -295,7 +336,6 @@ GList *rest_poi_map_search_cabins(struct coord_geo *center, double radius_km, st
     sel->order = 18;
     sel->range = item_range_all;
     
-    /* Search in mapset */
     struct map *map;
     struct attr map_attr;
     struct attr_iter *iter = mapset_attr_iter_new(NULL);
@@ -303,11 +343,12 @@ GList *rest_poi_map_search_cabins(struct coord_geo *center, double radius_km, st
     while (mapset_get_attr(ms, attr_map, &map_attr, iter)) {
         map = map_attr.u.map;
         struct map_rect *mr = map_rect_new(map, sel);
-        if (!mr) continue;
+        if (!mr) {
+            continue;
+        }
         
         struct item *item;
         while ((item = map_rect_get_item(mr))) {
-            /* Check if item type matches cabin types */
             int matches = 0;
             for (int i = 0; cabin_types[i] != type_none; i++) {
                 if (item->type == cabin_types[i]) {
@@ -317,48 +358,7 @@ GList *rest_poi_map_search_cabins(struct coord_geo *center, double radius_km, st
             }
             
             if (matches) {
-                /* Get item coordinates */
-                struct coord item_coord;
-                if (item_coord_get(item, &item_coord, 1)) {
-                    struct coord_geo item_geo;
-                    transform_to_geo(projection_mg, &item_coord, &item_geo);
-                    
-                    /* Calculate distance */
-                    double distance = coord_distance_geo(center, &item_geo);
-                    if (distance <= radius_m) {
-                        /* Create POI structure */
-                        struct rest_poi *poi = g_new0(struct rest_poi, 1);
-                        poi->coord = item_geo;
-                        poi->distance_from_rest_stop = distance;
-                        
-                        /* Get name/label */
-                        struct attr label_attr;
-                        if (item_attr_get(item, attr_label, &label_attr)) {
-                            poi->name = g_strdup(map_convert_string(item->map, label_attr.u.str));
-                        }
-                        
-                        /* Get type from item type name */
-                        poi->type = g_strdup("tourism");
-                        poi->category = g_strdup(item_to_name(item->type));
-                        
-                        /* Check for DNT/network tags */
-                        char *network_name = NULL;
-                        if (rest_poi_is_network_cabin(item, &network_name)) {
-                            /* Store network info in POI (we'll need to extend rest_poi struct) */
-                            /* For now, append to name */
-                            if (network_name && poi->name) {
-                                char *new_name = g_strdup_printf("%s [%s]", poi->name, network_name);
-                                g_free(poi->name);
-                                poi->name = new_name;
-                            } else if (network_name) {
-                                poi->name = g_strdup_printf("[%s]", network_name);
-                            }
-                            g_free(network_name);
-                        }
-                        
-                        pois = g_list_append(pois, poi);
-                    }
-                }
+                process_cabin_item(item, center, radius_m, &pois);
             }
         }
         

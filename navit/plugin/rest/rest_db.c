@@ -44,144 +44,81 @@ struct rest_db {
     sqlite3 *db;
 };
 
+/* Configuration key mapping structure */
+struct config_key_map {
+    const char *key;
+    int *field;
+    int min_value;
+    int max_value;
+    int allow_zero;
+};
+
+/* Validate and set a configuration value */
+static int rest_db_set_config_value(struct config_key_map *map, int value, int *loaded_count) {
+    int valid = 0;
+    
+    if (map->allow_zero) {
+        valid = (value >= map->min_value && value <= map->max_value);
+    } else {
+        valid = (value > map->min_value && value <= map->max_value);
+    }
+    
+    if (valid) {
+        *(map->field) = value;
+        (*loaded_count)++;
+        return 0;
+    } else {
+        dbg(lvl_warning, "Rest plugin: Invalid %s value: %d, using default", map->key, value);
+        return 0;
+    }
+}
+
 /* Load a single configuration value - returns 0 on success, -1 if key not recognized */
 static int rest_db_load_config_value(const char *key, int value, struct rest_config *config, int *loaded_count) {
-    if (!strcmp(key, "vehicle_type")) {
-        if (value >= 0 && value <= MAX_VEHICLE_TYPE) {
-            config->vehicle_type = value;
-            (*loaded_count)++;
-            return 0;
-        } else {
-            dbg(lvl_warning, "Rest plugin: Invalid vehicle_type value: %d, using default", value);
-            return 0;
-        }
-    } else if (!strcmp(key, "car_soft_limit_hours")) {
-        if (value > 0 && value <= MAX_HOURS_PER_DAY) {
-            config->car_soft_limit_hours = value;
-            (*loaded_count)++;
-            return 0;
-        } else {
-            dbg(lvl_warning, "Rest plugin: Invalid car_soft_limit_hours value: %d, using default", value);
-            return 0;
-        }
-    } else if (!strcmp(key, "car_max_hours")) {
-        if (value > 0 && value <= MAX_HOURS_PER_DAY) {
-            config->car_max_hours = value;
-            (*loaded_count)++;
-            return 0;
-        } else {
-            dbg(lvl_warning, "Rest plugin: Invalid car_max_hours value: %d, using default", value);
-            return 0;
-        }
-    } else if (!strcmp(key, "car_break_interval_hours")) {
-        if (value > 0 && value <= MAX_HOURS_PER_DAY) {
-            config->car_break_interval_hours = value;
-            (*loaded_count)++;
-            return 0;
-        } else {
-            dbg(lvl_warning, "Rest plugin: Invalid car_break_interval_hours value: %d, using default", value);
-            return 0;
-        }
-    } else if (!strcmp(key, "car_break_duration_min")) {
-        if (value > 0 && value <= MAX_BREAK_DURATION_MIN) {
-            config->car_break_duration_min = value;
-            (*loaded_count)++;
-            return 0;
-        } else {
-            dbg(lvl_warning, "Rest plugin: Invalid car_break_duration_min value: %d, using default", value);
-            return 0;
-        }
-    } else if (!strcmp(key, "truck_mandatory_break_after_hours")) {
-        if (value > 0 && value <= MAX_HOURS_PER_DAY) {
-            config->truck_mandatory_break_after_hours = value;
-            (*loaded_count)++;
-            return 0;
-        } else {
-            dbg(lvl_warning, "Rest plugin: Invalid truck_mandatory_break_after_hours value: %d, using default", value);
-            return 0;
-        }
-    } else if (!strcmp(key, "truck_mandatory_break_duration_min")) {
-        if (value > 0 && value <= MAX_BREAK_DURATION_MIN) {
-            config->truck_mandatory_break_duration_min = value;
-            (*loaded_count)++;
-            return 0;
-        } else {
-            dbg(lvl_warning, "Rest plugin: Invalid truck_mandatory_break_duration_min value: %d, using default", value);
-            return 0;
-        }
-    } else if (!strcmp(key, "truck_max_daily_hours")) {
-        if (value > 0 && value <= MAX_HOURS_PER_DAY) {
-            config->truck_max_daily_hours = value;
-            (*loaded_count)++;
-            return 0;
-        } else {
-            dbg(lvl_warning, "Rest plugin: Invalid truck_max_daily_hours value: %d, using default", value);
-            return 0;
-        }
-    } else if (!strcmp(key, "min_distance_from_buildings")) {
-        if (value > 0 && value <= MAX_DISTANCE_METERS) {
-            config->min_distance_from_buildings = value;
-            (*loaded_count)++;
-            return 0;
-        } else {
-            dbg(lvl_warning, "Rest plugin: Invalid min_distance_from_buildings value: %d, using default", value);
-            return 0;
-        }
-    } else if (!strcmp(key, "poi_search_radius_km")) {
-        if (value > 0 && value <= MAX_POI_SEARCH_RADIUS_KM) {
-            config->poi_search_radius_km = value;
-            (*loaded_count)++;
-            return 0;
-        } else {
-            dbg(lvl_warning, "Rest plugin: Invalid poi_search_radius_km value: %d, using default", value);
-            return 0;
-        }
-    } else if (!strcmp(key, "poi_water_search_radius_km")) {
-        if (value > 0 && value <= MAX_POI_WATER_CABIN_RADIUS_KM) {
-            config->poi_water_search_radius_km = value;
-            (*loaded_count)++;
-            return 0;
-        } else {
-            dbg(lvl_warning, "Rest plugin: Invalid poi_water_search_radius_km value: %d, using default", value);
-            return 0;
-        }
-    } else if (!strcmp(key, "poi_cabin_search_radius_km")) {
-        if (value > 0 && value <= MAX_POI_WATER_CABIN_RADIUS_KM) {
-            config->poi_cabin_search_radius_km = value;
-            (*loaded_count)++;
-            return 0;
-        } else {
-            dbg(lvl_warning, "Rest plugin: Invalid poi_cabin_search_radius_km value: %d, using default", value);
-            return 0;
-        }
-    } else if (!strcmp(key, "min_distance_from_glaciers")) {
-        if (value > 0 && value <= MAX_DISTANCE_METERS) {
-            config->min_distance_from_glaciers = value;
-            (*loaded_count)++;
-            return 0;
-        } else {
-            dbg(lvl_warning, "Rest plugin: Invalid min_distance_from_glaciers value: %d, using default", value);
-            return 0;
-        }
-    } else if (!strcmp(key, "rest_interval_min_hours")) {
-        if (value > 0 && value <= MAX_HOURS_PER_DAY_24) {
-            config->rest_interval_min_hours = value;
-            (*loaded_count)++;
-            return 0;
-        } else {
-            dbg(lvl_warning, "Rest plugin: Invalid rest_interval_min_hours value: %d, using default", value);
-            return 0;
-        }
-    } else if (!strcmp(key, "rest_interval_max_hours")) {
-        if (value > 0 && value <= MAX_HOURS_PER_DAY_24) {
-            config->rest_interval_max_hours = value;
-            (*loaded_count)++;
-            return 0;
-        } else {
-            dbg(lvl_warning, "Rest plugin: Invalid rest_interval_max_hours value: %d, using default", value);
-            return 0;
+    static struct config_key_map maps[] = {
+        {"vehicle_type", NULL, 0, MAX_VEHICLE_TYPE, 1},
+        {"car_soft_limit_hours", NULL, 0, MAX_HOURS_PER_DAY, 0},
+        {"car_max_hours", NULL, 0, MAX_HOURS_PER_DAY, 0},
+        {"car_break_interval_hours", NULL, 0, MAX_HOURS_PER_DAY, 0},
+        {"car_break_duration_min", NULL, 0, MAX_BREAK_DURATION_MIN, 0},
+        {"truck_mandatory_break_after_hours", NULL, 0, MAX_HOURS_PER_DAY, 0},
+        {"truck_mandatory_break_duration_min", NULL, 0, MAX_BREAK_DURATION_MIN, 0},
+        {"truck_max_daily_hours", NULL, 0, MAX_HOURS_PER_DAY, 0},
+        {"min_distance_from_buildings", NULL, 0, MAX_DISTANCE_METERS, 0},
+        {"poi_search_radius_km", NULL, 0, MAX_POI_SEARCH_RADIUS_KM, 0},
+        {"poi_water_search_radius_km", NULL, 0, MAX_POI_WATER_CABIN_RADIUS_KM, 0},
+        {"poi_cabin_search_radius_km", NULL, 0, MAX_POI_WATER_CABIN_RADIUS_KM, 0},
+        {"min_distance_from_glaciers", NULL, 0, MAX_DISTANCE_METERS, 0},
+        {"rest_interval_min_hours", NULL, 0, MAX_HOURS_PER_DAY_24, 0},
+        {"rest_interval_max_hours", NULL, 0, MAX_HOURS_PER_DAY_24, 0},
+        {NULL, NULL, 0, 0, 0}
+    };
+    
+    /* Initialize field pointers on first call */
+    if (maps[0].field == NULL) {
+        maps[0].field = &config->vehicle_type;
+        maps[1].field = &config->car_soft_limit_hours;
+        maps[2].field = &config->car_max_hours;
+        maps[3].field = &config->car_break_interval_hours;
+        maps[4].field = &config->car_break_duration_min;
+        maps[5].field = &config->truck_mandatory_break_after_hours;
+        maps[6].field = &config->truck_mandatory_break_duration_min;
+        maps[7].field = &config->truck_max_daily_hours;
+        maps[8].field = &config->min_distance_from_buildings;
+        maps[9].field = &config->poi_search_radius_km;
+        maps[10].field = &config->poi_water_search_radius_km;
+        maps[11].field = &config->poi_cabin_search_radius_km;
+        maps[12].field = &config->min_distance_from_glaciers;
+        maps[13].field = &config->rest_interval_min_hours;
+        maps[14].field = &config->rest_interval_max_hours;
+    }
+    
+    for (int i = 0; maps[i].key != NULL; i++) {
+        if (!strcmp(key, maps[i].key)) {
+            return rest_db_set_config_value(&maps[i], value, loaded_count);
         }
     }
+    
     return -1;
 }
 

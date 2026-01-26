@@ -46,6 +46,9 @@ int route_validator_is_forbidden_highway(const char *highway_type);
 /* Check if highway type is a priority path for hikers */
 int route_validator_is_priority_path(const char *highway_type);
 
+/* Map Navit item types to OSM highway types */
+const char *route_validator_map_item_to_highway_type(struct item *street_item);
+
 /* Free validation result */
 void route_validator_free_result(struct route_validation_result *result);
 

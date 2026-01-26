@@ -64,6 +64,37 @@
 #include "osd.h"
 #include "command.h"
 
+/* Get database path from attributes or use default */
+static char *rest_get_database_path(struct attr **attrs) {
+    char *db_path = NULL;
+    struct attr *db_path_attr = attr_search(attrs, attr_data);
+    
+    if (db_path_attr && db_path_attr->u.str) {
+        /* Expand environment variables in path (e.g., $HOME) */
+        struct file_wordexp *we = file_wordexp_new(db_path_attr->u.str);
+        int count = file_wordexp_get_count(we);
+        char **array = file_wordexp_get_array(we);
+        if (count > 0 && array[0]) {
+            db_path = g_strdup(array[0]);
+        } else {
+            /* Fallback to default if expansion fails */
+            const char *user_data_dir = navit_get_user_data_directory(1);
+            if (user_data_dir) {
+                db_path = g_build_filename(user_data_dir, "rest_plugin.db", NULL);
+            }
+        }
+        file_wordexp_destroy(we);
+    } else {
+        /* Default database path */
+        const char *user_data_dir = navit_get_user_data_directory(1);
+        if (user_data_dir) {
+            db_path = g_build_filename(user_data_dir, "rest_plugin.db", NULL);
+        }
+    }
+    
+    return db_path;
+}
+
 /* Default configuration */
 static void rest_config_default(struct rest_config *config) {
     /* Zero-initialize entire structure first */
@@ -177,9 +208,147 @@ static void rest_vehicle_callback_wrapper(void *priv_data) {
 }
 
 /* Route callback wrapper */
+/* Convert hiking rest stops to rest_stop format and add POIs */
+static void process_hiking_stops(struct rest_priv *priv, GList *hiking_stops) {
+    GList *l = hiking_stops;
+    while (l) {
+        struct hiking_rest_stop *h_stop = (struct hiking_rest_stop *)l->data;
+        if (h_stop) {
+            /* Get coordinate at distance along route */
+            struct coord c = route_get_coord_dist(priv->current_route, (int)h_stop->position);
+            transform_to_geo(projection_mg, &c, &h_stop->coord);
+            
+            /* Create rest_stop from hiking_rest_stop */
+            struct rest_stop *stop = g_new0(struct rest_stop, 1);
+            stop->coord = h_stop->coord;
+            stop->distance_from_route = 0;
+            stop->name = g_strdup_printf("Hiking rest stop at %.1f km", h_stop->position / 1000.0);
+            
+            /* Search for POIs using map data if available */
+            struct mapset *ms = navit_get_mapset(priv->nav);
+            if (ms) {
+                GList *water_pois_list = poi_search_water_points_map(&h_stop->coord, 
+                                                                    priv->config.poi_water_search_radius_km, ms);
+                GList *cabin_pois_list = poi_search_cabins_map(&h_stop->coord, 
+                                                              priv->config.poi_cabin_search_radius_km, ms,
+                                                              priv->config.enable_dnt_priority);
+                
+                /* Convert water points and cabins to rest_poi format */
+                GList *poi_list = water_pois_list;
+                while (poi_list) {
+                    struct water_point *wp = (struct water_point *)poi_list->data;
+                    if (wp) {
+                        struct rest_poi *poi = g_new0(struct rest_poi, 1);
+                        poi->coord = wp->coord;
+                        poi->name = wp->name ? g_strdup(wp->name) : NULL;
+                        poi->type = g_strdup("amenity");
+                        poi->category = wp->type ? g_strdup(wp->type) : NULL;
+                        poi->distance_from_rest_stop = wp->distance_from_rest_stop;
+                        stop->pois = g_list_append(stop->pois, poi);
+                    }
+                    poi_list = g_list_next(poi_list);
+                }
+                
+                poi_list = cabin_pois_list;
+                while (poi_list) {
+                    struct cabin_hut *cabin = (struct cabin_hut *)poi_list->data;
+                    if (cabin) {
+                        struct rest_poi *poi = g_new0(struct rest_poi, 1);
+                        poi->coord = cabin->coord;
+                        poi->name = cabin->name ? g_strdup(cabin->name) : NULL;
+                        poi->type = g_strdup("tourism");
+                        poi->category = cabin->type ? g_strdup(cabin->type) : NULL;
+                        poi->distance_from_rest_stop = cabin->distance_from_rest_stop;
+                        stop->pois = g_list_append(stop->pois, poi);
+                    }
+                    poi_list = g_list_next(poi_list);
+                }
+                
+                poi_free_water_points(water_pois_list);
+                poi_free_cabins(cabin_pois_list);
+            } else {
+                stop->pois = rest_poi_discover(&h_stop->coord, priv->config.poi_search_radius_km, NULL, 0);
+            }
+            
+            priv->suggested_stops = g_list_append(priv->suggested_stops, stop);
+        }
+        l = g_list_next(l);
+    }
+}
+
+/* Convert cycling rest stops to rest_stop format and add POIs */
+static void process_cycling_stops(struct rest_priv *priv, GList *cycling_stops) {
+    GList *l = cycling_stops;
+    while (l) {
+        struct cycling_rest_stop *c_stop = (struct cycling_rest_stop *)l->data;
+        if (c_stop) {
+            /* Get coordinate at distance along route */
+            struct coord c = route_get_coord_dist(priv->current_route, (int)c_stop->position);
+            transform_to_geo(projection_mg, &c, &c_stop->coord);
+            
+            /* Create rest_stop from cycling_rest_stop */
+            struct rest_stop *stop = g_new0(struct rest_stop, 1);
+            stop->coord = c_stop->coord;
+            stop->distance_from_route = 0;
+            stop->name = g_strdup_printf("Cycling rest stop at %.1f km", c_stop->position / 1000.0);
+            
+            /* Search for POIs using map data if available */
+            struct mapset *ms = navit_get_mapset(priv->nav);
+            if (ms) {
+                GList *water_pois_list = poi_search_water_points_map(&c_stop->coord, 
+                                                                    priv->config.poi_water_search_radius_km, ms);
+                GList *cabin_pois_list = poi_search_cabins_map(&c_stop->coord, 
+                                                              priv->config.poi_cabin_search_radius_km, ms,
+                                                              priv->config.enable_dnt_priority);
+                
+                /* Convert water points and cabins to rest_poi format */
+                GList *poi_list = water_pois_list;
+                while (poi_list) {
+                    struct water_point *wp = (struct water_point *)poi_list->data;
+                    if (wp) {
+                        struct rest_poi *poi = g_new0(struct rest_poi, 1);
+                        poi->coord = wp->coord;
+                        poi->name = wp->name ? g_strdup(wp->name) : NULL;
+                        poi->type = g_strdup("amenity");
+                        poi->category = wp->type ? g_strdup(wp->type) : NULL;
+                        poi->distance_from_rest_stop = wp->distance_from_rest_stop;
+                        stop->pois = g_list_append(stop->pois, poi);
+                    }
+                    poi_list = g_list_next(poi_list);
+                }
+                
+                poi_list = cabin_pois_list;
+                while (poi_list) {
+                    struct cabin_hut *cabin = (struct cabin_hut *)poi_list->data;
+                    if (cabin) {
+                        struct rest_poi *poi = g_new0(struct rest_poi, 1);
+                        poi->coord = cabin->coord;
+                        poi->name = cabin->name ? g_strdup(cabin->name) : NULL;
+                        poi->type = g_strdup("tourism");
+                        poi->category = cabin->type ? g_strdup(cabin->type) : NULL;
+                        poi->distance_from_rest_stop = cabin->distance_from_rest_stop;
+                        stop->pois = g_list_append(stop->pois, poi);
+                    }
+                    poi_list = g_list_next(poi_list);
+                }
+                
+                poi_free_water_points(water_pois_list);
+                poi_free_cabins(cabin_pois_list);
+            } else {
+                stop->pois = rest_poi_discover(&c_stop->coord, priv->config.poi_search_radius_km, NULL, 0);
+            }
+            
+            priv->suggested_stops = g_list_append(priv->suggested_stops, stop);
+        }
+        l = g_list_next(l);
+    }
+}
+
 static void rest_route_callback_wrapper(void *priv_data) {
     struct rest_priv *priv = (struct rest_priv *)priv_data;
-    if (!priv) return;
+    if (!priv) {
+        return;
+    }
     
     /* Get route from navit */
     struct attr attr;
@@ -210,74 +379,7 @@ static void rest_route_callback_wrapper(void *priv_data) {
                     /* Calculate hiking rest stops with adjusted max daily distance */
                     GList *hiking_stops = hiking_calculate_rest_stops_with_max(total_distance, 0, max_daily);
                     if (hiking_stops) {
-                        /* Convert hiking rest stops to rest_stop format */
-                        GList *l = hiking_stops;
-                        while (l) {
-                            struct hiking_rest_stop *h_stop = (struct hiking_rest_stop *)l->data;
-                            if (h_stop) {
-                                /* Get coordinate at distance along route */
-                                struct coord c = route_get_coord_dist(priv->current_route, (int)h_stop->position);
-                                transform_to_geo(projection_mg, &c, &h_stop->coord);
-                                
-                                /* Create rest_stop from hiking_rest_stop */
-                                struct rest_stop *stop = g_new0(struct rest_stop, 1);
-                                stop->coord = h_stop->coord;
-                                stop->distance_from_route = 0;
-                                stop->name = g_strdup_printf("Hiking rest stop at %.1f km", h_stop->position / 1000.0);
-                                
-                                /* Search for POIs using map data if available */
-                                struct mapset *ms = navit_get_mapset(priv->nav);
-                                if (ms) {
-                                    /* Use map-based POI search */
-                                    GList *water_pois_list = poi_search_water_points_map(&h_stop->coord, 
-                                                                                        priv->config.poi_water_search_radius_km, ms);
-                                    GList *cabin_pois_list = poi_search_cabins_map(&h_stop->coord, 
-                                                                                  priv->config.poi_cabin_search_radius_km, ms,
-                                                                                  priv->config.enable_dnt_priority);
-                                    
-                                    /* Convert water points and cabins to rest_poi format */
-                                    GList *l = water_pois_list;
-                                    while (l) {
-                                        struct water_point *wp = (struct water_point *)l->data;
-                                        if (wp) {
-                                            struct rest_poi *poi = g_new0(struct rest_poi, 1);
-                                            poi->coord = wp->coord;
-                                            poi->name = wp->name ? g_strdup(wp->name) : NULL;
-                                            poi->type = g_strdup("amenity");
-                                            poi->category = wp->type ? g_strdup(wp->type) : NULL;
-                                            poi->distance_from_rest_stop = wp->distance_from_rest_stop;
-                                            stop->pois = g_list_append(stop->pois, poi);
-                                        }
-                                        l = g_list_next(l);
-                                    }
-                                    
-                                    l = cabin_pois_list;
-                                    while (l) {
-                                        struct cabin_hut *cabin = (struct cabin_hut *)l->data;
-                                        if (cabin) {
-                                            struct rest_poi *poi = g_new0(struct rest_poi, 1);
-                                            poi->coord = cabin->coord;
-                                            poi->name = cabin->name ? g_strdup(cabin->name) : NULL;
-                                            poi->type = g_strdup("tourism");
-                                            poi->category = cabin->type ? g_strdup(cabin->type) : NULL;
-                                            poi->distance_from_rest_stop = cabin->distance_from_rest_stop;
-                                            stop->pois = g_list_append(stop->pois, poi);
-                                        }
-                                        l = g_list_next(l);
-                                    }
-                                    
-                                    poi_free_water_points(water_pois_list);
-                                    poi_free_cabins(cabin_pois_list);
-                                } else {
-                                    /* Fallback to Overpass API */
-                                    stop->pois = rest_poi_discover(&h_stop->coord, priv->config.poi_search_radius_km,
-                                                                   NULL, 0);
-                                }
-                                
-                                priv->suggested_stops = g_list_append(priv->suggested_stops, stop);
-                            }
-                            l = g_list_next(l);
-                        }
+                        process_hiking_stops(priv, hiking_stops);
                         hiking_free_rest_stops(hiking_stops);
                     }
                 }
@@ -293,74 +395,7 @@ static void rest_route_callback_wrapper(void *priv_data) {
                     /* Calculate cycling rest stops */
                     GList *cycling_stops = cycling_calculate_rest_stops(total_distance, 0);
                     if (cycling_stops) {
-                        /* Convert cycling rest stops to rest_stop format */
-                        GList *l = cycling_stops;
-                        while (l) {
-                            struct cycling_rest_stop *c_stop = (struct cycling_rest_stop *)l->data;
-                            if (c_stop) {
-                                /* Get coordinate at distance along route */
-                                struct coord c = route_get_coord_dist(priv->current_route, (int)c_stop->position);
-                                transform_to_geo(projection_mg, &c, &c_stop->coord);
-                                
-                                /* Create rest_stop from cycling_rest_stop */
-                                struct rest_stop *stop = g_new0(struct rest_stop, 1);
-                                stop->coord = c_stop->coord;
-                                stop->distance_from_route = 0;
-                                stop->name = g_strdup_printf("Cycling rest stop at %.1f km", c_stop->position / 1000.0);
-                                
-                                /* Search for POIs using map data if available */
-                                struct mapset *ms = navit_get_mapset(priv->nav);
-                                if (ms) {
-                                    /* Use map-based POI search */
-                                    GList *water_pois_list = poi_search_water_points_map(&c_stop->coord, 
-                                                                                        priv->config.poi_water_search_radius_km, ms);
-                                    GList *cabin_pois_list = poi_search_cabins_map(&c_stop->coord, 
-                                                                                  priv->config.poi_cabin_search_radius_km, ms,
-                                                                                  priv->config.enable_dnt_priority);
-                                    
-                                    /* Convert water points and cabins to rest_poi format */
-                                    GList *l = water_pois_list;
-                                    while (l) {
-                                        struct water_point *wp = (struct water_point *)l->data;
-                                        if (wp) {
-                                            struct rest_poi *poi = g_new0(struct rest_poi, 1);
-                                            poi->coord = wp->coord;
-                                            poi->name = wp->name ? g_strdup(wp->name) : NULL;
-                                            poi->type = g_strdup("amenity");
-                                            poi->category = wp->type ? g_strdup(wp->type) : NULL;
-                                            poi->distance_from_rest_stop = wp->distance_from_rest_stop;
-                                            stop->pois = g_list_append(stop->pois, poi);
-                                        }
-                                        l = g_list_next(l);
-                                    }
-                                    
-                                    l = cabin_pois_list;
-                                    while (l) {
-                                        struct cabin_hut *cabin = (struct cabin_hut *)l->data;
-                                        if (cabin) {
-                                            struct rest_poi *poi = g_new0(struct rest_poi, 1);
-                                            poi->coord = cabin->coord;
-                                            poi->name = cabin->name ? g_strdup(cabin->name) : NULL;
-                                            poi->type = g_strdup("tourism");
-                                            poi->category = cabin->type ? g_strdup(cabin->type) : NULL;
-                                            poi->distance_from_rest_stop = cabin->distance_from_rest_stop;
-                                            stop->pois = g_list_append(stop->pois, poi);
-                                        }
-                                        l = g_list_next(l);
-                                    }
-                                    
-                                    poi_free_water_points(water_pois_list);
-                                    poi_free_cabins(cabin_pois_list);
-                                } else {
-                                    /* Fallback to Overpass API */
-                                    stop->pois = rest_poi_discover(&c_stop->coord, priv->config.poi_search_radius_km,
-                                                                   NULL, 0);
-                                }
-                                
-                                priv->suggested_stops = g_list_append(priv->suggested_stops, stop);
-                            }
-                            l = g_list_next(l);
-                        }
+                        process_cycling_stops(priv, cycling_stops);
                         cycling_free_rest_stops(cycling_stops);
                     }
                 }
@@ -454,31 +489,7 @@ static struct osd_priv *rest_osd_new(struct navit *nav, struct osd_methods *meth
     dbg(lvl_debug, "Rest plugin: Stored instance pointer at %p", priv);
     
     /* Get database path from config */
-    db_path_attr = attr_search(attrs, attr_data);
-    if (db_path_attr && db_path_attr->u.str) {
-        /* Expand environment variables in path (e.g., $HOME) */
-        struct file_wordexp *we = file_wordexp_new(db_path_attr->u.str);
-        int count = file_wordexp_get_count(we);
-        char **array = file_wordexp_get_array(we);
-        if (count > 0 && array[0]) {
-            db_path = g_strdup(array[0]);
-        } else {
-            /* Fallback to default if expansion fails */
-            const char *user_data_dir = navit_get_user_data_directory(1);
-            if (user_data_dir) {
-                db_path = g_build_filename(user_data_dir, "rest_plugin.db", NULL);
-            }
-            /* Note: user_data_dir is from getenv(), do not free */
-        }
-        file_wordexp_destroy(we);
-    } else {
-        /* Default database path */
-        const char *user_data_dir = navit_get_user_data_directory(1);
-        if (user_data_dir) {
-            db_path = g_build_filename(user_data_dir, "rest_plugin.db", NULL);
-        }
-        /* Note: user_data_dir is from getenv(), do not free */
-    }
+    db_path = rest_get_database_path(attrs);
     
     /* Initialize database */
     priv->db = rest_db_new(db_path);

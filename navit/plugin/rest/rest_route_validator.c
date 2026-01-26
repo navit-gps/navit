@@ -28,6 +28,8 @@
 #include "map.h"
 #include "rest_poi_map.h"
 
+struct item;
+
 /* Forbidden highways for hikers */
 static const char *forbidden_highways[] = {
     "motorway",
@@ -133,39 +135,7 @@ struct route_validation_result *route_validator_validate_hiking_with_priority(st
             }
             
             if (street_item) {
-                /* Map Navit item types to OSM highway types */
-                const char *highway_type = NULL;
-                
-                /* Check item type and map to highway type string */
-                if (street_item->type == type_highway_land || street_item->type == type_highway_city) {
-                    highway_type = "motorway";
-                } else if (street_item->type == type_street_n_lanes) {
-                    highway_type = "trunk";
-                } else if (street_item->type == type_street_4_land || street_item->type == type_street_4_city) {
-                    highway_type = "primary";
-                } else if (street_item->type == type_ramp) {
-                    highway_type = "motorway_link";
-                } else if (street_item->type == type_footway) {
-                    highway_type = "footway";
-                } else if (street_item->type == type_path) {
-                    highway_type = "path";
-                } else if (street_item->type == type_track || street_item->type == type_track_paved ||
-                           street_item->type == type_track_gravelled || street_item->type == type_track_unpaved ||
-                           street_item->type == type_track_ground || street_item->type == type_track_grass) {
-                    highway_type = "track";
-                } else if (street_item->type == type_steps) {
-                    highway_type = "steps";
-                } else if (street_item->type == type_bridleway) {
-                    highway_type = "bridleway";
-                } else if (street_item->type == type_street_3_land || street_item->type == type_street_3_city) {
-                    highway_type = "secondary";
-                } else if (street_item->type == type_street_2_land || street_item->type == type_street_2_city) {
-                    highway_type = "tertiary";
-                } else if (street_item->type == type_street_1_land || street_item->type == type_street_1_city ||
-                           street_item->type == type_street_0 || street_item->type == type_street_service ||
-                           street_item->type == type_living_street) {
-                    highway_type = "unclassified";
-                }
+                const char *highway_type = route_validator_map_item_to_highway_type(street_item);
                 
                 /* Classify segment */
                 if (highway_type) {
