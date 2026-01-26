@@ -552,6 +552,10 @@ add_module(map/csv "Default" TRUE)
 #Modules without test yet
 add_module(plugin/pedestrian "Default" FALSE)
 add_module(plugin/j1850 "Default" FALSE)
+add_module(plugin/aprs "Default" TRUE)
+# APRS SDR plugin - only if librtlsdr is found
+add_module(plugin/aprs_sdr "Default" FALSE)
+add_module(plugin/rest "Default" TRUE)
 add_module(speech/android "Default" FALSE)
 add_module(speech/espeak "Default" FALSE)
 add_module(speech/iphone "Default" FALSE)

@@ -1,6 +1,7 @@
 /.gradle/
 /.settings/
 /build/
+/make/
 /navit/android/.externalNativeBuild/
 /navit/android/build/
 /.cproject
@@ -10,3 +11,40 @@
 /navit/android/cmake_plugin_settings.txt
 /nbproject/
 navit/android/checkstyle
+
+# CMake build artifacts
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+*.cmake
+!CMakeLists.txt
+!*.cmake.in
+
+# Compiled binaries
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.bin
+a.out
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Compiled translations
+*.mo
+
+# Test temporary files
+*_tmp/
+*.tmp/
+maptool_*.tmp/
+
+# Generated config
+config.h
