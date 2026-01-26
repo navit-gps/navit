@@ -28,9 +28,162 @@
 #include "rest_db.h"
 #include "rest.h"
 
+/* Constants for validation bounds */
+#define MAX_HOURS_PER_DAY 12
+#define MAX_BREAK_DURATION_MIN 120
+#define MAX_VEHICLE_TYPE 3
+#define SQLITE_COLUMN_INDEX_WAS_MANDATORY 5
+#define MAX_DISTANCE_METERS 10000
+#define MAX_POI_SEARCH_RADIUS_KM 1000
+#define MAX_POI_WATER_CABIN_RADIUS_KM 100
+#define MAX_HOURS_PER_DAY_24 24
+#define MAX_CONFIG_VALUE 1000000
+#define DECIMAL_BASE 10
+
 struct rest_db {
     sqlite3 *db;
 };
+
+/* Load a single configuration value - returns 0 on success, -1 if key not recognized */
+static int rest_db_load_config_value(const char *key, int value, struct rest_config *config, int *loaded_count) {
+    if (!strcmp(key, "vehicle_type")) {
+        if (value >= 0 && value <= MAX_VEHICLE_TYPE) {
+            config->vehicle_type = value;
+            (*loaded_count)++;
+            return 0;
+        } else {
+            dbg(lvl_warning, "Rest plugin: Invalid vehicle_type value: %d, using default", value);
+            return 0;
+        }
+    } else if (!strcmp(key, "car_soft_limit_hours")) {
+        if (value > 0 && value <= MAX_HOURS_PER_DAY) {
+            config->car_soft_limit_hours = value;
+            (*loaded_count)++;
+            return 0;
+        } else {
+            dbg(lvl_warning, "Rest plugin: Invalid car_soft_limit_hours value: %d, using default", value);
+            return 0;
+        }
+    } else if (!strcmp(key, "car_max_hours")) {
+        if (value > 0 && value <= MAX_HOURS_PER_DAY) {
+            config->car_max_hours = value;
+            (*loaded_count)++;
+            return 0;
+        } else {
+            dbg(lvl_warning, "Rest plugin: Invalid car_max_hours value: %d, using default", value);
+            return 0;
+        }
+    } else if (!strcmp(key, "car_break_interval_hours")) {
+        if (value > 0 && value <= MAX_HOURS_PER_DAY) {
+            config->car_break_interval_hours = value;
+            (*loaded_count)++;
+            return 0;
+        } else {
+            dbg(lvl_warning, "Rest plugin: Invalid car_break_interval_hours value: %d, using default", value);
+            return 0;
+        }
+    } else if (!strcmp(key, "car_break_duration_min")) {
+        if (value > 0 && value <= MAX_BREAK_DURATION_MIN) {
+            config->car_break_duration_min = value;
+            (*loaded_count)++;
+            return 0;
+        } else {
+            dbg(lvl_warning, "Rest plugin: Invalid car_break_duration_min value: %d, using default", value);
+            return 0;
+        }
+    } else if (!strcmp(key, "truck_mandatory_break_after_hours")) {
+        if (value > 0 && value <= MAX_HOURS_PER_DAY) {
+            config->truck_mandatory_break_after_hours = value;
+            (*loaded_count)++;
+            return 0;
+        } else {
+            dbg(lvl_warning, "Rest plugin: Invalid truck_mandatory_break_after_hours value: %d, using default", value);
+            return 0;
+        }
+    } else if (!strcmp(key, "truck_mandatory_break_duration_min")) {
+        if (value > 0 && value <= MAX_BREAK_DURATION_MIN) {
+            config->truck_mandatory_break_duration_min = value;
+            (*loaded_count)++;
+            return 0;
+        } else {
+            dbg(lvl_warning, "Rest plugin: Invalid truck_mandatory_break_duration_min value: %d, using default", value);
+            return 0;
+        }
+    } else if (!strcmp(key, "truck_max_daily_hours")) {
+        if (value > 0 && value <= MAX_HOURS_PER_DAY) {
+            config->truck_max_daily_hours = value;
+            (*loaded_count)++;
+            return 0;
+        } else {
+            dbg(lvl_warning, "Rest plugin: Invalid truck_max_daily_hours value: %d, using default", value);
+            return 0;
+        }
+    } else if (!strcmp(key, "min_distance_from_buildings")) {
+        if (value > 0 && value <= MAX_DISTANCE_METERS) {
+            config->min_distance_from_buildings = value;
+            (*loaded_count)++;
+            return 0;
+        } else {
+            dbg(lvl_warning, "Rest plugin: Invalid min_distance_from_buildings value: %d, using default", value);
+            return 0;
+        }
+    } else if (!strcmp(key, "poi_search_radius_km")) {
+        if (value > 0 && value <= MAX_POI_SEARCH_RADIUS_KM) {
+            config->poi_search_radius_km = value;
+            (*loaded_count)++;
+            return 0;
+        } else {
+            dbg(lvl_warning, "Rest plugin: Invalid poi_search_radius_km value: %d, using default", value);
+            return 0;
+        }
+    } else if (!strcmp(key, "poi_water_search_radius_km")) {
+        if (value > 0 && value <= MAX_POI_WATER_CABIN_RADIUS_KM) {
+            config->poi_water_search_radius_km = value;
+            (*loaded_count)++;
+            return 0;
+        } else {
+            dbg(lvl_warning, "Rest plugin: Invalid poi_water_search_radius_km value: %d, using default", value);
+            return 0;
+        }
+    } else if (!strcmp(key, "poi_cabin_search_radius_km")) {
+        if (value > 0 && value <= MAX_POI_WATER_CABIN_RADIUS_KM) {
+            config->poi_cabin_search_radius_km = value;
+            (*loaded_count)++;
+            return 0;
+        } else {
+            dbg(lvl_warning, "Rest plugin: Invalid poi_cabin_search_radius_km value: %d, using default", value);
+            return 0;
+        }
+    } else if (!strcmp(key, "min_distance_from_glaciers")) {
+        if (value > 0 && value <= MAX_DISTANCE_METERS) {
+            config->min_distance_from_glaciers = value;
+            (*loaded_count)++;
+            return 0;
+        } else {
+            dbg(lvl_warning, "Rest plugin: Invalid min_distance_from_glaciers value: %d, using default", value);
+            return 0;
+        }
+    } else if (!strcmp(key, "rest_interval_min_hours")) {
+        if (value > 0 && value <= MAX_HOURS_PER_DAY_24) {
+            config->rest_interval_min_hours = value;
+            (*loaded_count)++;
+            return 0;
+        } else {
+            dbg(lvl_warning, "Rest plugin: Invalid rest_interval_min_hours value: %d, using default", value);
+            return 0;
+        }
+    } else if (!strcmp(key, "rest_interval_max_hours")) {
+        if (value > 0 && value <= MAX_HOURS_PER_DAY_24) {
+            config->rest_interval_max_hours = value;
+            (*loaded_count)++;
+            return 0;
+        } else {
+            dbg(lvl_warning, "Rest plugin: Invalid rest_interval_max_hours value: %d, using default", value);
+            return 0;
+        }
+    }
+    return -1;
+}
 
 /* Clean up corrupted config entries from database */
 static void rest_db_clean_corrupted_config(struct rest_db *db) {
@@ -38,7 +191,9 @@ static void rest_db_clean_corrupted_config(struct rest_db *db) {
     char *err_msg = NULL;
     int rc;
     
-    if (!db || !db->db) return;
+    if (!db || !db->db) {
+        return;
+    }
     
     /* Delete entries with invalid values (too large, negative, etc.) */
     sql = "DELETE FROM rest_config WHERE "
@@ -190,7 +345,7 @@ GList *rest_db_get_history(struct rest_db *db, time_t since) {
     while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
         struct rest_stop_history *entry = g_new0(struct rest_stop_history, 1);
         
-        entry->timestamp = (time_t)sqlite3_column_int64(stmt, 0);
+        entry->timestamp = sqlite3_column_int64(stmt, 0);
         entry->coord.lat = sqlite3_column_double(stmt, 1);
         entry->coord.lng = sqlite3_column_double(stmt, 2);
         
@@ -200,7 +355,7 @@ GList *rest_db_get_history(struct rest_db *db, time_t since) {
         }
         
         entry->duration_minutes = sqlite3_column_int(stmt, 4);
-        entry->was_mandatory = sqlite3_column_int(stmt, 5);
+        entry->was_mandatory = sqlite3_column_int(stmt, SQLITE_COLUMN_INDEX_WAS_MANDATORY);
         
         list = g_list_prepend(list, entry);
     }
@@ -318,10 +473,17 @@ int rest_db_load_config(struct rest_db *db, struct rest_config *config) {
         const char *value_str = (const char *)sqlite3_column_text(stmt, 1);
         int value;
         
-        if (!key || !value_str) continue;
+        if (!key || !value_str) {
+            continue;
+        }
         
-        /* Convert text to integer with validation */
-        value = atoi(value_str);
+        /* Convert text to integer with validation - use strtol for better error handling */
+        char *endptr;
+        value = (int)strtol(value_str, &endptr, DECIMAL_BASE);
+        if (*endptr != '\0' && *endptr != '\n') {
+            dbg(lvl_warning, "Rest plugin: Invalid numeric value for %s: '%s', skipping", key, value_str);
+            continue;
+        }
         
         /* Check if conversion was successful (atoi returns 0 for invalid, but 0 might be valid) */
         /* So we check if the string represents a valid number */
@@ -331,112 +493,7 @@ int rest_db_load_config(struct rest_db *db, struct rest_config *config) {
         }
         
         /* Only load non-zero values within reasonable bounds to preserve defaults */
-        if (!strcmp(key, "vehicle_type")) {
-            if (value >= 0 && value <= 3) {
-                config->vehicle_type = value;
-                loaded_count++;
-            } else {
-                dbg(lvl_warning, "Rest plugin: Invalid vehicle_type value: %d, using default", value);
-            }
-        } else if (!strcmp(key, "car_soft_limit_hours")) {
-            if (value > 0 && value <= 12) {
-                config->car_soft_limit_hours = value;
-                loaded_count++;
-            } else {
-                dbg(lvl_warning, "Rest plugin: Invalid car_soft_limit_hours value: %d, using default", value);
-            }
-        } else if (!strcmp(key, "car_max_hours")) {
-            if (value > 0 && value <= 12) {
-                config->car_max_hours = value;
-                loaded_count++;
-            } else {
-                dbg(lvl_warning, "Rest plugin: Invalid car_max_hours value: %d, using default", value);
-            }
-        } else if (!strcmp(key, "car_break_interval_hours")) {
-            if (value > 0 && value <= 12) {
-                config->car_break_interval_hours = value;
-                loaded_count++;
-            } else {
-                dbg(lvl_warning, "Rest plugin: Invalid car_break_interval_hours value: %d, using default", value);
-            }
-        } else if (!strcmp(key, "car_break_duration_min")) {
-            if (value > 0 && value <= 120) {
-                config->car_break_duration_min = value;
-                loaded_count++;
-            } else {
-                dbg(lvl_warning, "Rest plugin: Invalid car_break_duration_min value: %d, using default", value);
-            }
-        } else if (!strcmp(key, "truck_mandatory_break_after_hours")) {
-            if (value > 0 && value <= 12) {
-                config->truck_mandatory_break_after_hours = value;
-                loaded_count++;
-            } else {
-                dbg(lvl_warning, "Rest plugin: Invalid truck_mandatory_break_after_hours value: %d, using default", value);
-            }
-        } else if (!strcmp(key, "truck_mandatory_break_duration_min")) {
-            if (value > 0 && value <= 120) {
-                config->truck_mandatory_break_duration_min = value;
-                loaded_count++;
-            } else {
-                dbg(lvl_warning, "Rest plugin: Invalid truck_mandatory_break_duration_min value: %d, using default", value);
-            }
-        } else if (!strcmp(key, "truck_max_daily_hours")) {
-            if (value > 0 && value <= 12) {
-                config->truck_max_daily_hours = value;
-                loaded_count++;
-            } else {
-                dbg(lvl_warning, "Rest plugin: Invalid truck_max_daily_hours value: %d, using default", value);
-            }
-        } else if (!strcmp(key, "min_distance_from_buildings")) {
-            if (value > 0 && value <= 10000) {  /* Max 10 km */
-                config->min_distance_from_buildings = value;
-                loaded_count++;
-            } else {
-                dbg(lvl_warning, "Rest plugin: Invalid min_distance_from_buildings value: %d, using default", value);
-            }
-        } else if (!strcmp(key, "poi_search_radius_km")) {
-            if (value > 0 && value <= 1000) {  /* Max 1000 km */
-                config->poi_search_radius_km = value;
-                loaded_count++;
-            } else {
-                dbg(lvl_warning, "Rest plugin: Invalid poi_search_radius_km value: %d, using default", value);
-            }
-        } else if (!strcmp(key, "poi_water_search_radius_km")) {
-            if (value > 0 && value <= 100) {  /* Max 100 km */
-                config->poi_water_search_radius_km = value;
-                loaded_count++;
-            } else {
-                dbg(lvl_warning, "Rest plugin: Invalid poi_water_search_radius_km value: %d, using default", value);
-            }
-        } else if (!strcmp(key, "poi_cabin_search_radius_km")) {
-            if (value > 0 && value <= 100) {  /* Max 100 km */
-                config->poi_cabin_search_radius_km = value;
-                loaded_count++;
-            } else {
-                dbg(lvl_warning, "Rest plugin: Invalid poi_cabin_search_radius_km value: %d, using default", value);
-            }
-        } else if (!strcmp(key, "min_distance_from_glaciers")) {
-            if (value > 0 && value <= 10000) {  /* Max 10 km */
-                config->min_distance_from_glaciers = value;
-                loaded_count++;
-            } else {
-                dbg(lvl_warning, "Rest plugin: Invalid min_distance_from_glaciers value: %d, using default", value);
-            }
-        } else if (!strcmp(key, "rest_interval_min_hours")) {
-            if (value > 0 && value <= 24) {
-                config->rest_interval_min_hours = value;
-                loaded_count++;
-            } else {
-                dbg(lvl_warning, "Rest plugin: Invalid rest_interval_min_hours value: %d, using default", value);
-            }
-        } else if (!strcmp(key, "rest_interval_max_hours")) {
-            if (value > 0 && value <= 24) {
-                config->rest_interval_max_hours = value;
-                loaded_count++;
-            } else {
-                dbg(lvl_warning, "Rest plugin: Invalid rest_interval_max_hours value: %d, using default", value);
-            }
-        } else {
+        if (rest_db_load_config_value(key, value, config, &loaded_count) != 0) {
             dbg(lvl_debug, "Rest plugin: Unknown config key in database: %s", key);
         }
     }
