@@ -439,6 +439,14 @@ int aprs_cmd_nmea_parity_odd(struct navit *nav, char *function, struct attr **in
     return 1;
 }
 
+int aprs_cmd_setting_aprs(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct attr navit_attr;
+    navit_attr.type = attr_navit;
+    navit_attr.u.navit = nav;
+    command_evaluate_to_void(&navit_attr, "menu(\"#Settings APRS\")", NULL);
+    return 1;
+}
+
 static struct command_table aprs_commands[] = {
     {"aprs_freq_144_39", command_cast(aprs_cmd_freq_144_39)},
     {"aprs_freq_144_8", command_cast(aprs_cmd_freq_144_8)},
@@ -467,6 +475,7 @@ static struct command_table aprs_commands[] = {
     {"aprs_nmea_parity_none", command_cast(aprs_cmd_nmea_parity_none)},
     {"aprs_nmea_parity_even", command_cast(aprs_cmd_nmea_parity_even)},
     {"aprs_nmea_parity_odd", command_cast(aprs_cmd_nmea_parity_odd)},
+    {"setting_aprs", command_cast(aprs_cmd_setting_aprs)},
 };
 
 static void aprs_osd_destroy(struct osd_priv *osd) {

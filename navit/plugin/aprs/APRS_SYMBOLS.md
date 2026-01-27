@@ -88,17 +88,6 @@ Common symbols include:
 
 See the APRS Protocol Specification for complete symbol tables.
 
-## Layout Configuration
-
-APRS stations use `type_poi_custom0` to support custom icons. Ensure your Navit layout includes:
-```xml
-<itemgra item_types="poi_custom0" order="10-">
-    <icon src="%s"/>
-</itemgra>
-```
-
-The `%s` format string is substituted with the icon path from `attr_icon_src`.
-
 ## Troubleshooting
 
 ### Icons Not Displaying
@@ -114,9 +103,7 @@ char *icon = aprs_symbol_get_icon('/', '>');
 printf("Icon path: %s\n", icon);
 ```
 
-3. Verify layout configuration includes custom POI icon support
-
-4. Check Navit debug logs for icon loading errors
+3. Check Navit debug logs for icon loading errors
 
 ### Missing Symbols
 
