@@ -104,15 +104,15 @@ var NAVTREEINDEX =
 "structmapsetObject.html#a56c13b645681e7b556cf814a08790db3",
 "structnavit.html#a7c9134933e633a163cab550da8ca2e03",
 "structosm__protobufdb__context.html#a4a467f03766e4a6e8cab95ee6588807b",
-"structroute.html#a052d5b83336fae1672ce9514d386fb9e",
-"structslicerpolygon.html#a3ed734c4acceaf67c25ea7ac0e2ff75e",
-"structtown__priv.html#ab68c6f9c8ab0e7f1e8b418a3ed5df74d",
+"structroute.html#a0bdbb423178c93cc7d2930ae04804983",
+"structslicerpolygon.html#a4955590c44ef65c5c2b2197b0d7742b1",
+"structtown__priv.html#ab76c0a94647e6371e6b16855473c7caa",
 "structvehicle__priv.html",
-"structxistate.html#a7bcfae17652167399b2832200d38dcdc",
-"tile_8c.html#aa1525b4ab3a92cc4d1e713712d660a0d",
-"traffic_8c.html#af5b5a5a7f9d6718a87a5ae95ac8fa2d1",
-"transform_8c.html#adb6dd7535108a2bded18405c5c7769f6",
-"vehicle__demo_8c.html#a9e8aaccf8c944a651a3e7f528cf7fc71"
+"structxistate.html#ae5fd94ddf54cb32b5c70543439518656",
+"tile_8c.html#ab0dd4fe078be16f77ff3fd0eb9e2592b",
+"traffic_8c.html#af9831ce04fa609fbdb30c83337e6a67d",
+"transform_8c.html#adeaa0bc60b6541725a856a0a23d6a388",
+"vehicle__file_8c.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

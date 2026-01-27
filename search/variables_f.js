@@ -36,7 +36,7 @@ var searchData=
   ['navit_5fiface_33',['navit_iface',['../namespaceeval.html#a15f98ded951fdf8e02a788234f10f16b',1,'eval.navit_iface'],['../namespacetest.html#a4774a7cae6b3234481c9607aac9e8bea',1,'test.navit_iface']]],
   ['navit_5finit_5fcb_34',['navit_init_cb',['../structosd__scale.html#a48ff43641869c37970af3e0487d3241b',1,'osd_scale::navit_init_cb'],['../structnav__toggle__announcer.html#ab822b8e4f5a604b9c6d2e105d2861cdd',1,'nav_toggle_announcer::navit_init_cb'],['../structosd__button.html#a0e07f1b8517e3daf7e37dec6af9aebb2',1,'osd_button::navit_init_cb']]],
   ['navit_5fmethods_35',['navit_methods',['../binding_2python_2navit_8c.html#a12c9867a3d0773f45c25129a29d27e87',1,'navit.c']]],
-  ['navit_5fobject_36',['navit_object',['../structattr.html#a2334c773ca8101f330729651daa9268c',1,'attr::navit_object'],['../structspeech.html#ade1e72320c786bb9bad1d5feaf249355',1,'speech::NAVIT_OBJECT']]],
+  ['navit_5fobject_36',['navit_object',['../structspeech.html#ade1e72320c786bb9bad1d5feaf249355',1,'speech::NAVIT_OBJECT'],['../structattr.html#a2334c773ca8101f330729651daa9268c',1,'attr::navit_object']]],
   ['navit_5fpackage_5fname_37',['NAVIT_PACKAGE_NAME',['../classorg_1_1navitproject_1_1navit_1_1Navit.html#a6392cb03ab4377c31ab23478c47ec7ff',1,'org::navitproject::navit::Navit']]],
   ['navit_5fprefs_38',['NAVIT_PREFS',['../classorg_1_1navitproject_1_1navit_1_1NavitAppConfig.html#a9a4d2bb3713cf1a8e815156e4375a503',1,'org::navitproject::navit::NavitAppConfig']]],
   ['navit_5frunoptionsitem_39',['Navit_runOptionsItem',['../graphics__android_8c.html#a7fa5c0e1b1a7db5bc648c9bcdb0560df',1,'graphics_android.c']]],

@@ -8,7 +8,6 @@ var structvehicleprofile =
     [ "flags_reverse_mask", "structvehicleprofile.html#afe09da8fc23d370a2580c1a0f0223ea8", null ],
     [ "height", "structvehicleprofile.html#a76719ce3a7ce8950181f5aa4589ce18d", null ],
     [ "length", "structvehicleprofile.html#a2498d5281842c517cfeee5e21e8e3d80", null ],
-    [ "maxspeed_handling", "structvehicleprofile.html#a3ff440b7f298ef8c549b666e7dbb1477", null ],
     [ "mode", "structvehicleprofile.html#a1b3a214238a7a19898660cb3a162810c", null ],
     [ "name", "structvehicleprofile.html#a045592a1186fa58546adce51b3c9c73c", null ],
     [ "roadprofile_hash", "structvehicleprofile.html#a62f0d40444ae2c3fcf6afb5166586f8b", null ],

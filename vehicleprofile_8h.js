@@ -1,11 +1,6 @@
 var vehicleprofile_8h =
 [
     [ "vehicleprofile", "structvehicleprofile.html", "structvehicleprofile" ],
-    [ "maxspeed_handling", "vehicleprofile_8h.html#ae1102ac91662c5d756ac2aa3e4137391", [
-      [ "maxspeed_enforce", "vehicleprofile_8h.html#ae1102ac91662c5d756ac2aa3e4137391ac66ffd803aaa429e4f2ff871f5120077", null ],
-      [ "maxspeed_restrict", "vehicleprofile_8h.html#ae1102ac91662c5d756ac2aa3e4137391a6d89caab24f44ef11089d684423f7d05", null ],
-      [ "maxspeed_ignore", "vehicleprofile_8h.html#ae1102ac91662c5d756ac2aa3e4137391a113803a21138e17f277cd2cea599c39e", null ]
-    ] ],
     [ "vehicleprofile_add_attr", "vehicleprofile_8h.html#ab03bcd4060b0f1184645978cccfed0cc", null ],
     [ "vehicleprofile_attr_iter_destroy", "vehicleprofile_8h.html#a1d0a9f05b38ea8b39140ab892c3af574", null ],
     [ "vehicleprofile_attr_iter_new", "vehicleprofile_8h.html#a629a77e01e855dc0b5d4209ecccd9944", null ],
