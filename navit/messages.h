@@ -20,6 +20,8 @@
 #ifndef NAVIT_MESSAGES_H
 #define NAVIT_MESSAGES_H
 
+#include <time.h>
+
 struct messagelist;
 
 struct message {
