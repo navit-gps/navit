@@ -96,28 +96,28 @@ $(document).ready(function(){initNavTree('binfile_8c.html',''); initResizable();
   <div class="headertitle"><div class="title">binfile.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;stdlib.h&gt;</code><br />
-<code>#include &lt;glib.h&gt;</code><br />
-<code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
 <code>#include &quot;config.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="endianess_8h_source.html">endianess.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="geom_8h_source.html">geom.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="linguistics_8h_source.html">linguistics.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="maptype_8h_source.html">maptype.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="zipfile_8h_source.html">zipfile.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="linguistics_8h_source.html">linguistics.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="endianess_8h_source.html">endianess.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="geom_8h_source.html">geom.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="zipfile_8h_source.html">zipfile.h</a>&quot;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -3847,16 +3847,16 @@ Variables</h2></td></tr>
 <div class="line">    <a class="code hl_function" href="binfile_8c.html#af4bb8659ebe136535a2fb439db1982af">binmap_get_attr</a>,</div>
 <div class="line">    <a class="code hl_function" href="binfile_8c.html#a47980e25ffc50ee363dcdae6b480b1cc">binmap_set_attr</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="abinfile_8c_html_a0cb2ef463a003af411f86c583dbe08fc"><div class="ttname"><a href="binfile_8c.html#a0cb2ef463a003af411f86c583dbe08fc">binmap_search_new</a></div><div class="ttdeci">static struct map_search_priv * binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, int partial)</div><div class="ttdef"><b>Definition</b> binfile.c:1918</div></div>
-<div class="ttc" id="abinfile_8c_html_a0ef1e16812271c20fc285338f3d1d228"><div class="ttname"><a href="binfile_8c.html#a0ef1e16812271c20fc285338f3d1d228">map_destroy_binfile</a></div><div class="ttdeci">static void map_destroy_binfile(struct map_priv *m)</div><div class="ttdef"><b>Definition</b> binfile.c:412</div></div>
-<div class="ttc" id="abinfile_8c_html_a3485b7e9cccda45cf58417f2c66ab17e"><div class="ttname"><a href="binfile_8c.html#a3485b7e9cccda45cf58417f2c66ab17e">binmap_search_destroy</a></div><div class="ttdeci">static void binmap_search_destroy(struct map_search_priv *ms)</div><div class="ttdef"><b>Definition</b> binfile.c:2317</div></div>
-<div class="ttc" id="abinfile_8c_html_a47980e25ffc50ee363dcdae6b480b1cc"><div class="ttname"><a href="binfile_8c.html#a47980e25ffc50ee363dcdae6b480b1cc">binmap_set_attr</a></div><div class="ttdeci">static int binmap_set_attr(struct map_priv *map, struct attr *attr)</div><div class="ttdef"><b>Definition</b> binfile.c:2355</div></div>
-<div class="ttc" id="abinfile_8c_html_a7912488f26dd61ffb877d58191257c0b"><div class="ttname"><a href="binfile_8c.html#a7912488f26dd61ffb877d58191257c0b">binmap_search_get_item</a></div><div class="ttdeci">static struct item * binmap_search_get_item(struct map_search_priv *map_search)</div><div class="ttdef"><b>Definition</b> binfile.c:2156</div></div>
-<div class="ttc" id="abinfile_8c_html_a98b9b3c2d0461657eec4f9e1db26bb8b"><div class="ttname"><a href="binfile_8c.html#a98b9b3c2d0461657eec4f9e1db26bb8b">map_rect_get_item_binfile</a></div><div class="ttdeci">static struct item * map_rect_get_item_binfile(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> binfile.c:1676</div></div>
-<div class="ttc" id="abinfile_8c_html_ad48b8efb04cedaaeaf56c348713243a1"><div class="ttname"><a href="binfile_8c.html#ad48b8efb04cedaaeaf56c348713243a1">map_rect_get_item_byid_binfile</a></div><div class="ttdeci">static struct item * map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int id_hi, int id_lo)</div><div class="ttdef"><b>Definition</b> binfile.c:1726</div></div>
-<div class="ttc" id="abinfile_8c_html_ae2d29ae30a975e4ffa57a20af77da564"><div class="ttname"><a href="binfile_8c.html#ae2d29ae30a975e4ffa57a20af77da564">map_rect_destroy_binfile</a></div><div class="ttdeci">static void map_rect_destroy_binfile(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> binfile.c:1548</div></div>
-<div class="ttc" id="abinfile_8c_html_ae870002dd8b0f769c4ea63514e45f907"><div class="ttname"><a href="binfile_8c.html#ae870002dd8b0f769c4ea63514e45f907">map_rect_new_binfile</a></div><div class="ttdeci">static struct map_rect_priv * map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)</div><div class="ttdef"><b>Definition</b> binfile.c:1472</div></div>
-<div class="ttc" id="abinfile_8c_html_af4bb8659ebe136535a2fb439db1982af"><div class="ttname"><a href="binfile_8c.html#af4bb8659ebe136535a2fb439db1982af">binmap_get_attr</a></div><div class="ttdeci">static int binmap_get_attr(struct map_priv *m, enum attr_type type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> binfile.c:2335</div></div>
+<div class="ttc" id="abinfile_8c_html_a0cb2ef463a003af411f86c583dbe08fc"><div class="ttname"><a href="binfile_8c.html#a0cb2ef463a003af411f86c583dbe08fc">binmap_search_new</a></div><div class="ttdeci">static struct map_search_priv * binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, int partial)</div><div class="ttdef"><b>Definition</b> binfile.c:1901</div></div>
+<div class="ttc" id="abinfile_8c_html_a0ef1e16812271c20fc285338f3d1d228"><div class="ttname"><a href="binfile_8c.html#a0ef1e16812271c20fc285338f3d1d228">map_destroy_binfile</a></div><div class="ttdeci">static void map_destroy_binfile(struct map_priv *m)</div><div class="ttdef"><b>Definition</b> binfile.c:405</div></div>
+<div class="ttc" id="abinfile_8c_html_a3485b7e9cccda45cf58417f2c66ab17e"><div class="ttname"><a href="binfile_8c.html#a3485b7e9cccda45cf58417f2c66ab17e">binmap_search_destroy</a></div><div class="ttdeci">static void binmap_search_destroy(struct map_search_priv *ms)</div><div class="ttdef"><b>Definition</b> binfile.c:2315</div></div>
+<div class="ttc" id="abinfile_8c_html_a47980e25ffc50ee363dcdae6b480b1cc"><div class="ttname"><a href="binfile_8c.html#a47980e25ffc50ee363dcdae6b480b1cc">binmap_set_attr</a></div><div class="ttdeci">static int binmap_set_attr(struct map_priv *map, struct attr *attr)</div><div class="ttdef"><b>Definition</b> binfile.c:2353</div></div>
+<div class="ttc" id="abinfile_8c_html_a7912488f26dd61ffb877d58191257c0b"><div class="ttname"><a href="binfile_8c.html#a7912488f26dd61ffb877d58191257c0b">binmap_search_get_item</a></div><div class="ttdeci">static struct item * binmap_search_get_item(struct map_search_priv *map_search)</div><div class="ttdef"><b>Definition</b> binfile.c:2140</div></div>
+<div class="ttc" id="abinfile_8c_html_a98b9b3c2d0461657eec4f9e1db26bb8b"><div class="ttname"><a href="binfile_8c.html#a98b9b3c2d0461657eec4f9e1db26bb8b">map_rect_get_item_binfile</a></div><div class="ttdeci">static struct item * map_rect_get_item_binfile(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> binfile.c:1661</div></div>
+<div class="ttc" id="abinfile_8c_html_ad48b8efb04cedaaeaf56c348713243a1"><div class="ttname"><a href="binfile_8c.html#ad48b8efb04cedaaeaf56c348713243a1">map_rect_get_item_byid_binfile</a></div><div class="ttdeci">static struct item * map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int id_hi, int id_lo)</div><div class="ttdef"><b>Definition</b> binfile.c:1711</div></div>
+<div class="ttc" id="abinfile_8c_html_ae2d29ae30a975e4ffa57a20af77da564"><div class="ttname"><a href="binfile_8c.html#ae2d29ae30a975e4ffa57a20af77da564">map_rect_destroy_binfile</a></div><div class="ttdeci">static void map_rect_destroy_binfile(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> binfile.c:1531</div></div>
+<div class="ttc" id="abinfile_8c_html_ae870002dd8b0f769c4ea63514e45f907"><div class="ttname"><a href="binfile_8c.html#ae870002dd8b0f769c4ea63514e45f907">map_rect_new_binfile</a></div><div class="ttdeci">static struct map_rect_priv * map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)</div><div class="ttdef"><b>Definition</b> binfile.c:1456</div></div>
+<div class="ttc" id="abinfile_8c_html_af4bb8659ebe136535a2fb439db1982af"><div class="ttname"><a href="binfile_8c.html#af4bb8659ebe136535a2fb439db1982af">binmap_get_attr</a></div><div class="ttdeci">static int binmap_get_attr(struct map_priv *m, enum attr_type type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> binfile.c:2333</div></div>
 <div class="ttc" id="aprojection_8h_html_a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064"><div class="ttname"><a href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a></div><div class="ttdeci">@ projection_mg</div><div class="ttdef"><b>Definition</b> projection.h:25</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="binfile_8c.html#a242d67669d26cff4a773aa28c2aeda11">map_new_binfile()</a>.</p>
@@ -3893,13 +3893,13 @@ Variables</h2></td></tr>
 <div class="line">    NULL,</div>
 <div class="line">    <a class="code hl_function" href="binfile_8c.html#a707f4ebeb2a2998ab71ded5cac808768">binfile_coords_left</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="abinfile_8c_html_a129dbc12511bb159d9cc09ffa0f133c5"><div class="ttname"><a href="binfile_8c.html#a129dbc12511bb159d9cc09ffa0f133c5">binfile_attr_set</a></div><div class="ttdeci">static int binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)</div><div class="ttdef"><b>Definition</b> binfile.c:727</div></div>
-<div class="ttc" id="abinfile_8c_html_a1a7c87a36120cbb578edfc1a675369b7"><div class="ttname"><a href="binfile_8c.html#a1a7c87a36120cbb578edfc1a675369b7">binfile_coord_rewind</a></div><div class="ttdeci">static void binfile_coord_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> binfile.c:419</div></div>
-<div class="ttc" id="abinfile_8c_html_a2319a01b5e6704fc34d12063d4ad2578"><div class="ttname"><a href="binfile_8c.html#a2319a01b5e6704fc34d12063d4ad2578">binfile_attr_get</a></div><div class="ttdeci">static int binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> binfile.c:524</div></div>
-<div class="ttc" id="abinfile_8c_html_a5ca94ecf4c25a3e89455d45128976658"><div class="ttname"><a href="binfile_8c.html#a5ca94ecf4c25a3e89455d45128976658">binfile_coord_set</a></div><div class="ttdeci">static int binfile_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode)</div><div class="ttdef"><b>Definition</b> binfile.c:633</div></div>
-<div class="ttc" id="abinfile_8c_html_a707f4ebeb2a2998ab71ded5cac808768"><div class="ttname"><a href="binfile_8c.html#a707f4ebeb2a2998ab71ded5cac808768">binfile_coords_left</a></div><div class="ttdeci">static int binfile_coords_left(void *priv_data)</div><div class="ttdoc">Get nuber of coords left for current item.</div><div class="ttdef"><b>Definition</b> binfile.c:461</div></div>
-<div class="ttc" id="abinfile_8c_html_ae2b72ad9f696a1ab6fd959febd9dd284"><div class="ttname"><a href="binfile_8c.html#ae2b72ad9f696a1ab6fd959febd9dd284">binfile_coord_get</a></div><div class="ttdeci">static int binfile_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition</b> binfile.c:431</div></div>
-<div class="ttc" id="abinfile_8c_html_af9f83cc015a9857d10e11a03ffa01ced"><div class="ttname"><a href="binfile_8c.html#af9f83cc015a9857d10e11a03ffa01ced">binfile_attr_rewind</a></div><div class="ttdeci">static void binfile_attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> binfile.c:470</div></div>
+<div class="ttc" id="abinfile_8c_html_a129dbc12511bb159d9cc09ffa0f133c5"><div class="ttname"><a href="binfile_8c.html#a129dbc12511bb159d9cc09ffa0f133c5">binfile_attr_set</a></div><div class="ttdeci">static int binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)</div><div class="ttdef"><b>Definition</b> binfile.c:717</div></div>
+<div class="ttc" id="abinfile_8c_html_a1a7c87a36120cbb578edfc1a675369b7"><div class="ttname"><a href="binfile_8c.html#a1a7c87a36120cbb578edfc1a675369b7">binfile_coord_rewind</a></div><div class="ttdeci">static void binfile_coord_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> binfile.c:412</div></div>
+<div class="ttc" id="abinfile_8c_html_a2319a01b5e6704fc34d12063d4ad2578"><div class="ttname"><a href="binfile_8c.html#a2319a01b5e6704fc34d12063d4ad2578">binfile_attr_get</a></div><div class="ttdeci">static int binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> binfile.c:516</div></div>
+<div class="ttc" id="abinfile_8c_html_a5ca94ecf4c25a3e89455d45128976658"><div class="ttname"><a href="binfile_8c.html#a5ca94ecf4c25a3e89455d45128976658">binfile_coord_set</a></div><div class="ttdeci">static int binfile_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode)</div><div class="ttdef"><b>Definition</b> binfile.c:625</div></div>
+<div class="ttc" id="abinfile_8c_html_a707f4ebeb2a2998ab71ded5cac808768"><div class="ttname"><a href="binfile_8c.html#a707f4ebeb2a2998ab71ded5cac808768">binfile_coords_left</a></div><div class="ttdeci">static int binfile_coords_left(void *priv_data)</div><div class="ttdoc">Get nuber of coords left for current item.</div><div class="ttdef"><b>Definition</b> binfile.c:454</div></div>
+<div class="ttc" id="abinfile_8c_html_ae2b72ad9f696a1ab6fd959febd9dd284"><div class="ttname"><a href="binfile_8c.html#ae2b72ad9f696a1ab6fd959febd9dd284">binfile_coord_get</a></div><div class="ttdeci">static int binfile_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition</b> binfile.c:424</div></div>
+<div class="ttc" id="abinfile_8c_html_af9f83cc015a9857d10e11a03ffa01ced"><div class="ttname"><a href="binfile_8c.html#af9f83cc015a9857d10e11a03ffa01ced">binfile_attr_rewind</a></div><div class="ttdeci">static void binfile_attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> binfile.c:463</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="binfile_8c.html#a84a0127558852a25311da849073509b0">map_rect_new_binfile_int()</a>.</p>
 
