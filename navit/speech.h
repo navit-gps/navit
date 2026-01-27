@@ -21,6 +21,7 @@
 #define NAVIT_SPEECH_H
 
 #include "attr_type_def.h"
+#include "attr.h"
 
 struct speech_priv;
 struct attr_iter;
