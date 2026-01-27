@@ -48,8 +48,9 @@
 #endif
 #ifdef HAVE_API_WIN32_CE
 #    include "libc.h"
-#    include <winbase.h>
 #    include <windows.h>
+
+#    include <winbase.h>
 #endif
 
 int main_argc;

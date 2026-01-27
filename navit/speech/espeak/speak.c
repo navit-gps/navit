@@ -38,8 +38,9 @@
 #include <sys/types.h>
 
 #ifdef HAVE_API_WIN32_BASE
-#    include <mmsystem.h>
 #    include <windows.h>
+
+#    include <mmsystem.h>
 #    include <winreg.h>
 #else
 #    include <unistd.h>
