@@ -220,130 +220,130 @@ Waypoint</text></img>
 		<!-- For the cumulative displacement filter to be enabled, set cdf_histsize="x" here, with x being an integer somewhere around 4 -->
 		<tracking cdf_histsize="0"/>
 
-		<vehicleprofile name="car" route_depth="4:25%,8:40000,18:10000" flags="0x4000000" flags_forward_mask="0x4040002" flags_reverse_mask="0x4040001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
-			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="10" />
-			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="30" />
-			<roadprofile item_types="street_3_city" speed="40" route_weight="40" />
-			<roadprofile item_types="street_4_city" speed="50" route_weight="50" />
-			<roadprofile item_types="highway_city" speed="80" route_weight="80" />
-			<roadprofile item_types="street_1_land" speed="60" route_weight="60" />
-			<roadprofile item_types="street_2_land" speed="65" route_weight="65" />
-			<roadprofile item_types="street_3_land" speed="70" route_weight="70" />
-			<roadprofile item_types="street_4_land" speed="80" route_weight="80" />
-			<roadprofile item_types="street_n_lanes" speed="120" route_weight="120" />
-			<roadprofile item_types="highway_land" speed="120" route_weight="120" />
-			<roadprofile item_types="ramp" speed="40" route_weight="40" />
+		<vehicleprofile name="car" route_depth="4:25%,8:40000,18:10000" flags="0x4000000" flags_forward_mask="0x4040002" flags_reverse_mask="0x4040001" route_mode="0" static_speed="5" static_distance="25">
+			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" />
+			<roadprofile item_types="street_2_city,track_paved" speed="30" />
+			<roadprofile item_types="street_3_city" speed="40" />
+			<roadprofile item_types="street_4_city" speed="50" />
+			<roadprofile item_types="highway_city" speed="80" />
+			<roadprofile item_types="street_1_land" speed="60" />
+			<roadprofile item_types="street_2_land" speed="65" />
+			<roadprofile item_types="street_3_land" speed="70" />
+			<roadprofile item_types="street_4_land" speed="80" />
+			<roadprofile item_types="street_n_lanes" speed="120" />
+			<roadprofile item_types="highway_land" speed="120" />
+			<roadprofile item_types="ramp" speed="40" />
 			<!--roundabout does not apply to OSMaps -->
-			<roadprofile item_types="roundabout" speed="10" route_weight="10"/>
-			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
+			<roadprofile item_types="roundabout" speed="10"/>
+			<roadprofile item_types="ferry" speed="40"/>
 		</vehicleprofile>
 
-		<vehicleprofile name="car_shortest" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
-			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="60" />
-			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="60" />
-			<roadprofile item_types="street_3_city" speed="40" route_weight="60" />
-			<roadprofile item_types="street_4_city" speed="50" route_weight="60" />
-			<roadprofile item_types="highway_city" speed="80" route_weight="60" />
-			<roadprofile item_types="street_1_land" speed="60" route_weight="60" />
-			<roadprofile item_types="street_2_land" speed="65" route_weight="60" />
-			<roadprofile item_types="street_3_land" speed="70" route_weight="60" />
-			<roadprofile item_types="street_4_land" speed="80" route_weight="60" />
-			<roadprofile item_types="street_n_lanes" speed="120" route_weight="60" />
-			<roadprofile item_types="highway_land" speed="120" route_weight="60" />
-			<roadprofile item_types="ramp" speed="40" route_weight="60" />
+		<vehicleprofile name="car_shortest" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" route_mode="0" static_speed="5" static_distance="25">
+			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" />
+			<roadprofile item_types="street_2_city,track_paved" speed="30" />
+			<roadprofile item_types="street_3_city" speed="40" />
+			<roadprofile item_types="street_4_city" speed="50" />
+			<roadprofile item_types="highway_city" speed="80" />
+			<roadprofile item_types="street_1_land" speed="60" />
+			<roadprofile item_types="street_2_land" speed="65" />
+			<roadprofile item_types="street_3_land" speed="70" />
+			<roadprofile item_types="street_4_land" speed="80" />
+			<roadprofile item_types="street_n_lanes" speed="120" />
+			<roadprofile item_types="highway_land" speed="120" />
+			<roadprofile item_types="ramp" speed="40" />
 			<!--roundabout does not apply to OSMaps -->
-			<roadprofile item_types="roundabout" speed="10" route_weight="60"/>
-			<roadprofile item_types="ferry" speed="40" route_weight="60"/>
+			<roadprofile item_types="roundabout" speed="10"/>
+			<roadprofile item_types="ferry" speed="40"/>
 		</vehicleprofile>
 
-		<vehicleprofile name="car_avoid_tolls" flags="0x4000000" flags_forward_mask="0x4000402" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
-			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="10"/>
-			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="30"/>
-			<roadprofile item_types="street_3_city" speed="40" route_weight="40"/>
-			<roadprofile item_types="street_4_city" speed="50" route_weight="50"/>
-			<roadprofile item_types="highway_city" speed="80" route_weight="80"/>
-			<roadprofile item_types="street_1_land" speed="60" route_weight="60"/>
-			<roadprofile item_types="street_2_land" speed="65" route_weight="65"/>
-			<roadprofile item_types="street_3_land" speed="70" route_weight="70"/>
-			<roadprofile item_types="street_4_land" speed="80" route_weight="80"/>
-			<roadprofile item_types="street_n_lanes" speed="120" route_weight="120"/>
-			<roadprofile item_types="highway_land" speed="120" route_weight="120"/>
-			<roadprofile item_types="ramp" speed="40" route_weight="40"/>
+		<vehicleprofile name="car_avoid_tolls" flags="0x4000000" flags_forward_mask="0x4000402" flags_reverse_mask="0x4000001" route_mode="0" static_speed="5" static_distance="25">
+			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10"/>
+			<roadprofile item_types="street_2_city,track_paved" speed="30"/>
+			<roadprofile item_types="street_3_city" speed="40"/>
+			<roadprofile item_types="street_4_city" speed="50"/>
+			<roadprofile item_types="highway_city" speed="80"/>
+			<roadprofile item_types="street_1_land" speed="60"/>
+			<roadprofile item_types="street_2_land" speed="65"/>
+			<roadprofile item_types="street_3_land" speed="70"/>
+			<roadprofile item_types="street_4_land" speed="80"/>
+			<roadprofile item_types="street_n_lanes" speed="120"/>
+			<roadprofile item_types="highway_land" speed="120"/>
+			<roadprofile item_types="ramp" speed="40"/>
 			<!--roundabout does not apply to OSMaps -->
-			<roadprofile item_types="roundabout" speed="10" route_weight="10"/>
-			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
+			<roadprofile item_types="roundabout" speed="10"/>
+			<roadprofile item_types="ferry" speed="40"/>
 		</vehicleprofile>
-		<vehicleprofile name="car_pedantic" route_depth="18:25%,18:40000" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
-			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="10"/>
-			<roadprofile item_types="street_2_city,track_paved" speed="30" route_weight="30"/>
-			<roadprofile item_types="street_3_city" speed="40" route_weight="40"/>
-			<roadprofile item_types="street_4_city" speed="50" route_weight="50"/>
-			<roadprofile item_types="highway_city" speed="80" route_weight="80"/>
-			<roadprofile item_types="street_1_land" speed="60" route_weight="60"/>
-			<roadprofile item_types="street_2_land" speed="65" route_weight="65"/>
-			<roadprofile item_types="street_3_land" speed="70" route_weight="70"/>
-			<roadprofile item_types="street_4_land" speed="80" route_weight="80"/>
-			<roadprofile item_types="street_n_lanes" speed="120" route_weight="120"/>
-			<roadprofile item_types="highway_land" speed="120" route_weight="120"/>
-			<roadprofile item_types="ramp" speed="40" route_weight="40"/>
+		<vehicleprofile name="car_pedantic" route_depth="18:25%,18:40000" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" route_mode="0" static_speed="5" static_distance="25">
+			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10"/>
+			<roadprofile item_types="street_2_city,track_paved" speed="30"/>
+			<roadprofile item_types="street_3_city" speed="40"/>
+			<roadprofile item_types="street_4_city" speed="50"/>
+			<roadprofile item_types="highway_city" speed="80"/>
+			<roadprofile item_types="street_1_land" speed="60"/>
+			<roadprofile item_types="street_2_land" speed="65"/>
+			<roadprofile item_types="street_3_land" speed="70"/>
+			<roadprofile item_types="street_4_land" speed="80"/>
+			<roadprofile item_types="street_n_lanes" speed="120"/>
+			<roadprofile item_types="highway_land" speed="120"/>
+			<roadprofile item_types="ramp" speed="40"/>
 			<!--roundabout does not apply to OSMaps -->
-			<roadprofile item_types="roundabout" speed="10" route_weight="10"/>
-			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
+			<roadprofile item_types="roundabout" speed="10"/>
+			<roadprofile item_types="ferry" speed="40"/>
 		</vehicleprofile>
-		<vehicleprofile name="bike" route_depth="18:25%,18:40000" flags="0x40000000" flags_forward_mask="0x40000002" flags_reverse_mask="0x40000001" maxspeed_handling="1" route_mode="0" static_speed="5" static_distance="25">
+		<vehicleprofile name="bike" route_depth="18:25%,18:40000" flags="0x40000000" flags_forward_mask="0x40000002" flags_reverse_mask="0x40000001" route_mode="0" static_speed="5" static_distance="25">
 			<!-- cycleways and paved tracks are the favourite ways (caveat: can be next to a main road) -->
-			<roadprofile item_types="track_paved,cycleway" speed="20" route_weight="20" />
+			<roadprofile item_types="track_paved,cycleway" speed="20" />
 			<!-- residential, unclassified, living street etc. -->
-			<roadprofile item_types="street_0,street_1_city,street_1_land,living_street" speed="20" route_weight="20" />
+			<roadprofile item_types="street_0,street_1_city,street_1_land,living_street" speed="20" />
 			<!-- ways shared with pedestrians are OK if access flags permit, but lower preference (caveat: may or may not be segregated) -->
-			<roadprofile item_types="street_pedestrian,footway" speed="17" route_weight="17" />
+			<roadprofile item_types="street_pedestrian,footway" speed="17" />
 			<!-- serviceways etc. are OK but lower preference -->
-			<roadprofile item_types="street_service,street_parking_lane" speed="17" route_weight="15" />
+			<roadprofile item_types="street_service,street_parking_lane" speed="17" />
 			<!-- tertiary roads are acceptable, but should be avoided in favour of tracks and cycleways -->
-			<roadprofile item_types="street_2_city,street_2_land" speed="20" route_weight="15" />
+			<roadprofile item_types="street_2_city,street_2_land" speed="20" />
 			<!-- secondary, primary and trunk are acceptable when necessary, but give preference to lower tiers -->
-			<roadprofile item_types="street_3_city,street_3_land" speed="20" route_weight="15" />
-			<roadprofile item_types="street_4_land,street_4_city" speed="20" route_weight="12" />
-			<roadprofile item_types="street_n_lanes,ramp" speed="20" route_weight="10" />
+			<roadprofile item_types="street_3_city,street_3_land" speed="20" />
+			<roadprofile item_types="street_4_land,street_4_city" speed="20" />
+			<roadprofile item_types="street_n_lanes,ramp" speed="20" />
 			<!-- low preference for rough terrain -->
-			<roadprofile item_types="path,track_ground" speed="7" route_weight="7" />
-			<roadprofile item_types="track_gravelled" speed="17" route_weight="12" />
+			<roadprofile item_types="path,track_ground" speed="7" />
+			<roadprofile item_types="track_gravelled" speed="17" />
 			<!-- avoid steps unless that means a huge detour -->
-			<roadprofile item_types="steps" speed="2" route_weight="2" />
+			<roadprofile item_types="steps" speed="2" />
 			<!--roundabout does not apply to OSM maps -->
-			<roadprofile item_types="roundabout" speed="20" route_weight="10"/>
-			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
+			<roadprofile item_types="roundabout" speed="20"/>
+			<roadprofile item_types="ferry" speed="40"/>
 		</vehicleprofile>
 
-		<vehicleprofile name="pedestrian" route_depth="18:25%,18:10000" flags="0x80000000" flags_forward_mask="0x80000000" flags_reverse_mask="0x80000000" maxspeed_handling="1" route_mode="0" static_speed="3" static_distance="10">
-			<roadprofile item_types="footway,bridleway,path,steps" speed="5" route_weight="5"/>
-			<roadprofile item_types="hiking_mountain" speed="4" route_weight="4"/>
-			<roadprofile item_types="living_street,street_pedestrian" speed="5" route_weight="5"/>
-			<roadprofile item_types="track_gravelled,track_unpaved,track_grass,track_ground,hiking" speed="5" route_weight="5"/>
-			<roadprofile item_types="track_paved" speed="5" route_weight="5"/>
-			<roadprofile item_types="cycleway" speed="5" route_weight="5"/>
-			<roadprofile item_types="street_0,street_1_city,street_2_city" speed="5" route_weight="5"/>
-			<roadprofile item_types="street_3_city,street_4_city,street_service,street_parking_lane" speed="5" route_weight="5"/>
-			<roadprofile item_types="street_1_land,street_2_land" speed="5" route_weight="5"/>
-			<roadprofile item_types="street_3_land,street_4_land" speed="5" route_weight="5"/>
+		<vehicleprofile name="pedestrian" route_depth="18:25%,18:10000" flags="0x80000000" flags_forward_mask="0x80000000" flags_reverse_mask="0x80000000" route_mode="0" static_speed="3" static_distance="10">
+			<roadprofile item_types="footway,bridleway,path,steps" speed="5"/>
+			<roadprofile item_types="hiking_mountain" speed="4"/>
+			<roadprofile item_types="living_street,street_pedestrian" speed="5"/>
+			<roadprofile item_types="track_gravelled,track_unpaved,track_grass,track_ground,hiking" speed="5"/>
+			<roadprofile item_types="track_paved" speed="5"/>
+			<roadprofile item_types="cycleway" speed="5"/>
+			<roadprofile item_types="street_0,street_1_city,street_2_city" speed="5"/>
+			<roadprofile item_types="street_3_city,street_4_city,street_service,street_parking_lane" speed="5"/>
+			<roadprofile item_types="street_1_land,street_2_land" speed="5"/>
+			<roadprofile item_types="street_3_land,street_4_land" speed="5"/>
 			<!--roundabout does not apply to OSMaps -->
-			<roadprofile item_types="roundabout" speed="5" route_weight="5"/>
-			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
+			<roadprofile item_types="roundabout" speed="5"/>
+			<roadprofile item_types="ferry" speed="40"/>
 		</vehicleprofile>
-		<vehicleprofile name="horse" route_depth="18:25%,18:40000" flags="0x20000000" flags_forward_mask="0x20000000" flags_reverse_mask="0x20000000" maxspeed_handling="1" route_mode="0" static_speed="3" static_distance="10">
-			<roadprofile item_types="bridleway" speed="10" route_weight="10"/>
-			<roadprofile item_types="footway,path,steps" speed="5" route_weight="5"/>
-			<roadprofile item_types="living_street,street_pedestrian" speed="5" route_weight="4"/>
-			<roadprofile item_types="track_gravelled" speed="5" route_weight="5"/>
-			<roadprofile item_types="track_paved" speed="5" route_weight="5"/>
-			<roadprofile item_types="cycleway" speed="5" route_weight="5"/>
-			<roadprofile item_types="street_0,street_1_city,street_2_city" speed="5" route_weight="2"/>
-			<roadprofile item_types="street_3_city,street_4_city,street_service,street_parking_lane" speed="5" route_weight="4"/>
-			<roadprofile item_types="street_1_land,street_2_land" speed="5" route_weight="2"/>
-			<roadprofile item_types="street_3_land,street_4_land" speed="5" route_weight="4"/>
+		<vehicleprofile name="horse" route_depth="18:25%,18:40000" flags="0x20000000" flags_forward_mask="0x20000000" flags_reverse_mask="0x20000000" route_mode="0" static_speed="3" static_distance="10">
+			<roadprofile item_types="bridleway" speed="10"/>
+			<roadprofile item_types="footway,path,steps" speed="5"/>
+			<roadprofile item_types="living_street,street_pedestrian" speed="5"/>
+			<roadprofile item_types="track_gravelled" speed="5"/>
+			<roadprofile item_types="track_paved" speed="5"/>
+			<roadprofile item_types="cycleway" speed="5"/>
+			<roadprofile item_types="street_0,street_1_city,street_2_city" speed="5"/>
+			<roadprofile item_types="street_3_city,street_4_city,street_service,street_parking_lane" speed="5"/>
+			<roadprofile item_types="street_1_land,street_2_land" speed="5"/>
+			<roadprofile item_types="street_3_land,street_4_land" speed="5"/>
 			<!--roundabout does not apply to OSMaps -->
-			<roadprofile item_types="roundabout" speed="5" route_weight="2"/>
-			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
+			<roadprofile item_types="roundabout" speed="5"/>
+			<roadprofile item_types="ferry" speed="40"/>
 		</vehicleprofile>
                 <!-- chr:
                      flags used for a truck: (first flag number is 0)
@@ -368,25 +368,25 @@ Waypoint</text></img>
                           vehicle_axle_weight= 34000 lbs,  15422 kg
                 -->
 
-                <vehicleprofile name="Truck" flags="0x200000" flags_forward_mask="0x200002" flags_reverse_mask="0x200001" maxspeed_handling="1" route_mode="0" static_speed="5"
+                <vehicleprofile name="Truck" flags="0x200000" flags_forward_mask="0x200002" flags_reverse_mask="0x200001" route_mode="0" static_speed="5"
  static_distance="25"
                                 vehicle_width="274" vehicle_height="411" vehicle_length="2134"
                                 vehicle_weight="36287" vehicle_axle_weight="15422">
-                        <roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" route_weight="5" />
-                        <roadprofile item_types="street_2_city,track_paved" speed="20" route_weight="20"/>
-                        <roadprofile item_types="street_3_city" speed="30" route_weight="30"/>
-                       	<roadprofile item_types="street_4_city" speed="40" route_weight="40"/>
-                        <roadprofile item_types="highway_city" speed="70" route_weight="70"/>
-                        <roadprofile item_types="street_1_land" speed="50" route_weight="50"/>
-                        <roadprofile item_types="street_2_land" speed="55" route_weight="55"/>
-                        <roadprofile item_types="street_3_land" speed="60" route_weight="60"/>
-                        <roadprofile item_types="street_4_land" speed="70" route_weight="70"/>
-                        <roadprofile item_types="street_n_lanes" speed="80" route_weight="80"/>
-                        <roadprofile item_types="highway_land" speed="80" route_weight="80"/>
-                        <roadprofile item_types="ramp" speed="30" route_weight="30"/>
+                        <roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved,street_parking_lane" speed="10" />
+                        <roadprofile item_types="street_2_city,track_paved" speed="20"/>
+                        <roadprofile item_types="street_3_city" speed="30"/>
+                       	<roadprofile item_types="street_4_city" speed="40"/>
+                        <roadprofile item_types="highway_city" speed="70"/>
+                        <roadprofile item_types="street_1_land" speed="50"/>
+                        <roadprofile item_types="street_2_land" speed="55"/>
+                        <roadprofile item_types="street_3_land" speed="60"/>
+                        <roadprofile item_types="street_4_land" speed="70"/>
+                        <roadprofile item_types="street_n_lanes" speed="80"/>
+                        <roadprofile item_types="highway_land" speed="80"/>
+                        <roadprofile item_types="ramp" speed="30"/>
                         <!--roundabout does not apply to OSMaps -->
-                        <roadprofile item_types="roundabout" speed="5" route_weight="5"/>
-                        <roadprofile item_types="ferry" speed="40" route_weight="40"/>
+                        <roadprofile item_types="roundabout" speed="5"/>
+                        <roadprofile item_types="ferry" speed="40"/>
                 </vehicleprofile>
 
 
