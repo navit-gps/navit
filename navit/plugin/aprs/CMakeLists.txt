@@ -18,7 +18,6 @@ endif()
 
 module_add_library(plugin_aprs aprs.c aprs_db.c aprs_decode.c aprs_osd.c aprs_nmea.c aprs_symbols.c)
 
-# Export symbols for inter-plugin communication
 set_target_properties(plugin_aprs PROPERTIES
     C_VISIBILITY_PRESET default
     VISIBILITY_INLINES_HIDDEN 0
