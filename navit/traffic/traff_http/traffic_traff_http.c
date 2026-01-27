@@ -207,8 +207,9 @@ static struct curl_result * curl_post(char * url, char * data) {
         curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, curl_result_callback);
         curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)ret);
 
-        // FIXME provide a meaningful user agent
-        curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+        char useragent[256];
+        snprintf(useragent, 256, "Navit/%s (TraffXML)", NAVIT_VERSION);
+        curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, useragent);
 
         /* follow redirects */
         curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
