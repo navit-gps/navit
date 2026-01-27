@@ -1,8 +1,8 @@
 #ifndef Xpm2BMP_H_INCLUDED
 #define Xpm2BMP_H_INCLUDED
 
-#include "wingdi.h"
 #include <windows.h>
+#include <wingdi.h>
 
 typedef struct XPMCOLORENTRY_TAG {
     char *color_str;
