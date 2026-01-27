@@ -2,7 +2,7 @@
 
 ## Overview
 
-The APRS plugin integrates with the hessu/aprs-symbols symbol set, providing modern, high-quality icons for APRS stations on the map.
+The APRS plugin integrates with the hessu/aprs-symbols symbol set for APRS station icons.
 
 ## Symbol Set
 
