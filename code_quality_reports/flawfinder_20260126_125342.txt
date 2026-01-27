@@ -1,0 +1,214 @@
+Flawfinder version 2.0.19, (C) 2001-2019 David A. Wheeler.
+Number of rules (primarily dangerous function names) in C/C++ ruleset: 222
+Examining navit/plugin/rest/rest_db.c
+Examining navit/plugin/rest/rest_poi_map.h
+Examining navit/plugin/rest/rest_poi_hiking.c
+Examining navit/plugin/rest/rest_glacier.c
+Examining navit/plugin/rest/rest_poi.h
+Examining navit/plugin/rest/rest_db.h
+Examining navit/plugin/rest/rest.c
+Examining navit/plugin/rest/rest_poi_map.c
+Examining navit/plugin/rest/tests/test_rest_integration.c
+Examining navit/plugin/rest/tests/test_rest_config.c
+Examining navit/plugin/rest/tests/test_rest_srtm.c
+Examining navit/plugin/rest/tests/test_rest_routing.c
+Examining navit/plugin/rest/tests/test_rest_db.c
+Examining navit/plugin/rest/tests/test_rest_route_integration.c
+Examining navit/plugin/rest/tests/test_rest_finder.c
+Examining navit/plugin/rest/rest_cycling.h
+Examining navit/plugin/rest/rest_osd.c
+Examining navit/plugin/rest/rest_finder.c
+Examining navit/plugin/rest/rest_energy.c
+Examining navit/plugin/rest/rest_poi_hiking.h
+Examining navit/plugin/rest/rest_cycling.c
+Examining navit/plugin/rest/rest_srtm_osd.c
+Examining navit/plugin/rest/rest_poi.c
+Examining navit/plugin/rest/rest_route_validator.h
+Examining navit/plugin/rest/rest.h
+Examining navit/plugin/rest/rest_glacier.h
+Examining navit/plugin/rest/rest_finder.h
+Examining navit/plugin/rest/rest_route_validator.c
+Examining navit/plugin/rest/rest_hiking.c
+Examining navit/plugin/rest/rest_hiking.h
+Examining navit/plugin/rest/rest_srtm.h
+Examining navit/plugin/rest/rest_osd.h
+Examining navit/plugin/rest/rest_srtm.c
+Examining navit/plugin/rest/rest_srtm_osd.h
+Examining navit/plugin/rest/rest_energy.h
+
+FINAL RESULTS:
+
+navit/plugin/rest/rest_srtm.c:409:34:  [4] (shell) system:
+  This causes a new program to execute and is difficult to use safely
+  (CWE-78). try using a library call that implements the same functionality
+  if available.
+            int extract_result = system(extract_cmd);
+navit/plugin/rest/rest_db.c:324:17:  [2] (integer) atoi:
+  Unless checked, the resulting number can exceed the expected range
+  (CWE-190). If source untrusted, check both minimum and maximum, even if the
+  input had no minus sign (large numbers can roll over into negative number;
+  consider saving to an unsigned value if that is intended).
+        value = atoi(value_str);
+navit/plugin/rest/rest_osd.c:323:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char buffer[256];
+navit/plugin/rest/rest_osd.c:412:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char buffer[256];
+navit/plugin/rest/rest_osd.c:457:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char buffer[256];
+navit/plugin/rest/rest_osd.c:500:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char buffer[256];
+navit/plugin/rest/rest_osd.c:605:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char buffer[256];
+navit/plugin/rest/rest_osd.c:606:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char title[128];
+navit/plugin/rest/rest_poi.c:49:5:  [2] (buffer) memcpy:
+  Does not check for buffer overflows when copying to destination (CWE-120).
+  Make sure destination can always hold the source data.
+    memcpy(&(mem->response[mem->size]), contents, realsize);
+navit/plugin/rest/rest_poi.c:81:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char search_pattern[256];
+navit/plugin/rest/rest_poi.c:98:5:  [2] (buffer) memcpy:
+  Does not check for buffer overflows when copying to destination (CWE-120).
+  Make sure destination can always hold the source data.
+    memcpy(value, pos, len);
+navit/plugin/rest/rest_poi.c:107:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char search_pattern[256];
+navit/plugin/rest/rest_poi_map.c:53:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char tag_key[256];
+navit/plugin/rest/rest_poi_map.c:70:21:  [2] (buffer) memcpy:
+  Does not check for buffer overflows when copying to destination (CWE-120).
+  Make sure destination can always hold the source data.
+                    memcpy(tag_value, pos, len);
+navit/plugin/rest/rest_srtm.c:188:15:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (CWE-362).
+    FILE *f = fopen(filepath, "rb");
+navit/plugin/rest/rest_srtm.c:228:14:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    unsigned char bytes[2];
+navit/plugin/rest/rest_srtm.c:373:16:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (CWE-362).
+    FILE *fp = fopen(zip_path, "wb");
+navit/plugin/rest/tests/test_rest_db.c:42:14:  [2] (tmpfile) mkstemp:
+  Potential for temporary file vulnerability in some circumstances. Some
+  older Unix-like systems create temp files with permission to write by all
+  by default, so be sure to set the umask to override this. Also, some older
+  Unix systems might fail to use O_EXCL when opening the file, so make sure
+  that O_EXCL is used by the library (CWE-377).
+    int fd = mkstemp(template);
+navit/plugin/rest/tests/test_rest_srtm.c:61:15:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (CWE-362).
+    FILE *f = fopen(filepath, "wb");
+navit/plugin/rest/tests/test_rest_srtm.c:83:18:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+        unsigned char bytes[2];
+navit/plugin/rest/tests/test_rest_srtm.c:100:15:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (CWE-362).
+    FILE *f = fopen(filepath, "wb");
+navit/plugin/rest/tests/test_rest_srtm.c:106:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char dummy[1000];
+navit/plugin/rest/tests/test_rest_srtm.c:115:15:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (CWE-362).
+    FILE *f = fopen(filepath, "wb");
+navit/plugin/rest/tests/test_rest_srtm.c:132:15:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (CWE-362).
+    FILE *f = fopen(filepath, "wb");
+navit/plugin/rest/rest_poi.c:89:12:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated; if given one it may
+  perform an over-read (it could cause a crash if unprotected) (CWE-126).
+    pos += strlen(search_pattern);
+navit/plugin/rest/rest_poi.c:115:12:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated; if given one it may
+  perform an over-read (it could cause a crash if unprotected) (CWE-126).
+    pos += strlen(search_pattern);
+navit/plugin/rest/rest_poi_map.c:64:24:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated; if given one it may
+  perform an over-read (it could cause a crash if unprotected) (CWE-126).
+                pos += strlen(tag_key);
+navit/plugin/rest/rest_poi_map.c:66:39:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated; if given one it may
+  perform an over-read (it could cause a crash if unprotected) (CWE-126).
+                if (!end) end = pos + strlen(pos);
+
+ANALYSIS SUMMARY:
+
+Hits = 28
+Lines analyzed = 7815 in approximately 0.05 seconds (166746 lines/second)
+Physical Source Lines of Code (SLOC) = 5310
+Hits@level = [0]  99 [1]   4 [2]  23 [3]   0 [4]   1 [5]   0
+Hits@level+ = [0+] 127 [1+]  28 [2+]  24 [3+]   1 [4+]   1 [5+]   0
+Hits/KSLOC@level+ = [0+] 23.9171 [1+] 5.27307 [2+] 4.51977 [3+] 0.188324 [4+] 0.188324 [5+]   0
+Minimum risk level = 1
+
+Not every hit is necessarily a security vulnerability.
+You can inhibit a report by adding a comment in this form:
+// flawfinder: ignore
+Make *sure* it's a false positive!
+You can use the option --neverignore to show these.
+
+There may be other security vulnerabilities; review your code!
+See 'Secure Programming HOWTO'
+(https://dwheeler.com/secure-programs) for more information.

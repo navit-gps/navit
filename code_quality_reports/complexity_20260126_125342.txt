@@ -1,0 +1,18 @@
+Code Complexity Analysis
+=======================
+
+Largest files:
+756 navit/plugin/rest/rest_osd.c
+595 navit/plugin/rest/rest_srtm.c
+549 navit/plugin/rest/rest.c
+512 navit/plugin/rest/tests/test_rest_route_integration.c
+453 navit/plugin/rest/rest_db.c
+441 navit/plugin/rest/rest_poi.c
+415 navit/plugin/rest/rest_finder.c
+388 navit/plugin/rest/rest_poi_map.c
+358 navit/plugin/rest/tests/test_rest_srtm.c
+341 navit/plugin/rest/tests/test_rest_integration.c
+
+Functions with high complexity (potential issues):
+  (Functions with many nested levels or long parameter lists)
+

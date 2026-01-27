@@ -1,0 +1,763 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<results version="2">
+    <cppcheck version="2.13.0"/>
+    <errors>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="20" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;debug.h&quot; not found." verbose="Include file: &quot;debug.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="27" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;coord.h&quot; not found." verbose="Include file: &quot;coord.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="28" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;item.h&quot; not found." verbose="Include file: &quot;item.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="29" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;map.h&quot; not found." verbose="Include file: &quot;map.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="30" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;plugin.h&quot; not found." verbose="Include file: &quot;plugin.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="31" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;callback.h&quot; not found." verbose="Include file: &quot;callback.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="32" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;event.h&quot; not found." verbose="Include file: &quot;event.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="33" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;attr.h&quot; not found." verbose="Include file: &quot;attr.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="34" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;projection.h&quot; not found." verbose="Include file: &quot;projection.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="35" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;transform.h&quot; not found." verbose="Include file: &quot;transform.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="36" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;file.h&quot; not found." verbose="Include file: &quot;file.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="37" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.h" line="23" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;coord.h&quot; not found." verbose="Include file: &quot;coord.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.h" line="26" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;item.h&quot; not found." verbose="Include file: &quot;item.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.h" line="27" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;attr.h&quot; not found." verbose="Include file: &quot;attr.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.h" line="28" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_db.h" line="23" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;coord.h&quot; not found." verbose="Include file: &quot;coord.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_db.h" line="24" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_finder.h" line="23" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;coord.h&quot; not found." verbose="Include file: &quot;coord.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_finder.h" line="24" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;route.h&quot; not found." verbose="Include file: &quot;route.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_finder.h" line="25" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi.h" line="23" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;coord.h&quot; not found." verbose="Include file: &quot;coord.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi.h" line="24" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.h" line="23" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;navit.h&quot; not found." verbose="Include file: &quot;navit.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.h" line="24" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;command.h&quot; not found." verbose="Include file: &quot;command.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.h" line="25" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_energy.h" line="23" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;coord.h&quot; not found." verbose="Include file: &quot;coord.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_energy.h" line="24" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_hiking.h" line="23" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;coord.h&quot; not found." verbose="Include file: &quot;coord.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_hiking.h" line="24" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_cycling.h" line="23" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;coord.h&quot; not found." verbose="Include file: &quot;coord.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_cycling.h" line="24" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi_hiking.h" line="23" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;coord.h&quot; not found." verbose="Include file: &quot;coord.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi_hiking.h" line="24" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_route_validator.h" line="23" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;route.h&quot; not found." verbose="Include file: &quot;route.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_route_validator.h" line="24" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_glacier.h" line="23" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;coord.h&quot; not found." verbose="Include file: &quot;coord.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_glacier.h" line="24" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_srtm.h" line="23" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;coord.h&quot; not found." verbose="Include file: &quot;coord.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_srtm.h" line="25" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_srtm_osd.h" line="23" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;navit.h&quot; not found." verbose="Include file: &quot;navit.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_srtm_osd.h" line="24" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi_map.h" line="23" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;coord.h&quot; not found." verbose="Include file: &quot;coord.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi_map.h" line="24" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;mapset.h&quot; not found." verbose="Include file: &quot;mapset.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi_map.h" line="26" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;transform.h&quot; not found." verbose="Include file: &quot;transform.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="52" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;projection.h&quot; not found." verbose="Include file: &quot;projection.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="53" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;mapset.h&quot; not found." verbose="Include file: &quot;mapset.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="54" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;popup.h&quot; not found." verbose="Include file: &quot;popup.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="56" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;vehicle.h&quot; not found." verbose="Include file: &quot;vehicle.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="57" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;mapset.h&quot; not found." verbose="Include file: &quot;mapset.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="58" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;navit.h&quot; not found." verbose="Include file: &quot;navit.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="59" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;menu.h&quot; not found." verbose="Include file: &quot;menu.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="60" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;route.h&quot; not found." verbose="Include file: &quot;route.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="61" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;navigation.h&quot; not found." verbose="Include file: &quot;navigation.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="62" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;color.h&quot; not found." verbose="Include file: &quot;color.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="63" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;osd.h&quot; not found." verbose="Include file: &quot;osd.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="64" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;command.h&quot; not found." verbose="Include file: &quot;command.h&quot; not found.">
+            <location file="navit/plugin/rest/rest.c" line="65" column="0"/>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &apos;l&apos; shadows outer variable" verbose="Local variable &apos;l&apos; shadows outer variable" cwe="398" file0="navit/plugin/rest/rest.c">
+            <location file="navit/plugin/rest/rest.c" line="239" column="44" info="Shadow variable"/>
+            <location file="navit/plugin/rest/rest.c" line="214" column="32" info="Shadowed declaration"/>
+            <symbol>l</symbol>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &apos;l&apos; shadows outer variable" verbose="Local variable &apos;l&apos; shadows outer variable" cwe="398" file0="navit/plugin/rest/rest.c">
+            <location file="navit/plugin/rest/rest.c" line="322" column="44" info="Shadow variable"/>
+            <location file="navit/plugin/rest/rest.c" line="297" column="32" info="Shadowed declaration"/>
+            <symbol>l</symbol>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;config&apos; can be declared as pointer to const" verbose="Variable &apos;config&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest.c">
+            <location file="navit/plugin/rest/rest.c" line="124" column="25" info="Variable &apos;config&apos; can be declared as pointer to const"/>
+            <symbol>config</symbol>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;vehicle_type_attr&apos; can be declared as pointer to const" verbose="Variable &apos;vehicle_type_attr&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest.c">
+            <location file="navit/plugin/rest/rest.c" line="432" column="33" info="Variable &apos;vehicle_type_attr&apos; can be declared as pointer to const"/>
+            <symbol>vehicle_type_attr</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_cycling.c" line="20" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;debug.h&quot; not found." verbose="Include file: &quot;debug.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_cycling.c" line="25" column="0"/>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;existing&apos; can be declared as pointer to const" verbose="Variable &apos;existing&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_cycling.c">
+            <location file="navit/plugin/rest/rest_cycling.c" line="84" column="43" info="Variable &apos;existing&apos; can be declared as pointer to const"/>
+            <symbol>existing</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_db.c" line="20" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;debug.h&quot; not found." verbose="Include file: &quot;debug.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_db.c" line="26" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;file.h&quot; not found." verbose="Include file: &quot;file.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_db.c" line="27" column="0"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;sql&apos; can be reduced." verbose="The scope of the variable &apos;sql&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="navit/plugin/rest/rest_db.c">
+            <location file="navit/plugin/rest/rest_db.c" line="238" column="11"/>
+            <symbol>sql</symbol>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;rc&apos; can be reduced." verbose="The scope of the variable &apos;rc&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="navit/plugin/rest/rest_db.c">
+            <location file="navit/plugin/rest/rest_db.c" line="240" column="9"/>
+            <symbol>rc</symbol>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;config&apos; can be declared as pointer to const" verbose="Parameter &apos;config&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_db.c">
+            <location file="navit/plugin/rest/rest_db.c" line="237" column="65" info="Parameter &apos;config&apos; can be declared as pointer to const"/>
+            <symbol>config</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_energy.c" line="20" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;debug.h&quot; not found." verbose="Include file: &quot;debug.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_energy.c" line="23" column="0"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;f_recup_force&apos; can be reduced." verbose="The scope of the variable &apos;f_recup_force&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="navit/plugin/rest/rest_energy.c">
+            <location file="navit/plugin/rest/rest_energy.c" line="104" column="12"/>
+            <symbol>f_recup_force</symbol>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &apos;f_recup_force&apos; is assigned a value that is never used." verbose="Variable &apos;f_recup_force&apos; is assigned a value that is never used." cwe="563" file0="navit/plugin/rest/rest_energy.c">
+            <location file="navit/plugin/rest/rest_energy.c" line="104" column="26"/>
+            <symbol>f_recup_force</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_finder.c" line="20" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;debug.h&quot; not found." verbose="Include file: &quot;debug.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_finder.c" line="25" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;coord.h&quot; not found." verbose="Include file: &quot;coord.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_finder.c" line="26" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;item.h&quot; not found." verbose="Include file: &quot;item.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_finder.c" line="27" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;map.h&quot; not found." verbose="Include file: &quot;map.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_finder.c" line="28" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;mapset.h&quot; not found." verbose="Include file: &quot;mapset.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_finder.c" line="29" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;route.h&quot; not found." verbose="Include file: &quot;route.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_finder.c" line="30" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;transform.h&quot; not found." verbose="Include file: &quot;transform.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_finder.c" line="31" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;projection.h&quot; not found." verbose="Include file: &quot;projection.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_finder.c" line="32" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;transform.h&quot; not found." verbose="Include file: &quot;transform.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_finder.c" line="37" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;item.h&quot; not found." verbose="Include file: &quot;item.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_finder.c" line="38" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;mapset.h&quot; not found." verbose="Include file: &quot;mapset.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_finder.c" line="39" column="0"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;map&apos; can be reduced." verbose="The scope of the variable &apos;map&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="navit/plugin/rest/rest_finder.c">
+            <location file="navit/plugin/rest/rest_finder.c" line="67" column="17"/>
+            <symbol>map</symbol>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;mr&apos; can be reduced." verbose="The scope of the variable &apos;mr&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="navit/plugin/rest/rest_finder.c">
+            <location file="navit/plugin/rest/rest_finder.c" line="71" column="22"/>
+            <symbol>mr</symbol>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;map&apos; can be reduced." verbose="The scope of the variable &apos;map&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="navit/plugin/rest/rest_finder.c">
+            <location file="navit/plugin/rest/rest_finder.c" line="123" column="17"/>
+            <symbol>map</symbol>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;mr&apos; can be reduced." verbose="The scope of the variable &apos;mr&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="navit/plugin/rest/rest_finder.c">
+            <location file="navit/plugin/rest/rest_finder.c" line="127" column="22"/>
+            <symbol>mr</symbol>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;c1&apos; can be declared as pointer to const" verbose="Parameter &apos;c1&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_finder.c">
+            <location file="navit/plugin/rest/rest_finder.c" line="42" column="48" info="Parameter &apos;c1&apos; can be declared as pointer to const"/>
+            <symbol>c1</symbol>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;c2&apos; can be declared as pointer to const" verbose="Parameter &apos;c2&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_finder.c">
+            <location file="navit/plugin/rest/rest_finder.c" line="42" column="70" info="Parameter &apos;c2&apos; can be declared as pointer to const"/>
+            <symbol>c2</symbol>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;rect&apos; can be declared as pointer to const" verbose="Parameter &apos;rect&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_finder.c">
+            <location file="navit/plugin/rest/rest_finder.c" line="57" column="80" info="Parameter &apos;rect&apos; can be declared as pointer to const"/>
+            <symbol>rect</symbol>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;item&apos; can be declared as pointer to const" verbose="Variable &apos;item&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_finder.c">
+            <location file="navit/plugin/rest/rest_finder.c" line="72" column="18" info="Variable &apos;item&apos; can be declared as pointer to const"/>
+            <symbol>item</symbol>
+        </error>
+        <error id="constVariable" severity="style" msg="Variable &apos;landuse_types&apos; can be declared as const array" verbose="Variable &apos;landuse_types&apos; can be declared as const array" cwe="398" file0="navit/plugin/rest/rest_finder.c">
+            <location file="navit/plugin/rest/rest_finder.c" line="73" column="20" info="Variable &apos;landuse_types&apos; can be declared as const array"/>
+            <symbol>landuse_types</symbol>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;coord&apos; can be declared as pointer to const" verbose="Parameter &apos;coord&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_finder.c">
+            <location file="navit/plugin/rest/rest_finder.c" line="177" column="53" info="Parameter &apos;coord&apos; can be declared as pointer to const"/>
+            <symbol>coord</symbol>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;config&apos; can be declared as pointer to const" verbose="Parameter &apos;config&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_finder.c">
+            <location file="navit/plugin/rest/rest_finder.c" line="177" column="80" info="Parameter &apos;config&apos; can be declared as pointer to const"/>
+            <symbol>config</symbol>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;street_item&apos; can be declared as pointer to const" verbose="Variable &apos;street_item&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_finder.c">
+            <location file="navit/plugin/rest/rest_finder.c" line="260" column="26" info="Variable &apos;street_item&apos; can be declared as pointer to const"/>
+            <symbol>street_item</symbol>
+        </error>
+        <error id="unusedVariable" severity="style" msg="Unused variable: coord" verbose="Unused variable: coord" cwe="563" file0="navit/plugin/rest/rest_finder.c">
+            <location file="navit/plugin/rest/rest_finder.c" line="219" column="22"/>
+            <symbol>coord</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_glacier.c" line="20" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;debug.h&quot; not found." verbose="Include file: &quot;debug.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_glacier.c" line="25" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;map.h&quot; not found." verbose="Include file: &quot;map.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_glacier.c" line="27" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;mapset.h&quot; not found." verbose="Include file: &quot;mapset.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_glacier.c" line="28" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;item.h&quot; not found." verbose="Include file: &quot;item.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_glacier.c" line="29" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;transform.h&quot; not found." verbose="Include file: &quot;transform.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_glacier.c" line="30" column="0"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;map&apos; can be reduced." verbose="The scope of the variable &apos;map&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="navit/plugin/rest/rest_glacier.c">
+            <location file="navit/plugin/rest/rest_glacier.c" line="84" column="17"/>
+            <symbol>map</symbol>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &apos;c&apos; shadows outer variable" verbose="Local variable &apos;c&apos; shadows outer variable" cwe="398" file0="navit/plugin/rest/rest_glacier.c">
+            <location file="navit/plugin/rest/rest_glacier.c" line="98" column="30" info="Shadow variable"/>
+            <location file="navit/plugin/rest/rest_glacier.c" line="66" column="18" info="Shadowed declaration"/>
+            <symbol>c</symbol>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;c1&apos; can be declared as pointer to const" verbose="Parameter &apos;c1&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_glacier.c">
+            <location file="navit/plugin/rest/rest_glacier.c" line="33" column="48" info="Parameter &apos;c1&apos; can be declared as pointer to const"/>
+            <symbol>c1</symbol>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;c2&apos; can be declared as pointer to const" verbose="Parameter &apos;c2&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_glacier.c">
+            <location file="navit/plugin/rest/rest_glacier.c" line="33" column="70" info="Parameter &apos;c2&apos; can be declared as pointer to const"/>
+            <symbol>c2</symbol>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;glacier&apos; can be declared as pointer to const" verbose="Variable &apos;glacier&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_glacier.c">
+            <location file="navit/plugin/rest/rest_glacier.c" line="160" column="34" info="Variable &apos;glacier&apos; can be declared as pointer to const"/>
+            <symbol>glacier</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_hiking.c" line="20" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;debug.h&quot; not found." verbose="Include file: &quot;debug.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_hiking.c" line="25" column="0"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;default_daily&apos; can be reduced." verbose="The scope of the variable &apos;default_daily&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="navit/plugin/rest/rest_hiking.c">
+            <location file="navit/plugin/rest/rest_hiking.c" line="82" column="12"/>
+            <symbol>default_daily</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="20" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;debug.h&quot; not found." verbose="Include file: &quot;debug.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="26" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;item.h&quot; not found." verbose="Include file: &quot;item.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="27" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;navit.h&quot; not found." verbose="Include file: &quot;navit.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="28" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;color.h&quot; not found." verbose="Include file: &quot;color.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="29" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;point.h&quot; not found." verbose="Include file: &quot;point.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="30" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;osd.h&quot; not found." verbose="Include file: &quot;osd.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="31" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;plugin.h&quot; not found." verbose="Include file: &quot;plugin.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="32" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;map.h&quot; not found." verbose="Include file: &quot;map.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="33" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;mapset.h&quot; not found." verbose="Include file: &quot;mapset.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="34" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;attr.h&quot; not found." verbose="Include file: &quot;attr.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="35" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;command.h&quot; not found." verbose="Include file: &quot;command.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="36" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;gui.h&quot; not found." verbose="Include file: &quot;gui.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="37" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;osd.h&quot; not found." verbose="Include file: &quot;osd.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="38" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;popup.h&quot; not found." verbose="Include file: &quot;popup.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="39" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;vehicleprofile.h&quot; not found." verbose="Include file: &quot;vehicleprofile.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="45" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;gui.h&quot; not found." verbose="Include file: &quot;gui.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="46" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;graphics.h&quot; not found." verbose="Include file: &quot;graphics.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="47" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;gui/internal/gui_internal.h&quot; not found." verbose="Include file: &quot;gui/internal/gui_internal.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="53" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;gui/internal/gui_internal_widget.h&quot; not found." verbose="Include file: &quot;gui/internal/gui_internal_widget.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="54" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;gui/internal/gui_internal_menu.h&quot; not found." verbose="Include file: &quot;gui/internal/gui_internal_menu.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="55" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;gui/internal/gui_internal_priv.h&quot; not found." verbose="Include file: &quot;gui/internal/gui_internal_priv.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_osd.c" line="56" column="0"/>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;gui_local&apos; can be declared as pointer to const" verbose="Variable &apos;gui_local&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_osd.c">
+            <location file="navit/plugin/rest/rest_osd.c" line="247" column="23" info="Variable &apos;gui_local&apos; can be declared as pointer to const"/>
+            <symbol>gui_local</symbol>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;plugin&apos; can be declared as pointer to const" verbose="Variable &apos;plugin&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_osd.c">
+            <location file="navit/plugin/rest/rest_osd.c" line="292" column="11" info="Variable &apos;plugin&apos; can be declared as pointer to const"/>
+            <symbol>plugin</symbol>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;plugin&apos; can be declared as pointer to const" verbose="Variable &apos;plugin&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_osd.c">
+            <location file="navit/plugin/rest/rest_osd.c" line="302" column="11" info="Variable &apos;plugin&apos; can be declared as pointer to const"/>
+            <symbol>plugin</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi.c" line="20" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;debug.h&quot; not found." verbose="Include file: &quot;debug.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi.c" line="25" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;coord.h&quot; not found." verbose="Include file: &quot;coord.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi.c" line="26" column="0"/>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;center&apos; can be declared as pointer to const" verbose="Parameter &apos;center&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_poi.c">
+            <location file="navit/plugin/rest/rest_poi.c" line="234" column="44" info="Parameter &apos;center&apos; can be declared as pointer to const"/>
+            <symbol>center</symbol>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;c1&apos; can be declared as pointer to const" verbose="Parameter &apos;c1&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_poi.c">
+            <location file="navit/plugin/rest/rest_poi.c" line="370" column="48" info="Parameter &apos;c1&apos; can be declared as pointer to const"/>
+            <symbol>c1</symbol>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;c2&apos; can be declared as pointer to const" verbose="Parameter &apos;c2&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_poi.c">
+            <location file="navit/plugin/rest/rest_poi.c" line="370" column="70" info="Parameter &apos;c2&apos; can be declared as pointer to const"/>
+            <symbol>c2</symbol>
+        </error>
+        <error id="constParameterCallback" severity="style" msg="Parameter &apos;contents&apos; can be declared as pointer to const. However it seems that &apos;overpass_write_callback&apos; is a callback function, if &apos;contents&apos; is declared with const you might also need to cast function pointer(s)." verbose="Parameter &apos;contents&apos; can be declared as pointer to const. However it seems that &apos;overpass_write_callback&apos; is a callback function, if &apos;contents&apos; is declared with const you might also need to cast function pointer(s)." cwe="398" file0="navit/plugin/rest/rest_poi.c">
+            <location file="navit/plugin/rest/rest_poi.c" line="39" column="45" info="Parameter &apos;contents&apos; can be declared as pointer to const"/>
+            <location file="navit/plugin/rest/rest_poi.c" line="342" column="55" info="You might need to cast the function pointer here"/>
+            <symbol>contents</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi_hiking.c" line="20" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;debug.h&quot; not found." verbose="Include file: &quot;debug.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi_hiking.c" line="25" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;mapset.h&quot; not found." verbose="Include file: &quot;mapset.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi_hiking.c" line="29" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;navit.h&quot; not found." verbose="Include file: &quot;navit.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi_hiking.c" line="30" column="0"/>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;c1&apos; can be declared as pointer to const" verbose="Parameter &apos;c1&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_poi_hiking.c">
+            <location file="navit/plugin/rest/rest_poi_hiking.c" line="59" column="52" info="Parameter &apos;c1&apos; can be declared as pointer to const"/>
+            <symbol>c1</symbol>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;c2&apos; can be declared as pointer to const" verbose="Parameter &apos;c2&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_poi_hiking.c">
+            <location file="navit/plugin/rest/rest_poi_hiking.c" line="59" column="74" info="Parameter &apos;c2&apos; can be declared as pointer to const"/>
+            <symbol>c2</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi_map.c" line="20" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;debug.h&quot; not found." verbose="Include file: &quot;debug.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi_map.c" line="25" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;map.h&quot; not found." verbose="Include file: &quot;map.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi_map.c" line="28" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;item.h&quot; not found." verbose="Include file: &quot;item.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi_map.c" line="29" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;transform.h&quot; not found." verbose="Include file: &quot;transform.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi_map.c" line="30" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;attr.h&quot; not found." verbose="Include file: &quot;attr.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi_map.c" line="31" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;projection.h&quot; not found." verbose="Include file: &quot;projection.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_poi_map.c" line="32" column="0"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;map&apos; can be reduced." verbose="The scope of the variable &apos;map&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="navit/plugin/rest/rest_poi_map.c">
+            <location file="navit/plugin/rest/rest_poi_map.c" line="185" column="17"/>
+            <symbol>map</symbol>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;map&apos; can be reduced." verbose="The scope of the variable &apos;map&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="navit/plugin/rest/rest_poi_map.c">
+            <location file="navit/plugin/rest/rest_poi_map.c" line="299" column="17"/>
+            <symbol>map</symbol>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;c1&apos; can be declared as pointer to const" verbose="Parameter &apos;c1&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_poi_map.c">
+            <location file="navit/plugin/rest/rest_poi_map.c" line="36" column="52" info="Parameter &apos;c1&apos; can be declared as pointer to const"/>
+            <symbol>c1</symbol>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;c2&apos; can be declared as pointer to const" verbose="Parameter &apos;c2&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_poi_map.c">
+            <location file="navit/plugin/rest/rest_poi_map.c" line="36" column="74" info="Parameter &apos;c2&apos; can be declared as pointer to const"/>
+            <symbol>c2</symbol>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;poi_types&apos; can be declared as pointer to const" verbose="Parameter &apos;poi_types&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_poi_map.c">
+            <location file="navit/plugin/rest/rest_poi_map.c" line="155" column="44" info="Parameter &apos;poi_types&apos; can be declared as pointer to const"/>
+            <symbol>poi_types</symbol>
+        </error>
+        <error id="constVariable" severity="style" msg="Variable &apos;cabin_types&apos; can be declared as const array" verbose="Variable &apos;cabin_types&apos; can be declared as const array" cwe="398" file0="navit/plugin/rest/rest_poi_map.c">
+            <location file="navit/plugin/rest/rest_poi_map.c" line="271" column="20" info="Variable &apos;cabin_types&apos; can be declared as const array"/>
+            <symbol>cabin_types</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_route_validator.c" line="20" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;debug.h&quot; not found." verbose="Include file: &quot;debug.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_route_validator.c" line="24" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;route.h&quot; not found." verbose="Include file: &quot;route.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_route_validator.c" line="26" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;item.h&quot; not found." verbose="Include file: &quot;item.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_route_validator.c" line="27" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;map.h&quot; not found." verbose="Include file: &quot;map.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_route_validator.c" line="28" column="0"/>
+        </error>
+        <error id="knownConditionTrueFalse" severity="style" msg="Condition &apos;street_item&apos; is always true" verbose="Condition &apos;street_item&apos; is always true" cwe="571" file0="navit/plugin/rest/rest_route_validator.c">
+            <location file="navit/plugin/rest/rest_route_validator.c" line="186" column="58" info="Condition &apos;street_item&apos; is always true"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_srtm.c" line="20" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;debug.h&quot; not found." verbose="Include file: &quot;debug.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_srtm.c" line="28" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;file.h&quot; not found." verbose="Include file: &quot;file.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_srtm.c" line="29" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;navit.h&quot; not found." verbose="Include file: &quot;navit.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_srtm.c" line="31" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;event.h&quot; not found." verbose="Include file: &quot;event.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_srtm.c" line="32" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;callback.h&quot; not found." verbose="Include file: &quot;callback.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_srtm.c" line="33" column="0"/>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;t&apos; can be declared as pointer to const" verbose="Variable &apos;t&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_srtm.c">
+            <location file="navit/plugin/rest/rest_srtm.c" line="144" column="35" info="Variable &apos;t&apos; can be declared as pointer to const"/>
+            <symbol>t</symbol>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;coord&apos; can be declared as pointer to const" verbose="Parameter &apos;coord&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_srtm.c">
+            <location file="navit/plugin/rest/rest_srtm.c" line="248" column="42" info="Parameter &apos;coord&apos; can be declared as pointer to const"/>
+            <symbol>coord</symbol>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;tile&apos; can be declared as pointer to const" verbose="Variable &apos;tile&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_srtm.c">
+            <location file="navit/plugin/rest/rest_srtm.c" line="313" column="31" info="Variable &apos;tile&apos; can be declared as pointer to const"/>
+            <symbol>tile</symbol>
+        </error>
+        <error id="constParameterCallback" severity="style" msg="Parameter &apos;contents&apos; can be declared as pointer to const. However it seems that &apos;srtm_write_callback&apos; is a callback function, if &apos;contents&apos; is declared with const you might also need to cast function pointer(s)." verbose="Parameter &apos;contents&apos; can be declared as pointer to const. However it seems that &apos;srtm_write_callback&apos; is a callback function, if &apos;contents&apos; is declared with const you might also need to cast function pointer(s)." cwe="398" file0="navit/plugin/rest/rest_srtm.c">
+            <location file="navit/plugin/rest/rest_srtm.c" line="357" column="41" info="Parameter &apos;contents&apos; can be declared as pointer to const"/>
+            <location file="navit/plugin/rest/rest_srtm.c" line="383" column="51" info="You might need to cast the function pointer here"/>
+            <symbol>contents</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;config.h&quot; not found." verbose="Include file: &quot;config.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_srtm_osd.c" line="20" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;debug.h&quot; not found." verbose="Include file: &quot;debug.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_srtm_osd.c" line="21" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;command.h&quot; not found." verbose="Include file: &quot;command.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_srtm_osd.c" line="22" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;navit.h&quot; not found." verbose="Include file: &quot;navit.h&quot; not found.">
+            <location file="navit/plugin/rest/rest_srtm_osd.c" line="23" column="0"/>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;ctx&apos; can be declared as pointer to const" verbose="Variable &apos;ctx&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/rest_srtm_osd.c">
+            <location file="navit/plugin/rest/rest_srtm_osd.c" line="76" column="35" info="Variable &apos;ctx&apos; can be declared as pointer to const"/>
+            <symbol>ctx</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../debug.h&quot; not found." verbose="Include file: &quot;../../debug.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_config.c" line="13" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../debug.h&quot; not found." verbose="Include file: &quot;../../debug.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_db.c" line="14" column="0"/>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;retrieved&apos; can be declared as pointer to const" verbose="Variable &apos;retrieved&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/tests/test_rest_db.c">
+            <location file="navit/plugin/rest/tests/test_rest_db.c" line="106" column="31" info="Variable &apos;retrieved&apos; can be declared as pointer to const"/>
+            <symbol>retrieved</symbol>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;retrieved&apos; can be declared as pointer to const" verbose="Variable &apos;retrieved&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/tests/test_rest_db.c">
+            <location file="navit/plugin/rest/tests/test_rest_db.c" line="162" column="31" info="Variable &apos;retrieved&apos; can be declared as pointer to const"/>
+            <symbol>retrieved</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../debug.h&quot; not found." verbose="Include file: &quot;../../debug.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_finder.c" line="13" column="0"/>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;c1&apos; can be declared as pointer to const" verbose="Parameter &apos;c1&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/tests/test_rest_finder.c">
+            <location file="navit/plugin/rest/tests/test_rest_finder.c" line="39" column="48" info="Parameter &apos;c1&apos; can be declared as pointer to const"/>
+            <symbol>c1</symbol>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &apos;c2&apos; can be declared as pointer to const" verbose="Parameter &apos;c2&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/tests/test_rest_finder.c">
+            <location file="navit/plugin/rest/tests/test_rest_finder.c" line="39" column="70" info="Parameter &apos;c2&apos; can be declared as pointer to const"/>
+            <symbol>c2</symbol>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;result&apos; can be declared as pointer to const" verbose="Variable &apos;result&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/tests/test_rest_finder.c">
+            <location file="navit/plugin/rest/tests/test_rest_finder.c" line="156" column="12" info="Variable &apos;result&apos; can be declared as pointer to const"/>
+            <symbol>result</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../debug.h&quot; not found." verbose="Include file: &quot;../../debug.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_integration.c" line="12" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../navit.h&quot; not found." verbose="Include file: &quot;../../navit.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_integration.c" line="20" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../route.h&quot; not found." verbose="Include file: &quot;../../route.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_integration.c" line="21" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../mapset.h&quot; not found." verbose="Include file: &quot;../../mapset.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_integration.c" line="22" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../vehicleprofile.h&quot; not found." verbose="Include file: &quot;../../vehicleprofile.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_integration.c" line="23" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../transform.h&quot; not found." verbose="Include file: &quot;../../transform.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_integration.c" line="24" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../projection.h&quot; not found." verbose="Include file: &quot;../../projection.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_integration.c" line="25" column="0"/>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;first_stop&apos; can be declared as pointer to const" verbose="Variable &apos;first_stop&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/tests/test_rest_integration.c">
+            <location file="navit/plugin/rest/tests/test_rest_integration.c" line="62" column="30" info="Variable &apos;first_stop&apos; can be declared as pointer to const"/>
+            <symbol>first_stop</symbol>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;stop&apos; can be declared as pointer to const" verbose="Variable &apos;stop&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/tests/test_rest_integration.c">
+            <location file="navit/plugin/rest/tests/test_rest_integration.c" line="71" column="34" info="Variable &apos;stop&apos; can be declared as pointer to const"/>
+            <symbol>stop</symbol>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;stop&apos; can be declared as pointer to const" verbose="Variable &apos;stop&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/tests/test_rest_integration.c">
+            <location file="navit/plugin/rest/tests/test_rest_integration.c" line="228" column="34" info="Variable &apos;stop&apos; can be declared as pointer to const"/>
+            <symbol>stop</symbol>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &apos;bjoberg&apos; is assigned a value that is never used." verbose="Variable &apos;bjoberg&apos; is assigned a value that is never used." cwe="563" file0="navit/plugin/rest/tests/test_rest_integration.c">
+            <location file="navit/plugin/rest/tests/test_rest_integration.c" line="114" column="30"/>
+            <symbol>bjoberg</symbol>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &apos;aurlandsdalen&apos; is assigned a value that is never used." verbose="Variable &apos;aurlandsdalen&apos; is assigned a value that is never used." cwe="563" file0="navit/plugin/rest/tests/test_rest_integration.c">
+            <location file="navit/plugin/rest/tests/test_rest_integration.c" line="116" column="36"/>
+            <symbol>aurlandsdalen</symbol>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &apos;aukrust&apos; is assigned a value that is never used." verbose="Variable &apos;aukrust&apos; is assigned a value that is never used." cwe="563" file0="navit/plugin/rest/tests/test_rest_integration.c">
+            <location file="navit/plugin/rest/tests/test_rest_integration.c" line="141" column="30"/>
+            <symbol>aukrust</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../debug.h&quot; not found." verbose="Include file: &quot;../../debug.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="13" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../navit.h&quot; not found." verbose="Include file: &quot;../../navit.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="22" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../route.h&quot; not found." verbose="Include file: &quot;../../route.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="23" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../mapset.h&quot; not found." verbose="Include file: &quot;../../mapset.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="24" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../map.h&quot; not found." verbose="Include file: &quot;../../map.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="25" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../vehicleprofile.h&quot; not found." verbose="Include file: &quot;../../vehicleprofile.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="26" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../transform.h&quot; not found." verbose="Include file: &quot;../../transform.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="27" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../projection.h&quot; not found." verbose="Include file: &quot;../../projection.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="28" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../attr.h&quot; not found." verbose="Include file: &quot;../../attr.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="29" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../atom.h&quot; not found." verbose="Include file: &quot;../../atom.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="30" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../main.h&quot; not found." verbose="Include file: &quot;../../main.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="31" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../file.h&quot; not found." verbose="Include file: &quot;../../file.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="32" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../plugin.h&quot; not found." verbose="Include file: &quot;../../plugin.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="33" column="0"/>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;map_driver&apos; can be declared as pointer to const" verbose="Variable &apos;map_driver&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/tests/test_rest_route_integration.c">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="211" column="11" info="Variable &apos;map_driver&apos; can be declared as pointer to const"/>
+            <symbol>map_driver</symbol>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;stop&apos; can be declared as pointer to const" verbose="Variable &apos;stop&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/tests/test_rest_route_integration.c">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="296" column="34" info="Variable &apos;stop&apos; can be declared as pointer to const"/>
+            <symbol>stop</symbol>
+        </error>
+        <error id="constVariablePointer" severity="style" msg="Variable &apos;stop&apos; can be declared as pointer to const" verbose="Variable &apos;stop&apos; can be declared as pointer to const" cwe="398" file0="navit/plugin/rest/tests/test_rest_route_integration.c">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="440" column="35" info="Variable &apos;stop&apos; can be declared as pointer to const"/>
+            <symbol>stop</symbol>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &apos;pl&apos; can be reduced." verbose="The scope of the variable &apos;pl&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:\012void f(int x)\012{\012    int i = 0;\012    if (x) {\012        // it&apos;s safe to move &apos;int i = 0;&apos; here\012        for (int n = 0; n &lt; 10; ++n) {\012            // it is possible but not safe to move &apos;int i = 0;&apos; here\012            do_something(&amp;i);\012        }\012    }\012}\012When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="navit/plugin/rest/tests/test_rest_route_integration.c">
+            <location file="navit/plugin/rest/tests/test_rest_route_integration.c" line="91" column="24"/>
+            <symbol>pl</symbol>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../debug.h&quot; not found." verbose="Include file: &quot;../../debug.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_routing.c" line="12" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../item.h&quot; not found." verbose="Include file: &quot;../../item.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_routing.c" line="16" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../debug.h&quot; not found." verbose="Include file: &quot;../../debug.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_srtm.c" line="15" column="0"/>
+        </error>
+        <error id="missingInclude" severity="information" msg="Include file: &quot;../../navit.h&quot; not found." verbose="Include file: &quot;../../navit.h&quot; not found.">
+            <location file="navit/plugin/rest/tests/test_rest_srtm.c" line="18" column="0"/>
+        </error>
+        <error id="redundantCondition" severity="style" msg="Redundant condition: The condition &apos;elevation == -32768&apos; is redundant since &apos;elevation &gt;= -32768&apos; is sufficient." verbose="Redundant condition: The condition &apos;elevation == -32768&apos; is redundant since &apos;elevation &gt;= -32768&apos; is sufficient." cwe="398" file0="navit/plugin/rest/tests/test_rest_srtm.c">
+            <location file="navit/plugin/rest/tests/test_rest_srtm.c" line="226" column="5"/>
+        </error>
+        <error id="checkersReport" severity="information" msg="Active checkers: 106/592 (use --checkers-report=&lt;filename&gt; to see details)" verbose="Active checkers: 106/592 (use --checkers-report=&lt;filename&gt; to see details)"/>
+    </errors>
+</results>

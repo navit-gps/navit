@@ -42,7 +42,7 @@ Plugins
 
 Navit includes several plugins that extend its functionality:
 
-- **Rest Plugin** — Vehicle pause and rest stop management with POI discovery and energy-based routing
+- **Driver Break Plugin** — Vehicle pause and rest stop management with POI discovery and energy-based routing
 - **APRS Plugin** — Real-time APRS station tracking with packet decoding and map display
 - **APRS SDR Plugin** — RTL-SDR hardware support for direct APRS packet reception
 

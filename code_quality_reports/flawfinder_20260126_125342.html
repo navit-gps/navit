@@ -1,0 +1,328 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf8">
+<title>Flawfinder Results</title>
+<meta name="author" content="David A. Wheeler">
+<meta name="keywords" lang="en" content="flawfinder results, security scan">
+</head>
+<body>
+<h1>Flawfinder Results</h1>
+Here are the security scan results from
+<a href="https://dwheeler.com/flawfinder">Flawfinder version 2.0.19</a>,
+(C) 2001-2019 <a href="https://dwheeler.com">David A. Wheeler</a>.
+Number of rules (primarily dangerous function names) in C/C++ ruleset: 222
+<p>
+Examining navit/plugin/rest/rest_db.c <br>
+Examining navit/plugin/rest/rest_poi_map.h <br>
+Examining navit/plugin/rest/rest_poi_hiking.c <br>
+Examining navit/plugin/rest/rest_glacier.c <br>
+Examining navit/plugin/rest/rest_poi.h <br>
+Examining navit/plugin/rest/rest_db.h <br>
+Examining navit/plugin/rest/rest.c <br>
+Examining navit/plugin/rest/rest_poi_map.c <br>
+Examining navit/plugin/rest/tests/test_rest_integration.c <br>
+Examining navit/plugin/rest/tests/test_rest_config.c <br>
+Examining navit/plugin/rest/tests/test_rest_srtm.c <br>
+Examining navit/plugin/rest/tests/test_rest_routing.c <br>
+Examining navit/plugin/rest/tests/test_rest_db.c <br>
+Examining navit/plugin/rest/tests/test_rest_route_integration.c <br>
+Examining navit/plugin/rest/tests/test_rest_finder.c <br>
+Examining navit/plugin/rest/rest_cycling.h <br>
+Examining navit/plugin/rest/rest_osd.c <br>
+Examining navit/plugin/rest/rest_finder.c <br>
+Examining navit/plugin/rest/rest_energy.c <br>
+Examining navit/plugin/rest/rest_poi_hiking.h <br>
+Examining navit/plugin/rest/rest_cycling.c <br>
+Examining navit/plugin/rest/rest_srtm_osd.c <br>
+Examining navit/plugin/rest/rest_poi.c <br>
+Examining navit/plugin/rest/rest_route_validator.h <br>
+Examining navit/plugin/rest/rest.h <br>
+Examining navit/plugin/rest/rest_glacier.h <br>
+Examining navit/plugin/rest/rest_finder.h <br>
+Examining navit/plugin/rest/rest_route_validator.c <br>
+Examining navit/plugin/rest/rest_hiking.c <br>
+Examining navit/plugin/rest/rest_hiking.h <br>
+Examining navit/plugin/rest/rest_srtm.h <br>
+Examining navit/plugin/rest/rest_osd.h <br>
+Examining navit/plugin/rest/rest_srtm.c <br>
+Examining navit/plugin/rest/rest_srtm_osd.h <br>
+Examining navit/plugin/rest/rest_energy.h <br>
+
+<h2>Final Results</h2>
+<ul>
+<li>navit/plugin/rest/rest_srtm.c:409:34: <b>  [4] </b> (shell) <i> system:
+  This causes a new program to execute and is difficult to use safely (<a
+  href="https://cwe.mitre.org/data/definitions/78.html">CWE-78</a>). try
+  using a library call that implements the same functionality if available. </i>
+<pre>
+            int extract_result = system(extract_cmd);
+</pre>
+<li>navit/plugin/rest/rest_db.c:324:17: <b>  [2] </b> (integer) <i> atoi:
+  Unless checked, the resulting number can exceed the expected range (<a
+  href="https://cwe.mitre.org/data/definitions/190.html">CWE-190</a>). If
+  source untrusted, check both minimum and maximum, even if the input had no
+  minus sign (large numbers can roll over into negative number; consider
+  saving to an unsigned value if that is intended). </i>
+<pre>
+        value = atoi(value_str);
+</pre>
+<li>navit/plugin/rest/rest_osd.c:323:5: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+    char buffer[256];
+</pre>
+<li>navit/plugin/rest/rest_osd.c:412:5: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+    char buffer[256];
+</pre>
+<li>navit/plugin/rest/rest_osd.c:457:5: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+    char buffer[256];
+</pre>
+<li>navit/plugin/rest/rest_osd.c:500:5: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+    char buffer[256];
+</pre>
+<li>navit/plugin/rest/rest_osd.c:605:5: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+    char buffer[256];
+</pre>
+<li>navit/plugin/rest/rest_osd.c:606:5: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+    char title[128];
+</pre>
+<li>navit/plugin/rest/rest_poi.c:49:5: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+    memcpy(&amp;(mem-&gt;response[mem-&gt;size]), contents, realsize);
+</pre>
+<li>navit/plugin/rest/rest_poi.c:81:5: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+    char search_pattern[256];
+</pre>
+<li>navit/plugin/rest/rest_poi.c:98:5: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+    memcpy(value, pos, len);
+</pre>
+<li>navit/plugin/rest/rest_poi.c:107:5: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+    char search_pattern[256];
+</pre>
+<li>navit/plugin/rest/rest_poi_map.c:53:5: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+    char tag_key[256];
+</pre>
+<li>navit/plugin/rest/rest_poi_map.c:70:21: <b>  [2] </b> (buffer) <i> memcpy:
+  Does not check for buffer overflows when copying to destination (<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>). Make
+  sure destination can always hold the source data. </i>
+<pre>
+                    memcpy(tag_value, pos, len);
+</pre>
+<li>navit/plugin/rest/rest_srtm.c:188:15: <b>  [2] </b> (misc) <i> fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (<a
+  href="https://cwe.mitre.org/data/definitions/362.html">CWE-362</a>). </i>
+<pre>
+    FILE *f = fopen(filepath, "rb");
+</pre>
+<li>navit/plugin/rest/rest_srtm.c:228:14: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+    unsigned char bytes[2];
+</pre>
+<li>navit/plugin/rest/rest_srtm.c:373:16: <b>  [2] </b> (misc) <i> fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (<a
+  href="https://cwe.mitre.org/data/definitions/362.html">CWE-362</a>). </i>
+<pre>
+    FILE *fp = fopen(zip_path, "wb");
+</pre>
+<li>navit/plugin/rest/tests/test_rest_db.c:42:14: <b>  [2] </b> (tmpfile) <i> mkstemp:
+  Potential for temporary file vulnerability in some circumstances. Some
+  older Unix-like systems create temp files with permission to write by all
+  by default, so be sure to set the umask to override this. Also, some older
+  Unix systems might fail to use O_EXCL when opening the file, so make sure
+  that O_EXCL is used by the library (<a
+  href="https://cwe.mitre.org/data/definitions/377.html">CWE-377</a>). </i>
+<pre>
+    int fd = mkstemp(template);
+</pre>
+<li>navit/plugin/rest/tests/test_rest_srtm.c:61:15: <b>  [2] </b> (misc) <i> fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (<a
+  href="https://cwe.mitre.org/data/definitions/362.html">CWE-362</a>). </i>
+<pre>
+    FILE *f = fopen(filepath, "wb");
+</pre>
+<li>navit/plugin/rest/tests/test_rest_srtm.c:83:18: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+        unsigned char bytes[2];
+</pre>
+<li>navit/plugin/rest/tests/test_rest_srtm.c:100:15: <b>  [2] </b> (misc) <i> fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (<a
+  href="https://cwe.mitre.org/data/definitions/362.html">CWE-362</a>). </i>
+<pre>
+    FILE *f = fopen(filepath, "wb");
+</pre>
+<li>navit/plugin/rest/tests/test_rest_srtm.c:106:5: <b>  [2] </b> (buffer) <i> char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (<a
+  href="https://cwe.mitre.org/data/definitions/119.html">CWE-119</a>!/<a
+  href="https://cwe.mitre.org/data/definitions/120.html">CWE-120</a>).
+  Perform bounds checking, use functions that limit length, or ensure that
+  the size is larger than the maximum possible length. </i>
+<pre>
+    char dummy[1000];
+</pre>
+<li>navit/plugin/rest/tests/test_rest_srtm.c:115:15: <b>  [2] </b> (misc) <i> fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (<a
+  href="https://cwe.mitre.org/data/definitions/362.html">CWE-362</a>). </i>
+<pre>
+    FILE *f = fopen(filepath, "wb");
+</pre>
+<li>navit/plugin/rest/tests/test_rest_srtm.c:132:15: <b>  [2] </b> (misc) <i> fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (<a
+  href="https://cwe.mitre.org/data/definitions/362.html">CWE-362</a>). </i>
+<pre>
+    FILE *f = fopen(filepath, "wb");
+</pre>
+<li>navit/plugin/rest/rest_poi.c:89:12: <b>  [1] </b> (buffer) <i> strlen:
+  Does not handle strings that are not \0-terminated; if given one it may
+  perform an over-read (it could cause a crash if unprotected) (<a
+  href="https://cwe.mitre.org/data/definitions/126.html">CWE-126</a>). </i>
+<pre>
+    pos += strlen(search_pattern);
+</pre>
+<li>navit/plugin/rest/rest_poi.c:115:12: <b>  [1] </b> (buffer) <i> strlen:
+  Does not handle strings that are not \0-terminated; if given one it may
+  perform an over-read (it could cause a crash if unprotected) (<a
+  href="https://cwe.mitre.org/data/definitions/126.html">CWE-126</a>). </i>
+<pre>
+    pos += strlen(search_pattern);
+</pre>
+<li>navit/plugin/rest/rest_poi_map.c:64:24: <b>  [1] </b> (buffer) <i> strlen:
+  Does not handle strings that are not \0-terminated; if given one it may
+  perform an over-read (it could cause a crash if unprotected) (<a
+  href="https://cwe.mitre.org/data/definitions/126.html">CWE-126</a>). </i>
+<pre>
+                pos += strlen(tag_key);
+</pre>
+<li>navit/plugin/rest/rest_poi_map.c:66:39: <b>  [1] </b> (buffer) <i> strlen:
+  Does not handle strings that are not \0-terminated; if given one it may
+  perform an over-read (it could cause a crash if unprotected) (<a
+  href="https://cwe.mitre.org/data/definitions/126.html">CWE-126</a>). </i>
+<pre>
+                if (!end) end = pos + strlen(pos);
+</pre>
+</ul>
+<h2>Analysis Summary</h2>
+<p>
+Hits = 28
+<br>
+Lines analyzed = 7815 in approximately 0.05 seconds (168032 lines/second)
+<br>
+Physical Source Lines of Code (SLOC) = 5310
+<br>
+Hits@level = [0]  99 [1]   4 [2]  23 [3]   0 [4]   1 [5]   0 <br>
+Hits@level+ = [0+] 127 [1+]  28 [2+]  24 [3+]   1 [4+]   1 [5+]   0 <br>
+Hits/KSLOC@level+ = [0+] 23.9171 [1+] 5.27307 [2+] 4.51977 [3+] 0.188324 [4+] 0.188324 [5+]   0 <br>
+Minimum risk level = 1
+<br>
+Not every hit is necessarily a security vulnerability.
+You can inhibit a report by adding a comment in this form:
+// flawfinder: ignore
+Make *sure* it's a false positive!
+You can use the option --neverignore to show these.
+<br>
+There may be other security vulnerabilities; review your code!
+<br>
+See '<a href="https://dwheeler.com/secure-programs">Secure Programming HOWTO</a>'
+(<a href="https://dwheeler.com/secure-programs">https://dwheeler.com/secure-programs</a>) for more information.
+</body>
+</html>

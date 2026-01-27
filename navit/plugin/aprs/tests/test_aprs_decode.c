@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2024 Navit Team
+ * Copyright (C) 2024-2026 Navit Team
  *
  * Unit tests for APRS packet decoding
  */
