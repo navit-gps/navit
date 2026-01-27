@@ -58,7 +58,6 @@ struct datawindow;
 struct graphics;
 struct gui;
 struct menu;
-struct pcoord;
 struct gui *gui_new(struct attr *parent, struct attr **attrs);
 int gui_get_attr(struct gui *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int gui_set_attr(struct gui *this_, struct attr *attr);
