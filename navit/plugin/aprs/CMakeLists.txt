@@ -1,18 +1,10 @@
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(SQLITE3 sqlite3)
-
+# SQLite3 dependency is checked in main CMakeLists.txt
+# Variables SQLITE3_LIBRARIES, SQLITE3_INCLUDE_DIRS, SQLITE3_CFLAGS_OTHER are set there
 if(SQLITE3_FOUND)
     set(plugin_aprs_LIBS ${SQLITE3_LIBRARIES})
     set(plugin_aprs_INCLUDES ${SQLITE3_INCLUDE_DIRS})
-    set(plugin_aprs_FLAGS ${SQLITE3_CFLAGS_OTHER})
-else()
-    find_library(SQLITE3_LIBRARIES NAMES sqlite3)
-    find_path(SQLITE3_INCLUDE_DIRS NAMES sqlite3.h)
-    if(SQLITE3_LIBRARIES AND SQLITE3_INCLUDE_DIRS)
-        set(plugin_aprs_LIBS ${SQLITE3_LIBRARIES})
-        set(plugin_aprs_INCLUDES ${SQLITE3_INCLUDE_DIRS})
-    else()
-        message(FATAL_ERROR "SQLite3 not found. Please install libsqlite3-dev or equivalent.")
+    if(SQLITE3_CFLAGS_OTHER)
+        set(plugin_aprs_FLAGS ${SQLITE3_CFLAGS_OTHER})
     endif()
 endif()
 
