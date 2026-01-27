@@ -2,6 +2,8 @@
 #ifndef NAVIT_GUI_INTERNAL_GUI_INTERNAL_WIDGET_H
 #define NAVIT_GUI_INTERNAL_GUI_INTERNAL_WIDGET_H
 
+#include "gui_internal.h"
+
 enum gui_internal_reason {
     gui_internal_reason_click = 1,
     gui_internal_reason_keypress,
