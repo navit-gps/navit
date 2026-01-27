@@ -1,4 +1,11 @@
 /**
+ * @file rest_finder.h
+ * @brief Rest stop finder API
+ *
+ * Functions for finding suitable rest stop locations along routes
+ * and validating locations against rest stop criteria.
+ * For detailed API documentation, see https://doxygen.navit-project.org/
+ *
  * Navit, a modular navigation system.
  * Copyright (C) 2024 Navit Team
  *
@@ -25,30 +32,60 @@
 #include "route.h"
 #include "rest.h"
 
-/* Find rest stops along a route */
+/**
+ * @brief Find rest stops along a route
+ * @param route Route to search along
+ * @param config Rest configuration
+ * @param mandatory_break_required 1 if mandatory break is required
+ * @return GList of struct rest_stop* (caller must free with rest_finder_free_list)
+ */
 GList *rest_finder_find_along_route(struct route *route, 
                                      struct rest_config *config,
                                      int mandatory_break_required);
 
-/* Find rest stops near a coordinate */
+/**
+ * @brief Find rest stops near a coordinate
+ * @param center Center coordinate for search
+ * @param distance_km Search radius in kilometers
+ * @param config Rest configuration
+ * @return GList of struct rest_stop* (caller must free with rest_finder_free_list)
+ */
 GList *rest_finder_find_near(struct coord_geo *center, 
                               double distance_km,
                               struct rest_config *config);
 
-/* Check if location meets rest stop criteria */
+/**
+ * @brief Check if location meets rest stop criteria
+ * @param coord Location to validate
+ * @param config Rest configuration
+ * @return 1 if valid, 0 otherwise
+ */
 int rest_finder_is_valid_location(struct coord_geo *coord, 
                                   struct rest_config *config);
 
-/* Check if location is valid for nightly rest stop (with glacier check) */
+/**
+ * @brief Check if location is valid for nightly rest stop (with glacier check)
+ * @param coord Location to validate
+ * @param config Rest configuration
+ * @param ms Mapset for map queries
+ * @param has_camping_building 1 if location has camping building
+ * @return 1 if valid, 0 otherwise
+ */
 int rest_finder_is_valid_nightly_location(struct coord_geo *coord, 
                                             struct rest_config *config,
                                             struct mapset *ms,
                                             int has_camping_building);
 
-/* Free rest stop list */
+/**
+ * @brief Free a list of rest stops
+ * @param stops GList of struct rest_stop* to free
+ */
 void rest_finder_free_list(GList *stops);
 
-/* Free single rest stop */
+/**
+ * @brief Free a single rest stop structure
+ * @param stop Rest stop to free
+ */
 void rest_finder_free(struct rest_stop *stop);
 
 #endif /* NAVIT_PLUGIN_REST_FINDER_H */

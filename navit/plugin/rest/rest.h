@@ -1,4 +1,11 @@
 /**
+ * @file rest.h
+ * @brief Rest plugin public API and data structures
+ *
+ * This file defines the public API for the Rest plugin, including
+ * configuration structures, data types, and forward declarations.
+ * For detailed API documentation, see https://doxygen.navit-project.org/
+ *
  * Navit, a modular navigation system.
  * Copyright (C) 2024 Navit Team
  *
@@ -27,15 +34,22 @@
 #include "item.h"
 #include "attr.h"
 
-/* Vehicle types */
+/**
+ * @brief Vehicle type enumeration
+ */
 enum rest_vehicle_type {
-    REST_VEHICLE_CAR = 0,
-    REST_VEHICLE_TRUCK = 1,
-    REST_VEHICLE_HIKING = 2,
-    REST_VEHICLE_CYCLING = 3
+    REST_VEHICLE_CAR = 0,     /**< Car vehicle type */
+    REST_VEHICLE_TRUCK = 1,   /**< Truck vehicle type (EU Regulation EC 561/2006) */
+    REST_VEHICLE_HIKING = 2,  /**< Hiking vehicle type */
+    REST_VEHICLE_CYCLING = 3  /**< Cycling vehicle type */
 };
 
-/* Rest period configuration */
+/**
+ * @brief Rest period configuration structure
+ *
+ * Contains all configurable parameters for rest stop management,
+ * including vehicle-specific limits, POI search radii, and routing options.
+ */
 struct rest_config {
     int vehicle_type;  /* 0=car, 1=truck, 2=hiking, 3=cycling */
     
@@ -81,7 +95,12 @@ struct rest_config {
     double total_weight;           /* Total weight for energy calculations (kg) */
 };
 
-/* Rest stop location */
+/**
+ * @brief Rest stop location structure
+ *
+ * Represents a candidate rest stop location with coordinates,
+ * metadata, nearby POIs, and ranking score.
+ */
 struct rest_stop {
     struct coord_geo coord;
     char *name;
@@ -91,7 +110,12 @@ struct rest_stop {
     int score;    /* Ranking score */
 };
 
-/* POI information */
+/**
+ * @brief Point of Interest structure
+ *
+ * Represents a POI near a rest stop, including location,
+ * category, distance, and optional metadata.
+ */
 struct rest_poi {
     struct coord_geo coord;
     char *name;
@@ -103,7 +127,12 @@ struct rest_poi {
     double rating;  /* If available */
 };
 
-/* Driving session tracking */
+/**
+ * @brief Driving session tracking structure
+ *
+ * Tracks current driving session state including start time,
+ * break history, and mandatory break status.
+ */
 struct driving_session {
     time_t start_time;
     time_t last_break_time;
@@ -113,7 +142,11 @@ struct driving_session {
     int mandatory_break_required;
 };
 
-/* Rest stop history entry */
+/**
+ * @brief Rest stop history entry
+ *
+ * Represents a historical rest stop visit stored in the database.
+ */
 struct rest_stop_history {
     time_t timestamp;
     struct coord_geo coord;

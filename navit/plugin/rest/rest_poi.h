@@ -1,4 +1,11 @@
 /**
+ * @file rest_poi.h
+ * @brief POI discovery API
+ *
+ * Functions for discovering Points of Interest near rest stops
+ * using map-based queries or Overpass API fallback.
+ * For detailed API documentation, see https://doxygen.navit-project.org/
+ *
  * Navit, a modular navigation system.
  * Copyright (C) 2024 Navit Team
  *
@@ -24,18 +31,38 @@
 #include "coord.h"
 #include "rest.h"
 
-/* POI discovery using Overpass API */
+/**
+ * @brief Discover POIs near a location
+ * @param center Center coordinate for search
+ * @param radius_km Search radius in kilometers
+ * @param poi_categories Array of POI category strings (e.g., "amenity=cafe")
+ * @param num_categories Number of categories in array
+ * @return GList of struct rest_poi* (caller must free with rest_poi_free_list)
+ *
+ * Uses map-based queries (preferred) or Overpass API fallback if map data unavailable.
+ */
 GList *rest_poi_discover(struct coord_geo *center, int radius_km, 
                          const char **poi_categories, int num_categories);
 
-/* POI ranking */
+/**
+ * @brief Rank POIs by distance and preferences
+ * @param pois GList of struct rest_poi* to rank (modified in-place)
+ * @param rest_stop Rest stop location for distance calculation
+ * @param config Rest configuration
+ */
 void rest_poi_rank(GList *pois, struct coord_geo *rest_stop, 
                    struct rest_config *config);
 
-/* Free POI list */
+/**
+ * @brief Free a list of POIs
+ * @param pois GList of struct rest_poi* to free
+ */
 void rest_poi_free_list(GList *pois);
 
-/* Free single POI */
+/**
+ * @brief Free a single POI structure
+ * @param poi POI to free
+ */
 void rest_poi_free(struct rest_poi *poi);
 
 #endif /* NAVIT_PLUGIN_REST_POI_H */
