@@ -10,7 +10,6 @@
 #include "route.h"
 #include <glib.h>
 
-
 struct poi_param {
 
     /**

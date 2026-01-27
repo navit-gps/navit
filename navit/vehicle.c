@@ -446,9 +446,9 @@ static void vehicle_draw_do(struct vehicle *this_) {
         if ((*attr)->type == attr_itemgra) {
             struct itemgra *itm = (*attr)->u.itemgra;
             dbg(lvl_debug, "speed %d-%d %d", itm->speed_range.min, itm->speed_range.max, speed);
-            if (speed >= itm->speed_range.min && speed <= itm->speed_range.max && angle >= itm->angle_range.min &&
-                angle <= itm->angle_range.max && sequence >= itm->sequence_range.min &&
-                sequence <= itm->sequence_range.max) {
+            if (speed >= itm->speed_range.min && speed <= itm->speed_range.max && angle >= itm->angle_range.min
+                && angle <= itm->angle_range.max && sequence >= itm->sequence_range.min
+                && sequence <= itm->sequence_range.max) {
                 graphics_draw_itemgra(this_->gra, itm, this_->trans, label);
             }
             if (sequence < itm->sequence_range.max)
@@ -561,8 +561,8 @@ static void vehicle_log_gpx(struct vehicle *this_, struct log *log) {
         g_free(this_->gpx_desc);
         this_->gpx_desc = NULL;
     }
-    if (attr_types_contains_default(attr_types, attr_position_height, 0) &&
-        this_->meth.position_attr_get(this_->priv, attr_position_height, &attr))
+    if (attr_types_contains_default(attr_types, attr_position_height, 0)
+        && this_->meth.position_attr_get(this_->priv, attr_position_height, &attr))
         logstr = g_strconcat_printf(logstr, "\t<ele>%.6f</ele>\n", *attr.u.numd);
     // <magvar> magnetic variation in degrees; we might use position_magnetic_direction and position_direction to figure
     // it out
@@ -575,27 +575,27 @@ static void vehicle_log_gpx(struct vehicle *this_, struct log *log) {
     // <type> Type (classification)
     // <fix> Type of GPS fix {'none'|'2d'|'3d'|'dgps'|'pps'}, leave out if unknown. Similar to position_fix_type but
     // more detailed.
-    if (attr_types_contains_default(attr_types, attr_position_sats_used, 0) &&
-        this_->meth.position_attr_get(this_->priv, attr_position_sats_used, &attr))
+    if (attr_types_contains_default(attr_types, attr_position_sats_used, 0)
+        && this_->meth.position_attr_get(this_->priv, attr_position_sats_used, &attr))
         logstr = g_strconcat_printf(logstr, "\t<sat>%d</sat>\n", attr.u.num);
-    if (attr_types_contains_default(attr_types, attr_position_hdop, 0) &&
-        this_->meth.position_attr_get(this_->priv, attr_position_hdop, &attr))
+    if (attr_types_contains_default(attr_types, attr_position_hdop, 0)
+        && this_->meth.position_attr_get(this_->priv, attr_position_hdop, &attr))
         logstr = g_strconcat_printf(logstr, "\t<hdop>%.6f</hdop>\n", *attr.u.numd);
     // <vdop>, <pdop> Vertical and position dilution of precision, no corresponding attribute
-    if (attr_types_contains_default(attr_types, attr_position_direction, 0) &&
-        this_->meth.position_attr_get(this_->priv, attr_position_direction, &attr))
+    if (attr_types_contains_default(attr_types, attr_position_direction, 0)
+        && this_->meth.position_attr_get(this_->priv, attr_position_direction, &attr))
         logstr = g_strconcat_printf(logstr, "\t<course>%.1f</course>\n", *attr.u.numd);
-    if (attr_types_contains_default(attr_types, attr_position_speed, 0) &&
-        this_->meth.position_attr_get(this_->priv, attr_position_speed, &attr))
+    if (attr_types_contains_default(attr_types, attr_position_speed, 0)
+        && this_->meth.position_attr_get(this_->priv, attr_position_speed, &attr))
         logstr = g_strconcat_printf(logstr, "\t<speed>%.2f</speed>\n", (*attr.u.numd / 3.6));
-    if (attr_types_contains_default(attr_types, attr_profilename, 0) &&
-        (attrp = attr_search(this_->attrs, attr_profilename))) {
+    if (attr_types_contains_default(attr_types, attr_profilename, 0)
+        && (attrp = attr_search(this_->attrs, attr_profilename))) {
         logstr =
             g_strconcat_printf(logstr, "%s\t\t<navit:profilename>%s</navit:profilename>\n", extensions, attrp->u.str);
         extensions = "";
     }
-    if (attr_types_contains_default(attr_types, attr_position_radius, 0) &&
-        this_->meth.position_attr_get(this_->priv, attr_position_radius, &attr)) {
+    if (attr_types_contains_default(attr_types, attr_position_radius, 0)
+        && this_->meth.position_attr_get(this_->priv, attr_position_radius, &attr)) {
         logstr = g_strconcat_printf(logstr, "%s\t\t<navit:radius>%.2f</navit:radius>\n", extensions, *attr.u.numd);
         extensions = "";
     }

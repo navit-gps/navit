@@ -1,22 +1,22 @@
 /*
-	Copyright (C) 2007  Alexander Atanasov      <aatanasov@gmail.com>
+        Copyright (C) 2007  Alexander Atanasov      <aatanasov@gmail.com>
 
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; version 2 of the License.
+        This program is free software; you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation; version 2 of the License.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-	MA  02110-1301  USA
+        You should have received a copy of the GNU General Public License
+        along with this program; if not, write to the Free Software
+        Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+        MA  02110-1301  USA
 
-	Garmin and MapSource are registered trademarks or trademarks
-	of Garmin Ltd. or one of its subsidiaries.
+        Garmin and MapSource are registered trademarks or trademarks
+        of Garmin Ltd. or one of its subsidiaries.
 
 */
 
@@ -45,23 +45,22 @@ GROUP is
 1 - RGN2-4
  */
 
-#include <stdio.h>
-#include <string.h>
-#include <malloc.h>
-#include "item.h"
+#include "gar2navit.h"
 #include "attr.h"
 #include "garmin.h"
-#include "gar2navit.h"
+#include "item.h"
+#include <malloc.h>
+#include <stdio.h>
+#include <string.h>
 
-static int add_def(struct gar2nav_conv *conv, int type, unsigned short minid,
-                   unsigned short maxid, unsigned int group, char *ntype,
-                   char *descr) {
+static int add_def(struct gar2nav_conv *conv, int type, unsigned short minid, unsigned short maxid, unsigned int group,
+                   char *ntype, char *descr) {
     enum item_type it;
     struct gar2navit *g2n;
-    dlog(11, "group=%d type=%d routable=%u min=%04X max=%04X ntype=%s descr=%s\n",
-         group, type,  minid, maxid, ntype, descr);
+    dlog(11, "group=%d type=%d routable=%u min=%04X max=%04X ntype=%s descr=%s\n", group, type, minid, maxid, ntype,
+         descr);
     it = item_from_name(ntype);
-    if (it==type_none) {
+    if (it == type_none) {
         dlog(1, "Please define: %s\n", ntype);
     }
     g2n = calloc(1, sizeof(*g2n));
@@ -114,16 +113,13 @@ static int load_types_file(char *file, struct gar2nav_conv *conv) {
             continue;
         }
         // assume only lines are routable
-        rc = sscanf(buf, "%d, 0x%04X - 0x%04X = %[^\t , ] , %[^\n]",
-                    &group, &minid, &maxid, ntype, descr);
+        rc = sscanf(buf, "%d, 0x%04X - 0x%04X = %[^\t , ] , %[^\n]", &group, &minid, &maxid, ntype, descr);
         if (rc != 5) {
             maxid = 0;
-            rc = sscanf(buf, "%d,0x%04X = %[^\t, ], %[^\n]",
-                        &group, &minid, ntype, descr);
+            rc = sscanf(buf, "%d,0x%04X = %[^\t, ], %[^\n]", &group, &minid, ntype, descr);
             if (rc != 4) {
-                dlog(1, "Invalid line rc=%d:[%s]\n",rc, buf);
-                dlog(1, "minid=%04X ntype=[%s] des=[%s]\n",
-                     minid, ntype, descr);
+                dlog(1, "Invalid line rc=%d:[%s]\n", rc, buf);
+                dlog(1, "minid=%04X ntype=[%s] des=[%s]\n", minid, ntype, descr);
                 continue;
             }
         }
@@ -171,9 +167,7 @@ enum item_type g2n_get_type(struct gar2nav_conv *c, unsigned int type, unsigned 
     }
 
     while (def) {
-        if (def->group == group &&
-                ((!def->maxid && def->id == id) ||
-                 (def->id <= id && id <= def->maxid)))
+        if (def->group == group && ((!def->maxid && def->id == id) || (def->id <= id && id <= def->maxid)))
             return def->ntype;
         def = def->next;
     }
@@ -194,8 +188,7 @@ char *g2n_get_descr(struct gar2nav_conv *c, int type, unsigned short id) {
         return NULL;
     }
     while (def) {
-        if ((!def->maxid && def->id == id) ||
-                (def->id <= id && id <= def->maxid))
+        if ((!def->maxid && def->id == id) || (def->id <= id && id <= def->maxid))
             return def->descr;
         def = def->next;
     }

@@ -14,15 +14,12 @@
    2008-07-06 aacircle
 */
 
-
-#include <math.h>
-#include <glib.h>
-
 #include "raster.h"
+#include <glib.h>
+#include <math.h>
 
 #undef DEBUG
 #undef PARANOID
-
 
 /* raster_rect */
 
@@ -31,11 +28,11 @@ static inline void raster_rect_inline(SDL_Surface *dst, int16_t x1, int16_t y1, 
     SDL_Rect rect;
 
 #if 1
-    if((w <= 0) || (h <= 0)) {
+    if ((w <= 0) || (h <= 0)) {
         return;
     }
 
-#if 0
+#    if 0
     if(x1 < 0) {
         if((x1 + w) < 0) {
             return;
@@ -59,7 +56,7 @@ static inline void raster_rect_inline(SDL_Surface *dst, int16_t x1, int16_t y1, 
     if(y1 + h >= dst->h) {
         h = dst->h - y1;
     }
-#endif
+#    endif
 
     rect.x = x1;
     rect.y = y1;
@@ -94,45 +91,45 @@ static inline void raster_rect_inline(SDL_Surface *dst, int16_t x1, int16_t y1, 
      * check visibility
      */
     left = dst->clip_rect.x;
-    if (x2<left) {
-        return(0);
+    if (x2 < left) {
+        return (0);
     }
     right = dst->clip_rect.x + dst->clip_rect.w - 1;
-    if (x1>right) {
-        return(0);
+    if (x1 > right) {
+        return (0);
     }
     top = dst->clip_rect.y;
-    if (y2<top) {
-        return(0);
+    if (y2 < top) {
+        return (0);
     }
     bottom = dst->clip_rect.y + dst->clip_rect.h - 1;
-    if (y1>bottom) {
-        return(0);
+    if (y1 > bottom) {
+        return (0);
     }
 
     /* Clip all points */
-    if (x1<left) {
-        x1=left;
-    } else if (x1>right) {
-        x1=right;
+    if (x1 < left) {
+        x1 = left;
+    } else if (x1 > right) {
+        x1 = right;
     }
-    if (x2<left) {
-        x2=left;
-    } else if (x2>right) {
-        x2=right;
+    if (x2 < left) {
+        x2 = left;
+    } else if (x2 > right) {
+        x2 = right;
     }
-    if (y1<top) {
-        y1=top;
-    } else if (y1>bottom) {
-        y1=bottom;
+    if (y1 < top) {
+        y1 = top;
+    } else if (y1 > bottom) {
+        y1 = bottom;
     }
-    if (y2<top) {
-        y2=top;
-    } else if (y2>bottom) {
-        y2=bottom;
+    if (y2 < top) {
+        y2 = top;
+    } else if (y2 > bottom) {
+        y2 = bottom;
     }
 
-#if 0
+#    if 0
     /*
      * Test for special cases of straight line or single point
      */
@@ -146,7 +143,7 @@ static inline void raster_rect_inline(SDL_Surface *dst, int16_t x1, int16_t y1, 
     if (y1 == y2) {
         return (hlineColor(dst, x1, x2, y1, color));
     }
-#endif
+#    endif
 
     /*
      * Calculate width&height
@@ -158,7 +155,7 @@ static inline void raster_rect_inline(SDL_Surface *dst, int16_t x1, int16_t y1, 
      * No alpha-blending required
      */
 
-#if 0
+#    if 0
     /*
      * Setup color
      */
@@ -168,7 +165,7 @@ static inline void raster_rect_inline(SDL_Surface *dst, int16_t x1, int16_t y1, 
     } else {
         color = SDL_MapRGBA(dst->format, colorptr[3], colorptr[2], colorptr[1], colorptr[0]);
     }
-#endif
+#    endif
 
     /*
      * Lock surface
@@ -182,7 +179,7 @@ static inline void raster_rect_inline(SDL_Surface *dst, int16_t x1, int16_t y1, 
     dy = h;
     pixx = dst->format->BytesPerPixel;
     pixy = dst->pitch;
-    pixel = ((Uint8 *) dst->pixels) + pixx * (int) x1 + pixy * (int) y1;
+    pixel = ((Uint8 *)dst->pixels) + pixx * (int)x1 + pixy * (int)y1;
     pixellast = pixel + pixx * dx + pixy * dy;
     dx++;
 
@@ -192,14 +189,14 @@ static inline void raster_rect_inline(SDL_Surface *dst, int16_t x1, int16_t y1, 
     switch (dst->format->BytesPerPixel) {
     case 1:
         for (; pixel <= pixellast; pixel += pixy) {
-            memset(pixel, (Uint8) color, dx);
+            memset(pixel, (Uint8)color, dx);
         }
         break;
     case 2:
         pixy -= (pixx * dx);
         for (; pixel <= pixellast; pixel += pixy) {
             for (x = 0; x < dx; x++) {
-                *(Uint16*) pixel = color;
+                *(Uint16 *)pixel = color;
                 pixel += pixx;
             }
         }
@@ -221,11 +218,11 @@ static inline void raster_rect_inline(SDL_Surface *dst, int16_t x1, int16_t y1, 
             }
         }
         break;
-    default:		/* case 4 */
+    default: /* case 4 */
         pixy -= (pixx * dx);
         for (; pixel <= pixellast; pixel += pixy) {
             for (x = 0; x < dx; x++) {
-                *(Uint32 *) pixel = color;
+                *(Uint32 *)pixel = color;
                 pixel += pixx;
             }
         }
@@ -246,46 +243,39 @@ void raster_rect(SDL_Surface *s, int16_t x, int16_t y, int16_t w, int16_t h, uin
 
 #define raster_rect_inline raster_rect
 
-
 /* raster :: pixel */
 
 #define MODIFIED_ALPHA_PIXEL_ROUTINE
 
-
 #define clip_xmin(surface) surface->clip_rect.x
-#define clip_xmax(surface) surface->clip_rect.x+surface->clip_rect.w-1
+#define clip_xmax(surface) surface->clip_rect.x + surface->clip_rect.w - 1
 #define clip_ymin(surface) surface->clip_rect.y
-#define clip_ymax(surface) surface->clip_rect.y+surface->clip_rect.h-1
-
+#define clip_ymax(surface) surface->clip_rect.y + surface->clip_rect.h - 1
 
 static void raster_PutPixel(SDL_Surface *surface, Sint16 x, Sint16 y, Uint32 color) {
-    if(x>=clip_xmin(surface) && x<=clip_xmax(surface) && y>=clip_ymin(surface) && y<=clip_ymax(surface)) {
+    if (x >= clip_xmin(surface) && x <= clip_xmax(surface) && y >= clip_ymin(surface) && y <= clip_ymax(surface)) {
         switch (surface->format->BytesPerPixel) {
         case 1: { /* Assuming 8-bpp */
-            *((Uint8 *)surface->pixels + y*surface->pitch + x) = color;
-        }
-        break;
+            *((Uint8 *)surface->pixels + y * surface->pitch + x) = color;
+        } break;
 
         case 2: { /* Probably 15-bpp or 16-bpp */
-            *((Uint16 *)surface->pixels + y*surface->pitch/2 + x) = color;
-        }
-        break;
+            *((Uint16 *)surface->pixels + y * surface->pitch / 2 + x) = color;
+        } break;
 
         case 3: { /* Slow 24-bpp mode, usually not used */
-            Uint8 *pix = (Uint8 *)surface->pixels + y * surface->pitch + x*3;
+            Uint8 *pix = (Uint8 *)surface->pixels + y * surface->pitch + x * 3;
 
             /* Gack - slow, but endian correct */
-            *(pix+surface->format->Rshift/8) = color>>surface->format->Rshift;
-            *(pix+surface->format->Gshift/8) = color>>surface->format->Gshift;
-            *(pix+surface->format->Bshift/8) = color>>surface->format->Bshift;
-            *(pix+surface->format->Ashift/8) = color>>surface->format->Ashift;
-        }
-        break;
+            *(pix + surface->format->Rshift / 8) = color >> surface->format->Rshift;
+            *(pix + surface->format->Gshift / 8) = color >> surface->format->Gshift;
+            *(pix + surface->format->Bshift / 8) = color >> surface->format->Bshift;
+            *(pix + surface->format->Ashift / 8) = color >> surface->format->Ashift;
+        } break;
 
         case 4: { /* Probably 32-bpp */
-            *((Uint32 *)surface->pixels + y*surface->pitch/4 + x) = color;
-        }
-        break;
+            *((Uint32 *)surface->pixels + y * surface->pitch / 4 + x) = color;
+        } break;
         }
     }
 }
@@ -294,21 +284,20 @@ static void raster_PutPixel(SDL_Surface *surface, Sint16 x, Sint16 y, Uint32 col
 
 /* New, faster routine - default blending pixel */
 
-static void raster_PutPixelAlpha(SDL_Surface * surface, Sint16 x, Sint16 y, Uint32 color, Uint8 alpha) {
+static void raster_PutPixelAlpha(SDL_Surface *surface, Sint16 x, Sint16 y, Uint32 color, Uint8 alpha) {
     /* sdl-gfx */
-    Uint32 Rmask = surface->format->Rmask, Gmask =
-                       surface->format->Gmask, Bmask = surface->format->Bmask, Amask = surface->format->Amask;
+    Uint32 Rmask = surface->format->Rmask, Gmask = surface->format->Gmask, Bmask = surface->format->Bmask,
+           Amask = surface->format->Amask;
     Uint32 R = 0, G = 0, B = 0, A = 0;
 
-    if (x >= clip_xmin(surface) && x <= clip_xmax(surface)
-            && y >= clip_ymin(surface) && y <= clip_ymax(surface)) {
+    if (x >= clip_xmin(surface) && x <= clip_xmax(surface) && y >= clip_ymin(surface) && y <= clip_ymax(surface)) {
 
         switch (surface->format->BytesPerPixel) {
-        case 1: {		/* Assuming 8-bpp */
+        case 1: { /* Assuming 8-bpp */
             if (alpha == 255) {
-                *((Uint8 *) surface->pixels + y * surface->pitch + x) = color;
+                *((Uint8 *)surface->pixels + y * surface->pitch + x) = color;
             } else {
-                Uint8 *pixel = (Uint8 *) surface->pixels + y * surface->pitch + x;
+                Uint8 *pixel = (Uint8 *)surface->pixels + y * surface->pitch + x;
 
                 Uint8 dR = surface->format->palette->colors[*pixel].r;
                 Uint8 dG = surface->format->palette->colors[*pixel].g;
@@ -323,14 +312,13 @@ static void raster_PutPixelAlpha(SDL_Surface * surface, Sint16 x, Sint16 y, Uint
 
                 *pixel = SDL_MapRGB(surface->format, dR, dG, dB);
             }
-        }
-        break;
+        } break;
 
-        case 2: {		/* Probably 15-bpp or 16-bpp */
+        case 2: { /* Probably 15-bpp or 16-bpp */
             if (alpha == 255) {
-                *((Uint16 *) surface->pixels + y * surface->pitch / 2 + x) = color;
+                *((Uint16 *)surface->pixels + y * surface->pitch / 2 + x) = color;
             } else {
-                Uint16 *pixel = (Uint16 *) surface->pixels + y * surface->pitch / 2 + x;
+                Uint16 *pixel = (Uint16 *)surface->pixels + y * surface->pitch / 2 + x;
                 Uint32 dc = *pixel;
 
                 R = ((dc & Rmask) + (((color & Rmask) - (dc & Rmask)) * alpha >> 8)) & Rmask;
@@ -341,16 +329,14 @@ static void raster_PutPixelAlpha(SDL_Surface * surface, Sint16 x, Sint16 y, Uint
 
                 *pixel = R | G | B | A;
             }
-        }
-        break;
+        } break;
 
-        case 3: {		/* Slow 24-bpp mode, usually not used */
-            Uint8 *pix = (Uint8 *) surface->pixels + y * surface->pitch + x * 3;
+        case 3: { /* Slow 24-bpp mode, usually not used */
+            Uint8 *pix = (Uint8 *)surface->pixels + y * surface->pitch + x * 3;
             Uint8 rshift8 = surface->format->Rshift / 8;
             Uint8 gshift8 = surface->format->Gshift / 8;
             Uint8 bshift8 = surface->format->Bshift / 8;
             Uint8 ashift8 = surface->format->Ashift / 8;
-
 
             if (alpha == 255) {
                 *(pix + rshift8) = color >> surface->format->Rshift;
@@ -361,7 +347,7 @@ static void raster_PutPixelAlpha(SDL_Surface * surface, Sint16 x, Sint16 y, Uint
                 Uint8 dR, dG, dB, dA = 0;
                 Uint8 sR, sG, sB, sA = 0;
 
-                pix = (Uint8 *) surface->pixels + y * surface->pitch + x * 3;
+                pix = (Uint8 *)surface->pixels + y * surface->pitch + x * 3;
 
                 dR = *((pix) + rshift8);
                 dG = *((pix) + gshift8);
@@ -383,17 +369,16 @@ static void raster_PutPixelAlpha(SDL_Surface * surface, Sint16 x, Sint16 y, Uint
                 *((pix) + bshift8) = dB;
                 *((pix) + ashift8) = dA;
             }
-        }
-        break;
+        } break;
 
 #ifdef ORIGINAL_ALPHA_PIXEL_ROUTINE
 
-        case 4: {		/* Probably :-) 32-bpp */
+        case 4: { /* Probably :-) 32-bpp */
             if (alpha == 255) {
-                *((Uint32 *) surface->pixels + y * surface->pitch / 4 + x) = color;
+                *((Uint32 *)surface->pixels + y * surface->pitch / 4 + x) = color;
             } else {
                 Uint32 Rshift, Gshift, Bshift, Ashift;
-                Uint32 *pixel = (Uint32 *) surface->pixels + y * surface->pitch / 4 + x;
+                Uint32 *pixel = (Uint32 *)surface->pixels + y * surface->pitch / 4 + x;
                 Uint32 dc = *pixel;
 
                 Rshift = surface->format->Rshift;
@@ -405,22 +390,22 @@ static void raster_PutPixelAlpha(SDL_Surface * surface, Sint16 x, Sint16 y, Uint
                 G = ((dc & Gmask) + (((((color & Gmask) - (dc & Gmask)) >> Gshift) * alpha >> 8) << Gshift)) & Gmask;
                 B = ((dc & Bmask) + (((((color & Bmask) - (dc & Bmask)) >> Bshift) * alpha >> 8) << Bshift)) & Bmask;
                 if (Amask)
-                    A = ((dc & Amask) + (((((color & Amask) - (dc & Amask)) >> Ashift) * alpha >> 8) << Ashift)) & Amask;
+                    A = ((dc & Amask) + (((((color & Amask) - (dc & Amask)) >> Ashift) * alpha >> 8) << Ashift))
+                        & Amask;
 
                 *pixel = R | G | B | A;
             }
-        }
-        break;
+        } break;
 #endif
 
 #ifdef MODIFIED_ALPHA_PIXEL_ROUTINE
 
-        case 4: {		/* Probably :-) 32-bpp */
+        case 4: { /* Probably :-) 32-bpp */
             if (alpha == 255) {
-                *((Uint32 *) surface->pixels + y * surface->pitch / 4 + x) = color;
+                *((Uint32 *)surface->pixels + y * surface->pitch / 4 + x) = color;
             } else {
                 Uint32 Rshift, Gshift, Bshift, Ashift;
-                Uint32 *pixel = (Uint32 *) surface->pixels + y * surface->pitch / 4 + x;
+                Uint32 *pixel = (Uint32 *)surface->pixels + y * surface->pitch / 4 + x;
                 Uint32 dc = *pixel;
                 Uint32 dR = (color & Rmask), dG = (color & Gmask), dB = (color & Bmask);
                 Uint32 surfaceAlpha, preMultR, preMultG, preMultB;
@@ -431,32 +416,29 @@ static void raster_PutPixelAlpha(SDL_Surface * surface, Sint16 x, Sint16 y, Uint
                 Bshift = surface->format->Bshift;
                 Ashift = surface->format->Ashift;
 
-                preMultR = (alpha * (dR>>Rshift));
-                preMultG = (alpha * (dG>>Gshift));
-                preMultB = (alpha * (dB>>Bshift));
+                preMultR = (alpha * (dR >> Rshift));
+                preMultG = (alpha * (dG >> Gshift));
+                preMultB = (alpha * (dB >> Bshift));
 
                 surfaceAlpha = ((dc & Amask) >> Ashift);
                 aTmp = (255 - alpha);
-                if ((A = 255 - ((aTmp * (255 - surfaceAlpha)) >> 8 ))) {
+                if ((A = 255 - ((aTmp * (255 - surfaceAlpha)) >> 8))) {
                     aTmp *= surfaceAlpha;
                     R = (preMultR + ((aTmp * ((dc & Rmask) >> Rshift)) >> 8)) / A << Rshift & Rmask;
                     G = (preMultG + ((aTmp * ((dc & Gmask) >> Gshift)) >> 8)) / A << Gshift & Gmask;
                     B = (preMultB + ((aTmp * ((dc & Bmask) >> Bshift)) >> 8)) / A << Bshift & Bmask;
                 }
                 *pixel = R | G | B | (A << Ashift & Amask);
-
             }
-        }
-        break;
+        } break;
 #endif
         }
     }
 }
 
-
 /* FIXME: eliminate these 2 functions */
 
-static int raster_pixelColorNolock(SDL_Surface * dst, Sint16 x, Sint16 y, Uint32 color) {
+static int raster_pixelColorNolock(SDL_Surface *dst, Sint16 x, Sint16 y, Uint32 color) {
     int result = 0;
 
 #if 0
@@ -477,10 +459,9 @@ static int raster_pixelColorNolock(SDL_Surface * dst, Sint16 x, Sint16 y, Uint32
     return (result);
 }
 
-
 /* Pixel - using alpha weight on color for AA-drawing - no locking */
 
-static int raster_pixelColorWeightNolock(SDL_Surface * dst, Sint16 x, Sint16 y, Uint32 color, Uint32 weight) {
+static int raster_pixelColorWeightNolock(SDL_Surface *dst, Sint16 x, Sint16 y, Uint32 color, Uint32 weight) {
 #if 0
     Uint32 a;
 
@@ -500,26 +481,23 @@ static int raster_pixelColorWeightNolock(SDL_Surface * dst, Sint16 x, Sint16 y, 
     return 0;
 }
 
-
 /* raster :: line */
 
-
-
-static inline void raster_hline(SDL_Surface * dst, Sint16 x1, Sint16 x2, Sint16 y, Uint32 color) {
+static inline void raster_hline(SDL_Surface *dst, Sint16 x1, Sint16 x2, Sint16 y, Uint32 color) {
 #if 1
     SDL_Rect l;
 
     /* sge */
-    if(x1>x2) {
-        Sint16 tmp=x1;
-        x1=x2;
-        x2=tmp;
+    if (x1 > x2) {
+        Sint16 tmp = x1;
+        x1 = x2;
+        x2 = tmp;
     }
 
-    l.x=x1;
-    l.y=y;
-    l.w=x2-x1+1;
-    l.h=1;
+    l.x = x1;
+    l.y = y;
+    l.w = x2 - x1 + 1;
+    l.h = 1;
 
     SDL_FillRect(dst, &l, color);
 
@@ -532,7 +510,7 @@ static inline void raster_hline(SDL_Surface * dst, Sint16 x1, Sint16 x2, Sint16 
     Sint16 w;
     Sint16 xtmp;
     int result = -1;
-#if 0
+#    if 0
     int i;
     union {
         double d;
@@ -542,13 +520,13 @@ static inline void raster_hline(SDL_Surface * dst, Sint16 x1, Sint16 x2, Sint16 
     for(i = 0; i < 4; i++) {
         doub.col[i] = color;
     }
-#endif
+#    endif
 
     /*
      * Check visibility of clipping rectangle
      */
-    if ((dst->clip_rect.w==0) || (dst->clip_rect.h==0)) {
-        return(0);
+    if ((dst->clip_rect.w == 0) || (dst->clip_rect.h == 0)) {
+        return (0);
     }
 
     /*
@@ -565,16 +543,16 @@ static inline void raster_hline(SDL_Surface * dst, Sint16 x1, Sint16 x2, Sint16 
      * check visibility of hline
      */
     left = dst->clip_rect.x;
-    if (x2<left) {
-        return(0);
+    if (x2 < left) {
+        return (0);
     }
     right = dst->clip_rect.x + dst->clip_rect.w - 1;
-    if (x1>right) {
-        return(0);
+    if (x1 > right) {
+        return (0);
     }
     top = dst->clip_rect.y;
     bottom = dst->clip_rect.y + dst->clip_rect.h - 1;
-    if ((y<top) || (y>bottom)) {
+    if ((y < top) || (y > bottom)) {
         return (0);
     }
 
@@ -593,9 +571,9 @@ static inline void raster_hline(SDL_Surface * dst, Sint16 x1, Sint16 x2, Sint16 
      */
     w = x2 - x1;
 
-#if 0
+#    if 0
     printf("raster_hline %d %d %d %d\n", x1, x2, y, w);
-#endif
+#    endif
 
     /*
      * Lock surface
@@ -610,7 +588,7 @@ static inline void raster_hline(SDL_Surface * dst, Sint16 x1, Sint16 x2, Sint16 
     dx = w;
     pixx = dst->format->BytesPerPixel;
     pixy = dst->pitch;
-    pixel = ((Uint8 *) dst->pixels) + pixx * (int) x1 + pixy * (int) y;
+    pixel = ((Uint8 *)dst->pixels) + pixx * (int)x1 + pixy * (int)y;
 
     /*
      * Draw
@@ -621,13 +599,13 @@ static inline void raster_hline(SDL_Surface * dst, Sint16 x1, Sint16 x2, Sint16 
         break;
     case 2:
         pixellast = pixel + dx + dx;
-#if 0
+#    if 0
         for (; (pixel+3) <= pixellast; pixel += 4*pixx) {
             *(double *)pixel = doub.d;
         }
-#endif
+#    endif
         for (; pixel <= pixellast; pixel += pixx) {
-            *(Uint16 *) pixel = color;
+            *(Uint16 *)pixel = color;
         }
         break;
     case 3:
@@ -644,11 +622,11 @@ static inline void raster_hline(SDL_Surface * dst, Sint16 x1, Sint16 x2, Sint16 
             }
         }
         break;
-    default:		/* case 4 */
+    default: /* case 4 */
         dx = dx + dx;
         pixellast = pixel + dx + dx;
         for (; pixel <= pixellast; pixel += pixx) {
-            *(Uint32 *) pixel = color;
+            *(Uint32 *)pixel = color;
         }
         break;
     }
@@ -672,30 +650,28 @@ static inline void raster_hline(SDL_Surface * dst, Sint16 x1, Sint16 x2, Sint16 
 static void raster_vline(SDL_Surface *dst, Sint16 x, Sint16 y1, Sint16 y2, Uint32 color) {
     SDL_Rect l;
 
-    if(y1>y2) {
-        Sint16 tmp=y1;
-        y1=y2;
-        y2=tmp;
+    if (y1 > y2) {
+        Sint16 tmp = y1;
+        y1 = y2;
+        y2 = tmp;
     }
 
-    l.x=x;
-    l.y=y1;
-    l.w=1;
-    l.h=y2-y1+1;
+    l.x = x;
+    l.y = y1;
+    l.w = 1;
+    l.h = y2 - y1 + 1;
 
     SDL_FillRect(dst, &l, color);
 }
 
-
-
 /* raster_line */
-#define CLIP_LEFT_EDGE   0x1
-#define CLIP_RIGHT_EDGE  0x2
+#define CLIP_LEFT_EDGE 0x1
+#define CLIP_RIGHT_EDGE 0x2
 #define CLIP_BOTTOM_EDGE 0x4
-#define CLIP_TOP_EDGE    0x8
-#define CLIP_INSIDE(a)   (!a)
-#define CLIP_REJECT(a,b) (a&b)
-#define CLIP_ACCEPT(a,b) (!(a|b))
+#define CLIP_TOP_EDGE 0x8
+#define CLIP_INSIDE(a) (!a)
+#define CLIP_REJECT(a, b) (a & b)
+#define CLIP_ACCEPT(a, b) (!(a | b))
 
 static int clipEncode(Sint16 x, Sint16 y, Sint16 left, Sint16 top, Sint16 right, Sint16 bottom) {
     int code = 0;
@@ -713,7 +689,7 @@ static int clipEncode(Sint16 x, Sint16 y, Sint16 left, Sint16 top, Sint16 right,
     return code;
 }
 
-static int clipLine(SDL_Surface * dst, Sint16 * x1, Sint16 * y1, Sint16 * x2, Sint16 * y2) {
+static int clipLine(SDL_Surface *dst, Sint16 *x1, Sint16 *y1, Sint16 *x2, Sint16 *y2) {
     Sint16 left, right, top, bottom;
     int code1, code2;
     int draw = 0;
@@ -749,24 +725,24 @@ static int clipLine(SDL_Surface * dst, Sint16 * x1, Sint16 * y1, Sint16 * x2, Si
                 code1 = swaptmp;
             }
             if (*x2 != *x1) {
-                m = (*y2 - *y1) / (float) (*x2 - *x1);
+                m = (*y2 - *y1) / (float)(*x2 - *x1);
             } else {
                 m = 1.0f;
             }
             if (code1 & CLIP_LEFT_EDGE) {
-                *y1 += (Sint16) ((left - *x1) * m);
+                *y1 += (Sint16)((left - *x1) * m);
                 *x1 = left;
             } else if (code1 & CLIP_RIGHT_EDGE) {
-                *y1 += (Sint16) ((right - *x1) * m);
+                *y1 += (Sint16)((right - *x1) * m);
                 *x1 = right;
             } else if (code1 & CLIP_BOTTOM_EDGE) {
                 if (*x2 != *x1) {
-                    *x1 += (Sint16) ((bottom - *y1) / m);
+                    *x1 += (Sint16)((bottom - *y1) / m);
                 }
                 *y1 = bottom;
             } else if (code1 & CLIP_TOP_EDGE) {
                 if (*x2 != *x1) {
-                    *x1 += (Sint16) ((top - *y1) / m);
+                    *x1 += (Sint16)((top - *y1) / m);
                 }
                 *y1 = top;
             }
@@ -775,7 +751,6 @@ static int clipLine(SDL_Surface * dst, Sint16 * x1, Sint16 * y1, Sint16 * x2, Si
 
     return draw;
 }
-
 
 void raster_line(SDL_Surface *dst, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t color) {
     /* sdl-gfx */
@@ -818,7 +793,6 @@ void raster_line(SDL_Surface *dst, int16_t x1, int16_t y1, int16_t x2, int16_t y
         }
     }
 
-
     /*
      * Variable setup
      */
@@ -857,7 +831,7 @@ void raster_line(SDL_Surface *dst, int16_t x1, int16_t y1, int16_t x2, int16_t y
     dy = sy * dy + 1;
     pixx = dst->format->BytesPerPixel;
     pixy = dst->pitch;
-    pixel = ((Uint8 *) dst->pixels) + pixx * (int) x1 + pixy * (int) y1;
+    pixel = ((Uint8 *)dst->pixels) + pixx * (int)x1 + pixy * (int)y1;
     pixx *= sx;
     pixy *= sy;
     if (dx < dy) {
@@ -876,7 +850,7 @@ void raster_line(SDL_Surface *dst, int16_t x1, int16_t y1, int16_t x2, int16_t y
     y = 0;
     switch (dst->format->BytesPerPixel) {
     case 1:
-        for (; x < dx; x++, pixel=(Uint8 *)pixel+pixx) {
+        for (; x < dx; x++, pixel = (Uint8 *)pixel + pixx) {
             *(Uint8 *)pixel = color;
             y += dy;
             if (y >= dx) {
@@ -886,8 +860,8 @@ void raster_line(SDL_Surface *dst, int16_t x1, int16_t y1, int16_t x2, int16_t y
         }
         break;
     case 2:
-        for (; x < dx; x++, pixel=(Uint8 *)pixel+pixx) {
-            *(Uint16 *) pixel = color;
+        for (; x < dx; x++, pixel = (Uint8 *)pixel + pixx) {
+            *(Uint16 *)pixel = color;
             y += dy;
             if (y >= dx) {
                 y -= dx;
@@ -896,15 +870,15 @@ void raster_line(SDL_Surface *dst, int16_t x1, int16_t y1, int16_t x2, int16_t y
         }
         break;
     case 3:
-        for (; x < dx; x++, pixel=(Uint8 *)pixel+pixx) {
+        for (; x < dx; x++, pixel = (Uint8 *)pixel + pixx) {
             if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
                 *(Uint8 *)pixel = (color >> 16) & 0xff;
-                *((Uint8 *)pixel+1) = (color >> 8) & 0xff;
-                *((Uint8 *)pixel+2) = color & 0xff;
+                *((Uint8 *)pixel + 1) = (color >> 8) & 0xff;
+                *((Uint8 *)pixel + 2) = color & 0xff;
             } else {
                 *(Uint8 *)pixel = color & 0xff;
-                *((Uint8 *)pixel+1) = (color >> 8) & 0xff;
-                *((Uint8 *)pixel+2) = (color >> 16) & 0xff;
+                *((Uint8 *)pixel + 1) = (color >> 8) & 0xff;
+                *((Uint8 *)pixel + 2) = (color >> 16) & 0xff;
             }
             y += dy;
             if (y >= dx) {
@@ -913,9 +887,9 @@ void raster_line(SDL_Surface *dst, int16_t x1, int16_t y1, int16_t x2, int16_t y
             }
         }
         break;
-    default:		/* case 4 */
-        for (; x < dx; x++, pixel=(Uint8 *)pixel+pixx) {
-            *(Uint32 *) pixel = color;
+    default: /* case 4 */
+        for (; x < dx; x++, pixel = (Uint8 *)pixel + pixx) {
+            *(Uint32 *)pixel = color;
             y += dy;
             if (y >= dx) {
                 y -= dx;
@@ -933,11 +907,10 @@ void raster_line(SDL_Surface *dst, int16_t x1, int16_t y1, int16_t x2, int16_t y
     return;
 }
 
-
 #define AAlevels 256
 #define AAbits 8
 
-static void raster_aalineColorInt(SDL_Surface * dst, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 color,
+static void raster_aalineColorInt(SDL_Surface *dst, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 color,
                                   int draw_endpoint) {
     Sint32 xx0, yy0, xx1, yy1;
     Uint32 intshift, erracc, erradj;
@@ -947,7 +920,7 @@ static void raster_aalineColorInt(SDL_Surface * dst, Sint16 x1, Sint16 y1, Sint1
     /*
      * Check visibility of clipping rectangle
      */
-    if ((dst->clip_rect.w==0) || (dst->clip_rect.h==0)) {
+    if ((dst->clip_rect.w == 0) || (dst->clip_rect.h == 0)) {
         return;
     }
 
@@ -1068,7 +1041,7 @@ static void raster_aalineColorInt(SDL_Surface * dst, Sint16 x1, Sint16 y1, Sint1
                 xx0 = x0pxdir;
                 x0pxdir += xdir;
             }
-            yy0++;		/* y-major so always advance Y */
+            yy0++; /* y-major so always advance Y */
 
             /*
              * the AAbits most significant bits of erracc give us the intensity
@@ -1076,8 +1049,8 @@ static void raster_aalineColorInt(SDL_Surface * dst, Sint16 x1, Sint16 y1, Sint1
              * the paired pixel.
              */
             wgt = (erracc >> intshift) & 255;
-            raster_pixelColorWeightNolock (dst, xx0, yy0, color, 255 - wgt);
-            raster_pixelColorWeightNolock (dst, x0pxdir, yy0, color, wgt);
+            raster_pixelColorWeightNolock(dst, xx0, yy0, color, 255 - wgt);
+            raster_pixelColorWeightNolock(dst, x0pxdir, yy0, color, wgt);
         }
 
     } else {
@@ -1107,15 +1080,15 @@ static void raster_aalineColorInt(SDL_Surface * dst, Sint16 x1, Sint16 y1, Sint1
                 yy0 = y0p1;
                 y0p1++;
             }
-            xx0 += xdir;	/* x-major so always advance X */
+            xx0 += xdir; /* x-major so always advance X */
             /*
              * the AAbits most significant bits of erracc give us the intensity
              * weighting for this pixel, and the complement of the weighting for
              * the paired pixel.
              */
             wgt = (erracc >> intshift) & 255;
-            raster_pixelColorWeightNolock (dst, xx0, yy0, color, 255 - wgt);
-            raster_pixelColorWeightNolock (dst, xx0, y0p1, color, wgt);
+            raster_pixelColorWeightNolock(dst, xx0, yy0, color, 255 - wgt);
+            raster_pixelColorWeightNolock(dst, xx0, y0p1, color, wgt);
         }
     }
 
@@ -1127,7 +1100,7 @@ static void raster_aalineColorInt(SDL_Surface * dst, Sint16 x1, Sint16 y1, Sint1
          * Draw final pixel, always exactly intersected by the line and doesn't
          * need to be weighted.
          */
-        raster_pixelColorNolock (dst, x2, y2, color);
+        raster_pixelColorNolock(dst, x2, y2, color);
     }
 
     /* Unlock surface */
@@ -1140,8 +1113,6 @@ void raster_aaline(SDL_Surface *s, int16_t x1, int16_t y1, int16_t x2, int16_t y
     raster_aalineColorInt(s, x1, y1, x2, y2, col, 1);
 }
 
-
-
 /* raster :: circle */
 
 void raster_circle(SDL_Surface *dst, int16_t x, int16_t y, int16_t r, uint32_t color) {
@@ -1150,8 +1121,8 @@ void raster_circle(SDL_Surface *dst, int16_t x, int16_t y, int16_t r, uint32_t c
     Sint16 x1, y1, x2, y2;
     Sint16 cx = 0;
     Sint16 cy = r;
-    Sint16 ocx = (Sint16) 0xffff;
-    Sint16 ocy = (Sint16) 0xffff;
+    Sint16 ocx = (Sint16)0xffff;
+    Sint16 ocy = (Sint16)0xffff;
     Sint16 df = 1 - r;
     Sint16 d_e = 3;
     Sint16 d_se = -2 * r + 5;
@@ -1161,7 +1132,7 @@ void raster_circle(SDL_Surface *dst, int16_t x, int16_t y, int16_t r, uint32_t c
     /*
      * Check visibility of clipping rectangle
      */
-    if ((dst->clip_rect.w==0) || (dst->clip_rect.h==0)) {
+    if ((dst->clip_rect.w == 0) || (dst->clip_rect.h == 0)) {
         return;
     }
 
@@ -1185,22 +1156,22 @@ void raster_circle(SDL_Surface *dst, int16_t x, int16_t y, int16_t r, uint32_t c
      */
     x2 = x + r;
     left = dst->clip_rect.x;
-    if (x2<left) {
+    if (x2 < left) {
         return;
     }
     x1 = x - r;
     right = dst->clip_rect.x + dst->clip_rect.w - 1;
-    if (x1>right) {
+    if (x1 > right) {
         return;
     }
     y2 = y + r;
     top = dst->clip_rect.y;
-    if (y2<top) {
+    if (y2 < top) {
         return;
     }
     y1 = y - r;
     bottom = dst->clip_rect.y + dst->clip_rect.h - 1;
-    if (y1>bottom) {
+    if (y1 > bottom) {
         return;
     }
 
@@ -1218,12 +1189,12 @@ void raster_circle(SDL_Surface *dst, int16_t x, int16_t y, int16_t r, uint32_t c
                 ymcy = y - cy;
                 raster_hline(dst, xmcx, xpcx, ypcy, color);
                 raster_hline(dst, xmcx, xpcx, ymcy, color);
-//        raster_rect_inline(dst, xmcx, ypcy, 2*cx, 1, color);
-//        raster_rect_inline(dst, xmcx, ymcy, 2*cx, 1, color);
+                //        raster_rect_inline(dst, xmcx, ypcy, 2*cx, 1, color);
+                //        raster_rect_inline(dst, xmcx, ymcy, 2*cx, 1, color);
 
             } else {
                 raster_hline(dst, xmcx, xpcx, y, color);
-//        raster_rect_inline(dst, xmcx, y, 2*cx, 1, color);
+                //        raster_rect_inline(dst, xmcx, y, 2*cx, 1, color);
             }
             ocy = cy;
         }
@@ -1234,11 +1205,11 @@ void raster_circle(SDL_Surface *dst, int16_t x, int16_t y, int16_t r, uint32_t c
                     ymcx = y - cx;
                     raster_hline(dst, xmcy, xpcy, ymcx, color);
                     raster_hline(dst, xmcy, xpcy, ypcx, color);
-                    //raster_rect_inline(dst, xmcy, ymcx, 2*cy, 1, color);
-                    //raster_rect_inline(dst, xmcy, ypcx, 2*cy, 1, color);
+                    // raster_rect_inline(dst, xmcy, ymcx, 2*cy, 1, color);
+                    // raster_rect_inline(dst, xmcy, ypcx, 2*cy, 1, color);
                 } else {
                     raster_hline(dst, xmcy, xpcy, y, color);
-                    //raster_rect_inline(dst, xmcy, y, 2*cy, 1, color);
+                    // raster_rect_inline(dst, xmcy, y, 2*cy, 1, color);
                 }
             }
             ocx = cx;
@@ -1259,7 +1230,6 @@ void raster_circle(SDL_Surface *dst, int16_t x, int16_t y, int16_t r, uint32_t c
         cx++;
     } while (cx <= cy);
 }
-
 
 /* FIXME: convert to fixed pt */
 static void raster_AAFilledEllipse(SDL_Surface *surface, Sint16 xc, Sint16 yc, Sint16 rx, Sint16 ry, Uint32 color) {
@@ -1289,22 +1259,22 @@ static void raster_AAFilledEllipse(SDL_Surface *surface, Sint16 xc, Sint16 yc, S
     float cp, is, ip, imax = 1.0;
 
     /* Lock surface */
-    if ( SDL_MUSTLOCK(surface) )
-        if ( SDL_LockSurface(surface) < 0 )
+    if (SDL_MUSTLOCK(surface))
+        if (SDL_LockSurface(surface) < 0)
             return;
 
     /* "End points" */
     raster_PutPixel(surface, x, y, color);
-    raster_PutPixel(surface, 2*xc-x, y, color);
+    raster_PutPixel(surface, 2 * xc - x, y, color);
 
-    raster_PutPixel(surface, x, 2*yc-y, color);
-    raster_PutPixel(surface, 2*xc-x, 2*yc-y, color);
+    raster_PutPixel(surface, x, 2 * yc - y, color);
+    raster_PutPixel(surface, 2 * xc - x, 2 * yc - y, color);
 
     /* unlock surface */
-    if (SDL_MUSTLOCK(surface) )
+    if (SDL_MUSTLOCK(surface))
         SDL_UnlockSurface(surface);
 
-    raster_vline(surface, x, y+1, 2*yc-y-1, color);
+    raster_vline(surface, x, y + 1, 2 * yc - y - 1, color);
 
     int i;
 
@@ -1333,41 +1303,38 @@ static void raster_AAFilledEllipse(SDL_Surface *surface, Sint16 xc, Sint16 yc, S
         t -= dt;
 
         /* Calculate alpha */
-        cp = (float) abs(d) / abs(s);
+        cp = (float)abs(d) / abs(s);
         is = cp * imax;
         ip = imax - is;
 
-
         /* Lock surface */
-        if ( SDL_MUSTLOCK(surface) )
-            if ( SDL_LockSurface(surface) < 0 )
+        if (SDL_MUSTLOCK(surface))
+            if (SDL_LockSurface(surface) < 0)
                 return;
 
         /* Upper half */
-        raster_PutPixelAlpha(surface, x, y, color, (Uint8)(ip*255));
-        raster_PutPixelAlpha(surface, 2*xc-x, y, color, (Uint8)(ip*255));
+        raster_PutPixelAlpha(surface, x, y, color, (Uint8)(ip * 255));
+        raster_PutPixelAlpha(surface, 2 * xc - x, y, color, (Uint8)(ip * 255));
 
-        raster_PutPixelAlpha(surface, x, ys, color, (Uint8)(is*255));
-        raster_PutPixelAlpha(surface, 2*xc-x, ys, color, (Uint8)(is*255));
-
+        raster_PutPixelAlpha(surface, x, ys, color, (Uint8)(is * 255));
+        raster_PutPixelAlpha(surface, 2 * xc - x, ys, color, (Uint8)(is * 255));
 
         /* Lower half */
-        raster_PutPixelAlpha(surface, x, 2*yc-y, color, (Uint8)(ip*255));
-        raster_PutPixelAlpha(surface, 2*xc-x, 2*yc-y, color, (Uint8)(ip*255));
+        raster_PutPixelAlpha(surface, x, 2 * yc - y, color, (Uint8)(ip * 255));
+        raster_PutPixelAlpha(surface, 2 * xc - x, 2 * yc - y, color, (Uint8)(ip * 255));
 
-        raster_PutPixelAlpha(surface, x, 2*yc-ys, color, (Uint8)(is*255));
-        raster_PutPixelAlpha(surface, 2*xc-x, 2*yc-ys, color, (Uint8)(is*255));
+        raster_PutPixelAlpha(surface, x, 2 * yc - ys, color, (Uint8)(is * 255));
+        raster_PutPixelAlpha(surface, 2 * xc - x, 2 * yc - ys, color, (Uint8)(is * 255));
 
         /* unlock surface */
-        if (SDL_MUSTLOCK(surface) )
+        if (SDL_MUSTLOCK(surface))
             SDL_UnlockSurface(surface);
 
-
         /* Fill */
-        raster_vline(surface, x, y+1, 2*yc-y-1, color);
-        raster_vline(surface, 2*xc-x, y+1, 2*yc-y-1, color);
-        raster_vline(surface, x, ys+1, 2*yc-ys-1, color);
-        raster_vline(surface, 2*xc-x, ys+1, 2*yc-ys-1, color);
+        raster_vline(surface, x, y + 1, 2 * yc - y - 1, color);
+        raster_vline(surface, 2 * xc - x, y + 1, 2 * yc - y - 1, color);
+        raster_vline(surface, x, ys + 1, 2 * yc - ys - 1, color);
+        raster_vline(surface, 2 * xc - x, ys + 1, 2 * yc - ys - 1, color);
     }
 
     dyt = abs(y - yc);
@@ -1397,40 +1364,38 @@ static void raster_AAFilledEllipse(SDL_Surface *surface, Sint16 xc, Sint16 yc, S
         s += ds;
 
         /* Calculate alpha */
-        cp = (float) abs(d) / abs(t);
+        cp = (float)abs(d) / abs(t);
         is = cp * imax;
         ip = imax - is;
 
-
         /* Lock surface */
-        if ( SDL_MUSTLOCK(surface) )
-            if ( SDL_LockSurface(surface) < 0 )
+        if (SDL_MUSTLOCK(surface))
+            if (SDL_LockSurface(surface) < 0)
                 return;
 
         /* Upper half */
-        raster_PutPixelAlpha(surface, x, y, color, (Uint8)(ip*255));
-        raster_PutPixelAlpha(surface, 2*xc-x, y, color, (Uint8)(ip*255));
+        raster_PutPixelAlpha(surface, x, y, color, (Uint8)(ip * 255));
+        raster_PutPixelAlpha(surface, 2 * xc - x, y, color, (Uint8)(ip * 255));
 
-        raster_PutPixelAlpha(surface, xs, y, color, (Uint8)(is*255));
-        raster_PutPixelAlpha(surface, 2*xc-xs, y, color, (Uint8)(is*255));
-
+        raster_PutPixelAlpha(surface, xs, y, color, (Uint8)(is * 255));
+        raster_PutPixelAlpha(surface, 2 * xc - xs, y, color, (Uint8)(is * 255));
 
         /* Lower half*/
-        raster_PutPixelAlpha(surface, x, 2*yc-y, color, (Uint8)(ip*255));
-        raster_PutPixelAlpha(surface, 2*xc-x, 2*yc-y, color, (Uint8)(ip*255));
+        raster_PutPixelAlpha(surface, x, 2 * yc - y, color, (Uint8)(ip * 255));
+        raster_PutPixelAlpha(surface, 2 * xc - x, 2 * yc - y, color, (Uint8)(ip * 255));
 
-        raster_PutPixelAlpha(surface, xs, 2*yc-y, color, (Uint8)(is*255));
-        raster_PutPixelAlpha(surface, 2*xc-xs, 2*yc-y, color, (Uint8)(is*255));
+        raster_PutPixelAlpha(surface, xs, 2 * yc - y, color, (Uint8)(is * 255));
+        raster_PutPixelAlpha(surface, 2 * xc - xs, 2 * yc - y, color, (Uint8)(is * 255));
 
         /* unlock surface */
-        if (SDL_MUSTLOCK(surface) )
+        if (SDL_MUSTLOCK(surface))
             SDL_UnlockSurface(surface);
 
         /* Fill */
-        raster_hline(surface, x+1, 2*xc-x-1, y, color);
-        raster_hline(surface, xs+1, 2*xc-xs-1, y, color);
-        raster_hline(surface, x+1, 2*xc-x-1, 2*yc-y, color);
-        raster_hline(surface, xs+1, 2*xc-xs-1, 2*yc-y, color);
+        raster_hline(surface, x + 1, 2 * xc - x - 1, y, color);
+        raster_hline(surface, xs + 1, 2 * xc - xs - 1, y, color);
+        raster_hline(surface, x + 1, 2 * xc - x - 1, 2 * yc - y, color);
+        raster_hline(surface, xs + 1, 2 * xc - xs - 1, 2 * yc - y, color);
     }
 }
 
@@ -1468,14 +1433,14 @@ void raster_aacircle(SDL_Surface *s, int16_t x, int16_t y, int16_t r, uint32_t c
         return;
     }
 
-#if 0
+#    if 0
     /*
      * Special case for r=0 - draw a point
      */
     if (r == 0) {
         return (pixelColor(dst, x, y, color));
     }
-#endif
+#    endif
 
     /*
      * Get circle and clipping boundary and
@@ -1557,7 +1522,7 @@ void raster_aacircle(SDL_Surface *s, int16_t x, int16_t y, int16_t r, uint32_t c
         }
         cx++;
     } while (cx <= cy);
-#if 0
+#    if 0
     /* sge */
     Sint16 cx = 0;
     Sint16 cy = r;
@@ -1566,9 +1531,9 @@ void raster_aacircle(SDL_Surface *s, int16_t x, int16_t y, int16_t r, uint32_t c
     Sint16 d_e = 3;
     Sint16 d_se = -2 * r + 5;
 
-#ifdef DEBUG
+#        ifdef DEBUG
     printf("raster_circle %d %d %d\n", x, y, r);
-#endif
+#        endif
 
     if(r < 0) {
         return;
@@ -1602,23 +1567,19 @@ void raster_aacircle(SDL_Surface *s, int16_t x, int16_t y, int16_t r, uint32_t c
         }
         cx++;
     } while(cx <= cy);
-#endif
+#    endif
 }
 #endif
 
-
-
 /* raster :: poly */
-
 
 /* ---- Filled Polygon */
 
 /* Helper qsort callback for polygon drawing */
 
 static int gfxPrimitivesCompareInt(const void *a, const void *b) {
-    return (*(const int *) a) - (*(const int *) b);
+    return (*(const int *)a) - (*(const int *)b);
 }
-
 
 /* Global vertex array to use if optional parameters are not given in polygon calls. */
 static int *gfxPrimitivesPolyIntsGlobal = NULL;
@@ -1626,8 +1587,8 @@ static int gfxPrimitivesPolyAllocatedGlobal = 0;
 
 /* (Note: The last two parameters are optional; but required for multithreaded operation.) */
 
-static inline int raster_filledPolygonColorMT(SDL_Surface * dst, const Sint16 * vx, const Sint16 * vy, int n,
-        Uint32 color, int **polyInts, int *polyAllocated) {
+static inline int raster_filledPolygonColorMT(SDL_Surface *dst, const Sint16 *vx, const Sint16 *vy, int n, Uint32 color,
+                                              int **polyInts, int *polyAllocated) {
     /* sdl-gfx */
     int result;
     int i;
@@ -1643,8 +1604,8 @@ static inline int raster_filledPolygonColorMT(SDL_Surface * dst, const Sint16 * 
     /*
      * Check visibility of clipping rectangle
      */
-    if ((dst->clip_rect.w==0) || (dst->clip_rect.h==0)) {
-        return(0);
+    if ((dst->clip_rect.w == 0) || (dst->clip_rect.h == 0)) {
+        return (0);
     }
 
     /*
@@ -1657,7 +1618,7 @@ static inline int raster_filledPolygonColorMT(SDL_Surface * dst, const Sint16 * 
     /*
      * Map polygon cache
      */
-    if ((polyInts==NULL) || (polyAllocated==NULL)) {
+    if ((polyInts == NULL) || (polyAllocated == NULL)) {
         /* Use global cache */
         gfxPrimitivesPolyInts = gfxPrimitivesPolyIntsGlobal;
         gfxPrimitivesPolyAllocated = gfxPrimitivesPolyAllocatedGlobal;
@@ -1671,11 +1632,11 @@ static inline int raster_filledPolygonColorMT(SDL_Surface * dst, const Sint16 * 
      * Allocate temp array, only grow array
      */
     if (!gfxPrimitivesPolyAllocated) {
-        gfxPrimitivesPolyInts = (int *) malloc(sizeof(int) * n);
+        gfxPrimitivesPolyInts = (int *)malloc(sizeof(int) * n);
         gfxPrimitivesPolyAllocated = n;
     } else {
         if (gfxPrimitivesPolyAllocated < n) {
-            gfxPrimitivesPolyInts = (int *) realloc(gfxPrimitivesPolyInts, sizeof(int) * n);
+            gfxPrimitivesPolyInts = (int *)realloc(gfxPrimitivesPolyInts, sizeof(int) * n);
             gfxPrimitivesPolyAllocated = n;
         }
     }
@@ -1683,15 +1644,15 @@ static inline int raster_filledPolygonColorMT(SDL_Surface * dst, const Sint16 * 
     /*
      * Check temp array
      */
-    if (gfxPrimitivesPolyInts==NULL) {
+    if (gfxPrimitivesPolyInts == NULL) {
         gfxPrimitivesPolyAllocated = 0;
     }
 
     /*
      * Update cache variables
      */
-    if ((polyInts==NULL) || (polyAllocated==NULL)) {
-        gfxPrimitivesPolyIntsGlobal =  gfxPrimitivesPolyInts;
+    if ((polyInts == NULL) || (polyAllocated == NULL)) {
+        gfxPrimitivesPolyIntsGlobal = gfxPrimitivesPolyInts;
         gfxPrimitivesPolyAllocatedGlobal = gfxPrimitivesPolyAllocated;
     } else {
         *polyInts = gfxPrimitivesPolyInts;
@@ -1701,8 +1662,8 @@ static inline int raster_filledPolygonColorMT(SDL_Surface * dst, const Sint16 * 
     /*
      * Check temp array again
      */
-    if (gfxPrimitivesPolyInts==NULL) {
-        return(-1);
+    if (gfxPrimitivesPolyInts == NULL) {
+        return (-1);
     }
 
     /*
@@ -1745,7 +1706,7 @@ static inline int raster_filledPolygonColorMT(SDL_Surface * dst, const Sint16 * 
             } else {
                 continue;
             }
-            if ( ((y >= y1) && (y < y2)) || ((y == maxy) && (y > y1) && (y <= y2)) ) {
+            if (((y >= y1) && (y < y2)) || ((y == maxy) && (y > y1) && (y <= y2))) {
                 gfxPrimitivesPolyInts[ints++] = ((65536 * (y - y1)) / (y2 - y1)) * (x2 - x1) + (65536 * x1);
             }
         }
@@ -1755,10 +1716,10 @@ static inline int raster_filledPolygonColorMT(SDL_Surface * dst, const Sint16 * 
         for (i = 0; (i < ints); i += 2) {
             xa = gfxPrimitivesPolyInts[i] + 1;
             xa = (xa >> 16) + ((xa & 32768) >> 15);
-            xb = gfxPrimitivesPolyInts[i+1] - 1;
+            xb = gfxPrimitivesPolyInts[i + 1] - 1;
             xb = (xb >> 16) + ((xb & 32768) >> 15);
             raster_hline(dst, xa, xb, y, color);
-//        raster_rect_inline(dst, xa, y, xb - xa, 1, color);
+            //        raster_rect_inline(dst, xa, y, xb - xa, 1, color);
         }
     }
 
@@ -1768,7 +1729,6 @@ static inline int raster_filledPolygonColorMT(SDL_Surface * dst, const Sint16 * 
 void raster_polygon(SDL_Surface *s, int16_t n, int16_t *vx, int16_t *vy, uint32_t col) {
     raster_filledPolygonColorMT(s, vx, vy, n, col, NULL, NULL);
 }
-
 
 void raster_aapolygon(SDL_Surface *dst, int16_t n, int16_t *vx, int16_t *vy, uint32_t color) {
     /* sdl-gfx + sge w/ rphlx changes: basically, draw aaline border,
@@ -1795,7 +1755,7 @@ void raster_aapolygon(SDL_Surface *dst, int16_t n, int16_t *vx, int16_t *vy, uin
     /*
      * Check visibility of clipping rectangle
      */
-    if ((dst->clip_rect.w==0) || (dst->clip_rect.h==0)) {
+    if ((dst->clip_rect.w == 0) || (dst->clip_rect.h == 0)) {
         return;
     }
 
@@ -1805,7 +1765,6 @@ void raster_aapolygon(SDL_Surface *dst, int16_t n, int16_t *vx, int16_t *vy, uin
     if (n < 3) {
         return;
     }
-
 
     /*
      * Pointer setup
@@ -1830,7 +1789,7 @@ void raster_aapolygon(SDL_Surface *dst, int16_t n, int16_t *vx, int16_t *vy, uin
     /*
      * Map polygon cache
      */
-    if ((polyInts==NULL) || (polyAllocated==NULL)) {
+    if ((polyInts == NULL) || (polyAllocated == NULL)) {
         /* Use global cache */
         gfxPrimitivesPolyInts = gfxPrimitivesPolyIntsGlobal;
         gfxPrimitivesPolyAllocated = gfxPrimitivesPolyAllocatedGlobal;
@@ -1844,11 +1803,11 @@ void raster_aapolygon(SDL_Surface *dst, int16_t n, int16_t *vx, int16_t *vy, uin
      * Allocate temp array, only grow array
      */
     if (!gfxPrimitivesPolyAllocated) {
-        gfxPrimitivesPolyInts = (int *) malloc(sizeof(int) * n);
+        gfxPrimitivesPolyInts = (int *)malloc(sizeof(int) * n);
         gfxPrimitivesPolyAllocated = n;
     } else {
         if (gfxPrimitivesPolyAllocated < n) {
-            gfxPrimitivesPolyInts = (int *) realloc(gfxPrimitivesPolyInts, sizeof(int) * n);
+            gfxPrimitivesPolyInts = (int *)realloc(gfxPrimitivesPolyInts, sizeof(int) * n);
             gfxPrimitivesPolyAllocated = n;
         }
     }
@@ -1856,15 +1815,15 @@ void raster_aapolygon(SDL_Surface *dst, int16_t n, int16_t *vx, int16_t *vy, uin
     /*
      * Check temp array
      */
-    if (gfxPrimitivesPolyInts==NULL) {
+    if (gfxPrimitivesPolyInts == NULL) {
         gfxPrimitivesPolyAllocated = 0;
     }
 
     /*
      * Update cache variables
      */
-    if ((polyInts==NULL) || (polyAllocated==NULL)) {
-        gfxPrimitivesPolyIntsGlobal =  gfxPrimitivesPolyInts;
+    if ((polyInts == NULL) || (polyAllocated == NULL)) {
+        gfxPrimitivesPolyIntsGlobal = gfxPrimitivesPolyInts;
         gfxPrimitivesPolyAllocatedGlobal = gfxPrimitivesPolyAllocated;
     } else {
         *polyInts = gfxPrimitivesPolyInts;
@@ -1874,7 +1833,7 @@ void raster_aapolygon(SDL_Surface *dst, int16_t n, int16_t *vx, int16_t *vy, uin
     /*
      * Check temp array again
      */
-    if (gfxPrimitivesPolyInts==NULL) {
+    if (gfxPrimitivesPolyInts == NULL) {
         return;
     }
 
@@ -1917,15 +1876,15 @@ void raster_aapolygon(SDL_Surface *dst, int16_t n, int16_t *vx, int16_t *vy, uin
             } else {
                 continue;
             }
-            if ( ((y >= y1) && (y < y2)) || ((y == maxy) && (y > y1) && (y <= y2)) ) {
+            if (((y >= y1) && (y < y2)) || ((y == maxy) && (y > y1) && (y <= y2))) {
                 gfxPrimitivesPolyInts[ints++] = ((65536 * (y - y1)) / (y2 - y1)) * (x2 - x1) + (65536 * x1);
             }
         }
 
         qsort(gfxPrimitivesPolyInts, ints, sizeof(int), gfxPrimitivesCompareInt);
 
-//    o = p = -1;
-        for (i = 0; (i < ints); i +=2) {
+        //    o = p = -1;
+        for (i = 0; (i < ints); i += 2) {
 #if 0
             xa = gfxPrimitivesPolyInts[i] + 1;
             xa = (xa >> 16) + ((xa & 32768) >> 15);
@@ -1933,7 +1892,7 @@ void raster_aapolygon(SDL_Surface *dst, int16_t n, int16_t *vx, int16_t *vy, uin
             xb = (xb >> 16) + ((xb & 32768) >> 15);
 #else
             xa = (gfxPrimitivesPolyInts[i] >> 16);
-            xb = (gfxPrimitivesPolyInts[i+1] >> 16);
+            xb = (gfxPrimitivesPolyInts[i + 1] >> 16);
 #endif
 
 #if 0
@@ -1954,11 +1913,11 @@ void raster_aapolygon(SDL_Surface *dst, int16_t n, int16_t *vx, int16_t *vy, uin
                 o = p = -1;
             }
 #else
-            raster_hline(dst, xa+1, xb, y, color);
+            raster_hline(dst, xa + 1, xb, y, color);
 
 #endif
 
-//        raster_rect_inline(dst, xa, y, xb - xa, 1, color);
+            //        raster_rect_inline(dst, xa, y, xb - xa, 1, color);
         }
     }
 }
@@ -1984,13 +1943,13 @@ void raster_aapolygon(SDL_Surface *dst, int16_t n, int16_t *vx, int16_t *vy, uin
  * @oaram holes array of point arrays. One for each "hole"
  * @param col Color to draw this.
  */
-void raster_aapolygon_with_holes (SDL_Surface *s, struct point *p, int count, int hole_count, int* ccount,
-                                  struct point **holes, uint32_t col) {
+void raster_aapolygon_with_holes(SDL_Surface *s, struct point *p, int count, int hole_count, int *ccount,
+                                 struct point **holes, uint32_t col) {
     int i;
-    struct point * p1;
-    struct point * p2;
+    struct point *p1;
+    struct point *p2;
     /* Check visibility of clipping rectangle */
-    if ((s->clip_rect.w==0) || (s->clip_rect.h==0)) {
+    if ((s->clip_rect.w == 0) || (s->clip_rect.h == 0)) {
         return;
     }
 
@@ -2033,17 +1992,17 @@ void raster_aapolygon_with_holes (SDL_Surface *s, struct point *p, int count, in
  * @oaram holes array of point arrays. One for each "hole"
  * @param col Color to draw this.
  */
-void raster_polygon_with_holes (SDL_Surface *s, struct point *p, int count, int hole_count, int* ccount,
-                                struct point **holes, uint32_t col) {
+void raster_polygon_with_holes(SDL_Surface *s, struct point *p, int count, int hole_count, int *ccount,
+                               struct point **holes, uint32_t col) {
     int vertex_max;
     int vertex_count;
-    int * vertexes;
+    int *vertexes;
     int miny, maxy;
     int i;
     int y;
 
     /* Check visibility of clipping rectangle */
-    if ((s->clip_rect.w==0) || (s->clip_rect.h==0)) {
+    if ((s->clip_rect.w == 0) || (s->clip_rect.h == 0)) {
         return;
     }
 
@@ -2057,11 +2016,11 @@ void raster_polygon_with_holes (SDL_Surface *s, struct point *p, int count, int 
      * of polygon and holes
      */
     vertex_max = count;
-    for(i =0; i < hole_count; i ++) {
+    for (i = 0; i < hole_count; i++) {
         vertex_max += ccount[i];
     }
     vertexes = g_malloc(sizeof(int) * vertex_max);
-    if(vertexes == NULL) {
+    if (vertexes == NULL) {
         return;
     }
 
@@ -2078,9 +2037,9 @@ void raster_polygon_with_holes (SDL_Surface *s, struct point *p, int count, int 
     }
 
     /* scan y coordinates from miny to maxy */
-    for(y = miny; y <= maxy ; y ++) {
+    for (y = miny; y <= maxy; y++) {
         int h;
-        vertex_count=0;
+        vertex_count = 0;
         /* calculate the intersecting points of the polygon with current y and add to vertexes array*/
         for (i = 0; (i < count); i++) {
             int ind1;
@@ -2108,11 +2067,11 @@ void raster_polygon_with_holes (SDL_Surface *s, struct point *p, int count, int 
             } else {
                 continue;
             }
-            if ( ((y >= p1.y) && (y < p2.y)) || ((y == maxy) && (y > p1.y) && (y <= p2.y)) ) {
+            if (((y >= p1.y) && (y < p2.y)) || ((y == maxy) && (y > p1.y) && (y <= p2.y))) {
                 vertexes[vertex_count++] = ((65536 * (y - p1.y)) / (p2.y - p1.y)) * (p2.x - p1.x) + (65536 * p1.x);
             }
         }
-        for(h= 0; h < hole_count; h ++) {
+        for (h = 0; h < hole_count; h++) {
             /* add the intersecting points from the holes as well */
             for (i = 0; (i < ccount[h]); i++) {
                 int ind1;
@@ -2140,7 +2099,7 @@ void raster_polygon_with_holes (SDL_Surface *s, struct point *p, int count, int 
                 } else {
                     continue;
                 }
-                if ( ((y >= p1.y) && (y < p2.y)) || ((y == maxy) && (y > p1.y) && (y <= p2.y)) ) {
+                if (((y >= p1.y) && (y < p2.y)) || ((y == maxy) && (y > p1.y) && (y <= p2.y))) {
                     vertexes[vertex_count++] = ((65536 * (y - p1.y)) / (p2.y - p1.y)) * (p2.x - p1.x) + (65536 * p1.x);
                 }
             }
@@ -2149,12 +2108,12 @@ void raster_polygon_with_holes (SDL_Surface *s, struct point *p, int count, int 
         /* sort the vertexes */
         qsort(vertexes, vertex_count, sizeof(int), gfxPrimitivesCompareInt);
         /* draw the lines between every second vertex */
-        for (i = 0; (i < vertex_count); i +=2) {
+        for (i = 0; (i < vertex_count); i += 2) {
             Sint16 xa;
             Sint16 xb;
             xa = (vertexes[i] >> 16);
-            xb = (vertexes[i+1] >> 16);
-            raster_hline(s, xa+1, xb, y, col);
+            xb = (vertexes[i + 1] >> 16);
+            raster_hline(s, xa + 1, xb, y, col);
         }
     }
     g_free(vertexes);

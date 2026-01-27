@@ -3,10 +3,10 @@
 #define NAVIT_GUI_INTERNAL_GUI_INTERNAL_WIDGET_H
 
 #include "attr.h"
-#include "item.h"
 #include "coord.h"
-#include "point.h"
 #include "gui_internal.h"
+#include "item.h"
+#include "point.h"
 #include <glib.h>
 
 enum gui_internal_reason {

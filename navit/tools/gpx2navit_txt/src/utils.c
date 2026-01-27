@@ -17,9 +17,9 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include "geodesic.h"
 #include "gpx2navit_txt.h"
 #include "projects.h"
-#include "geodesic.h"
 
 double getDistanceCore(char *p1, char *l1, char *p2, char *l2);
 void checkEllpsUnit(char *unit);
@@ -37,18 +37,15 @@ void checkEllpsUnit(char *unit) {
      * checks ellipse unit can be used by proj4
      */
     int isOK = 0;
-    struct PJ_ELLPS *el;	/* project.h of proj4 */
+    struct PJ_ELLPS *el; /* project.h of proj4 */
     for (el = pj_ellps; el->id; ++el) {
         if (!strcmp(el->id, unit)) {
             isOK = 1;
         }
     }
     if (!isOK) {
-        fputs
-        ("The ellipse argument is not correct or supported by libproj\n",
-         stderr);
-        fputs("You can choose the argument from a list below.\n\n",
-              stderr);
+        fputs("The ellipse argument is not correct or supported by libproj\n", stderr);
+        fputs("You can choose the argument from a list below.\n\n", stderr);
         for (el = pj_ellps; el->id; el++) {
             printf("%10s\t%s\n", el->id, el->name);
         }
@@ -63,7 +60,7 @@ double checkLengthUnit(char *unit) {
      */
     int isOK = 0;
     double to_meter = 0;
-    struct PJ_UNITS *ut;	/* project.h of proj4 */
+    struct PJ_UNITS *ut; /* project.h of proj4 */
     for (ut = pj_units; ut->id; ut++) {
         if (!strcmp(ut->id, unit)) {
             isOK = 1;
@@ -71,11 +68,8 @@ double checkLengthUnit(char *unit) {
         }
     }
     if (!isOK) {
-        fputs
-        ("The length unit argument is not correct or supported by libproj.\n",
-         stderr);
-        fputs("You can choose the argument from a list below.\n\n",
-              stderr);
+        fputs("The length unit argument is not correct or supported by libproj.\n", stderr);
+        fputs("You can choose the argument from a list below.\n\n", stderr);
         for (ut = pj_units; ut->id; ut++) {
             printf("%s\t%s\n", ut->id, ut->name);
         }
@@ -85,8 +79,8 @@ double checkLengthUnit(char *unit) {
 }
 
 int checkTimeUnit(char *unit) {
-    char *u[8] = { "sec", "s", "min", "m", "hour", "h", "day", "d" };
-    int p[8] = { 1, 1, 60, 60, 3600, 3600, 86400, 86400 };
+    char *u[8] = {"sec", "s", "min", "m", "hour", "h", "day", "d"};
+    int p[8] = {1, 1, 60, 60, 3600, 3600, 86400, 86400};
     int i, to_sec = 0;
     for (i = 0; i < 8; i++) {
         if (!strcmp(u[i], unit)) {
@@ -95,8 +89,7 @@ int checkTimeUnit(char *unit) {
     }
     if (!to_sec) {
         fputs("The time unit argument is not correct.\n", stderr);
-        fputs("You can choose the argument from sec, min, hour or day.\n",
-              stderr);
+        fputs("You can choose the argument from sec, min, hour or day.\n", stderr);
         exit(ERR_TIMEUNIT);
     }
     return to_sec;
@@ -114,12 +107,10 @@ double getTimeInterval(char *_t, char *t) {
     time_t _tmt, tmt;
     memset(&_tt, 0, sizeof(_tt));
     memset(&tt, 0, sizeof(tt));
-    sscanf(_t, "%d-%d-%dT%d:%d:%dZ", &_tt.tm_year, &_tt.tm_mon,
-           &_tt.tm_mday, &_tt.tm_hour, &_tt.tm_min, &_tt.tm_sec);
+    sscanf(_t, "%d-%d-%dT%d:%d:%dZ", &_tt.tm_year, &_tt.tm_mon, &_tt.tm_mday, &_tt.tm_hour, &_tt.tm_min, &_tt.tm_sec);
     _tt.tm_year -= 1900;
     _tt.tm_mon -= 1;
-    sscanf(t, "%d-%d-%dT%d:%d:%d", &tt.tm_year, &tt.tm_mon, &tt.tm_mday,
-           &tt.tm_hour, &tt.tm_min, &tt.tm_sec);
+    sscanf(t, "%d-%d-%dT%d:%d:%d", &tt.tm_year, &tt.tm_mon, &tt.tm_mday, &tt.tm_hour, &tt.tm_min, &tt.tm_sec);
     tt.tm_year -= 1900;
     tt.tm_mon -= 1;
     _tmt = mktime(&_tt);
@@ -167,7 +158,7 @@ double getDistance(double _x, double _y, double x, double y) {
     return length;
 }
 
-//todo void closeShpFiles(shphandles * shps)
+// todo void closeShpFiles(shphandles * shps)
 //{
 /*
  * Closes all SHP files if they opened
@@ -188,7 +179,7 @@ double getDistance(double _x, double _y, double x, double y) {
 //	SHPClose(shps->rte_pnt);
 //}
 
-//todo void closeDbfFiles(dbfhandles * dbfs)
+// todo void closeDbfFiles(dbfhandles * dbfs)
 //{
 /*
  * Closes all DBF files if they opened
@@ -208,4 +199,3 @@ double getDistance(double _x, double _y, double x, double y) {
 //    if (dbfs->rte_pnt)
 //	DBFClose(dbfs->rte_pnt);
 //}
-

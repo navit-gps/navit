@@ -18,24 +18,14 @@
  */
 
 #ifndef lint
-static const char SCCSID[] =
-    "@(#)geod_inv.c	4.5	95/09/23	GIE	REL";
+static const char SCCSID[] = "@(#)geod_inv.c	4.5	95/09/23	GIE	REL";
 #endif
-# include "projects.h"
-# include "geodesic.h"
-# define DTOL	1e-12
+#include "geodesic.h"
+#include "projects.h"
+#define DTOL 1e-12
 void geod_inv(void) {
-    double th1,
-           th2,
-           thm,
-           dthm,
-           dlamm,
-           dlam,
-           sindlamm,
-           costhm,
-           sinthm,
-           cosdthm,
-           sindthm, L, E, cosd, d, X, Y, T, sind, tandlammp, u, v, D, A, B;
+    double th1, th2, thm, dthm, dlamm, dlam, sindlamm, costhm, sinthm, cosdthm, sindthm, L, E, cosd, d, X, Y, T, sind,
+        tandlammp, u, v, D, A, B;
 
     if (ellipse) {
         th1 = atan(onef * tan(phi1));
@@ -56,8 +46,7 @@ void geod_inv(void) {
     sinthm = sin(thm);
     cosdthm = cos(dthm);
     sindthm = sin(dthm);
-    L = sindthm * sindthm + (cosdthm * cosdthm - sinthm * sinthm)
-        * sindlamm * sindlamm;
+    L = sindthm * sindthm + (cosdthm * cosdthm - sinthm * sinthm) * sindlamm * sindlamm;
     d = acos(cosd = 1 - L - L);
     if (ellipse) {
         E = cosd + cosd;
@@ -72,14 +61,12 @@ void geod_inv(void) {
         D = 4. * T * T;
         A = D * E;
         B = D + D;
-        geod_S = geod_a * sind * (T - f4 * (T * X - Y) +
-                                  f64 * (X * (A + (T - .5 * (A - E)) * X) -
-                                         Y * (B + E * Y) + D * X * Y));
-        tandlammp = tan(.5 * (dlam - .25 * (Y + Y - E * (4. - X)) *
-                              (f2 * T + f64 * (32. * T - (20. * T - A)
-                                               * X - (B +
-                                                       4.) * Y)) *
-                              tan(dlam)));
+        geod_S = geod_a * sind
+                 * (T - f4 * (T * X - Y) + f64 * (X * (A + (T - .5 * (A - E)) * X) - Y * (B + E * Y) + D * X * Y));
+        tandlammp = tan(.5
+                        * (dlam
+                           - .25 * (Y + Y - E * (4. - X))
+                                 * (f2 * T + f64 * (32. * T - (20. * T - A) * X - (B + 4.) * Y)) * tan(dlam)));
     } else {
         geod_S = geod_a * d;
         tandlammp = tan(dlamm);

@@ -34,13 +34,13 @@
 #include <string.h>
 #include <time.h>
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
+#    include <unistd.h>
 #endif
 #ifdef HAVE_API_WIN32_BASE
-#include <windows.h>
+#    include <windows.h>
 #endif
 #ifndef _MSC_VER
-#include <sys/time.h>
+#    include <sys/time.h>
 #endif /* _MSC_VER */
 #include "bookmarks.h"
 #include "callback.h"
@@ -103,7 +103,10 @@ const int SMALL_PROFILE = 2;
  * [2] => Small profile (default)
  */
 static struct gui_config_settings config_profiles[] = {
-    {545, 32, 48, 96, 10}, {300, 32, 48, 64, 3}, {200, 16, 32, 48, 2}};
+    {545, 32, 48, 96, 10},
+    {300, 32, 48, 64, 3 },
+    {200, 16, 32, 48, 2 }
+};
 
 static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void *data);
 static void gui_internal_prepare_search_results_map(struct gui_priv *this, struct widget *table, struct coord_rect *r);
@@ -318,8 +321,8 @@ static void gui_internal_motion_cb(struct gui_priv *this) {
                 btm = td->bottom_row;
                 top = td->top_row;
 
-                while (n-- > 0 && (tbtm = gui_internal_widget_table_next_row(btm)) != NULL &&
-                       (ttop = gui_internal_widget_table_next_row(top)) != NULL) {
+                while (n-- > 0 && (tbtm = gui_internal_widget_table_next_row(btm)) != NULL
+                       && (ttop = gui_internal_widget_table_next_row(top)) != NULL) {
                     top = ttop;
                     btm = tbtm;
                     if (top->data == wr)
@@ -341,8 +344,8 @@ static void gui_internal_motion_cb(struct gui_priv *this) {
                 btm = td->bottom_row;
                 top = td->top_row;
 
-                while (n-- > 0 && (ttop = gui_internal_widget_table_prev_row(top)) != NULL &&
-                       (tbtm = gui_internal_widget_table_prev_row(btm)) != NULL) {
+                while (n-- > 0 && (ttop = gui_internal_widget_table_prev_row(top)) != NULL
+                       && (tbtm = gui_internal_widget_table_prev_row(btm)) != NULL) {
                     btm = tbtm;
                     top = ttop;
                     if (btm->data == wr)
@@ -1102,9 +1105,9 @@ void gui_internal_cmd_position_do(struct gui_priv *this, const struct pcoord *pc
         const char *text;
         struct attr vehicle, source;
         int deactivate = 0;
-        if (navit_get_attr(this->nav, attr_vehicle, &vehicle, NULL) && vehicle.u.vehicle &&
-            !(vehicle_get_attr(vehicle.u.vehicle, attr_source, &source, NULL) && source.u.str &&
-              !strcmp("demo://", source.u.str)))
+        if (navit_get_attr(this->nav, attr_vehicle, &vehicle, NULL) && vehicle.u.vehicle
+            && !(vehicle_get_attr(vehicle.u.vehicle, attr_source, &source, NULL) && source.u.str
+                 && !strcmp("demo://", source.u.str)))
             deactivate = 1;
 
         text = deactivate ? _("Set as position (and deactivate vehicle)") : _("Set as position");
@@ -2123,8 +2126,8 @@ static void gui_internal_set_position_coord(struct gui_priv *this) {
 
     attr_free(this->position_coord_geo);
     this->position_coord_geo = NULL;
-    if (navit_get_attr(this->nav, attr_vehicle, &attr, NULL) && attr.u.vehicle &&
-        vehicle_get_attr(attr.u.vehicle, attr_position_coord_geo, &attrp, NULL)) {
+    if (navit_get_attr(this->nav, attr_vehicle, &attr, NULL) && attr.u.vehicle
+        && vehicle_get_attr(attr.u.vehicle, attr_position_coord_geo, &attrp, NULL)) {
         trans = navit_get_trans(this->nav);
         this->position_coord_geo = attr_dup(&attrp);
         this->vehiclep.pro = transform_get_projection(trans);
@@ -2272,8 +2275,8 @@ static void gui_internal_dbus_signal(struct gui_priv *this, struct point *p) {
     dlh = graphics_displaylist_open(display);
     while ((di = graphics_displaylist_next(dlh))) {
         struct item *item = graphics_displayitem_get_item(di);
-        if (item_is_point(*item) && graphics_displayitem_get_displayed(di) &&
-            graphics_displayitem_within_dist(display, di, p, this->radius)) {
+        if (item_is_point(*item) && graphics_displayitem_get_displayed(di)
+            && graphics_displayitem_within_dist(display, di, p, this->radius)) {
             struct map_rect *mr = map_rect_new(item->map, NULL);
             struct item *itemo = map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
             struct attr attr;
@@ -2371,8 +2374,8 @@ static void gui_internal_cmd_enter_coord_do(struct gui_priv *this, struct widget
         g_free(widgettext);
         return;
     }
-    if (gui_internal_coordinate_parse(lat, 'N', 'S', &latitude) &&
-        gui_internal_coordinate_parse(lng, 'E', 'W', &longitude)) {
+    if (gui_internal_coordinate_parse(lat, 'N', 'S', &latitude)
+        && gui_internal_coordinate_parse(lng, 'E', 'W', &longitude)) {
         g_free(widgettext);
         widgettext = g_strdup_printf("%lf %lf", longitude, latitude);
         pcoord_parse(widgettext, projection_mg, &widget->c);

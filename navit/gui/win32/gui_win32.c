@@ -17,9 +17,9 @@
 #include <stdlib.h>
 #include <windows.h>
 #ifdef __CEGCC__
-#include "ceglue.h"
-#include <aygshell.h>
-#include <sipapi.h>
+#    include "ceglue.h"
+#    include <aygshell.h>
+#    include <sipapi.h>
 
 static int ce_backlight = 1;
 static int ce_fullscreen;
@@ -67,7 +67,7 @@ static BOOL CALLBACK EnumChildProc(HWND hwndChild, LPARAM lParam) {
 #endif
 
 #ifndef GET_WHEEL_DELTA_WPARAM
-#define GET_WHEEL_DELTA_WPARAM(wParam) ((short)HIWORD(wParam))
+#    define GET_WHEEL_DELTA_WPARAM(wParam) ((short)HIWORD(wParam))
 #endif
 
 static void CreateToolBar(HWND hwnd) {
@@ -357,13 +357,13 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
         } else if (wParam == '3') {
             navit_zoom_out(gui->nav, 2, NULL);
         } else if (wParam == '7') {
-#if 0
+#    if 0
             toggle_backlight();
-#endif
+#    endif
         } else if (wParam == '9') {
-#if 0
+#    if 0
             toggle_fullscreen(hwnd);
-#endif
+#    endif
         }
     } break;
 #endif
