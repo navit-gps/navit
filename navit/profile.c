@@ -17,15 +17,15 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#ifndef _MSC_VER
-#include <sys/time.h>
-#endif /* _MSC_VER */
 #include "profile.h"
 #include "debug.h"
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#ifndef _MSC_VER
+#    include <sys/time.h>
+#endif /* _MSC_VER */
 
 #define PROFILE_LEVEL_MAX 9
 
@@ -56,19 +56,18 @@
 void profile_timer(int level, const char *module, const char *function, const char *fmt, ...) {
 #ifndef _MSC_VER
     va_list ap;
-    static struct timeval last[PROFILE_LEVEL_MAX+1];
+    static struct timeval last[PROFILE_LEVEL_MAX + 1];
     struct timeval curr;
     double msec;
-    char buffer[strlen(module)+20];
+    char buffer[strlen(module) + 20];
 
     if (level < 0)
-        level=0;
+        level = 0;
     if (level > PROFILE_LEVEL_MAX)
-        level=PROFILE_LEVEL_MAX;
+        level = PROFILE_LEVEL_MAX;
     if (fmt) {
         gettimeofday(&curr, NULL);
-        msec=(curr.tv_usec-last[level].tv_usec)/((double)1000)+
-             (curr.tv_sec-last[level].tv_sec)*1000;
+        msec = (curr.tv_usec - last[level].tv_usec) / ((double)1000) + (curr.tv_sec - last[level].tv_sec) * 1000;
 
         sprintf(buffer, "profile:%s", module);
         va_start(ap, fmt);
@@ -79,7 +78,7 @@ void profile_timer(int level, const char *module, const char *function, const ch
     } else {
         gettimeofday(&curr, NULL);
         while (level <= PROFILE_LEVEL_MAX)
-            last[level++]=curr;
+            last[level++] = curr;
     }
 #endif /*_MSC_VER*/
 }

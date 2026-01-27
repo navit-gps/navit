@@ -17,69 +17,68 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <glib.h>
+#include "start_real.h"
+#include "atom.h"
+#include "command.h"
 #include "config.h"
-#ifdef HAVE_GETOPT_H
-#include <getopt.h>
-#else
-#include <XGetopt.h>
-#endif
 #include "config_.h"
-#include "item.h"
 #include "coord.h"
-#include "main.h"
-#include "route.h"
-#include "navigation.h"
-#include "track.h"
 #include "debug.h"
 #include "event.h"
 #include "event_glib.h"
-#include "xmlconfig.h"
 #include "file.h"
-#include "search.h"
-#include "start_real.h"
-#include "linguistics.h"
-#include "navit_nls.h"
-#include "atom.h"
-#include "command.h"
 #include "geom.h"
+#include "item.h"
+#include "linguistics.h"
+#include "main.h"
+#include "navigation.h"
+#include "navit_nls.h"
+#include "route.h"
+#include "search.h"
+#include "track.h"
 #include "traffic.h"
+#include "xmlconfig.h"
+#include <glib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef HAVE_GETOPT_H
+#    include <getopt.h>
+#else
+#    include <XGetopt.h>
+#endif
 #ifdef HAVE_API_WIN32_CE
-#include <windows.h>
-#include <winbase.h>
-#include "libc.h"
+#    include "libc.h"
+#    include <winbase.h>
+#    include <windows.h>
 #endif
 
 int main_argc;
-char * const* main_argv;
+char *const *main_argv;
 
 static void print_usage(void) {
-    printf("%s",_("navit usage:\n"
-                  "navit [options] [configfile]\n"
-                  "\t-c <file>: use <file> as config file, instead of using the default file.\n"
-                  "\t-d <n>: set the global debug output level to <n> (0=error, 1=warning, 2=info, 3=debug).\n"
-                  "\tSettings from config file will still take effect where they set a higher level.\n"
-                  "\t-h: print this usage info and exit.\n"
-                  "\t-v: print the version and exit.\n"));
+    printf("%s", _("navit usage:\n"
+                   "navit [options] [configfile]\n"
+                   "\t-c <file>: use <file> as config file, instead of using the default file.\n"
+                   "\t-d <n>: set the global debug output level to <n> (0=error, 1=warning, 2=info, 3=debug).\n"
+                   "\tSettings from config file will still take effect where they set a higher level.\n"
+                   "\t-h: print this usage info and exit.\n"
+                   "\t-v: print the version and exit.\n"));
 }
-
 
 #ifndef USE_PLUGINS
 extern void builtin_init(void);
 #endif /* USE_PLUGINS*/
 
-int main_real(int argc, char * const* argv) {
+int main_real(int argc, char *const *argv) {
     xmlerror *error = NULL;
-    char *config_file = NULL, *command=NULL, *startup_file=NULL;
+    char *config_file = NULL, *command = NULL, *startup_file = NULL;
     int opt;
     char *cp;
     struct attr navit, conf;
 
     GList *list = NULL, *li;
-    main_argc=argc;
-    main_argv=argv;
+    main_argc = argc;
+    main_argv = argv;
 
 #ifdef HAVE_GLIB
     event_glib_init();
@@ -111,17 +110,17 @@ int main_real(int argc, char * const* argv) {
     linguistics_init();
     geom_init();
     traffic_init();
-    config_file=NULL;
+    config_file = NULL;
 #ifdef HAVE_GETOPT_H
-    opterr=0;  //don't bomb out on errors.
-#endif /* _MSC_VER */
+    opterr = 0;  // don't bomb out on errors.
+#endif           /* _MSC_VER */
     /* ingore iphone command line argument */
-    if (argc == 2 && !strcmp(argv[1],"-RegisterForSystemEvents"))
-        argc=1;
+    if (argc == 2 && !strcmp(argv[1], "-RegisterForSystemEvents"))
+        argc = 1;
     if (argc > 1) {
         /* Don't forget to update the manpage if you modify theses options */
-        while((opt = getopt(argc, argv, ":hvc:d:e:s:")) != -1) {
-            switch(opt) {
+        while ((opt = getopt(argc, argv, ":hvc:d:e:s:")) != -1) {
+            switch (opt) {
             case 'h':
                 print_usage();
                 exit(0);
@@ -138,10 +137,10 @@ int main_real(int argc, char * const* argv) {
                 debug_set_global_level(atoi(optarg), 1);
                 break;
             case 'e':
-                command=optarg;
+                command = optarg;
                 break;
             case 's':
-                startup_file=optarg;
+                startup_file = optarg;
                 break;
 #ifdef HAVE_GETOPT_H
             case ':':
@@ -157,20 +156,21 @@ int main_real(int argc, char * const* argv) {
             }
         }
         // use 1st cmd line option that is left for the config file
-        if (optind < argc) config_file = argv[optind];
+        if (optind < argc)
+            config_file = argv[optind];
     }
 
     // if config file is explicitely given only look for it, otherwise try std paths
     if (config_file) {
-        list = g_list_append(list,g_strdup(config_file));
+        list = g_list_append(list, g_strdup(config_file));
     } else {
-        list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_USER_DATADIR"), "/navit.xml", NULL));
-        list = g_list_append(list,g_strdup("navit.xml.local"));
-        list = g_list_append(list,g_strdup("navit.xml"));
-        list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml.local", NULL));
-        list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml", NULL));
+        list = g_list_append(list, g_strjoin(NULL, getenv("NAVIT_USER_DATADIR"), "/navit.xml", NULL));
+        list = g_list_append(list, g_strdup("navit.xml.local"));
+        list = g_list_append(list, g_strdup("navit.xml"));
+        list = g_list_append(list, g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/navit.xml.local", NULL));
+        list = g_list_append(list, g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/navit.xml", NULL));
 #ifndef _WIN32
-        list = g_list_append(list,g_strdup("/etc/navit/navit.xml"));
+        list = g_list_append(list, g_strdup("/etc/navit/navit.xml"));
 #endif
     }
     li = list;
@@ -182,7 +182,7 @@ int main_real(int argc, char * const* argv) {
         }
         // Try the next config file possibility from the list
         config_file = li->data;
-        dbg(lvl_debug,"trying %s",config_file);
+        dbg(lvl_debug, "trying %s", config_file);
         if (file_exists(config_file)) {
             break;
         }
@@ -190,13 +190,13 @@ int main_real(int argc, char * const* argv) {
         li = g_list_next(li);
     }
 
-    dbg(lvl_debug,"Loading config from '%s'",config_file);
+    dbg(lvl_debug, "Loading config from '%s'", config_file);
     if (!config_load(config_file, &error)) {
         dbg(lvl_error, _("Error parsing config file '%s': %s"), config_file, error ? error->message : "");
     } else {
         dbg(lvl_info, _("Using config file '%s'"), config_file);
     }
-    if (! config) {
+    if (!config) {
         dbg(lvl_error, _("Error: No configuration found in config file '%s'"), config_file);
     }
     while (li) {
@@ -204,18 +204,18 @@ int main_real(int argc, char * const* argv) {
         li = g_list_next(li);
     }
     g_list_free(list);
-    if (! (config && config_get_attr(config, attr_navit, &navit, NULL))) {
+    if (!(config && config_get_attr(config, attr_navit, &navit, NULL))) {
         dbg(lvl_error, "%s", _("Internal initialization failed, exiting. Check previous error messages."));
         exit(5);
     }
-    conf.type=attr_config;
-    conf.u.config=config;
+    conf.type = attr_config;
+    conf.u.config = config;
     if (startup_file) {
-        FILE *f = fopen(startup_file,"r");
+        FILE *f = fopen(startup_file, "r");
         if (f) {
             char buffer[4096];
             int fclose_ret;
-            while(fgets(buffer, sizeof(buffer), f)) {
+            while (fgets(buffer, sizeof(buffer), f)) {
                 command_evaluate(&conf, buffer);
             }
             fclose_ret = fclose(f);
@@ -231,8 +231,9 @@ int main_real(int argc, char * const* argv) {
     }
     event_main_loop_run();
 
-    /* TODO: Android actually has no event loop, so we can't free all allocated resources here. Have to find better place to
-     *  free all allocations on program exit. And don't forget to free all the stuff allocated in the code above.
+    /* TODO: Android actually has no event loop, so we can't free all allocated resources here. Have to find better
+     * place to free all allocations on program exit. And don't forget to free all the stuff allocated in the code
+     * above.
      */
 #ifndef HAVE_API_ANDROID
     linguistics_free();

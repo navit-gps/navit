@@ -17,13 +17,13 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <time.h>
-#include <glib.h>
+#include "phrase.h"
 #include "coord.h"
 #include "item.h"
 #include "route.h"
 #include "speech.h"
-#include "phrase.h"
+#include <glib.h>
+#include <time.h>
 
 void phrase_route_calc(void *speech) {
 #if 0
@@ -37,7 +37,7 @@ void phrase_route_calculated(void *speech, void *route) {
 #if 0
     struct tm *eta;
 #endif
-    if (! speech)
+    if (!speech)
         return;
 
 #if 0 /* FIXME */
@@ -46,5 +46,4 @@ void phrase_route_calculated(void *speech, void *route) {
     speech_sayf(speech,"Die Route wurde berechnet, geschätzte Ankunftszeit %d Uhr %d  Entfernung %4.0f Kilometer",
                 eta->tm_hour,eta->tm_min,route_get_len(route)/1000);
 #endif
-
 }

@@ -17,37 +17,41 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <stdlib.h>
-#include <glib.h>
+#include "util.h"
+#include "config.h"
+#include "debug.h"
 #include <ctype.h>
-#include <stdarg.h>
-#include <time.h>
+#include <glib.h>
 #include <limits.h>
-#include <string.h>
+#include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#if defined(_WIN32) || defined(__CEGCC__)
+#    include <sys/types.h>
+#    include <windows.h>
+#endif
 
 #ifdef _POSIX_C_SOURCE
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+#    include <sys/types.h>
+#    include <sys/wait.h>
+#    include <unistd.h>
 #endif
 #ifdef _MSC_VER
-typedef int ssize_t ;
+typedef int ssize_t;
 #endif
-#include "util.h"
-#include "debug.h"
-#include "config.h"
 
 void strtoupper(char *dest, const char *src) {
     while (*src)
-        *dest++=toupper(*src++);
-    *dest='\0';
+        *dest++ = toupper(*src++);
+    *dest = '\0';
 }
 
 void strtolower(char *dest, const char *src) {
     while (*src)
-        *dest++=tolower(*src++);
-    *dest='\0';
+        *dest++ = tolower(*src++);
+    *dest = '\0';
 }
 
 /**
@@ -57,22 +61,22 @@ void strtolower(char *dest, const char *src) {
  * @return sqrt(n)
  */
 unsigned int uint_sqrt(unsigned int n) {
-    unsigned int h, p= 0, q= 1, r= n;
+    unsigned int h, p = 0, q = 1, r = n;
 
     /* avoid q rollover */
-    if(n >= (1<<(sizeof(n)*8-2))) {
-        q = 1<<(sizeof(n)*8-2);
+    if (n >= (1 << (sizeof(n) * 8 - 2))) {
+        q = 1 << (sizeof(n) * 8 - 2);
     } else {
-        while ( q <= n ) {
+        while (q <= n) {
             q <<= 2;
         }
         q >>= 2;
     }
 
-    while ( q != 0 ) {
+    while (q != 0) {
         h = p + q;
         p >>= 1;
-        if ( r >= h ) {
+        if (r >= h) {
             p += q;
             r -= h;
         }
@@ -82,12 +86,12 @@ unsigned int uint_sqrt(unsigned int n) {
 }
 
 int navit_utf8_strcasecmp(const char *s1, const char *s2) {
-    char *s1_folded,*s2_folded;
+    char *s1_folded, *s2_folded;
     int cmpres;
-    s1_folded=g_utf8_casefold(s1,-1);
-    s2_folded=g_utf8_casefold(s2,-1);
-    cmpres=strcmp(s1_folded,s2_folded);
-    dbg(lvl_debug,"Compared %s with %s, got %d",s1_folded,s2_folded,cmpres);
+    s1_folded = g_utf8_casefold(s1, -1);
+    s2_folded = g_utf8_casefold(s2, -1);
+    cmpres = strcmp(s1_folded, s2_folded);
+    dbg(lvl_debug, "Compared %s with %s, got %d", s1_folded, s2_folded, cmpres);
     g_free(s1_folded);
     g_free(s2_folded);
     return cmpres;
@@ -121,81 +125,84 @@ static void strtrim(char *s) {
  *
  * @return The escaped string
  *
- * @note In html escape mode (escape_mode_html), we will only process HTML escape sequence, and string quoting, but we won't escape backslashes or double quotes
+ * @note In html escape mode (escape_mode_html), we will only process HTML escape sequence, and string quoting, but we
+ * won't escape backslashes or double quotes
  * @warning The returned string has been allocated and g_free() must thus be called on this string
  */
 char *str_escape(enum escape_mode mode, const char *in) {
-    int len=mode & escape_mode_string ? 2:0;	/* Add 2 characters to the length of the buffer if quoting is enabled */
-    char *dst,*out;
-    const char *src=in;
-    static const char *quot="&quot;";
-    static const char *apos="&apos;";
-    static const char *amp="&amp;";
-    static const char *lt="&lt;";
-    static const char *gt="&gt;";
+    int len = mode & escape_mode_string ? 2
+                                        : 0; /* Add 2 characters to the length of the buffer if quoting is enabled */
+    char *dst, *out;
+    const char *src = in;
+    static const char *quot = "&quot;";
+    static const char *apos = "&apos;";
+    static const char *amp = "&amp;";
+    static const char *lt = "&lt;";
+    static const char *gt = "&gt;";
 
     dbg(lvl_debug, "Will escape string=\"%s\", escape mode %d", in, mode);
     while (*src) {
         if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote)))
             len++;
         if (*src == '"' && mode == escape_mode_html_quote)
-            len+=strlen(quot);
+            len += strlen(quot);
         else if (*src == '\'' && mode == escape_mode_html_apos)
-            len+=strlen(apos);
+            len += strlen(apos);
         else if (*src == '&' && mode == escape_mode_html_amp)
-            len+=strlen(amp);
+            len += strlen(amp);
         else if (*src == '<' && mode == escape_mode_html_lt)
-            len+=strlen(lt);
+            len += strlen(lt);
         else if (*src == '>' && mode == escape_mode_html_gt)
-            len+=strlen(gt);
+            len += strlen(gt);
         else
             len++;
         src++;
     }
-    src=in;
-    out=dst=g_malloc(len+1); /* +1 character for NUL termination */
+    src = in;
+    out = dst = g_malloc(len + 1); /* +1 character for NUL termination */
 
     /* In string quoting mode (escape_mode_string), prepend the whole string with a double quote */
     if (mode & escape_mode_string)
-        *dst++='"';
+        *dst++ = '"';
 
     while (*src) {
-        if (mode & escape_mode_html) {	/* In html escape mode, only process HTML escape sequence, not backslashes or quotes */
+        if (mode & escape_mode_html) { /* In html escape mode, only process HTML escape sequence, not backslashes or
+                                          quotes */
             if (*src == '"' && (mode & escape_mode_html_quote)) {
-                strcpy(dst,quot);
+                strcpy(dst, quot);
                 src++;
-                dst+=strlen(quot);
+                dst += strlen(quot);
             } else if (*src == '\'' && (mode & escape_mode_html_apos)) {
-                strcpy(dst,apos);
+                strcpy(dst, apos);
                 src++;
-                dst+=strlen(apos);
+                dst += strlen(apos);
             } else if (*src == '&' && (mode & escape_mode_html_amp)) {
-                strcpy(dst,amp);
+                strcpy(dst, amp);
                 src++;
-                dst+=strlen(amp);
+                dst += strlen(amp);
             } else if (*src == '<' && (mode & escape_mode_html_lt)) {
-                strcpy(dst,lt);
+                strcpy(dst, lt);
                 src++;
-                dst+=strlen(lt);
+                dst += strlen(lt);
             } else if (*src == '>' && (mode & escape_mode_html_gt)) {
-                strcpy(dst,gt);
+                strcpy(dst, gt);
                 src++;
-                dst+=strlen(gt);
+                dst += strlen(gt);
             } else
-                *dst++=*src++;
+                *dst++ = *src++;
         } else {
             if ((*src == '"' || *src == '\\') && (mode & (escape_mode_string | escape_mode_quote))) {
-                *dst++='\\';
+                *dst++ = '\\';
             }
-            *dst++=*src++;
+            *dst++ = *src++;
         }
     }
 
     /* In string quoting mode (escape_mode_string), append a double quote to the whole string */
     if (mode & escape_mode_string)
-        *dst++='"';
+        *dst++ = '"';
 
-    *dst++='\0';
+    *dst++ = '\0';
     dbg(lvl_debug, "Result of escaped string=\"%s\"", out);
     return out;
 }
@@ -206,29 +213,32 @@ char *str_escape(enum escape_mode mode, const char *in) {
  * @note Escaped characters are "\\\\" (double backslash) resulting in '\\' (single backslash)
  *       and "\\\"" (backslash followed by double quote), resulting in '"' (double quote)
  *       but we will escape any other character, for example "\\ " will result in ' ' (space)
- *       This is the reverse of function str_escape, except that we assume (and only support) unescaping mode escape_mode_quote here
+ *       This is the reverse of function str_escape, except that we assume (and only support) unescaping mode
+ * escape_mode_quote here
  *
  * @param[out] dest The location where to store the unescaped string
  * @param[in] src The source string to copy (and to unescape)
- * @param n The maximum amount of bytes copied into dest. Warning: If there is no null byte among the n bytes written to dest, the string placed in dest will not be null-terminated.
+ * @param n The maximum amount of bytes copied into dest. Warning: If there is no null byte among the n bytes written to
+ * dest, the string placed in dest will not be null-terminated.
  *
  * @return A pointer to the destination string @p dest
  */
 char *strncpy_unescape(char *dest, const char *src, size_t n) {
-    char *dest_ptr;	/* A pointer to the currently parsed character inside string dest */
+    char *dest_ptr; /* A pointer to the currently parsed character inside string dest */
 
-    for (dest_ptr=dest; (dest_ptr-dest) < n && (*src != '\0'); src++, dest_ptr++) {
+    for (dest_ptr = dest; (dest_ptr - dest) < n && (*src != '\0'); src++, dest_ptr++) {
         if (*src == '\\') {
             src++;
         }
         *dest_ptr = *src;
         if (*dest_ptr == '\0') {
-            /* This is only possible if we just parsed an escaped sequence '\\' followed by a NUL termination, which is not really sane, but we will silently accept this case */
+            /* This is only possible if we just parsed an escaped sequence '\\' followed by a NUL termination, which is
+             * not really sane, but we will silently accept this case */
             return dest;
         }
     }
-    if ((dest_ptr-dest) < n)
-        *dest_ptr='\0';	/* Add a trailing '\0' if any room is remaining */
+    if ((dest_ptr - dest) < n)
+        *dest_ptr = '\0'; /* Add a trailing '\0' if any room is remaining */
     else {
         // strncpy_unescape will return a non NUL-terminated string. Trouble ahead if this is not handled properly
     }
@@ -259,7 +269,7 @@ enum parse_state {
  * @return A buffer containing the parsed string, parts delimited by a null character, the last part
  * followed by a double null character.
  */
-static char * parse_for_systematic_comparison(const char *s) {
+static char *parse_for_systematic_comparison(const char *s) {
     char *ret = g_malloc0(strlen(s) * 2 + 1);
     const char *in = s;
     char *out = ret;
@@ -449,31 +459,31 @@ int compare_name_systematic(const char *s1, const char *s2) {
 
     ret = ((elements - matches) * MAX_MISMATCH) / elements;
 
-    dbg(lvl_debug, "'%s' %s '%s', ret=%d",
-        s1, ret ? (ret == MAX_MISMATCH ? "does NOT match" : "PARTIALLY matches") : "matches", s2, ret);
+    dbg(lvl_debug, "'%s' %s '%s', ret=%d", s1,
+        ret ? (ret == MAX_MISMATCH ? "does NOT match" : "PARTIALLY matches") : "matches", s2, ret);
 
     return ret;
 }
 
 static void hash_callback(gpointer key, gpointer value, gpointer user_data) {
-    GList **l=user_data;
-    *l=g_list_prepend(*l, value);
+    GList **l = user_data;
+    *l = g_list_prepend(*l, value);
 }
 
 GList *g_hash_to_list(GHashTable *h) {
-    GList *ret=NULL;
+    GList *ret = NULL;
     g_hash_table_foreach(h, hash_callback, &ret);
 
     return ret;
 }
 
 static void hash_callback_key(gpointer key, gpointer value, gpointer user_data) {
-    GList **l=user_data;
-    *l=g_list_prepend(*l, key);
+    GList **l = user_data;
+    *l = g_list_prepend(*l, key);
 }
 
 GList *g_hash_to_list_keys(GHashTable *h) {
-    GList *ret=NULL;
+    GList *ret = NULL;
     g_hash_table_foreach(h, hash_callback_key, &ret);
 
     return ret;
@@ -493,15 +503,15 @@ GList *g_hash_to_list_keys(GHashTable *h) {
  * @return A newly allocated string, see description. The caller is responsible for freeing the returned string.
  */
 gchar *g_strconcat_printf(gchar *buffer, gchar *fmt, ...) {
-    gchar *str,*ret;
+    gchar *str, *ret;
     va_list ap;
 
     va_start(ap, fmt);
-    str=g_strdup_vprintf(fmt, ap);
+    str = g_strdup_vprintf(fmt, ap);
     va_end(ap);
-    if (! buffer)
+    if (!buffer)
         return str;
-    ret=g_strconcat(buffer, str, NULL);
+    ret = g_strconcat(buffer, str, NULL);
     g_free(buffer);
     g_free(str);
     return ret;
@@ -514,18 +524,13 @@ int g_utf8_strlen_force_link(gchar *buffer, int max) {
 }
 #endif
 
-#if defined(_WIN32) || defined(__CEGCC__)
-#include <windows.h>
-#include <sys/types.h>
-#endif
-
-#if defined(_WIN32) || defined(__CEGCC__) || defined (__APPLE__) || defined(HAVE_API_ANDROID)
+#if defined(_WIN32) || defined(__CEGCC__) || defined(__APPLE__) || defined(HAVE_API_ANDROID)
 char *stristr(const char *String, const char *Pattern) {
     char *pptr, *sptr, *start;
 
     for (start = (char *)String; *start != (int)NULL; start++) {
         /* find start of pattern in string */
-        for ( ; ((*start!=(int)NULL) && (toupper(*start) != toupper(*Pattern))); start++)
+        for (; ((*start != (int)NULL) && (toupper(*start) != toupper(*Pattern))); start++)
             ;
         if ((int)NULL == *start)
             return NULL;
@@ -546,28 +551,27 @@ char *stristr(const char *String, const char *Pattern) {
     return NULL;
 }
 
-#ifndef SIZE_MAX
-# define SIZE_MAX ((size_t) -1)
-#endif
-#ifndef SSIZE_MAX
-# define SSIZE_MAX ((ssize_t) (SIZE_MAX / 2))
-#endif
-#if !HAVE_FLOCKFILE
-# undef flockfile
-# define flockfile(x) ((void) 0)
-#endif
-#if !HAVE_FUNLOCKFILE
-# undef funlockfile
-# define funlockfile(x) ((void) 0)
-#endif
+#    ifndef SIZE_MAX
+#        define SIZE_MAX ((size_t)-1)
+#    endif
+#    ifndef SSIZE_MAX
+#        define SSIZE_MAX ((ssize_t)(SIZE_MAX / 2))
+#    endif
+#    if !HAVE_FLOCKFILE
+#        undef flockfile
+#        define flockfile(x) ((void)0)
+#    endif
+#    if !HAVE_FUNLOCKFILE
+#        undef funlockfile
+#        define funlockfile(x) ((void)0)
+#    endif
 
 /* Some systems, like OSF/1 4.0 and Woe32, don't have EOVERFLOW.  */
-#ifndef EOVERFLOW
-# define EOVERFLOW E2BIG
-#endif
+#    ifndef EOVERFLOW
+#        define EOVERFLOW E2BIG
+#    endif
 
-
-#ifndef HAVE_GETDELIM
+#    ifndef HAVE_GETDELIM
 /**
  * @brief Reads the part of a file up to a delimiter to a string.
  * <p>
@@ -578,8 +582,8 @@ char *stristr(const char *String, const char *Pattern) {
  * @param n Size of the buffer.
  *
  * @return Number of characters read (not including the null terminator), or -1 on error or EOF.
-*/
-ssize_t getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp) {
+ */
+ssize_t getdelim(char **lineptr, size_t *n, int delimiter, FILE *fp) {
     int result;
     size_t cur_len = 0;
 
@@ -587,11 +591,11 @@ ssize_t getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp) {
         return -1;
     }
 
-    flockfile (fp);
+    flockfile(fp);
 
     if (*lineptr == NULL || *n == 0) {
         *n = 120;
-        *lineptr = (char *) realloc (*lineptr, *n);
+        *lineptr = (char *)realloc(*lineptr, *n);
         if (*lineptr == NULL) {
             result = -1;
             goto unlock_return;
@@ -601,7 +605,7 @@ ssize_t getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp) {
     for (;;) {
         int i;
 
-        i = getc (fp);
+        i = getc(fp);
         if (i == EOF) {
             result = -1;
             break;
@@ -609,8 +613,8 @@ ssize_t getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp) {
 
         /* Make enough space for len+1 (for final NUL) bytes.  */
         if (cur_len + 1 >= *n) {
-            size_t needed_max=SIZE_MAX;
-            size_t needed = 2 * *n + 1;   /* Be generous. */
+            size_t needed_max = SIZE_MAX;
+            size_t needed = 2 * *n + 1; /* Be generous. */
             char *new_lineptr;
             if (needed_max < needed)
                 needed = needed_max;
@@ -619,7 +623,7 @@ ssize_t getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp) {
                 goto unlock_return;
             }
 
-            new_lineptr = (char *) realloc (*lineptr, needed);
+            new_lineptr = (char *)realloc(*lineptr, needed);
             if (new_lineptr == NULL) {
                 result = -1;
                 goto unlock_return;
@@ -639,34 +643,35 @@ ssize_t getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp) {
     result = cur_len ? cur_len : result;
 
 unlock_return:
-    funlockfile (fp); /* doesn't set errno */
+    funlockfile(fp); /* doesn't set errno */
 
     return result;
 }
-#endif
+#    endif
 
-#ifndef HAVE_GETLINE
-ssize_t getline (char **lineptr, size_t *n, FILE *stream) {
-    return getdelim (lineptr, n, '\n', stream);
+#    ifndef HAVE_GETLINE
+ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
+    return getdelim(lineptr, n, '\n', stream);
 }
-#endif
+#    endif
 
-#if defined(_UNICODE)
-wchar_t* newSysString(const char *toconvert) {
+#    if defined(_UNICODE)
+wchar_t *newSysString(const char *toconvert) {
     int newstrlen = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toconvert, -1, 0, 0);
-    wchar_t *newstring = g_new(wchar_t,newstrlen);
-    MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toconvert, -1, newstring, newstrlen) ;
+    wchar_t *newstring = g_new(wchar_t, newstrlen);
+    MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toconvert, -1, newstring, newstrlen);
     return newstring;
 }
-#else
-char * newSysString(const char *toconvert) {
+#    else
+char *newSysString(const char *toconvert) {
     return g_strdup(toconvert);
 }
-#endif
+#    endif
 #endif
 
 /**
- * @brief Optimizes the format of a string, adding carriage returns so that when displayed, the result text zone is roughly as wide as high
+ * @brief Optimizes the format of a string, adding carriage returns so that when displayed, the result text zone is
+ * roughly as wide as high
  *
  * @param[in,out] s The string to proces (will be modified by this function, but length will be unchanged)
  */
@@ -681,8 +686,8 @@ void square_shape_str(char *s) {
 
     if (!s)
         return;
-    for (c=s; *c!='\0'; c++) {
-        if (*c==' ') {
+    for (c = s; *c != '\0'; c++) {
+        if (*c == ' ') {
             if (max_cols < cur_cols)
                 max_cols = cur_cols;
             cur_cols = 0;
@@ -692,7 +697,7 @@ void square_shape_str(char *s) {
     }
     if (max_cols < cur_cols)
         max_cols = cur_cols;
-    if (cur_cols)	/* If last line does not end with CR, add it to line numbers anyway */
+    if (cur_cols) /* If last line does not end with CR, add it to line numbers anyway */
         max_rows++;
     /* Give twice more room for rows (hence the factor 2 below)
      * This will render as a rectangular shape, taking more horizontal space than vertical */
@@ -702,28 +707,29 @@ void square_shape_str(char *s) {
     if (target_cols < max_cols)
         target_cols = max_cols;
 
-    target_cols = target_cols + target_cols/10;	/* Allow 10% extra on columns */
-    dbg(lvl_debug, "square_shape_str(): analyzing input text=\"%s\". max_rows=%u, max_cols=%u, surface=%u, target_cols=%u",
-        s, max_rows, max_cols, max_rows * 2 * max_cols, target_cols);
+    target_cols = target_cols + target_cols / 10; /* Allow 10% extra on columns */
+    dbg(lvl_debug,
+        "square_shape_str(): analyzing input text=\"%s\". max_rows=%u, max_cols=%u, surface=%u, target_cols=%u", s,
+        max_rows, max_cols, max_rows * 2 * max_cols, target_cols);
 
     cur_cols = 0;
     last_break = NULL;
-    for (c=s; *c!='\0'; c++) {
-        if (*c==' ') {
-            if (cur_cols>=target_cols) {	/* This line is too long, break at the previous non alnum character */
+    for (c = s; *c != '\0'; c++) {
+        if (*c == ' ') {
+            if (cur_cols >= target_cols) { /* This line is too long, break at the previous non alnum character */
                 if (last_break) {
-                    *last_break =
-                        '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
-                    cur_cols = c-last_break;
+                    *last_break = '\n'; /* Replace the previous non alnum character with a line break, this creates a
+                                           new line and prevents the previous line from being too long */
+                    cur_cols = c - last_break;
                 }
             }
-            last_break = c;	/* Record this position as a candidate to insert a line break */
+            last_break = c; /* Record this position as a candidate to insert a line break */
         }
         cur_cols++;
     }
-    if (cur_cols>=target_cols && last_break) {
-        *last_break =
-            '\n';	/* Replace the previous non alnum character with a line break, this creates a new line and prevents the previous line from being too long */
+    if (cur_cols >= target_cols && last_break) {
+        *last_break = '\n'; /* Replace the previous non alnum character with a line break, this creates a new line and
+                               prevents the previous line from being too long */
     }
 
     dbg(lvl_debug, "square_shape_str(): output text=\"%s\"", s);
@@ -737,7 +743,7 @@ void square_shape_str(char *s) {
 int gettimeofday(struct timeval *time, void *local) {
     int milliseconds = GetTickCount();
 
-    time->tv_sec = milliseconds/1000;
+    time->tv_sec = milliseconds / 1000;
     time->tv_usec = (milliseconds - (time->tv_sec * 1000)) * 1000;
 
     return 0;
@@ -751,29 +757,29 @@ int gettimeofday(struct timeval *time, void *local) {
  * @return The number of seconds elapsed since January 1, 1970, 00:00:00 UTC.
  */
 unsigned int iso8601_to_secs(char *iso8601) {
-    int a,b,d,val[6],i=0;
-    char *start=iso8601,*pos=iso8601;
+    int a, b, d, val[6], i = 0;
+    char *start = iso8601, *pos = iso8601;
     while (*pos && i < 6) {
         if (*pos < '0' || *pos > '9') {
-            val[i++]=atoi(start);
+            val[i++] = atoi(start);
             pos++;
-            start=pos;
+            start = pos;
         }
-        if(*pos)
+        if (*pos)
             pos++;
     }
 
-    a=val[0]/100;
-    b=2-a+a/4;
+    a = val[0] / 100;
+    b = 2 - a + a / 4;
 
     if (val[1] < 3) {
         val[0]--;
-        val[1]+=12;
+        val[1] += 12;
     }
 
-    d=1461*(val[0]+4716)/4+306001*(val[1]+1)/10000+val[2]+b-2442112;
+    d = 1461 * (val[0] + 4716) / 4 + 306001 * (val[1] + 1) / 10000 + val[2] + b - 2442112;
 
-    return ((d*24+val[3])*60+val[4])*60+val[5];
+    return ((d * 24 + val[3]) * 60 + val[4]) * 60 + val[5];
 }
 
 /**
@@ -796,11 +802,11 @@ unsigned int iso8601_to_secs(char *iso8601) {
  * or—in the case of `tm_wday` and `tm_yday`—if their values are inconsistent with the other members.
  *
  */
-time_t mkgmtime(struct tm * pt) {
+time_t mkgmtime(struct tm *pt) {
     time_t ret;
 
     /* Input, GMT and local time */
-    struct tm * pti, * pgt, * plt;
+    struct tm *pti, *pgt, *plt;
 
     pti = g_memdup(pt, sizeof(struct tm));
 
@@ -831,7 +837,7 @@ time_t mkgmtime(struct tm * pt) {
 /**
  * @brief Converts an ISO 8601-style time string into `time_t`.
  */
-time_t iso8601_to_time(char * iso8601) {
+time_t iso8601_to_time(char *iso8601) {
     /* Date/time fields (YYYY-MM-DD-hh-mm-ss) */
     int val[8];
 
@@ -878,8 +884,8 @@ time_t iso8601_to_time(char * iso8601) {
     tm.tm_min = val[4] - val[7];
     tm.tm_sec = val[5];
 
-    dbg(lvl_debug, "time %s (%02d-%02d-%02d %02d:%02d:%02d)\n", iso8601, tm.tm_year, tm.tm_mon, tm.tm_mday,
-        tm.tm_hour, tm.tm_min, tm.tm_sec);
+    dbg(lvl_debug, "time %s (%02d-%02d-%02d %02d:%02d:%02d)\n", iso8601, tm.tm_year, tm.tm_mon, tm.tm_mday, tm.tm_hour,
+        tm.tm_min, tm.tm_sec);
 
     return mkgmtime(&tm);
 }
@@ -893,15 +899,15 @@ time_t iso8601_to_time(char * iso8601) {
  *
  * @return Time in ISO8601 format
  */
-char * time_to_iso8601(time_t time) {
-    char *timep=NULL;
+char *time_to_iso8601(time_t time) {
+    char *timep = NULL;
     char buffer[32];
     struct tm *tm;
 
     tm = gmtime(&time);
     if (tm) {
         strftime(buffer, sizeof(buffer), "%Y-%m-%dT%TZ", tm);
-        timep=g_strdup(buffer);
+        timep = g_strdup(buffer);
     }
     return timep;
 }
@@ -913,10 +919,11 @@ char * time_to_iso8601(time_t time) {
  */
 char *current_to_iso8601(void) {
 #ifdef HAVE_API_WIN32_BASE
-    char *timep=NULL;
+    char *timep = NULL;
     SYSTEMTIME ST;
     GetSystemTime(&ST);
-    timep=g_strdup_printf("%d-%02d-%02dT%02d:%02d:%02dZ",ST.wYear,ST.wMonth,ST.wDay,ST.wHour,ST.wMinute,ST.wSecond);
+    timep =
+        g_strdup_printf("%d-%02d-%02dT%02d:%02d:%02dZ", ST.wYear, ST.wMonth, ST.wDay, ST.wHour, ST.wMinute, ST.wSecond);
     return timep;
 #else
     time_t tnow;
@@ -925,16 +932,14 @@ char *current_to_iso8601(void) {
 #endif
 }
 
-
 struct spawn_process_info {
 #ifdef HAVE_API_WIN32_BASE
     PROCESS_INFORMATION pr;
 #else
-    pid_t pid; // = -1 if non-blocking spawn isn't supported
-    int status; // exit status if non-blocking spawn isn't supported
+    pid_t pid;   // = -1 if non-blocking spawn isn't supported
+    int status;  // exit status if non-blocking spawn isn't supported
 #endif
 };
-
 
 /**
  * Escape and quote string for shell
@@ -944,87 +949,87 @@ struct spawn_process_info {
  */
 char *shell_escape(char *arg) {
     char *r;
-    int arglen=strlen(arg);
-    int i,j,rlen;
+    int arglen = strlen(arg);
+    int i, j, rlen;
 #ifdef HAVE_API_WIN32_BASE
     {
-        int bscount=0;
-        rlen=arglen+3;
-        r=g_new(char,rlen);
-        r[0]='"';
-        for(i=0,j=1; i<arglen; i++) {
-            if(arg[i]=='\\') {
+        int bscount = 0;
+        rlen = arglen + 3;
+        r = g_new(char, rlen);
+        r[0] = '"';
+        for (i = 0, j = 1; i < arglen; i++) {
+            if (arg[i] == '\\') {
                 bscount++;
-                if(i==(arglen-1)) {
+                if (i == (arglen - 1)) {
                     // Most special case - last char is
                     // backslash. We can't escape it inside
                     // quoted string due to Win unescaping
                     // rules so quote should be closed
                     // before backslashes and these
                     // backslashes shouldn't be doubled
-                    rlen+=bscount;
-                    r=g_realloc(r,rlen);
-                    r[j++]='"';
-                    memset(r+j,'\\',bscount);
-                    j+=bscount;
+                    rlen += bscount;
+                    r = g_realloc(r, rlen);
+                    r[j++] = '"';
+                    memset(r + j, '\\', bscount);
+                    j += bscount;
                 }
             } else {
-                //Any preceeding backslashes will be doubled.
-                bscount*=2;
+                // Any preceeding backslashes will be doubled.
+                bscount *= 2;
                 // Double quote needs to be preceeded by
                 // at least one backslash
-                if(arg[i]=='"')
+                if (arg[i] == '"')
                     bscount++;
-                if(bscount>0) {
-                    rlen+=bscount;
-                    r=g_realloc(r,rlen);
-                    memset(r+j,'\\',bscount);
-                    j+=bscount;
-                    bscount=0;
+                if (bscount > 0) {
+                    rlen += bscount;
+                    r = g_realloc(r, rlen);
+                    memset(r + j, '\\', bscount);
+                    j += bscount;
+                    bscount = 0;
                 }
-                r[j++]=arg[i];
-                if(i==(arglen-1)) {
-                    r[j++]='"';
+                r[j++] = arg[i];
+                if (i == (arglen - 1)) {
+                    r[j++] = '"';
                 }
             }
         }
-        r[j++]=0;
+        r[j++] = 0;
     }
 #else
     {
         // Will use hard quoting for the whole string
         // and replace each singular quote found with a '\'' sequence.
-        rlen=arglen+3;
-        r=g_new(char,rlen);
-        r[0]='\'';
-        for(i=0,j=1; i<arglen; i++) {
-            if(arg[i]=='\'') {
-                rlen+=3;
-                r=g_realloc(r,rlen);
-                g_strlcpy(r+j,"'\\''",rlen-j);
+        rlen = arglen + 3;
+        r = g_new(char, rlen);
+        r[0] = '\'';
+        for (i = 0, j = 1; i < arglen; i++) {
+            if (arg[i] == '\'') {
+                rlen += 3;
+                r = g_realloc(r, rlen);
+                g_strlcpy(r + j, "'\\''", rlen - j);
             } else {
-                r[j++]=arg[i];
+                r[j++] = arg[i];
             }
         }
-        r[j++]='\'';
-        r[j++]=0;
+        r[j++] = '\'';
+        r[j++] = 0;
     }
 #endif
     return r;
 }
 
 #ifndef _POSIX_C_SOURCE
-static char* spawn_process_compose_cmdline(char **argv) {
-    int i,j;
-    char *cmdline=shell_escape(argv[0]);
-    for(i=1,j=strlen(cmdline); argv[i]; i++) {
-        char *arg=shell_escape(argv[i]);
-        int arglen=strlen(arg);
-        cmdline[j]=' ';
-        cmdline=g_realloc(cmdline,j+1+arglen+1);
-        memcpy(cmdline+j+1,arg,arglen+1);
+static char *spawn_process_compose_cmdline(char **argv) {
+    int i, j;
+    char *cmdline = shell_escape(argv[0]);
+    for (i = 1, j = strlen(cmdline); argv[i]; i++) {
+        char *arg = shell_escape(argv[i]);
+        int arglen = strlen(arg);
+        cmdline[j] = ' ';
+        cmdline = g_realloc(cmdline, j + 1 + arglen + 1);
+        memcpy(cmdline + j + 1, arg, arglen + 1);
         g_free(arg);
-        j=j+1+arglen;
+        j = j + 1 + arglen;
     }
     return cmdline;
 }
@@ -1032,16 +1037,15 @@ static char* spawn_process_compose_cmdline(char **argv) {
 
 #ifdef _POSIX_C_SOURCE
 
-#if 0 /* def _POSIX_THREADS */
-#define spawn_process_sigmask(how,set,old) pthread_sigmask(how,set,old)
-#else
-#define spawn_process_sigmask(how,set,old) sigprocmask(how,set,old)
+#    if 0 /* def _POSIX_THREADS */
+#        define spawn_process_sigmask(how, set, old) pthread_sigmask(how, set, old)
+#    else
+#        define spawn_process_sigmask(how, set, old) sigprocmask(how, set, old)
+#    endif
+
+GList *spawn_process_children = NULL;
+
 #endif
-
-GList *spawn_process_children=NULL;
-
-#endif
-
 
 /**
  * Call external program
@@ -1050,37 +1054,36 @@ GList *spawn_process_children=NULL;
  *    zeroeth argument is program name
  * @returns 0 - success, >0 - return code, -1 - error
  */
-struct spawn_process_info*
-spawn_process(char **argv) {
-    struct spawn_process_info*r=g_new(struct spawn_process_info,1);
+struct spawn_process_info *spawn_process(char **argv) {
+    struct spawn_process_info *r = g_new(struct spawn_process_info, 1);
 #ifdef _POSIX_C_SOURCE
     {
         pid_t pid;
 
         sigset_t set, old;
-        dbg(lvl_debug,"spawning process for '%s'", argv[0]);
+        dbg(lvl_debug, "spawning process for '%s'", argv[0]);
         sigemptyset(&set);
-        sigaddset(&set,SIGCHLD);
-        spawn_process_sigmask(SIG_BLOCK,&set,&old);
-        pid=fork();
-        if(pid==0) {
+        sigaddset(&set, SIGCHLD);
+        spawn_process_sigmask(SIG_BLOCK, &set, &old);
+        pid = fork();
+        if (pid == 0) {
             execvp(argv[0], argv);
             /*Shouldn't reach here*/
             exit(1);
-        } else if(pid>0) {
-            r->status=-1;
-            r->pid=pid;
-            spawn_process_children=g_list_prepend(spawn_process_children,r);
+        } else if (pid > 0) {
+            r->status = -1;
+            r->pid = pid;
+            spawn_process_children = g_list_prepend(spawn_process_children, r);
         } else {
-            dbg(lvl_error,"fork() returned error.");
+            dbg(lvl_error, "fork() returned error.");
             g_free(r);
-            r=NULL;
+            r = NULL;
         }
-        spawn_process_sigmask(SIG_SETMASK,&old,NULL);
+        spawn_process_sigmask(SIG_SETMASK, &old, NULL);
         return r;
     }
 #else
-#ifdef HAVE_API_WIN32_BASE
+#    ifdef HAVE_API_WIN32_BASE
     {
         char *cmdline;
         DWORD dwRet;
@@ -1093,40 +1096,40 @@ spawn_process(char **argv) {
         // without first CreateProcess parameter, also it seems that
         // no WinCE program has support for quoted strings in arguments.
         // So...
-#ifdef HAVE_API_WIN32_CE
-        LPWSTR cmd,args;
-        cmdline=g_strjoinv(" ",argv+1);
-        args=newSysString(cmdline);
+#        ifdef HAVE_API_WIN32_CE
+        LPWSTR cmd, args;
+        cmdline = g_strjoinv(" ", argv + 1);
+        args = newSysString(cmdline);
         cmd = newSysString(argv[0]);
-        dwRet=CreateProcess(cmd, args, NULL, NULL, 0, 0, NULL, NULL, NULL, &(r->pr));
-        dbg(lvl_debug, "CreateProcess(%s,%s), PID=%i",argv[0],cmdline,r->pr.dwProcessId);
+        dwRet = CreateProcess(cmd, args, NULL, NULL, 0, 0, NULL, NULL, NULL, &(r->pr));
+        dbg(lvl_debug, "CreateProcess(%s,%s), PID=%i", argv[0], cmdline, r->pr.dwProcessId);
         g_free(cmd);
-#else
-        TCHAR* args;
+#        else
+        TCHAR *args;
         STARTUPINFO startupInfo;
         memset(&startupInfo, 0, sizeof(startupInfo));
         startupInfo.cb = sizeof(startupInfo);
-        cmdline=spawn_process_compose_cmdline(argv);
-        args=newSysString(cmdline);
-        dwRet=CreateProcess(NULL, args, NULL, NULL, 0, 0, NULL, NULL, &startupInfo, &(r->pr));
-        dbg(lvl_debug, "CreateProcess(%s), PID=%i",cmdline,r->pr.dwProcessId);
-#endif
+        cmdline = spawn_process_compose_cmdline(argv);
+        args = newSysString(cmdline);
+        dwRet = CreateProcess(NULL, args, NULL, NULL, 0, 0, NULL, NULL, &startupInfo, &(r->pr));
+        dbg(lvl_debug, "CreateProcess(%s), PID=%i", cmdline, r->pr.dwProcessId);
+#        endif
         g_free(cmdline);
         g_free(args);
         return r;
     }
-#else
+#    else
     {
-        char *cmdline=spawn_process_compose_cmdline(argv);
+        char *cmdline = spawn_process_compose_cmdline(argv);
         int status;
-        dbg(lvl_error,"Unblocked spawn_process isn't availiable on this platform.");
-        status=system(cmdline);
+        dbg(lvl_error, "Unblocked spawn_process isn't availiable on this platform.");
+        status = system(cmdline);
         g_free(cmdline);
-        r->status=status;
-        r->pid=0;
+        r->status = status;
+        r->pid = 0;
         return r;
     }
-#endif
+#    endif
 #endif
 }
 
@@ -1140,75 +1143,75 @@ spawn_process(char **argv) {
  *
  */
 int spawn_process_check_status(struct spawn_process_info *pi, int block) {
-    if(pi==NULL) {
-        dbg(lvl_error,"Trying to get process status of NULL, assuming process is terminated.");
+    if (pi == NULL) {
+        dbg(lvl_error, "Trying to get process status of NULL, assuming process is terminated.");
         return 255;
     }
 #ifdef HAVE_API_WIN32_BASE
     {
-        int failcount=0;
-        while(1) {
+        int failcount = 0;
+        while (1) {
             DWORD dw;
-            if(GetExitCodeProcess(pi->pr.hProcess,&dw)) {
-                if(dw!=STILL_ACTIVE) {
+            if (GetExitCodeProcess(pi->pr.hProcess, &dw)) {
+                if (dw != STILL_ACTIVE) {
                     return dw;
                     break;
                 }
             } else {
-                dbg(lvl_error,"GetExitCodeProcess failed. Assuming the process is terminated.");
+                dbg(lvl_error, "GetExitCodeProcess failed. Assuming the process is terminated.");
                 return 255;
             }
-            if(!block)
+            if (!block)
                 return -1;
 
-            dw=WaitForSingleObject(pi->pr.hProcess,INFINITE);
-            if(dw==WAIT_FAILED && failcount++==1) {
-                dbg(lvl_error,"WaitForSingleObject failed twice. Assuming the process is terminated.");
+            dw = WaitForSingleObject(pi->pr.hProcess, INFINITE);
+            if (dw == WAIT_FAILED && failcount++ == 1) {
+                dbg(lvl_error, "WaitForSingleObject failed twice. Assuming the process is terminated.");
                 return 0;
                 break;
             }
         }
     }
 #else
-#ifdef _POSIX_C_SOURCE
-    if(pi->status!=-1) {
+#    ifdef _POSIX_C_SOURCE
+    if (pi->status != -1) {
         return pi->status;
     }
-    while(1) {
+    while (1) {
         int status;
-        pid_t w=waitpid(pi->pid,&status,block?0:WNOHANG);
-        if(w>0) {
-            if(WIFEXITED(status))
-                pi->status=WEXITSTATUS(status);
+        pid_t w = waitpid(pi->pid, &status, block ? 0 : WNOHANG);
+        if (w > 0) {
+            if (WIFEXITED(status))
+                pi->status = WEXITSTATUS(status);
             return pi->status;
-            if(WIFSTOPPED(status)) {
-                dbg(lvl_debug,"child is stopped by %i signal",WSTOPSIG(status));
+            if (WIFSTOPPED(status)) {
+                dbg(lvl_debug, "child is stopped by %i signal", WSTOPSIG(status));
             } else if (WIFSIGNALED(status)) {
-                dbg(lvl_debug,"child terminated by signal %i",WEXITSTATUS(status));
-                pi->status=255;
+                dbg(lvl_debug, "child terminated by signal %i", WEXITSTATUS(status));
+                pi->status = 255;
                 return 255;
             }
-            if(!block)
+            if (!block)
                 return -1;
-        } else if(w==0) {
-            if(!block)
+        } else if (w == 0) {
+            if (!block)
                 return -1;
         } else {
-            if(pi->status!=-1) // Signal handler has changed pi->status while in this function
+            if (pi->status != -1)  // Signal handler has changed pi->status while in this function
                 return pi->status;
-            dbg(lvl_error,"waitpid() indicated error, reporting process termination.");
+            dbg(lvl_error, "waitpid() indicated error, reporting process termination.");
             return 255;
         }
     }
-#else
+#    else
     dbg(lvl_error, "Non-blocking spawn_process isn't availiable for this platform, repoting process exit status.");
     return pi->status;
-#endif
+#    endif
 #endif
 }
 
 void spawn_process_info_free(struct spawn_process_info *pi) {
-    if(pi==NULL)
+    if (pi == NULL)
         return;
 #ifdef HAVE_API_WIN32_BASE
     CloseHandle(pi->pr.hProcess);
@@ -1218,10 +1221,10 @@ void spawn_process_info_free(struct spawn_process_info *pi) {
     {
         sigset_t set, old;
         sigemptyset(&set);
-        sigaddset(&set,SIGCHLD);
-        spawn_process_sigmask(SIG_BLOCK,&set,&old);
-        spawn_process_children=g_list_remove(spawn_process_children,pi);
-        spawn_process_sigmask(SIG_SETMASK,&old,NULL);
+        sigaddset(&set, SIGCHLD);
+        spawn_process_sigmask(SIG_BLOCK, &set, &old);
+        spawn_process_children = g_list_remove(spawn_process_children, pi);
+        spawn_process_sigmask(SIG_SETMASK, &old, NULL);
     }
 #endif
     g_free(pi);
@@ -1231,14 +1234,14 @@ void spawn_process_info_free(struct spawn_process_info *pi) {
 static void spawn_process_sigchld(int sig) {
     int status;
     pid_t pid;
-    while ((pid=waitpid(-1, &status, WNOHANG)) > 0) {
-        GList *el=g_list_first(spawn_process_children);
-        while(el) {
-            struct spawn_process_info *p=el->data;
-            if(p->pid==pid) {
-                p->status=status;
+    while ((pid = waitpid(-1, &status, WNOHANG)) > 0) {
+        GList *el = g_list_first(spawn_process_children);
+        while (el) {
+            struct spawn_process_info *p = el->data;
+            if (p->pid == pid) {
+                p->status = status;
             }
-            el=g_list_next(el);
+            el = g_list_next(el);
         }
     }
 }
@@ -1247,8 +1250,8 @@ static void spawn_process_sigchld(int sig) {
 void spawn_process_init() {
 #ifdef _POSIX_C_SOURCE
     struct sigaction act;
-    act.sa_handler=spawn_process_sigchld;
-    act.sa_flags=0;
+    act.sa_handler = spawn_process_sigchld;
+    act.sa_flags = 0;
     sigemptyset(&act.sa_mask);
     sigaction(SIGCHLD, &act, NULL);
 #endif
@@ -1272,27 +1275,27 @@ void spawn_process_init() {
  * @param mode The conversion mode, see description
  */
 void get_compass_direction(char *buffer, int angle, int mode) {
-    angle=angle%360;
+    angle = angle % 360;
     switch (mode) {
     case 0:
-        sprintf(buffer,"%d",angle);
+        sprintf(buffer, "%d", angle);
         break;
     case 1:
         if (angle < 69 || angle > 291)
-            *buffer++='N';
+            *buffer++ = 'N';
         if (angle > 111 && angle < 249)
-            *buffer++='S';
+            *buffer++ = 'S';
         if (angle > 22 && angle < 158)
-            *buffer++='E';
+            *buffer++ = 'E';
         if (angle > 202 && angle < 338)
-            *buffer++='W';
-        *buffer++='\0';
+            *buffer++ = 'W';
+        *buffer++ = '\0';
         break;
     case 2:
-        angle=(angle+15)/30;
-        if (! angle)
-            angle=12;
-        sprintf(buffer,"%d H", angle);
+        angle = (angle + 15) / 30;
+        if (!angle)
+            angle = 12;
+        sprintf(buffer, "%d H", angle);
         break;
     }
 }

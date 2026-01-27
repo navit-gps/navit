@@ -18,9 +18,9 @@
  */
 #include "navit_lfs.h" /* include first to avoid conflicts bet */
 
-#include <stdlib.h>
-#include "maptool.h"
 #include "debug.h"
+#include "maptool.h"
+#include <stdlib.h>
 
 /**
  * @brief Saves a buffer to a file
@@ -33,13 +33,13 @@
  */
 void save_buffer(char *filename, struct buffer *b, long long offset) {
     FILE *f;
-    f=fopen(filename,"rb+");
-    if (! f)
-        f=fopen(filename,"wb+");
+    f = fopen(filename, "rb+");
+    if (!f)
+        f = fopen(filename, "wb+");
 
     dbg_assert(f != NULL);
-    dbg_assert(fseeko(f, offset, SEEK_SET)==0);
-    dbg_assert(fwrite(b->base, b->size, 1, f)==1);
+    dbg_assert(fseeko(f, offset, SEEK_SET) == 0);
+    dbg_assert(fwrite(b->base, b->size, 1, f) == 1);
     fclose(f);
 }
 /**
@@ -55,22 +55,22 @@ void save_buffer(char *filename, struct buffer *b, long long offset) {
 int load_buffer(char *filename, struct buffer *b, long long offset, long long size) {
     FILE *f;
     long long len;
-    dbg_assert(size>=0);
-    dbg_assert(offset>=0);
+    dbg_assert(size >= 0);
+    dbg_assert(offset >= 0);
     g_free(b->base);
-    b->malloced=0;
-    f=fopen(filename,"rb");
+    b->malloced = 0;
+    f = fopen(filename, "rb");
     fseeko(f, 0, SEEK_END);
-    len=ftello(f);
-    dbg_assert(len>=0);
-    if (offset+size > len) {
-        size=len-offset;
+    len = ftello(f);
+    dbg_assert(len >= 0);
+    if (offset + size > len) {
+        size = len - offset;
     }
-    b->size=b->malloced=size;
-    dbg_assert(b->size>0);
+    b->size = b->malloced = size;
+    dbg_assert(b->size > 0);
 
     fseeko(f, offset, SEEK_SET);
-    b->base=g_malloc(b->size);
+    b->base = g_malloc(b->size);
     if (fread(b->base, b->size, 1, f) == 0) {
         dbg(lvl_warning, "fread failed");
         fclose(f);
@@ -89,9 +89,9 @@ int load_buffer(char *filename, struct buffer *b, long long offset, long long si
  */
 long long sizeof_buffer(char *filename) {
     long long ret;
-    FILE *f=fopen(filename,"rb");
+    FILE *f = fopen(filename, "rb");
     fseeko(f, 0, SEEK_END);
-    ret=ftello(f);
+    ret = ftello(f);
     fclose(f);
     return ret;
 }

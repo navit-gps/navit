@@ -17,30 +17,30 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <stdlib.h>
-#include <glib.h>
-#include "config.h"
-#include "item.h"
-#include "plugin.h"
-#include "navit.h"
 #include "attr.h"
 #include "callback.h"
+#include "config.h"
+#include "item.h"
+#include "navit.h"
+#include "plugin.h"
 #include "speech.h"
+#include <glib.h>
+#include <stdlib.h>
 
 struct speech_priv {
     struct navit *nav;
 };
 
 static int speech_dbus_say(struct speech_priv *this, const char *text) {
-    struct attr attr1,attr2,cb,*attr_list[3];
-    int valid=0;
-    attr1.type=attr_type;
-    attr1.u.str="speech";
-    attr2.type=attr_data;
-    attr2.u.str=(char *)text;
-    attr_list[0]=&attr1;
-    attr_list[1]=&attr2;
-    attr_list[2]=NULL;
+    struct attr attr1, attr2, cb, *attr_list[3];
+    int valid = 0;
+    attr1.type = attr_type;
+    attr1.u.str = "speech";
+    attr2.type = attr_data;
+    attr2.u.str = (char *)text;
+    attr_list[0] = &attr1;
+    attr_list[1] = &attr2;
+    attr_list[2] = NULL;
     if (navit_get_attr(this->nav, attr_callback_list, &cb, NULL))
         callback_list_call_attr_4(cb.u.callback_list, attr_command, "dbus_send_signal", attr_list, NULL, &valid);
     return 0;
@@ -59,12 +59,11 @@ static struct speech_priv *speech_dbus_new(struct speech_methods *meth, struct a
     struct speech_priv *this;
     if (!parent || parent->type != attr_navit)
         return NULL;
-    this=g_new(struct speech_priv,1);
-    this->nav=parent->u.navit;
-    *meth=speech_dbus_meth;
+    this = g_new(struct speech_priv, 1);
+    this->nav = parent->u.navit;
+    *meth = speech_dbus_meth;
     return this;
 }
-
 
 void plugin_init(void) {
     plugin_register_category_speech("dbus", speech_dbus_new);

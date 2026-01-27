@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 #if !defined(GDK_KEY_Book) || !defined(GDK_Book) || !defined(GDK_Calendar)
-#include <X11/XF86keysym.h>
+#    include <X11/XF86keysym.h>
 #endif
 #include "bookmarks.h"
 #include "callback.h"
@@ -49,26 +49,26 @@
 #include <gtk/gtk.h>
 
 #ifdef USE_HILDON
-#include "hildon/hildon-defines.h"
-#define KEY_ZOOM_IN HILDON_HARDKEY_INCREASE
-#define KEY_ZOOM_OUT HILDON_HARDKEY_DECREASE
-#define KEY_UP HILDON_HARDKEY_UP
-#define KEY_DOWN HILDON_HARDKEY_DOWN
-#define KEY_LEFT HILDON_HARDKEY_LEFT
-#define KEY_RIGHT HILDON_HARDKEY_RIGHT
+#    include "hildon/hildon-defines.h"
+#    define KEY_ZOOM_IN HILDON_HARDKEY_INCREASE
+#    define KEY_ZOOM_OUT HILDON_HARDKEY_DECREASE
+#    define KEY_UP HILDON_HARDKEY_UP
+#    define KEY_DOWN HILDON_HARDKEY_DOWN
+#    define KEY_LEFT HILDON_HARDKEY_LEFT
+#    define KEY_RIGHT HILDON_HARDKEY_RIGHT
 #else
-#ifndef GDK_Book
-#define GDK_KEY_Book XF86XK_Book
-#endif
-#ifndef GDK_Calendar
-#define GDK_KEY_Calendar XF86XK_Calendar
-#endif
-#define KEY_ZOOM_IN GDK_KEY_Book
-#define KEY_ZOOM_OUT GDK_KEY_Calendar
-#define KEY_UP GDK_KEY_Up
-#define KEY_DOWN GDK_KEY_Down
-#define KEY_LEFT GDK_KEY_Left
-#define KEY_RIGHT GDK_KEY_Right
+#    ifndef GDK_Book
+#        define GDK_KEY_Book XF86XK_Book
+#    endif
+#    ifndef GDK_Calendar
+#        define GDK_KEY_Calendar XF86XK_Calendar
+#    endif
+#    define KEY_ZOOM_IN GDK_KEY_Book
+#    define KEY_ZOOM_OUT GDK_KEY_Calendar
+#    define KEY_UP GDK_KEY_Up
+#    define KEY_DOWN GDK_KEY_Down
+#    define KEY_LEFT GDK_KEY_Left
+#    define KEY_RIGHT GDK_KEY_Right
 #endif
 
 GdkPixbuf *geticon(const char *name);
@@ -535,8 +535,8 @@ static void gui_gtk_destinations_update(struct gui_priv *this) {
     g_list_free(this->dest_menuitems);
     this->dest_menuitems = NULL;
 
-    if (navit_get_attr(this->nav, attr_former_destination_map, &attr, NULL) && attr.u.map &&
-        (mr = map_rect_new(attr.u.map, NULL))) {
+    if (navit_get_attr(this->nav, attr_former_destination_map, &attr, NULL) && attr.u.map
+        && (mr = map_rect_new(attr.u.map, NULL))) {
         while ((item = map_rect_get_item(mr))) {
             if (item->type != type_former_destination)
                 continue;
@@ -591,8 +591,8 @@ static void gui_gtk_bookmarks_update(struct gui_priv *this) {
     g_list_free(this->bookmarks_menuitems);
     this->bookmarks_menuitems = NULL;
 
-    if (navit_get_attr(this->nav, attr_bookmark_map, &attr, NULL) && attr.u.map &&
-        (mr = map_rect_new(attr.u.map, NULL))) {
+    if (navit_get_attr(this->nav, attr_bookmark_map, &attr, NULL) && attr.u.map
+        && (mr = map_rect_new(attr.u.map, NULL))) {
         hash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
         while ((item = map_rect_get_item(mr))) {
             if (item->type != type_bookmark)
