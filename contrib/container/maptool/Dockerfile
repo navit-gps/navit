@@ -24,7 +24,7 @@ FROM debian:stable-slim
 COPY --from=builder /app/build/navit.deb /tmp/navit.deb
 
 # Install the deb package
-RUN apt-get update && dpkg -I /tmp/navit.deb && apt-get install -y /tmp/navit.deb &&  rm -rf /var/lib/apt/lists/* /tmp/navit.deb
+RUN apt-get update && dpkg -I /tmp/navit.deb && apt-get install -y /tmp/navit.deb && apt-get -y install wget && rm -rf /var/lib/apt/lists/* /tmp/navit.deb
 
 # Set the entrypoint
 ENTRYPOINT ["maptool"]
