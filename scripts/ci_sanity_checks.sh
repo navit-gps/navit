@@ -88,7 +88,7 @@ for f in $(git --no-pager diff --name-only refs/remotes/origin/trunk | sort -u);
 done
 
 
-echo "[INFO] Checking for compliance with the DTD using xmllint on ${f}..."
+echo "[INFO] Checking for compliance with the DTD using xmllint on *shipped.xml"
 if ! find . -type f -name "*shipped.xml" -print0 | xargs -0L1 xmllint --noout --dtdvalid navit/navit.dtd; then
 		echo "[ERROR] one of the \*shipped.xml-files doesn't validate against the navit/navit.dtd using xmllint" >&2
 		return_code=3
