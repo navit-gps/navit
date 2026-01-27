@@ -21,8 +21,6 @@
 #define __NAVIT_MAPTOOL_H_
 
 #include <glib.h>
-#include <stdio.h>
-
 #include "attr.h"
 #include "attr_type_def.h"
 #include "config.h"
