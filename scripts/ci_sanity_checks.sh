@@ -84,17 +84,15 @@ for f in $(git --no-pager diff --name-only refs/remotes/origin/trunk | sort -u);
             clang-format -i "${f}"
         fi
 
-        if [[ "${f: -11}" == "shipped.xml" ]]; then
-            echo "[INFO] Checking for compliance with the DTD using xmllint on ${f}..."
-            xmllint --noout --dtdvalid navit/navit.dtd "$f"
-            rc=$?
-            if [[ $rc -ne 0 ]]; then
-                echo "[ERROR] Your ${f} file doesn't validate against the navit/navit.dtd using xmllint" >&2
-                exit 3
-            fi
-        fi
-    fi
+       fi
 done
+
+
+echo "[INFO] Checking for compliance with the DTD using xmllint on ${f}..."
+if ! find . -type f -name "*shipped.xml" -print0 | xargs -0L1 xmllint --noout --dtdvalid navit/navit.dtd; then
+		echo "[ERROR] one of the \*shipped.xml-files doesn't validate against the navit/navit.dtd using xmllint" >&2
+		return_code=3
+fi
 
 check_diff
 exit $return_code
