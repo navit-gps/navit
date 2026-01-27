@@ -11,16 +11,16 @@
 		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}lib*.so" ondemand="yes"/>
 		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libbinding_dbus.so" active="no"/>
 		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libgraphics_null.so" active="no"/>
-		<!-- Rest plugin - try multiple possible paths for development -->
-		<plugin path=":/*/navit/plugin/rest/libosd_rest.so" ondemand="yes"/>
-		<plugin path=":navit/plugin/rest/libosd_rest.so" ondemand="yes"/>
-		<plugin path="../navit/plugin/rest/libosd_rest.so" ondemand="yes"/>
+		<!-- Driver Break plugin - try multiple possible paths for development -->
+		<plugin path=":/*/navit/plugin/driver_break/libosd_driver_break.so" ondemand="yes"/>
+		<plugin path=":navit/plugin/driver_break/libosd_driver_break.so" ondemand="yes"/>
+		<plugin path="../navit/plugin/driver_break/libosd_driver_break.so" ondemand="yes"/>
 	</plugins>
 
 	<!-- The global debug level (like using command line option "-d"). Ignored if option -d is used. -->
 	<!-- Possible debug levels: error, warning, info, debug. -->
 	<debug name="global" dbg_level="info"/>
-	<debug name="plugin_rest" dbg_level="debug"/>
+	<debug name="plugin_driver_break" dbg_level="debug"/>
 	<!-- Example of setting the debug level for a single function.  -->
 	<debug name="navit:do_draw" dbg_level="error"/>
 	<!-- Example for logging timing/profiling information. Note the prefix "profile:".
@@ -182,8 +182,8 @@ Navigation</text></img>
 Waypoint</text></img>
 				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_next_waypoint()'><text>Drop next
 Waypoint</text></img>
-				<img cond='navit.vehicle.profilename=="car" || navit.vehicle.profilename=="truck" || navit.vehicle.profilename=="hiking" || navit.vehicle.profilename=="bike" || navit.vehicle.profilename=="pedestrian" || navit.vehicle.profilename=="cycling"' src='gui_settings' onclick='rest_configure_intervals()'><text>Configure Rest Stop Intervals</text></img>
-				<img cond='navit.vehicle.profilename=="car" || navit.vehicle.profilename=="truck" || navit.vehicle.profilename=="hiking" || navit.vehicle.profilename=="bike" || navit.vehicle.profilename=="pedestrian" || navit.vehicle.profilename=="cycling"' src='gui_settings' onclick='rest_configure_overnight()'><text>Configure Overnight Stops</text></img>
+				<img cond='navit.vehicle.profilename=="car" || navit.vehicle.profilename=="truck" || navit.vehicle.profilename=="hiking" || navit.vehicle.profilename=="bike" || navit.vehicle.profilename=="pedestrian" || navit.vehicle.profilename=="cycling"' src='gui_settings' onclick='driver_break_configure_intervals()'><text>Configure Driver Break Intervals</text></img>
+				<img cond='navit.vehicle.profilename=="car" || navit.vehicle.profilename=="truck" || navit.vehicle.profilename=="hiking" || navit.vehicle.profilename=="bike" || navit.vehicle.profilename=="pedestrian" || navit.vehicle.profilename=="cycling"' src='gui_settings' onclick='driver_break_configure_overnight()'><text>Configure Overnight Stops</text></img>
 			</a>
 			<a name='Map Point'><text>Map Point</text>
 				<script>position(click_coord_geo,_("Map Point"),8|16|32|64|256)</script>
@@ -252,8 +252,8 @@ Waypoint</text></img>
 		http://wiki.navit-project.org/index.php/OSD -->
 		<osd enabled="no" type="compass"/>
 		<osd enabled="no" type="navigation_next_turn"/>
-		<!-- Rest plugin OSD - enables rest stop configuration commands -->
-		<osd enabled="yes" type="rest" data="$HOME/.navit/rest_plugin.db"/>
+		<!-- Driver Break plugin OSD - enables driver break configuration commands -->
+		<osd enabled="yes" type="driver_break" data="$HOME/.navit/driver_break_plugin.db"/>
 
 		<!-- Commands include gui_internal_menu, gui_internal_fullscreen, zoom_in and zoom_out.
 			Usage of negative values change the button origins. x="0" y="0" specifies the top left, x="-0" y="-0" the bottom right corner.
