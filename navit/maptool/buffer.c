@@ -16,7 +16,8 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-#include "navit_lfs.h"
+#include "navit_lfs.h" /* include first to avoid conflicts bet */
+
 #include <stdlib.h>
 #include "maptool.h"
 #include "debug.h"
