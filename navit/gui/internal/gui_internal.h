@@ -1,3 +1,7 @@
+
+#ifndef _NAVIT_GUID_INTERNAL_H
+#define _NAVIT_GUID_INTERNAL_H
+
 struct widget;
 struct graphics_image;
 struct gui_priv;
@@ -85,3 +89,5 @@ struct gui_internal_data {
     struct gui_internal_methods *gui;
     struct gui_internal_widget_methods *widget;
 };
+
+#endif
