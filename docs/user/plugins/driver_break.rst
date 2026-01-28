@@ -190,16 +190,21 @@ Usage
 Menu Commands
 ~~~~~~~~~~~~~
 
-The plugin provides the following menu commands:
+The plugin provides the following menu commands, all of which are fully implemented:
 
-- ``rest_suggest_stop()``: Show rest stop suggestions (placeholder - not yet implemented)
-- ``rest_show_history()``: Display rest stop history (placeholder - not yet implemented)
-- ``rest_configure_intervals()``: Configure rest stop intervals (based on selected vehicle profile)
-- ``rest_configure_overnight()``: Configure overnight stop settings (based on selected vehicle profile)
-- ``rest_start_break()``: Record break start (placeholder - not yet implemented)
-- ``rest_end_break()``: Record break end and save to history (placeholder - not yet implemented)
+- ``rest_suggest_stop()`` or ``driver_break_suggest_stop()``: Show rest stop suggestions along the current route. Finds suitable rest locations based on route analysis and displays them in a dialog with POI information.
 
-**Note**: The configuration commands (``rest_configure_intervals`` and ``rest_configure_overnight``) are fully implemented and show dialogs with current settings. Other commands are placeholders for future implementation.
+- ``rest_show_history()`` or ``driver_break_show_history()``: Display rest stop history from the database. Shows a list of all recorded breaks with timestamps, locations, durations, and whether they were mandatory breaks.
+
+- ``rest_configure_intervals()`` or ``driver_break_configure_intervals()``: Configure rest stop intervals based on the selected vehicle profile. Shows a profile-specific dialog (car, truck, hiking, cycling) with current settings that can be modified and saved.
+
+- ``rest_configure_overnight()`` or ``driver_break_configure_overnight()``: Configure overnight stop settings based on the selected vehicle profile. Allows configuration of minimum distances from buildings and glaciers, and other overnight-specific parameters.
+
+- ``rest_start_break()`` or ``driver_break_start_break()``: Record break start time and current position. Tracks the start of a break session and stores the GPS coordinates.
+
+- ``rest_end_break()`` or ``driver_break_end_break()``: Record break end, calculate duration, and save to history. Calculates the break duration, creates a history entry, and saves it to the database for future reference.
+
+**Note**: The plugin supports both the legacy ``rest_*`` command names (for backward compatibility) and the new ``driver_break_*`` command names. All commands require the internal GUI to display dialogs; if the internal GUI is not available, appropriate error messages are shown.
 
 Automatic Operation
 ~~~~~~~~~~~~~~~~~~
@@ -277,8 +282,8 @@ The plugin logs events at various levels:
 - ``lvl_debug``: Detailed operation (POI discovery, route analysis)
 - ``lvl_error``: Errors (database issues, API failures)
 
-Future Enhancements
--------------------
+Possible Future Enhancements
+-----------------------------
 
 - User preference system for POI ranking
 - Operating hours integration
@@ -293,17 +298,21 @@ Unit Tests
 
 Comprehensive unit tests are available in the ``tests/`` directory:
 
-- ``test_rest_db.c`` - Database operation tests
-- ``test_rest_config.c`` - Configuration and driving time calculation tests
-- ``test_rest_finder.c`` - Rest stop finder tests
+- ``test_driver_break_db.c`` - Database operation tests
+- ``test_driver_break_config.c`` - Configuration and driving time calculation tests
+- ``test_driver_break_finder.c`` - Rest stop finder tests
+- ``test_driver_break_srtm.c`` - SRTM elevation data tests
+- ``test_driver_break_routing.c`` - Routing and route validation tests
+- ``test_driver_break_integration.c`` - Integration tests using actual Navit functions
+- ``test_driver_break_route_integration.c`` - Route integration tests for rest intervals and POI discovery
 
 Build and run tests:
 
 .. code-block:: bash
 
-   cmake .. -DBUILD_REST_TESTS=ON
-   make test_rest_db test_rest_config test_rest_finder
-   ./build/navit/plugin/driver_break/tests/test_rest_db
+   cmake .. -DBUILD_DRIVER_BREAK_TESTS=ON
+   make test_driver_break_db test_driver_break_config test_driver_break_finder
+   ./build/navit/plugin/driver_break/tests/test_driver_break_db
 
 License
 -------

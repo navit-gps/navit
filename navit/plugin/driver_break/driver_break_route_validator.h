@@ -22,7 +22,7 @@
 
 #include "config.h"
 #include "route.h"
-#include "rest.h"
+#include "driver_break.h"
 
 /* Route validation result */
 struct route_validation_result {

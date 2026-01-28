@@ -10,7 +10,7 @@
 #include <string.h>
 #include <glib.h>
 #include "../../debug.h"
-#include "../rest.h"
+#include "../driver_break.h"
 #include "../driver_break_hiking.h"
 #include "../driver_break_cycling.h"
 #include "../driver_break_poi_hiking.h"

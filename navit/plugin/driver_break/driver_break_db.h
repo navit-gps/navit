@@ -28,7 +28,7 @@
 
 #include "config.h"
 #include "coord.h"
-#include "rest.h"
+#include "driver_break.h"
 
 struct driver_break_db;
 
@@ -84,5 +84,11 @@ int driver_break_db_save_config(struct driver_break_db *db, struct driver_break_
  * @return 1 on success, 0 if no saved config found
  */
 int driver_break_db_load_config(struct driver_break_db *db, struct driver_break_config *config);
+
+/**
+ * @brief Free a history entry structure
+ * @param entry History entry to free
+ */
+void driver_break_free_history_entry(struct driver_break_stop_history *entry);
 
 #endif /* NAVIT_PLUGIN_DRIVER_BREAK_DB_H */

@@ -453,3 +453,8 @@ References
 - SQLite Documentation: https://www.sqlite.org/docs.html
 - IARU Region 1 VHF Manager's Handbook
 - Direwolf APRS software: https://github.com/wb2osz/direwolf
+
+Possible Future Enhancements
+-----------------------------
+
+- Compatibility with NA7Q-APRSdroid (https://github.com/9M2PJU/NA7Q-APRSdroid) for enhanced Android APRS integration and position sharing

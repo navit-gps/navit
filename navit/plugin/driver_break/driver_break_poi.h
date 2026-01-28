@@ -29,7 +29,7 @@
 
 #include "config.h"
 #include "coord.h"
-#include "rest.h"
+#include "driver_break.h"
 
 /**
  * @brief Discover POIs near a location

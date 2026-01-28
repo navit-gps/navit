@@ -22,7 +22,7 @@
 
 #include "config.h"
 #include "coord.h"
-#include "rest.h"
+#include "driver_break.h"
 
 /* Energy-based routing model (inspired by BRouter's KinematicModel) */
 struct energy_model {

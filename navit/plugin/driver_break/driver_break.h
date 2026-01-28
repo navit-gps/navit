@@ -173,6 +173,8 @@ struct driver_break_priv {
     struct event_timeout *check_timeout;
     struct route *current_route;
     GList *suggested_stops;
+    time_t current_break_start_time;  /* 0 if no break in progress */
+    struct coord_geo current_break_location;  /* Location where break started */
     int active;
 };
 

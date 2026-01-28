@@ -11,7 +11,7 @@
 #include <time.h>
 #include <glib.h>
 #include "../../debug.h"
-#include "../rest.h"
+#include "../driver_break.h"
 
 /* Stub for debug_printf and max_debug_level for unit tests */
 dbg_level max_debug_level = lvl_error;

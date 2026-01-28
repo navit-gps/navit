@@ -1,0 +1,116 @@
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/string.h:44:14: Parse Error:
+    Inconsistent function parameter syntax: size_t :
+    <any>. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/string.h:44:14: Parse Error:
+    Inconsistent function parameter syntax: size_t :
+    <any>. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/string.h:44:14: Parse Error:
+    Inconsistent function parameter syntax: size_t :
+    <any>. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/string.h:44:14: Parse Error:
+    Inconsistent function parameter syntax: size_t :
+    <any>. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:95:9:
+    Parse Error. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:95:9:
+    Parse Error. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:95:9:
+    Parse Error. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:95:9:
+    Parse Error. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:95:9:
+    Parse Error. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:95:9:
+    Parse Error. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:95:9:
+    Parse Error. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/stdlib.h:98:37: Parse Error. (For help on parse errors, see splint
+               -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/string.h:44:14: Parse Error:
+    Inconsistent function parameter syntax: size_t :
+    <any>. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/string.h:44:14: Parse Error:
+    Inconsistent function parameter syntax: size_t :
+    <any>. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/string.h:44:14: Parse Error:
+    Inconsistent function parameter syntax: size_t :
+    <any>. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/string.h:44:14: Parse Error:
+    Inconsistent function parameter syntax: size_t :
+    <any>. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:95:9:
+    Parse Error. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/string.h:44:14: Parse Error:
+    Inconsistent function parameter syntax: size_t :
+    <any>. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/string.h:44:14: Parse Error:
+    Inconsistent function parameter syntax: size_t :
+    <any>. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/sqlite3.h:3010:46: Parse Error:
+    Inconsistent function parameter syntax: va_list :
+    <any>. (For help on parse errors, see splint -help parseerrors.)
+*** Cannot continue.
+Splint 3.1.2 --- 21 Feb 2021
+
+/usr/include/stdlib.h:98:37: Parse Error. (For help on parse errors, see splint
+               -help parseerrors.)
+*** Cannot continue.

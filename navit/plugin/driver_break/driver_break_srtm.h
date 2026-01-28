@@ -23,7 +23,7 @@
 #include "config.h"
 #include <glib.h>
 #include "coord.h"
-#include "rest.h"
+#include "driver_break.h"
 
 /* SRTM region definition */
 struct srtm_region {

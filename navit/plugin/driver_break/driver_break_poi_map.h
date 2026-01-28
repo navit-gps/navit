@@ -22,7 +22,7 @@
 
 #include "config.h"
 #include "coord.h"
-#include "rest.h"
+#include "driver_break.h"
 #include "mapset.h"
 
 /* Search for POIs in maps near a coordinate */

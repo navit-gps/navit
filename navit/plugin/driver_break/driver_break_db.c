@@ -447,3 +447,15 @@ int driver_break_db_load_config(struct driver_break_db *db, struct driver_break_
         return 0;
     }
 }
+
+void driver_break_free_history_entry(struct driver_break_stop_history *entry) {
+    if (!entry) {
+        return;
+    }
+    
+    if (entry->name) {
+        g_free(entry->name);
+    }
+    
+    g_free(entry);
+}

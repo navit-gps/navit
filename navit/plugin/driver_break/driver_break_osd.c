@@ -175,6 +175,13 @@ static struct command_table driver_break_commands[] = {
     {"driver_break_end_break", command_cast(driver_break_cmd_end_break)},
     {"driver_break_configure_intervals", command_cast(driver_break_cmd_configure_intervals)},
     {"driver_break_configure_overnight", command_cast(driver_break_cmd_configure_overnight)},
+    /* Backward compatibility aliases */
+    {"rest_suggest_stop", command_cast(driver_break_cmd_suggest_stop)},
+    {"rest_show_history", command_cast(driver_break_cmd_show_history)},
+    {"rest_start_break", command_cast(driver_break_cmd_start_break)},
+    {"rest_end_break", command_cast(driver_break_cmd_end_break)},
+    {"rest_configure_intervals", command_cast(driver_break_cmd_configure_intervals)},
+    {"rest_configure_overnight", command_cast(driver_break_cmd_configure_overnight)},
 };
 
 /* Register commands in driver_break_osd_new */
@@ -267,16 +274,226 @@ static struct gui_priv *driver_break_get_internal_gui_priv(struct navit *nav) {
 }
 
 /* Suggest rest stop command */
+/* Show rest stop suggestions dialog */
+static void driver_break_show_suggestions_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv, GList *stops) {
+    struct widget *menu, *box, *label;
+    char buffer[512];
+    GList *l;
+    int count = 0;
+    
+    if (!priv) {
+        dbg(lvl_error, "Driver Break plugin: driver_break_show_suggestions_dialog called with NULL priv");
+        return;
+    }
+    
+    graphics_draw_mode(gui_priv->gra, draw_mode_begin);
+    gui_internal_enter(gui_priv, 1);
+    gui_internal_set_click_coord(gui_priv, NULL);
+    gui_internal_enter_setup(gui_priv);
+    
+    menu = gui_internal_menu(gui_priv, "Rest Stop Suggestions");
+    box = gui_internal_box_new(gui_priv, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
+    gui_internal_widget_append(menu, box);
+    
+    if (!stops) {
+        label = gui_internal_label_new(gui_priv, "No rest stops found along route");
+        gui_internal_widget_append(box, label);
+    } else {
+        for (l = stops; l; l = g_list_next(l)) {
+            struct driver_break_stop *stop = (struct driver_break_stop *)l->data;
+            if (!stop) continue;
+            
+            count++;
+            if (stop->name) {
+                snprintf(buffer, sizeof(buffer), "%d. %s (%.1f km from route)", 
+                    count, stop->name, stop->distance_from_route / 1000.0);
+            } else {
+                snprintf(buffer, sizeof(buffer), "%d. Rest stop (%.1f km from route)", 
+                    count, stop->distance_from_route / 1000.0);
+            }
+            label = gui_internal_label_new(gui_priv, buffer);
+            gui_internal_widget_append(box, label);
+        }
+    }
+    
+    gui_internal_menu_render(gui_priv);
+    gui_internal_leave(gui_priv);
+    graphics_draw_mode(gui_priv->gra, draw_mode_end);
+}
+
 int driver_break_cmd_suggest_stop(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    struct route *route;
+    struct attr route_attr;
+    void *plugin;
+    struct gui_priv *gui_priv;
+    GList *stops = NULL;
+    
     dbg(lvl_info, "Driver Break plugin: Suggest rest stop command");
-    /* This would show a dialog with rest stop suggestions */
+    
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        dbg(lvl_error, "Driver Break plugin: Plugin not found");
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
+    }
+    
+    priv = (struct driver_break_priv *)plugin;
+    
+    /* Use existing suggested stops if available, otherwise find new ones */
+    if (priv->suggested_stops) {
+        stops = priv->suggested_stops;
+        dbg(lvl_info, "Driver Break plugin: Using existing suggested stops");
+    } else {
+        /* Get current route */
+        if (!navit_get_attr(nav, attr_route, &route_attr, NULL)) {
+            navit_add_message(nav, "Driver Break plugin: No active route");
+            dbg(lvl_warning, "Driver Break plugin: No route found");
+            return 0;
+        }
+        
+        route = route_attr.u.route;
+        if (!route) {
+            navit_add_message(nav, "Driver Break plugin: No active route");
+            return 0;
+        }
+        
+        /* Find rest stops along route */
+        stops = driver_break_finder_find_along_route(route, &priv->config, priv->session.mandatory_break_required);
+    }
+    
+    /* Get internal GUI priv */
+    gui_priv = driver_break_get_internal_gui_priv(nav);
+    if (!gui_priv) {
+        navit_add_message(nav, "Driver Break plugin: Suggestions dialog requires internal GUI");
+        if (stops) {
+            driver_break_finder_free_list(stops);
+        }
+        return 0;
+    }
+    
+    /* Show suggestions dialog */
+    driver_break_show_suggestions_dialog(gui_priv, priv, stops);
+    
+    /* Free stops list only if we created it (not if using existing suggested_stops) */
+    if (stops && stops != priv->suggested_stops) {
+        driver_break_finder_free_list(stops);
+    }
+    
     return 1;
+}
+
+/* Show history dialog */
+static void driver_break_show_history_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv, GList *history) {
+    struct widget *menu, *box, *label;
+    char buffer[512];
+    GList *l;
+    struct tm *tm_info;
+    int count = 0;
+    
+    if (!priv) {
+        dbg(lvl_error, "Driver Break plugin: driver_break_show_history_dialog called with NULL priv");
+        return;
+    }
+    
+    graphics_draw_mode(gui_priv->gra, draw_mode_begin);
+    gui_internal_enter(gui_priv, 1);
+    gui_internal_set_click_coord(gui_priv, NULL);
+    gui_internal_enter_setup(gui_priv);
+    
+    menu = gui_internal_menu(gui_priv, "Rest Stop History");
+    box = gui_internal_box_new(gui_priv, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
+    gui_internal_widget_append(menu, box);
+    
+    if (!history) {
+        label = gui_internal_label_new(gui_priv, "No history entries found");
+        gui_internal_widget_append(box, label);
+    } else {
+        for (l = history; l; l = g_list_next(l)) {
+            struct driver_break_stop_history *entry = (struct driver_break_stop_history *)l->data;
+            if (!entry) continue;
+            
+            count++;
+            tm_info = localtime(&entry->timestamp);
+            if (tm_info) {
+                char time_str[64];
+                strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M", tm_info);
+                
+                if (entry->name) {
+                    snprintf(buffer, sizeof(buffer), "%d. %s - %s (%d min%s)", 
+                        count, time_str, entry->name, entry->duration_minutes,
+                        entry->was_mandatory ? ", mandatory" : "");
+                } else {
+                    snprintf(buffer, sizeof(buffer), "%d. %s - %.6f, %.6f (%d min%s)", 
+                        count, time_str, entry->coord.lat, entry->coord.lng, 
+                        entry->duration_minutes, entry->was_mandatory ? ", mandatory" : "");
+                }
+            } else {
+                if (entry->name) {
+                    snprintf(buffer, sizeof(buffer), "%d. %s (%d min%s)", 
+                        count, entry->name, entry->duration_minutes,
+                        entry->was_mandatory ? ", mandatory" : "");
+                } else {
+                    snprintf(buffer, sizeof(buffer), "%d. %.6f, %.6f (%d min%s)", 
+                        count, entry->coord.lat, entry->coord.lng, 
+                        entry->duration_minutes, entry->was_mandatory ? ", mandatory" : "");
+                }
+            }
+            label = gui_internal_label_new(gui_priv, buffer);
+            gui_internal_widget_append(box, label);
+        }
+    }
+    
+    gui_internal_menu_render(gui_priv);
+    gui_internal_leave(gui_priv);
+    graphics_draw_mode(gui_priv->gra, draw_mode_end);
 }
 
 /* Show history command */
 int driver_break_cmd_show_history(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+    struct gui_priv *gui_priv;
+    GList *history = NULL;
+    time_t since = 0;  /* Get all history entries */
+    
     dbg(lvl_info, "Driver Break plugin: Show history command");
-    /* This would display rest stop history */
+    
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        dbg(lvl_error, "Driver Break plugin: Plugin not found");
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
+    }
+    
+    priv = (struct driver_break_priv *)plugin;
+    
+    if (!priv->db) {
+        navit_add_message(nav, "Driver Break plugin: Database not available");
+        return 0;
+    }
+    
+    /* Get history from database */
+    history = driver_break_db_get_history(priv->db, since);
+    
+    /* Get internal GUI priv */
+    gui_priv = driver_break_get_internal_gui_priv(nav);
+    if (!gui_priv) {
+        navit_add_message(nav, "Driver Break plugin: History dialog requires internal GUI");
+        if (history) {
+            g_list_free_full(history, (GDestroyNotify)driver_break_free_history_entry);
+        }
+        return 0;
+    }
+    
+    /* Show history dialog */
+    driver_break_show_history_dialog(gui_priv, priv, history);
+    
+    /* Free history list */
+    if (history) {
+        g_list_free_full(history, (GDestroyNotify)driver_break_free_history_entry);
+    }
+    
     return 1;
 }
 
@@ -289,21 +506,119 @@ int driver_break_cmd_configure(struct navit *nav, char *function, struct attr **
 
 /* Start break command */
 int driver_break_cmd_start_break(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
-    void *plugin = driver_break_get_plugin(nav);
-    if (plugin) {
-        /* Record break start time */
-        dbg(lvl_info, "Driver Break plugin: Break started");
+    struct driver_break_priv *priv;
+    void *plugin;
+    struct attr position_attr;
+    time_t now;
+    
+    dbg(lvl_info, "Driver Break plugin: Start break command");
+    
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        dbg(lvl_error, "Driver Break plugin: Plugin not found");
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
     }
+    
+    priv = (struct driver_break_priv *)plugin;
+    
+    /* Check if break already in progress */
+    if (priv->current_break_start_time != 0) {
+        navit_add_message(nav, "Driver Break plugin: Break already in progress");
+        dbg(lvl_warning, "Driver Break plugin: Attempted to start break while one is already active");
+        return 0;
+    }
+    
+    now = time(NULL);
+    priv->current_break_start_time = now;
+    
+    /* Get current position */
+    if (navit_get_attr(nav, attr_position_coord_geo, &position_attr, NULL)) {
+        if (position_attr.u.coord_geo) {
+            priv->current_break_location = *position_attr.u.coord_geo;
+        }
+    }
+    
+    dbg(lvl_info, "Driver Break plugin: Break started at %ld", (long)now);
+    navit_add_message(nav, "Driver Break plugin: Break started");
+    
     return 1;
 }
 
 /* End break command */
 int driver_break_cmd_end_break(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
-    void *plugin = driver_break_get_plugin(nav);
-    if (plugin) {
-        /* Record break end time and save to history */
-        dbg(lvl_info, "Driver Break plugin: Break ended");
+    struct driver_break_priv *priv;
+    void *plugin;
+    time_t now;
+    int duration_minutes;
+    struct driver_break_stop_history *entry;
+    
+    dbg(lvl_info, "Driver Break plugin: End break command");
+    
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        dbg(lvl_error, "Driver Break plugin: Plugin not found");
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
     }
+    
+    priv = (struct driver_break_priv *)plugin;
+    
+    /* Check if break is in progress */
+    if (priv->current_break_start_time == 0) {
+        navit_add_message(nav, "Driver Break plugin: No break in progress");
+        dbg(lvl_warning, "Driver Break plugin: Attempted to end break when none is active");
+        return 0;
+    }
+    
+    now = time(NULL);
+    duration_minutes = (int)((now - priv->current_break_start_time) / 60);
+    
+    if (duration_minutes < 0) {
+        dbg(lvl_error, "Driver Break plugin: Invalid break duration: %d minutes", duration_minutes);
+        priv->current_break_start_time = 0;
+        return 0;
+    }
+    
+    /* Create history entry */
+    entry = g_new0(struct driver_break_stop_history, 1);
+    if (!entry) {
+        dbg(lvl_error, "Driver Break plugin: Out of memory");
+        priv->current_break_start_time = 0;
+        return 0;
+    }
+    
+    entry->timestamp = priv->current_break_start_time;
+    entry->coord = priv->current_break_location;
+    entry->duration_minutes = duration_minutes;
+    entry->was_mandatory = priv->session.mandatory_break_required;
+    entry->name = NULL;  /* Could be enhanced to get location name from map */
+    
+    /* Save to database */
+    if (priv->db) {
+        if (driver_break_db_add_history(priv->db, entry)) {
+            dbg(lvl_info, "Driver Break plugin: Break saved to history: %d minutes", duration_minutes);
+            navit_add_message(nav, "Driver Break plugin: Break ended and saved");
+        } else {
+            dbg(lvl_error, "Driver Break plugin: Failed to save break to history");
+            navit_add_message(nav, "Driver Break plugin: Failed to save break");
+        }
+    }
+    
+    /* Update session - reset continuous driving time */
+    priv->session.last_break_time = now;
+    priv->session.continuous_driving_minutes = 0;
+    priv->session.breaks_taken++;
+    priv->session.mandatory_break_required = 0;
+    
+    /* Clear break start time */
+    priv->current_break_start_time = 0;
+    
+    /* Free history entry */
+    driver_break_free_history_entry(entry);
+    
+    dbg(lvl_info, "Driver Break plugin: Break ended after %d minutes", duration_minutes);
+    
     return 1;
 }
 

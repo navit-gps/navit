@@ -150,7 +150,10 @@ static int test_db_range_filtering(void) {
     station1->position.lat = 37.8044;
     station1->position.lng = -122.2711;
     station1->timestamp = time(NULL);
-    aprs_db_update_station(db, station1);
+    station1->symbol_table = '/';
+    station1->symbol_code = '>';
+    int result1 = aprs_db_update_station(db, station1);
+    TEST_ASSERT(result1 == 1, "Failed to insert NEAR station");
     
     /* Add station out of range (New York, ~4000 km away) */
     struct aprs_station *station2 = aprs_station_new();
@@ -158,9 +161,30 @@ static int test_db_range_filtering(void) {
     station2->position.lat = 40.7128;
     station2->position.lng = -74.0060;
     station2->timestamp = time(NULL);
-    aprs_db_update_station(db, station2);
+    station2->symbol_table = '/';
+    station2->symbol_code = '>';
+    int result2 = aprs_db_update_station(db, station2);
+    TEST_ASSERT(result2 == 1, "Failed to insert FAR station");
+    
+    fprintf(stderr, "=== test_db_range_filtering: Starting test ===\n");
+    fprintf(stderr, "Center: (%f, %f)\n", center.lat, center.lng);
+    fprintf(stderr, "Range: 50.0 km\n");
+    fprintf(stderr, "Station 1 (NEAR): (%f, %f)\n", station1->position.lat, station1->position.lng);
+    fprintf(stderr, "Station 2 (FAR): (%f, %f)\n", station2->position.lat, station2->position.lng);
     
     int result = aprs_db_get_stations_in_range(db, &center, 50.0, &stations);
+    fprintf(stderr, "aprs_db_get_stations_in_range returned: %d\n", result);
+    fprintf(stderr, "List length: %d\n", g_list_length(stations));
+    if (result > 0 && stations) {
+        GList *l = stations;
+        int idx = 0;
+        while (l) {
+            struct aprs_station *s = (struct aprs_station *)l->data;
+            fprintf(stderr, "  Station %d: '%s' at (%f, %f)\n", idx++, s->callsign, s->position.lat, s->position.lng);
+            l = g_list_next(l);
+        }
+    }
+    
     TEST_ASSERT(result == 1, "Range query failed");
     TEST_ASSERT(g_list_length(stations) == 1, "Wrong number of stations in range");
     

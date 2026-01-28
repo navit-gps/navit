@@ -478,6 +478,7 @@ static struct osd_priv *driver_break_osd_new(struct navit *nav, struct osd_metho
     *meth = driver_break_osd_meth;
     
     priv->nav = nav;
+    priv->current_break_start_time = 0;  /* No break in progress initially */
     
     /* Initialize config with defaults - ensure all fields are set */
     driver_break_config_default(&priv->config);

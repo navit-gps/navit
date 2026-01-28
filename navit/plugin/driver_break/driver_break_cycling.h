@@ -22,7 +22,7 @@
 
 #include "config.h"
 #include "coord.h"
-#include "rest.h"
+#include "driver_break.h"
 
 /* Cycling rest constants (scaled from hiking by 2.5x) */
 #define CYCLING_DRIVER_BREAK_DISTANCE_MAIN 28240.0     /* 28.24 km */

@@ -30,7 +30,7 @@
 #include "config.h"
 #include "coord.h"
 #include "route.h"
-#include "rest.h"
+#include "driver_break.h"
 
 /**
  * @brief Find rest stops along a route

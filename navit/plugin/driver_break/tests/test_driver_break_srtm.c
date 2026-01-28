@@ -14,7 +14,7 @@
 #include <glib/gstdio.h>
 #include "../../debug.h"
 #include "../driver_break_srtm.h"
-#include "../rest.h"
+#include "../driver_break.h"
 #include "../../navit.h"
 
 /* Stub for debug_printf and max_debug_level for unit tests */
@@ -300,8 +300,10 @@ static int test_hgt_cache_memory(void) {
     /* Create multiple valid HGT files to test cache */
     for (int lat = 60; lat < 62; lat++) {
         for (int lon = 7; lon < 10; lon++) {
-            char *filepath = g_build_filename(test_dir, srtm_get_tile_filename(lon, lat), NULL);
+            char *filename = srtm_get_tile_filename(lon, lat);
+            char *filepath = g_build_filename(test_dir, filename, NULL);
             create_valid_hgt_file(filepath, lon, lat);
+            g_free(filename);
             g_free(filepath);
         }
     }

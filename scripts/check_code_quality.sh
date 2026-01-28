@@ -40,7 +40,7 @@ run_cppcheck() {
     
     echo -e "${GREEN}[1/3] Running cppcheck static analysis...${NC}"
     
-    local target="${1:-navit/plugin/rest}"
+    local target="${1:-navit/plugin/driver_break}"
     local report_file="${OUTPUT_DIR}/cppcheck_${TIMESTAMP}.txt"
     
     cppcheck \
@@ -67,7 +67,7 @@ run_clang_tidy() {
     
     echo -e "${GREEN}[2/5] Running clang-tidy analysis...${NC}"
     
-    local target="${1:-navit/plugin/rest}"
+    local target="${1:-navit/plugin/driver_break}"
     local report_file="${OUTPUT_DIR}/clang-tidy_${TIMESTAMP}.txt"
     
     # Create compile_commands.json if it doesn't exist
@@ -104,7 +104,7 @@ run_flawfinder() {
     
     echo -e "${GREEN}[3/5] Running flawfinder security analysis...${NC}"
     
-    local target="${1:-navit/plugin/rest}"
+    local target="${1:-navit/plugin/driver_break}"
     local report_file="${OUTPUT_DIR}/flawfinder_${TIMESTAMP}.txt"
     
     flawfinder --html --context --columns --minlevel=1 "$target" > "${OUTPUT_DIR}/flawfinder_${TIMESTAMP}.html" 2>&1
@@ -125,7 +125,7 @@ run_splint() {
     
     echo -e "${GREEN}[4/5] Running splint analysis...${NC}"
     
-    local target="${1:-navit/plugin/rest}"
+    local target="${1:-navit/plugin/driver_break}"
     local report_file="${OUTPUT_DIR}/splint_${TIMESTAMP}.txt"
     
     # Splint needs include paths - try to find them from CMake or use defaults
@@ -145,7 +145,7 @@ run_splint() {
 run_complexity() {
     echo -e "${GREEN}[5/5] Analyzing code complexity...${NC}"
     
-    local target="${1:-navit/plugin/rest}"
+    local target="${1:-navit/plugin/driver_break}"
     local report_file="${OUTPUT_DIR}/complexity_${TIMESTAMP}.txt"
     
     echo "Code Complexity Analysis" > "$report_file"
@@ -172,7 +172,7 @@ run_complexity() {
 }
 
 # Main execution
-TARGET="${1:-navit/plugin/rest}"
+TARGET="${1:-navit/plugin/driver_break}"
 
 if [ ! -d "$TARGET" ]; then
     echo -e "${RED}Error: Directory $TARGET does not exist${NC}"

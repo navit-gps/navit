@@ -22,7 +22,7 @@
 
 #include "config.h"
 #include "coord.h"
-#include "rest.h"
+#include "driver_break.h"
 
 /* POI search radius constants */
 #define POI_WATER_SEARCH_RADIUS 2000.0    /* 2 km for water points */

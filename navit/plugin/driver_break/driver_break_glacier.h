@@ -22,7 +22,7 @@
 
 #include "config.h"
 #include "coord.h"
-#include "rest.h"
+#include "driver_break.h"
 
 /* Minimum distance from glaciers for nightly camping (meters) */
 #define GLACIER_MIN_CAMPING_DISTANCE 300.0  /* 300 meters */

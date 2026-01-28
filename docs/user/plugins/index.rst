@@ -7,7 +7,9 @@ Navit includes several plugins that extend its functionality:
    :maxdepth: 1
 
    driver_break
+   driver_break_test_results
    aprs
+   aprs_test_results
    aprs_sdr
 
 Driver Break Plugin
@@ -17,12 +19,16 @@ The Driver Break plugin provides dynamic rest period management for vehicles, wi
 
 See :doc:`driver_break` for complete documentation.
 
+Test results: :doc:`driver_break_test_results`
+
 APRS Plugin
 -----------
 
 The APRS (Automatic Packet Reporting System) plugin provides real-time tracking of APRS stations on the map. It decodes APRS packets (Bell 202 / AX.25), stores station information in a SQLite database, and displays moving objects on the Navit map.
 
 See :doc:`aprs` for complete documentation.
+
+Test results: :doc:`aprs_test_results`
 
 APRS SDR Plugin
 ---------------
