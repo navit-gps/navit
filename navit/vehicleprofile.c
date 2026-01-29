@@ -196,9 +196,8 @@ static void vehicleprofile_update(struct vehicleprofile *this_) {
     vehicleprofile_attr_iter_destroy(iter);
     dbg(lvl_debug, "result l %d w %d h %d wg %d awg %d pen %d", this_->length, this_->width, this_->height,
         this_->weight, this_->axle_weight, this_->through_traffic_penalty);
-    dbg(lvl_debug, "m %d fwd 0x%x rev 0x%x flags 0x%x max %d stsp %d stdst %d dg %d", this_->mode,
-        this_->flags_forward_mask, this_->flags_reverse_mask, this_->flags, this_->static_speed, this_->static_distance,
-        this_->dangerous_goods);
+    dbg(lvl_debug, "m %d fwd 0x%x rev 0x%x flags 0x%x stsp %d stdst %d dg %d", this_->mode, this_->flags_forward_mask,
+        this_->flags_reverse_mask, this_->flags, this_->static_speed, this_->static_distance, this_->dangerous_goods);
     g_hash_table_foreach(this_->roadprofile_hash, vehicleprofile_debug_roadprofile, NULL);
 }
 
