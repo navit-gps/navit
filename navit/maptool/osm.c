@@ -37,6 +37,7 @@
 #include "coord.h"
 #include "country.h"
 #include "debug.h"
+#include "file.h"
 #include "geom.h"
 #include "glib.h"
 #include "item.h"
