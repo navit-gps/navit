@@ -8,11 +8,13 @@ When we release Navit, here are the steps we have to follow for now
 
 -  Update NAVIT_VERSION_MAJOR, NAVIT_VERSION_MINOR and
    NAVIT_VERSION_PATCH in **CMakeLists.txt**
--  Update Sailfish spec (Version, Release and Changelog) in
-   **contrib/sailfish/navit-sailfish.spec**
+-  Update Sailfish spec in ``contrib/sailfish/navit-sailfish.spec``
+   - Version: Update to new Version number
+   - Release: Reset to 1 when Version is updated
+   - Changelog 
 -  update the contributors list using:
-   **scripts/generate_contributors.sh**
--  generate changelog using **git cliff --unreleased --prepend CHANGELOG.md**
+   ``scripts/generate_contributors.sh``
+-  generate changelog using ``git cliff --unreleased --prepend CHANGELOG.md``
    Then edit the CHANGELOG.md and clean it up.
 -  cut tag (verify that master is up-to-date with trunk)
 -  Wait that circleci finishes to build all the jobs for the master
@@ -20,8 +22,8 @@ When we release Navit, here are the steps we have to follow for now
 -  attach artifacts from the master branch build from circleCI to the
    tag (don't forget the .cab and the .exe for wince)
 -  Generate the release based on the tag
--  download the tarball and generate the release signature using **gpg
-   --armor --detach-sign ** then attach the **.asc** file as an artifact
+-  download the tarball and generate the release signature using ``gpg
+   --armor --detach-sign`` then attach the **.asc** file as an artifact
 -  Grab the Versioncode from the build_android and update
    https://github.com/navit-gps/download-center/edit/master/_data/version.yml
    (Search for "Version Code" within the Build Log on Circleci)
