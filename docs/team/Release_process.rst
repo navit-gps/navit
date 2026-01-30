@@ -12,10 +12,8 @@ When we release Navit, here are the steps we have to follow for now
    **contrib/sailfish/navit-sailfish.spec**
 -  update the contributors list using:
    **scripts/generate_contributors.sh**
--  generate changelog using **~/.local/bin/gitchangelog ^v0.5.1 HEAD**
-   with **^v0.5.1** being the latest tag available. Then edit the
-   CHANGELOG.md and clean it up (no, the gitchangelog python module is
-   not perfect :) )
+-  generate changelog using **git cliff --unreleased --prepend CHANGELOG.md**
+   Then edit the CHANGELOG.md and clean it up.
 -  cut tag (verify that master is up-to-date with trunk)
 -  Wait that circleci finishes to build all the jobs for the master
    branch (not trunk)
