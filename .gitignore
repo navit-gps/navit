@@ -78,5 +78,5 @@ maptool_*.tmp/
 # Generated config
 config.h
 
-# Generated config
-config.h
+# Code quality reports (generated)
+code_quality_reports/
