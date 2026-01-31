@@ -184,6 +184,8 @@ Settings can be customized through the plugin's configuration menu or by modifyi
 
 **Note**: Currently, changing configuration values through the UI is not yet implemented. The configuration dialogs display current values but do not allow editing. To modify settings, edit the database directly using SQLite tools.
 
+**Rest period intervals**: There is currently no way to adjust rest period intervals (main rest distance, short rest distance, maximum daily distance) from the user interface. These values are stored in the database and can be changed with SQLite tools. Adding UI controls for them (for example, drop-down choices or sliders in the configuration dialogs) would be a relatively straightforward improvement for anyone who wants to implement it.
+
 Usage
 -----
 
@@ -285,6 +287,7 @@ The plugin logs events at various levels:
 Possible Future Enhancements
 -----------------------------
 
+- **Rest interval UI**: Add controls (e.g. drop-downs or sliders) in the configuration dialogs to adjust rest period intervals; the backend and database already support custom values.
 - User preference system for POI ranking
 - Operating hours integration
 - User reviews integration
