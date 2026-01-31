@@ -9,8 +9,14 @@
 <config xmlns:xi="http://www.w3.org/2001/XInclude">
 	<plugins>
 		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}lib*.so" ondemand="yes"/>
+		<!-- APRS plugin: load at startup so OSD type 'aprs' is registered before config parsing -->
+		<plugin path="$NAVIT_LIBDIR/plugin/${NAVIT_LIBPREFIX}libosd_aprs.so" ondemand="no"/>
 		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libbinding_dbus.so" active="no"/>
 		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libgraphics_null.so" active="no"/>
+		<!-- Driver Break plugin - try multiple possible paths for development -->
+		<!-- <plugin path=":/*/navit/plugin/driver_break/libosd_driver_break.so" ondemand="yes"/> -->
+		<!-- <plugin path=":navit/plugin/driver_break/libosd_driver_break.so" ondemand="yes"/> -->
+		<!-- <plugin path="../navit/plugin/driver_break/libosd_driver_break.so" ondemand="yes"/> -->
 	</plugins>
 
 	<!-- The global debug level (like using command line option "-d"). Ignored if option -d is used. -->
@@ -100,58 +106,58 @@ Navigation</text></img>
 				<a href='#Settings APRS'><img src='gui_settings'><text>APRS</text></img></a>
 			</a>
 			<a name='Settings APRS'><text>APRS Settings</text>
-				<a onclick='aprs_refresh_freq_index();menu("#Settings APRS Frequency")'><img src='gui_settings'><text>RX Frequency: </text><script>var idx=get_int_var("aprs_freq_index"); if(idx==0) write("144.39 MHz (North America)"); else if(idx==1) write("144.80 MHz (Europe)"); else if(idx==2) write("145.175 MHz (Australia)"); else if(idx==3) write("144.575 MHz (New Zealand)"); else if(idx==4) write("144.64 MHz (China/Japan)"); else if(idx==5) write("144.66 MHz (Japan Kyushu)"); else if(idx==6) write("144.93 MHz (Argentina/Uruguay)"); else if(idx==7) write("145.57 MHz (Brazil)"); else write("144.39 MHz (North America)");</script></img></a>
+				<a href='#Settings APRS Frequency'><img src='gui_settings'><text>RX Frequency</text></img></a>
 				<a href='#Settings APRS Timeout'><img src='gui_settings'><text>Station Timeout</text></img></a>
 				<a href='#Settings APRS Device'><img src='gui_settings'><text>Device</text></img></a>
 				<a href='#Settings APRS NMEA'><img src='gui_settings'><text>NMEA Settings</text></img></a>
 			</a>
-			<a name='Settings APRS Frequency' onclick='aprs_refresh_freq_index()'><text>APRS RX Frequency</text>
-				<img cond='get_int_var("aprs_freq_index")==0' src='gui_active' onclick='aprs_freq_144_39()'><text>144.39 MHz (North America)</text></img>
-				<img cond='get_int_var("aprs_freq_index")!=0' src='gui_settings' onclick='aprs_freq_144_39()'><text>144.39 MHz (North America)</text></img>
-				<img cond='get_int_var("aprs_freq_index")==1' src='gui_active' onclick='aprs_freq_144_8()'><text>144.80 MHz (Europe)</text></img>
-				<img cond='get_int_var("aprs_freq_index")!=1' src='gui_settings' onclick='aprs_freq_144_8()'><text>144.80 MHz (Europe)</text></img>
-				<img cond='get_int_var("aprs_freq_index")==2' src='gui_active' onclick='aprs_freq_145_175()'><text>145.175 MHz (Australia)</text></img>
-				<img cond='get_int_var("aprs_freq_index")!=2' src='gui_settings' onclick='aprs_freq_145_175()'><text>145.175 MHz (Australia)</text></img>
-				<img cond='get_int_var("aprs_freq_index")==3' src='gui_active' onclick='aprs_freq_144_575()'><text>144.575 MHz (New Zealand)</text></img>
-				<img cond='get_int_var("aprs_freq_index")!=3' src='gui_settings' onclick='aprs_freq_144_575()'><text>144.575 MHz (New Zealand)</text></img>
-				<img cond='get_int_var("aprs_freq_index")==4' src='gui_active' onclick='aprs_freq_144_64()'><text>144.64 MHz (China/Japan)</text></img>
-				<img cond='get_int_var("aprs_freq_index")!=4' src='gui_settings' onclick='aprs_freq_144_64()'><text>144.64 MHz (China/Japan)</text></img>
-				<img cond='get_int_var("aprs_freq_index")==5' src='gui_active' onclick='aprs_freq_144_66()'><text>144.66 MHz (Japan Kyushu)</text></img>
-				<img cond='get_int_var("aprs_freq_index")!=5' src='gui_settings' onclick='aprs_freq_144_66()'><text>144.66 MHz (Japan Kyushu)</text></img>
-				<img cond='get_int_var("aprs_freq_index")==6' src='gui_active' onclick='aprs_freq_144_93()'><text>144.93 MHz (Argentina/Uruguay)</text></img>
-				<img cond='get_int_var("aprs_freq_index")!=6' src='gui_settings' onclick='aprs_freq_144_93()'><text>144.93 MHz (Argentina/Uruguay)</text></img>
-				<img cond='get_int_var("aprs_freq_index")==7' src='gui_active' onclick='aprs_freq_145_57()'><text>145.57 MHz (Brazil)</text></img>
-				<img cond='get_int_var("aprs_freq_index")!=7' src='gui_settings' onclick='aprs_freq_145_57()'><text>145.57 MHz (Brazil)</text></img>
+			<a name='Settings APRS Frequency' onclick='navit.aprs_refresh_freq_index()'><text>APRS RX Frequency</text>
+				<img cond='get_int_var("aprs_freq_index")==0' src='gui_active' onclick='navit.aprs_freq_144_39()'><text>144.39 MHz (North America)</text></img>
+				<img cond='get_int_var("aprs_freq_index")!=0' src='gui_settings' onclick='navit.aprs_freq_144_39()'><text>144.39 MHz (North America)</text></img>
+				<img cond='get_int_var("aprs_freq_index")==1' src='gui_active' onclick='navit.aprs_freq_144_8()'><text>144.80 MHz (Europe)</text></img>
+				<img cond='get_int_var("aprs_freq_index")!=1' src='gui_settings' onclick='navit.aprs_freq_144_8()'><text>144.80 MHz (Europe)</text></img>
+				<img cond='get_int_var("aprs_freq_index")==2' src='gui_active' onclick='navit.aprs_freq_145_175()'><text>145.175 MHz (Australia)</text></img>
+				<img cond='get_int_var("aprs_freq_index")!=2' src='gui_settings' onclick='navit.aprs_freq_145_175()'><text>145.175 MHz (Australia)</text></img>
+				<img cond='get_int_var("aprs_freq_index")==3' src='gui_active' onclick='navit.aprs_freq_144_575()'><text>144.575 MHz (New Zealand)</text></img>
+				<img cond='get_int_var("aprs_freq_index")!=3' src='gui_settings' onclick='navit.aprs_freq_144_575()'><text>144.575 MHz (New Zealand)</text></img>
+				<img cond='get_int_var("aprs_freq_index")==4' src='gui_active' onclick='navit.aprs_freq_144_64()'><text>144.64 MHz (China/Japan)</text></img>
+				<img cond='get_int_var("aprs_freq_index")!=4' src='gui_settings' onclick='navit.aprs_freq_144_64()'><text>144.64 MHz (China/Japan)</text></img>
+				<img cond='get_int_var("aprs_freq_index")==5' src='gui_active' onclick='navit.aprs_freq_144_66()'><text>144.66 MHz (Japan Kyushu)</text></img>
+				<img cond='get_int_var("aprs_freq_index")!=5' src='gui_settings' onclick='navit.aprs_freq_144_66()'><text>144.66 MHz (Japan Kyushu)</text></img>
+				<img cond='get_int_var("aprs_freq_index")==6' src='gui_active' onclick='navit.aprs_freq_144_93()'><text>144.93 MHz (Argentina/Uruguay)</text></img>
+				<img cond='get_int_var("aprs_freq_index")!=6' src='gui_settings' onclick='navit.aprs_freq_144_93()'><text>144.93 MHz (Argentina/Uruguay)</text></img>
+				<img cond='get_int_var("aprs_freq_index")==7' src='gui_active' onclick='navit.aprs_freq_145_57()'><text>145.57 MHz (Brazil)</text></img>
+				<img cond='get_int_var("aprs_freq_index")!=7' src='gui_settings' onclick='navit.aprs_freq_145_57()'><text>145.57 MHz (Brazil)</text></img>
 			</a>
 			<a name='Settings APRS Timeout'><text>APRS Station Timeout</text>
-				<img src='gui_settings' onclick='aprs_timeout_30min()'><text>30 minutes</text></img>
-				<img src='gui_settings' onclick='aprs_timeout_60min()'><text>60 minutes</text></img>
-				<img src='gui_settings' onclick='aprs_timeout_90min()'><text>90 minutes</text></img>
-				<img src='gui_settings' onclick='aprs_timeout_120min()'><text>120 minutes</text></img>
-				<img src='gui_settings' onclick='aprs_timeout_180min()'><text>180 minutes</text></img>
-				<img src='gui_settings' onclick='aprs_timeout_clear()'><text>Clear Expired</text></img>
+				<img src='gui_settings' onclick='navit.aprs_timeout_30min()'><text>30 minutes</text></img>
+				<img src='gui_settings' onclick='navit.aprs_timeout_60min()'><text>60 minutes</text></img>
+				<img src='gui_settings' onclick='navit.aprs_timeout_90min()'><text>90 minutes</text></img>
+				<img src='gui_settings' onclick='navit.aprs_timeout_120min()'><text>120 minutes</text></img>
+				<img src='gui_settings' onclick='navit.aprs_timeout_180min()'><text>180 minutes</text></img>
+				<img src='gui_settings' onclick='navit.aprs_timeout_clear()'><text>Clear Expired</text></img>
 			</a>
 			<a name='Settings APRS Device'><text>APRS Device</text>
-				<img src='gui_settings' onclick='aprs_device_rtlsdr_blog_v3()'><text>RTL-SDR Blog V3</text></img>
-				<img src='gui_settings' onclick='aprs_device_rtlsdr_v4_r828d()'><text>V4 R828D</text></img>
-				<img src='gui_settings' onclick='aprs_device_rtlsdr_nooelec()'><text>Nooelec</text></img>
-				<img src='gui_settings' onclick='aprs_device_rtlsdr_generic()'><text>Generic RTL-SDR</text></img>
-				<img src='gui_settings' onclick='aprs_device_nmea()'><text>NMEA Serial</text></img>
+				<img src='gui_settings' onclick='navit.aprs_device_rtlsdr_blog_v3()'><text>RTL-SDR Blog V3</text></img>
+				<img src='gui_settings' onclick='navit.aprs_device_rtlsdr_v4_r828d()'><text>V4 R828D</text></img>
+				<img src='gui_settings' onclick='navit.aprs_device_rtlsdr_nooelec()'><text>Nooelec</text></img>
+				<img src='gui_settings' onclick='navit.aprs_device_rtlsdr_generic()'><text>Generic RTL-SDR</text></img>
+				<img src='gui_settings' onclick='navit.aprs_device_nmea()'><text>NMEA Serial</text></img>
 			</a>
 			<a name='Settings APRS NMEA'><text>APRS NMEA Settings</text>
 				<a href='#Settings APRS NMEA Baud'><img src='gui_settings'><text>Baud Rate</text></img></a>
 				<a href='#Settings APRS NMEA Parity'><img src='gui_settings'><text>Parity</text></img></a>
 			</a>
 			<a name='Settings APRS NMEA Baud'><text>APRS NMEA Baud Rate</text>
-				<img src='gui_settings' onclick='aprs_nmea_baud_4800()'><text>4800</text></img>
-				<img src='gui_settings' onclick='aprs_nmea_baud_9600()'><text>9600</text></img>
-				<img src='gui_settings' onclick='aprs_nmea_baud_19200()'><text>19200</text></img>
-				<img src='gui_settings' onclick='aprs_nmea_baud_38400()'><text>38400</text></img>
+				<img src='gui_settings' onclick='navit.aprs_nmea_baud_4800()'><text>4800</text></img>
+				<img src='gui_settings' onclick='navit.aprs_nmea_baud_9600()'><text>9600</text></img>
+				<img src='gui_settings' onclick='navit.aprs_nmea_baud_19200()'><text>19200</text></img>
+				<img src='gui_settings' onclick='navit.aprs_nmea_baud_38400()'><text>38400</text></img>
 			</a>
 			<a name='Settings APRS NMEA Parity'><text>APRS NMEA Parity</text>
-				<img src='gui_settings' onclick='aprs_nmea_parity_none()'><text>None</text></img>
-				<img src='gui_settings' onclick='aprs_nmea_parity_even()'><text>Even</text></img>
-				<img src='gui_settings' onclick='aprs_nmea_parity_odd()'><text>Odd</text></img>
+				<img src='gui_settings' onclick='navit.aprs_nmea_parity_none()'><text>None</text></img>
+				<img src='gui_settings' onclick='navit.aprs_nmea_parity_even()'><text>Even</text></img>
+				<img src='gui_settings' onclick='navit.aprs_nmea_parity_odd()'><text>Odd</text></img>
 			</a>
 			<a name='Settings Display'><text>Display</text>
 				<!-- <img src='gui_display' onclick='setting_layout()'><text>Layout</text></img> -->
@@ -177,6 +183,8 @@ Navigation</text></img>
 Waypoint</text></img>
 				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_next_waypoint()'><text>Drop next
 Waypoint</text></img>
+				<img src='gui_settings' onclick='navit.driver_break_configure_intervals()'><text>Configure Driver Break Intervals</text></img>
+				<img src='gui_settings' onclick='navit.driver_break_configure_overnight()'><text>Configure Overnight Stops</text></img>
 			</a>
 			<a name='Map Point'><text>Map Point</text>
 				<script>position(click_coord_geo,_("Map Point"),8|16|32|64|256)</script>
@@ -245,6 +253,10 @@ Waypoint</text></img>
 		https://navit.readthedocs.io/en/latest/user/configuration/OSD.html -->
 		<osd enabled="no" type="compass"/>
 		<osd enabled="no" type="navigation_next_turn"/>
+		<!-- Driver Break plugin OSD - registers menu commands (driver_break_configure_intervals, etc.) -->
+		<osd enabled="yes" type="driver_break" data="$HOME/.navit/driver_break_plugin.db"/>
+		<!-- APRS plugin OSD - registers menu commands (setting_aprs, aprs_freq_*, etc.) -->
+		<osd enabled="yes" type="aprs"/>
 
 		<!-- Commands include gui_internal_menu, gui_internal_fullscreen, zoom_in and zoom_out.
 			Usage of negative values change the button origins. x="0" y="0" specifies the top left, x="-0" y="-0" the bottom right corner.
@@ -485,7 +497,7 @@ Waypoint</text></img>
 		<mapset enabled="yes">
 			<xi:include href="$NAVIT_SHAREDIR/maps/*.xml"/>
 			<!-- APRS plugin - displays APRS stations on the map with symbols and station names -->
-			<map type="aprs" enabled="yes" data="$HOME/.navit/aprs.db" timeout="5400"/>
+			<!-- <map type="aprs" enabled="yes" data="$HOME/.navit/aprs.db" timeout="5400"/> -->
 		</mapset>
 
 		<!-- Mapset template for OpenStreetMap -->

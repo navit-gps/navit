@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2024 Navit Team
+ * Copyright (C) 2024-2026 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -17,41 +17,54 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include "config.h"
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <glib.h>
-#include "debug.h"
-#include "item.h"
-#include "navit.h"
-#include "color.h"
-#include "point.h"
-#include "osd.h"
-#include "plugin.h"
-#include "map.h"
-#include "mapset.h"
-#include "attr.h"
-#include "command.h"
-#include "popup.h"
 #include "aprs.h"
 #include "aprs_db.h"
+#include "attr.h"
+#include "color.h"
+#include "command.h"
+#include "config.h"
+#include "debug.h"
+#include "item.h"
+#include "map.h"
+#include "mapset.h"
 #include "navit.h"
+#include "osd.h"
+#include "plugin.h"
+#include "point.h"
+#include "popup.h"
+#include <glib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /* Current frequency tracking for menu display */
 /* Frequency index: 0=144.39, 1=144.8, 2=145.175, 3=144.575, 4=144.64, 5=144.66, 6=144.93, 7=145.57 */
 static int current_aprs_freq_index = 0; /* Default to 144.39 MHz (North America) */
 
-/* Map frequency value to index for menu display */
+/* Frequency bands for menu display: center (MHz), index */
+static const struct {
+    double min;
+    double max;
+    int idx;
+} freq_bands[] = {
+    {144.385, 144.395, 0}, /* 144.39 */
+    {144.795, 144.805, 1}, /* 144.8 */
+    {145.170, 145.180, 2}, /* 145.175 */
+    {144.570, 144.580, 3}, /* 144.575 */
+    {144.635, 144.645, 4}, /* 144.64 */
+    {144.655, 144.665, 5}, /* 144.66 */
+    {144.925, 144.935, 6}, /* 144.93 */
+    {145.565, 145.575, 7}, /* 145.57 */
+};
+#define NUM_FREQ_BANDS (sizeof(freq_bands) / sizeof(freq_bands[0]))
+
 static int frequency_to_index(double freq) {
-    if (freq >= 144.385 && freq <= 144.395) return 0; /* 144.39 */
-    if (freq >= 144.795 && freq <= 144.805) return 1; /* 144.8 */
-    if (freq >= 145.170 && freq <= 145.180) return 2; /* 145.175 */
-    if (freq >= 144.570 && freq <= 144.580) return 3; /* 144.575 */
-    if (freq >= 144.635 && freq <= 144.645) return 4; /* 144.64 */
-    if (freq >= 144.655 && freq <= 144.665) return 5; /* 144.66 */
-    if (freq >= 144.925 && freq <= 144.935) return 6; /* 144.93 */
-    if (freq >= 145.565 && freq <= 145.575) return 7; /* 145.57 */
+    int i;
+    for (i = 0; i < (int)NUM_FREQ_BANDS; i++) {
+        if (freq >= freq_bands[i].min && freq <= freq_bands[i].max) {
+            return freq_bands[i].idx;
+        }
+    }
     return 0; /* Default */
 }
 
@@ -61,16 +74,17 @@ static int aprs_osd_get_frequency_index(struct navit *nav) {
     struct map *map;
     struct attr_iter *iter;
     double frequency = 144.39; /* Default */
-    
-    if (!nav) return 0;
-    
+
+    if (!nav)
+        return 0;
+
     if (!navit_get_attr(nav, attr_mapset, &map_attr, NULL)) {
         return 0;
     }
-    
+
     ms = map_attr.u.mapset;
     iter = mapset_attr_iter_new(NULL);
-    
+
     while (mapset_get_attr(ms, attr_map, &map_attr, iter)) {
         map = map_attr.u.map;
         if (map_get_attr(map, attr_type, &map_attr, NULL)) {
@@ -85,7 +99,7 @@ static int aprs_osd_get_frequency_index(struct navit *nav) {
         }
     }
     mapset_attr_iter_destroy(iter);
-    
+
     current_aprs_freq_index = frequency_to_index(frequency);
     return current_aprs_freq_index;
 }
@@ -95,17 +109,18 @@ static void aprs_osd_set_frequency(struct navit *nav, double frequency) {
     struct mapset *ms;
     struct map *map;
     struct attr_iter *iter;
-    
-    if (!nav) return;
-    
+
+    if (!nav)
+        return;
+
     if (!navit_get_attr(nav, attr_mapset, &map_attr, NULL)) {
         dbg(lvl_error, "No mapset found");
         return;
     }
-    
+
     ms = map_attr.u.mapset;
     iter = mapset_attr_iter_new(NULL);
-    
+
     while (mapset_get_attr(ms, attr_map, &map_attr, iter)) {
         map = map_attr.u.map;
         if (map_get_attr(map, attr_type, &map_attr, NULL)) {
@@ -114,7 +129,7 @@ static void aprs_osd_set_frequency(struct navit *nav, double frequency) {
                 freq_attr.u.numd = &frequency;
                 map_set_attr(map, &freq_attr);
                 current_aprs_freq_index = frequency_to_index(frequency);
-                
+
                 /* Store frequency index in command variable for menu access */
                 if (nav) {
                     struct attr navit_attr;
@@ -124,7 +139,7 @@ static void aprs_osd_set_frequency(struct navit *nav, double frequency) {
                     snprintf(cmd_str, sizeof(cmd_str), "set_int_var(\"aprs_freq_index\", %d)", current_aprs_freq_index);
                     command_evaluate_to_void(&navit_attr, cmd_str, NULL);
                 }
-                
+
                 dbg(lvl_info, "APRS frequency set to %.3f MHz via menu (index %d)", frequency, current_aprs_freq_index);
                 break;
             }
@@ -187,23 +202,23 @@ int aprs_cmd_refresh_freq_index(struct navit *nav, char *function, struct attr *
     return 1;
 }
 
-
 static void aprs_osd_set_timeout(struct navit *nav, int timeout_seconds) {
     struct attr map_attr, timeout_attr;
     struct mapset *ms;
     struct map *map;
     struct attr_iter *iter;
-    
-    if (!nav) return;
-    
+
+    if (!nav)
+        return;
+
     if (!navit_get_attr(nav, attr_mapset, &map_attr, NULL)) {
         dbg(lvl_error, "No mapset found");
         return;
     }
-    
+
     ms = map_attr.u.mapset;
     iter = mapset_attr_iter_new(NULL);
-    
+
     while (mapset_get_attr(ms, attr_map, &map_attr, iter)) {
         map = map_attr.u.map;
         if (map_get_attr(map, attr_type, &map_attr, NULL)) {
@@ -211,15 +226,14 @@ static void aprs_osd_set_timeout(struct navit *nav, int timeout_seconds) {
                 timeout_attr.type = attr_timeout;
                 timeout_attr.u.num = timeout_seconds;
                 map_set_attr(map, &timeout_attr);
-                dbg(lvl_info, "APRS timeout set to %d seconds (%d minutes) via menu", 
-                    timeout_seconds, timeout_seconds / 60);
+                dbg(lvl_info, "APRS timeout set to %d seconds (%d minutes) via menu", timeout_seconds,
+                    timeout_seconds / 60);
                 break;
             }
         }
     }
     mapset_attr_iter_destroy(iter);
 }
-
 
 int aprs_cmd_timeout_30min(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
     aprs_osd_set_timeout(nav, 1800);
@@ -250,16 +264,17 @@ int aprs_cmd_timeout_clear_expired(struct navit *nav, char *function, struct att
     struct attr map_attr;
     struct mapset *ms;
     struct attr_iter *iter;
-    
-    if (!nav) return 0;
-    
+
+    if (!nav)
+        return 0;
+
     if (!navit_get_attr(nav, attr_mapset, &map_attr, NULL)) {
         return 0;
     }
-    
+
     ms = map_attr.u.mapset;
     iter = mapset_attr_iter_new(NULL);
-    
+
     while (mapset_get_attr(ms, attr_map, &map_attr, iter)) {
         struct map *m = map_attr.u.map;
         if (map_get_attr(m, attr_type, &map_attr, NULL)) {
@@ -283,17 +298,18 @@ static void aprs_osd_set_device(struct navit *nav, const char *device_type) {
     struct mapset *ms;
     struct map *map;
     struct attr_iter *iter;
-    
-    if (!nav) return;
-    
+
+    if (!nav)
+        return;
+
     if (!navit_get_attr(nav, attr_mapset, &map_attr, NULL)) {
         dbg(lvl_error, "No mapset found");
         return;
     }
-    
+
     ms = map_attr.u.mapset;
     iter = mapset_attr_iter_new(NULL);
-    
+
     while (mapset_get_attr(ms, attr_map, &map_attr, iter)) {
         map = map_attr.u.map;
         if (map_get_attr(map, attr_type, &map_attr, NULL)) {
@@ -316,17 +332,18 @@ static void aprs_osd_set_nmea_baud(struct navit *nav, int baud_rate) {
     struct mapset *ms;
     struct map *map;
     struct attr_iter *iter;
-    
-    if (!nav) return;
-    
+
+    if (!nav)
+        return;
+
     if (!navit_get_attr(nav, attr_mapset, &map_attr, NULL)) {
         dbg(lvl_error, "No mapset found");
         return;
     }
-    
+
     ms = map_attr.u.mapset;
     iter = mapset_attr_iter_new(NULL);
-    
+
     while (mapset_get_attr(ms, attr_map, &map_attr, iter)) {
         map = map_attr.u.map;
         if (map_get_attr(map, attr_type, &map_attr, NULL)) {
@@ -348,17 +365,18 @@ static void aprs_osd_set_nmea_parity(struct navit *nav, char parity) {
     struct map *map;
     struct attr_iter *iter;
     char device_str[256];
-    
-    if (!nav) return;
-    
+
+    if (!nav)
+        return;
+
     if (!navit_get_attr(nav, attr_mapset, &map_attr, NULL)) {
         dbg(lvl_error, "No mapset found");
         return;
     }
-    
+
     ms = map_attr.u.mapset;
     iter = mapset_attr_iter_new(NULL);
-    
+
     while (mapset_get_attr(ms, attr_map, &map_attr, iter)) {
         map = map_attr.u.map;
         if (map_get_attr(map, attr_type, &map_attr, NULL)) {
@@ -439,6 +457,14 @@ int aprs_cmd_nmea_parity_odd(struct navit *nav, char *function, struct attr **in
     return 1;
 }
 
+int aprs_cmd_setting_aprs(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct attr navit_attr;
+    navit_attr.type = attr_navit;
+    navit_attr.u.navit = nav;
+    command_evaluate_to_void(&navit_attr, "menu(\"#Settings APRS\")", NULL);
+    return 1;
+}
+
 static struct command_table aprs_commands[] = {
     {"aprs_freq_144_39", command_cast(aprs_cmd_freq_144_39)},
     {"aprs_freq_144_8", command_cast(aprs_cmd_freq_144_8)},
@@ -467,15 +493,12 @@ static struct command_table aprs_commands[] = {
     {"aprs_nmea_parity_none", command_cast(aprs_cmd_nmea_parity_none)},
     {"aprs_nmea_parity_even", command_cast(aprs_cmd_nmea_parity_even)},
     {"aprs_nmea_parity_odd", command_cast(aprs_cmd_nmea_parity_odd)},
+    {"setting_aprs", command_cast(aprs_cmd_setting_aprs)},
 };
 
-static void aprs_osd_destroy(struct osd_priv *osd) {
-    g_free(osd);
-}
+static void aprs_osd_destroy(struct osd_priv *osd) { g_free(osd); }
 
-static int aprs_osd_set_attr(struct osd_priv *osd, struct attr *attr) {
-    return 0;
-}
+static int aprs_osd_set_attr(struct osd_priv *osd, struct attr *attr) { return 0; }
 
 static struct osd_methods aprs_osd_meth = {
     aprs_osd_destroy,
@@ -487,26 +510,19 @@ static struct osd_methods aprs_osd_meth = {
 static struct osd_priv *aprs_osd_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
     struct osd_priv *priv;
     struct attr cmd_attr;
-    
+
     priv = g_malloc0(sizeof(void *)); /* osd_priv is opaque, just allocate pointer-sized memory */
     *meth = aprs_osd_meth;
-    
-    command_add_table_attr(aprs_commands, sizeof(aprs_commands)/sizeof(struct command_table), nav, &cmd_attr);
+
+    command_add_table_attr(aprs_commands, sizeof(aprs_commands) / sizeof(struct command_table), nav, &cmd_attr);
     navit_add_attr(nav, &cmd_attr);
-    
-    /* Initialize frequency index variable for menu */
-    aprs_osd_get_frequency_index(nav);
-    if (nav) {
-        struct attr navit_attr;
-        char cmd_str[128];
-        navit_attr.type = attr_navit;
-        navit_attr.u.navit = nav;
-        snprintf(cmd_str, sizeof(cmd_str), "set_int_var(\"aprs_freq_index\", %d)", current_aprs_freq_index);
-        command_evaluate_to_void(&navit_attr, cmd_str, NULL);
-    }
-    
+
+    /* Note: Do NOT call aprs_osd_get_frequency_index() here - navit is not fully
+     * initialized yet (mapset may not exist). The frequency index will be
+     * initialized when aprs_refresh_freq_index command is called from the menu. */
+
     dbg(lvl_info, "APRS OSD menu commands registered");
-    
+
     return priv;
 }
 
@@ -514,4 +530,3 @@ void plugin_init_osd(void) {
     dbg(lvl_debug, "APRS OSD plugin initializing");
     plugin_register_category_osd("aprs", aprs_osd_new);
 }
-

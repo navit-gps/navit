@@ -531,6 +531,37 @@ if (GETTEXT_FOUND)
 	set_with_reason(USE_NATIVE_LANGUAGE_SUPPORT "Gettext found" TRUE)
 endif(GETTEXT_FOUND)
 
+# Check SQLite3 for APRS and Driver Break plugins
+find_package(PkgConfig QUIET)
+if(PkgConfig_FOUND)
+	pkg_check_modules(SQLITE3 sqlite3)
+endif()
+if(NOT SQLITE3_FOUND)
+	find_library(SQLITE3_LIBRARIES NAMES sqlite3)
+	find_path(SQLITE3_INCLUDE_DIRS NAMES sqlite3.h)
+	if(SQLITE3_LIBRARIES AND SQLITE3_INCLUDE_DIRS)
+		set(SQLITE3_FOUND TRUE)
+	endif()
+endif()
+
+# Check libcurl for Driver Break plugin (optional)
+if(plugin/driver_break)
+	find_package(PkgConfig QUIET)
+	if(PkgConfig_FOUND)
+		pkg_check_modules(CURL libcurl)
+	endif()
+	if(NOT CURL_FOUND)
+		find_library(CURL_LIBRARIES NAMES curl)
+		find_path(CURL_INCLUDE_DIRS NAMES curl/curl.h)
+		if(CURL_LIBRARIES AND CURL_INCLUDE_DIRS)
+			set(CURL_FOUND TRUE)
+		endif()
+	endif()
+	if(NOT CURL_FOUND)
+		message(WARNING "libcurl not found. Driver Break plugin POI discovery will be disabled.")
+	endif()
+endif()
+
 #Independent modules
 add_module(graphics/null "Default" TRUE)
 add_module(osd/core "Default" TRUE)
@@ -554,9 +585,18 @@ add_module(map/csv "Default" TRUE)
 #Modules without test yet
 add_module(plugin/pedestrian "Default" FALSE)
 add_module(plugin/j1850 "Default" FALSE)
-add_module(plugin/aprs "Default" TRUE)
+add_module(plugin/aprs "Default" FALSE)
 # APRS SDR plugin - only if librtlsdr is found
 add_module(plugin/aprs_sdr "Default" FALSE)
+add_module(plugin/driver_break "Default" FALSE)
+# Enable APRS and Driver Break when SQLite3 found (set_with_reason must run after add_module)
+if(SQLITE3_FOUND)
+	set_with_reason(plugin/aprs "SQLite3 found" TRUE)
+	set_with_reason(plugin/driver_break "SQLite3 found" TRUE)
+else()
+	set_with_reason(plugin/aprs "SQLite3 not found" FALSE)
+	set_with_reason(plugin/driver_break "SQLite3 not found" FALSE)
+endif()
 add_module(speech/android "Default" FALSE)
 add_module(speech/espeak "Default" FALSE)
 add_module(speech/iphone "Default" FALSE)
@@ -868,7 +908,9 @@ CHECK_FUNCTION_EXISTS (_atoi64 HAVE__ATOI64)
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in"
 			   "${CMAKE_CURRENT_BINARY_DIR}/config.h" )
 
-# Compile with -Wall -Wextra. We need all the help we can get from the compiler :-).
+# Compile with -Wall -Wextra -Wpedantic -fanalyzer. We need all the help we can get from the compiler :-).
+# Glib-2.0 cflags are applied via pkg_check_modules(GLIB2) and include_directories(${GLIB2_INCLUDE_DIRS}).
+# -fsyntax-only: use for manual syntax checks (e.g. gcc -fsyntax-only); do not add to build (breaks linking).
 # Disabled warnings:
 # -Wno-missing-field-initializers: Used a lot, does not seem problematic.
 # -Wno-unused-parameter: Unfortunately occurs frequently because of
@@ -876,13 +918,19 @@ CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in"
 # -Wno-sign-compare: We currently just use int almost everywhere.
 #                    Unclear if it's really worth correcting.
 add_compiler_flag_if_available("-Wall")
+add_compiler_flag_if_available("-Wextra")
+add_compiler_flag_if_available("-Wpedantic")
+# -fanalyzer: optional; enable with -DENABLE_ANALYZER=ON (reports potential bugs, can fail build)
+option(ENABLE_ANALYZER "Enable GCC -fanalyzer (static analysis)" OFF)
+if(ENABLE_ANALYZER)
+	add_compiler_flag_if_available("-fanalyzer")
+endif()
 add_compiler_flag_if_available("-Wno-unused-parameter")
 add_compiler_flag_if_available("-Wno-sign-compare")
 add_compiler_flag_if_available("-Wno-missing-field-initializers")
 add_compiler_flag_if_available("-Wundef")
 add_compiler_flag_if_available("-Wcast-align")
 add_compiler_flag_if_available("-Wpointer-arith")
-add_compiler_flag_if_available("-Wextra")
 add_compiler_flag_if_available("-Wdate-time")
 add_compiler_flag_if_available("-Wmissing-prototypes")
 add_compiler_flag_if_available("-Wstrict-prototypes")
