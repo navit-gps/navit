@@ -1,27 +1,22 @@
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(SQLITE3 sqlite3)
-
+# SQLite3 dependency is checked in main CMakeLists.txt
+# Variables SQLITE3_LIBRARIES, SQLITE3_INCLUDE_DIRS, SQLITE3_CFLAGS_OTHER are set there
 if(SQLITE3_FOUND)
     set(plugin_aprs_LIBS ${SQLITE3_LIBRARIES})
     set(plugin_aprs_INCLUDES ${SQLITE3_INCLUDE_DIRS})
-    set(plugin_aprs_FLAGS ${SQLITE3_CFLAGS_OTHER})
-else()
-    find_library(SQLITE3_LIBRARIES NAMES sqlite3)
-    find_path(SQLITE3_INCLUDE_DIRS NAMES sqlite3.h)
-    if(SQLITE3_LIBRARIES AND SQLITE3_INCLUDE_DIRS)
-        set(plugin_aprs_LIBS ${SQLITE3_LIBRARIES})
-        set(plugin_aprs_INCLUDES ${SQLITE3_INCLUDE_DIRS})
-    else()
-        message(FATAL_ERROR "SQLite3 not found. Please install libsqlite3-dev or equivalent.")
+    if(SQLITE3_CFLAGS_OTHER)
+        set(plugin_aprs_FLAGS ${SQLITE3_CFLAGS_OTHER})
     endif()
 endif()
 
 module_add_library(plugin_aprs aprs.c aprs_db.c aprs_decode.c aprs_osd.c aprs_nmea.c aprs_symbols.c)
 
-# Export symbols for inter-plugin communication
+# Output name must be libosd_aprs.so for Navit's on-demand OSD lookup (plugin_get_category_osd)
+# to find and load this plugin when <osd type="aprs"/> is used in config
 set_target_properties(plugin_aprs PROPERTIES
     C_VISIBILITY_PRESET default
     VISIBILITY_INLINES_HIDDEN 0
+    OUTPUT_NAME "osd_aprs"
+    PREFIX "lib"
 )
 
 # Add unit tests if enabled

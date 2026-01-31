@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2024 Navit Team
+ * Copyright (C) 2024-2026 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -123,7 +123,14 @@ static int aprs_db_deserialize_path(const char *path_str, char ***path, int *cou
 }
 
 int aprs_db_update_station(struct aprs_db *db, struct aprs_station *station) {
-    if (!db || !station || !station->callsign) return 0;
+    dbg(lvl_debug, "aprs_db_update_station: callsign='%s', pos=(%f, %f)", 
+        station ? station->callsign : NULL, 
+        station ? station->position.lat : 0.0, 
+        station ? station->position.lng : 0.0);
+    if (!db || !station || !station->callsign) {
+        dbg(lvl_debug, "aprs_db_update_station: invalid input");
+        return 0;
+    }
     
     sqlite3_stmt *stmt;
     const char *sql = 
@@ -145,14 +152,18 @@ int aprs_db_update_station(struct aprs_db *db, struct aprs_station *station) {
     sqlite3_bind_int(stmt, 6, station->speed);
     sqlite3_bind_int64(stmt, 7, (sqlite3_int64)station->timestamp);
     sqlite3_bind_text(stmt, 8, station->comment, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 9, &station->symbol_table, 1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 10, &station->symbol_code, 1, SQLITE_STATIC);
+    /* Bind symbol_table and symbol_code as single-character strings */
+    char sym_tbl_str[2] = {station->symbol_table, '\0'};
+    char sym_code_str[2] = {station->symbol_code, '\0'};
+    sqlite3_bind_text(stmt, 9, sym_tbl_str, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 10, sym_code_str, -1, SQLITE_STATIC);
     
     char *path_str = aprs_db_serialize_path(station->path, station->path_count);
     sqlite3_bind_text(stmt, 11, path_str, -1, SQLITE_TRANSIENT);
     g_free(path_str);
     
     rc = sqlite3_step(stmt);
+    dbg(lvl_debug, "aprs_db_update_station: sqlite3_step returned %d", rc);
     sqlite3_finalize(stmt);
     
     if (rc != SQLITE_DONE) {
@@ -160,6 +171,7 @@ int aprs_db_update_station(struct aprs_db *db, struct aprs_station *station) {
         return 0;
     }
     
+    dbg(lvl_debug, "aprs_db_update_station: success");
     return 1;
 }
 
@@ -273,7 +285,11 @@ static double haversine_distance(const struct coord_geo *a, const struct coord_g
 
 int aprs_db_get_stations_in_range(struct aprs_db *db, const struct coord_geo *center, double range_km, 
                                   GList **stations) {
-    if (!db || !center || !stations) return 0;
+    dbg(lvl_debug, "aprs_db_get_stations_in_range: center=(%f, %f), range=%f km", center->lat, center->lng, range_km);
+    if (!db || !center || !stations) {
+        dbg(lvl_debug, "aprs_db_get_stations_in_range: invalid input");
+        return 0;
+    }
     
     *stations = NULL;
     
@@ -288,12 +304,19 @@ int aprs_db_get_stations_in_range(struct aprs_db *db, const struct coord_geo *ce
     }
     
     int count = 0;
-    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+    int row_count = 0;
+    rc = sqlite3_step(stmt);
+    dbg(lvl_debug, "aprs_db_get_stations_in_range: first step returned %d", rc);
+    while (rc == SQLITE_ROW) {
+        row_count++;
         struct aprs_station *station = aprs_station_new();
         
         station->callsign = g_strdup((const char *)sqlite3_column_text(stmt, 0));
         station->position.lat = sqlite3_column_double(stmt, 1);
         station->position.lng = sqlite3_column_double(stmt, 2);
+        dbg(lvl_debug, "aprs_db_get_stations_in_range: row %d: callsign='%s', pos=(%f, %f)", 
+            row_count, station->callsign, station->position.lat, station->position.lng);
+        
         station->altitude = sqlite3_column_double(stmt, 3);
         station->course = sqlite3_column_int(stmt, 4);
         station->speed = sqlite3_column_int(stmt, 5);
@@ -305,15 +328,30 @@ int aprs_db_get_stations_in_range(struct aprs_db *db, const struct coord_geo *ce
         if (sym_code && *sym_code) station->symbol_code = sym_code[0];
         
         const char *path_str = (const char *)sqlite3_column_text(stmt, 10);
-        aprs_db_deserialize_path(path_str, &station->path, &station->path_count);
+        if (path_str) {
+            aprs_db_deserialize_path(path_str, &station->path, &station->path_count);
+        } else {
+            station->path = NULL;
+            station->path_count = 0;
+        }
         
         double distance = haversine_distance(center, &station->position);
+        dbg(lvl_debug, "aprs_db_get_stations_in_range: distance from center: %f km", distance);
         if (distance <= range_km) {
+            dbg(lvl_debug, "aprs_db_get_stations_in_range: station '%s' is within range", station->callsign);
             *stations = g_list_append(*stations, station);
             count++;
         } else {
+            dbg(lvl_debug, "aprs_db_get_stations_in_range: station '%s' is out of range", station->callsign);
             aprs_station_free(station);
         }
+        
+        rc = sqlite3_step(stmt);
+    }
+    
+    dbg(lvl_debug, "aprs_db_get_stations_in_range: processed %d rows, %d in range", row_count, count);
+    if (rc != SQLITE_DONE) {
+        dbg(lvl_error, "SQLite step error in range query: %s", sqlite3_errmsg(db->db));
     }
     
     sqlite3_finalize(stmt);

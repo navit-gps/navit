@@ -1,0 +1,226 @@
+Flawfinder version 2.0.19, (C) 2001-2019 David A. Wheeler.
+Number of rules (primarily dangerous function names) in C/C++ ruleset: 222
+Examining navit/plugin/driver_break/driver_break_poi_hiking.h
+Examining navit/plugin/driver_break/driver_break_srtm.h
+Examining navit/plugin/driver_break/driver_break_poi_map.h
+Examining navit/plugin/driver_break/driver_break_finder.h
+Examining navit/plugin/driver_break/driver_break_energy.h
+Examining navit/plugin/driver_break/driver_break_srtm_osd.c
+Examining navit/plugin/driver_break/driver_break_osd.c
+Examining navit/plugin/driver_break/driver_break_poi.h
+Examining navit/plugin/driver_break/driver_break_energy.c
+Examining navit/plugin/driver_break/driver_break_route_validator.c
+Examining navit/plugin/driver_break/driver_break_glacier.h
+Examining navit/plugin/driver_break/tests/test_driver_break_srtm.c
+Examining navit/plugin/driver_break/tests/test_driver_break_routing.c
+Examining navit/plugin/driver_break/tests/test_driver_break_route_integration.c
+Examining navit/plugin/driver_break/tests/test_driver_break_db.c
+Examining navit/plugin/driver_break/tests/test_driver_break_integration.c
+Examining navit/plugin/driver_break/tests/test_driver_break_config.c
+Examining navit/plugin/driver_break/tests/test_driver_break_finder.c
+Examining navit/plugin/driver_break/driver_break_hiking.h
+Examining navit/plugin/driver_break/driver_break_hiking.c
+Examining navit/plugin/driver_break/driver_break_poi_hiking.c
+Examining navit/plugin/driver_break/driver_break_cycling.h
+Examining navit/plugin/driver_break/driver_break_route_validator.h
+Examining navit/plugin/driver_break/driver_break_glacier.c
+Examining navit/plugin/driver_break/driver_break_poi_map.c
+Examining navit/plugin/driver_break/driver_break_poi.c
+Examining navit/plugin/driver_break/driver_break.h
+Examining navit/plugin/driver_break/driver_break_db.h
+Examining navit/plugin/driver_break/driver_break_srtm.c
+Examining navit/plugin/driver_break/driver_break.c
+Examining navit/plugin/driver_break/driver_break_srtm_osd.h
+Examining navit/plugin/driver_break/driver_break_osd.h
+Examining navit/plugin/driver_break/driver_break_finder.c
+Examining navit/plugin/driver_break/driver_break_db.c
+Examining navit/plugin/driver_break/driver_break_cycling.c
+
+FINAL RESULTS:
+
+navit/plugin/driver_break/driver_break_srtm.c:412:34:  [4] (shell) system:
+  This causes a new program to execute and is difficult to use safely
+  (CWE-78). try using a library call that implements the same functionality
+  if available.
+            int extract_result = system(extract_cmd);
+navit/plugin/driver_break/driver_break_osd.c:280:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char buffer[512];
+navit/plugin/driver_break/driver_break_osd.c:389:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char buffer[512];
+navit/plugin/driver_break/driver_break_osd.c:419:17:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+                char time_str[64];
+navit/plugin/driver_break/driver_break_osd.c:638:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char buffer[256];
+navit/plugin/driver_break/driver_break_osd.c:727:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char buffer[256];
+navit/plugin/driver_break/driver_break_osd.c:772:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char buffer[256];
+navit/plugin/driver_break/driver_break_osd.c:815:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char buffer[256];
+navit/plugin/driver_break/driver_break_osd.c:920:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char buffer[256];
+navit/plugin/driver_break/driver_break_osd.c:921:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char title[128];
+navit/plugin/driver_break/driver_break_poi.c:49:5:  [2] (buffer) memcpy:
+  Does not check for buffer overflows when copying to destination (CWE-120).
+  Make sure destination can always hold the source data.
+    memcpy(&(mem->response[mem->size]), contents, realsize);
+navit/plugin/driver_break/driver_break_poi.c:82:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char search_pattern[256];
+navit/plugin/driver_break/driver_break_poi.c:99:5:  [2] (buffer) memcpy:
+  Does not check for buffer overflows when copying to destination (CWE-120).
+  Make sure destination can always hold the source data.
+    memcpy(value, pos, len);
+navit/plugin/driver_break/driver_break_poi.c:108:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char search_pattern[256];
+navit/plugin/driver_break/driver_break_poi_map.c:53:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char tag_key[256];
+navit/plugin/driver_break/driver_break_poi_map.c:70:21:  [2] (buffer) memcpy:
+  Does not check for buffer overflows when copying to destination (CWE-120).
+  Make sure destination can always hold the source data.
+                    memcpy(tag_value, pos, len);
+navit/plugin/driver_break/driver_break_srtm.c:190:15:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (CWE-362).
+    FILE *f = fopen(filepath, "rb");
+navit/plugin/driver_break/driver_break_srtm.c:230:14:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    unsigned char bytes[2];
+navit/plugin/driver_break/driver_break_srtm.c:376:16:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (CWE-362).
+    FILE *fp = fopen(zip_path, "wb");
+navit/plugin/driver_break/tests/test_driver_break_db.c:42:14:  [2] (tmpfile) mkstemp:
+  Potential for temporary file vulnerability in some circumstances. Some
+  older Unix-like systems create temp files with permission to write by all
+  by default, so be sure to set the umask to override this. Also, some older
+  Unix systems might fail to use O_EXCL when opening the file, so make sure
+  that O_EXCL is used by the library (CWE-377).
+    int fd = mkstemp(template);
+navit/plugin/driver_break/tests/test_driver_break_srtm.c:61:15:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (CWE-362).
+    FILE *f = fopen(filepath, "wb");
+navit/plugin/driver_break/tests/test_driver_break_srtm.c:83:18:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+        unsigned char bytes[2];
+navit/plugin/driver_break/tests/test_driver_break_srtm.c:100:15:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (CWE-362).
+    FILE *f = fopen(filepath, "wb");
+navit/plugin/driver_break/tests/test_driver_break_srtm.c:106:5:  [2] (buffer) char:
+  Statically-sized arrays can be improperly restricted, leading to potential
+  overflows or other issues (CWE-119!/CWE-120). Perform bounds checking, use
+  functions that limit length, or ensure that the size is larger than the
+  maximum possible length.
+    char dummy[1000];
+navit/plugin/driver_break/tests/test_driver_break_srtm.c:115:15:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (CWE-362).
+    FILE *f = fopen(filepath, "wb");
+navit/plugin/driver_break/tests/test_driver_break_srtm.c:132:15:  [2] (misc) fopen:
+  Check when opening files - can an attacker redirect it (via symlinks),
+  force the opening of special file type (e.g., device files), move things
+  around to create a race condition, control its ancestors, or change its
+  contents? (CWE-362).
+    FILE *f = fopen(filepath, "wb");
+navit/plugin/driver_break/driver_break_poi.c:90:12:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated; if given one it may
+  perform an over-read (it could cause a crash if unprotected) (CWE-126).
+    pos += strlen(search_pattern);
+navit/plugin/driver_break/driver_break_poi.c:116:12:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated; if given one it may
+  perform an over-read (it could cause a crash if unprotected) (CWE-126).
+    pos += strlen(search_pattern);
+navit/plugin/driver_break/driver_break_poi_map.c:64:24:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated; if given one it may
+  perform an over-read (it could cause a crash if unprotected) (CWE-126).
+                pos += strlen(tag_key);
+navit/plugin/driver_break/driver_break_poi_map.c:66:39:  [1] (buffer) strlen:
+  Does not handle strings that are not \0-terminated; if given one it may
+  perform an over-read (it could cause a crash if unprotected) (CWE-126).
+                if (!end) end = pos + strlen(pos);
+
+ANALYSIS SUMMARY:
+
+Hits = 30
+Lines analyzed = 8283 in approximately 0.05 seconds (165061 lines/second)
+Physical Source Lines of Code (SLOC) = 5547
+Hits@level = [0] 105 [1]   4 [2]  25 [3]   0 [4]   1 [5]   0
+Hits@level+ = [0+] 135 [1+]  30 [2+]  26 [3+]   1 [4+]   1 [5+]   0
+Hits/KSLOC@level+ = [0+] 24.3375 [1+] 5.40833 [2+] 4.68722 [3+] 0.180278 [4+] 0.180278 [5+]   0
+Minimum risk level = 1
+
+Not every hit is necessarily a security vulnerability.
+You can inhibit a report by adding a comment in this form:
+// flawfinder: ignore
+Make *sure* it's a false positive!
+You can use the option --neverignore to show these.
+
+There may be other security vulnerabilities; review your code!
+See 'Secure Programming HOWTO'
+(https://dwheeler.com/secure-programs) for more information.

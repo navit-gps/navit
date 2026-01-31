@@ -39,7 +39,7 @@ fi
 if [ ! -d "$SYMBOL_SIZE/primary" ]; then
     echo "Error: Symbol directory $SYMBOL_SIZE/primary not found in repository"
     echo "Available directories:"
-    ls -d */ | head -10
+    ls -d ./*/ | head -10
     exit 1
 fi
 

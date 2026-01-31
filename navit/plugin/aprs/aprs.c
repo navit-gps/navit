@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2024 Navit Team
+ * Copyright (C) 2024-2026 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -383,7 +383,8 @@ static void aprs_update_items(struct map_priv *priv) {
         struct item *new_item = g_new0(struct item, 1);
         struct aprs_item_priv *ip = g_new0(struct aprs_item_priv, 1);
         
-        new_item->type = type_poi_custom0; /* Use custom POI type to support icon_src attribute */
+        /* Use communication POI type - plugins cannot use custom POI types */
+        new_item->type = type_poi_communication;
         new_item->id_hi = id_hi;
         new_item->id_lo = id_lo++;
         new_item->meth = &aprs_item_methods;
@@ -427,16 +428,10 @@ static void aprs_update_items(struct map_priv *priv) {
             attr_idx++;
         }
         
-        /* Set APRS symbol icon if available */
-        if (station->symbol_table && station->symbol_code) {
-            char *icon_path = aprs_symbol_get_icon(station->symbol_table, station->symbol_code);
-            if (icon_path) {
-                attrs[attr_idx] = g_new0(struct attr, 1);
-                attrs[attr_idx]->type = attr_icon_src;
-                attrs[attr_idx]->u.str = icon_path;
-                attr_idx++;
-            }
-        }
+        /* Note: Custom icons via attr_icon_src are not supported for plugins.
+         * Plugins cannot use custom POI types (poi_custom0-poi_customf) as those
+         * are reserved for user-defined content. APRS stations will use the
+         * default icon for type_poi_communication defined in the layout. */
         
         attrs[attr_idx] = NULL;
         ip->attrs = attr_list_dup(attrs);

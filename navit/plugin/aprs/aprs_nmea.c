@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2024 Navit Team
+ * Copyright (C) 2024-2026 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -65,11 +65,134 @@ static double parse_dm_to_decimal(const char *dm) {
     return deg + min / 60.0;
 }
 
+/* Parse GPWPL sentence type */
+static int parse_gpwpl(char **fields, int field_count, struct aprs_station *station) {
+    if (field_count < 5) {
+        return 0;
+    }
+    station->position.lat = parse_dm_to_decimal(fields[1]);
+    if (fields[2][0] == 'S') {
+        station->position.lat = -station->position.lat;
+    }
+    station->position.lng = parse_dm_to_decimal(fields[3]);
+    if (fields[4][0] == 'W') {
+        station->position.lng = -station->position.lng;
+    }
+    if (field_count > 5 && fields[5][0]) {
+        station->callsign = g_strdup(fields[5]);
+    }
+    station->timestamp = time(NULL);
+    return 1;
+}
+
+/* Parse PGRMW sentence type */
+static int parse_pgrmw(char **fields, int field_count, struct aprs_station *station) {
+    if (field_count < 4) {
+        return 0;
+    }
+    if (fields[1][0]) {
+        station->callsign = g_strdup(fields[1]);
+    }
+    station->position.lat = parse_dm_to_decimal(fields[2]);
+    station->position.lng = parse_dm_to_decimal(fields[3]);
+    if (field_count > 4 && fields[4][0]) {
+        char lat_dir = fields[4][0];
+        if (lat_dir == 'S') {
+            station->position.lat = -station->position.lat;
+        }
+    }
+    if (field_count > 5 && fields[5][0]) {
+        char lng_dir = fields[5][0];
+        if (lng_dir == 'W') {
+            station->position.lng = -station->position.lng;
+        }
+    }
+    if (field_count > 6 && fields[6][0]) {
+        station->altitude = atof(fields[6]);
+    }
+    if (field_count > 7 && fields[7][0]) {
+        station->symbol_table = fields[7][0];
+    }
+    if (field_count > 8 && fields[8][0]) {
+        station->symbol_code = fields[8][0];
+    }
+    if (field_count > 9 && fields[9][0]) {
+        station->comment = g_strdup(fields[9]);
+    }
+    station->timestamp = time(NULL);
+    return 1;
+}
+
+/* Parse PMGNWPL sentence type */
+static int parse_pmgnwpl(char **fields, int field_count, struct aprs_station *station) {
+    if (field_count < 6) {
+        return 0;
+    }
+    if (fields[1][0]) {
+        station->callsign = g_strdup(fields[1]);
+    }
+    station->position.lat = parse_dm_to_decimal(fields[2]);
+    if (fields[3][0] == 'S') {
+        station->position.lat = -station->position.lat;
+    }
+    station->position.lng = parse_dm_to_decimal(fields[4]);
+    if (fields[5][0] == 'W') {
+        station->position.lng = -station->position.lng;
+    }
+    if (field_count > 6 && fields[6][0]) {
+        station->altitude = atof(fields[6]);
+    }
+    if (field_count > 7 && fields[7][0]) {
+        station->symbol_table = fields[7][0];
+    }
+    if (field_count > 8 && fields[8][0]) {
+        station->symbol_code = fields[8][0];
+    }
+    if (field_count > 9 && fields[9][0]) {
+        station->comment = g_strdup(fields[9]);
+    }
+    if (field_count > 10 && fields[10][0]) {
+        station->course = atoi(fields[10]);
+    }
+    if (field_count > 11 && fields[11][0]) {
+        station->speed = atoi(fields[11]);
+    }
+    station->timestamp = time(NULL);
+    return 1;
+}
+
+/* Parse PKWDWPL sentence type */
+static int parse_pkwdwpl(char **fields, int field_count, struct aprs_station *station) {
+    if (field_count < 5) {
+        return 0;
+    }
+    if (fields[1][0]) {
+        station->callsign = g_strdup(fields[1]);
+    }
+    station->position.lat = parse_dm_to_decimal(fields[2]);
+    if (fields[3][0] == 'S') {
+        station->position.lat = -station->position.lat;
+    }
+    station->position.lng = parse_dm_to_decimal(fields[4]);
+    if (fields[5][0] == 'W') {
+        station->position.lng = -station->position.lng;
+    }
+    if (field_count > 6 && fields[6][0]) {
+        station->symbol_table = fields[6][0];
+    }
+    if (field_count > 7 && fields[7][0]) {
+        station->symbol_code = fields[7][0];
+    }
+    station->timestamp = time(NULL);
+    return 1;
+}
+
 int aprs_nmea_parse_sentence(const char *sentence, struct aprs_station *station) {
     char *sentence_copy = g_strdup(sentence);
     char *fields[32];
     int field_count = 0;
     int len = strlen(sentence_copy);
+    int result = 0;
     
     if (len < 4 || sentence_copy[0] != '$') {
         g_free(sentence_copy);
@@ -91,9 +214,14 @@ int aprs_nmea_parse_sentence(const char *sentence, struct aprs_station *station)
     char *p = sentence_copy + 1;
     while (*p && field_count < 31) {
         fields[field_count++] = p;
-        while (*p && *p != ',') p++;
-        if (*p == ',') *p++ = '\0';
-        else break;
+        while (*p && *p != ',') {
+            p++;
+        }
+        if (*p == ',') {
+            *p++ = '\0';
+        } else {
+            break;
+        }
     }
     
     if (field_count < 3) {
@@ -104,108 +232,17 @@ int aprs_nmea_parse_sentence(const char *sentence, struct aprs_station *station)
     const char *sentence_type = fields[0];
     
     if (strncmp(sentence_type, "GPWPL", 5) == 0) {
-        if (field_count < 5) {
-            g_free(sentence_copy);
-            return 0;
-        }
-        station->position.lat = parse_dm_to_decimal(fields[1]);
-        if (fields[2][0] == 'S') station->position.lat = -station->position.lat;
-        station->position.lng = parse_dm_to_decimal(fields[3]);
-        if (fields[4][0] == 'W') station->position.lng = -station->position.lng;
-        if (field_count > 5 && fields[5][0]) {
-            station->callsign = g_strdup(fields[5]);
-        }
-        station->timestamp = time(NULL);
-        g_free(sentence_copy);
-        return 1;
-    }
-    else if (strncmp(sentence_type, "PGRMW", 5) == 0) {
-        if (field_count < 4) {
-            g_free(sentence_copy);
-            return 0;
-        }
-        if (fields[1][0]) station->callsign = g_strdup(fields[1]);
-        station->position.lat = parse_dm_to_decimal(fields[2]);
-        station->position.lng = parse_dm_to_decimal(fields[3]);
-        if (field_count > 4 && fields[4][0]) {
-            char lat_dir = fields[4][0];
-            if (lat_dir == 'S') station->position.lat = -station->position.lat;
-        }
-        if (field_count > 5 && fields[5][0]) {
-            char lng_dir = fields[5][0];
-            if (lng_dir == 'W') station->position.lng = -station->position.lng;
-        }
-        if (field_count > 6 && fields[6][0]) {
-            station->altitude = atof(fields[6]);
-        }
-        if (field_count > 7 && fields[7][0]) {
-            station->symbol_table = fields[7][0];
-        }
-        if (field_count > 8 && fields[8][0]) {
-            station->symbol_code = fields[8][0];
-        }
-        if (field_count > 9 && fields[9][0]) {
-            station->comment = g_strdup(fields[9]);
-        }
-        station->timestamp = time(NULL);
-        g_free(sentence_copy);
-        return 1;
-    }
-    else if (strncmp(sentence_type, "PMGNWPL", 7) == 0) {
-        if (field_count < 6) {
-            g_free(sentence_copy);
-            return 0;
-        }
-        if (fields[1][0]) station->callsign = g_strdup(fields[1]);
-        station->position.lat = parse_dm_to_decimal(fields[2]);
-        if (fields[3][0] == 'S') station->position.lat = -station->position.lat;
-        station->position.lng = parse_dm_to_decimal(fields[4]);
-        if (fields[5][0] == 'W') station->position.lng = -station->position.lng;
-        if (field_count > 6 && fields[6][0]) {
-            station->altitude = atof(fields[6]);
-        }
-        if (field_count > 7 && fields[7][0]) {
-            station->symbol_table = fields[7][0];
-        }
-        if (field_count > 8 && fields[8][0]) {
-            station->symbol_code = fields[8][0];
-        }
-        if (field_count > 9 && fields[9][0]) {
-            station->comment = g_strdup(fields[9]);
-        }
-        if (field_count > 10 && fields[10][0]) {
-            station->course = atoi(fields[10]);
-        }
-        if (field_count > 11 && fields[11][0]) {
-            station->speed = atoi(fields[11]);
-        }
-        station->timestamp = time(NULL);
-        g_free(sentence_copy);
-        return 1;
-    }
-    else if (strncmp(sentence_type, "PKWDWPL", 7) == 0) {
-        if (field_count < 5) {
-            g_free(sentence_copy);
-            return 0;
-        }
-        if (fields[1][0]) station->callsign = g_strdup(fields[1]);
-        station->position.lat = parse_dm_to_decimal(fields[2]);
-        if (fields[3][0] == 'S') station->position.lat = -station->position.lat;
-        station->position.lng = parse_dm_to_decimal(fields[4]);
-        if (fields[5][0] == 'W') station->position.lng = -station->position.lng;
-        if (field_count > 6 && fields[6][0]) {
-            station->symbol_table = fields[6][0];
-        }
-        if (field_count > 7 && fields[7][0]) {
-            station->symbol_code = fields[7][0];
-        }
-        station->timestamp = time(NULL);
-        g_free(sentence_copy);
-        return 1;
+        result = parse_gpwpl(fields, field_count, station);
+    } else if (strncmp(sentence_type, "PGRMW", 5) == 0) {
+        result = parse_pgrmw(fields, field_count, station);
+    } else if (strncmp(sentence_type, "PMGNWPL", 7) == 0) {
+        result = parse_pmgnwpl(fields, field_count, station);
+    } else if (strncmp(sentence_type, "PKWDWPL", 7) == 0) {
+        result = parse_pkwdwpl(fields, field_count, station);
     }
     
     g_free(sentence_copy);
-    return 0;
+    return result;
 }
 
 static void *aprs_nmea_thread(void *data) {
@@ -297,26 +334,16 @@ void aprs_nmea_destroy(struct aprs_nmea *nmea) {
     g_free(nmea);
 }
 
-int aprs_nmea_start(struct aprs_nmea *nmea) {
-    if (!nmea || nmea->running) return 0;
-    
-    nmea->fd = open(nmea->config.device, O_RDWR | O_NOCTTY | O_NONBLOCK);
-    if (nmea->fd < 0) {
-        dbg(lvl_error, "Failed to open NMEA device %s: %s", 
-            nmea->config.device, strerror(errno));
-        return 0;
-    }
-    
+/* Configure terminal attributes for NMEA device */
+static int configure_termios(int fd, const struct aprs_nmea_config *config) {
     struct termios tty;
-    if (tcgetattr(nmea->fd, &tty) != 0) {
+    if (tcgetattr(fd, &tty) != 0) {
         dbg(lvl_error, "Failed to get terminal attributes: %s", strerror(errno));
-        close(nmea->fd);
-        nmea->fd = -1;
         return 0;
     }
     
     speed_t speed;
-    switch (nmea->config.baud_rate) {
+    switch (config->baud_rate) {
     case 4800: speed = B4800; break;
     case 9600: speed = B9600; break;
     case 19200: speed = B19200; break;
@@ -329,19 +356,19 @@ int aprs_nmea_start(struct aprs_nmea *nmea) {
     cfsetispeed(&tty, speed);
     
     tty.c_cflag &= ~PARENB;
-    if (nmea->config.parity == 'E') {
+    if (config->parity == 'E') {
         tty.c_cflag |= PARENB | PARODD;
-    } else if (nmea->config.parity == 'O') {
+    } else if (config->parity == 'O') {
         tty.c_cflag |= PARENB;
     }
     
     tty.c_cflag &= ~CSTOPB;
-    if (nmea->config.stop_bits == 2) {
+    if (config->stop_bits == 2) {
         tty.c_cflag |= CSTOPB;
     }
     
     tty.c_cflag &= ~CSIZE;
-    if (nmea->config.data_bits == 7) {
+    if (config->data_bits == 7) {
         tty.c_cflag |= CS7;
     } else {
         tty.c_cflag |= CS8;
@@ -355,8 +382,27 @@ int aprs_nmea_start(struct aprs_nmea *nmea) {
     tty.c_cc[VMIN] = 0;
     tty.c_cc[VTIME] = 10;
     
-    if (tcsetattr(nmea->fd, TCSANOW, &tty) != 0) {
+    if (tcsetattr(fd, TCSANOW, &tty) != 0) {
         dbg(lvl_error, "Failed to set terminal attributes: %s", strerror(errno));
+        return 0;
+    }
+    
+    return 1;
+}
+
+int aprs_nmea_start(struct aprs_nmea *nmea) {
+    if (!nmea || nmea->running) {
+        return 0;
+    }
+    
+    nmea->fd = open(nmea->config.device, O_RDWR | O_NOCTTY | O_NONBLOCK);
+    if (nmea->fd < 0) {
+        dbg(lvl_error, "Failed to open NMEA device %s: %s", 
+            nmea->config.device, strerror(errno));
+        return 0;
+    }
+    
+    if (!configure_termios(nmea->fd, &nmea->config)) {
         close(nmea->fd);
         nmea->fd = -1;
         return 0;

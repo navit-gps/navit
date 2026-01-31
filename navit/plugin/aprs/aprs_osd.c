@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2024 Navit Team
+ * Copyright (C) 2024-2026 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -439,6 +439,14 @@ int aprs_cmd_nmea_parity_odd(struct navit *nav, char *function, struct attr **in
     return 1;
 }
 
+int aprs_cmd_setting_aprs(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct attr navit_attr;
+    navit_attr.type = attr_navit;
+    navit_attr.u.navit = nav;
+    command_evaluate_to_void(&navit_attr, "menu(\"#Settings APRS\")", NULL);
+    return 1;
+}
+
 static struct command_table aprs_commands[] = {
     {"aprs_freq_144_39", command_cast(aprs_cmd_freq_144_39)},
     {"aprs_freq_144_8", command_cast(aprs_cmd_freq_144_8)},
@@ -467,6 +475,7 @@ static struct command_table aprs_commands[] = {
     {"aprs_nmea_parity_none", command_cast(aprs_cmd_nmea_parity_none)},
     {"aprs_nmea_parity_even", command_cast(aprs_cmd_nmea_parity_even)},
     {"aprs_nmea_parity_odd", command_cast(aprs_cmd_nmea_parity_odd)},
+    {"setting_aprs", command_cast(aprs_cmd_setting_aprs)},
 };
 
 static void aprs_osd_destroy(struct osd_priv *osd) {
@@ -494,16 +503,9 @@ static struct osd_priv *aprs_osd_new(struct navit *nav, struct osd_methods *meth
     command_add_table_attr(aprs_commands, sizeof(aprs_commands)/sizeof(struct command_table), nav, &cmd_attr);
     navit_add_attr(nav, &cmd_attr);
     
-    /* Initialize frequency index variable for menu */
-    aprs_osd_get_frequency_index(nav);
-    if (nav) {
-        struct attr navit_attr;
-        char cmd_str[128];
-        navit_attr.type = attr_navit;
-        navit_attr.u.navit = nav;
-        snprintf(cmd_str, sizeof(cmd_str), "set_int_var(\"aprs_freq_index\", %d)", current_aprs_freq_index);
-        command_evaluate_to_void(&navit_attr, cmd_str, NULL);
-    }
+    /* Note: Do NOT call aprs_osd_get_frequency_index() here - navit is not fully
+     * initialized yet (mapset may not exist). The frequency index will be 
+     * initialized when aprs_refresh_freq_index command is called from the menu. */
     
     dbg(lvl_info, "APRS OSD menu commands registered");
     
