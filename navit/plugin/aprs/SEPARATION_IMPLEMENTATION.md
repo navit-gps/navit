@@ -45,11 +45,11 @@ static GList *packet_sources = NULL;
 
 int aprs_register_packet_source(aprs_packet_callback_t callback, void *user_data) {
     if (!callback) return 0;
-    
+
     struct packet_source *src = g_new0(struct packet_source, 1);
     src->callback = callback;
     src->user_data = user_data;
-    
+
     packet_sources = g_list_append(packet_sources, src);
     dbg(lvl_info, "APRS packet source registered");
     return 1;
@@ -102,36 +102,36 @@ static void aprs_sdr_deliver_frame(const unsigned char *frame_data, int frame_le
 static int aprs_sdr_discover_aprs_plugin(void) {
     GModule *aprs_module = NULL;
     int (*register_func)(aprs_packet_callback_t, void *) = NULL;
-    
+
     // Try to open APRS plugin module
     aprs_module = g_module_open("libaprs.so", G_MODULE_BIND_LAZY);
     if (!aprs_module) {
         // Try alternative names
         aprs_module = g_module_open("aprs", G_MODULE_BIND_LAZY);
     }
-    
+
     if (!aprs_module) {
         dbg(lvl_warning, "APRS plugin not found - SDR plugin will not deliver packets");
         return 0;
     }
-    
+
     // Look up the registration function
     if (!g_module_symbol(aprs_module, "aprs_register_packet_source", (gpointer *)&register_func)) {
         dbg(lvl_error, "Could not find aprs_register_packet_source in APRS plugin");
         g_module_close(aprs_module);
         return 0;
     }
-    
+
     // Get APRS map instance (need to find it via Navit's map system)
     struct mapset *ms = navit_get_mapset(navit_get());
     // ... find APRS map ...
-    
+
     // Register our callback
     if (register_func(aprs_sdr_deliver_frame, aprs_map_priv)) {
         dbg(lvl_info, "Successfully registered with APRS plugin");
         return 1;
     }
-    
+
     return 0;
 }
 ```
@@ -149,19 +149,19 @@ Better approach using Navit's plugin system:
 static int aprs_sdr_discover_aprs_plugin(void) {
     // Use Navit's plugin_get_category to find APRS map
     struct map_priv *aprs_map = (struct map_priv *)plugin_get_category_map("aprs");
-    
+
     if (!aprs_map) {
         dbg(lvl_warning, "APRS map not found");
         return 0;
     }
-    
+
     // Get the packet processing function
     // This requires exporting it from aprs.c
     extern int aprs_process_packet(struct map_priv *priv, const unsigned char *data, int length);
-    
+
     // Store reference for later use
     aprs_map_priv = aprs_map;
-    
+
     return 1;
 }
 ```

@@ -42,11 +42,11 @@ typedef void (*aprs_packet_callback_t)(const unsigned char *data, int length, vo
 
 /**
  * Register a packet callback with the APRS plugin
- * 
+ *
  * This function is exported by the APRS plugin and can be called by
  * other plugins (like aprs_sdr) to register a callback that will be
  * invoked whenever a decoded APRS packet is available.
- * 
+ *
  * @param callback Function to call when a packet is decoded
  * @param user_data User context to pass to callback
  * @return 1 on success, 0 on failure (APRS plugin not available)
@@ -55,7 +55,7 @@ int aprs_register_packet_source(aprs_packet_callback_t callback, void *user_data
 
 /**
  * Unregister a packet callback
- * 
+ *
  * @param callback The callback function to unregister
  * @return 1 on success, 0 on failure
  */
@@ -66,4 +66,3 @@ int aprs_unregister_packet_source(aprs_packet_callback_t callback);
 #endif
 
 #endif /* NAVIT_APRS_PLUGIN_INTERFACE_H */
-

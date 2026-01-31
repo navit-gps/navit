@@ -20,10 +20,10 @@ endif()
 # The functions will be resolved at runtime when the plugin is loaded by Navit,
 # as long as gui_internal is loaded before this plugin.
 
-module_add_library(plugin_driver_break 
-    driver_break.c 
-    driver_break_db.c 
-    driver_break_finder.c 
+module_add_library(plugin_driver_break
+    driver_break.c
+    driver_break_db.c
+    driver_break_finder.c
     driver_break_poi.c
     driver_break_osd.c
     driver_break_energy.c

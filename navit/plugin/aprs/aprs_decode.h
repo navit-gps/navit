@@ -52,4 +52,3 @@ void aprs_packet_free(struct aprs_packet *packet);
 void aprs_position_free(struct aprs_position *pos);
 
 #endif
-

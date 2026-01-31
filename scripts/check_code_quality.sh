@@ -37,12 +37,12 @@ run_cppcheck() {
     if ! check_tool cppcheck; then
         return 1
     fi
-    
+
     echo -e "${GREEN}[1/3] Running cppcheck static analysis...${NC}"
-    
+
     local target="${1:-navit/plugin/driver_break}"
     local report_file="${OUTPUT_DIR}/cppcheck_${TIMESTAMP}.txt"
-    
+
     cppcheck \
         --enable=all \
         --suppress=missingIncludeSystem \
@@ -52,7 +52,7 @@ run_cppcheck() {
         --xml --xml-version=2 \
         --output-file="${OUTPUT_DIR}/cppcheck_${TIMESTAMP}.xml" \
         "$target" 2>&1 | tee "$report_file"
-    
+
     local issues=$(grep -c "\[.*\]" "$report_file" 2>/dev/null || echo "0")
     echo -e "${GREEN}  Found $issues potential issues${NC}"
     echo "  Report saved to: $report_file"
@@ -64,19 +64,19 @@ run_clang_tidy() {
     if ! check_tool clang-tidy; then
         return 1
     fi
-    
+
     echo -e "${GREEN}[2/5] Running clang-tidy analysis...${NC}"
-    
+
     local target="${1:-navit/plugin/driver_break}"
     local report_file="${OUTPUT_DIR}/clang-tidy_${TIMESTAMP}.txt"
-    
+
     # Create compile_commands.json if it doesn't exist
     if [ ! -f "$PROJECT_ROOT/compile_commands.json" ]; then
         echo -e "${YELLOW}  Warning: compile_commands.json not found.${NC}"
         echo "  Generate it with: cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .."
         echo "  Running clang-tidy without compile commands (limited analysis)..."
     fi
-    
+
     local issues=0
     find "$target" -name "*.c" -o -name "*.h" | while read file; do
         if [ -f "$PROJECT_ROOT/compile_commands.json" ]; then
@@ -89,7 +89,7 @@ run_clang_tidy() {
                 --warnings-as-errors='*' 2>&1 | tee -a "$report_file"
         fi
     done
-    
+
     issues=$(grep -c "warning:\|error:" "$report_file" 2>/dev/null || echo "0")
     echo -e "${GREEN}  Found $issues potential issues${NC}"
     echo "  Report saved to: $report_file"
@@ -101,15 +101,15 @@ run_flawfinder() {
     if ! check_tool flawfinder; then
         return 1
     fi
-    
+
     echo -e "${GREEN}[3/5] Running flawfinder security analysis...${NC}"
-    
+
     local target="${1:-navit/plugin/driver_break}"
     local report_file="${OUTPUT_DIR}/flawfinder_${TIMESTAMP}.txt"
-    
+
     flawfinder --html --context --columns --minlevel=1 "$target" > "${OUTPUT_DIR}/flawfinder_${TIMESTAMP}.html" 2>&1
     flawfinder --context --columns --minlevel=1 "$target" > "$report_file" 2>&1
-    
+
     local issues=$(grep -c "Hits = " "$report_file" 2>/dev/null | tail -1 | grep -oP '\d+' || echo "0")
     echo -e "${GREEN}  Found $issues potential security issues${NC}"
     echo "  Report saved to: $report_file"
@@ -122,19 +122,19 @@ run_splint() {
     if ! check_tool splint; then
         return 1
     fi
-    
+
     echo -e "${GREEN}[4/5] Running splint analysis...${NC}"
-    
+
     local target="${1:-navit/plugin/driver_break}"
     local report_file="${OUTPUT_DIR}/splint_${TIMESTAMP}.txt"
-    
+
     # Splint needs include paths - try to find them from CMake or use defaults
     local include_dirs="-I${PROJECT_ROOT}/navit -I${PROJECT_ROOT}"
-    
+
     find "$target" -name "*.c" | while read file; do
         splint $include_dirs -weak -preproc -warnposix -nolib -DHAVE_API_ANDROID=0 -DHAVE_CURL=1 "$file" 2>&1 | tee -a "$report_file" || true
     done
-    
+
     local issues=$(grep -c "Splint" "$report_file" 2>/dev/null || echo "0")
     echo -e "${GREEN}  Found $issues potential issues${NC}"
     echo "  Report saved to: $report_file"
@@ -144,29 +144,29 @@ run_splint() {
 # Run code complexity analysis
 run_complexity() {
     echo -e "${GREEN}[5/5] Analyzing code complexity...${NC}"
-    
+
     local target="${1:-navit/plugin/driver_break}"
     local report_file="${OUTPUT_DIR}/complexity_${TIMESTAMP}.txt"
-    
+
     echo "Code Complexity Analysis" > "$report_file"
     echo "=======================" >> "$report_file"
     echo "" >> "$report_file"
-    
+
     echo "Largest files:" >> "$report_file"
     find "$target" -name "*.c" -exec wc -l {} \; | sort -rn | head -10 >> "$report_file"
     echo "" >> "$report_file"
-    
+
     echo "Functions with high complexity (potential issues):" >> "$report_file"
     echo "  (Functions with many nested levels or long parameter lists)" >> "$report_file"
     echo "" >> "$report_file"
-    
+
     # Count function parameters (functions with >5 parameters are complex)
     grep -n "^[a-zA-Z_].*(" "$target"/*.c 2>/dev/null | \
         awk -F: '{print $2}' | \
         grep -o "([^)]*)" | \
         awk -F, '{if (NF > 5) print}' | \
         head -10 >> "$report_file" || true
-    
+
     echo "  Report saved to: $report_file"
     echo ""
 }

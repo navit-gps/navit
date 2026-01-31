@@ -81,7 +81,7 @@ if [ -z "${OSM_INPUT}" ]; then
     echo ""
     echo "Method 2: Downloading Norway extract from Geofabrik (fallback)..."
     GEOFABRIK_URL="https://download.geofabrik.de/europe/norway-latest.osm.pbf"
-    
+
     if command -v curl &> /dev/null; then
         echo "Downloading ${GEOFABRIK_URL}..."
         echo "Note: Full Norway extract is large (~1.2GB). This may take several minutes..."
@@ -123,7 +123,7 @@ fi
 # Extract bounding box from PBF file if we downloaded full Norway extract
 if [ "${EXTRACT_NEEDED}" = "1" ] && [ -f "${OSM_PBF}" ]; then
     echo "Extracting bounding box (7.2°E, 60.8°N to 11.0°E, 61.3°N) from Norway extract..."
-    
+
     # Check if osmium-tool is available (best tool for PBF extraction)
     if command -v osmium &> /dev/null; then
         echo "Using osmium-tool to extract bounding box..."

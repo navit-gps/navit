@@ -45,7 +45,7 @@ Device Support
 The plugin supports the following RTL-SDR devices:
 
 - **RTL-SDR Blog V3** (RTL2832U + R820T2) - Recommended for best performance
-- **V4 R828D** (RTL2832U + R828D) - Latest generation, excellent sensitivity  
+- **V4 R828D** (RTL2832U + R828D) - Latest generation, excellent sensitivity
 - **Nooelec dongles** (NESDR series) - Budget-friendly option
 - **Generic RTL2832U** - Fallback for other compatible dongles
 
@@ -137,7 +137,7 @@ The plugin is built automatically when librtlsdr is found:
 
    # Install dependencies
    sudo apt-get install librtlsdr-dev
-   
+
    # Build (plugin auto-detected)
    cd build
    cmake ..

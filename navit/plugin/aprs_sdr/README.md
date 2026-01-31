@@ -42,7 +42,7 @@ APRS Plugin (via aprs_process_packet)
 The plugin supports the following RTL-SDR devices:
 
 - **RTL-SDR Blog V3** (RTL2832U + R820T2) - Recommended for best performance
-- **V4 R828D** (RTL2832U + R828D) - Latest generation, excellent sensitivity  
+- **V4 R828D** (RTL2832U + R828D) - Latest generation, excellent sensitivity
 - **Nooelec dongles** (NESDR series) - Budget-friendly option
 - **Generic RTL2832U** - Fallback for other compatible dongles
 

@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <navit>
     <!-- Rest Plugin Configuration Examples -->
-    
+
     <!-- Example 1: Car with default settings -->
     <osd type="rest" enabled="yes">
         <attr name="type" value="car"/>
     </osd>
-    
+
     <!-- Example 2: Truck with custom database path -->
     <osd type="rest" enabled="yes" data="/home/user/.navit/rest_truck.db">
         <attr name="type" value="truck"/>
     </osd>
-    
+
     <!-- Example 3: Car with custom database location -->
     <osd type="rest" enabled="yes" data="/var/lib/navit/rest_plugin.db">
         <attr name="type" value="car"/>
     </osd>
-    
+
     <!-- Menu integration example -->
     <!-- Add to your menu XML:
     <a name='Settings Rest'><text>Rest &amp; Break Settings</text>

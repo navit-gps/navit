@@ -25,4 +25,3 @@
 struct aprs_sdr;
 
 #endif /* NAVIT_APRS_SDR_H */
-

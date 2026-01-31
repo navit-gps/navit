@@ -30,10 +30,10 @@
 
 /* common */
 #ifndef ATTR
-#    define ATTR(x) extern##x;
+#define ATTR(x) extern##x;
 #endif
 #ifndef ATTR2
-#    define ATTR2(x, y) extern##y;
+#define ATTR2(x, y) extern##y;
 #endif
 ATTR2(0x00000000, none)
 ATTR(any)

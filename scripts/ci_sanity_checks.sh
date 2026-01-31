@@ -9,6 +9,14 @@ set -u
 #
 # WARNING: make sure you commit ALL your changes before running it locally if you ever do it because it will run a git
 # checkout -- which will reset your changes on all files...
+#
+# NOTE (local vs CI): The script processes files from "git diff refs/remotes/origin/trunk". On CI, origin points to
+# navit-gps/navit (upstream). Locally, origin often points to your fork. If your branch equals origin/trunk, the diff
+# is empty and the script processes nothing - it will pass even if files have issues. To simulate CI locally:
+#   git fetch upstream   # upstream = https://github.com/navit-gps/navit.git
+#   # Temporarily compare against upstream: sed -i 's|origin/trunk|upstream/trunk|' scripts/ci_sanity_checks.sh
+#   ./scripts/ci_sanity_checks.sh
+#   git checkout scripts/ci_sanity_checks.sh
 # #####################################################################################################################
 
 return_code=0

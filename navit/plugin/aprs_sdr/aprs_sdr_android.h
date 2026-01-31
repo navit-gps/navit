@@ -23,8 +23,8 @@
 #include "config.h"
 
 #ifdef ANDROID
-#include <jni.h>
 #include <android/log.h>
+#include <jni.h>
 
 /**
  * @file aprs_sdr_android.h
@@ -60,8 +60,7 @@ void aprs_sdr_android_destroy(struct aprs_sdr_android *android_usb);
  * @param product_id USB product ID
  * @return 1 if permission granted, 0 otherwise
  */
-int aprs_sdr_android_request_permission(struct aprs_sdr_android *android_usb,
-                                       int vendor_id, int product_id);
+int aprs_sdr_android_request_permission(struct aprs_sdr_android *android_usb, int vendor_id, int product_id);
 
 /**
  * Open USB device
@@ -70,8 +69,7 @@ int aprs_sdr_android_request_permission(struct aprs_sdr_android *android_usb,
  * @param product_id USB product ID
  * @return File descriptor or -1 on error
  */
-int aprs_sdr_android_open_device(struct aprs_sdr_android *android_usb,
-                                 int vendor_id, int product_id);
+int aprs_sdr_android_open_device(struct aprs_sdr_android *android_usb, int vendor_id, int product_id);
 
 /**
  * Close USB device
@@ -85,8 +83,7 @@ void aprs_sdr_android_close_device(struct aprs_sdr_android *android_usb);
  * @param length Buffer size
  * @return Number of bytes read, or -1 on error
  */
-int aprs_sdr_android_bulk_read(struct aprs_sdr_android *android_usb,
-                               unsigned char *buffer, int length);
+int aprs_sdr_android_bulk_read(struct aprs_sdr_android *android_usb, unsigned char *buffer, int length);
 
 /**
  * Write control request to USB device
@@ -99,10 +96,8 @@ int aprs_sdr_android_bulk_read(struct aprs_sdr_android *android_usb,
  * @param length Data length
  * @return 0 on success, -1 on error
  */
-int aprs_sdr_android_control_transfer(struct aprs_sdr_android *android_usb,
-                                     int request_type, int request,
-                                     int value, int index,
-                                     unsigned char *data, int length);
+int aprs_sdr_android_control_transfer(struct aprs_sdr_android *android_usb, int request_type, int request, int value,
+                                      int index, unsigned char *data, int length);
 
 /**
  * Check if USB device is connected
@@ -112,4 +107,3 @@ int aprs_sdr_android_is_device_connected(struct aprs_sdr_android *android_usb);
 #endif /* ANDROID */
 
 #endif /* NAVIT_APRS_SDR_ANDROID_H */
-

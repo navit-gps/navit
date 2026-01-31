@@ -781,7 +781,7 @@ Use multiple RTL-SDR dongles or frequency hopping:
 ```bash
 # Frequency 1
 rtl_fm -f 144.39M -d 0 ... &
-# Frequency 2  
+# Frequency 2
 rtl_fm -f 144.8M -d 1 ... &
 ```
 

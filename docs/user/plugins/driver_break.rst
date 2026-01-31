@@ -137,7 +137,7 @@ Dependencies
 - **libcurl**: Optional, enables POI discovery via Overpass API when map data is not available
   - Debian/Ubuntu: ``apt-get install libcurl4-openssl-dev``
   - Fedora: ``dnf install libcurl-devel``
-  
+
   **Note**: The plugin works without libcurl, but POI discovery will be disabled if map data is unavailable.
 
 Build

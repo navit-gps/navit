@@ -88,7 +88,7 @@ For RTL-SDR support, install librtlsdr:
 
    # Debian/Ubuntu
    sudo apt-get install librtlsdr-dev
-   
+
    # Or build from source
    git clone https://github.com/librtlsdr/librtlsdr.git
    cd librtlsdr
