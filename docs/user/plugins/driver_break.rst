@@ -69,6 +69,21 @@ Trucks (EU Regulation EC 561/2006)
 - Predictive break scheduling
 - Cross-border regulation support
 
+Hiking
+^^^^^^
+
+The default break distances for hikers are based on the historical Norwegian mile system:
+
+- **1 Norwegian mile** = 11 km (traditional unit)
+- **1/4 Norwegian mile** = 2.8 km (short rest interval)
+- **Day's walk** = approximately 40 km
+
+Defaults (configurable):
+
+- Main rest interval: 11.295 km (1 Norwegian mile)
+- Short rest interval: 2.275 km (approximately 1/4 Norwegian mile)
+- Maximum daily distance: 40 km
+
 Rest Stop Location Criteria
 ---------------------------
 
