@@ -164,4 +164,4 @@ Sources
 
 http://trac.navit-project.org/ticket/735
 
-http://wiki.navit-project.org/index.php/Other_maps
+:doc:`/user/configuration/maps/Other maps`

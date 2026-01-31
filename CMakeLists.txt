@@ -32,7 +32,7 @@ endif(NOT DISABLE_CXX)
 
 set(NAVIT_VERSION_MAJOR "0")
 set(NAVIT_VERSION_MINOR "5")
-set(NAVIT_VERSION_PATCH "6")
+set(NAVIT_VERSION_PATCH "7")
 
 set(CMAKE_C_FLAGS_DEBUG "-g -O0 -fno-omit-frame-pointer")
 

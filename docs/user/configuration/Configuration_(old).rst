@@ -1108,7 +1108,7 @@ Mbrola
 
 If the default eSpeak voice sounds too much like an 80's robot to you,
 you may want to try a mbrola voice. Take a look at
-http://wiki.navit-project.org/index.php/Speech_output_with_espeak_and_mbrola
+:doc:`/user/configuration/advanced/introduction`
 
 ===Droid---
 

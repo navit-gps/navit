@@ -233,7 +233,7 @@ public class Navit extends Activity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface arg0, int arg1) {
                             Log.d(TAG, "user wants more info, show the website");
-                            String url = "http://wiki.navit-project.org/index.php/Navit_on_Android";
+                            String url = "https://navit.readthedocs.io/en/latest/user/platforms/maintained/android.html";
                             Intent i = new Intent(Intent.ACTION_VIEW);
                             i.setData(Uri.parse(url));
                             startActivity(i);

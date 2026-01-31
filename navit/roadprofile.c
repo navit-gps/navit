@@ -31,9 +31,6 @@ static void roadprofile_set_attr_do(struct roadprofile *this, struct attr *attr)
     case attr_maxspeed:
         this->maxspeed = attr->u.num;
         break;
-    case attr_route_weight:
-        this->route_weight = attr->u.num;
-        break;
     default:
         break;
     }

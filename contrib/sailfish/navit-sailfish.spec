@@ -9,7 +9,7 @@
 Name: harbour-navit
 Summary: Open Source car navigation system
 #Version: %{navit_version}_%{git_version}
-Version: 0.5.6
+Version: 0.5.7
 Release: 3
 License: GPL
 Group: Applications/Productivity
