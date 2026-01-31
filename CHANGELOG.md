@@ -35,357 +35,126 @@ allowed
 
 ### 🚀 Features
 
-- Maptool: write temporary files into instance-specific directory
+- Maptool: Allow to run multiple instances concurrently
+- Maptool: circular junctions allow oneway to be specified
+- Routing: Consider one-way property of circular junctions
+- Routing: Improve Time of Arrival Estimation
+
+### ⚡ Breaking Changes
+
+- navit.xml: roadprofile: route_weight parameter removed
+- navit.xml: vehicleprofile: maxspeed_handling attribute removed
 
 ### 🐛 Bug Fixes
 
+- Geoclue: speed conversion from mps to kph
 - Core Do not crash if center has no coordinates
-- Core Correctly pars coordinates from string
-- Os:sailfish version bump
+- Core Correctly parse coordinates from string
 - Core:Do not crash on recursive navit_add_attr
-- Python_biondings: Try to build if python 2 only.
+- Core:Redraw map when the orientation attribute is changed
+- Python_bindings: Try to build if python 2 only.
 - Build:Fix build warnings
 - Build:Add Target scopes
-- Core:Add missing import
 - Build:tomtom:Update tomtom image to our github image which was updated to debian bookworm
-- Build_tomtom:Revert to main branch
-- Core:cmake correctly detect protbuf-c
-- Core:core do not build shared libnavit_core.so
-- Build:Introduce GitHub actions (#1162)
 - Unterminated strings avoided, compiler warnings mitigated
 - Traffic:Fix error on missing error message
-
-### 💼 Other
-
-- Core Print stacktrace on SIG11 without gdb
-- Qt5 Allow to disable QML rotation.
-- Qt5 allow to set source from outsode
-- Android Fix ci build
-- Sailfish speed up build
-- Glib Fix compile warning
-- Ubuntutouch First working build.
-- Ubuntutouch Prevent screen saver if application runs
-- Qt5 fix ubtouch loader. This now disables screensaver
-- Sailfishos use newewr sdk
-- Verison bump
-- Android: do not update containers prior build
-- Sailfis: version bump to 5.0.0.43
-- Buildsystem:tomtom] Downgrade CMake agan for TomTom build
-- Geoclue speed conversion from mps to kph
-- Convert gif to jpg because of errors with gif
-- Consider one-way property of circular junctions
-- Build: Plugin loading fixed
-- Vehicle: Give example for activated, enabled demo vehicle
-- Routing: Improve Time of Arrival Estimation
+- Memory: Corruption fix on homedir edge case
 - Search_houseno_interpol: Ensure distance is allocated to desired size
-- Translations: Hindi newlines and amount of arguments fixed
-- Translation: Tamil amount of arguments fixed
-- Command: Warning on String Truncation resolved
-- Core:Make navit_set_center_cursor_draw globally accessible
-- Core:Redraw map when the orientation attribute is changed
-- Core:Wrap item_is_poi macro in brackets
-- Maptool: circular junctions allow oneway to be specified
-- Clang-format introduced
-- Ci_sanity_check: Write error message to stdout
-- Ci_sanity_check: Header files included in formatting check
-- Ci_sanity_check: formatting astyle replaced by clang-format
-- Missing includes added
-- Whitespace: vehicle.c reformatted with clang-format
-- Whitespace: android.c reformatted with clang-format
-- AUTHORS file updated
-- Generate_contributors speed up
+- CI Artefacts fixed to contain all necessary resources
+- DTD: polygon: missing attributes src, w, h added
+
+### 🌏 Translations
+
 - I18n: break build on outdated msgid on ci_sanity_checks
 - I18n: Update PO files to current strings
-- Sanity-check: Execute sanity check as part of gha pipeline
-- Gha: sanity check image used from ghcr
-- Sanity_check: git operations allowed
-- Build Fdroid fixed by switching buildserver to bookworm
-- Android: NDK upgraded to 25.2.9519653
-- Fdroid: compileSdkVersion increased to satisfy linter
-- Android intent export flag specified for upgrade to android 12
-- Build: cmake upgraded to 3.18
-- Build Android/F-droid libnavit.so added to apk
-- Android/F-Droid: Warning about buildToolsVersion resolved
-- Build: Ninja conditions removed from Android-builds
-- Android: SHARED_LIBNAVIT enabled
-- Build Android unnecessary failing check on ANDROID_LOCATION removed
-- CICD: F-Droid Build migrated from CircleCI to gha
-- Gha: Typo in task name fixed Binarys => Binaries
-- Error in Android Studio Code Analysis
-- Sanity_Check: Git Diff execution limited to changed file
-- Sanity_Check: Display files in violation at the end in form of a summary
-- Build: On CMAKE_BUILDE_TYPE=Debug set gdb-friendly compiler options
-- Build: Linux libnavit_core included in build
-- Build: gio_internal align datatypes
-- Format:Format all changed files with clang-format
-- Android:GUI/Internal: Show contextual GUI menu when receiving geo intent
-- Build:Dockerfile: Add Dockerfile for maptool Container
-- Workflow: Create GitHub Actions workflow for building and pushing Docker image
-- DTD: polygon: missing attributes src, w, h added
-- Build: Missing includes added to route.h and vehicleprofile.h
-- Build: Missing Includes and Include Guards added
-- Build Windows: winbase.h include removed
-- Whitespace: format documentation, headers and code
-- Memory: Corruption fix on homedir edge case
-- Ci_sanity_check: po-Update simplified
-- Ci_sanity_check: check once for differences
-- Ci_sanity_check: Provide patch on unexpected formatting
-- Ci_sanity_check: 80% Speedup by allowing to cache results
-- Map_Textfile: Error message unable to get line clarified
-- Map_textfile: formatted using clang-format
-- Ci_sanity_check: Unbreak sanity check by not using pager
-- Build:Fix Upload to only upload on failure
-- Gar2navit: Include guard and missing include to item_type_def.h added
-- Announcement: Include guard and missing include to attr.h added
-- Layout.h: missing include navit.h added for NAVIT_OBJECT
-- Map.h: missing includes added, superfluus includes removed
-- Coord.h: missing includes added, superfluus includes removed, duplicate /unneeded prototypes removed
-- Osd.h: missing includes added, superfluus includes removed, duplicate /unneeded prototypes removed
-- Search.h: missing includes added, superfluus includes removed, duplicate /unneeded prototypes removed
-- Xmlconfig.h: missing includes added, superfluus includes removed, duplicate /unneeded prototypes removed
-- Font_freetype.h: Includeguard added, necessary forward declarations added
-- Map/textfile.c/h: Includeguard added, missing includes added
-- Maptool: Headers reworked
-- Whitespace reformat maptool source using clang-format
-- Whitespace: All headers formatted
-- Docs:Fix Formating of Commands Table
-- Docs:Remove outdated reference to slow script
-- Docs:Fix Links to Contact info
-- Docs:Rename files with whitespace
-- Docs:whitespaces in toctree
-- Docs:Remove old backup file
-- Docs:Automatically convert svg to png to avoid problems with latex
-- Docs:Only show gif's in html
-- Docs:Remove Layout's from doc as those are better suited as xml files
-- Docs:Fix whitespaces
-- Routing: maxspeed_handling attribute removed
-- ETA calculation: in absence of roadprofile speed parameter, assume maximum speed on this segment.
-- ETA: Consider vehicle speed when calculating ETA
-- Route: Refactor route_seg_speed() for clarity
-- Route_weight: unused attribute to vehicleprofile removed
-- Navit_schema aligned with dtd
-- Core:Whitespace reformat sources with wiki links source using clang-format
-- Docs:Update Link to the old wiki to point to the doc's
-- Core:def files are not generated from wiki any more
-- Docs:Migrate all wiki link to the docs for non doc files
-- Ci_sanity_check: check xml for validity towards dtd always
-- Feat:ci_sanity_check: fix log message
-- Container:Added wget to container image so mapserver can download mapfiles
-- Vehicleprofile Align amount of parameters
-- Add new Contributors with aliases to mailmap
-- Updated Authors
+- Translation updates for:
+  - Basque
+  - Dutch
+  - English
+  - German
+  - Hindi
+  - Italian
+  - Odia
+  - Polish
+  - Portuguese
+  - Romanian
+  - Russian
+  - Spanish
+  - Tamil
 
 ### 📚 Documentation
 
 - Piper-tts, speech2wave install and configuration instructions added
 - Vehicle: GUI vehicle activating procedure added
+- Vehicle: Give example for activated, enabled demo vehicle
+- Fix Formatting of Commands Table
+- Remove outdated reference to slow script
+- Fix Links to Contact info
+- Rename files with whitespace
+- Remove old backup file
+- Automatically convert svg to png to avoid problems with latex
+- Only show gif's in html
+- Remove Layout's from doc as those are better suited as xml files
+- Update Link to the old wiki to point to the doc's
+- Migrate all wiki link to the docs for non doc files
+- def files are not generated from wiki any more
 
 ### ⚙️ Miscellaneous Tasks
-
-- Debug: Switch ASAN introduced
-- Command: dangling pointer ctx.attr resolved
-- Main: compiler warning about ifdef AND ifdef fixed
-- Asan: Use message clarity
-- Linux: Dead Code removal for CircleCI icon logic
-- Build: ci_sanity_check fail with exit code on error
-
-### ◀️ Revert
-
-- Build:Reactivate temporary deactivated entrys
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-Changes and documentation about Navit can be found in the docs:
-https://navit.readthedocs.io/en/latest/index.html
-Please Report Bugs on our github project:
-https://github.com/navit-gps/navit/issues
-
-
-## semantic versioning
-Navit follows the semantic versioning:
-
-### major
-`X.y.z` (major): at least one of the following:
-
-* Major new functionality (such as Augmented Reality, inertial navigation or
-support for live traffic services): de-facto standard for end-user apps
-* New user interface (such as moving from the old pulldown menu UI to the Internal
-GUI): this is definitely the UI equivalent of a breaking API change
-* Dropped support for a data format or interface: also a breaking change and
-usually tends to occur along with larger changes which would warrant a new major
-version anyway
-
-### minor
-`x.Y.z` (minor): added or changed functionality but can be used as a drop-in
-replacement for the previous version (all data formats and interfaces are still
-supported); minor UI changes (such as moving individual menu items) are also
-allowed
-
-### patch
-`x.y.Z` (patch): only bug fixes or refactoring, no changes in functionality
-
-## [0.5.7] - 2026-01-30
-
-### 🚀 Features
-
-- Maptool: write temporary files into instance-specific directory
-
-### 🐛 Bug Fixes
-
-- Core Do not crash if center has no coordinates
-- Core Correctly pars coordinates from string
-- Os:sailfish version bump
-- Core:Do not crash on recursive navit_add_attr
-- Python_biondings: Try to build if python 2 only.
-- Build:Fix build warnings
-- Build:Add Target scopes
-- Core:Add missing import
-- Build:tomtom:Update tomtom image to our github image which was updated to debian bookworm
-- Build_tomtom:Revert to main branch
-- Core:cmake correctly detect protbuf-c
-- Core:core do not build shared libnavit_core.so
-- Build:Introduce GitHub actions (#1162)
-- Unterminated strings avoided, compiler warnings mitigated
-- Traffic:Fix error on missing error message
-
-### 💼 Other
 
 - Core Print stacktrace on SIG11 without gdb
-- Qt5 Allow to disable QML rotation.
-- Qt5 allow to set source from outsode
-- Android Fix ci build
-- Sailfish speed up build
-- Glib Fix compile warning
-- Ubuntutouch First working build.
-- Ubuntutouch Prevent screen saver if application runs
-- Qt5 fix ubtouch loader. This now disables screensaver
-- Sailfishos use newewr sdk
-- Verison bump
-- Android: do not update containers prior build
-- Sailfis: version bump to 5.0.0.43
-- Buildsystem:tomtom] Downgrade CMake agan for TomTom build
-- Geoclue speed conversion from mps to kph
 - Convert gif to jpg because of errors with gif
-- Consider one-way property of circular junctions
-- Build: Plugin loading fixed
-- Vehicle: Give example for activated, enabled demo vehicle
-- Routing: Improve Time of Arrival Estimation
-- Search_houseno_interpol: Ensure distance is allocated to desired size
-- Translations: Hindi newlines and amount of arguments fixed
-- Translation: Tamil amount of arguments fixed
-- Command: Warning on String Truncation resolved
-- Core:Make navit_set_center_cursor_draw globally accessible
-- Core:Redraw map when the orientation attribute is changed
-- Core:Wrap item_is_poi macro in brackets
-- Maptool: circular junctions allow oneway to be specified
-- Clang-format introduced
-- Ci_sanity_check: Write error message to stdout
-- Ci_sanity_check: Header files included in formatting check
-- Ci_sanity_check: formatting astyle replaced by clang-format
-- Missing includes added
-- Whitespace: vehicle.c reformatted with clang-format
-- Whitespace: android.c reformatted with clang-format
-- AUTHORS file updated
-- Generate_contributors speed up
-- I18n: break build on outdated msgid on ci_sanity_checks
-- I18n: Update PO files to current strings
-- Sanity-check: Execute sanity check as part of gha pipeline
-- Gha: sanity check image used from ghcr
-- Sanity_check: git operations allowed
-- Build Fdroid fixed by switching buildserver to bookworm
-- Android: NDK upgraded to 25.2.9519653
-- Fdroid: compileSdkVersion increased to satisfy linter
-- Android intent export flag specified for upgrade to android 12
-- Build: cmake upgraded to 3.18
-- Build Android/F-droid libnavit.so added to apk
-- Android/F-Droid: Warning about buildToolsVersion resolved
-- Build: Ninja conditions removed from Android-builds
-- Android: SHARED_LIBNAVIT enabled
-- Build Android unnecessary failing check on ANDROID_LOCATION removed
-- CICD: F-Droid Build migrated from CircleCI to gha
-- Gha: Typo in task name fixed Binarys => Binaries
-- Error in Android Studio Code Analysis
-- Sanity_Check: Git Diff execution limited to changed file
-- Sanity_Check: Display files in violation at the end in form of a summary
-- Build: On CMAKE_BUILDE_TYPE=Debug set gdb-friendly compiler options
-- Build: Linux libnavit_core included in build
-- Build: gio_internal align datatypes
-- Format:Format all changed files with clang-format
-- Android:GUI/Internal: Show contextual GUI menu when receiving geo intent
-- Build:Dockerfile: Add Dockerfile for maptool Container
-- Workflow: Create GitHub Actions workflow for building and pushing Docker image
-- DTD: polygon: missing attributes src, w, h added
-- Build: Missing includes added to route.h and vehicleprofile.h
-- Build: Missing Includes and Include Guards added
-- Build Windows: winbase.h include removed
-- Whitespace: format documentation, headers and code
-- Memory: Corruption fix on homedir edge case
-- Ci_sanity_check: po-Update simplified
-- Ci_sanity_check: check once for differences
-- Ci_sanity_check: Provide patch on unexpected formatting
-- Ci_sanity_check: 80% Speedup by allowing to cache results
-- Map_Textfile: Error message unable to get line clarified
-- Map_textfile: formatted using clang-format
-- Ci_sanity_check: Unbreak sanity check by not using pager
-- Build:Fix Upload to only upload on failure
-- Gar2navit: Include guard and missing include to item_type_def.h added
-- Announcement: Include guard and missing include to attr.h added
-- Layout.h: missing include navit.h added for NAVIT_OBJECT
-- Map.h: missing includes added, superfluus includes removed
-- Coord.h: missing includes added, superfluus includes removed, duplicate /unneeded prototypes removed
-- Osd.h: missing includes added, superfluus includes removed, duplicate /unneeded prototypes removed
-- Search.h: missing includes added, superfluus includes removed, duplicate /unneeded prototypes removed
-- Xmlconfig.h: missing includes added, superfluus includes removed, duplicate /unneeded prototypes removed
-- Font_freetype.h: Includeguard added, necessary forward declarations added
-- Map/textfile.c/h: Includeguard added, missing includes added
-- Maptool: Headers reworked
-- Whitespace reformat maptool source using clang-format
-- Whitespace: All headers formatted
-- Docs:Fix Formating of Commands Table
-- Docs:Remove outdated reference to slow script
-- Docs:Fix Links to Contact info
-- Docs:Rename files with whitespace
-- Docs:whitespaces in toctree
-- Docs:Remove old backup file
-- Docs:Automatically convert svg to png to avoid problems with latex
-- Docs:Only show gif's in html
-- Docs:Remove Layout's from doc as those are better suited as xml files
-- Docs:Fix whitespaces
-- Routing: maxspeed_handling attribute removed
-- ETA calculation: in absence of roadprofile speed parameter, assume maximum speed on this segment.
-- ETA: Consider vehicle speed when calculating ETA
-- Route: Refactor route_seg_speed() for clarity
-- Route_weight: unused attribute to vehicleprofile removed
-- Navit_schema aligned with dtd
-- Core:Whitespace reformat sources with wiki links source using clang-format
-- Docs:Update Link to the old wiki to point to the doc's
-- Core:def files are not generated from wiki any more
-- Docs:Migrate all wiki link to the docs for non doc files
-- Ci_sanity_check: check xml for validity towards dtd always
-- Feat:ci_sanity_check: fix log message
-- Container:Added wget to container image so mapserver can download mapfiles
-- Vehicleprofile Align amount of parameters
-- Add new Contributors with aliases to mailmap
-- Updated Authors
-
-### 📚 Documentation
-
-- Piper-tts, speech2wave install and configuration instructions added
-- Vehicle: GUI vehicle activating procedure added
-
-### ⚙️ Miscellaneous Tasks
-
+- clang-format introduced and CI check implemented
 - Debug: Switch ASAN introduced
 - Command: dangling pointer ctx.attr resolved
 - Main: compiler warning about ifdef AND ifdef fixed
-- Asan: Use message clarity
 - Linux: Dead Code removal for CircleCI icon logic
 - Build: ci_sanity_check fail with exit code on error
+- Build:Introduce GitHub actions (#1162)
+- Build: cmake upgraded to 3.18
+- Build: On CMAKE_BUILDE_TYPE=Debug set gdb-friendly compiler options
+- Container:Added wget to container image so mapserver can download mapfiles
+- Core:cmake correctly detect protbuf-c
+- Core:Add missing import
+- Missing includes added
+- Qt5 Allow to disable QML rotation.
+- Qt5 allow to set source from outside
+- Glib Fix compile warning
+- Build: Plugin loading fixed
+- Generate_contributors speed up
+- Migrate from circleCI to GHA
+- Build Fdroid fixed by switching buildserver to bookworm
+- Warning on String Truncation resolved
+- Build:Dockerfile: Add Dockerfile for maptool Container
+- Improve CI_sanity_check (speedup, provide patch on formatting errors, provide
+  summary)
+- Ci_sanity_check: check xml for validity towards dtd always
+- Map_Textfile: Error message unable to get line clarified
 
-### ◀️ Revert
+#### Sailfish
 
-- Build:Reactivate temporary deactivated entrys
+- Sailfish version bump
+- Sailfish speed up build
+- Sailfish use newer sdk
+
+#### Ubuntu Touch
+
+- Ubuntutouch First working build.
+- Qt5 fix ubtouch loader. This now disables screensaver
+- Ubuntutouch Prevent screen saver if application runs
+
+#### Android
+
+- Fix ci build
+- Build Android/F-droid libnavit.so added to apk
+- do not update containers prior build
+- Android: NDK upgraded to 25.2.9519653
+- Permissions fixed
+- Android/F-Droid: Warning about buildToolsVersion resolved
+- Android intent export flag specified for upgrade to android 12
+- Android:GUI/Internal: Show contextual GUI menu when receiving geo intent
+- Fdroid: compileSdkVersion increased to satisfy linter
+- Build: Ninja conditions removed from Android-builds
+
 
 ## [v0.5.6](https://github.com/navit-gps/navit/compare/v0.5.5...v0.5.6) - 2021-03-06
 
