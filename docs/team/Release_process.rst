@@ -11,7 +11,7 @@ When we release Navit, here are the steps we have to follow for now
 -  Update Sailfish spec in ``contrib/sailfish/navit-sailfish.spec``
    - Version: Update to new Version number
    - Release: Reset to 1 when Version is updated
-   - Changelog 
+   - Changelog
 -  update the contributors list using:
    ``scripts/generate_contributors.sh``
 -  generate changelog using ``git cliff --unreleased --prepend CHANGELOG.md``
