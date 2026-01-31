@@ -41,8 +41,8 @@
  *
  * Uses map-based queries (preferred) or Overpass API fallback if map data unavailable.
  */
-GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, 
-                         const char **poi_categories, int num_categories);
+GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const char **poi_categories,
+                                 int num_categories);
 
 /**
  * @brief Rank POIs by distance and preferences
@@ -50,8 +50,7 @@ GList *driver_break_poi_discover(struct coord_geo *center, int radius_km,
  * @param driver_break_stop Rest stop location for distance calculation
  * @param config Rest configuration
  */
-void driver_break_poi_rank(GList *pois, struct coord_geo *driver_break_stop, 
-                   struct driver_break_config *config);
+void driver_break_poi_rank(GList *pois, struct coord_geo *driver_break_stop, struct driver_break_config *config);
 
 /**
  * @brief Free a list of POIs

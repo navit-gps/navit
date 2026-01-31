@@ -25,34 +25,35 @@
 #include "driver_break.h"
 
 /* Hiking rest constants */
-#define HIKING_DRIVER_BREAK_DISTANCE_MAIN 11295.0      /* 11.295 km */
-#define HIKING_DRIVER_BREAK_DISTANCE_ALT 2275.2        /* 2.275 km */
-#define HIKING_MAX_DAILY_DISTANCE 40000.0      /* 40 km per day */
+#define HIKING_DRIVER_BREAK_DISTANCE_MAIN 11295.0 /* 11.295 km */
+#define HIKING_DRIVER_BREAK_DISTANCE_ALT 2275.2   /* 2.275 km */
+#define HIKING_MAX_DAILY_DISTANCE 40000.0         /* 40 km per day */
 
 /* Hiking rest stop */
 struct hiking_driver_break_stop {
-    double position;              /* Position along route (meters) */
-    double distance_from_start;  /* Distance from start (meters) */
-    int is_alternative;          /* 1 if using alternative distance, 0 if main */
-    int day;                     /* Day number (for multi-day hikes) */
-    struct coord_geo coord;      /* Geographic coordinates */
-    GList *nearby_water;         /* Water points within 2 km */
-    GList *nearby_cabins;        /* Cabins/huts within 5 km */
+    double position;            /* Position along route (meters) */
+    double distance_from_start; /* Distance from start (meters) */
+    int is_alternative;         /* 1 if using alternative distance, 0 if main */
+    int day;                    /* Day number (for multi-day hikes) */
+    struct coord_geo coord;     /* Geographic coordinates */
+    GList *nearby_water;        /* Water points within 2 km */
+    GList *nearby_cabins;       /* Cabins/huts within 5 km */
 };
 
 /* Daily hiking segment */
 struct hiking_daily_segment {
     int day;
-    double start_distance;       /* Start distance (meters) */
-    double end_distance;         /* End distance (meters) */
-    double distance;             /* Segment distance (meters) */
+    double start_distance; /* Start distance (meters) */
+    double end_distance;   /* End distance (meters) */
+    double distance;       /* Segment distance (meters) */
 };
 
 /* Calculate hiking rest stops */
 GList *hiking_calculate_driver_break_stops(double total_distance, int use_alternative);
 
 /* Calculate hiking rest stops with configurable max daily distance */
-GList *hiking_calculate_driver_break_stops_with_max(double total_distance, int use_alternative, double max_daily_distance);
+GList *hiking_calculate_driver_break_stops_with_max(double total_distance, int use_alternative,
+                                                    double max_daily_distance);
 
 /* Calculate daily segments for hiking */
 GList *hiking_calculate_daily_segments(double total_distance, double max_daily_km);

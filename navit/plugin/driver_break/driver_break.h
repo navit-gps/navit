@@ -27,21 +27,21 @@
 #ifndef NAVIT_PLUGIN_DRIVER_BREAK_H
 #define NAVIT_PLUGIN_DRIVER_BREAK_H
 
+#include "attr.h"
 #include "config.h"
-#include <glib.h>
-#include <time.h>
 #include "coord.h"
 #include "item.h"
-#include "attr.h"
+#include <glib.h>
+#include <time.h>
 
 /**
  * @brief Vehicle type enumeration
  */
 enum driver_break_vehicle_type {
-    DRIVER_BREAK_VEHICLE_CAR = 0,     /**< Car vehicle type */
-    DRIVER_BREAK_VEHICLE_TRUCK = 1,   /**< Truck vehicle type (EU Regulation EC 561/2006) */
-    DRIVER_BREAK_VEHICLE_HIKING = 2,  /**< Hiking vehicle type */
-    DRIVER_BREAK_VEHICLE_CYCLING = 3  /**< Cycling vehicle type */
+    DRIVER_BREAK_VEHICLE_CAR = 0,    /**< Car vehicle type */
+    DRIVER_BREAK_VEHICLE_TRUCK = 1,  /**< Truck vehicle type (EU Regulation EC 561/2006) */
+    DRIVER_BREAK_VEHICLE_HIKING = 2, /**< Hiking vehicle type */
+    DRIVER_BREAK_VEHICLE_CYCLING = 3 /**< Cycling vehicle type */
 };
 
 /**
@@ -51,48 +51,48 @@ enum driver_break_vehicle_type {
  * including vehicle-specific limits, POI search radii, and routing options.
  */
 struct driver_break_config {
-    int vehicle_type;  /* 0=car, 1=truck, 2=hiking, 3=cycling */
-    
+    int vehicle_type; /* 0=car, 1=truck, 2=hiking, 3=cycling */
+
     /* Car settings */
-    int car_soft_limit_hours;      /* 5-9 hours */
-    int car_max_hours;              /* 10-12 hours */
-    int car_break_interval_hours;  /* 4.5 hours */
-    int car_break_duration_min;    /* 15-45 minutes */
-    
+    int car_soft_limit_hours;     /* 5-9 hours */
+    int car_max_hours;            /* 10-12 hours */
+    int car_break_interval_hours; /* 4.5 hours */
+    int car_break_duration_min;   /* 15-45 minutes */
+
     /* Truck settings (EU Regulation EC 561/2006) */
     int truck_mandatory_break_after_hours;  /* 4.5 hours */
     int truck_mandatory_break_duration_min; /* 45 minutes */
     int truck_max_daily_hours;              /* 9 hours */
-    
+
     /* Hiking settings */
-    double hiking_driver_break_distance_main;      /* 11.295 km */
-    double hiking_driver_break_distance_alt;       /* 2.275 km */
-    double hiking_max_daily_distance;      /* 40 km */
-    
+    double hiking_driver_break_distance_main; /* 11.295 km */
+    double hiking_driver_break_distance_alt;  /* 2.275 km */
+    double hiking_max_daily_distance;         /* 40 km */
+
     /* Cycling settings */
-    double cycling_driver_break_distance_main;      /* 28.24 km */
-    double cycling_driver_break_distance_alt;      /* 5.69 km */
-    double cycling_max_daily_distance;      /* 100 km */
-    
+    double cycling_driver_break_distance_main; /* 28.24 km */
+    double cycling_driver_break_distance_alt;  /* 5.69 km */
+    double cycling_max_daily_distance;         /* 100 km */
+
     /* Rest stop settings */
     int min_distance_from_buildings;  /* 150 meters */
-    int min_distance_from_glaciers;  /* 300 meters for nightly */
+    int min_distance_from_glaciers;   /* 300 meters for nightly */
     int poi_search_radius_km;         /* 15 km */
     int poi_water_search_radius_km;   /* 2 km */
     int poi_cabin_search_radius_km;   /* 5 km */
-    int network_hut_search_radius_km;  /* 25 km for network huts when DNT priority enabled */
-    
+    int network_hut_search_radius_km; /* 25 km for network huts when DNT priority enabled */
+
     /* Network and route priority */
-    int enable_dnt_priority;  /* Enable DNT/network priority mode (0=disabled, 1=enabled) */
-    int enable_hiking_pilgrimage_priority;  /* Enable hiking/pilgrimage route priority (0=disabled, 1=enabled) */
-    
+    int enable_dnt_priority;               /* Enable DNT/network priority mode (0=disabled, 1=enabled) */
+    int enable_hiking_pilgrimage_priority; /* Enable hiking/pilgrimage route priority (0=disabled, 1=enabled) */
+
     /* Rest interval range */
-    int driver_break_interval_min_hours;  /* 1 hour */
-    int driver_break_interval_max_hours;  /* 6 hours */
-    
+    int driver_break_interval_min_hours; /* 1 hour */
+    int driver_break_interval_max_hours; /* 6 hours */
+
     /* Energy-based routing */
-    int use_energy_routing;        /* 1 to enable energy-based routing */
-    double total_weight;           /* Total weight for energy calculations (kg) */
+    int use_energy_routing; /* 1 to enable energy-based routing */
+    double total_weight;    /* Total weight for energy calculations (kg) */
 };
 
 /**
@@ -105,9 +105,9 @@ struct driver_break_stop {
     struct coord_geo coord;
     char *name;
     char *highway_type;
-    double distance_from_route;  /* meters */
-    GList *pois;  /* List of nearby POIs */
-    int score;    /* Ranking score */
+    double distance_from_route; /* meters */
+    GList *pois;                /* List of nearby POIs */
+    int score;                  /* Ranking score */
 };
 
 /**
@@ -119,12 +119,12 @@ struct driver_break_stop {
 struct driver_break_poi {
     struct coord_geo coord;
     char *name;
-    char *type;  /* amenity, tourism, leisure, etc. */
-    char *category;  /* cafe, restaurant, museum, etc. */
-    double distance_from_driver_break_stop;  /* meters */
+    char *type;                             /* amenity, tourism, leisure, etc. */
+    char *category;                         /* cafe, restaurant, museum, etc. */
+    double distance_from_driver_break_stop; /* meters */
     char *opening_hours;
     int accessibility;
-    double rating;  /* If available */
+    double rating; /* If available */
 };
 
 /**
@@ -173,8 +173,8 @@ struct driver_break_priv {
     struct event_timeout *check_timeout;
     struct route *current_route;
     GList *suggested_stops;
-    time_t current_break_start_time;  /* 0 if no break in progress */
-    struct coord_geo current_break_location;  /* Location where break started */
+    time_t current_break_start_time;         /* 0 if no break in progress */
+    struct coord_geo current_break_location; /* Location where break started */
     int active;
 };
 

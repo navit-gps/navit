@@ -20,9 +20,9 @@
 #ifndef NAVIT_PLUGIN_DRIVER_BREAK_OSD_H
 #define NAVIT_PLUGIN_DRIVER_BREAK_OSD_H
 
+#include "command.h"
 #include "config.h"
 #include "navit.h"
-#include "command.h"
 
 /* Command functions */
 int driver_break_cmd_suggest_stop(struct navit *nav, char *function, struct attr **in, struct attr ***out);

@@ -25,12 +25,10 @@
 #include "driver_break.h"
 
 /* Minimum distance from glaciers for nightly camping (meters) */
-#define GLACIER_MIN_CAMPING_DISTANCE 300.0  /* 300 meters */
+#define GLACIER_MIN_CAMPING_DISTANCE 300.0 /* 300 meters */
 
 /* Check if position is too close to glacier for camping */
-int glacier_is_too_close_for_camping(struct coord_geo *position, 
-                                      struct mapset *ms,
-                                      int has_camping_building);
+int glacier_is_too_close_for_camping(struct coord_geo *position, struct mapset *ms, int has_camping_building);
 
 /* Find nearby glaciers */
 GList *glacier_find_nearby(struct coord_geo *position, double radius_km, struct mapset *ms);

@@ -25,30 +25,30 @@
 #include "driver_break.h"
 
 /* POI search radius constants */
-#define POI_WATER_SEARCH_RADIUS 2000.0    /* 2 km for water points */
-#define POI_CABIN_SEARCH_RADIUS 5000.0    /* 5 km for cabins/huts */
+#define POI_WATER_SEARCH_RADIUS 2000.0 /* 2 km for water points */
+#define POI_CABIN_SEARCH_RADIUS 5000.0 /* 5 km for cabins/huts */
 
 /* Water point information */
 struct water_point {
     struct coord_geo coord;
     char *name;
-    char *type;  /* "drinking_water", "fountain", "spring" */
-    double distance_from_driver_break_stop;  /* meters */
-    int is_spring;  /* 1 if natural spring (may need treatment) */
-    char *warning;  /* Warning message for springs */
+    char *type;                             /* "drinking_water", "fountain", "spring" */
+    double distance_from_driver_break_stop; /* meters */
+    int is_spring;                          /* 1 if natural spring (may need treatment) */
+    char *warning;                          /* Warning message for springs */
 };
 
 /* Cabin/hut information */
 struct cabin_hut {
     struct coord_geo coord;
     char *name;
-    char *type;  /* "wilderness_hut", "alpine_hut", "hut", "cabin" */
-    double distance_from_driver_break_stop;  /* meters */
-    int is_dnt;  /* 1 if DNT (Norwegian Trekking Association) hut */
-    int is_network;  /* 1 if network cabin (DNT, STF, etc.) */
-    char *network;  /* Network name (e.g., "DNT", "STF") */
-    int locked;  /* 1 if locked, 0 if open */
-    int has_water;  /* 1 if has water available */
+    char *type;                             /* "wilderness_hut", "alpine_hut", "hut", "cabin" */
+    double distance_from_driver_break_stop; /* meters */
+    int is_dnt;                             /* 1 if DNT (Norwegian Trekking Association) hut */
+    int is_network;                         /* 1 if network cabin (DNT, STF, etc.) */
+    char *network;                          /* Network name (e.g., "DNT", "STF") */
+    int locked;                             /* 1 if locked, 0 if open */
+    int has_water;                          /* 1 if has water available */
 };
 
 /* Search for water points near rest stop */
@@ -61,7 +61,8 @@ GList *poi_search_water_points_map(struct coord_geo *driver_break_stop, double r
 GList *poi_search_cabins(struct coord_geo *driver_break_stop, double radius_km);
 
 /* Search for cabins/huts near rest stop (with mapset and DNT priority) */
-GList *poi_search_cabins_map(struct coord_geo *driver_break_stop, double radius_km, struct mapset *ms, int enable_dnt_priority);
+GList *poi_search_cabins_map(struct coord_geo *driver_break_stop, double radius_km, struct mapset *ms,
+                             int enable_dnt_priority);
 
 /* Free water point list */
 void poi_free_water_points(GList *water_points);

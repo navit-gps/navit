@@ -17,32 +17,32 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include "config.h"
-#include <string.h>
-#include <stdlib.h>
-#include <time.h>
-#include <math.h>
-#include <glib.h>
-#include "debug.h"
-#include "coord.h"
-#include "item.h"
-#include "map.h"
-#include "plugin.h"
-#include "callback.h"
-#include "event.h"
-#include "attr.h"
-#include "projection.h"
-#include "transform.h"
 #include "aprs_db.h"
 #include "aprs_decode.h"
 #include "aprs_nmea.h"
 #include "aprs_plugin_interface.h"
 #include "aprs_symbols.h"
-#include "popup.h"
-#include "vehicle.h"
+#include "attr.h"
+#include "callback.h"
+#include "config.h"
+#include "coord.h"
+#include "debug.h"
+#include "event.h"
+#include "item.h"
+#include "map.h"
 #include "mapset.h"
-#include "navit.h"
 #include "menu.h"
+#include "navit.h"
+#include "plugin.h"
+#include "popup.h"
+#include "projection.h"
+#include "transform.h"
+#include "vehicle.h"
+#include <glib.h>
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 extern int aprs_cmd_freq_144_39(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 extern int aprs_cmd_freq_144_8(struct navit *nav, char *function, struct attr **in, struct attr ***out);
@@ -215,7 +215,7 @@ struct map_rect_priv {
 enum aprs_input_type {
     APRS_INPUT_NONE = 0,
     APRS_INPUT_NMEA,
-    APRS_INPUT_SDR_PLUGIN  /* External SDR plugin */
+    APRS_INPUT_SDR_PLUGIN /* External SDR plugin */
 };
 
 struct map_priv {
@@ -234,7 +234,7 @@ struct map_priv {
     enum aprs_input_type input_type;
     struct aprs_nmea *nmea;
     int nmea_enabled;
-    
+
     /* Packet source callbacks (for SDR plugin) */
     GList *packet_sources;
 };
@@ -249,8 +249,9 @@ static GList *aprs_map_instances = NULL;
 /* NMEA callback function */
 static void aprs_nmea_callback(void *data, struct aprs_station *station) {
     struct map_priv *priv = (struct map_priv *)data;
-    if (!priv || !station) return;
-    
+    if (!priv || !station)
+        return;
+
     aprs_db_update_station(priv->db, station);
     aprs_update_items(priv);
 }
@@ -290,11 +291,11 @@ static void aprs_item_coord_rewind(void *priv_data) {
 
 static int aprs_item_coord_get(void *priv_data, struct coord *c, int count) {
     struct aprs_item_priv *ip = (struct aprs_item_priv *)priv_data;
-    
+
     if (count < 1 || ip->next_coord >= 1) {
         return 0;
     }
-    
+
     c[0] = ip->coord;
     ip->next_coord = 1;
     return 1;
@@ -307,9 +308,10 @@ static void aprs_item_attr_rewind(void *priv_data) {
 
 static int aprs_item_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct aprs_item_priv *ip = (struct aprs_item_priv *)priv_data;
-    
-    if (!ip->attrs) return 0;
-    
+
+    if (!ip->attrs)
+        return 0;
+
     while (ip->attrs[ip->next_attr]) {
         if (ip->attrs[ip->next_attr]->type == attr_type) {
             *attr = *(ip->attrs[ip->next_attr]);
@@ -318,7 +320,7 @@ static int aprs_item_attr_get(void *priv_data, enum attr_type attr_type, struct 
         }
         ip->next_attr++;
     }
-    
+
     return 0;
 }
 
@@ -354,7 +356,7 @@ static void aprs_item_destroy(struct item *item) {
 
 static void aprs_update_items(struct map_priv *priv) {
     GList *l;
-    
+
     for (l = priv->items; l; l = g_list_next(l)) {
         struct item *item = (struct item *)l->data;
         aprs_item_destroy(item);
@@ -362,50 +364,50 @@ static void aprs_update_items(struct map_priv *priv) {
     g_list_free(priv->items);
     priv->items = NULL;
     g_hash_table_remove_all(priv->station_hash);
-    
+
     GList *stations = NULL;
     if (priv->has_center) {
         aprs_db_get_stations_in_range(priv->db, &priv->center, 150.0, &stations);
     } else {
         aprs_db_get_all_stations(priv->db, &stations);
     }
-    
+
     int id_hi = 1;
     int id_lo = 0;
-    
+
     for (l = stations; l; l = g_list_next(l)) {
         struct aprs_station *station = (struct aprs_station *)l->data;
-        
+
         if (time(NULL) - station->timestamp > priv->expire_seconds) {
             continue;
         }
-        
+
         struct item *new_item = g_new0(struct item, 1);
         struct aprs_item_priv *ip = g_new0(struct aprs_item_priv, 1);
-        
+
         /* Use communication POI type - plugins cannot use custom POI types */
         new_item->type = type_poi_communication;
         new_item->id_hi = id_hi;
         new_item->id_lo = id_lo++;
         new_item->meth = &aprs_item_methods;
         new_item->priv_data = ip;
-        
+
         enum projection pro = projection_mg;
         transform_from_geo(pro, &station->position, &ip->coord);
-        
+
         ip->station = station;
         ip->refcount = 1;
-        
+
         struct attr *attrs[16];
         int attr_idx = 0;
-        
+
         if (station->callsign) {
             attrs[attr_idx] = g_new0(struct attr, 1);
             attrs[attr_idx]->type = attr_label;
             attrs[attr_idx]->u.str = g_strdup(station->callsign);
             attr_idx++;
         }
-        
+
         char timestamp_str[64];
         const struct tm *tm_info = gmtime(&station->timestamp);
         strftime(timestamp_str, sizeof(timestamp_str), "%Y-%m-%d %H:%M:%S UTC", tm_info);
@@ -413,36 +415,36 @@ static void aprs_update_items(struct map_priv *priv) {
         attrs[attr_idx]->type = attr_data;
         attrs[attr_idx]->u.str = g_strdup(timestamp_str);
         attr_idx++;
-        
+
         if (station->speed >= 0) {
             attrs[attr_idx] = g_new0(struct attr, 1);
             attrs[attr_idx]->type = attr_speed;
             attrs[attr_idx]->u.num = (int)station->speed;
             attr_idx++;
         }
-        
+
         if (station->course >= 0) {
             attrs[attr_idx] = g_new0(struct attr, 1);
             attrs[attr_idx]->type = attr_direction;
             attrs[attr_idx]->u.num = (int)station->course;
             attr_idx++;
         }
-        
+
         /* Note: Custom icons via attr_icon_src are not supported for plugins.
          * Plugins cannot use custom POI types (poi_custom0-poi_customf) as those
          * are reserved for user-defined content. APRS stations will use the
          * default icon for type_poi_communication defined in the layout. */
-        
+
         attrs[attr_idx] = NULL;
         ip->attrs = attr_list_dup(attrs);
         attr_list_free(attrs);
-        
+
         priv->items = g_list_append(priv->items, new_item);
         g_hash_table_insert(priv->station_hash, g_strdup(station->callsign), new_item);
     }
-    
+
     g_list_free(stations);
-    
+
     struct attr attr;
     attr.type = attr_active;
     attr.u.num = 1;
@@ -451,11 +453,11 @@ static void aprs_update_items(struct map_priv *priv) {
 
 static void aprs_expire_callback(void *data) {
     struct map_priv *priv = (struct map_priv *)data;
-    if (!priv || !priv->db) return;
+    if (!priv || !priv->db)
+        return;
     int deleted = aprs_db_delete_expired(priv->db, priv->expire_seconds);
     if (deleted > 0) {
-        dbg(lvl_info, "Expired %d APRS stations (timeout: %ld minutes)",
-            deleted, (long)(priv->expire_seconds / 60));
+        dbg(lvl_info, "Expired %d APRS stations (timeout: %ld minutes)", deleted, (long)(priv->expire_seconds / 60));
         aprs_update_items(priv);
     }
 }
@@ -463,15 +465,15 @@ static void aprs_expire_callback(void *data) {
 static void aprs_position_update_callback(void *data) {
     struct map_priv *priv = (struct map_priv *)data;
     struct attr vehicle_attr, position_attr;
-    
-    if (!priv || !priv->navit) return;
-    
+
+    if (!priv || !priv->navit)
+        return;
+
     if (navit_get_attr(priv->navit, attr_vehicle, &vehicle_attr, NULL) && vehicle_attr.u.vehicle) {
         if (vehicle_get_attr(vehicle_attr.u.vehicle, attr_position_coord_geo, &position_attr, NULL)) {
             priv->center = *position_attr.u.coord_geo;
             priv->has_center = 1;
-            dbg(lvl_debug, "APRS center updated to device location: %.6f, %.6f", 
-                priv->center.lat, priv->center.lng);
+            dbg(lvl_debug, "APRS center updated to device location: %.6f, %.6f", priv->center.lat, priv->center.lng);
             aprs_update_items(priv);
         }
     }
@@ -485,33 +487,33 @@ static void aprs_update_callback(void *data) {
 
 static void aprs_map_destroy(struct map_priv *priv) {
     aprs_symbol_cleanup();
-    if (!priv) return;
-    
+    if (!priv)
+        return;
+
     GList *l;
     for (l = priv->items; l; l = g_list_next(l)) {
         struct item *item = (struct item *)l->data;
         aprs_item_destroy(item);
     }
     g_list_free(priv->items);
-    
+
     if (priv->expire_timeout) {
         event_remove_timeout(priv->expire_timeout);
     }
     if (priv->update_timeout) {
         event_remove_timeout(priv->update_timeout);
     }
-    
+
     if (priv->position_callback && priv->navit) {
         navit_remove_callback(priv->navit, priv->position_callback);
         callback_destroy(priv->position_callback);
     }
-    
-    
+
     if (priv->nmea) {
         aprs_nmea_stop(priv->nmea);
         aprs_nmea_destroy(priv->nmea);
     }
-    
+
     g_hash_table_destroy(priv->station_hash);
     aprs_db_destroy(priv->db);
     g_free(priv);
@@ -524,16 +526,14 @@ static struct map_rect_priv *aprs_map_rect_new(struct map_priv *priv, struct map
     return mr;
 }
 
-static void aprs_map_rect_destroy(struct map_rect_priv *mr) {
-    g_free(mr);
-}
+static void aprs_map_rect_destroy(struct map_rect_priv *mr) { g_free(mr); }
 
 static struct item *aprs_map_get_item(struct map_rect_priv *mr) {
     if (mr->item) {
         struct aprs_item_priv *ip = (struct aprs_item_priv *)mr->item->priv_data;
         ip->mr = NULL;
     }
-    
+
     if (mr->next_item) {
         struct item *ret = (struct item *)mr->next_item->data;
         struct aprs_item_priv *ip = (struct aprs_item_priv *)ret->priv_data;
@@ -544,7 +544,7 @@ static struct item *aprs_map_get_item(struct map_rect_priv *mr) {
         mr->item = ret;
         return ret;
     }
-    
+
     mr->item = NULL;
     return NULL;
 }
@@ -558,8 +558,9 @@ static struct item *aprs_map_get_item_byid(struct map_rect_priv *mr, int id_hi, 
 }
 
 static int aprs_map_get_attr(struct map_priv *priv, enum attr_type type, struct attr *attr) {
-    if (!priv) return 0;
-    
+    if (!priv)
+        return 0;
+
     switch (type) {
     case attr_active:
         attr->type = attr_active;
@@ -570,142 +571,151 @@ static int aprs_map_get_attr(struct map_priv *priv, enum attr_type type, struct 
     }
 }
 
+static void aprs_nmea_stop_and_clear(struct map_priv *priv) {
+    if (priv->nmea) {
+        aprs_nmea_stop(priv->nmea);
+        aprs_nmea_destroy(priv->nmea);
+        priv->nmea = NULL;
+        priv->nmea_enabled = 0;
+    }
+}
+
+static int aprs_start_nmea_with_config(struct map_priv *priv, const struct aprs_nmea_config *nmea_config) {
+    priv->nmea = aprs_nmea_new(nmea_config);
+    if (!priv->nmea)
+        return 0;
+    aprs_nmea_set_callback(priv->nmea, aprs_nmea_callback, priv);
+    if (aprs_nmea_start(priv->nmea)) {
+        priv->nmea_enabled = 1;
+        return 1;
+    }
+    aprs_nmea_destroy(priv->nmea);
+    priv->nmea = NULL;
+    return 0;
+}
+
+static char aprs_device_parity_from_str(const char *str) {
+    const char *parity_str = strstr(str, "parity=");
+    if (!parity_str)
+        return 'N';
+    if (parity_str[7] == 'E' || parity_str[7] == 'e')
+        return 'E';
+    if (parity_str[7] == 'O' || parity_str[7] == 'o')
+        return 'O';
+    return 'N';
+}
+
+static void aprs_nmea_config_defaults(struct aprs_nmea_config *nmea_config, const char *device, int baud) {
+    memset(nmea_config, 0, sizeof(*nmea_config));
+    nmea_config->device = g_strdup(device ? device : "/dev/ttyUSB0");
+    nmea_config->baud_rate = baud;
+    nmea_config->parity = 'N';
+    nmea_config->data_bits = 8;
+    nmea_config->stop_bits = 1;
+}
+
+static int aprs_set_attr_device(struct map_priv *priv, const char *str) {
+    struct aprs_nmea_config nmea_config;
+
+    if (!str)
+        return 0;
+    if (strstr(str, "nmea")) {
+        priv->input_type = APRS_INPUT_NMEA;
+        if (!priv->nmea) {
+            aprs_nmea_config_defaults(&nmea_config, "/dev/ttyUSB0", 4800);
+            nmea_config.parity = aprs_device_parity_from_str(str);
+            if (aprs_start_nmea_with_config(priv, &nmea_config))
+                dbg(lvl_info, "NMEA input enabled");
+            g_free(nmea_config.device);
+        }
+        return 1;
+    }
+    if (strstr(str, "sdr") || strstr(str, "rtlsdr")) {
+        priv->input_type = APRS_INPUT_SDR_PLUGIN;
+        aprs_nmea_stop_and_clear(priv);
+        dbg(lvl_info, "SDR input selected (requires aprs_sdr plugin)");
+        return 1;
+    }
+    return 0;
+}
+
+static int aprs_set_attr_data(struct map_priv *priv, const char *device) {
+    struct aprs_nmea_config nmea_config;
+
+    if (!device || !priv->nmea)
+        return 0;
+    aprs_nmea_stop_and_clear(priv);
+    aprs_nmea_config_defaults(&nmea_config, device, 4800);
+    if (aprs_start_nmea_with_config(priv, &nmea_config))
+        dbg(lvl_info, "NMEA device changed to %s", device);
+    g_free(nmea_config.device);
+    return 1;
+}
+
+static int aprs_set_attr_baudrate(struct map_priv *priv, long baud_rate) {
+    struct aprs_nmea_config nmea_config;
+
+    if (!baud_rate || !priv->nmea)
+        return 0;
+    aprs_nmea_stop_and_clear(priv);
+    aprs_nmea_config_defaults(&nmea_config, "/dev/ttyUSB0", (int)baud_rate);
+    if (aprs_start_nmea_with_config(priv, &nmea_config))
+        dbg(lvl_info, "NMEA baud rate changed to %ld", baud_rate);
+    g_free(nmea_config.device);
+    return 1;
+}
+
+static int aprs_set_attr_frequency(struct map_priv *priv, const struct attr *attr) {
+    if (attr->u.numd)
+        dbg(lvl_debug, "Frequency change requested (handled by SDR plugin if available): %.3f MHz", *attr->u.numd);
+    return 1;
+}
+
+static int aprs_set_attr_distance(struct map_priv *priv) {
+    priv->range_km = 150.0;
+    dbg(lvl_info, "APRS range hardcoded to 150 km (distance attribute ignored)");
+    aprs_update_items(priv);
+    return 1;
+}
+
+static int aprs_set_attr_timeout(struct map_priv *priv, const struct attr *attr) {
+    if (!attr->u.num)
+        return 0;
+    priv->expire_seconds = attr->u.num;
+    dbg(lvl_info, "APRS timeout set to %ld seconds (%ld minutes)", (long)priv->expire_seconds,
+        (long)(priv->expire_seconds / 60));
+    aprs_update_items(priv);
+    return 1;
+}
+
+static int aprs_set_attr_position(struct map_priv *priv, const struct attr *attr) {
+    if (!attr->u.coord_geo)
+        return 0;
+    priv->center = *attr->u.coord_geo;
+    priv->has_center = 1;
+    dbg(lvl_info, "APRS center set to %.6f, %.6f", priv->center.lat, priv->center.lng);
+    aprs_update_items(priv);
+    return 1;
+}
+
 static int aprs_map_set_attr(struct map_priv *priv, struct attr *attr) {
-    if (!priv) return 0;
-    
+    if (!priv)
+        return 0;
     switch (attr->type) {
     case attr_frequency:
-        /* Frequency changes are handled by SDR plugin if loaded */
-        /* This is kept for compatibility but doesn't do anything here */
-        if (attr->u.numd) {
-            dbg(lvl_debug, "Frequency change requested (handled by SDR plugin if available): %.3f MHz", *attr->u.numd);
-        }
-        return 1;
+        return aprs_set_attr_frequency(priv, attr);
     case attr_distance:
-        priv->range_km = 150.0;
-        dbg(lvl_info, "APRS range hardcoded to 150 km (distance attribute ignored)");
-        aprs_update_items(priv);
-        return 1;
+        return aprs_set_attr_distance(priv);
     case attr_timeout:
-        if (attr->u.num) {
-            priv->expire_seconds = attr->u.num;
-            dbg(lvl_info, "APRS timeout set to %ld seconds (%ld minutes)",
-                (long)priv->expire_seconds, (long)(priv->expire_seconds / 60));
-            aprs_update_items(priv);
-            return 1;
-        }
-        return 0;
+        return aprs_set_attr_timeout(priv, attr);
     case attr_position_coord_geo:
-        if (attr->u.coord_geo) {
-            priv->center = *attr->u.coord_geo;
-            priv->has_center = 1;
-            dbg(lvl_info, "APRS center set to %.6f, %.6f", 
-                priv->center.lat, priv->center.lng);
-            aprs_update_items(priv);
-            return 1;
-        }
-        return 0;
+        return aprs_set_attr_position(priv, attr);
     case attr_device:
-        if (attr->u.str) {
-            if (strstr(attr->u.str, "nmea")) {
-                priv->input_type = APRS_INPUT_NMEA;
-                if (!priv->nmea) {
-                    struct aprs_nmea_config nmea_config;
-                    memset(&nmea_config, 0, sizeof(nmea_config));
-                    nmea_config.device = g_strdup("/dev/ttyUSB0");
-                    nmea_config.baud_rate = 4800;
-                    nmea_config.parity = 'N';
-                    nmea_config.data_bits = 8;
-                    nmea_config.stop_bits = 1;
-                    
-                    const char *parity_str = strstr(attr->u.str, "parity=");
-                    if (parity_str) {
-                        if (parity_str[7] == 'E' || parity_str[7] == 'e') {
-                            nmea_config.parity = 'E';
-                        } else if (parity_str[7] == 'O' || parity_str[7] == 'o') {
-                            nmea_config.parity = 'O';
-                        }
-                    }
-                    
-                    priv->nmea = aprs_nmea_new(&nmea_config);
-                    if (priv->nmea) {
-                        aprs_nmea_set_callback(priv->nmea, aprs_nmea_callback, priv);
-                        if (aprs_nmea_start(priv->nmea)) {
-                            priv->nmea_enabled = 1;
-                            dbg(lvl_info, "NMEA input enabled");
-                        }
-                    }
-                    g_free(nmea_config.device);
-                }
-                return 1;
-            } else if (strstr(attr->u.str, "sdr") || strstr(attr->u.str, "rtlsdr")) {
-                /* SDR input is handled by separate SDR plugin */
-                priv->input_type = APRS_INPUT_SDR_PLUGIN;
-                if (priv->nmea) {
-                    aprs_nmea_stop(priv->nmea);
-                    aprs_nmea_destroy(priv->nmea);
-                    priv->nmea = NULL;
-                    priv->nmea_enabled = 0;
-                }
-                dbg(lvl_info, "SDR input selected (requires aprs_sdr plugin)");
-                return 1;
-            }
-        }
-        return 0;
+        return aprs_set_attr_device(priv, attr->u.str);
     case attr_data:
-        if (attr->u.str && priv->nmea) {
-            aprs_nmea_stop(priv->nmea);
-            aprs_nmea_destroy(priv->nmea);
-            priv->nmea = NULL;
-            priv->nmea_enabled = 0;
-            
-            struct aprs_nmea_config nmea_config;
-            memset(&nmea_config, 0, sizeof(nmea_config));
-            nmea_config.device = g_strdup(attr->u.str);
-            nmea_config.baud_rate = 4800;
-            nmea_config.parity = 'N';
-            nmea_config.data_bits = 8;
-            nmea_config.stop_bits = 1;
-            
-            priv->nmea = aprs_nmea_new(&nmea_config);
-            if (priv->nmea) {
-                aprs_nmea_set_callback(priv->nmea, aprs_nmea_callback, priv);
-                if (aprs_nmea_start(priv->nmea)) {
-                    priv->nmea_enabled = 1;
-                    dbg(lvl_info, "NMEA device changed to %s", attr->u.str);
-                }
-            }
-            g_free(nmea_config.device);
-            return 1;
-        }
-        return 0;
+        return aprs_set_attr_data(priv, attr->u.str);
     case attr_baudrate:
-        if (attr->u.num && priv->nmea) {
-            aprs_nmea_stop(priv->nmea);
-            aprs_nmea_destroy(priv->nmea);
-            priv->nmea = NULL;
-            priv->nmea_enabled = 0;
-            
-            struct aprs_nmea_config nmea_config;
-            memset(&nmea_config, 0, sizeof(nmea_config));
-            nmea_config.device = g_strdup("/dev/ttyUSB0");
-            nmea_config.baud_rate = attr->u.num;
-            nmea_config.parity = 'N';
-            nmea_config.data_bits = 8;
-            nmea_config.stop_bits = 1;
-            
-            priv->nmea = aprs_nmea_new(&nmea_config);
-            if (priv->nmea) {
-                aprs_nmea_set_callback(priv->nmea, aprs_nmea_callback, priv);
-                if (aprs_nmea_start(priv->nmea)) {
-                    priv->nmea_enabled = 1;
-                    dbg(lvl_info, "NMEA baud rate changed to %ld", (long)attr->u.num);
-                }
-            }
-            g_free(nmea_config.device);
-            return 1;
-        }
-        return 0;
+        return aprs_set_attr_baudrate(priv, attr->u.num);
     default:
         return 0;
     }
@@ -726,27 +736,32 @@ static struct map_methods aprs_map_meth = {
     aprs_map_set_attr,
 };
 
+static int aprs_decode_and_parse_position(const unsigned char *data, int length, struct aprs_packet *packet,
+                                          struct aprs_position *pos) {
+    if (!aprs_decode_ax25(data, length, packet))
+        return 0;
+    if (!aprs_parse_position(packet->information_field, packet->information_length, pos)) {
+        aprs_packet_free(packet);
+        aprs_position_free(pos);
+        return 0;
+    }
+    if (!pos->has_position) {
+        aprs_packet_free(packet);
+        aprs_position_free(pos);
+        return 0;
+    }
+    return 1;
+}
+
 static int aprs_process_packet(struct map_priv *priv, const unsigned char *data, int length) {
-    if (!priv || !data || length <= 0) return 0;
     struct aprs_packet packet;
     struct aprs_position pos;
-    
-    if (!aprs_decode_ax25(data, length, &packet)) {
+
+    if (!priv || !data || length <= 0)
         return 0;
-    }
-    
-    if (!aprs_parse_position(packet.information_field, packet.information_length, &pos)) {
-        aprs_packet_free(&packet);
-        aprs_position_free(&pos);
+    if (!aprs_decode_and_parse_position(data, length, &packet, &pos))
         return 0;
-    }
-    
-    if (!pos.has_position) {
-        aprs_packet_free(&packet);
-        aprs_position_free(&pos);
-        return 0;
-    }
-    
+
     struct aprs_station *station = aprs_station_new();
     station->callsign = g_strdup(packet.source_callsign);
     station->position = pos.position;
@@ -758,34 +773,34 @@ static int aprs_process_packet(struct map_priv *priv, const unsigned char *data,
     station->comment = pos.comment ? g_strdup(pos.comment) : NULL;
     station->path = packet.path ? g_strdupv(packet.path) : NULL;
     station->path_count = packet.path_count;
-    
+
     time_t packet_time = time(NULL);
     if (aprs_parse_timestamp(packet.information_field, packet.information_length, &packet_time)) {
         station->timestamp = packet_time;
     } else {
         station->timestamp = time(NULL);
     }
-    
+
     aprs_db_update_station(priv->db, station);
-    
+
     const struct item *existing_item = g_hash_table_lookup(priv->station_hash, station->callsign);
     if (existing_item) {
         aprs_update_items(priv);
     } else {
         aprs_update_items(priv);
     }
-    
+
     aprs_packet_free(&packet);
     aprs_position_free(&pos);
     aprs_station_free(station);
-    
+
     return 1;
 }
 
 static struct map_priv *aprs_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl) {
     struct map_priv *ret = g_new0(struct map_priv, 1);
     struct attr *db_path_attr, *expire_attr, *range_attr, *center_attr;
-    
+
     *meth = aprs_map_meth;
     ret->cbl = cbl;
     ret->expire_seconds = 5400;
@@ -797,27 +812,27 @@ static struct map_priv *aprs_map_new(struct map_methods *meth, struct attr **att
     ret->navit = NULL;
     ret->position_callback = NULL;
     ret->packet_sources = NULL;
-    
+
     /* Add to global list of map instances */
     aprs_map_instances = g_list_append(aprs_map_instances, ret);
-    
+
     db_path_attr = attr_search(attrs, attr_data);
     const char *db_path = db_path_attr ? db_path_attr->u.str : NULL;
-    
+
     ret->db = aprs_db_new(db_path);
     if (!ret->db) {
         dbg(lvl_error, "Failed to open APRS database");
         g_free(ret);
         return NULL;
     }
-    
+
     expire_attr = attr_search(attrs, attr_timeout);
     if (expire_attr) {
         ret->expire_seconds = expire_attr->u.num;
     } else {
         ret->expire_seconds = 5400;
     }
-    
+
     range_attr = attr_search(attrs, attr_distance);
     if (range_attr && range_attr->u.numd) {
         double requested_km = *range_attr->u.numd / 1000.0;
@@ -828,23 +843,23 @@ static struct map_priv *aprs_map_new(struct map_methods *meth, struct attr **att
             ret->range_km = requested_km;
         }
     }
-    
+
     center_attr = attr_search(attrs, attr_position_coord_geo);
     if (center_attr && center_attr->u.coord_geo) {
         ret->center = *center_attr->u.coord_geo;
         ret->has_center = 1;
     }
-    
+
     ret->station_hash = g_hash_table_new(g_str_hash, g_str_equal);
-    
+
     ret->expire_timeout = event_add_timeout(60000, 0, callback_new_1(callback_cast(aprs_expire_callback), ret));
     ret->update_timeout = event_add_timeout(1000, 0, callback_new_1(callback_cast(aprs_update_callback), ret));
-    
+
     /* Initialize APRS symbol lookup system */
     aprs_symbol_init(NULL, NULL);
-    
+
     aprs_update_items(ret);
-    
+
     return ret;
 }
 
@@ -869,20 +884,20 @@ struct packet_source_entry {
 
 /**
  * Register a packet source callback
- * 
+ *
  * This function is called by external plugins (like aprs_sdr) to
  * register a callback for delivering decoded AX.25 frames.
  */
 /* Export function for other plugins - use visibility attribute */
-__attribute__((visibility("default")))
-int aprs_register_packet_source(aprs_packet_callback_t callback, void *user_data) {
+__attribute__((visibility("default"))) int aprs_register_packet_source(aprs_packet_callback_t callback,
+                                                                       void *user_data) {
     struct map_priv *map_priv = NULL;
-    
+
     if (!callback) {
         dbg(lvl_error, "aprs_register_packet_source: NULL callback");
         return 0;
     }
-    
+
     /* Find the first APRS map instance */
     /* In a multi-map scenario, we'd need to handle this differently */
     if (aprs_map_instances) {
@@ -891,36 +906,36 @@ int aprs_register_packet_source(aprs_packet_callback_t callback, void *user_data
         /* Try to find via plugin system */
         map_priv = (struct map_priv *)plugin_get_category_map("aprs");
     }
-    
+
     if (!map_priv) {
         dbg(lvl_warning, "aprs_register_packet_source: No APRS map instance found");
         return 0;
     }
-    
+
     /* Create wrapper callback that delivers to this map instance */
     struct packet_source_entry *entry = g_new0(struct packet_source_entry, 1);
     entry->callback = callback;
     /* Store map_priv as user_data so callback can deliver to it */
     entry->user_data = map_priv;
-    
+
     map_priv->packet_sources = g_list_append(map_priv->packet_sources, entry);
-    
+
     /* Set up the callback to deliver to this map */
     /* The SDR plugin's callback will be called, which should call aprs_process_packet */
     dbg(lvl_info, "Packet source registered with APRS plugin (map instance: %p)", map_priv);
     return 1;
 }
 
-__attribute__((visibility("default")))
-int aprs_unregister_packet_source(aprs_packet_callback_t callback) {
+__attribute__((visibility("default"))) int aprs_unregister_packet_source(aprs_packet_callback_t callback) {
     GList *l, *map_list;
-    
-    if (!callback) return 0;
-    
+
+    if (!callback)
+        return 0;
+
     /* Search all map instances */
     for (map_list = aprs_map_instances; map_list; map_list = g_list_next(map_list)) {
         struct map_priv *map_priv = (struct map_priv *)map_list->data;
-        
+
         for (l = map_priv->packet_sources; l; l = g_list_next(l)) {
             struct packet_source_entry *entry = (struct packet_source_entry *)l->data;
             if (entry->callback == callback) {
@@ -931,7 +946,7 @@ int aprs_unregister_packet_source(aprs_packet_callback_t callback) {
             }
         }
     }
-    
+
     return 0;
 }
 
@@ -940,8 +955,9 @@ int aprs_unregister_packet_source(aprs_packet_callback_t callback) {
  * Called by packet source callbacks
  */
 static void aprs_deliver_packet_to_map(struct map_priv *priv, const unsigned char *data, int length) {
-    if (!priv || !data || length <= 0) return;
-    
+    if (!priv || !data || length <= 0)
+        return;
+
     /* Process packet through normal pipeline */
     aprs_process_packet(priv, data, length);
 }
@@ -952,8 +968,7 @@ void plugin_init(void) {
     plugin_register_popup(callback_cast(aprs_popup));
     extern void plugin_init_osd(void);
     plugin_init_osd();
-    
+
     /* Export packet registration function for other plugins */
     /* Function is already defined above and will be visible via symbol export */
 }
-

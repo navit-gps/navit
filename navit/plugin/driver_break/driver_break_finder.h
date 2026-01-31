@@ -29,8 +29,8 @@
 
 #include "config.h"
 #include "coord.h"
-#include "route.h"
 #include "driver_break.h"
+#include "route.h"
 
 /**
  * @brief Find rest stops along a route
@@ -39,9 +39,8 @@
  * @param mandatory_break_required 1 if mandatory break is required
  * @return GList of struct driver_break_stop* (caller must free with driver_break_finder_free_list)
  */
-GList *driver_break_finder_find_along_route(struct route *route, 
-                                     struct driver_break_config *config,
-                                     int mandatory_break_required);
+GList *driver_break_finder_find_along_route(struct route *route, struct driver_break_config *config,
+                                            int mandatory_break_required);
 
 /**
  * @brief Find rest stops near a coordinate
@@ -50,9 +49,7 @@ GList *driver_break_finder_find_along_route(struct route *route,
  * @param config Rest configuration
  * @return GList of struct driver_break_stop* (caller must free with driver_break_finder_free_list)
  */
-GList *driver_break_finder_find_near(struct coord_geo *center, 
-                              double distance_km,
-                              struct driver_break_config *config);
+GList *driver_break_finder_find_near(struct coord_geo *center, double distance_km, struct driver_break_config *config);
 
 /**
  * @brief Check if location meets rest stop criteria
@@ -60,8 +57,7 @@ GList *driver_break_finder_find_near(struct coord_geo *center,
  * @param config Rest configuration
  * @return 1 if valid, 0 otherwise
  */
-int driver_break_finder_is_valid_location(struct coord_geo *coord, 
-                                  struct driver_break_config *config);
+int driver_break_finder_is_valid_location(struct coord_geo *coord, struct driver_break_config *config);
 
 /**
  * @brief Check if location is valid for nightly rest stop (with glacier check)
@@ -71,10 +67,8 @@ int driver_break_finder_is_valid_location(struct coord_geo *coord,
  * @param has_camping_building 1 if location has camping building
  * @return 1 if valid, 0 otherwise
  */
-int driver_break_finder_is_valid_nightly_location(struct coord_geo *coord, 
-                                            struct driver_break_config *config,
-                                            struct mapset *ms,
-                                            int has_camping_building);
+int driver_break_finder_is_valid_nightly_location(struct coord_geo *coord, struct driver_break_config *config,
+                                                  struct mapset *ms, int has_camping_building);
 
 /**
  * @brief Free a list of rest stops

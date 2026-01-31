@@ -25,28 +25,28 @@
 #include "driver_break.h"
 
 /* Cycling rest constants (scaled from hiking by 2.5x) */
-#define CYCLING_DRIVER_BREAK_DISTANCE_MAIN 28240.0     /* 28.24 km */
-#define CYCLING_DRIVER_BREAK_DISTANCE_ALT 5690.0       /* 5.69 km */
-#define CYCLING_MAX_DAILY_DISTANCE 100000.0    /* 100 km per day */
-#define CYCLING_MIN_DIST_FROM_MAIN 1000.0      /* 1 km minimum from main rest */
+#define CYCLING_DRIVER_BREAK_DISTANCE_MAIN 28240.0 /* 28.24 km */
+#define CYCLING_DRIVER_BREAK_DISTANCE_ALT 5690.0   /* 5.69 km */
+#define CYCLING_MAX_DAILY_DISTANCE 100000.0        /* 100 km per day */
+#define CYCLING_MIN_DIST_FROM_MAIN 1000.0          /* 1 km minimum from main rest */
 
 /* Cycling rest stop */
 struct cycling_driver_break_stop {
-    double position;              /* Position along route (meters) */
-    double distance_from_start;  /* Distance from start (meters) */
-    int is_main_rest;            /* 1 if main rest (28.24 km), 0 if alternative */
-    int is_alternative;          /* 1 if alternative rest (5.69 km) */
-    struct coord_geo coord;      /* Geographic coordinates */
-    GList *nearby_water;         /* Water points within 2 km */
-    GList *nearby_cabins;        /* Cabins/huts within 5 km */
+    double position;            /* Position along route (meters) */
+    double distance_from_start; /* Distance from start (meters) */
+    int is_main_rest;           /* 1 if main rest (28.24 km), 0 if alternative */
+    int is_alternative;         /* 1 if alternative rest (5.69 km) */
+    struct coord_geo coord;     /* Geographic coordinates */
+    GList *nearby_water;        /* Water points within 2 km */
+    GList *nearby_cabins;       /* Cabins/huts within 5 km */
 };
 
 /* Daily cycling segment */
 struct cycling_daily_segment {
     int day;
-    double start_distance;       /* Start distance (meters) */
-    double end_distance;         /* End distance (meters) */
-    double distance;             /* Segment distance (meters) */
+    double start_distance; /* Start distance (meters) */
+    double end_distance;   /* End distance (meters) */
+    double distance;       /* Segment distance (meters) */
 };
 
 /* Calculate cycling rest stops */

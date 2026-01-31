@@ -20,8 +20,10 @@
 #ifndef NAVIT_APRS_DB_H
 #define NAVIT_APRS_DB_H
 
-#include <sqlite3.h>
 #include "coord.h"
+#include <glib.h>
+#include <sqlite3.h>
+#include <time.h>
 
 struct aprs_station {
     char *callsign;
@@ -46,7 +48,7 @@ int aprs_db_update_station(struct aprs_db *db, struct aprs_station *station);
 int aprs_db_get_station(struct aprs_db *db, const char *callsign, struct aprs_station *station);
 int aprs_db_delete_station(struct aprs_db *db, const char *callsign);
 int aprs_db_delete_expired(struct aprs_db *db, time_t expire_seconds);
-int aprs_db_get_stations_in_range(struct aprs_db *db, const struct coord_geo *center, double range_km, 
+int aprs_db_get_stations_in_range(struct aprs_db *db, const struct coord_geo *center, double range_km,
                                   GList **stations);
 int aprs_db_get_all_stations(struct aprs_db *db, GList **stations);
 
@@ -54,4 +56,3 @@ void aprs_station_free(struct aprs_station *station);
 struct aprs_station *aprs_station_new(void);
 
 #endif
-

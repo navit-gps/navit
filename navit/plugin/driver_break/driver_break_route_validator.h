@@ -21,8 +21,8 @@
 #define NAVIT_PLUGIN_DRIVER_BREAK_ROUTE_VALIDATOR_H
 
 #include "config.h"
-#include "route.h"
 #include "driver_break.h"
+#include "route.h"
 
 /* Route validation result */
 struct route_validation_result {
@@ -38,7 +38,8 @@ struct route_validation_result {
 struct route_validation_result *route_validator_validate_hiking(struct route *route);
 
 /* Validate hiking route with pilgrimage/hiking priority check */
-struct route_validation_result *route_validator_validate_hiking_with_priority(struct route *route, int enable_hiking_pilgrimage_priority);
+struct route_validation_result *route_validator_validate_hiking_with_priority(struct route *route,
+                                                                              int enable_hiking_pilgrimage_priority);
 
 /* Check if highway type is forbidden for hikers */
 int route_validator_is_forbidden_highway(const char *highway_type);

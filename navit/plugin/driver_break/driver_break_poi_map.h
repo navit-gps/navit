@@ -26,9 +26,8 @@
 #include "mapset.h"
 
 /* Search for POIs in maps near a coordinate */
-GList *driver_break_poi_map_search(struct coord_geo *center, double radius_km, 
-                           enum item_type *poi_types, int num_types,
-                           struct mapset *ms);
+GList *driver_break_poi_map_search(struct coord_geo *center, double radius_km, enum item_type *poi_types, int num_types,
+                                   struct mapset *ms);
 
 /* Search for water points in maps */
 GList *driver_break_poi_map_search_water(struct coord_geo *center, double radius_km, struct mapset *ms);
