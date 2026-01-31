@@ -84,6 +84,22 @@ Defaults (configurable):
 - Short rest interval: 2.275 km (approximately 1/4 Norwegian mile)
 - Maximum daily distance: 40 km
 
+Energy-based routing
+~~~~~~~~~~~~~~~~~~~~
+
+The plugin includes an optional **energy-based routing** model (inspired by BRouter's kinematic model). When enabled, it computes a **segment cost** for each road segment so that routes can favour options that use less energy. The cost is derived from:
+
+- **Weight**: Total vehicle (and cargo) weight; heavier vehicles use more energy on climbs and acceleration.
+- **Rolling resistance**: Friction between tyres and road; contributes to cost per meter.
+- **Air resistance**: Depends on speed; the model can apply temperature and elevation (air pressure) corrections.
+- **Elevation**: Uphill segments cost more (gravity); downhill segments cost less when recuperation is modelled.
+- **Recuperation**: On downhill segments, part of the energy can be recovered (e.g. regenerative braking); the model applies a recuperation efficiency so steep descents are cheaper than flat or climbing segments.
+- **Steepness of roads**: Gradient (rise/run) is used to compute the elevation force and thus how much a segment costs; steeper climbs are more expensive, steeper descents can reduce cost when recuperation is applied.
+
+The energy model is **disabled by default** (``use_energy_routing=0``). Parameters such as total weight, rolling and air resistance coefficients, standby power, and recuperation efficiency are configurable. Elevation data (e.g. SRTM) is used when available to compute segment elevation change and gradient.
+
+**How to enable**: Set ``use_energy_routing`` to ``1`` and, if needed, ``total_weight`` (kg) for the energy model. Because these values are not yet exposed in the configuration UI or in the database config loader, you must change the defaults in the source and recompile: in ``navit/plugin/driver_break/driver_break.c``, in ``driver_break_config_default()``, set ``config->use_energy_routing = 1`` and optionally ``config->total_weight`` to your vehicle plus cargo weight in kg (default is 80). Rebuild the plugin and restart Navit. If in a future version these keys are stored in the ``driver_break_config`` table, you will be able to enable energy routing by inserting ``use_energy_routing`` = ``1`` and ``total_weight`` (kg) via SQLite.
+
 Rest Stop Location Criteria
 ---------------------------
 
@@ -105,7 +121,21 @@ Rest stops are automatically excluded from:
 - ``landuse=military``
 - ``landuse=recreation_ground``
 
-Minimum distance from buildings: 150 meters (configurable)
+Minimum distance from buildings: 150 meters (configurable). This follows Norwegian practice; other countries may have different rules and laws.
+
+Freedom to roam
+~~~~~~~~~~~~~~~
+
+The plugin's rest stop and overnight criteria are chosen to align with the **freedom to roam** (everyone's right, right of public access to the wilderness). This is the general public's right to access certain land for recreation and exercise, subject to not harming the environment or disturbing landowners. It applies to hikers as well as drivers: on land where it is permitted, you may walk, camp, or rest (in Norway, at least 150 meters from buildings; other countries may have different rules and laws). It is codified in many countries (e.g. Nordic *allemansrätten*, Norway's *utmark* rules, Scotland's access code). See `Freedom to roam <https://en.wikipedia.org/wiki/Freedom_to_roam>`_ on Wikipedia.
+
+The following behaviour is in accordance with that principle:
+
+- **Exclusions**: Rest stops are automatically excluded from ``landuse=farmland``, ``landuse=residential``, ``landuse=commercial``, ``landuse=industrial``, ``landuse=military``, and ``landuse=recreation_ground``, so suggestions avoid cultivated land, gardens, and areas where access is typically restricted.
+- **Minimum distance from buildings**: 150 meters (configurable). This follows Norwegian practice; other countries may have different requirements. Keeping this distance respects the immediate vicinity of dwellings and reduces disturbance.
+
+Rest stops are suggested at intersections between road types where stopping is typically acceptable: ``highway=unclassified``, ``highway=service``, ``highway=track``, ``highway=rest_area``, ``highway=tertiary``.
+
+For **overnight car camping** (e.g. motorhomes, camper vans), parking for the night is generally permitted in the same kinds of locations: at or near intersections of these road types, where local law allows. In Norway, camping is required to be at least 150 m from inhabited houses or cottages; other countries may have different rules and laws.
 
 POI Categories
 --------------
