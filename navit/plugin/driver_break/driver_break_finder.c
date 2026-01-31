@@ -31,7 +31,6 @@
 #include "transform.h"
 #include "projection.h"
 #include "driver_break_finder.h"
-#include "rest.h"
 #include "driver_break_poi.h"
 #include "driver_break_glacier.h"
 #include "transform.h"

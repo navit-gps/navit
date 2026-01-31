@@ -35,7 +35,6 @@
 #include "projection.h"
 #include "transform.h"
 #include "file.h"
-#include "rest.h"
 #include "driver_break_db.h"
 #include "driver_break_finder.h"
 #include "driver_break_poi.h"

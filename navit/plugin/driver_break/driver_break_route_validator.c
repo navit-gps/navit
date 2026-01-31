@@ -26,9 +26,39 @@
 #include "route.h"
 #include "item.h"
 #include "map.h"
+#include "attr.h"
 #include "driver_break_poi_map.h"
 
 struct item;
+
+/* Extract highway type from street item OSM tags (caller must not free - points to static buffer) */
+static const char *get_highway_from_item(struct item *item) {
+    static char highway_buf[64];
+    struct attr attr;
+    highway_buf[0] = '\0';
+    if (!item_attr_get(item, attr_osm_tag, &attr) || !attr.u.str)
+        return NULL;
+    const char *tags = attr.u.str;
+    const char *pos = strstr(tags, "highway=");
+    if (!pos)
+        return NULL;
+    pos += 8; /* strlen("highway=") */
+    const char *end = strchr(pos, ' ');
+    if (!end)
+        end = pos + strlen(pos);
+    size_t len = end - pos;
+    if (len >= sizeof(highway_buf))
+        len = sizeof(highway_buf) - 1;
+    memcpy(highway_buf, pos, len);
+    highway_buf[len] = '\0';
+    return highway_buf[0] ? highway_buf : NULL;
+}
+
+const char *route_validator_map_item_to_highway_type(struct item *street_item) {
+    if (!street_item)
+        return NULL;
+    return get_highway_from_item(street_item);
+}
 
 /* Forbidden highways for hikers */
 static const char *forbidden_highways[] = {

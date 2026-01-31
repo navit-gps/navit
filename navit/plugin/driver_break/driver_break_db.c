@@ -26,7 +26,6 @@
 #include "debug.h"
 #include "file.h"
 #include "driver_break_db.h"
-#include "rest.h"
 
 /* Constants for validation bounds */
 #define MAX_HOURS_PER_DAY 12

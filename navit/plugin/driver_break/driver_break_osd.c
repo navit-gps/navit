@@ -37,7 +37,6 @@
 #include "gui.h"
 #include "osd.h"
 #include "popup.h"
-#include "rest.h"
 #include "driver_break_db.h"
 #include "driver_break_finder.h"
 #include "driver_break_poi.h"
@@ -184,47 +183,17 @@ static struct command_table driver_break_commands[] = {
     {"rest_configure_overnight", command_cast(driver_break_cmd_configure_overnight)},
 };
 
-/* Register commands in driver_break_osd_new */
+/* Register commands with Navit's command registry (same API as core OSDs).
+ * Menu items must call these via navit.command_name() so the context is navit. */
 void driver_break_register_commands(struct navit *nav) {
-    struct attr gui_attr;
-    struct attr cbl_attr;
-    struct attr cmd_attr;
-    
     if (!nav) {
         dbg(lvl_error, "Driver Break plugin: Cannot register commands - nav is NULL");
         return;
     }
-    
-    /* Get GUI from navit - commands are called from GUI context */
-    if (!navit_get_attr(nav, attr_gui, &gui_attr, NULL)) {
-        dbg(lvl_error, "Driver Break plugin: navit does not have a GUI");
-        return;
-    }
-    
-    /* Get GUI's callback list */
-    if (!gui_get_attr(gui_attr.u.gui, attr_callback_list, &cbl_attr, NULL)) {
-        dbg(lvl_error, "Driver Break plugin: GUI does not have attr_callback_list");
-        return;
-    }
-    dbg(lvl_debug, "Driver Break plugin: Found GUI callback_list at %p", cbl_attr.u.callback_list);
-    
-    /* Create command table callback */
-    command_add_table_attr(driver_break_commands, sizeof(driver_break_commands)/sizeof(struct command_table), 
-                          nav, &cmd_attr);
-    
-    if (cmd_attr.type != attr_callback) {
-        dbg(lvl_error, "Driver Break plugin: command_add_table_attr failed - attr type is %d, expected %d", 
-            cmd_attr.type, attr_callback);
-        return;
-    }
-    
-    /* Add callback to GUI's callback list (not navit's) */
-    dbg(lvl_debug, "Driver Break plugin: Adding callback %p to GUI callback list", cmd_attr.u.callback);
-    callback_list_add(cbl_attr.u.callback_list, cmd_attr.u.callback);
-    
-    dbg(lvl_info, "Driver Break plugin: Menu commands registered (count=%zu)", 
-        sizeof(driver_break_commands)/sizeof(struct command_table));
-    dbg(lvl_debug, "Driver Break plugin: Registered commands: driver_break_configure_intervals, driver_break_configure_overnight");
+    navit_command_add_table(nav, driver_break_commands,
+                            sizeof(driver_break_commands) / sizeof(struct command_table));
+    dbg(lvl_info, "Driver Break plugin: Menu commands registered (count=%zu)",
+        sizeof(driver_break_commands) / sizeof(struct command_table));
 }
 
 /* Static pointer to the driver_break_priv instance (there should only be one) */

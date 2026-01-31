@@ -25,7 +25,6 @@
 #include "debug.h"
 #include "coord.h"
 #include "driver_break_poi.h"
-#include "rest.h"
 
 #ifdef HAVE_CURL
 #include <curl/curl.h>

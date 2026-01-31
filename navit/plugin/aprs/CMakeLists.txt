@@ -10,9 +10,13 @@ endif()
 
 module_add_library(plugin_aprs aprs.c aprs_db.c aprs_decode.c aprs_osd.c aprs_nmea.c aprs_symbols.c)
 
+# Output name must be libosd_aprs.so for Navit's on-demand OSD lookup (plugin_get_category_osd)
+# to find and load this plugin when <osd type="aprs"/> is used in config
 set_target_properties(plugin_aprs PROPERTIES
     C_VISIBILITY_PRESET default
     VISIBILITY_INLINES_HIDDEN 0
+    OUTPUT_NAME "osd_aprs"
+    PREFIX "lib"
 )
 
 # Add unit tests if enabled
