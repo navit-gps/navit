@@ -358,7 +358,7 @@ static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc
 }
 
 static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r) {
-    cairo_arc(gr->cairo, p->x, p->y, r / 2, 0.0, 2 * M_PI);
+    cairo_arc(gr->cairo, p->x, p->y, r / 2, 0.0, 2 * G_PI);
     set_stroke_params_from_gc(gr->cairo, gc);
     cairo_stroke(gr->cairo);
 }

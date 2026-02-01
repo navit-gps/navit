@@ -111,8 +111,8 @@ static void transform_rotate(struct point *center, int angle, struct point *p, i
     int i, x, y;
     double dx, dy;
     for (i = 0; i < count; i++) {
-        dx = sin(M_PI * angle / 180.0);
-        dy = cos(M_PI * angle / 180.0);
+        dx = sin(G_PI * angle / 180.0);
+        dy = cos(G_PI * angle / 180.0);
         x = dy * p->x - dx * p->y;
         y = dx * p->x + dy * p->y;
 
@@ -1457,7 +1457,7 @@ static void osd_compass_draw(struct osd_priv_common *opc, struct navit *nav, str
             transform_from_geo(pro, position_attr.u.coord_geo, &c1);
             c2.x = destination_attr.u.pcoord->x;
             c2.y = destination_attr.u.pcoord->y;
-            dir = atan2(c2.x - c1.x, c2.y - c1.y) * 180.0 / M_PI;
+            dir = atan2(c2.x - c1.x, c2.y - c1.y) * 180.0 / G_PI;
             dir -= vdir;
             draw_handle(opc->osd_item.gr, this->destination_dir_gc, &p, opc->osd_item.w / 3,
                         dir); /* Draw the green arrow pointing to the destination */

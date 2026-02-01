@@ -2441,8 +2441,8 @@ static int navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_o
             mdir = nv->dir - this_->orientation;
         }
 
-        p->x = (50 - offset * sin(M_PI * mdir / 180.)) * width / 100;
-        p->y = (50 + offset * cos(M_PI * mdir / 180.)) * height / 100;
+        p->x = (50 - offset * sin(G_PI * mdir / 180.)) * width / 100;
+        p->y = (50 + offset * cos(G_PI * mdir / 180.)) * height / 100;
         if (dir)
             *dir = this_->orientation;
     }

@@ -50,11 +50,6 @@ struct relations;
 struct relations_func;
 struct zip_info;
 
-#ifndef M_PI
-#    define M_PI 3.14159265358979323846
-#    define M_PI_4 0.785398163397448309616
-#endif
-
 static int in_way, in_node, in_relation;
 osmid nodeid, wayid;
 
@@ -1457,8 +1452,8 @@ void osm_add_node(osmid id, double lat, double lon) {
     dbg_assert(id < ((2ull << NODE_ID_BITS) - 1));
     current_node->nd_id = id;
     current_node->ref_way = 0;
-    current_node->c.x = lon * 6371000.0 * M_PI / 180;
-    current_node->c.y = log(tan(M_PI_4 + lat * M_PI / 360)) * 6371000.0;
+    current_node->c.x = lon * 6371000.0 * G_PI / 180;
+    current_node->c.y = log(tan(G_PI_4 + lat * G_PI / 360)) * 6371000.0;
     if (!node_hash) {
         if (current_node->nd_id > id_last_node) {
             id_last_node = current_node->nd_id;
