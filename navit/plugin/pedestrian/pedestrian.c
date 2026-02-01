@@ -1120,24 +1120,24 @@ static void android_sensors(struct navit *nav, int sensor, float *x, float *y, f
     switch (orientation) {
     case ORIENTATION_FLAT:
         if (sensor == TYPE_MAGNETIC_FIELD) {
-            yaw = (int)(atan2f(-*y, -*x) * 180 / M_PI + 180);
+            yaw = (int)(atan2f(-*y, -*x) * 180 / G_PI + 180);
         }
         pitch = 0;
         break;
     case ORIENTATION_LANDSCAPE:
         if (sensor == TYPE_ACCELEROMETER) {
-            pitch = (int)(atan2f(*x, *z) * 180 / M_PI);
+            pitch = (int)(atan2f(*x, *z) * 180 / G_PI);
         }
         if (sensor == TYPE_MAGNETIC_FIELD) {
-            yaw = (int)(atan2f(-*y, *z) * 180 / M_PI + 180);
+            yaw = (int)(atan2f(-*y, *z) * 180 / G_PI + 180);
         }
         break;
     case ORIENTATION_PORTRAIT:
         if (sensor == TYPE_ACCELEROMETER) {
-            pitch = (int)(atan2f(*y, *z) * 180 / M_PI);
+            pitch = (int)(atan2f(*y, *z) * 180 / G_PI);
         }
         if (sensor == TYPE_MAGNETIC_FIELD) {
-            yaw = (int)(atan2f(*x, *z) * 180 / M_PI + 180);
+            yaw = (int)(atan2f(*x, *z) * 180 / G_PI + 180);
         }
         break;
     default:

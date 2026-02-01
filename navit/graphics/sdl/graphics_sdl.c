@@ -403,13 +403,13 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
                 x_lw_adj = round((float)lw / 2.0);
                 y_lw_adj = 0;
             } else {
-                angle = (M_PI / 2.0) - atan(abs((int)dx) / abs((int)dy));
+                angle = (G_PI / 2.0) - atan(abs((int)dx) / abs((int)dy));
                 x_lw_adj = round(sin(angle) * (float)lw / 2.0);
                 y_lw_adj = round(cos(angle) * (float)lw / 2.0);
                 if ((x_lw_adj < 0) || (y_lw_adj < 0)) {
                     dbg(lvl_debug, "i=%d", i);
                     dbg(lvl_debug, "   %d,%d->%d,%d", p[i].x, p[i].y, p[i + 1].x, p[i + 1].y);
-                    dbg(lvl_debug, "   lw=%d angle=%f", lw, 180.0 * angle / M_PI);
+                    dbg(lvl_debug, "   lw=%d angle=%f", lw, 180.0 * angle / G_PI);
                     dbg(lvl_debug, "   x_lw_adj=%d y_lw_adj=%d", x_lw_adj, y_lw_adj);
                 }
             }
