@@ -286,10 +286,9 @@ static struct graphics_image_priv* svg_debug_image_new(struct graphics_priv *gr,
         }
         base64_encoded_image = g_base64_encode((guchar*) contents, img_size);
 
-        base64_data_url = g_malloc0(
-                              strlen(base64_encoded_image) + strlen(data_url_template)
-                              + strlen(image_mime_type) + 1);
-        sprintf(base64_data_url, data_url_template, image_mime_type,
+        size_t data_url_len = strlen(data_url_template) + strlen(base64_encoded_image) + strlen(image_mime_type) + 1;
+        base64_data_url = g_malloc0(data_url_len);
+        snprintf(base64_data_url, data_url_len, data_url_template, image_mime_type,
                 base64_encoded_image);
         g_free(base64_encoded_image);
 
