@@ -701,7 +701,7 @@ static struct graphics_priv *graphics_svg_debug_new(struct navit *nav, struct gr
 }
 
 void plugin_init(void) {
-    dbg(lvl_error, "enter svg_debug plugin_init")
-        plugin_register_category_graphics("svg_debug", graphics_svg_debug_new);
+    dbg(lvl_error, "enter svg_debug plugin_init");
+    plugin_register_category_graphics("svg_debug", graphics_svg_debug_new);
     // plugin_register_category_event("svg_debug", event_svg_debug_new);
 }
