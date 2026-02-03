@@ -2,9 +2,9 @@
 
 function check_pocketcab()
 {
-	if ! which pocketpc-cab &> /dev/null
+	if ! which gcab &> /dev/null
 	then
-		echo "You don't have pocketpc-cab installed or not in PATH"
+		echo "You don't have gcab installed or not in PATH"
 		exit
 	fi
 }
@@ -77,6 +77,6 @@ do
 	echo "$i $BASEDIR/maps/$bn" >> $CABLIST.$$
 done
 fi
-pocketpc-cab -p "Navit Team" -a "Navit" $CABLIST.$$ $CABNAME
+gcab -c $CABNAME $(cat $CABLIST.$$)
 rm $CABLIST.$$
 

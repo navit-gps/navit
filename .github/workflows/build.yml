@@ -197,8 +197,16 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
+          path: wince/output/navit.cab
+          name: WinCE CAB
+
+      - run: |
+          rm -rf wince/output/navit.cab
+
+      - uses: actions/upload-artifact@v4
+        with:
           path: wince/output
-          name: WinCE Binary
+          name: WinCE Archive
 
       - name: Update Navit-Download-Center
         run: bash scripts/update_download_center.sh
