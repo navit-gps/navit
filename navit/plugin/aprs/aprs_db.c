@@ -392,6 +392,10 @@ int aprs_db_get_all_stations(struct aprs_db *db, GList **stations) {
         count++;
     }
 
+    if (rc != SQLITE_DONE && rc != SQLITE_ROW) {
+        dbg(lvl_warning, "APRS: sqlite3_step ended with unexpected code: %d", rc);
+    }
+
     sqlite3_finalize(stmt);
     return count;
 }

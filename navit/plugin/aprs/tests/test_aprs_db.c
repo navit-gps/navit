@@ -188,8 +188,10 @@ static int test_db_range_filtering(void) {
 
     TEST_ASSERT(result == 1, "Range query failed");
     TEST_ASSERT(g_list_length(stations) == 1, "Wrong number of stations in range");
+    TEST_ASSERT(stations != NULL, "Stations list is NULL");
 
     struct aprs_station *found = (struct aprs_station *)stations->data;
+    TEST_ASSERT(found != NULL, "Station data is NULL");
     TEST_ASSERT(strcmp(found->callsign, "NEAR") == 0, "Wrong station in range");
 
     g_list_free_full(stations, (GDestroyNotify)aprs_station_free);
