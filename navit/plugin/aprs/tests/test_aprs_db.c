@@ -167,7 +167,6 @@ static int test_db_range_filtering(void) {
     int result2 = aprs_db_update_station(db, station2);
     TEST_ASSERT(result2 == 1, "Failed to insert FAR station");
 
-
     int result = aprs_db_get_stations_in_range(db, &center, 50.0, &stations);
 
     TEST_ASSERT(result == 1, "Range query failed");
