@@ -142,7 +142,7 @@ static int test_db_delete_expired(void) {
 
 static int test_db_range_filtering(void) {
     struct aprs_db *db = aprs_db_new(NULL);
-    struct coord_geo center = {37.7749, -122.4194}; /* San Francisco */
+    struct coord_geo center = {.lng = -122.4194, .lat = 37.7749}; /* San Francisco */
     GList *stations = NULL;
 
     /* Add station in range (Oakland, ~10 km away) */
@@ -167,24 +167,8 @@ static int test_db_range_filtering(void) {
     int result2 = aprs_db_update_station(db, station2);
     TEST_ASSERT(result2 == 1, "Failed to insert FAR station");
 
-    fprintf(stderr, "=== test_db_range_filtering: Starting test ===\n");
-    fprintf(stderr, "Center: (%f, %f)\n", center.lat, center.lng);
-    fprintf(stderr, "Range: 50.0 km\n");
-    fprintf(stderr, "Station 1 (NEAR): (%f, %f)\n", station1->position.lat, station1->position.lng);
-    fprintf(stderr, "Station 2 (FAR): (%f, %f)\n", station2->position.lat, station2->position.lng);
 
     int result = aprs_db_get_stations_in_range(db, &center, 50.0, &stations);
-    fprintf(stderr, "aprs_db_get_stations_in_range returned: %d\n", result);
-    fprintf(stderr, "List length: %d\n", g_list_length(stations));
-    if (result > 0 && stations) {
-        GList *l = stations;
-        int idx = 0;
-        while (l) {
-            struct aprs_station *s = (struct aprs_station *)l->data;
-            fprintf(stderr, "  Station %d: '%s' at (%f, %f)\n", idx++, s->callsign, s->position.lat, s->position.lng);
-            l = g_list_next(l);
-        }
-    }
 
     TEST_ASSERT(result == 1, "Range query failed");
     TEST_ASSERT(g_list_length(stations) == 1, "Wrong number of stations in range");
