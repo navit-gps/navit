@@ -462,5 +462,6 @@ Possible Future Enhancements
 - Route to the APRS station, clicking on the APRS stations icon creates a route to it.
 - Compatibility with https://repeatermap.de/, a database over radio amateur repeaters.
 - Compatibility with POI's like members of this network: https://www.openstreetmap.org/relation/18780801#map=18/61.897568/9.283834, a repeater like this one typically has a 50 kilometers range: https://www.openstreetmap.org/node/2641537344#map=19/60.808619/9.615892
+One could potentially display a pop up when entering the cover area, with the possibility to tune one of the vfo's to the correct frequency and subtone by using libham.
 
 
