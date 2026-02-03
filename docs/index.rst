@@ -52,6 +52,7 @@ Main Features
    development/concepts
    development/guides
    development/programming_guidelines
+   development/static_analysis
    development/commit_guidelines
    development/changelog_wrapper
 

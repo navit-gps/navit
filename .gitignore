@@ -80,3 +80,7 @@ config.h
 
 # Code quality reports (generated)
 code_quality_reports/
+
+# Large OSM test data files (download or generate locally)
+**/tests/map_data/*.osm
+**/tests/map_data/*.bin

@@ -289,6 +289,10 @@ GList *driver_break_db_get_history(struct driver_break_db *db, time_t since) {
         list = g_list_prepend(list, entry);
     }
 
+    if (rc != SQLITE_DONE && rc != SQLITE_ROW) {
+        dbg(lvl_warning, "Driver Break plugin: sqlite3_step ended with unexpected code: %d", rc);
+    }
+
     sqlite3_finalize(stmt);
 
     return g_list_reverse(list);
@@ -410,6 +414,10 @@ int driver_break_db_load_config(struct driver_break_db *db, struct driver_break_
         const char *key = (const char *)sqlite3_column_text(stmt, 0);
         const char *value_str = (const char *)sqlite3_column_text(stmt, 1);
         driver_break_db_apply_config_row(key, value_str, config, &loaded_count);
+    }
+
+    if (rc != SQLITE_DONE && rc != SQLITE_ROW) {
+        dbg(lvl_warning, "Driver Break plugin: sqlite3_step ended with unexpected code: %d", rc);
     }
 
     sqlite3_finalize(stmt);

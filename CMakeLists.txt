@@ -906,7 +906,9 @@ CHECK_FUNCTION_EXISTS (_atoi64 HAVE__ATOI64)
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in"
 			   "${CMAKE_CURRENT_BINARY_DIR}/config.h" )
 
-# Compile with -Wall -Wextra. We need all the help we can get from the compiler :-).
+# Compile with -Wall -Wextra -Wpedantic -fanalyzer. We need all the help we can get from the compiler :-).
+# Glib-2.0 cflags are applied via pkg_check_modules(GLIB2) and include_directories(${GLIB2_INCLUDE_DIRS}).
+# -fsyntax-only: use for manual syntax checks (e.g. gcc -fsyntax-only); do not add to build (breaks linking).
 # Disabled warnings:
 # -Wno-missing-field-initializers: Used a lot, does not seem problematic.
 # -Wno-unused-parameter: Unfortunately occurs frequently because of
@@ -914,13 +916,19 @@ CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in"
 # -Wno-sign-compare: We currently just use int almost everywhere.
 #                    Unclear if it's really worth correcting.
 add_compiler_flag_if_available("-Wall")
+add_compiler_flag_if_available("-Wextra")
+add_compiler_flag_if_available("-Wpedantic")
+# -fanalyzer: optional; enable with -DENABLE_ANALYZER=ON (reports potential bugs, can fail build)
+option(ENABLE_ANALYZER "Enable GCC -fanalyzer (static analysis)" OFF)
+if(ENABLE_ANALYZER)
+	add_compiler_flag_if_available("-fanalyzer")
+endif()
 add_compiler_flag_if_available("-Wno-unused-parameter")
 add_compiler_flag_if_available("-Wno-sign-compare")
 add_compiler_flag_if_available("-Wno-missing-field-initializers")
 add_compiler_flag_if_available("-Wundef")
 add_compiler_flag_if_available("-Wcast-align")
 add_compiler_flag_if_available("-Wpointer-arith")
-add_compiler_flag_if_available("-Wextra")
 add_compiler_flag_if_available("-Wdate-time")
 add_compiler_flag_if_available("-Wmissing-prototypes")
 add_compiler_flag_if_available("-Wstrict-prototypes")
