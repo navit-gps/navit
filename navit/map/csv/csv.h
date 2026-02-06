@@ -17,12 +17,12 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <glib.h>
-#include <stdio.h>
-
 #include "attr.h"
 #include "coord.h"
+#include "item.h"
 #include "quadtree.h"
+#include <glib.h>
+#include <stdio.h>
 
 struct map_priv {
     int id;
