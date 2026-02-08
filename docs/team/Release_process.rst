@@ -3,27 +3,27 @@
 Release process
 ===============
 
-When we release Navit, here are the steps we have to follow for now
-(April 2018):
+When we release Navit, here are the steps we have to follow:
 
 -  Update NAVIT_VERSION_MAJOR, NAVIT_VERSION_MINOR and
    NAVIT_VERSION_PATCH in **CMakeLists.txt**
 -  Update Sailfish spec in ``contrib/sailfish/navit-sailfish.spec``
+
    - Version: Update to new Version number
    - Release: Reset to 1 when Version is updated
    - Changelog
+
 -  update the contributors list using:
    ``scripts/generate_contributors.sh``
--  generate changelog using ``git cliff --unreleased --prepend CHANGELOG.md``
+-  generate changelog using ``git cliff --unreleased --prepend CHANGELOG.md``.
    Then edit the CHANGELOG.md and clean it up.
 -  cut tag (verify that master is up-to-date with trunk)
--  Wait that circleci finishes to build all the jobs for the master
+-  Wait that the CI finishes to build all the jobs for the master
    branch (not trunk)
--  attach artifacts from the master branch build from circleCI to the
+-  rename and attach artifacts from the master branch build from CI to the
    tag (don't forget the .cab and the .exe for wince)
 -  Generate the release based on the tag
--  download the tarball and generate the release signature using ``gpg
-   --armor --detach-sign`` then attach the **.asc** file as an artifact
+-  download the tarball and generate the release signature using ``gpg --armor --output [INPUT].asc --detach-sig [INPUT]`` then attach the **.asc** file as an artifact
 -  Grab the Versioncode from the build_android and update
    https://github.com/navit-gps/download-center/edit/master/_data/version.yml
    (Search for "Version Code" within the Build Log on Circleci)
@@ -47,14 +47,8 @@ When we release Navit, here are the steps we have to follow for now
 -  On Launchpad:
 
    -  update: https://launchpad.net/navit/+announcements
-   -  verify that https://code.launchpad.net/navit is up-to-date
 
--
-
-   -  add the milestone and release on the trunk series, then create the
-      release: https://launchpad.net/navit/trunk
-
--  publish a post to:
+-  OUTDATED: publish a post to :
 
    -  twitter: https://twitter.com/navitproject
    -  facebook: https://www.facebook.com/NavitProject
