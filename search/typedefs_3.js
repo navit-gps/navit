@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['instancedata_0',['InstanceData',['../browserplugin_8c.html#aff25d5caf3eec80bde887c689a88f822',1,'browserplugin.c']]]
+  ['navit_5ffloat_0',['navit_float',['../coord_8h.html#aae1a07a93ec5038cab0efff724660598',1,'coord.h']]]
 ];

@@ -12,6 +12,5 @@ var searchData=
   ['bookmarks_2eh_9',['bookmarks.h',['../bookmarks_8h.html',1,'']]],
   ['bookmarksproxy_2eh_10',['bookmarksProxy.h',['../bookmarksProxy_8h.html',1,'']]],
   ['boundaries_2ec_11',['boundaries.c',['../boundaries_8c.html',1,'']]],
-  ['browserplugin_2ec_12',['browserplugin.c',['../browserplugin_8c.html',1,'']]],
-  ['buffer_2ec_13',['buffer.c',['../buffer_8c.html',1,'']]]
+  ['buffer_2ec_12',['buffer.c',['../buffer_8c.html',1,'']]]
 ];

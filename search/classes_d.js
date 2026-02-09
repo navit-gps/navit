@@ -27,7 +27,7 @@ var searchData=
   ['navitlocationlistener_24',['NavitLocationListener',['../classorg_1_1navitproject_1_1navit_1_1NavitVehicle_1_1NavitLocationListener.html',1,'org::navitproject::navit::NavitVehicle']]],
   ['navitmap_25',['NavitMap',['../classorg_1_1navitproject_1_1navit_1_1NavitMap.html',1,'org::navitproject::navit']]],
   ['navitmapdownloader_26',['NavitMapDownloader',['../classorg_1_1navitproject_1_1navit_1_1NavitMapDownloader.html',1,'org::navitproject::navit']]],
-  ['navitobject_27',['navitobject',['../structnavitObject.html',1,'navitObject'],['../structNavitObject.html',1,'NavitObject']]],
+  ['navitobject_27',['navitObject',['../structnavitObject.html',1,'']]],
   ['navitrestoretask_28',['NavitRestoreTask',['../classorg_1_1navitproject_1_1navit_1_1NavitRestoreTask.html',1,'org::navitproject::navit']]],
   ['navitsensors_29',['NavitSensors',['../classorg_1_1navitproject_1_1navit_1_1NavitSensors.html',1,'org::navitproject::navit']]],
   ['navitspeech2_30',['NavitSpeech2',['../classorg_1_1navitproject_1_1navit_1_1NavitSpeech2.html',1,'org::navitproject::navit']]],

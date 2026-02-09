@@ -61,7 +61,7 @@ var searchData=
   ['circle_58',['circle',['../structelement.html#a840d2bfed3847bfbdc6c8bb743944779',1,'element::circle'],['../structattr.html#aba688a22aaadfc246060f580f9ad44a7',1,'attr::circle']]],
   ['circle64_59',['circle64',['../graphics_8c.html#acc52e4daad95cf07d293be5bf9127391',1,'graphics.c']]],
   ['city_60',['city',['../garmin__img_8c.html#ab840e4291cac2007b3daba2c44f1ee19',1,'city:&#160;garmin_img.c'],['../structlabel__header.html#a793c1af4995b7e7e103644c52d7b5121',1,'label_header::city']]],
-  ['class_61',['class',['../structgui__priv_1_1html.html#ab1e5077e323d23aac90768326426c05b',1,'gui_priv::html::class'],['../structNavitObject.html#a23054fa6cdf8d8f7bc3a8b0cd446ae8b',1,'NavitObject::class']]],
+  ['class_61',['class',['../structgui__priv_1_1html.html#ab1e5077e323d23aac90768326426c05b',1,'gui_priv::html']]],
   ['clb_5fcall_5fcmd_62',['CLB_CALL_CMD',['../enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html#a2c01e7f1821eacabb667901ec25ed036',1,'org::navitproject::navit::NavitCallbackHandler::MsgType']]],
   ['clb_5fcoord_5factions_63',['CLB_COORD_ACTIONS',['../enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html#a77b76b993cdf077b299ee54e6ba7bea9',1,'org::navitproject::navit::NavitCallbackHandler::MsgType']]],
   ['clb_5fdelete_5fmap_64',['CLB_DELETE_MAP',['../enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html#a2f4dc00f7f4f23f08a85789c8082452a',1,'org::navitproject::navit::NavitCallbackHandler::MsgType']]],

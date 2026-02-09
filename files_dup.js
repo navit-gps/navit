@@ -30,7 +30,6 @@ var files_dup =
     [ "route.c", "route_8c.html", "route_8c" ],
     [ "bookmarks.c", "bookmarks_8c.html", "bookmarks_8c" ],
     [ "bookmarks.h", "bookmarks_8h.html", "bookmarks_8h" ],
-    [ "browserplugin.c", "browserplugin_8c.html", "browserplugin_8c" ],
     [ "cache.c", "cache_8c.html", "cache_8c" ],
     [ "cache.h", "cache_8h.html", "cache_8h" ],
     [ "callback.c", "callback_8c.html", "callback_8c" ],

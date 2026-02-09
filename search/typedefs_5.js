@@ -1,16 +1,12 @@
 var searchData=
 [
-  ['object_5ffunc_5fadd_5fattr_0',['object_func_add_attr',['../xmlconfig_8h.html#a8dd474abdefe98704cc0858520a3c1d4',1,'xmlconfig.h']]],
-  ['object_5ffunc_5fdestroy_1',['object_func_destroy',['../xmlconfig_8h.html#aa85586360f85e1c2cec585478d517d78',1,'xmlconfig.h']]],
-  ['object_5ffunc_5fdup_2',['object_func_dup',['../xmlconfig_8h.html#a791b726f50850219d37d7ee4fa16926b',1,'xmlconfig.h']]],
-  ['object_5ffunc_5fget_5fattr_3',['object_func_get_attr',['../xmlconfig_8h.html#ac984e28a955dd4713ce683447a1ea4db',1,'xmlconfig.h']]],
-  ['object_5ffunc_5finit_4',['object_func_init',['../xmlconfig_8h.html#a3371a924ef319f6e38f94fa0331575a4',1,'xmlconfig.h']]],
-  ['object_5ffunc_5fiter_5fdestroy_5',['object_func_iter_destroy',['../xmlconfig_8h.html#a0c9c8dc41426168af7eea75f43b75c8c',1,'xmlconfig.h']]],
-  ['object_5ffunc_5fiter_5fnew_6',['object_func_iter_new',['../xmlconfig_8h.html#a080f3b0bde669c292c4256ac394b2cbe',1,'xmlconfig.h']]],
-  ['object_5ffunc_5fnew_7',['object_func_new',['../xmlconfig_8h.html#aa31a42a7daa8e061452393de5483d61c',1,'xmlconfig.h']]],
-  ['object_5ffunc_5fref_8',['object_func_ref',['../xmlconfig_8h.html#abbb9ed4adaef7076bdd82f67fca0fcfd',1,'xmlconfig.h']]],
-  ['object_5ffunc_5fremove_5fattr_9',['object_func_remove_attr',['../xmlconfig_8h.html#a14949a117c8a06880b17d43b735f7897',1,'xmlconfig.h']]],
-  ['object_5ffunc_5fset_5fattr_10',['object_func_set_attr',['../xmlconfig_8h.html#abdfdbb5d99fba502b3e0dec67882e02c',1,'xmlconfig.h']]],
-  ['object_5ffunc_5funref_11',['object_func_unref',['../xmlconfig_8h.html#a9930581a52d017db7539640ff6193a84',1,'xmlconfig.h']]],
-  ['osmid_12',['osmid',['../maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a',1,'maptool.h']]]
+  ['parent_0',['parent',['../gpx2navit__txt_8h.html#a93619a33de67f8166559770b9d86fdf5',1,'gpx2navit_txt.h']]],
+  ['parsedata_1',['parsedata',['../gpx2navit__txt_8h.html#ab7813f78b1c32fea3fca98a2890c1ed4',1,'gpx2navit_txt.h']]],
+  ['pathattr_2',['pathattr',['../gpx2navit__txt_8h.html#abfbcae3d341ab458459a3e220ca8b550',1,'gpx2navit_txt.h']]],
+  ['pfn_5fbthgetmode_3',['PFN_BthGetMode',['../group__vehicle-wince.html#ga170eb041f9b180a25846384fb43f5326',1,'vehicle_wince.c']]],
+  ['pfn_5fbthsetmode_4',['PFN_BthSetMode',['../group__vehicle-wince.html#ga8f123bfe3dcef9770d8e3abce18593a9',1,'vehicle_wince.c']]],
+  ['pvideo_5fpower_5fmanagement_5',['PVIDEO_POWER_MANAGEMENT',['../ceglue_8c.html#a4a5ef961165ede9d8f1518c19fa31a43',1,'ceglue.c']]],
+  ['pvideo_5fpower_5fstate_6',['PVIDEO_POWER_STATE',['../ceglue_8c.html#af402c2e3bd0db67a97dc41796134081c',1,'ceglue.c']]],
+  ['pxpm2bmp_7',['PXPM2BMP',['../xpm2bmp_8h.html#a9d78bf2be289d46d73a8439048420be6',1,'xpm2bmp.h']]],
+  ['pxpmcolorentry_8',['PXPMCOLORENTRY',['../xpm2bmp_8h.html#a7389567a28c012a50b0e3baa00a96958',1,'xpm2bmp.h']]]
 ];

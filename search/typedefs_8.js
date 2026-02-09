@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['u16_0',['u16',['../types_8h.html#ace9d960e74685e2cd84b36132dbbf8aa',1,'types.h']]],
-  ['u32_1',['u32',['../types_8h.html#afaa62991928fb9fb18ff0db62a040aba',1,'types.h']]],
-  ['u8_2',['u8',['../types_8h.html#a92c50087ca0e64fa93fc59402c55f8ca',1,'types.h']]]
+  ['video_5fpower_5fmanagement_0',['VIDEO_POWER_MANAGEMENT',['../ceglue_8c.html#afe5f4d1d59f7b0a874780e37bfcdc0e6',1,'ceglue.c']]],
+  ['video_5fpower_5fstate_1',['VIDEO_POWER_STATE',['../ceglue_8c.html#adfa6fa5c859e3721e07f7f6ff083c8d8',1,'ceglue.c']]]
 ];
