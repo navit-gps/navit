@@ -39,17 +39,17 @@
 # spaetz https://launchpad.net/~spaetz
 # vsandre https://launchpad.net/~vsandre
 # "J. Lavoie" <j.lavoie@net-c.ca>, 2024.
-# jkoan <jkoan@gmx.de>, 2024.
+# jkoan <jkoan@gmx.de>, 2024, 2026.
 # Ettore Atalan <atalanttore@googlemail.com>, 2024, 2025.
 # Patrick Höhn <hoehnp@gmx.de>, 2025.
-# Christof Schulze <christof.schulze@gmx.net>, 2025.
+# Christof Schulze <christof.schulze@gmx.net>, 2025, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.5.7\n"
+"Project-Id-Version: navit 0.5.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-31 07:33+0100\n"
-"PO-Revision-Date: 2025-12-18 13:05+0000\n"
-"Last-Translator: Christof Schulze <christof.schulze@gmx.net>\n"
+"POT-Creation-Date: 2025-12-16 19:22+0100\n"
+"PO-Revision-Date: 2026-02-09 18:25+0000\n"
+"Last-Translator: jkoan <jkoan@gmx.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/navit/navit-core/"
 "de/>\n"
 "Language: de\n"
@@ -57,7 +57,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15.1-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -65,7 +65,7 @@ msgstr "Aus dem Quellverzeichnis starten\n"
 
 #. libc of navit returns "dummy"
 msgid "Error getting current path. use ./ \n"
-msgstr ""
+msgstr "Fehler beim Abruf des aktuellen Verzeichnis. Nutze ./"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -246,7 +246,7 @@ msgid "Enter the roundabout %s"
 msgstr "%s in den Kreisverkehr einfahren"
 
 msgid "then enter the roundabout"
-msgstr ""
+msgstr "Dann in den Kreisverkehr einfahren"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -426,13 +426,13 @@ msgid "Length"
 msgstr "Länge"
 
 msgid "mi"
-msgstr ""
+msgstr "mi"
 
 msgid "km"
 msgstr "km"
 
 msgid "feet"
-msgstr ""
+msgstr "Fuß"
 
 msgid "m"
 msgstr "m"
@@ -1548,7 +1548,7 @@ msgstr "Samoa"
 
 #. 412
 msgid "Kosovo"
-msgstr ""
+msgstr "Kosovo"
 
 #. 887
 msgid "Yemen"
@@ -2231,126 +2231,6 @@ msgstr ""
 msgid "Display"
 msgstr "Darstellung"
 
-msgid "APRS"
-msgstr ""
-
-msgid "APRS Settings"
-msgstr ""
-
-msgid "RX Frequency"
-msgstr ""
-
-msgid "Station Timeout"
-msgstr ""
-
-msgid "Device"
-msgstr ""
-
-msgid "NMEA Settings"
-msgstr ""
-
-msgid "APRS RX Frequency"
-msgstr ""
-
-msgid "144.39 MHz (North America)"
-msgstr ""
-
-msgid "144.80 MHz (Europe)"
-msgstr ""
-
-msgid "145.175 MHz (Australia)"
-msgstr ""
-
-msgid "144.575 MHz (New Zealand)"
-msgstr ""
-
-msgid "144.64 MHz (China/Japan)"
-msgstr ""
-
-msgid "144.66 MHz (Japan Kyushu)"
-msgstr ""
-
-msgid "144.93 MHz (Argentina/Uruguay)"
-msgstr ""
-
-msgid "145.57 MHz (Brazil)"
-msgstr ""
-
-msgid "APRS Station Timeout"
-msgstr ""
-
-msgid "30 minutes"
-msgstr ""
-
-msgid "60 minutes"
-msgstr ""
-
-msgid "90 minutes"
-msgstr ""
-
-msgid "120 minutes"
-msgstr ""
-
-msgid "180 minutes"
-msgstr ""
-
-msgid "Clear Expired"
-msgstr ""
-
-msgid "APRS Device"
-msgstr ""
-
-msgid "RTL-SDR Blog V3"
-msgstr ""
-
-msgid "V4 R828D"
-msgstr ""
-
-msgid "Nooelec"
-msgstr ""
-
-msgid "Generic RTL-SDR"
-msgstr ""
-
-msgid "NMEA Serial"
-msgstr ""
-
-msgid "APRS NMEA Settings"
-msgstr ""
-
-msgid "Baud Rate"
-msgstr ""
-
-msgid "Parity"
-msgstr ""
-
-msgid "APRS NMEA Baud Rate"
-msgstr ""
-
-msgid "4800"
-msgstr ""
-
-msgid "9600"
-msgstr ""
-
-msgid "19200"
-msgstr ""
-
-msgid "38400"
-msgstr ""
-
-msgid "APRS NMEA Parity"
-msgstr ""
-
-msgid "None"
-msgstr ""
-
-msgid "Even"
-msgstr ""
-
-msgid "Odd"
-msgstr ""
-
 msgid "Fullscreen"
 msgstr "Vollbildmodus"
 
@@ -2381,12 +2261,6 @@ msgid ""
 "Drop next\n"
 "Waypoint"
 msgstr "nächsten Wegpunkt entfernen"
-
-msgid "Configure Driver Break Intervals"
-msgstr ""
-
-msgid "Configure Overnight Stops"
-msgstr ""
 
 msgid "Satellite Status"
 msgstr "Satellitenstatus"
@@ -2445,6 +2319,15 @@ msgid ""
 "\n"
 "Enjoy Navit!"
 msgstr ""
+"Willkommen bei Navit!\n"
+"\n"
+"Wähle \"Karte herunterladen\" im Menü um Navit zu nutzen. Die Karten können "
+"sehr groß  (&gt50MB) sein - die Nutzung einer WLAN-Verbindung wird "
+"empfohlen.\n"
+"\n"
+"Kartendaten: (c) Mitwirkende des OpenStreetMap Projekts\n"
+"\n"
+"Viel Spaß mit Navit!"
 
 #. Android resource: @strings/initial_info_box_OK
 msgid "OK"
@@ -2544,7 +2427,7 @@ msgstr "Karten passend zur aktuellen Position"
 
 #. Android resource: @strings/maps_installed
 msgid "Installed maps"
-msgstr ""
+msgstr "Installierte Karten"
 
 #. Android resource: @strings/map_downloading
 msgid "downloading"
