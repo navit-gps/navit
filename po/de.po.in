@@ -65,7 +65,7 @@ msgstr "Aus dem Quellverzeichnis starten\n"
 
 #. libc of navit returns "dummy"
 msgid "Error getting current path. use ./ \n"
-msgstr "Fehler beim Abruf des aktuellen Verzeichnis. Nutze ./"
+msgstr "Fehler beim Abruf des aktuellen Verzeichnis. Nutze ./ \n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
