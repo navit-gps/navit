@@ -54,5 +54,4 @@ fi
 # Clean up
 rm -rf aprs-symbols
 
-echo "Done!"
 
