@@ -54,6 +54,13 @@ IF(NOT CMAKE_BUILD_TYPE)
 	SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
 ENDIF(NOT CMAKE_BUILD_TYPE)
 
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+	find_program(iwyu_path NAMES include-what-you-use iwyu)
+	if (iwyu_path)
+		set(CMAKE_C_INCLUDE_WHAT_YOU_USE ${iwyu_path} )
+	endif()
+endif()
+
 # binary name
 set(NAVIT_BINARY navit CACHE STRING "Navit binary name")
 # install path
