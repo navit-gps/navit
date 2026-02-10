@@ -111,7 +111,7 @@ void plugin_init(void) {
    - AX.25 frame parsing
    - APRS position extraction
 
-4. **Update Mechanism**: 
+4. **Update Mechanism**:
    - Event-driven updates when packets arrive
    - Map callbacks to trigger redraws
    - Periodic expiration cleanup

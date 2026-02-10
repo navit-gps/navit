@@ -143,7 +143,7 @@ See [RTL_SDR_SETUP.md](RTL_SDR_SETUP.md) for complete RTL-SDR setup instructions
 ## Verification Status
 
 Navit moving object support: VERIFIED
-Dynamic POI updates: VERIFIED  
+Dynamic POI updates: VERIFIED
 Real-time coordinate rendering: VERIFIED
 Plugin mechanism: VERIFIED
 D-Bus support: VERIFIED (available for future use)

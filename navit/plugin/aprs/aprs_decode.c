@@ -30,7 +30,7 @@
 #include <time.h>
 
 #ifndef MODULE
-#define MODULE "aprs_decode"
+#    define MODULE "aprs_decode"
 #endif
 
 /* Decode one character at data[offset+i]; append to callsign if valid. Return 0 to stop loop, 1 to continue. */
@@ -289,8 +289,8 @@ static void parse_position_comment(struct aprs_position *pos, const char *commen
         pos->has_altitude = 1;
     }
     course_speed = strstr(comment_start, "/");
-    if (course_speed && course_speed[1] >= '0' && course_speed[1] <= '9' &&
-        sscanf(course_speed + 1, "%03d/%03d", &course, &speed) == 2) {
+    if (course_speed && course_speed[1] >= '0' && course_speed[1] <= '9'
+        && sscanf(course_speed + 1, "%03d/%03d", &course, &speed) == 2) {
         pos->course = course;
         pos->speed = (int)(speed * 1.852);
         pos->has_course_speed = 1;

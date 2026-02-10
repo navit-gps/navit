@@ -23,10 +23,10 @@ def load_symbol_definitions(yaml_path):
 def get_expected_filename(symbol_code):
     """
     Get the expected filename for a symbol code based on aprs_symbols.c lookup table.
-    
+
     Args:
         symbol_code (str): Symbol code (e.g., '/!', '/>', '\\\\!', etc.)
-    
+
     Returns:
         str: Expected filename matching the C code lookup table
     """
@@ -211,26 +211,26 @@ def get_expected_filename(symbol_code):
         '\\{': 'cloudy.png',  # Fog
         '\\}': 'unknown.png',  # Unused
     }
-    
+
     return SYMBOL_FILENAME_MAP.get(symbol_code, 'unknown.png')
 
 def generate_filename(symbol):
     """
     Generate filename for the symbol matching the C code lookup table.
-    
+
     The sprite sheet images match YAML descriptions, but the C code expects
     different filenames for some symbol codes. We map based on what the
     sprite sheet actually contains (YAML description) to the C code filename.
-    
+
     Args:
         symbol (dict): Symbol definition from YAML
-    
+
     Returns:
         str: Filename matching the C code lookup table
     """
     code = symbol['code']
     description = symbol.get('description', '').lower()
-    
+
     # Special cases where YAML description doesn't match C code expectations
     # These are handled by using get_expected_filename() which maps symbol codes
     # to C code filenames, regardless of what the sprite sheet actually contains
@@ -248,19 +248,19 @@ def generate_filename(symbol):
         'semi-trailer truck, 18-wheeler': 'bus.png',
         'semi-trailer truck': 'bus.png',
     }
-    
+
     # Check if we have a special mapping for this description
     if description in description_to_filename:
         return description_to_filename[description]
-    
+
     # Check partial matches
     for desc_key, filename in description_to_filename.items():
         if desc_key in description:
             return filename
-    
+
     # Otherwise use the standard code-based mapping
     filename = get_expected_filename(code)
-    
+
     # If not found in mapping, fall back to description-based generation
     if filename == 'unknown.png' and description:
         clean_desc = description \
@@ -274,17 +274,17 @@ def generate_filename(symbol):
             .replace("'", '') \
             .replace('.', '') \
             .replace('&', 'and')
-        
+
         clean_desc = clean_desc \
             .replace('_station', '') \
             .replace('_vehicle', '') \
             .replace('_site', '') \
             .replace('_by_', 'x')
-        
+
         if not clean_desc.endswith('.png'):
             clean_desc += '.png'
         filename = clean_desc
-    
+
     return filename
 
 def extract_symbols(sprite_path, output_dir, symbols, table_type):
@@ -292,33 +292,33 @@ def extract_symbols(sprite_path, output_dir, symbols, table_type):
     if not os.path.exists(sprite_path):
         print(f"Error: Sprite sheet not found: {sprite_path}")
         return False
-    
+
     try:
         img = Image.open(sprite_path)
     except Exception as e:
         print(f"Error opening sprite sheet: {e}")
         return False
-    
+
     width, height = img.size
     symbol_size = 48
     cols = 16
     rows = height // symbol_size
-    
+
     print(f"Extracting from {sprite_path} ({width}x{height})")
     print(f"Symbol size: {symbol_size}x{symbol_size}, Grid: {cols}x{rows}")
-    
+
     os.makedirs(output_dir, exist_ok=True)
-    
+
     # Filter symbols for the current table
     # Use YAML order (not ASCII order) because the sprite sheet matches YAML order
     # The YAML descriptions indicate what image is actually at each position
     all_table_symbols = [s for s in symbols if s['code'].startswith(table_type)]
-    
+
     # Map symbol codes to their sprite sheet indices
     code_to_index = {}
     for idx, sym in enumerate(all_table_symbols):
         code_to_index[sym['code']] = idx
-    
+
     # Swaps: when C code expects filename X for symbol Y, but sprite sheet has wrong image at Y,
     # we extract from a different position that has the correct image
     sprite_position_swaps = {
@@ -335,46 +335,46 @@ def extract_symbols(sprite_path, output_dir, symbols, table_type):
         # C expects /u -> bus.png, but sprite at /u has truck, so extract from /U (has bus)
         '/u': '/U',
     }
-    
+
     extracted = 0
     skipped = 0
-    
+
     # Extract symbols in YAML order
     for idx, symbol in enumerate(all_table_symbols):
         if idx >= cols * rows:
             break
-        
+
         # Skip unused symbols
         if symbol.get('unused', 0):
             skipped += 1
             continue
-        
+
         code = symbol['code']
-        
+
         # Get the sprite position to extract from (might be swapped)
         extract_from_code = sprite_position_swaps.get(code, code)
         extract_from_idx = code_to_index.get(extract_from_code, idx)
-        
+
         row = extract_from_idx // cols
         col = extract_from_idx % cols
-        
+
         x = col * symbol_size
         y = row * symbol_size
-        
+
         # Extract symbol from the (possibly swapped) position
         symbol_img = img.crop((x, y, x + symbol_size, y + symbol_size))
-        
+
         # Get the filename the C code expects for this symbol code
         filename = get_expected_filename(code)
         output_path = os.path.join(output_dir, filename)
-        
+
         symbol_img.save(output_path, 'PNG')
         if extract_from_code != code:
             print(f"Saved: {filename} (extracted from {extract_from_code} position for {code})")
         else:
             print(f"Saved: {filename}")
         extracted += 1
-    
+
     print(f"Extracted {extracted} symbols to {output_dir}")
     if skipped > 0:
         print(f"Skipped {skipped} unused symbols")
@@ -384,10 +384,10 @@ def main():
     # Determine script and repo directories
     script_dir = os.path.dirname(os.path.abspath(__file__))
     repo_dir = os.path.join(script_dir, 'aprs-symbols', 'png')
-    
+
     # Path to YAML symbol definitions
     yaml_path = os.path.join(script_dir, 'aprs_symbols.yaml')
-    
+
     # Load symbol definitions
     try:
         symbols = load_symbol_definitions(yaml_path)
@@ -395,30 +395,30 @@ def main():
     except Exception as e:
         print(f"Error loading symbol definitions: {e}")
         sys.exit(1)
-    
+
     # Sprite sheet paths
     primary_sprite = os.path.join(repo_dir, 'aprs-symbols-48-0.png')
     primary_output = os.path.join(script_dir, '48x48', 'primary')
-    
+
     alternate_sprite = os.path.join(repo_dir, 'aprs-symbols-48-1.png')
     alternate_output = os.path.join(script_dir, '48x48', 'alternate')
-    
+
     success = True
-    
+
     # Extract primary table symbols
     if os.path.exists(primary_sprite):
         success = extract_symbols(primary_sprite, primary_output, symbols, '/') and success
     else:
         print(f"Warning: Primary sprite not found: {primary_sprite}")
         success = False
-    
+
     # Extract alternate table symbols
     if os.path.exists(alternate_sprite):
         success = extract_symbols(alternate_sprite, alternate_output, symbols, '\\') and success
     else:
         print(f"Warning: Alternate sprite not found: {alternate_sprite}")
         success = False
-    
+
     if success:
         print("\nSymbol extraction complete!")
         print(f"Primary symbols: {primary_output}")

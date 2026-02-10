@@ -17,7 +17,7 @@
  * Boston, MA  02110-1301, USA.
  *
  * APRS Symbol Lookup - Integration with hessu/aprs-symbols
- * 
+ *
  * Maps APRS symbol_table and symbol_code to icon filenames from
  * the hessu/aprs-symbols repository (https://github.com/hessu/aprs-symbols)
  */
@@ -231,7 +231,7 @@ static GHashTable *symbol_lookup = NULL;
 static const struct symbol_entry *find_symbol_entry(char table, char code) {
     const struct symbol_entry *entries = NULL;
     size_t count = 0;
-    
+
     if (table == '/') {
         entries = primary_symbols;
         count = sizeof(primary_symbols) / sizeof(primary_symbols[0]);
@@ -241,13 +241,13 @@ static const struct symbol_entry *find_symbol_entry(char table, char code) {
     } else {
         return NULL;
     }
-    
+
     for (size_t i = 0; i < count; i++) {
         if (entries[i].table == table && entries[i].code == code) {
             return &entries[i];
         }
     }
-    
+
     return NULL;
 }
 
@@ -256,13 +256,13 @@ char *aprs_symbol_get_icon(char symbol_table, char symbol_code) {
         dbg(lvl_warning, "APRS symbols not initialized");
         return NULL;
     }
-    
+
     const struct symbol_entry *entry = find_symbol_entry(symbol_table, symbol_code);
     if (!entry) {
         dbg(lvl_debug, "Symbol not found: table='%c' code='%c'", symbol_table, symbol_code);
         return NULL;
     }
-    
+
     /* Return relative path - Navit's graphics_icon_path() will resolve it */
     char *icon_path = g_build_filename(icon_base_path, entry->filename, NULL);
     return icon_path;
@@ -273,13 +273,13 @@ char *aprs_symbol_get_description(char symbol_table, char symbol_code) {
     if (!entry) {
         return NULL;
     }
-    
+
     return g_strdup(entry->description);
 }
 
 int aprs_symbol_init(const char *symbol_index_path, const char *icon_base) {
     (void)symbol_index_path; /* TODO: Parse CSV if provided */
-    
+
     if (icon_base) {
         icon_base_path = g_strdup(icon_base);
     } else {
@@ -288,7 +288,7 @@ int aprs_symbol_init(const char *symbol_index_path, const char *icon_base) {
          * We'll use a relative path that works with graphics_icon_path() */
         icon_base_path = g_strdup("aprs-symbols/48x48/primary");
     }
-    
+
     dbg(lvl_info, "APRS symbols initialized: base path=%s", icon_base_path);
     return 1;
 }
@@ -298,7 +298,7 @@ void aprs_symbol_cleanup(void) {
         g_free(icon_base_path);
         icon_base_path = NULL;
     }
-    
+
     if (symbol_lookup) {
         g_hash_table_destroy(symbol_lookup);
         symbol_lookup = NULL;

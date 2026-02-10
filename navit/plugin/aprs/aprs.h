@@ -28,4 +28,3 @@ int aprs_process_packet(struct map_priv *priv, const unsigned char *data, int le
 void aprs_update_items(struct map_priv *priv);
 
 #endif
-

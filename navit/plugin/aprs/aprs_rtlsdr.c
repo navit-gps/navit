@@ -17,18 +17,18 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include "config.h"
-#include <string.h>
-#include <stdlib.h>
-#include <glib.h>
-#include "debug.h"
 #include "aprs_rtlsdr.h"
+#include "config.h"
+#include "debug.h"
+#include <glib.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef HAVE_RTLSDR
-#include <rtl-sdr.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <errno.h>
+#    include <errno.h>
+#    include <pthread.h>
+#    include <rtl-sdr.h>
+#    include <unistd.h>
 
 struct aprs_rtlsdr {
     rtlsdr_dev_t *dev;
@@ -86,8 +86,7 @@ static enum aprs_rtlsdr_device_type aprs_rtlsdr_detect_type(rtlsdr_dev_t *dev) {
 
     dbg(lvl_debug, "RTL-SDR device: %s %s %s", manufact, product, serial);
 
-    if (strstr(manufact, "Nooelec") || strstr(product, "Nooelec") ||
-        strstr(manufact, "NESDR")) {
+    if (strstr(manufact, "Nooelec") || strstr(product, "Nooelec") || strstr(manufact, "NESDR")) {
         return APRS_RTLSDR_NOOELEC;
     }
 
@@ -95,8 +94,7 @@ static enum aprs_rtlsdr_device_type aprs_rtlsdr_detect_type(rtlsdr_dev_t *dev) {
         return APRS_RTLSDR_V4_R828D;
     }
 
-    if (strstr(product, "R820T2") || strstr(serial, "R820T2") ||
-        strstr(product, "Blog")) {
+    if (strstr(product, "R820T2") || strstr(serial, "R820T2") || strstr(product, "Blog")) {
         return APRS_RTLSDR_BLOG_V3;
     }
 
@@ -114,8 +112,7 @@ static int aprs_rtlsdr_validate_device_index(int device_index) {
     dbg(lvl_info, "Found %d RTL-SDR device(s)", device_count);
 
     if (device_index >= device_count) {
-        dbg(lvl_error, "Device index %d out of range (0-%d)",
-            device_index, device_count - 1);
+        dbg(lvl_error, "Device index %d out of range (0-%d)", device_index, device_count - 1);
         return 0;
     }
 
@@ -127,8 +124,7 @@ static rtlsdr_dev_t *aprs_rtlsdr_open_device(int device_index) {
     rtlsdr_dev_t *dev = NULL;
     int result = rtlsdr_open(&dev, device_index);
     if (result < 0) {
-        dbg(lvl_error, "Failed to open RTL-SDR device %d: %d",
-            device_index, result);
+        dbg(lvl_error, "Failed to open RTL-SDR device %d: %d", device_index, result);
         return NULL;
     }
     return dev;
@@ -225,9 +221,8 @@ struct aprs_rtlsdr *aprs_rtlsdr_new(const struct aprs_rtlsdr_config *config) {
         return NULL;
     }
 
-    dbg(lvl_info, "RTL-SDR initialized: %.3f MHz, %d Hz, gain=%d, ppm=%d",
-        rtl->config.frequency_mhz, rtl->config.sample_rate,
-        rtl->config.gain, rtl->config.ppm_correction);
+    dbg(lvl_info, "RTL-SDR initialized: %.3f MHz, %d Hz, gain=%d, ppm=%d", rtl->config.frequency_mhz,
+        rtl->config.sample_rate, rtl->config.gain, rtl->config.ppm_correction);
 
     return rtl;
 }
@@ -249,8 +244,10 @@ void aprs_rtlsdr_destroy(struct aprs_rtlsdr *rtl) {
 int aprs_rtlsdr_start(struct aprs_rtlsdr *rtl) {
     int result;
 
-    if (!rtl) return 0;
-    if (rtl->running) return 1;
+    if (!rtl)
+        return 0;
+    if (rtl->running)
+        return 1;
 
     result = rtlsdr_reset_buffer(rtl->dev);
     if (result < 0) {
@@ -271,7 +268,8 @@ int aprs_rtlsdr_start(struct aprs_rtlsdr *rtl) {
 }
 
 int aprs_rtlsdr_stop(struct aprs_rtlsdr *rtl) {
-    if (!rtl || !rtl->running) return 1;
+    if (!rtl || !rtl->running)
+        return 1;
 
     rtl->stop_requested = 1;
     rtlsdr_cancel_async(rtl->dev);
@@ -288,20 +286,20 @@ int aprs_rtlsdr_is_running(struct aprs_rtlsdr *rtl) {
 }
 
 int aprs_rtlsdr_detect_devices(int *count) {
-    if (!count) return 0;
+    if (!count)
+        return 0;
 
-#ifdef HAVE_RTLSDR
+#    ifdef HAVE_RTLSDR
     *count = rtlsdr_get_device_count();
     return 1;
 #else
     *count = 0;
     return 0;
-#endif
+#    endif
 }
 
-int aprs_rtlsdr_get_device_info(int index, char *name, size_t name_len,
-                                 enum aprs_rtlsdr_device_type *type) {
-#ifdef HAVE_RTLSDR
+int aprs_rtlsdr_get_device_info(int index, char *name, size_t name_len, enum aprs_rtlsdr_device_type *type) {
+#    ifdef HAVE_RTLSDR
     rtlsdr_dev_t *dev;
     char manufact[256], product[256], serial[256];
     int result;
@@ -326,20 +324,22 @@ int aprs_rtlsdr_get_device_info(int index, char *name, size_t name_len,
 
     rtlsdr_close(dev);
     return 1;
-#else
+#    else
     return 0;
-#endif
+#    endif
 }
 
 int aprs_rtlsdr_set_callback(struct aprs_rtlsdr *rtl, aprs_rtlsdr_callback cb, void *user_data) {
-    if (!rtl) return 0;
+    if (!rtl)
+        return 0;
     rtl->callback = cb;
     rtl->callback_user_data = user_data;
     return 1;
 }
 
 int aprs_rtlsdr_set_frequency(struct aprs_rtlsdr *rtl, double frequency_mhz) {
-    if (!rtl || !rtl->dev) return 0;
+    if (!rtl || !rtl->dev)
+        return 0;
 
     int result = rtlsdr_set_center_freq(rtl->dev, (uint32_t)(frequency_mhz * 1000000));
     if (result >= 0) {
@@ -349,7 +349,8 @@ int aprs_rtlsdr_set_frequency(struct aprs_rtlsdr *rtl, double frequency_mhz) {
 }
 
 int aprs_rtlsdr_set_gain(struct aprs_rtlsdr *rtl, int gain) {
-    if (!rtl || !rtl->dev) return 0;
+    if (!rtl || !rtl->dev)
+        return 0;
 
     int result;
     if (gain >= 0) {
@@ -368,7 +369,8 @@ int aprs_rtlsdr_set_gain(struct aprs_rtlsdr *rtl, int gain) {
 }
 
 int aprs_rtlsdr_set_ppm(struct aprs_rtlsdr *rtl, int ppm) {
-    if (!rtl || !rtl->dev) return 0;
+    if (!rtl || !rtl->dev)
+        return 0;
 
     int result = rtlsdr_set_freq_correction(rtl->dev, ppm);
     if (result >= 0) {
@@ -391,16 +393,35 @@ struct aprs_rtlsdr *aprs_rtlsdr_new(const struct aprs_rtlsdr_config *config) {
 void aprs_rtlsdr_destroy(struct aprs_rtlsdr *rtl) {
 }
 
-int aprs_rtlsdr_start(struct aprs_rtlsdr *rtl) { return 0; }
-int aprs_rtlsdr_stop(struct aprs_rtlsdr *rtl) { return 0; }
-int aprs_rtlsdr_is_running(struct aprs_rtlsdr *rtl) { return 0; }
-int aprs_rtlsdr_detect_devices(int *count) { if (count) *count = 0; return 0; }
-int aprs_rtlsdr_get_device_info(int index, char *name, size_t name_len,
-                                enum aprs_rtlsdr_device_type *type) { return 0; }
-int aprs_rtlsdr_set_callback(struct aprs_rtlsdr *rtl, aprs_rtlsdr_callback cb, void *user_data) { return 0; }
-int aprs_rtlsdr_set_frequency(struct aprs_rtlsdr *rtl, double frequency_mhz) { return 0; }
-int aprs_rtlsdr_set_gain(struct aprs_rtlsdr *rtl, int gain) { return 0; }
-int aprs_rtlsdr_set_ppm(struct aprs_rtlsdr *rtl, int ppm) { return 0; }
+int aprs_rtlsdr_start(struct aprs_rtlsdr *rtl) {
+    return 0;
+}
+int aprs_rtlsdr_stop(struct aprs_rtlsdr *rtl) {
+    return 0;
+}
+int aprs_rtlsdr_is_running(struct aprs_rtlsdr *rtl) {
+    return 0;
+}
+int aprs_rtlsdr_detect_devices(int *count) {
+    if (count)
+        *count = 0;
+    return 0;
+}
+int aprs_rtlsdr_get_device_info(int index, char *name, size_t name_len, enum aprs_rtlsdr_device_type *type) {
+    return 0;
+}
+int aprs_rtlsdr_set_callback(struct aprs_rtlsdr *rtl, aprs_rtlsdr_callback cb, void *user_data) {
+    return 0;
+}
+int aprs_rtlsdr_set_frequency(struct aprs_rtlsdr *rtl, double frequency_mhz) {
+    return 0;
+}
+int aprs_rtlsdr_set_gain(struct aprs_rtlsdr *rtl, int gain) {
+    return 0;
+}
+int aprs_rtlsdr_set_ppm(struct aprs_rtlsdr *rtl, int ppm) {
+    return 0;
+}
 
 #endif /* HAVE_RTLSDR */
 

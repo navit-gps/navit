@@ -20,16 +20,16 @@
 #ifndef NAVIT_APRS_NMEA_H
 #define NAVIT_APRS_NMEA_H
 
+#include "aprs_db.h"
 #include "config.h"
 #include "coord.h"
-#include "aprs_db.h"
 
 struct aprs_nmea_config {
-    char *device;           /* Serial port device path */
-    int baud_rate;          /* Baud rate (4800, 9600, 19200, 38400, etc.) */
-    char parity;            /* 'N' = none, 'E' = even, 'O' = odd */
-    int data_bits;          /* Usually 8 */
-    int stop_bits;          /* Usually 1 */
+    char *device;  /* Serial port device path */
+    int baud_rate; /* Baud rate (4800, 9600, 19200, 38400, etc.) */
+    char parity;   /* 'N' = none, 'E' = even, 'O' = odd */
+    int data_bits; /* Usually 8 */
+    int stop_bits; /* Usually 1 */
 };
 
 struct aprs_nmea;
@@ -41,12 +41,10 @@ int aprs_nmea_start(struct aprs_nmea *nmea);
 int aprs_nmea_stop(struct aprs_nmea *nmea);
 int aprs_nmea_is_running(const struct aprs_nmea *nmea);
 
-void aprs_nmea_set_callback(struct aprs_nmea *nmea, 
-                            void (*callback)(void *data, struct aprs_station *station),
+void aprs_nmea_set_callback(struct aprs_nmea *nmea, void (*callback)(void *data, struct aprs_station *station),
                             void *data);
 
 /* Parse NMEA sentence and create station */
 int aprs_nmea_parse_sentence(const char *sentence, struct aprs_station *station);
 
 #endif /* NAVIT_APRS_NMEA_H */
-

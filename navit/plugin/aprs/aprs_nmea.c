@@ -17,20 +17,20 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include "aprs_nmea.h"
+#include "aprs_db.h"
 #include "config.h"
+#include "debug.h"
+#include <errno.h>
+#include <fcntl.h>
+#include <glib.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <fcntl.h>
 #include <termios.h>
-#include <errno.h>
-#include <glib.h>
-#include <math.h>
 #include <time.h>
-#include "debug.h"
-#include "aprs_nmea.h"
-#include "aprs_db.h"
+#include <unistd.h>
 
 #include <pthread.h>
 
@@ -48,7 +48,8 @@ struct aprs_nmea {
 static unsigned char nmea_checksum(const char *sentence) {
     unsigned char checksum = 0;
     const char *p = sentence;
-    if (*p == '$') p++;
+    if (*p == '$')
+        p++;
     while (*p && *p != '*') {
         checksum ^= (unsigned char)*p++;
     }
@@ -94,9 +95,8 @@ static void parse_optional_char_field(char **fields, int field_idx, int field_co
 }
 
 /* Parse position with direction */
-static void parse_position_with_dir(char **fields, int lat_idx, int lat_dir_idx, 
-                                    int lng_idx, int lng_dir_idx, int field_count,
-                                    struct aprs_station *station) {
+static void parse_position_with_dir(char **fields, int lat_idx, int lat_dir_idx, int lng_idx, int lng_dir_idx,
+                                    int field_count, struct aprs_station *station) {
     station->position.lat = parse_dm_to_decimal(fields[lat_idx]);
     if (field_count > lat_dir_idx && fields[lat_dir_idx][0] == 'S') {
         station->position.lat = -station->position.lat;
@@ -114,8 +114,7 @@ static int validate_nmea_checksum(char *sentence, int len) {
     }
     unsigned char calc_checksum = nmea_checksum(sentence);
     unsigned char recv_checksum;
-    if (sscanf(sentence + len - 2, "%2hhx", &recv_checksum) != 1 ||
-        calc_checksum != recv_checksum) {
+    if (sscanf(sentence + len - 2, "%2hhx", &recv_checksum) != 1 || calc_checksum != recv_checksum) {
         dbg(lvl_debug, "NMEA checksum mismatch");
         return 0;
     }
@@ -209,23 +208,23 @@ int aprs_nmea_parse_sentence(const char *sentence, struct aprs_station *station)
     char *fields[32];
     int len = strlen(sentence_copy);
     int result = 0;
-    
+
     if (len < 4 || sentence_copy[0] != '$') {
         g_free(sentence_copy);
         return 0;
     }
-    
+
     if (!validate_nmea_checksum(sentence_copy, len)) {
         g_free(sentence_copy);
         return 0;
     }
-    
+
     int field_count = parse_nmea_fields(sentence_copy, fields, 32);
     if (field_count < 3) {
         g_free(sentence_copy);
         return 0;
     }
-    
+
     const char *sentence_type = fields[0];
     if (strncmp(sentence_type, "GPWPL", 5) == 0) {
         result = parse_gpwpl(fields, field_count, station);
@@ -236,7 +235,7 @@ int aprs_nmea_parse_sentence(const char *sentence, struct aprs_station *station)
     } else if (strncmp(sentence_type, "PKWDWPL", 7) == 0) {
         result = parse_pkwdwpl(fields, field_count, station);
     }
-    
+
     g_free(sentence_copy);
     return result;
 }
@@ -249,7 +248,7 @@ static void process_nmea_line(const char *line, int line_len, struct aprs_nmea *
     char line_copy[512];
     memcpy(line_copy, line, line_len);
     line_copy[line_len] = '\0';
-    
+
     struct aprs_station *station = aprs_station_new();
     if (aprs_nmea_parse_sentence(line_copy, station)) {
         if (nmea->callback) {
@@ -265,7 +264,7 @@ static void process_buffer_lines(struct aprs_nmea *nmea) {
     char *p = nmea->buffer;
     char *line_start = nmea->buffer;
     int buffer_end = nmea->buffer_pos;
-    
+
     while (*p && (p - nmea->buffer) < buffer_end) {
         if (*p == '\n' || *p == '\r') {
             int line_len = p - line_start;
@@ -279,7 +278,7 @@ static void process_buffer_lines(struct aprs_nmea *nmea) {
             p++;
         }
     }
-    
+
     int remaining = p - line_start;
     if (remaining > 0 && remaining < (int)sizeof(nmea->buffer)) {
         memmove(nmea->buffer, line_start, remaining);
@@ -297,7 +296,7 @@ static int read_nmea_data(struct aprs_nmea *nmea) {
         nmea->buffer_pos = 0;
         max_read = sizeof(nmea->buffer) - 1;
     }
-    
+
     int n = read(nmea->fd, nmea->buffer + nmea->buffer_pos, max_read);
     if (n <= 0) {
         if (errno != EAGAIN && errno != EWOULDBLOCK) {
@@ -306,7 +305,7 @@ static int read_nmea_data(struct aprs_nmea *nmea) {
         }
         return 1;
     }
-    
+
     nmea->buffer_pos += n;
     if (nmea->buffer_pos >= (int)sizeof(nmea->buffer)) {
         nmea->buffer_pos = sizeof(nmea->buffer) - 1;
@@ -317,7 +316,7 @@ static int read_nmea_data(struct aprs_nmea *nmea) {
 
 static void *aprs_nmea_thread(void *data) {
     struct aprs_nmea *nmea = (struct aprs_nmea *)data;
-    
+
     while (nmea->running) {
         if (!read_nmea_data(nmea)) {
             break;
@@ -325,7 +324,7 @@ static void *aprs_nmea_thread(void *data) {
         process_buffer_lines(nmea);
         usleep(100000);
     }
-    
+
     return NULL;
 }
 
@@ -342,7 +341,8 @@ struct aprs_nmea *aprs_nmea_new(const struct aprs_nmea_config *config) {
 }
 
 void aprs_nmea_destroy(struct aprs_nmea *nmea) {
-    if (!nmea) return;
+    if (!nmea)
+        return;
     aprs_nmea_stop(nmea);
     if (nmea->fd >= 0) {
         close(nmea->fd);
@@ -354,13 +354,20 @@ void aprs_nmea_destroy(struct aprs_nmea *nmea) {
 /* Get baud rate speed_t from config */
 static speed_t get_baud_speed(int baud_rate) {
     switch (baud_rate) {
-    case 4800: return B4800;
-    case 9600: return B9600;
-    case 19200: return B19200;
-    case 38400: return B38400;
-    case 57600: return B57600;
-    case 115200: return B115200;
-    default: return B4800;
+    case 4800:
+        return B4800;
+    case 9600:
+        return B9600;
+    case 19200:
+        return B19200;
+    case 38400:
+        return B38400;
+    case 57600:
+        return B57600;
+    case 115200:
+        return B115200;
+    default:
+        return B4800;
     }
 }
 
@@ -380,7 +387,7 @@ static void configure_data_stop_bits(struct termios *tty, int data_bits, int sto
     if (stop_bits == 2) {
         tty->c_cflag |= CSTOPB;
     }
-    
+
     tty->c_cflag &= ~CSIZE;
     if (data_bits == 7) {
         tty->c_cflag |= CS7;
@@ -396,14 +403,14 @@ static int configure_termios(int fd, const struct aprs_nmea_config *config) {
         dbg(lvl_error, "Failed to get terminal attributes: %s", strerror(errno));
         return 0;
     }
-    
+
     speed_t speed = get_baud_speed(config->baud_rate);
     cfsetospeed(&tty, speed);
     cfsetispeed(&tty, speed);
-    
+
     configure_parity(&tty, config->parity);
     configure_data_stop_bits(&tty, config->data_bits, config->stop_bits);
-    
+
     tty.c_cflag |= (CLOCAL | CREAD);
     tty.c_cflag &= ~CRTSCTS;
     tty.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
@@ -411,12 +418,12 @@ static int configure_termios(int fd, const struct aprs_nmea_config *config) {
     tty.c_oflag &= ~OPOST;
     tty.c_cc[VMIN] = 0;
     tty.c_cc[VTIME] = 10;
-    
+
     if (tcsetattr(fd, TCSANOW, &tty) != 0) {
         dbg(lvl_error, "Failed to set terminal attributes: %s", strerror(errno));
         return 0;
     }
-    
+
     return 1;
 }
 
@@ -424,24 +431,23 @@ int aprs_nmea_start(struct aprs_nmea *nmea) {
     if (!nmea || nmea->running) {
         return 0;
     }
-    
+
     nmea->fd = open(nmea->config.device, O_RDWR | O_NOCTTY | O_NONBLOCK);
     if (nmea->fd < 0) {
-        dbg(lvl_error, "Failed to open NMEA device %s: %s", 
-            nmea->config.device, strerror(errno));
+        dbg(lvl_error, "Failed to open NMEA device %s: %s", nmea->config.device, strerror(errno));
         return 0;
     }
-    
+
     if (!configure_termios(nmea->fd, &nmea->config)) {
         close(nmea->fd);
         nmea->fd = -1;
         return 0;
     }
-    
+
     nmea->running = 1;
     nmea->buffer_pos = 0;
     memset(&nmea->thread, 0, sizeof(nmea->thread));
-    
+
     if (pthread_create(&nmea->thread, NULL, aprs_nmea_thread, nmea) != 0) {
         dbg(lvl_error, "Failed to create NMEA thread");
         nmea->running = 0;
@@ -449,24 +455,25 @@ int aprs_nmea_start(struct aprs_nmea *nmea) {
         nmea->fd = -1;
         return 0;
     }
-    
-    dbg(lvl_info, "NMEA input started on %s at %d baud", 
+
+    dbg(lvl_info, "NMEA input started on %s at %d baud",
         nmea->config.device, nmea->config.baud_rate);
     return 1;
 }
 
 int aprs_nmea_stop(struct aprs_nmea *nmea) {
-    if (!nmea || !nmea->running) return 0;
-    
+    if (!nmea || !nmea->running)
+        return 0;
+
     nmea->running = 0;
-    
+
     pthread_join(nmea->thread, NULL);
-    
+
     if (nmea->fd >= 0) {
         close(nmea->fd);
         nmea->fd = -1;
     }
-    
+
     dbg(lvl_info, "NMEA input stopped");
     return 1;
 }
@@ -475,8 +482,7 @@ int aprs_nmea_is_running(const struct aprs_nmea *nmea) {
     return nmea && nmea->running;
 }
 
-void aprs_nmea_set_callback(struct aprs_nmea *nmea, 
-                            void (*callback)(void *data, struct aprs_station *station),
+void aprs_nmea_set_callback(struct aprs_nmea *nmea, void (*callback)(void *data, struct aprs_station *station),
                             void *data) {
     if (nmea) {
         nmea->callback = callback;

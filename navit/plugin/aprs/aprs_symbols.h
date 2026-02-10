@@ -59,4 +59,3 @@ int aprs_symbol_init(const char *symbol_index_path, const char *icon_base_path);
 void aprs_symbol_cleanup(void);
 
 #endif
-

@@ -20,7 +20,7 @@ git clone --depth 1 https://github.com/hessu/aprs-symbols.git
 # Extract individual symbols from sprite sheets
 if [ -f "aprs-symbols/png/aprs-symbols-48-0.png" ] && [ -f "aprs-symbols/png/aprs-symbols-48-1.png" ]; then
     echo "Extracting symbols from sprite sheets..."
-    
+
     # Check if Python3, PIL, and PyYAML are available
     if ! python3 -c "from PIL import Image" 2>/dev/null; then
         echo "Error: Python3 with PIL (Pillow) is required"
@@ -32,10 +32,10 @@ if [ -f "aprs-symbols/png/aprs-symbols-48-0.png" ] && [ -f "aprs-symbols/png/apr
         echo "Install with: pip3 install PyYAML"
         exit 1
     fi
-    
+
     # Run extraction script
     python3 extract_symbols.py
-    
+
     if [ -d "48x48/primary" ] && [ -d "48x48/alternate" ]; then
         PRIMARY_COUNT=$(find 48x48/primary -name "*.png" 2>/dev/null | wc -l)
         ALTERNATE_COUNT=$(find 48x48/alternate -name "*.png" 2>/dev/null | wc -l)

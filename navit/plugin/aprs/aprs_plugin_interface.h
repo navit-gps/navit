@@ -66,4 +66,3 @@ int aprs_unregister_packet_source(aprs_packet_callback_t callback);
 #endif
 
 #endif /* NAVIT_APRS_PLUGIN_INTERFACE_H */
-

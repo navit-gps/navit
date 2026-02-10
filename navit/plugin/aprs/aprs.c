@@ -17,32 +17,32 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include "config.h"
-#include <string.h>
-#include <stdlib.h>
-#include <time.h>
-#include <math.h>
-#include <glib.h>
-#include "debug.h"
-#include "coord.h"
-#include "item.h"
-#include "map.h"
-#include "plugin.h"
-#include "callback.h"
-#include "event.h"
-#include "attr.h"
-#include "projection.h"
-#include "transform.h"
 #include "aprs_db.h"
 #include "aprs_decode.h"
 #include "aprs_nmea.h"
 #include "aprs_plugin_interface.h"
 #include "aprs_symbols.h"
-#include "popup.h"
-#include "vehicle.h"
+#include "attr.h"
+#include "callback.h"
+#include "config.h"
+#include "coord.h"
+#include "debug.h"
+#include "event.h"
+#include "item.h"
+#include "map.h"
 #include "mapset.h"
-#include "navit.h"
 #include "menu.h"
+#include "navit.h"
+#include "plugin.h"
+#include "popup.h"
+#include "projection.h"
+#include "transform.h"
+#include "vehicle.h"
+#include <glib.h>
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 extern int aprs_cmd_freq_144_39(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 extern int aprs_cmd_freq_144_8(struct navit *nav, char *function, struct attr **in, struct attr ***out);
@@ -215,7 +215,7 @@ struct map_rect_priv {
 enum aprs_input_type {
     APRS_INPUT_NONE = 0,
     APRS_INPUT_NMEA,
-    APRS_INPUT_SDR_PLUGIN  /* External SDR plugin */
+    APRS_INPUT_SDR_PLUGIN /* External SDR plugin */
 };
 
 struct map_priv {
@@ -249,7 +249,8 @@ static GList *aprs_map_instances = NULL;
 /* NMEA callback function */
 static void aprs_nmea_callback(void *data, struct aprs_station *station) {
     struct map_priv *priv = (struct map_priv *)data;
-    if (!priv || !station) return;
+    if (!priv || !station)
+        return;
 
     aprs_db_update_station(priv->db, station);
     aprs_update_items(priv);
@@ -308,7 +309,8 @@ static void aprs_item_attr_rewind(void *priv_data) {
 static int aprs_item_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr) {
     struct aprs_item_priv *ip = (struct aprs_item_priv *)priv_data;
 
-    if (!ip->attrs) return 0;
+    if (!ip->attrs)
+        return 0;
 
     while (ip->attrs[ip->next_attr]) {
         if (ip->attrs[ip->next_attr]->type == attr_type) {
@@ -456,11 +458,11 @@ static void aprs_update_items(struct map_priv *priv) {
 
 static void aprs_expire_callback(void *data) {
     struct map_priv *priv = (struct map_priv *)data;
-    if (!priv || !priv->db) return;
+    if (!priv || !priv->db)
+        return;
     int deleted = aprs_db_delete_expired(priv->db, priv->expire_seconds);
     if (deleted > 0) {
-        dbg(lvl_info, "Expired %d APRS stations (timeout: %ld minutes)",
-            deleted, (long)(priv->expire_seconds / 60));
+        dbg(lvl_info, "Expired %d APRS stations (timeout: %ld minutes)", deleted, (long)(priv->expire_seconds / 60));
         aprs_update_items(priv);
     }
 }
@@ -469,14 +471,14 @@ static void aprs_position_update_callback(void *data) {
     struct map_priv *priv = (struct map_priv *)data;
     struct attr vehicle_attr, position_attr;
 
-    if (!priv || !priv->navit) return;
+    if (!priv || !priv->navit)
+        return;
 
     if (navit_get_attr(priv->navit, attr_vehicle, &vehicle_attr, NULL) && vehicle_attr.u.vehicle) {
         if (vehicle_get_attr(vehicle_attr.u.vehicle, attr_position_coord_geo, &position_attr, NULL)) {
             priv->center = *position_attr.u.coord_geo;
             priv->has_center = 1;
-            dbg(lvl_debug, "APRS center updated to device location: %.6f, %.6f",
-                priv->center.lat, priv->center.lng);
+            dbg(lvl_debug, "APRS center updated to device location: %.6f, %.6f", priv->center.lat, priv->center.lng);
             aprs_update_items(priv);
         }
     }
@@ -490,7 +492,8 @@ static void aprs_update_callback(void *data) {
 
 static void aprs_map_destroy(struct map_priv *priv) {
     aprs_symbol_cleanup();
-    if (!priv) return;
+    if (!priv)
+        return;
 
     GList *l;
     for (l = priv->items; l; l = g_list_next(l)) {
@@ -510,7 +513,6 @@ static void aprs_map_destroy(struct map_priv *priv) {
         navit_remove_callback(priv->navit, priv->position_callback);
         callback_destroy(priv->position_callback);
     }
-
 
     if (priv->nmea) {
         aprs_nmea_stop(priv->nmea);
@@ -563,7 +565,8 @@ static struct item *aprs_map_get_item_byid(struct map_rect_priv *mr, int id_hi, 
 }
 
 static int aprs_map_get_attr(struct map_priv *priv, enum attr_type type, struct attr *attr) {
-    if (!priv) return 0;
+    if (!priv)
+        return 0;
 
     switch (type) {
     case attr_active:
@@ -786,7 +789,8 @@ static struct map_methods aprs_map_meth = {
 };
 
 static int aprs_process_packet(struct map_priv *priv, const unsigned char *data, int length) {
-    if (!priv || !data || length <= 0) return 0;
+    if (!priv || !data || length <= 0)
+        return 0;
     struct aprs_packet packet;
     struct aprs_position pos;
 
@@ -933,8 +937,8 @@ struct packet_source_entry {
  * register a callback for delivering decoded AX.25 frames.
  */
 /* Export function for other plugins - use visibility attribute */
-__attribute__((visibility("default")))
-int aprs_register_packet_source(aprs_packet_callback_t callback, void *user_data) {
+__attribute__((visibility("default"))) int aprs_register_packet_source(aprs_packet_callback_t callback,
+                                                                       void *user_data) {
     struct map_priv *map_priv = NULL;
 
     if (!callback) {
@@ -970,11 +974,11 @@ int aprs_register_packet_source(aprs_packet_callback_t callback, void *user_data
     return 1;
 }
 
-__attribute__((visibility("default")))
-int aprs_unregister_packet_source(aprs_packet_callback_t callback) {
+__attribute__((visibility("default"))) int aprs_unregister_packet_source(aprs_packet_callback_t callback) {
     GList *l, *map_list;
 
-    if (!callback) return 0;
+    if (!callback)
+        return 0;
 
     /* Search all map instances */
     for (map_list = aprs_map_instances; map_list; map_list = g_list_next(map_list)) {
@@ -999,7 +1003,8 @@ int aprs_unregister_packet_source(aprs_packet_callback_t callback) {
  * Called by packet source callbacks
  */
 static void aprs_deliver_packet_to_map(struct map_priv *priv, const unsigned char *data, int length) {
-    if (!priv || !data || length <= 0) return;
+    if (!priv || !data || length <= 0)
+        return;
 
     /* Process packet through normal pipeline */
     aprs_process_packet(priv, data, length);
