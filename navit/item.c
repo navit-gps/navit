@@ -18,11 +18,13 @@
  */
 
 #include "item.h"
+#include "attr.h"
 #include "coord.h"
 #include "debug.h"
 #include "map.h"
 #include "transform.h"
 #include <glib.h>
+#include <glib/gtypes.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -83,6 +85,7 @@ struct item_name item_names[] = {
 #define ITEM2(x, y) ITEM(y)
 #define ITEM(x) {type_##x, #x},
 #include "item_def.h"
+
 #undef ITEM2
 #undef ITEM
 };

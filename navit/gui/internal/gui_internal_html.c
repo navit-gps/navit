@@ -1,8 +1,9 @@
 #include "gui_internal_html.h"
+#include "attr.h"
+#include "attr_type_def.h"
 #include "callback.h"
 #include "color.h"
 #include "command.h"
-#include "coord.h"
 #include "debug.h"
 #include "graphics.h"
 #include "gui.h"
@@ -12,11 +13,13 @@
 #include "gui_internal_priv.h"
 #include "gui_internal_widget.h"
 #include "navit_nls.h"
-#include "point.h"
 #include "xmlconfig.h"
 #include <ctype.h>
 #include <glib.h>
+#include <glib/gtypes.h>
 #include <stdlib.h>
+#include <string.h>
+#include <strings.h>
 
 struct form {
     char *onsubmit;

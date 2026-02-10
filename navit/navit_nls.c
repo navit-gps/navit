@@ -1,8 +1,8 @@
 #include "config.h"
-#include "debug.h"
 #include <glib.h>
 #include <navit_nls.h>
 #include <stdlib.h>
+#include <string.h>
 #ifdef HAVE_API_WIN32_CE
 #    include "libc.h"
 #endif

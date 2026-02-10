@@ -5,6 +5,10 @@
  * should be drawn.
  */
 
+#ifndef __NAVIT_GUI_INTERNAL_PRIV_H
+#define __NAVIT_GUI_INTERNAL_PRIV_H
+
+#include "color.h"
 #include "gui_internal_widget.h"
 #include "transform.h"
 
@@ -237,3 +241,4 @@ void gui_internal_route_screen_free(struct gui_priv *this_, struct widget *w);
 void gui_internal_populate_route_table(struct gui_priv *this, struct navit *navit);
 void plugin_init(void);
 /* end of prototypes */
+#endif

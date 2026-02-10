@@ -25,9 +25,11 @@ extern "C" {
 #endif
 
 #include "attr.h"
+#include "attr_type_def.h"
 
 struct point;
 struct vehicle_priv;
+struct attr;
 
 struct vehicle_methods {
     void (*destroy)(struct vehicle_priv *priv);
@@ -43,6 +45,7 @@ struct cursor;
 struct graphics;
 struct point;
 struct vehicle;
+
 struct vehicle *vehicle_new(struct attr *parent, struct attr **attrs);
 void vehicle_destroy(struct vehicle *this_);
 struct attr_iter *vehicle_attr_iter_new(void *unused);

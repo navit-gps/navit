@@ -18,6 +18,7 @@
  */
 
 #include "navigation.h"
+#include "attr.h"
 #include "callback.h"
 #include "coord.h"
 #include "debug.h"
@@ -25,7 +26,6 @@
 #include "item.h"
 #include "linguistics.h"
 #include "map.h"
-#include "mapset.h"
 #include "navit.h"
 #include "navit_nls.h"
 #include "plugin.h"
@@ -39,10 +39,11 @@
 #include "xmlconfig.h"
 #include <ctype.h>
 #include <glib.h>
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+struct callback_list;
 
 /* #define DEBUG */
 

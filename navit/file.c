@@ -29,12 +29,18 @@
 #include "util.h"
 #include "zipfile.h"
 #include <glib.h>
+#include <glib/gtypes.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include <wordexp.h>
+#include <zconf.h>
 #include <zlib.h>
+
 #ifdef _MSC_VER
 #    include <windows.h>
 #else

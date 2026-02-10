@@ -17,11 +17,14 @@
  * Boston, MA  02110-1301, USA.
  */
 #include "config.h"
+#include <glib.h>
+#include <stdlib.h>
+#include <string.h>
+
 #ifdef HAVE_FONTCONFIG
 #    include <fontconfig/fontconfig.h>
 #endif
 #include <ft2build.h>
-#include <glib.h>
 #include FT_FREETYPE_H
 #ifndef USE_CACHING
 #    define USE_CACHING 1
@@ -44,6 +47,8 @@
 #include "graphics.h"
 #include "plugin.h"
 #include "point.h"
+
+struct graphics_font_priv;
 
 #ifndef HAVE_LOOKUP_SCALER
 #    if FREETYPE_MAJOR * 10000 + FREETYPE_MINOR * 100 + FREETYPE_PATCH > 20304
