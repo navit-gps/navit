@@ -23,7 +23,7 @@
 #include "config.h"
 
 #ifdef HAVE_RTLSDR
-#include <rtl-sdr.h>
+#    include <rtl-sdr.h>
 #endif
 
 struct aprs_sdr_hw;

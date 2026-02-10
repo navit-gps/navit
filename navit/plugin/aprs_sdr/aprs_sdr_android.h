@@ -23,8 +23,8 @@
 #include "config.h"
 
 #ifdef ANDROID
-#include <android/log.h>
-#include <jni.h>
+#    include <android/log.h>
+#    include <jni.h>
 
 /**
  * @file aprs_sdr_android.h

@@ -263,9 +263,12 @@ static struct map_rect_priv *aprs_sdr_map_rect_new(void *priv, struct map_select
     return NULL;
 }
 
-static void aprs_sdr_map_rect_destroy(struct map_rect_priv *mr) { /* Nothing to do */ }
+static void aprs_sdr_map_rect_destroy(struct map_rect_priv *mr) { /* Nothing to do */
+}
 
-static struct item *aprs_sdr_map_get_item(struct map_rect_priv *mr) { return NULL; }
+static struct item *aprs_sdr_map_get_item(struct map_rect_priv *mr) {
+    return NULL;
+}
 
 static int aprs_sdr_map_get_attr(void *priv, enum attr_type type, struct attr *attr) {
     struct aprs_sdr_priv *sdr_priv = (struct aprs_sdr_priv *)priv;

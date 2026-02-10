@@ -113,10 +113,10 @@ static void goertzel_process_sample(struct aprs_sdr_dsp *dsp, double sample) {
 
 static int goertzel_get_bit(struct aprs_sdr_dsp *dsp) {
     /* Calculate power in each frequency bin */
-    double mark_power =
-        dsp->mark_q1 * dsp->mark_q1 + dsp->mark_q2 * dsp->mark_q2 - dsp->mark_coeff * dsp->mark_q1 * dsp->mark_q2;
-    double space_power = dsp->space_q1 * dsp->space_q1 + dsp->space_q2 * dsp->space_q2 -
-                         dsp->space_coeff * dsp->space_q1 * dsp->space_q2;
+    double mark_power = dsp->mark_q1 * dsp->mark_q1 + dsp->mark_q2 * dsp->mark_q2
+                        - dsp->mark_coeff * dsp->mark_q1 * dsp->mark_q2;
+    double space_power = dsp->space_q1 * dsp->space_q1 + dsp->space_q2 * dsp->space_q2
+                         - dsp->space_coeff * dsp->space_q1 * dsp->space_q2;
 
     /* Reset Goertzel state */
     dsp->mark_q0 = dsp->mark_q1 = dsp->mark_q2 = 0.0;

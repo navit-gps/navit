@@ -228,7 +228,8 @@ struct aprs_rtlsdr *aprs_rtlsdr_new(const struct aprs_rtlsdr_config *config) {
 }
 
 void aprs_rtlsdr_destroy(struct aprs_rtlsdr *rtl) {
-    if (!rtl) return;
+    if (!rtl)
+        return;
 
     if (rtl->running) {
         aprs_rtlsdr_stop(rtl);
@@ -292,7 +293,7 @@ int aprs_rtlsdr_detect_devices(int *count) {
 #    ifdef HAVE_RTLSDR
     *count = rtlsdr_get_device_count();
     return 1;
-#else
+#    else
     *count = 0;
     return 0;
 #    endif
@@ -424,4 +425,3 @@ int aprs_rtlsdr_set_ppm(struct aprs_rtlsdr *rtl, int ppm) {
 }
 
 #endif /* HAVE_RTLSDR */
-

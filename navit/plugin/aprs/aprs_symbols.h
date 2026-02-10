@@ -22,7 +22,7 @@
 
 /**
  * Get icon filename for APRS symbol
- * 
+ *
  * @param symbol_table APRS symbol table character (e.g., '/', '\', ']')
  * @param symbol_code APRS symbol code character (e.g., '>', '!', '&')
  * @return Icon filename (e.g., "aprs-symbols/48x48/primary/vehicle.png")
@@ -33,7 +33,7 @@ char *aprs_symbol_get_icon(char symbol_table, char symbol_code);
 
 /**
  * Get description for APRS symbol
- * 
+ *
  * @param symbol_table APRS symbol table character
  * @param symbol_code APRS symbol code character
  * @return Human-readable description (e.g., "Vehicle")
@@ -44,9 +44,9 @@ char *aprs_symbol_get_description(char symbol_table, char symbol_code);
 
 /**
  * Initialize symbol lookup system
- * 
+ *
  * Loads symbol index from CSV file or uses built-in lookup table
- * 
+ *
  * @param symbol_index_path Path to symbol-index CSV file (optional, NULL for built-in)
  * @param icon_base_path Base path to icon directory (e.g., "/usr/share/navit/aprs-symbols/48x48")
  * @return 1 on success, 0 on failure

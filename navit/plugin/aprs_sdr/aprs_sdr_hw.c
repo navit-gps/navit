@@ -25,10 +25,10 @@
 #include <string.h>
 
 #ifdef HAVE_RTLSDR
-#include <errno.h>
-#include <pthread.h>
-#include <rtl-sdr.h>
-#include <unistd.h>
+#    include <errno.h>
+#    include <pthread.h>
+#    include <rtl-sdr.h>
+#    include <unistd.h>
 
 struct aprs_sdr_hw {
     rtlsdr_dev_t *dev;
@@ -246,7 +246,9 @@ int aprs_sdr_hw_stop(struct aprs_sdr_hw *hw) {
     return 1;
 }
 
-int aprs_sdr_hw_is_running(struct aprs_sdr_hw *hw) { return hw ? hw->running : 0; }
+int aprs_sdr_hw_is_running(struct aprs_sdr_hw *hw) {
+    return hw ? hw->running : 0;
+}
 
 int aprs_sdr_hw_detect_devices(int *count) {
     if (!count)
@@ -344,20 +346,37 @@ struct aprs_sdr_hw *aprs_sdr_hw_new(const struct aprs_sdr_hw_config *config) {
     return NULL;
 }
 
-void aprs_sdr_hw_destroy(struct aprs_sdr_hw *hw) {}
+void aprs_sdr_hw_destroy(struct aprs_sdr_hw *hw) {
+}
 
-int aprs_sdr_hw_start(struct aprs_sdr_hw *hw) { return 0; }
-int aprs_sdr_hw_stop(struct aprs_sdr_hw *hw) { return 0; }
-int aprs_sdr_hw_is_running(struct aprs_sdr_hw *hw) { return 0; }
+int aprs_sdr_hw_start(struct aprs_sdr_hw *hw) {
+    return 0;
+}
+int aprs_sdr_hw_stop(struct aprs_sdr_hw *hw) {
+    return 0;
+}
+int aprs_sdr_hw_is_running(struct aprs_sdr_hw *hw) {
+    return 0;
+}
 int aprs_sdr_hw_detect_devices(int *count) {
     if (count)
         *count = 0;
     return 0;
 }
-int aprs_sdr_hw_get_device_info(int index, char *name, size_t name_len, enum aprs_sdr_device_type *type) { return 0; }
-int aprs_sdr_hw_set_callback(struct aprs_sdr_hw *hw, aprs_sdr_hw_callback cb, void *user_data) { return 0; }
-int aprs_sdr_hw_set_frequency(struct aprs_sdr_hw *hw, double frequency_mhz) { return 0; }
-int aprs_sdr_hw_set_gain(struct aprs_sdr_hw *hw, int gain) { return 0; }
-int aprs_sdr_hw_set_ppm(struct aprs_sdr_hw *hw, int ppm) { return 0; }
+int aprs_sdr_hw_get_device_info(int index, char *name, size_t name_len, enum aprs_sdr_device_type *type) {
+    return 0;
+}
+int aprs_sdr_hw_set_callback(struct aprs_sdr_hw *hw, aprs_sdr_hw_callback cb, void *user_data) {
+    return 0;
+}
+int aprs_sdr_hw_set_frequency(struct aprs_sdr_hw *hw, double frequency_mhz) {
+    return 0;
+}
+int aprs_sdr_hw_set_gain(struct aprs_sdr_hw *hw, int gain) {
+    return 0;
+}
+int aprs_sdr_hw_set_ppm(struct aprs_sdr_hw *hw, int ppm) {
+    return 0;
+}
 
 #endif /* HAVE_RTLSDR */

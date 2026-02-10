@@ -20,25 +20,25 @@
 #include "config.h"
 
 #ifdef ANDROID
-#include "aprs_sdr_android.h"
-#include "debug.h"
-#include <errno.h>
-#include <fcntl.h>
-#include <glib.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#    include "aprs_sdr_android.h"
+#    include "debug.h"
+#    include <errno.h>
+#    include <fcntl.h>
+#    include <glib.h>
+#    include <stdlib.h>
+#    include <string.h>
+#    include <unistd.h>
 
 /* RTL-SDR USB identifiers */
-#define RTL_SDR_VENDOR_ID 0x0bda
-#define RTL_SDR_PRODUCT_ID_2832U 0x2832
-#define RTL_SDR_PRODUCT_ID_2838 0x2838
+#    define RTL_SDR_VENDOR_ID 0x0bda
+#    define RTL_SDR_PRODUCT_ID_2832U 0x2832
+#    define RTL_SDR_PRODUCT_ID_2838 0x2838
 
 /* USB control request types */
-#define USB_TYPE_VENDOR (0x02 << 5)
-#define USB_RECIP_DEVICE 0x00
-#define USB_DIR_OUT 0x00
-#define USB_DIR_IN 0x80
+#    define USB_TYPE_VENDOR (0x02 << 5)
+#    define USB_RECIP_DEVICE 0x00
+#    define USB_DIR_OUT 0x00
+#    define USB_DIR_IN 0x80
 
 struct aprs_sdr_android {
     JNIEnv *env;
@@ -333,10 +333,10 @@ int aprs_sdr_android_control_transfer(struct aprs_sdr_android *android_usb, int 
         (*android_usb->env)->SetByteArrayRegion(android_usb->env, jdata, 0, length, (jbyte *)data);
     }
 
-    jint result =
-        (*android_usb->env)
-            ->CallIntMethod(android_usb->env, android_usb->usb_connection, android_usb->control_transfer_method,
-                            request_type, request, value, index, jdata, length, 0);
+    jint result = (*android_usb->env)
+                      ->CallIntMethod(android_usb->env, android_usb->usb_connection,
+                                      android_usb->control_transfer_method, request_type, request, value, index, jdata,
+                                      length, 0);
 
     if (jdata) {
         if (result > 0 && (request_type & 0x80)) {
@@ -356,16 +356,28 @@ int aprs_sdr_android_is_device_connected(struct aprs_sdr_android *android_usb) {
 #else /* ANDROID */
 
 /* Stub implementations for non-Android platforms */
-struct aprs_sdr_android *aprs_sdr_android_new(void *env, void *context) { return NULL; }
-void aprs_sdr_android_destroy(struct aprs_sdr_android *android_usb) {}
-int aprs_sdr_android_request_permission(struct aprs_sdr_android *android_usb, int vid, int pid) { return 0; }
-int aprs_sdr_android_open_device(struct aprs_sdr_android *android_usb, int vid, int pid) { return -1; }
-void aprs_sdr_android_close_device(struct aprs_sdr_android *android_usb) {}
-int aprs_sdr_android_bulk_read(struct aprs_sdr_android *android_usb, unsigned char *buf, int len) { return -1; }
+struct aprs_sdr_android *aprs_sdr_android_new(void *env, void *context) {
+    return NULL;
+}
+void aprs_sdr_android_destroy(struct aprs_sdr_android *android_usb) {
+}
+int aprs_sdr_android_request_permission(struct aprs_sdr_android *android_usb, int vid, int pid) {
+    return 0;
+}
+int aprs_sdr_android_open_device(struct aprs_sdr_android *android_usb, int vid, int pid) {
+    return -1;
+}
+void aprs_sdr_android_close_device(struct aprs_sdr_android *android_usb) {
+}
+int aprs_sdr_android_bulk_read(struct aprs_sdr_android *android_usb, unsigned char *buf, int len) {
+    return -1;
+}
 int aprs_sdr_android_control_transfer(struct aprs_sdr_android *android_usb, int rt, int r, int v, int i,
                                       unsigned char *d, int l) {
     return -1;
 }
-int aprs_sdr_android_is_device_connected(struct aprs_sdr_android *android_usb) { return 0; }
+int aprs_sdr_android_is_device_connected(struct aprs_sdr_android *android_usb) {
+    return 0;
+}
 
 #endif /* ANDROID */

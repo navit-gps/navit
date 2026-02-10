@@ -466,39 +466,43 @@ int aprs_cmd_setting_aprs(struct navit *nav, char *function, struct attr **in, s
 }
 
 static struct command_table aprs_commands[] = {
-    {"aprs_freq_144_39", command_cast(aprs_cmd_freq_144_39)},
-    {"aprs_freq_144_8", command_cast(aprs_cmd_freq_144_8)},
-    {"aprs_freq_145_175", command_cast(aprs_cmd_freq_145_175)},
-    {"aprs_freq_144_575", command_cast(aprs_cmd_freq_144_575)},
-    {"aprs_freq_144_64", command_cast(aprs_cmd_freq_144_64)},
-    {"aprs_freq_144_66", command_cast(aprs_cmd_freq_144_66)},
-    {"aprs_freq_144_93", command_cast(aprs_cmd_freq_144_93)},
-    {"aprs_freq_145_57", command_cast(aprs_cmd_freq_145_57)},
-    {"aprs_refresh_freq_index", command_cast(aprs_cmd_refresh_freq_index)},
-    {"aprs_timeout_30min", command_cast(aprs_cmd_timeout_30min)},
-    {"aprs_timeout_60min", command_cast(aprs_cmd_timeout_60min)},
-    {"aprs_timeout_90min", command_cast(aprs_cmd_timeout_90min)},
-    {"aprs_timeout_120min", command_cast(aprs_cmd_timeout_120min)},
-    {"aprs_timeout_180min", command_cast(aprs_cmd_timeout_180min)},
-    {"aprs_timeout_clear", command_cast(aprs_cmd_timeout_clear_expired)},
-    {"aprs_device_rtlsdr_blog_v3", command_cast(aprs_cmd_device_rtlsdr_blog_v3)},
+    {"aprs_freq_144_39",            command_cast(aprs_cmd_freq_144_39)           },
+    {"aprs_freq_144_8",             command_cast(aprs_cmd_freq_144_8)            },
+    {"aprs_freq_145_175",           command_cast(aprs_cmd_freq_145_175)          },
+    {"aprs_freq_144_575",           command_cast(aprs_cmd_freq_144_575)          },
+    {"aprs_freq_144_64",            command_cast(aprs_cmd_freq_144_64)           },
+    {"aprs_freq_144_66",            command_cast(aprs_cmd_freq_144_66)           },
+    {"aprs_freq_144_93",            command_cast(aprs_cmd_freq_144_93)           },
+    {"aprs_freq_145_57",            command_cast(aprs_cmd_freq_145_57)           },
+    {"aprs_refresh_freq_index",     command_cast(aprs_cmd_refresh_freq_index)    },
+    {"aprs_timeout_30min",          command_cast(aprs_cmd_timeout_30min)         },
+    {"aprs_timeout_60min",          command_cast(aprs_cmd_timeout_60min)         },
+    {"aprs_timeout_90min",          command_cast(aprs_cmd_timeout_90min)         },
+    {"aprs_timeout_120min",         command_cast(aprs_cmd_timeout_120min)        },
+    {"aprs_timeout_180min",         command_cast(aprs_cmd_timeout_180min)        },
+    {"aprs_timeout_clear",          command_cast(aprs_cmd_timeout_clear_expired) },
+    {"aprs_device_rtlsdr_blog_v3",  command_cast(aprs_cmd_device_rtlsdr_blog_v3) },
     {"aprs_device_rtlsdr_v4_r828d", command_cast(aprs_cmd_device_rtlsdr_v4_r828d)},
-    {"aprs_device_rtlsdr_nooelec", command_cast(aprs_cmd_device_rtlsdr_nooelec)},
-    {"aprs_device_rtlsdr_generic", command_cast(aprs_cmd_device_rtlsdr_generic)},
-    {"aprs_device_nmea", command_cast(aprs_cmd_device_nmea)},
-    {"aprs_nmea_baud_4800", command_cast(aprs_cmd_nmea_baud_4800)},
-    {"aprs_nmea_baud_9600", command_cast(aprs_cmd_nmea_baud_9600)},
-    {"aprs_nmea_baud_19200", command_cast(aprs_cmd_nmea_baud_19200)},
-    {"aprs_nmea_baud_38400", command_cast(aprs_cmd_nmea_baud_38400)},
-    {"aprs_nmea_parity_none", command_cast(aprs_cmd_nmea_parity_none)},
-    {"aprs_nmea_parity_even", command_cast(aprs_cmd_nmea_parity_even)},
-    {"aprs_nmea_parity_odd", command_cast(aprs_cmd_nmea_parity_odd)},
-    {"setting_aprs", command_cast(aprs_cmd_setting_aprs)},
+    {"aprs_device_rtlsdr_nooelec",  command_cast(aprs_cmd_device_rtlsdr_nooelec) },
+    {"aprs_device_rtlsdr_generic",  command_cast(aprs_cmd_device_rtlsdr_generic) },
+    {"aprs_device_nmea",            command_cast(aprs_cmd_device_nmea)           },
+    {"aprs_nmea_baud_4800",         command_cast(aprs_cmd_nmea_baud_4800)        },
+    {"aprs_nmea_baud_9600",         command_cast(aprs_cmd_nmea_baud_9600)        },
+    {"aprs_nmea_baud_19200",        command_cast(aprs_cmd_nmea_baud_19200)       },
+    {"aprs_nmea_baud_38400",        command_cast(aprs_cmd_nmea_baud_38400)       },
+    {"aprs_nmea_parity_none",       command_cast(aprs_cmd_nmea_parity_none)      },
+    {"aprs_nmea_parity_even",       command_cast(aprs_cmd_nmea_parity_even)      },
+    {"aprs_nmea_parity_odd",        command_cast(aprs_cmd_nmea_parity_odd)       },
+    {"setting_aprs",                command_cast(aprs_cmd_setting_aprs)          },
 };
 
-static void aprs_osd_destroy(struct osd_priv *osd) { g_free(osd); }
+static void aprs_osd_destroy(struct osd_priv *osd) {
+    g_free(osd);
+}
 
-static int aprs_osd_set_attr(struct osd_priv *osd, struct attr *attr) { return 0; }
+static int aprs_osd_set_attr(struct osd_priv *osd, struct attr *attr) {
+    return 0;
+}
 
 static struct osd_methods aprs_osd_meth = {
     aprs_osd_destroy,

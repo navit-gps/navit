@@ -489,4 +489,3 @@ void aprs_nmea_set_callback(struct aprs_nmea *nmea, void (*callback)(void *data,
         nmea->callback_data = data;
     }
 }
-

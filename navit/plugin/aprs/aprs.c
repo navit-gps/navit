@@ -650,8 +650,8 @@ static int aprs_handle_timeout_attr(struct map_priv *priv, struct attr *attr) {
         return 0;
     }
     priv->expire_seconds = attr->u.num;
-    dbg(lvl_info, "APRS timeout set to %ld seconds (%ld minutes)",
-        (long)priv->expire_seconds, (long)(priv->expire_seconds / 60));
+    dbg(lvl_info, "APRS timeout set to %ld seconds (%ld minutes)", (long)priv->expire_seconds,
+        (long)(priv->expire_seconds / 60));
     aprs_update_items(priv);
     return 1;
 }
@@ -663,8 +663,7 @@ static int aprs_handle_position_attr(struct map_priv *priv, struct attr *attr) {
     }
     priv->center = *attr->u.coord_geo;
     priv->has_center = 1;
-    dbg(lvl_info, "APRS center set to %.6f, %.6f",
-        priv->center.lat, priv->center.lng);
+    dbg(lvl_info, "APRS center set to %.6f, %.6f", priv->center.lat, priv->center.lng);
     aprs_update_items(priv);
     return 1;
 }
@@ -1020,4 +1019,3 @@ void plugin_init(void) {
     /* Export packet registration function for other plugins */
     /* Function is already defined above and will be visible via symbol export */
 }
-
