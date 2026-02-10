@@ -254,7 +254,7 @@ Waypoint</text></img>
 		<osd enabled="no" type="compass"/>
 		<osd enabled="no" type="navigation_next_turn"/>
 		<!-- Driver Break plugin OSD - registers menu commands (driver_break_configure_intervals, etc.) -->
-		<osd enabled="yes" type="driver_break" data="$HOME/.navit/driver_break_plugin.db"/>
+		<osd enabled="yes" type="driver_break"/>
 		<!-- APRS plugin OSD - registers menu commands (setting_aprs, aprs_freq_*, etc.) -->
 		<osd enabled="yes" type="aprs"/>
 

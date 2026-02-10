@@ -57,7 +57,7 @@ static void *aprs_rtlsdr_read_thread(void *arg) {
 
     while (!rtl->stop_requested) {
         result = rtlsdr_read_sync(rtl->dev, buffer, buffer_size, &n_read);
-        
+
         if (result < 0) {
             dbg(lvl_error, "RTL-SDR read error: %d", result);
             break;
@@ -79,7 +79,7 @@ static void *aprs_rtlsdr_read_thread(void *arg) {
 
 static enum aprs_rtlsdr_device_type aprs_rtlsdr_detect_type(rtlsdr_dev_t *dev) {
     char manufact[256], product[256], serial[256];
-    
+
     if (rtlsdr_get_usb_strings(dev, manufact, product, serial) < 0) {
         return APRS_RTLSDR_GENERIC;
     }
@@ -103,40 +103,113 @@ static enum aprs_rtlsdr_device_type aprs_rtlsdr_detect_type(rtlsdr_dev_t *dev) {
     return APRS_RTLSDR_GENERIC;
 }
 
-struct aprs_rtlsdr *aprs_rtlsdr_new(const struct aprs_rtlsdr_config *config) {
-    struct aprs_rtlsdr *rtl;
-    int device_count;
-    int result;
-    uint32_t device_count_uint;
-    rtlsdr_dev_t *dev = NULL;
+/* Validate RTL-SDR device index */
+static int aprs_rtlsdr_validate_device_index(int device_index) {
+    int device_count = rtlsdr_get_device_count();
+    if (device_count < 1) {
+        dbg(lvl_error, "No RTL-SDR devices found");
+        return 0;
+    }
 
+    dbg(lvl_info, "Found %d RTL-SDR device(s)", device_count);
+
+    if (device_index >= device_count) {
+        dbg(lvl_error, "Device index %d out of range (0-%d)",
+            device_index, device_count - 1);
+        return 0;
+    }
+
+    return 1;
+}
+
+/* Open RTL-SDR device */
+static rtlsdr_dev_t *aprs_rtlsdr_open_device(int device_index) {
+    rtlsdr_dev_t *dev = NULL;
+    int result = rtlsdr_open(&dev, device_index);
+    if (result < 0) {
+        dbg(lvl_error, "Failed to open RTL-SDR device %d: %d",
+            device_index, result);
+        return NULL;
+    }
+    return dev;
+}
+
+/* Configure RTL-SDR sample rate and frequency */
+static int aprs_rtlsdr_configure_rf(rtlsdr_dev_t *dev, double frequency_mhz, int sample_rate) {
+    int result = rtlsdr_set_sample_rate(dev, sample_rate);
+    if (result < 0) {
+        dbg(lvl_error, "Failed to set sample rate: %d", result);
+        return 0;
+    }
+
+    result = rtlsdr_set_center_freq(dev, (uint32_t)(frequency_mhz * 1000000));
+    if (result < 0) {
+        dbg(lvl_error, "Failed to set frequency: %d", result);
+        return 0;
+    }
+
+    return 1;
+}
+
+/* Configure RTL-SDR gain settings */
+static void aprs_rtlsdr_configure_gain(rtlsdr_dev_t *dev, int gain) {
+    if (gain >= 0) {
+        int result = rtlsdr_set_tuner_gain_mode(dev, 1);
+        if (result < 0) {
+            dbg(lvl_error, "Failed to set gain mode: %d", result);
+        } else {
+            result = rtlsdr_set_tuner_gain(dev, gain * 10);
+            if (result < 0) {
+                dbg(lvl_error, "Failed to set gain: %d", result);
+            }
+        }
+    } else {
+        rtlsdr_set_tuner_gain_mode(dev, 0);
+    }
+}
+
+/* Configure RTL-SDR device settings */
+static int aprs_rtlsdr_configure_device(struct aprs_rtlsdr *rtl) {
+    if (!aprs_rtlsdr_configure_rf(rtl->dev, rtl->config.frequency_mhz, rtl->config.sample_rate)) {
+        return 0;
+    }
+
+    if (rtl->config.ppm_correction != 0) {
+        rtlsdr_set_freq_correction(rtl->dev, rtl->config.ppm_correction);
+    }
+
+    aprs_rtlsdr_configure_gain(rtl->dev, rtl->config.gain);
+
+    int result = rtlsdr_set_agc_mode(rtl->dev, 0);
+    if (result < 0) {
+        dbg(lvl_warning, "Failed to set AGC mode: %d", result);
+    }
+
+    result = rtlsdr_reset_buffer(rtl->dev);
+    if (result < 0) {
+        dbg(lvl_error, "Failed to reset buffer: %d", result);
+        return 0;
+    }
+
+    return 1;
+}
+
+struct aprs_rtlsdr *aprs_rtlsdr_new(const struct aprs_rtlsdr_config *config) {
     if (!config) {
         dbg(lvl_error, "RTL-SDR config is NULL");
         return NULL;
     }
 
-    device_count = rtlsdr_get_device_count();
-    if (device_count < 1) {
-        dbg(lvl_error, "No RTL-SDR devices found");
+    if (!aprs_rtlsdr_validate_device_index(config->device_index)) {
         return NULL;
     }
 
-    dbg(lvl_info, "Found %d RTL-SDR device(s)", device_count);
-
-    if (config->device_index >= device_count) {
-        dbg(lvl_error, "Device index %d out of range (0-%d)", 
-            config->device_index, device_count - 1);
+    rtlsdr_dev_t *dev = aprs_rtlsdr_open_device(config->device_index);
+    if (!dev) {
         return NULL;
     }
 
-    result = rtlsdr_open(&dev, config->device_index);
-    if (result < 0) {
-        dbg(lvl_error, "Failed to open RTL-SDR device %d: %d", 
-            config->device_index, result);
-        return NULL;
-    }
-
-    rtl = g_new0(struct aprs_rtlsdr, 1);
+    struct aprs_rtlsdr *rtl = g_new0(struct aprs_rtlsdr, 1);
     rtl->dev = dev;
     rtl->config = *config;
 
@@ -147,52 +220,13 @@ struct aprs_rtlsdr *aprs_rtlsdr_new(const struct aprs_rtlsdr_config *config) {
 
     dbg(lvl_info, "RTL-SDR device type: %d", rtl->config.device_type);
 
-    result = rtlsdr_set_sample_rate(dev, rtl->config.sample_rate);
-    if (result < 0) {
-        dbg(lvl_error, "Failed to set sample rate: %d", result);
-        aprs_rtlsdr_destroy(rtl);
-        return NULL;
-    }
-
-    result = rtlsdr_set_center_freq(dev, (uint32_t)(rtl->config.frequency_mhz * 1000000));
-    if (result < 0) {
-        dbg(lvl_error, "Failed to set frequency: %d", result);
-        aprs_rtlsdr_destroy(rtl);
-        return NULL;
-    }
-
-    if (rtl->config.ppm_correction != 0) {
-        rtlsdr_set_freq_correction(dev, rtl->config.ppm_correction);
-    }
-
-    if (rtl->config.gain >= 0) {
-        result = rtlsdr_set_tuner_gain_mode(dev, 1);
-        if (result < 0) {
-            dbg(lvl_error, "Failed to set gain mode: %d", result);
-        } else {
-            result = rtlsdr_set_tuner_gain(dev, rtl->config.gain * 10);
-            if (result < 0) {
-                dbg(lvl_error, "Failed to set gain: %d", result);
-            }
-        }
-    } else {
-        rtlsdr_set_tuner_gain_mode(dev, 0);
-    }
-
-    result = rtlsdr_set_agc_mode(dev, 0);
-    if (result < 0) {
-        dbg(lvl_warning, "Failed to set AGC mode: %d", result);
-    }
-
-    result = rtlsdr_reset_buffer(dev);
-    if (result < 0) {
-        dbg(lvl_error, "Failed to reset buffer: %d", result);
+    if (!aprs_rtlsdr_configure_device(rtl)) {
         aprs_rtlsdr_destroy(rtl);
         return NULL;
     }
 
     dbg(lvl_info, "RTL-SDR initialized: %.3f MHz, %d Hz, gain=%d, ppm=%d",
-        rtl->config.frequency_mhz, rtl->config.sample_rate, 
+        rtl->config.frequency_mhz, rtl->config.sample_rate,
         rtl->config.gain, rtl->config.ppm_correction);
 
     return rtl;
@@ -241,7 +275,7 @@ int aprs_rtlsdr_stop(struct aprs_rtlsdr *rtl) {
 
     rtl->stop_requested = 1;
     rtlsdr_cancel_async(rtl->dev);
-    
+
     pthread_join(rtl->thread, NULL);
     rtl->running = 0;
 
@@ -306,7 +340,7 @@ int aprs_rtlsdr_set_callback(struct aprs_rtlsdr *rtl, aprs_rtlsdr_callback cb, v
 
 int aprs_rtlsdr_set_frequency(struct aprs_rtlsdr *rtl, double frequency_mhz) {
     if (!rtl || !rtl->dev) return 0;
-    
+
     int result = rtlsdr_set_center_freq(rtl->dev, (uint32_t)(frequency_mhz * 1000000));
     if (result >= 0) {
         rtl->config.frequency_mhz = frequency_mhz;
@@ -316,7 +350,7 @@ int aprs_rtlsdr_set_frequency(struct aprs_rtlsdr *rtl, double frequency_mhz) {
 
 int aprs_rtlsdr_set_gain(struct aprs_rtlsdr *rtl, int gain) {
     if (!rtl || !rtl->dev) return 0;
-    
+
     int result;
     if (gain >= 0) {
         result = rtlsdr_set_tuner_gain_mode(rtl->dev, 1);
@@ -326,7 +360,7 @@ int aprs_rtlsdr_set_gain(struct aprs_rtlsdr *rtl, int gain) {
     } else {
         result = rtlsdr_set_tuner_gain_mode(rtl->dev, 0);
     }
-    
+
     if (result >= 0) {
         rtl->config.gain = gain;
     }
@@ -335,7 +369,7 @@ int aprs_rtlsdr_set_gain(struct aprs_rtlsdr *rtl, int gain) {
 
 int aprs_rtlsdr_set_ppm(struct aprs_rtlsdr *rtl, int ppm) {
     if (!rtl || !rtl->dev) return 0;
-    
+
     int result = rtlsdr_set_freq_correction(rtl->dev, ppm);
     if (result >= 0) {
         rtl->config.ppm_correction = ppm;
