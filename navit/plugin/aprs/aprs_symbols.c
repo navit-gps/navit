@@ -211,7 +211,7 @@ static const struct symbol_entry alternate_symbols[] = {
     {'\\', 'p',  "parking.png",         "Parking"          },
     {'\\', 'q',  "truck.png",           "Truck"            },
     {'\\', 'r',  "repeater.png",        "Repeater"         },
-    {'\\', 's',  "satellite.png",      "Satellite"        },
+    {'\\', 's',  "satellite.png",       "Satellite"        },
     {'\\', 't',  "sstv.png",            "SSTV"             },
     {'\\', 'u',  "bus.png",             "Bus"              },
     {'\\', 'v',  "van.png",             "Van"              },

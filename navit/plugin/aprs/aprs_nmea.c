@@ -456,8 +456,7 @@ int aprs_nmea_start(struct aprs_nmea *nmea) {
         return 0;
     }
 
-    dbg(lvl_info, "NMEA input started on %s at %d baud",
-        nmea->config.device, nmea->config.baud_rate);
+    dbg(lvl_info, "NMEA input started on %s at %d baud", nmea->config.device, nmea->config.baud_rate);
     return 1;
 }
 
