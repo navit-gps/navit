@@ -40,18 +40,12 @@ Current vehicle position from \
 Plugins
 =======
 
-<<<<<<< HEAD
-[APRS Plugin](navit/plugin/aprs/README.md) — Real-time APRS station tracking with packet decoding and map display. \
-[APRS SDR Plugin](navit/plugin/aprs_sdr/README.md) — RTL-SDR hardware support for direct APRS packet reception.
-=======
 Navit includes several plugins that extend its functionality:
 
-- **Rest Plugin** — Vehicle pause and rest stop management with POI discovery and energy-based routing
 - **APRS Plugin** — Real-time APRS station tracking with packet decoding and map display
 - **APRS SDR Plugin** — RTL-SDR hardware support for direct APRS packet reception
 
 For complete plugin documentation, see the `Navit User Manual <https://navit.readthedocs.io/en/latest/user/plugins/index.html>`_.
->>>>>>> ede9e3ad2 (Move plugin documentation to ReStructuredText in docs directory)
 
 Translation
 ===========
