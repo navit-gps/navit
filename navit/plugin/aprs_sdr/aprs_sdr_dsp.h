@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2024 Navit Team
+ * Copyright (C) 2024-2026 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -41,10 +41,10 @@
 struct aprs_sdr_dsp;
 
 struct aprs_sdr_dsp_config {
-    int sample_rate;          /* Input sample rate (typically 48000 Hz) */
-    double mark_freq;         /* Mark frequency (1200 Hz) */
-    double space_freq;        /* Space frequency (2200 Hz) */
-    double baud_rate;         /* Symbol rate (1200 bps) */
+    int sample_rate;   /* Input sample rate (typically 48000 Hz) */
+    double mark_freq;  /* Mark frequency (1200 Hz) */
+    double space_freq; /* Space frequency (2200 Hz) */
+    double baud_rate;  /* Symbol rate (1200 bps) */
 };
 
 struct aprs_sdr_dsp *aprs_sdr_dsp_new(const struct aprs_sdr_dsp_config *config);
@@ -57,9 +57,7 @@ void aprs_sdr_dsp_destroy(struct aprs_sdr_dsp *dsp);
  * @param length Number of samples (must be even, as I/Q pairs)
  * @return Number of frames extracted (0 if none)
  */
-int aprs_sdr_dsp_process_samples(struct aprs_sdr_dsp *dsp, 
-                                  const unsigned char *samples, 
-                                  int length);
+int aprs_sdr_dsp_process_samples(struct aprs_sdr_dsp *dsp, const unsigned char *samples, int length);
 
 /**
  * Set callback for delivering decoded AX.25 frames
@@ -68,9 +66,6 @@ int aprs_sdr_dsp_process_samples(struct aprs_sdr_dsp *dsp,
  * @param user_data User context
  */
 typedef void (*aprs_sdr_dsp_frame_callback)(const unsigned char *frame, int frame_length, void *user_data);
-int aprs_sdr_dsp_set_frame_callback(struct aprs_sdr_dsp *dsp, 
-                                     aprs_sdr_dsp_frame_callback callback,
-                                     void *user_data);
+int aprs_sdr_dsp_set_frame_callback(struct aprs_sdr_dsp *dsp, aprs_sdr_dsp_frame_callback callback, void *user_data);
 
 #endif /* NAVIT_APRS_SDR_DSP_H */
-
