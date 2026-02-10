@@ -97,28 +97,28 @@ $(document).ready(function(){initNavTree('garmin_8c.html',''); initResizable(); 
   <div class="headertitle"><div class="title">garmin.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;glib.h&gt;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
-<code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
-<code>#include &lt;sys/types.h&gt;</code><br />
-<code>#include &lt;sys/stat.h&gt;</code><br />
-<code>#include &lt;unistd.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="garmin_8h_source.html">garmin.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
 <code>#include &quot;config.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="data_8h_source.html">data.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gar2navit_8h_source.html">gar2navit.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="maptype_8h_source.html">maptype.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
 <code>#include &lt;libgarmin.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="garmin_8h_source.html">garmin.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gar2navit_8h_source.html">gar2navit.h</a>&quot;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;sys/stat.h&gt;</code><br />
+<code>#include &lt;sys/types.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -1203,24 +1203,24 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_enumvalue" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a99f0a3921f9fc25126cb6de94f21832b">projection_garmin</a>,</div>
-<div class="line">    <span class="stringliteral">&quot;utf-8&quot;</span>,</div>
-<div class="line">    <a class="code hl_function" href="garmin_8c.html#ae95aa7afb308a24a8fda16ff4f16807e">gmap_destroy</a>,</div>
-<div class="line">    <a class="code hl_function" href="garmin_8c.html#afb8a5b3cef610ba846958cbead37fb2c">gmap_rect_new</a>,</div>
-<div class="line">    <a class="code hl_function" href="garmin_8c.html#a14cde8b10ba1ed4c5ddbe5fb16fbd71e">gmap_rect_destroy</a>,</div>
-<div class="line">    <a class="code hl_function" href="garmin_8c.html#a39749f54ceb20a4c9fc17c4f1e719317">gmap_rect_get_item</a>,</div>
-<div class="line">    <a class="code hl_function" href="garmin_8c.html#a31904a81fea9dd807e69c7602b35f031">gmap_rect_get_item_byid</a>,</div>
-<div class="line">    <a class="code hl_function" href="garmin_8c.html#a1db58b9f26e806385704e172fb9fe30d">gmap_search_new</a>,</div>
-<div class="line">    <a class="code hl_function" href="garmin_8c.html#a5082a1ba232f68b39000200a1659460a">gmap_search_destroy</a>,</div>
-<div class="line">    NULL,</div>
+<div class="line">    .pro = <a class="code hl_enumvalue" href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a99f0a3921f9fc25126cb6de94f21832b">projection_garmin</a>,</div>
+<div class="line">    .charset = <span class="stringliteral">&quot;utf-8&quot;</span>,</div>
+<div class="line">    .map_destroy = <a class="code hl_function" href="garmin_8c.html#ae95aa7afb308a24a8fda16ff4f16807e">gmap_destroy</a>,</div>
+<div class="line">    .map_rect_new = <a class="code hl_function" href="garmin_8c.html#afb8a5b3cef610ba846958cbead37fb2c">gmap_rect_new</a>,</div>
+<div class="line">    .map_rect_destroy = <a class="code hl_function" href="garmin_8c.html#a14cde8b10ba1ed4c5ddbe5fb16fbd71e">gmap_rect_destroy</a>,</div>
+<div class="line">    .map_rect_get_item = <a class="code hl_function" href="garmin_8c.html#a39749f54ceb20a4c9fc17c4f1e719317">gmap_rect_get_item</a>,</div>
+<div class="line">    .map_rect_get_item_byid = <a class="code hl_function" href="garmin_8c.html#a31904a81fea9dd807e69c7602b35f031">gmap_rect_get_item_byid</a>,</div>
+<div class="line">    .map_search_new = <a class="code hl_function" href="garmin_8c.html#a1db58b9f26e806385704e172fb9fe30d">gmap_search_new</a>,</div>
+<div class="line">    .map_search_destroy = <a class="code hl_function" href="garmin_8c.html#a5082a1ba232f68b39000200a1659460a">gmap_search_destroy</a>,</div>
+<div class="line">    .map_search_get_item = NULL,</div>
 <div class="line">}</div>
-<div class="ttc" id="agarmin_8c_html_a14cde8b10ba1ed4c5ddbe5fb16fbd71e"><div class="ttname"><a href="garmin_8c.html#a14cde8b10ba1ed4c5ddbe5fb16fbd71e">gmap_rect_destroy</a></div><div class="ttdeci">static void gmap_rect_destroy(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> garmin.c:834</div></div>
-<div class="ttc" id="agarmin_8c_html_a1db58b9f26e806385704e172fb9fe30d"><div class="ttname"><a href="garmin_8c.html#a1db58b9f26e806385704e172fb9fe30d">gmap_search_new</a></div><div class="ttdeci">static struct map_search_priv * gmap_search_new(struct map_priv *map, struct item *item, struct attr *search, int partial)</div><div class="ttdef"><b>Definition</b> garmin.c:190</div></div>
-<div class="ttc" id="agarmin_8c_html_a31904a81fea9dd807e69c7602b35f031"><div class="ttname"><a href="garmin_8c.html#a31904a81fea9dd807e69c7602b35f031">gmap_rect_get_item_byid</a></div><div class="ttdeci">static struct item * gmap_rect_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)</div><div class="ttdef"><b>Definition</b> garmin.c:650</div></div>
-<div class="ttc" id="agarmin_8c_html_a39749f54ceb20a4c9fc17c4f1e719317"><div class="ttname"><a href="garmin_8c.html#a39749f54ceb20a4c9fc17c4f1e719317">gmap_rect_get_item</a></div><div class="ttdeci">static struct item * gmap_rect_get_item(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> garmin.c:668</div></div>
-<div class="ttc" id="agarmin_8c_html_a5082a1ba232f68b39000200a1659460a"><div class="ttname"><a href="garmin_8c.html#a5082a1ba232f68b39000200a1659460a">gmap_search_destroy</a></div><div class="ttdeci">static void gmap_search_destroy(struct map_search_priv *ms)</div><div class="ttdef"><b>Definition</b> garmin.c:845</div></div>
-<div class="ttc" id="agarmin_8c_html_ae95aa7afb308a24a8fda16ff4f16807e"><div class="ttname"><a href="garmin_8c.html#ae95aa7afb308a24a8fda16ff4f16807e">gmap_destroy</a></div><div class="ttdeci">static void gmap_destroy(struct map_priv *m)</div><div class="ttdef"><b>Definition</b> garmin.c:849</div></div>
-<div class="ttc" id="agarmin_8c_html_afb8a5b3cef610ba846958cbead37fb2c"><div class="ttname"><a href="garmin_8c.html#afb8a5b3cef610ba846958cbead37fb2c">gmap_rect_new</a></div><div class="ttdeci">static struct map_rect_priv * gmap_rect_new(struct map_priv *map, struct map_selection *sel)</div><div class="ttdef"><b>Definition</b> garmin.c:809</div></div>
+<div class="ttc" id="agarmin_8c_html_a14cde8b10ba1ed4c5ddbe5fb16fbd71e"><div class="ttname"><a href="garmin_8c.html#a14cde8b10ba1ed4c5ddbe5fb16fbd71e">gmap_rect_destroy</a></div><div class="ttdeci">static void gmap_rect_destroy(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> garmin.c:823</div></div>
+<div class="ttc" id="agarmin_8c_html_a1db58b9f26e806385704e172fb9fe30d"><div class="ttname"><a href="garmin_8c.html#a1db58b9f26e806385704e172fb9fe30d">gmap_search_new</a></div><div class="ttdeci">static struct map_search_priv * gmap_search_new(struct map_priv *map, struct item *item, struct attr *search, int partial)</div><div class="ttdef"><b>Definition</b> garmin.c:183</div></div>
+<div class="ttc" id="agarmin_8c_html_a31904a81fea9dd807e69c7602b35f031"><div class="ttname"><a href="garmin_8c.html#a31904a81fea9dd807e69c7602b35f031">gmap_rect_get_item_byid</a></div><div class="ttdeci">static struct item * gmap_rect_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)</div><div class="ttdef"><b>Definition</b> garmin.c:641</div></div>
+<div class="ttc" id="agarmin_8c_html_a39749f54ceb20a4c9fc17c4f1e719317"><div class="ttname"><a href="garmin_8c.html#a39749f54ceb20a4c9fc17c4f1e719317">gmap_rect_get_item</a></div><div class="ttdeci">static struct item * gmap_rect_get_item(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> garmin.c:659</div></div>
+<div class="ttc" id="agarmin_8c_html_a5082a1ba232f68b39000200a1659460a"><div class="ttname"><a href="garmin_8c.html#a5082a1ba232f68b39000200a1659460a">gmap_search_destroy</a></div><div class="ttdeci">static void gmap_search_destroy(struct map_search_priv *ms)</div><div class="ttdef"><b>Definition</b> garmin.c:834</div></div>
+<div class="ttc" id="agarmin_8c_html_ae95aa7afb308a24a8fda16ff4f16807e"><div class="ttname"><a href="garmin_8c.html#ae95aa7afb308a24a8fda16ff4f16807e">gmap_destroy</a></div><div class="ttdeci">static void gmap_destroy(struct map_priv *m)</div><div class="ttdef"><b>Definition</b> garmin.c:838</div></div>
+<div class="ttc" id="agarmin_8c_html_afb8a5b3cef610ba846958cbead37fb2c"><div class="ttname"><a href="garmin_8c.html#afb8a5b3cef610ba846958cbead37fb2c">gmap_rect_new</a></div><div class="ttdeci">static struct map_rect_priv * gmap_rect_new(struct map_priv *map, struct map_selection *sel)</div><div class="ttdef"><b>Definition</b> garmin.c:798</div></div>
 <div class="ttc" id="aprojection_8h_html_a380c9c985eef434d23f9a7b95a52cbc1a99f0a3921f9fc25126cb6de94f21832b"><div class="ttname"><a href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a99f0a3921f9fc25126cb6de94f21832b">projection_garmin</a></div><div class="ttdeci">@ projection_garmin</div><div class="ttdef"><b>Definition</b> projection.h:26</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="garmin_8c.html#a25fad751111b7fd736570f6e5f8ea640">gmap_new()</a>.</p>
@@ -1247,15 +1247,15 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_function" href="garmin_8c.html#aad3ee7306042746d70e2ea42832c2472">coord_rewind</a>,</div>
-<div class="line">    <a class="code hl_function" href="garmin_8c.html#ae3e08aa7a5c51b543f9e79e3fc7b654a">point_coord_get</a>,</div>
-<div class="line">    <a class="code hl_function" href="garmin_8c.html#a83f83bd4bb1e91b3915b5b880680611c">attr_rewind</a>,</div>
-<div class="line">    <a class="code hl_function" href="garmin_8c.html#a5407866e83dd835698f6cffb4d0ee2ec">point_attr_get</a>,</div>
+<div class="line">    .item_coord_rewind = <a class="code hl_function" href="garmin_8c.html#aad3ee7306042746d70e2ea42832c2472">coord_rewind</a>,</div>
+<div class="line">    .item_coord_get = <a class="code hl_function" href="garmin_8c.html#ae3e08aa7a5c51b543f9e79e3fc7b654a">point_coord_get</a>,</div>
+<div class="line">    .item_attr_rewind = <a class="code hl_function" href="garmin_8c.html#a83f83bd4bb1e91b3915b5b880680611c">attr_rewind</a>,</div>
+<div class="line">    .item_attr_get = <a class="code hl_function" href="garmin_8c.html#a5407866e83dd835698f6cffb4d0ee2ec">point_attr_get</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="agarmin_8c_html_a5407866e83dd835698f6cffb4d0ee2ec"><div class="ttname"><a href="garmin_8c.html#a5407866e83dd835698f6cffb4d0ee2ec">point_attr_get</a></div><div class="ttdeci">static int point_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> garmin.c:335</div></div>
-<div class="ttc" id="agarmin_8c_html_a83f83bd4bb1e91b3915b5b880680611c"><div class="ttname"><a href="garmin_8c.html#a83f83bd4bb1e91b3915b5b880680611c">attr_rewind</a></div><div class="ttdeci">static void attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> garmin.c:258</div></div>
-<div class="ttc" id="agarmin_8c_html_aad3ee7306042746d70e2ea42832c2472"><div class="ttname"><a href="garmin_8c.html#aad3ee7306042746d70e2ea42832c2472">coord_rewind</a></div><div class="ttdeci">static void coord_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> garmin.c:252</div></div>
-<div class="ttc" id="agarmin_8c_html_ae3e08aa7a5c51b543f9e79e3fc7b654a"><div class="ttname"><a href="garmin_8c.html#ae3e08aa7a5c51b543f9e79e3fc7b654a">point_coord_get</a></div><div class="ttdeci">static int point_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition</b> garmin.c:264</div></div>
+<div class="ttc" id="agarmin_8c_html_a5407866e83dd835698f6cffb4d0ee2ec"><div class="ttname"><a href="garmin_8c.html#a5407866e83dd835698f6cffb4d0ee2ec">point_attr_get</a></div><div class="ttdeci">static int point_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> garmin.c:328</div></div>
+<div class="ttc" id="agarmin_8c_html_a83f83bd4bb1e91b3915b5b880680611c"><div class="ttname"><a href="garmin_8c.html#a83f83bd4bb1e91b3915b5b880680611c">attr_rewind</a></div><div class="ttdeci">static void attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> garmin.c:251</div></div>
+<div class="ttc" id="agarmin_8c_html_aad3ee7306042746d70e2ea42832c2472"><div class="ttname"><a href="garmin_8c.html#aad3ee7306042746d70e2ea42832c2472">coord_rewind</a></div><div class="ttdeci">static void coord_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> garmin.c:245</div></div>
+<div class="ttc" id="agarmin_8c_html_ae3e08aa7a5c51b543f9e79e3fc7b654a"><div class="ttname"><a href="garmin_8c.html#ae3e08aa7a5c51b543f9e79e3fc7b654a">point_coord_get</a></div><div class="ttdeci">static int point_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition</b> garmin.c:257</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="garmin_8c.html#a6c9cf438c10e8202a814967f772130e4">garmin_poi2item()</a>.</p>
 
@@ -1281,14 +1281,14 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_function" href="garmin_8c.html#aad3ee7306042746d70e2ea42832c2472">coord_rewind</a>,</div>
-<div class="line">    <a class="code hl_function" href="garmin_8c.html#a2ed722b56be77b02d23146619bae4903">poly_coord_get</a>,</div>
-<div class="line">    <a class="code hl_function" href="garmin_8c.html#a83f83bd4bb1e91b3915b5b880680611c">attr_rewind</a>,        </div>
-<div class="line">    <a class="code hl_function" href="garmin_8c.html#a5407866e83dd835698f6cffb4d0ee2ec">point_attr_get</a>,     </div>
-<div class="line">    <a class="code hl_function" href="garmin_8c.html#a21738d2983639923ed30f3ac3a6f6c25">coord_is_node</a>,</div>
+<div class="line">    .item_coord_rewind = <a class="code hl_function" href="garmin_8c.html#aad3ee7306042746d70e2ea42832c2472">coord_rewind</a>,</div>
+<div class="line">    .item_coord_get = <a class="code hl_function" href="garmin_8c.html#a2ed722b56be77b02d23146619bae4903">poly_coord_get</a>,</div>
+<div class="line">    .item_attr_rewind = <a class="code hl_function" href="garmin_8c.html#a83f83bd4bb1e91b3915b5b880680611c">attr_rewind</a>,</div>
+<div class="line">    .item_attr_get = <a class="code hl_function" href="garmin_8c.html#a5407866e83dd835698f6cffb4d0ee2ec">point_attr_get</a>,</div>
+<div class="line">    .item_coord_is_node = <a class="code hl_function" href="garmin_8c.html#a21738d2983639923ed30f3ac3a6f6c25">coord_is_node</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="agarmin_8c_html_a21738d2983639923ed30f3ac3a6f6c25"><div class="ttname"><a href="garmin_8c.html#a21738d2983639923ed30f3ac3a6f6c25">coord_is_node</a></div><div class="ttdeci">static int coord_is_node(void *priv_data)</div><div class="ttdef"><b>Definition</b> garmin.c:287</div></div>
-<div class="ttc" id="agarmin_8c_html_a2ed722b56be77b02d23146619bae4903"><div class="ttname"><a href="garmin_8c.html#a2ed722b56be77b02d23146619bae4903">poly_coord_get</a></div><div class="ttdeci">static int poly_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition</b> garmin.c:294</div></div>
+<div class="ttc" id="agarmin_8c_html_a21738d2983639923ed30f3ac3a6f6c25"><div class="ttname"><a href="garmin_8c.html#a21738d2983639923ed30f3ac3a6f6c25">coord_is_node</a></div><div class="ttdeci">static int coord_is_node(void *priv_data)</div><div class="ttdef"><b>Definition</b> garmin.c:280</div></div>
+<div class="ttc" id="agarmin_8c_html_a2ed722b56be77b02d23146619bae4903"><div class="ttname"><a href="garmin_8c.html#a2ed722b56be77b02d23146619bae4903">poly_coord_get</a></div><div class="ttdeci">static int poly_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition</b> garmin.c:287</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="garmin_8c.html#a47cda9d2253d02f3081d062cb43e5a1e">garmin_pg2item()</a>, and <a class="el" href="garmin_8c.html#a33537f144633323a74872a2d2a132bc7">garmin_pl2item()</a>.</p>
 
@@ -1306,25 +1306,25 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    {   .g = 9, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 9, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 8, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 8, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 7, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 7, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 6, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 6, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 5, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 5, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 4, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 4, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 3, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 3, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 2, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 2, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 1, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 1, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 0, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
+<div class="line">    { .g = 9,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 9,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 8,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 8,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 7,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 7,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 6,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 6,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 5,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 5,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 4, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 4, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 3, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 3, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 2, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 2, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 1, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 1, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 0, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
 <div class="line">}</div>
 </div><!-- fragment -->
 </div>
@@ -1341,25 +1341,25 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    {   .g = 12, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 11, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 10, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 9, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 8, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 7, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 6, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 5, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 4, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {   .g = 4, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 3, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 3, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 2, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 2, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 2, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 1, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 1, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 1, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
-<div class="line">    {  .g = 0, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>, },</div>
+<div class="line">    { .g = 12, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 11, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 10, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 9,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 8,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 7,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 6,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 5,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 4,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 4,  .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 3, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 3, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 2, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 2, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 2, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 1, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 1, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 1, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
+<div class="line">    { .g = 0, .descr = <span class="stringliteral">&quot;0-120m&quot;</span>},</div>
 <div class="line">}</div>
 </div><!-- fragment -->
 </div>

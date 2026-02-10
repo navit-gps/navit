@@ -97,30 +97,30 @@ $(document).ready(function(){initNavTree('graphics__gtk__drawing__area_8c.html',
   <div class="headertitle"><div class="title">graphics_gtk_drawing_area.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;config.h&quot;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
-<code>#include &lt;signal.h&gt;</code><br />
-<code>#include &lt;sys/time.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
-<code>#include &lt;gtk/gtk.h&gt;</code><br />
-<code>#include &lt;gdk/gdkkeysyms.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="color_8h_source.html">color.h</a>&quot;</code><br />
+<code>#include &quot;config.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="event_8h_source.html">event.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="keys_8h_source.html">keys.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="navit_8h_source.html">navit.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="font__freetype_8h_source.html">navit/font/freetype/font_freetype.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="window_8h_source.html">window.h</a>&quot;</code><br />
 <code>#include &lt;cairo.h&gt;</code><br />
+<code>#include &lt;errno.h&gt;</code><br />
+<code>#include &lt;gdk/gdkkeysyms.h&gt;</code><br />
+<code>#include &lt;gtk/gtk.h&gt;</code><br />
 <code>#include &lt;locale.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;signal.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;sys/time.h&gt;</code><br />
 <code>#include &lt;X11/XF86keysym.h&gt;</code><br />
 <code>#include &lt;gdk/gdkx.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="event_8h_source.html">event.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="color_8h_source.html">color.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="window_8h_source.html">window.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="keys_8h_source.html">keys.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="font__freetype_8h_source.html">navit/font/freetype/font_freetype.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="navit_8h_source.html">navit.h</a>&quot;</code><br />
-<code>#include &lt;errno.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -2427,19 +2427,19 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_function" href="graphics__gtk__drawing__area_8c.html#a4f5a58361ff466402ab8cf75992715b3">gc_destroy</a>,</div>
-<div class="line">    <a class="code hl_function" href="graphics__gtk__drawing__area_8c.html#add7dfa8917652d28c056970edf329468">gc_set_linewidth</a>,</div>
-<div class="line">    <a class="code hl_function" href="graphics__gtk__drawing__area_8c.html#ad776465bab5741fdc7886fb14234b379">gc_set_dashes</a>,</div>
-<div class="line">    <a class="code hl_function" href="graphics__gtk__drawing__area_8c.html#a9883b50b443c2aa7ca6b30f86ea9ee51">gc_set_foreground</a>,</div>
-<div class="line">    <a class="code hl_function" href="graphics__gtk__drawing__area_8c.html#aa1ba6c9692a5f32227a87a09ddec95b0">gc_set_background</a>,</div>
-<div class="line">    <a class="code hl_function" href="graphics__gtk__drawing__area_8c.html#ad5c2bfd6478b169c940afc5bf7246700">gc_set_texture</a>,</div>
+<div class="line">    .gc_destroy = <a class="code hl_function" href="graphics__gtk__drawing__area_8c.html#a4f5a58361ff466402ab8cf75992715b3">gc_destroy</a>,</div>
+<div class="line">    .gc_set_linewidth = <a class="code hl_function" href="graphics__gtk__drawing__area_8c.html#add7dfa8917652d28c056970edf329468">gc_set_linewidth</a>,</div>
+<div class="line">    .gc_set_dashes = <a class="code hl_function" href="graphics__gtk__drawing__area_8c.html#ad776465bab5741fdc7886fb14234b379">gc_set_dashes</a>,</div>
+<div class="line">    .gc_set_foreground = <a class="code hl_function" href="graphics__gtk__drawing__area_8c.html#a9883b50b443c2aa7ca6b30f86ea9ee51">gc_set_foreground</a>,</div>
+<div class="line">    .gc_set_background = <a class="code hl_function" href="graphics__gtk__drawing__area_8c.html#aa1ba6c9692a5f32227a87a09ddec95b0">gc_set_background</a>,</div>
+<div class="line">    .gc_set_texture = <a class="code hl_function" href="graphics__gtk__drawing__area_8c.html#ad5c2bfd6478b169c940afc5bf7246700">gc_set_texture</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="agraphics__gtk__drawing__area_8c_html_a4f5a58361ff466402ab8cf75992715b3"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#a4f5a58361ff466402ab8cf75992715b3">gc_destroy</a></div><div class="ttdeci">static void gc_destroy(struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition</b> graphics_gtk_drawing_area.c:134</div></div>
-<div class="ttc" id="agraphics__gtk__drawing__area_8c_html_a9883b50b443c2aa7ca6b30f86ea9ee51"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#a9883b50b443c2aa7ca6b30f86ea9ee51">gc_set_foreground</a></div><div class="ttdeci">static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)</div><div class="ttdef"><b>Definition</b> graphics_gtk_drawing_area.c:159</div></div>
-<div class="ttc" id="agraphics__gtk__drawing__area_8c_html_aa1ba6c9692a5f32227a87a09ddec95b0"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#aa1ba6c9692a5f32227a87a09ddec95b0">gc_set_background</a></div><div class="ttdeci">static void gc_set_background(struct graphics_gc_priv *gc, struct color *c)</div><div class="ttdef"><b>Definition</b> graphics_gtk_drawing_area.c:163</div></div>
-<div class="ttc" id="agraphics__gtk__drawing__area_8c_html_ad5c2bfd6478b169c940afc5bf7246700"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#ad5c2bfd6478b169c940afc5bf7246700">gc_set_texture</a></div><div class="ttdeci">static void gc_set_texture(struct graphics_gc_priv *gc, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition</b> graphics_gtk_drawing_area.c:166</div></div>
-<div class="ttc" id="agraphics__gtk__drawing__area_8c_html_ad776465bab5741fdc7886fb14234b379"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#ad776465bab5741fdc7886fb14234b379">gc_set_dashes</a></div><div class="ttdeci">static void gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n)</div><div class="ttdef"><b>Definition</b> graphics_gtk_drawing_area.c:144</div></div>
-<div class="ttc" id="agraphics__gtk__drawing__area_8c_html_add7dfa8917652d28c056970edf329468"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#add7dfa8917652d28c056970edf329468">gc_set_linewidth</a></div><div class="ttdeci">static void gc_set_linewidth(struct graphics_gc_priv *gc, int w)</div><div class="ttdef"><b>Definition</b> graphics_gtk_drawing_area.c:140</div></div>
+<div class="ttc" id="agraphics__gtk__drawing__area_8c_html_a4f5a58361ff466402ab8cf75992715b3"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#a4f5a58361ff466402ab8cf75992715b3">gc_destroy</a></div><div class="ttdeci">static void gc_destroy(struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition</b> graphics_gtk_drawing_area.c:129</div></div>
+<div class="ttc" id="agraphics__gtk__drawing__area_8c_html_a9883b50b443c2aa7ca6b30f86ea9ee51"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#a9883b50b443c2aa7ca6b30f86ea9ee51">gc_set_foreground</a></div><div class="ttdeci">static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)</div><div class="ttdef"><b>Definition</b> graphics_gtk_drawing_area.c:154</div></div>
+<div class="ttc" id="agraphics__gtk__drawing__area_8c_html_aa1ba6c9692a5f32227a87a09ddec95b0"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#aa1ba6c9692a5f32227a87a09ddec95b0">gc_set_background</a></div><div class="ttdeci">static void gc_set_background(struct graphics_gc_priv *gc, struct color *c)</div><div class="ttdef"><b>Definition</b> graphics_gtk_drawing_area.c:158</div></div>
+<div class="ttc" id="agraphics__gtk__drawing__area_8c_html_ad5c2bfd6478b169c940afc5bf7246700"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#ad5c2bfd6478b169c940afc5bf7246700">gc_set_texture</a></div><div class="ttdeci">static void gc_set_texture(struct graphics_gc_priv *gc, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition</b> graphics_gtk_drawing_area.c:161</div></div>
+<div class="ttc" id="agraphics__gtk__drawing__area_8c_html_ad776465bab5741fdc7886fb14234b379"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#ad776465bab5741fdc7886fb14234b379">gc_set_dashes</a></div><div class="ttdeci">static void gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n)</div><div class="ttdef"><b>Definition</b> graphics_gtk_drawing_area.c:139</div></div>
+<div class="ttc" id="agraphics__gtk__drawing__area_8c_html_add7dfa8917652d28c056970edf329468"><div class="ttname"><a href="graphics__gtk__drawing__area_8c.html#add7dfa8917652d28c056970edf329468">gc_set_linewidth</a></div><div class="ttdeci">static void gc_set_linewidth(struct graphics_gc_priv *gc, int w)</div><div class="ttdef"><b>Definition</b> graphics_gtk_drawing_area.c:135</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="graphics__gtk__drawing__area_8c.html#a07cd818b1139be8cc8cd9b54f02c8ac9">gc_new()</a>.</p>
 

@@ -97,19 +97,19 @@ $(document).ready(function(){initNavTree('gui__internal__keyboard_8c.html',''); 
   <div class="headertitle"><div class="title">gui_internal_keyboard.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;glib.h&gt;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="gui__internal__keyboard_8h_source.html">gui_internal_keyboard.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="color_8h_source.html">color.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="gui__internal_8h_source.html">gui_internal.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui__internal__widget_8h_source.html">gui_internal_widget.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui__internal__priv_8h_source.html">gui_internal_priv.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="gui__internal__menu_8h_source.html">gui_internal_menu.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui__internal__keyboard_8h_source.html">gui_internal_keyboard.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui__internal__priv_8h_source.html">gui_internal_priv.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui__internal__widget_8h_source.html">gui_internal_widget.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -121,13 +121,13 @@ Data Structures</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:a423fa3afede5d7912c7c6386cecf86c6" id="r_a423fa3afede5d7912c7c6386cecf86c6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__keyboard_8c.html#a423fa3afede5d7912c7c6386cecf86c6">KEY</a>(x)&#160;&#160;&#160;<a class="el" href="gui__internal__keyboard_8c.html#a0a4dc7020357704570d264c35fd3abca">gui_internal_keyboard_key</a>(this, wkbd, (x), (x), max_w, max_h)</td></tr>
 <tr class="separator:a423fa3afede5d7912c7c6386cecf86c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b9faf6ebab2ed838c8c1ecf61d99328" id="r_a4b9faf6ebab2ed838c8c1ecf61d99328"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__keyboard_8c.html#a4b9faf6ebab2ed838c8c1ecf61d99328">SPACER</a>()&#160;&#160;&#160;<a class="el" href="gui__internal__keyboard_8c.html#ac3c0f2356a5d91950ca7a6813e95053d">gui_internal_keyboard_key_data</a>(this, wkbd, &quot;&quot;, 0, NULL, NULL, NULL,max_w,max_h)</td></tr>
+<tr class="memitem:a4b9faf6ebab2ed838c8c1ecf61d99328" id="r_a4b9faf6ebab2ed838c8c1ecf61d99328"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__keyboard_8c.html#a4b9faf6ebab2ed838c8c1ecf61d99328">SPACER</a>()&#160;&#160;&#160;<a class="el" href="gui__internal__keyboard_8c.html#ac3c0f2356a5d91950ca7a6813e95053d">gui_internal_keyboard_key_data</a>(this, wkbd, &quot;&quot;, 0, NULL, NULL, NULL, max_w, max_h)</td></tr>
 <tr class="separator:a4b9faf6ebab2ed838c8c1ecf61d99328"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a605dbdf5c9c7c6edbb25ad8981e471d6" id="r_a605dbdf5c9c7c6edbb25ad8981e471d6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__keyboard_8c.html#a605dbdf5c9c7c6edbb25ad8981e471d6">MODE</a>(x)</td></tr>
 <tr class="separator:a605dbdf5c9c7c6edbb25ad8981e471d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09b2c6fd0b55909acc70b4a3f112d8b2" id="r_a09b2c6fd0b55909acc70b4a3f112d8b2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__keyboard_8c.html#a09b2c6fd0b55909acc70b4a3f112d8b2">SWCASE</a>()&#160;&#160;&#160;<a class="el" href="gui__internal__keyboard_8c.html#a605dbdf5c9c7c6edbb25ad8981e471d6">MODE</a>(<a class="el" href="gui__internal__keyboard_8c.html#a838883242fc22768813a027b5bad97f2">gui_internal_keyb_modes</a>[mode/8].case_mode)</td></tr>
+<tr class="memitem:a09b2c6fd0b55909acc70b4a3f112d8b2" id="r_a09b2c6fd0b55909acc70b4a3f112d8b2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__keyboard_8c.html#a09b2c6fd0b55909acc70b4a3f112d8b2">SWCASE</a>()&#160;&#160;&#160;<a class="el" href="gui__internal__keyboard_8c.html#a605dbdf5c9c7c6edbb25ad8981e471d6">MODE</a>(<a class="el" href="gui__internal__keyboard_8c.html#a838883242fc22768813a027b5bad97f2">gui_internal_keyb_modes</a>[mode / 8].case_mode)</td></tr>
 <tr class="separator:a09b2c6fd0b55909acc70b4a3f112d8b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9ed919764e38568cfccb4f297b353e7" id="r_ab9ed919764e38568cfccb4f297b353e7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__keyboard_8c.html#ab9ed919764e38568cfccb4f297b353e7">UMLAUT</a>()&#160;&#160;&#160;<a class="el" href="gui__internal__keyboard_8c.html#a605dbdf5c9c7c6edbb25ad8981e471d6">MODE</a>(<a class="el" href="gui__internal__keyboard_8c.html#a838883242fc22768813a027b5bad97f2">gui_internal_keyb_modes</a>[mode/8].umlaut_mode)</td></tr>
+<tr class="memitem:ab9ed919764e38568cfccb4f297b353e7" id="r_ab9ed919764e38568cfccb4f297b353e7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="gui__internal__keyboard_8c.html#ab9ed919764e38568cfccb4f297b353e7">UMLAUT</a>()&#160;&#160;&#160;<a class="el" href="gui__internal__keyboard_8c.html#a605dbdf5c9c7c6edbb25ad8981e471d6">MODE</a>(<a class="el" href="gui__internal__keyboard_8c.html#a838883242fc22768813a027b5bad97f2">gui_internal_keyb_modes</a>[mode / 8].umlaut_mode)</td></tr>
 <tr class="separator:ab9ed919764e38568cfccb4f297b353e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -205,16 +205,16 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">                <a class="code hl_function" href="gui__internal__keyboard_8c.html#ac3c0f2356a5d91950ca7a6813e95053d">gui_internal_keyboard_key_data</a>(<span class="keyword">this</span>, wkbd, \</div>
-<div class="line">                <a class="code hl_variable" href="gui__internal__keyboard_8c.html#a838883242fc22768813a027b5bad97f2">gui_internal_keyb_modes</a>[(x)/8].title, \</div>
-<div class="line">                <a class="code hl_variable" href="gui__internal__keyboard_8c.html#a838883242fc22768813a027b5bad97f2">gui_internal_keyb_modes</a>[(x)/8].font, \</div>
-<div class="line">                <a class="code hl_function" href="gui__internal__keyboard_8c.html#ad51d50b9d7e3b540fa425f20dfe79a9c">gui_internal_keyboard_change</a>, wkbdb, NULL,max_w,max_h) \</div>
-<div class="line">                        -&gt; datai = (mode &amp; <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186adbc3dbdb0c95be95213de79288150042">VKBD_MASK_7</a>) | ((x) &amp; <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a129cf01acf76e52912984c276a7be347">VKBD_LAYOUT_MASK</a>)</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_function" href="gui__internal__keyboard_8c.html#ac3c0f2356a5d91950ca7a6813e95053d">gui_internal_keyboard_key_data</a>(<span class="keyword">this</span>, wkbd, <a class="code hl_variable" href="gui__internal__keyboard_8c.html#a838883242fc22768813a027b5bad97f2">gui_internal_keyb_modes</a>[(x) / 8].title,                                 \</div>
+<div class="line">                                   <a class="code hl_variable" href="gui__internal__keyboard_8c.html#a838883242fc22768813a027b5bad97f2">gui_internal_keyb_modes</a>[(x) / 8].font, <a class="code hl_function" href="gui__internal__keyboard_8c.html#ad51d50b9d7e3b540fa425f20dfe79a9c">gui_internal_keyboard_change</a>, wkbdb, NULL,   \</div>
+<div class="line">                                   max_w, max_h)                                                                       \</div>
+<div class="line">        -&gt;<a class="code hl_variable" href="structwidget.html#a9e2e7120af088874f5da62344ef6f483">datai</a> = (mode &amp; <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186adbc3dbdb0c95be95213de79288150042">VKBD_MASK_7</a>) | ((x) &amp; <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a129cf01acf76e52912984c276a7be347">VKBD_LAYOUT_MASK</a>)</div>
 <div class="ttc" id="agui__internal__keyboard_8c_html_a838883242fc22768813a027b5bad97f2"><div class="ttname"><a href="gui__internal__keyboard_8c.html#a838883242fc22768813a027b5bad97f2">gui_internal_keyb_modes</a></div><div class="ttdeci">struct gui_internal_keyb_mode gui_internal_keyb_modes[]</div><div class="ttdoc">A list of all available keyboard modes.</div></div>
 <div class="ttc" id="agui__internal__keyboard_8c_html_ac3c0f2356a5d91950ca7a6813e95053d"><div class="ttname"><a href="gui__internal__keyboard_8c.html#ac3c0f2356a5d91950ca7a6813e95053d">gui_internal_keyboard_key_data</a></div><div class="ttdeci">static struct widget * gui_internal_keyboard_key_data(struct gui_priv *this, struct widget *wkbd, char *text, int font, void(*func)(struct gui_priv *priv, struct widget *widget, void *data), void *data, void(*data_free)(void *data), int w, int h)</div><div class="ttdef"><b>Definition</b> gui_internal_keyboard.c:79</div></div>
-<div class="ttc" id="agui__internal__keyboard_8c_html_ad51d50b9d7e3b540fa425f20dfe79a9c"><div class="ttname"><a href="gui__internal__keyboard_8c.html#ad51d50b9d7e3b540fa425f20dfe79a9c">gui_internal_keyboard_change</a></div><div class="ttdeci">static void gui_internal_keyboard_change(struct gui_priv *this, struct widget *key, void *data)</div><div class="ttdef"><b>Definition</b> gui_internal_keyboard.c:682</div></div>
+<div class="ttc" id="agui__internal__keyboard_8c_html_ad51d50b9d7e3b540fa425f20dfe79a9c"><div class="ttname"><a href="gui__internal__keyboard_8c.html#ad51d50b9d7e3b540fa425f20dfe79a9c">gui_internal_keyboard_change</a></div><div class="ttdeci">static void gui_internal_keyboard_change(struct gui_priv *this, struct widget *key, void *data)</div><div class="ttdef"><b>Definition</b> gui_internal_keyboard.c:695</div></div>
 <div class="ttc" id="agui__internal__keyboard_8h_html_acec8ced03ff902d229024cd490554186a129cf01acf76e52912984c276a7be347"><div class="ttname"><a href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a129cf01acf76e52912984c276a7be347">VKBD_LAYOUT_MASK</a></div><div class="ttdeci">@ VKBD_LAYOUT_MASK</div><div class="ttdef"><b>Definition</b> gui_internal_keyboard.h:22</div></div>
 <div class="ttc" id="agui__internal__keyboard_8h_html_acec8ced03ff902d229024cd490554186adbc3dbdb0c95be95213de79288150042"><div class="ttname"><a href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186adbc3dbdb0c95be95213de79288150042">VKBD_MASK_7</a></div><div class="ttdeci">@ VKBD_MASK_7</div><div class="ttdef"><b>Definition</b> gui_internal_keyboard.h:20</div></div>
+<div class="ttc" id="astructwidget_html_a9e2e7120af088874f5da62344ef6f483"><div class="ttname"><a href="structwidget.html#a9e2e7120af088874f5da62344ef6f483">widget::datai</a></div><div class="ttdeci">int datai</div><div class="ttdef"><b>Definition</b> gui_internal_widget.h:42</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -228,7 +228,7 @@ Variables</h2></td></tr>
           <td class="memname">#define SPACER</td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="gui__internal__keyboard_8c.html#ac3c0f2356a5d91950ca7a6813e95053d">gui_internal_keyboard_key_data</a>(this, wkbd, &quot;&quot;, 0, NULL, NULL, NULL,max_w,max_h)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="gui__internal__keyboard_8c.html#ac3c0f2356a5d91950ca7a6813e95053d">gui_internal_keyboard_key_data</a>(this, wkbd, &quot;&quot;, 0, NULL, NULL, NULL, max_w, max_h)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -245,7 +245,7 @@ Variables</h2></td></tr>
           <td class="memname">#define SWCASE</td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="gui__internal__keyboard_8c.html#a605dbdf5c9c7c6edbb25ad8981e471d6">MODE</a>(<a class="el" href="gui__internal__keyboard_8c.html#a838883242fc22768813a027b5bad97f2">gui_internal_keyb_modes</a>[mode/8].case_mode)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="gui__internal__keyboard_8c.html#a605dbdf5c9c7c6edbb25ad8981e471d6">MODE</a>(<a class="el" href="gui__internal__keyboard_8c.html#a838883242fc22768813a027b5bad97f2">gui_internal_keyb_modes</a>[mode / 8].case_mode)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -262,7 +262,7 @@ Variables</h2></td></tr>
           <td class="memname">#define UMLAUT</td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="gui__internal__keyboard_8c.html#a605dbdf5c9c7c6edbb25ad8981e471d6">MODE</a>(<a class="el" href="gui__internal__keyboard_8c.html#a838883242fc22768813a027b5bad97f2">gui_internal_keyb_modes</a>[mode/8].umlaut_mode)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="gui__internal__keyboard_8c.html#a605dbdf5c9c7c6edbb25ad8981e471d6">MODE</a>(<a class="el" href="gui__internal__keyboard_8c.html#a838883242fc22768813a027b5bad97f2">gui_internal_keyb_modes</a>[mode / 8].umlaut_mode)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -890,15 +890,24 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
 <div class="line">     {<span class="stringliteral">&quot;ABC&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a73e304bac5846d073b75e77901d02a45">VKBD_LATIN_LOWER</a>,    <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a90981f5430d595f62d5d934087970d23">VKBD_UMLAUT_UPPER</a>},</div>
-<div class="line">     {<span class="stringliteral">&quot;abc&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186aeabfb5d4e9cc7f9fd718d64fd7922e22">VKBD_LATIN_UPPER</a>,    <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a5b0060c2627ba078a27a46a3fcfcc9aa">VKBD_UMLAUT_LOWER</a>},</div>
-<div class="line">     {<span class="stringliteral">&quot;123&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186aeabfb5d4e9cc7f9fd718d64fd7922e22">VKBD_LATIN_UPPER</a>,    <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a90981f5430d595f62d5d934087970d23">VKBD_UMLAUT_UPPER</a>},</div>
-<div class="line">     {<span class="stringliteral">&quot;ÄÖÜ&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a5b0060c2627ba078a27a46a3fcfcc9aa">VKBD_UMLAUT_LOWER</a>,   <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186aeabfb5d4e9cc7f9fd718d64fd7922e22">VKBD_LATIN_UPPER</a>},</div>
-<div class="line">     {<span class="stringliteral">&quot;äöü&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a90981f5430d595f62d5d934087970d23">VKBD_UMLAUT_UPPER</a>,   <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a73e304bac5846d073b75e77901d02a45">VKBD_LATIN_LOWER</a>},</div>
-<div class="line">     {<span class="stringliteral">&quot;АБВ&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a65b37ee78f60cb83d41387dfd8f62822">VKBD_CYRILLIC_LOWER</a>, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186aeabfb5d4e9cc7f9fd718d64fd7922e22">VKBD_LATIN_UPPER</a>},</div>
-<div class="line">     {<span class="stringliteral">&quot;абв&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186afdd99ee4ac06bd7e771f8e8499047890">VKBD_CYRILLIC_UPPER</a>, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a73e304bac5846d073b75e77901d02a45">VKBD_LATIN_LOWER</a>},</div>
-<div class="line">     {<span class="stringliteral">&quot;DEG&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a246c425d5b7a7482ac129f45917d3fcd">VKBD_FLAG_2</a>,         <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a246c425d5b7a7482ac129f45917d3fcd">VKBD_FLAG_2</a>},</div>
-<div class="line">     {<span class="stringliteral">&quot;ABΓ&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a7e5ea656a141caa4768e81326a163acf">VKBD_GREEK_LOWER</a>,    <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186aeabfb5d4e9cc7f9fd718d64fd7922e22">VKBD_LATIN_UPPER</a>},</div>
-<div class="line">     {<span class="stringliteral">&quot;abγ&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186ae56edfb21d48639aa1e3c3826b8f3540">VKBD_GREEK_UPPER</a>,    <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a73e304bac5846d073b75e77901d02a45">VKBD_LATIN_LOWER</a>}</div>
+<div class="line">    </div>
+<div class="line">    {<span class="stringliteral">&quot;abc&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186aeabfb5d4e9cc7f9fd718d64fd7922e22">VKBD_LATIN_UPPER</a>,    <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a5b0060c2627ba078a27a46a3fcfcc9aa">VKBD_UMLAUT_LOWER</a>},</div>
+<div class="line">    </div>
+<div class="line">    {<span class="stringliteral">&quot;123&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186aeabfb5d4e9cc7f9fd718d64fd7922e22">VKBD_LATIN_UPPER</a>,    <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a90981f5430d595f62d5d934087970d23">VKBD_UMLAUT_UPPER</a>},</div>
+<div class="line">    </div>
+<div class="line">    {<span class="stringliteral">&quot;ÄÖÜ&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a5b0060c2627ba078a27a46a3fcfcc9aa">VKBD_UMLAUT_LOWER</a>,   <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186aeabfb5d4e9cc7f9fd718d64fd7922e22">VKBD_LATIN_UPPER</a> },</div>
+<div class="line">    </div>
+<div class="line">    {<span class="stringliteral">&quot;äöü&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a90981f5430d595f62d5d934087970d23">VKBD_UMLAUT_UPPER</a>,   <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a73e304bac5846d073b75e77901d02a45">VKBD_LATIN_LOWER</a> },</div>
+<div class="line">    </div>
+<div class="line">    {<span class="stringliteral">&quot;АБВ&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a65b37ee78f60cb83d41387dfd8f62822">VKBD_CYRILLIC_LOWER</a>, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186aeabfb5d4e9cc7f9fd718d64fd7922e22">VKBD_LATIN_UPPER</a> },</div>
+<div class="line">    </div>
+<div class="line">    {<span class="stringliteral">&quot;абв&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186afdd99ee4ac06bd7e771f8e8499047890">VKBD_CYRILLIC_UPPER</a>, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a73e304bac5846d073b75e77901d02a45">VKBD_LATIN_LOWER</a> },</div>
+<div class="line">    </div>
+<div class="line">    {<span class="stringliteral">&quot;DEG&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a246c425d5b7a7482ac129f45917d3fcd">VKBD_FLAG_2</a>,         <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a246c425d5b7a7482ac129f45917d3fcd">VKBD_FLAG_2</a>      },</div>
+<div class="line">    </div>
+<div class="line">    {<span class="stringliteral">&quot;ABΓ&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a7e5ea656a141caa4768e81326a163acf">VKBD_GREEK_LOWER</a>,    <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186aeabfb5d4e9cc7f9fd718d64fd7922e22">VKBD_LATIN_UPPER</a> },</div>
+<div class="line">    </div>
+<div class="line">    {<span class="stringliteral">&quot;abγ&quot;</span>, 2, <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186ae56edfb21d48639aa1e3c3826b8f3540">VKBD_GREEK_UPPER</a>,    <a class="code hl_enumvalue" href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a73e304bac5846d073b75e77901d02a45">VKBD_LATIN_LOWER</a> }</div>
 <div class="line">}</div>
 <div class="ttc" id="agui__internal__keyboard_8h_html_acec8ced03ff902d229024cd490554186a246c425d5b7a7482ac129f45917d3fcd"><div class="ttname"><a href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a246c425d5b7a7482ac129f45917d3fcd">VKBD_FLAG_2</a></div><div class="ttdeci">@ VKBD_FLAG_2</div><div class="ttdef"><b>Definition</b> gui_internal_keyboard.h:18</div></div>
 <div class="ttc" id="agui__internal__keyboard_8h_html_acec8ced03ff902d229024cd490554186a5b0060c2627ba078a27a46a3fcfcc9aa"><div class="ttname"><a href="gui__internal__keyboard_8h.html#acec8ced03ff902d229024cd490554186a5b0060c2627ba078a27a46a3fcfcc9aa">VKBD_UMLAUT_LOWER</a></div><div class="ttdeci">@ VKBD_UMLAUT_LOWER</div><div class="ttdef"><b>Definition</b> gui_internal_keyboard.h:10</div></div>

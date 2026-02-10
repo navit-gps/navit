@@ -99,22 +99,22 @@ $(document).ready(function(){initNavTree('speak_8c.html',''); initResizable(); }
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;config.h&quot;</code><br />
-<code>#include &lt;unistd.h&gt;</code><br />
-<code>#include &lt;sys/types.h&gt;</code><br />
-<code>#include &lt;sys/stat.h&gt;</code><br />
-<code>#include &lt;glib.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="speech_8h_source.html">speech.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="util_8h_source.html">util.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;support/espeak/speech.h&quot;</code><br />
-<code>#include &quot;support/espeak/speak_lib.h&quot;</code><br />
 <code>#include &quot;support/espeak/phoneme.h&quot;</code><br />
+<code>#include &quot;support/espeak/speak_lib.h&quot;</code><br />
+<code>#include &quot;support/espeak/speech.h&quot;</code><br />
 <code>#include &quot;support/espeak/synthesize.h&quot;</code><br />
-<code>#include &quot;support/espeak/voice.h&quot;</code><br />
 <code>#include &quot;support/espeak/translate.h&quot;</code><br />
+<code>#include &quot;support/espeak/voice.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="util_8h_source.html">util.h</a>&quot;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
+<code>#include &lt;sys/stat.h&gt;</code><br />
+<code>#include &lt;sys/types.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -895,8 +895,8 @@ Variables</h2></td></tr>
 <div class="line">    <a class="code hl_function" href="speak_8c.html#acca238f78cc222318d7724db007fe2c1">espeak_destroy</a>,</div>
 <div class="line">    <a class="code hl_function" href="speak_8c.html#a77255d600c048d01bae6cf3b7217bfc9">espeak_say</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="aspeak_8c_html_a77255d600c048d01bae6cf3b7217bfc9"><div class="ttname"><a href="speak_8c.html#a77255d600c048d01bae6cf3b7217bfc9">espeak_say</a></div><div class="ttdeci">static int espeak_say(struct speech_priv *this, const char *text)</div><div class="ttdef"><b>Definition</b> speak.c:346</div></div>
-<div class="ttc" id="aspeak_8c_html_acca238f78cc222318d7724db007fe2c1"><div class="ttname"><a href="speak_8c.html#acca238f78cc222318d7724db007fe2c1">espeak_destroy</a></div><div class="ttdeci">static void espeak_destroy(struct speech_priv *this)</div><div class="ttdef"><b>Definition</b> speak.c:368</div></div>
+<div class="ttc" id="aspeak_8c_html_a77255d600c048d01bae6cf3b7217bfc9"><div class="ttname"><a href="speak_8c.html#a77255d600c048d01bae6cf3b7217bfc9">espeak_say</a></div><div class="ttdeci">static int espeak_say(struct speech_priv *this, const char *text)</div><div class="ttdef"><b>Definition</b> speak.c:325</div></div>
+<div class="ttc" id="aspeak_8c_html_acca238f78cc222318d7724db007fe2c1"><div class="ttname"><a href="speak_8c.html#acca238f78cc222318d7724db007fe2c1">espeak_destroy</a></div><div class="ttdeci">static void espeak_destroy(struct speech_priv *this)</div><div class="ttdef"><b>Definition</b> speak.c:347</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="speak_8c.html#aa9f7832bfbc4acb734a43c684fa15905">espeak_new()</a>.</p>
 

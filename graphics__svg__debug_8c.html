@@ -96,25 +96,25 @@ $(document).ready(function(){initNavTree('graphics__svg__debug_8c.html',''); ini
   <div class="headertitle"><div class="title">graphics_svg_debug.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="color_8h_source.html">color.h</a>&quot;</code><br />
-<code>#include &lt;glib.h&gt;</code><br />
-<code>#include &quot;config.h&quot;</code><br />
-<code>#include &lt;gio/gio.h&gt;</code><br />
-<code>#include &lt;pthread.h&gt;</code><br />
-<code>#include &lt;poll.h&gt;</code><br />
-<code>#include &lt;signal.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="window_8h_source.html">window.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="navit_8h_source.html">navit.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="keys_8h_source.html">keys.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="event_8h_source.html">event.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="color_8h_source.html">color.h</a>&quot;</code><br />
+<code>#include &quot;config.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="event_8h_source.html">event.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="keys_8h_source.html">keys.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="navit_8h_source.html">navit.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="util_8h_source.html">util.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="window_8h_source.html">window.h</a>&quot;</code><br />
+<code>#include &lt;gio/gio.h&gt;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
+<code>#include &lt;poll.h&gt;</code><br />
+<code>#include &lt;pthread.h&gt;</code><br />
+<code>#include &lt;signal.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -1690,10 +1690,10 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= { .font_destroy =</div>
-<div class="line">        <a class="code hl_function" href="graphics__svg__debug_8c.html#a8da894e64fa6f95c11947300c20f7d7c">svg_debug_font_destroy</a>,</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">    .font_destroy = <a class="code hl_function" href="graphics__svg__debug_8c.html#a8da894e64fa6f95c11947300c20f7d7c">svg_debug_font_destroy</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="agraphics__svg__debug_8c_html_a8da894e64fa6f95c11947300c20f7d7c"><div class="ttname"><a href="graphics__svg__debug_8c.html#a8da894e64fa6f95c11947300c20f7d7c">svg_debug_font_destroy</a></div><div class="ttdeci">static void svg_debug_font_destroy(struct graphics_font_priv *this)</div><div class="ttdef"><b>Definition</b> graphics_svg_debug.c:117</div></div>
+<div class="ttc" id="agraphics__svg__debug_8c_html_a8da894e64fa6f95c11947300c20f7d7c"><div class="ttname"><a href="graphics__svg__debug_8c.html#a8da894e64fa6f95c11947300c20f7d7c">svg_debug_font_destroy</a></div><div class="ttdeci">static void svg_debug_font_destroy(struct graphics_font_priv *this)</div><div class="ttdef"><b>Definition</b> graphics_svg_debug.c:105</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="graphics__svg__debug_8c.html#a94b939397ceeec6ff7bacbe3a3956059">svg_debug_font_new()</a>.</p>
 
@@ -1718,19 +1718,20 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= { .gc_destroy =</div>
-<div class="line">        <a class="code hl_function" href="graphics__svg__debug_8c.html#acf51fa0abdb7507e906c198eb35ef5ce">svg_debug_gc_destroy</a>, .gc_set_linewidth = <a class="code hl_function" href="graphics__svg__debug_8c.html#acec827e17e11679a044e114b6dce4c74">svg_debug_gc_set_linewidth</a>,</div>
-<div class="line">                              .gc_set_dashes = <a class="code hl_function" href="graphics__svg__debug_8c.html#a73e9a8f5b2e0ae3985f418e5ec4713e4">svg_debug_gc_set_dashes</a>, .gc_set_foreground =</div>
-<div class="line">                                          <a class="code hl_function" href="graphics__svg__debug_8c.html#a90965afb450f79791acd65d54391fa9b">svg_debug_gc_set_foreground</a>, .gc_set_background =</div>
-<div class="line">                                                  <a class="code hl_function" href="graphics__svg__debug_8c.html#a10172d73678fa8c156e15a0f209136fd">svg_debug_gc_set_background</a>, .gc_set_texture =</div>
-<div class="line">                                                          <a class="code hl_function" href="graphics__svg__debug_8c.html#a695709a883c22aa1fbde36be98bab8de">svg_debug_gc_set_texture</a>,</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">    .gc_destroy = <a class="code hl_function" href="graphics__svg__debug_8c.html#acf51fa0abdb7507e906c198eb35ef5ce">svg_debug_gc_destroy</a>,</div>
+<div class="line">    .gc_set_linewidth = <a class="code hl_function" href="graphics__svg__debug_8c.html#acec827e17e11679a044e114b6dce4c74">svg_debug_gc_set_linewidth</a>,</div>
+<div class="line">    .gc_set_dashes = <a class="code hl_function" href="graphics__svg__debug_8c.html#a73e9a8f5b2e0ae3985f418e5ec4713e4">svg_debug_gc_set_dashes</a>,</div>
+<div class="line">    .gc_set_foreground = <a class="code hl_function" href="graphics__svg__debug_8c.html#a90965afb450f79791acd65d54391fa9b">svg_debug_gc_set_foreground</a>,</div>
+<div class="line">    .gc_set_background = <a class="code hl_function" href="graphics__svg__debug_8c.html#a10172d73678fa8c156e15a0f209136fd">svg_debug_gc_set_background</a>,</div>
+<div class="line">    .gc_set_texture = <a class="code hl_function" href="graphics__svg__debug_8c.html#a695709a883c22aa1fbde36be98bab8de">svg_debug_gc_set_texture</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="agraphics__svg__debug_8c_html_a10172d73678fa8c156e15a0f209136fd"><div class="ttname"><a href="graphics__svg__debug_8c.html#a10172d73678fa8c156e15a0f209136fd">svg_debug_gc_set_background</a></div><div class="ttdeci">static void svg_debug_gc_set_background(struct graphics_gc_priv *gc, struct color *c)</div><div class="ttdef"><b>Definition</b> graphics_svg_debug.c:193</div></div>
-<div class="ttc" id="agraphics__svg__debug_8c_html_a695709a883c22aa1fbde36be98bab8de"><div class="ttname"><a href="graphics__svg__debug_8c.html#a695709a883c22aa1fbde36be98bab8de">svg_debug_gc_set_texture</a></div><div class="ttdeci">static void svg_debug_gc_set_texture(struct graphics_gc_priv *gc, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition</b> graphics_svg_debug.c:205</div></div>
-<div class="ttc" id="agraphics__svg__debug_8c_html_a73e9a8f5b2e0ae3985f418e5ec4713e4"><div class="ttname"><a href="graphics__svg__debug_8c.html#a73e9a8f5b2e0ae3985f418e5ec4713e4">svg_debug_gc_set_dashes</a></div><div class="ttdeci">static void svg_debug_gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n)</div><div class="ttdef"><b>Definition</b> graphics_svg_debug.c:171</div></div>
-<div class="ttc" id="agraphics__svg__debug_8c_html_a90965afb450f79791acd65d54391fa9b"><div class="ttname"><a href="graphics__svg__debug_8c.html#a90965afb450f79791acd65d54391fa9b">svg_debug_gc_set_foreground</a></div><div class="ttdeci">static void svg_debug_gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)</div><div class="ttdef"><b>Definition</b> graphics_svg_debug.c:181</div></div>
-<div class="ttc" id="agraphics__svg__debug_8c_html_acec827e17e11679a044e114b6dce4c74"><div class="ttname"><a href="graphics__svg__debug_8c.html#acec827e17e11679a044e114b6dce4c74">svg_debug_gc_set_linewidth</a></div><div class="ttdeci">static void svg_debug_gc_set_linewidth(struct graphics_gc_priv *gc, int w)</div><div class="ttdef"><b>Definition</b> graphics_svg_debug.c:162</div></div>
-<div class="ttc" id="agraphics__svg__debug_8c_html_acf51fa0abdb7507e906c198eb35ef5ce"><div class="ttname"><a href="graphics__svg__debug_8c.html#acf51fa0abdb7507e906c198eb35ef5ce">svg_debug_gc_destroy</a></div><div class="ttdeci">static void svg_debug_gc_destroy(struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition</b> graphics_svg_debug.c:154</div></div>
+<div class="ttc" id="agraphics__svg__debug_8c_html_a10172d73678fa8c156e15a0f209136fd"><div class="ttname"><a href="graphics__svg__debug_8c.html#a10172d73678fa8c156e15a0f209136fd">svg_debug_gc_set_background</a></div><div class="ttdeci">static void svg_debug_gc_set_background(struct graphics_gc_priv *gc, struct color *c)</div><div class="ttdef"><b>Definition</b> graphics_svg_debug.c:172</div></div>
+<div class="ttc" id="agraphics__svg__debug_8c_html_a695709a883c22aa1fbde36be98bab8de"><div class="ttname"><a href="graphics__svg__debug_8c.html#a695709a883c22aa1fbde36be98bab8de">svg_debug_gc_set_texture</a></div><div class="ttdeci">static void svg_debug_gc_set_texture(struct graphics_gc_priv *gc, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition</b> graphics_svg_debug.c:182</div></div>
+<div class="ttc" id="agraphics__svg__debug_8c_html_a73e9a8f5b2e0ae3985f418e5ec4713e4"><div class="ttname"><a href="graphics__svg__debug_8c.html#a73e9a8f5b2e0ae3985f418e5ec4713e4">svg_debug_gc_set_dashes</a></div><div class="ttdeci">static void svg_debug_gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n)</div><div class="ttdef"><b>Definition</b> graphics_svg_debug.c:154</div></div>
+<div class="ttc" id="agraphics__svg__debug_8c_html_a90965afb450f79791acd65d54391fa9b"><div class="ttname"><a href="graphics__svg__debug_8c.html#a90965afb450f79791acd65d54391fa9b">svg_debug_gc_set_foreground</a></div><div class="ttdeci">static void svg_debug_gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)</div><div class="ttdef"><b>Definition</b> graphics_svg_debug.c:162</div></div>
+<div class="ttc" id="agraphics__svg__debug_8c_html_acec827e17e11679a044e114b6dce4c74"><div class="ttname"><a href="graphics__svg__debug_8c.html#acec827e17e11679a044e114b6dce4c74">svg_debug_gc_set_linewidth</a></div><div class="ttdeci">static void svg_debug_gc_set_linewidth(struct graphics_gc_priv *gc, int w)</div><div class="ttdef"><b>Definition</b> graphics_svg_debug.c:147</div></div>
+<div class="ttc" id="agraphics__svg__debug_8c_html_acf51fa0abdb7507e906c198eb35ef5ce"><div class="ttname"><a href="graphics__svg__debug_8c.html#acf51fa0abdb7507e906c198eb35ef5ce">svg_debug_gc_destroy</a></div><div class="ttdeci">static void svg_debug_gc_destroy(struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition</b> graphics_svg_debug.c:139</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="graphics__svg__debug_8c.html#af5e1864a80cde23dacf69ec4bf36147c">svg_debug_gc_new()</a>.</p>
 
@@ -1779,10 +1780,10 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= { .image_destroy =</div>
-<div class="line">        <a class="code hl_function" href="graphics__svg__debug_8c.html#ac6f5d13c2af41abbc0fa149f053b3e00">svg_debug_image_destroy</a>,</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">    .image_destroy = <a class="code hl_function" href="graphics__svg__debug_8c.html#ac6f5d13c2af41abbc0fa149f053b3e00">svg_debug_image_destroy</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="agraphics__svg__debug_8c_html_ac6f5d13c2af41abbc0fa149f053b3e00"><div class="ttname"><a href="graphics__svg__debug_8c.html#ac6f5d13c2af41abbc0fa149f053b3e00">svg_debug_image_destroy</a></div><div class="ttdeci">void svg_debug_image_destroy(struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition</b> graphics_svg_debug.c:240</div></div>
+<div class="ttc" id="agraphics__svg__debug_8c_html_ac6f5d13c2af41abbc0fa149f053b3e00"><div class="ttname"><a href="graphics__svg__debug_8c.html#ac6f5d13c2af41abbc0fa149f053b3e00">svg_debug_image_destroy</a></div><div class="ttdeci">void svg_debug_image_destroy(struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition</b> graphics_svg_debug.c:213</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="graphics__svg__debug_8c.html#a4bc9ce3f0168c643468da6d346f2cdf8">svg_debug_image_new()</a>.</p>
 

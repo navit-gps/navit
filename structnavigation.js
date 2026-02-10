@@ -1,6 +1,6 @@
 var structnavigation =
 [
-    [ "announce", "structnavigation.html#a91526af69c26d512570fcfd97f5fb24e", null ],
+    [ "announce", "structnavigation.html#a3f81572729c317cd6bce123c03528e88", null ],
     [ "callback", "structnavigation.html#afa0345b5205e539024c81033eaaeb315", null ],
     [ "callback_speech", "structnavigation.html#a41dad16592fa0c25fa9f7cef5a5b1c76", null ],
     [ "cmd_first", "structnavigation.html#ac0b9fcda5bf5b6b505fde45cdd14e046", null ],

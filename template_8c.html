@@ -96,8 +96,8 @@ $(document).ready(function(){initNavTree('template_8c.html',''); initResizable()
   <div class="headertitle"><div class="title">template.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="common_8h_source.html">common.h</a>&quot;</code><br />
-<code>#include &quot;template.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;template.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="common_8h_source.html">common.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -151,7 +151,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structtemplateObject.html#a96cad3cc40d24b58d9e44e9a48752181">templateObject::ref</a>, and <a class="el" href="structtemplateObject.html#a7de48100815c1ab0932a0d50bafcb5bb">templateObject::template</a>.</p>
+<p class="reference">References <a class="el" href="structtemplateObject.html#a243734734f924446e08362d04bdd93cd">templateObject::ref</a>, and <a class="el" href="structtemplateObject.html#a7de48100815c1ab0932a0d50bafcb5bb">templateObject::template</a>.</p>
 
 </div>
 </div>
@@ -255,7 +255,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structtemplateObject.html#a96cad3cc40d24b58d9e44e9a48752181">templateObject::ref</a>, <a class="el" href="structtemplateObject.html#a7de48100815c1ab0932a0d50bafcb5bb">templateObject::template</a>, and <a class="el" href="template_8c.html#ac29fa45f5fcbb579f003cd8d64529c09">template_Type</a>.</p>
+<p class="reference">References <a class="el" href="structtemplateObject.html#a243734734f924446e08362d04bdd93cd">templateObject::ref</a>, <a class="el" href="structtemplateObject.html#a7de48100815c1ab0932a0d50bafcb5bb">templateObject::template</a>, and <a class="el" href="template_8c.html#ac29fa45f5fcbb579f003cd8d64529c09">template_Type</a>.</p>
 
 </div>
 </div>
@@ -275,7 +275,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structtemplateObject.html#a96cad3cc40d24b58d9e44e9a48752181">templateObject::ref</a>, <a class="el" href="structtemplateObject.html#a7de48100815c1ab0932a0d50bafcb5bb">templateObject::template</a>, and <a class="el" href="template_8c.html#ac29fa45f5fcbb579f003cd8d64529c09">template_Type</a>.</p>
+<p class="reference">References <a class="el" href="structtemplateObject.html#a243734734f924446e08362d04bdd93cd">templateObject::ref</a>, <a class="el" href="structtemplateObject.html#a7de48100815c1ab0932a0d50bafcb5bb">templateObject::template</a>, and <a class="el" href="template_8c.html#ac29fa45f5fcbb579f003cd8d64529c09">template_Type</a>.</p>
 
 </div>
 </div>
@@ -318,8 +318,8 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    {<span class="stringliteral">&quot;func&quot;</span>,    (PyCFunction) <a class="code hl_function" href="template_8c.html#ac89045b67b10919d1542ecc41c431899">template_func</a>, METH_VARARGS },</div>
-<div class="line">    {NULL, NULL },</div>
+<div class="line">    {<span class="stringliteral">&quot;func&quot;</span>, (PyCFunction)<a class="code hl_function" href="template_8c.html#ac89045b67b10919d1542ecc41c431899">template_func</a>, METH_VARARGS},</div>
+<div class="line">    {NULL, NULL},</div>
 <div class="line">}</div>
 <div class="ttc" id="atemplate_8c_html_ac89045b67b10919d1542ecc41c431899"><div class="ttname"><a href="template_8c.html#ac89045b67b10919d1542ecc41c431899">template_func</a></div><div class="ttdeci">static PyObject * template_func(templateObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> template.c:29</div></div>
 </div><!-- fragment -->
@@ -339,16 +339,16 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_define" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div>
-<div class="line">    .tp_name=<span class="stringliteral">&quot;template&quot;</span>,</div>
-<div class="line">    .tp_basicsize=<span class="keyword">sizeof</span>(<a class="code hl_struct" href="structtemplateObject.html">templateObject</a>),</div>
-<div class="line">    .tp_dealloc=(destructor)<a class="code hl_function" href="template_8c.html#a1fe49fcc7fb0ea1cbf9fc491be32adf0">template_destroy_py</a>,</div>
-<div class="line">    .tp_getattr=<a class="code hl_function" href="template_8c.html#aa8173d5973fb8ecabec36b5df3828ee9">template_getattr_py</a>,</div>
+<div class="line">    <a class="code hl_define" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a>,</div>
+<div class="line">    .tp_name = <span class="stringliteral">&quot;template&quot;</span>,</div>
+<div class="line">    .tp_basicsize = <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structtemplateObject.html">templateObject</a>),</div>
+<div class="line">    .tp_dealloc = (destructor)<a class="code hl_function" href="template_8c.html#a1fe49fcc7fb0ea1cbf9fc491be32adf0">template_destroy_py</a>,</div>
+<div class="line">    .tp_getattr = <a class="code hl_function" href="template_8c.html#aa8173d5973fb8ecabec36b5df3828ee9">template_getattr_py</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="abinding__python_8c_html_a6bb1ff01fab2f8a8bb023f584a5aa272"><div class="ttname"><a href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div><div class="ttdeci">#define Obj_HEAD</div><div class="ttdef"><b>Definition</b> binding_python.c:39</div></div>
+<div class="ttc" id="abinding__python_8c_html_a6bb1ff01fab2f8a8bb023f584a5aa272"><div class="ttname"><a href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div><div class="ttdeci">#define Obj_HEAD</div><div class="ttdef"><b>Definition</b> binding_python.c:37</div></div>
 <div class="ttc" id="astructtemplateObject_html"><div class="ttname"><a href="structtemplateObject.html">templateObject</a></div><div class="ttdef"><b>Definition</b> template.c:23</div></div>
-<div class="ttc" id="atemplate_8c_html_a1fe49fcc7fb0ea1cbf9fc491be32adf0"><div class="ttname"><a href="template_8c.html#a1fe49fcc7fb0ea1cbf9fc491be32adf0">template_destroy_py</a></div><div class="ttdeci">static void template_destroy_py(templateObject *self)</div><div class="ttdef"><b>Definition</b> template.c:50</div></div>
-<div class="ttc" id="atemplate_8c_html_aa8173d5973fb8ecabec36b5df3828ee9"><div class="ttname"><a href="template_8c.html#aa8173d5973fb8ecabec36b5df3828ee9">template_getattr_py</a></div><div class="ttdeci">static PyObject * template_getattr_py(PyObject *self, char *name)</div><div class="ttdef"><b>Definition</b> template.c:46</div></div>
+<div class="ttc" id="atemplate_8c_html_a1fe49fcc7fb0ea1cbf9fc491be32adf0"><div class="ttname"><a href="template_8c.html#a1fe49fcc7fb0ea1cbf9fc491be32adf0">template_destroy_py</a></div><div class="ttdeci">static void template_destroy_py(templateObject *self)</div><div class="ttdef"><b>Definition</b> template.c:47</div></div>
+<div class="ttc" id="atemplate_8c_html_aa8173d5973fb8ecabec36b5df3828ee9"><div class="ttname"><a href="template_8c.html#aa8173d5973fb8ecabec36b5df3828ee9">template_getattr_py</a></div><div class="ttdeci">static PyObject * template_getattr_py(PyObject *self, char *name)</div><div class="ttdef"><b>Definition</b> template.c:43</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="template_8c.html#acf4599c568d94237085f8fbb3b4840f0">template_new_py()</a>, and <a class="el" href="template_8c.html#ae09d9e54743cb99c3e92b774f422c4df">template_new_py_ref()</a>.</p>
 

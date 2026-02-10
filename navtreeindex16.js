@@ -1,5 +1,6 @@
 var NAVTREEINDEX16 =
 {
+"graphics__win32_8c.html#afcd8028f3d79cf8e9999291b5031f6f8":[3,0,3,11,1,15],
 "graphics__win32_8h.html":[3,0,3,11,2],
 "graphics__win32_8h.html#a058d2299e7999de526afe2ced9294c3e":[3,0,3,11,2,4],
 "graphics__win32_8h.html#a06bb4097de6ef52689d02218ad0db2d6":[3,0,3,11,2,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX16 =
 "group__vehicle-file.html#ga7da19115dc28f1cb3d662b6f8f89cc98":[0,2,0,2,44],
 "group__vehicle-file.html#ga8b4aacc937cf703e1f6545306dfccd14":[0,2,0,2,60],
 "group__vehicle-file.html#ga8b9105cff71b730277b779ee64a4dc8c":[0,2,0,2,61],
-"group__vehicle-file.html#ga97e40bb9ef83c327e9948eafb64257bf":[0,2,0,2,42],
-"group__vehicle-file.html#ga9847b71967f0e1daf55c9585c07a91f7":[0,2,0,2,62]
+"group__vehicle-file.html#ga97e40bb9ef83c327e9948eafb64257bf":[0,2,0,2,42]
 };

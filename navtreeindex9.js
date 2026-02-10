@@ -1,5 +1,6 @@
 var NAVTREEINDEX9 =
 {
+"errorcode_8h.html#a6c0229f42e5c333b45518b867682c05c":[3,0,12,0,0,2,7],
 "errorcode_8h.html#a84b3291048f57a13c727615c2c529401":[3,0,12,0,0,2,11],
 "errorcode_8h.html#a95c8f0860752ab756b616fdb7c8a85df":[3,0,12,0,0,2,12],
 "errorcode_8h.html#a9bc1bb628a4f96e3025b03dbb5eb00d9":[3,0,12,0,0,2,10],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "font__freetype_8c.html#abbe5149a3e3a0775661b68e3eba3293d":[3,0,2,0,0,10],
 "font__freetype_8c.html#aceb013fe8197cf382d5d66cf84451d83":[3,0,2,0,0,26],
 "font__freetype_8c.html#ad5a350ba30d102b3669f0fee6fb8fc4d":[3,0,2,0,0,5],
-"font__freetype_8c.html#adf2b252c802e3e338486eeb568f9f88b":[3,0,2,0,0,6],
-"font__freetype_8c.html#aff84206c5843ec0d30b642fc4fb68008":[3,0,2,0,0,27]
+"font__freetype_8c.html#adf2b252c802e3e338486eeb568f9f88b":[3,0,2,0,0,6]
 };

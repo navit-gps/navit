@@ -97,23 +97,23 @@ $(document).ready(function(){initNavTree('csv_8c.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;config.h&quot;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
-<code>#include &lt;glib.h&gt;</code><br />
-<code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
-<code>#include &lt;errno.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="csv_8h_source.html">csv.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="maptype_8h_source.html">maptype.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="quadtree_8h_source.html">quadtree.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="csv_8h_source.html">csv.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
+<code>#include &lt;errno.h&gt;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -1024,13 +1024,13 @@ Variables</h2></td></tr>
 <div class="line">    <a class="code hl_function" href="csv_8c.html#ac5124d6c5a59322bcb40ec2bcf15b079">csv_create_item</a>,</div>
 <div class="line">    <a class="code hl_function" href="csv_8c.html#a649a8749a1a84e93194198c1d0c4372a">csv_get_attr</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="acsv_8c_html_a5890bdedfe93d588852a0f1bae5cd25e"><div class="ttname"><a href="csv_8c.html#a5890bdedfe93d588852a0f1bae5cd25e">map_rect_new_csv</a></div><div class="ttdeci">static struct map_rect_priv * map_rect_new_csv(struct map_priv *map, struct map_selection *sel)</div><div class="ttdef"><b>Definition</b> csv.c:489</div></div>
-<div class="ttc" id="acsv_8c_html_a649a8749a1a84e93194198c1d0c4372a"><div class="ttname"><a href="csv_8c.html#a649a8749a1a84e93194198c1d0c4372a">csv_get_attr</a></div><div class="ttdeci">static int csv_get_attr(struct map_priv *m, enum attr_type type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> csv.c:576</div></div>
-<div class="ttc" id="acsv_8c_html_a7ce233f8438da9ff4483348da61c15cb"><div class="ttname"><a href="csv_8c.html#a7ce233f8438da9ff4483348da61c15cb">map_rect_get_item_byid_csv</a></div><div class="ttdeci">static struct item * map_rect_get_item_byid_csv(struct map_rect_priv *mr, int id_hi, int id_lo)</div><div class="ttdef"><b>Definition</b> csv.c:556</div></div>
-<div class="ttc" id="acsv_8c_html_aa1d756df7b29cb1ac22006c877ef8265"><div class="ttname"><a href="csv_8c.html#aa1d756df7b29cb1ac22006c877ef8265">map_rect_destroy_csv</a></div><div class="ttdeci">static void map_rect_destroy_csv(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> csv.c:525</div></div>
-<div class="ttc" id="acsv_8c_html_aafefb776346d7179b88a45b3fc1c06ea"><div class="ttname"><a href="csv_8c.html#aafefb776346d7179b88a45b3fc1c06ea">map_rect_get_item_csv</a></div><div class="ttdeci">static struct item * map_rect_get_item_csv(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> csv.c:535</div></div>
-<div class="ttc" id="acsv_8c_html_ac5124d6c5a59322bcb40ec2bcf15b079"><div class="ttname"><a href="csv_8c.html#ac5124d6c5a59322bcb40ec2bcf15b079">csv_create_item</a></div><div class="ttdeci">static struct item * csv_create_item(struct map_rect_priv *mr, enum item_type it_type)</div><div class="ttdef"><b>Definition</b> csv.c:580</div></div>
-<div class="ttc" id="acsv_8c_html_adab0941d11a633e6cbe2ce654a7328a0"><div class="ttname"><a href="csv_8c.html#adab0941d11a633e6cbe2ce654a7328a0">map_destroy_csv</a></div><div class="ttdeci">static void map_destroy_csv(struct map_priv *m)</div><div class="ttdef"><b>Definition</b> csv.c:177</div></div>
+<div class="ttc" id="acsv_8c_html_a5890bdedfe93d588852a0f1bae5cd25e"><div class="ttname"><a href="csv_8c.html#a5890bdedfe93d588852a0f1bae5cd25e">map_rect_new_csv</a></div><div class="ttdeci">static struct map_rect_priv * map_rect_new_csv(struct map_priv *map, struct map_selection *sel)</div><div class="ttdef"><b>Definition</b> csv.c:484</div></div>
+<div class="ttc" id="acsv_8c_html_a649a8749a1a84e93194198c1d0c4372a"><div class="ttname"><a href="csv_8c.html#a649a8749a1a84e93194198c1d0c4372a">csv_get_attr</a></div><div class="ttdeci">static int csv_get_attr(struct map_priv *m, enum attr_type type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> csv.c:571</div></div>
+<div class="ttc" id="acsv_8c_html_a7ce233f8438da9ff4483348da61c15cb"><div class="ttname"><a href="csv_8c.html#a7ce233f8438da9ff4483348da61c15cb">map_rect_get_item_byid_csv</a></div><div class="ttdeci">static struct item * map_rect_get_item_byid_csv(struct map_rect_priv *mr, int id_hi, int id_lo)</div><div class="ttdef"><b>Definition</b> csv.c:551</div></div>
+<div class="ttc" id="acsv_8c_html_aa1d756df7b29cb1ac22006c877ef8265"><div class="ttname"><a href="csv_8c.html#aa1d756df7b29cb1ac22006c877ef8265">map_rect_destroy_csv</a></div><div class="ttdeci">static void map_rect_destroy_csv(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> csv.c:520</div></div>
+<div class="ttc" id="acsv_8c_html_aafefb776346d7179b88a45b3fc1c06ea"><div class="ttname"><a href="csv_8c.html#aafefb776346d7179b88a45b3fc1c06ea">map_rect_get_item_csv</a></div><div class="ttdeci">static struct item * map_rect_get_item_csv(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> csv.c:530</div></div>
+<div class="ttc" id="acsv_8c_html_ac5124d6c5a59322bcb40ec2bcf15b079"><div class="ttname"><a href="csv_8c.html#ac5124d6c5a59322bcb40ec2bcf15b079">csv_create_item</a></div><div class="ttdeci">static struct item * csv_create_item(struct map_rect_priv *mr, enum item_type it_type)</div><div class="ttdef"><b>Definition</b> csv.c:575</div></div>
+<div class="ttc" id="acsv_8c_html_adab0941d11a633e6cbe2ce654a7328a0"><div class="ttname"><a href="csv_8c.html#adab0941d11a633e6cbe2ce654a7328a0">map_destroy_csv</a></div><div class="ttdeci">static void map_destroy_csv(struct map_priv *m)</div><div class="ttdef"><b>Definition</b> csv.c:173</div></div>
 <div class="ttc" id="aprojection_8h_html_a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064"><div class="ttname"><a href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a></div><div class="ttdeci">@ projection_mg</div><div class="ttdef"><b>Definition</b> projection.h:25</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="csv_8c.html#aef15cc988d484224845727a5ae8c4cda">map_new_csv()</a>.</p>
@@ -1057,22 +1057,23 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_function" href="csv_8c.html#a323c670f36125f654f05180ad164e39d">csv_coord_rewind</a>,</div>
-<div class="line">    <a class="code hl_function" href="csv_8c.html#a183260183557d9fe66c48ddcd2b8755f">csv_coord_get</a>,</div>
-<div class="line">    <a class="code hl_function" href="csv_8c.html#ab93cf33c16ab9720c2167c889759ff29">csv_attr_rewind</a>,</div>
-<div class="line">    <a class="code hl_function" href="csv_8c.html#acbc49a0052bd8792eff330a29a54f730">csv_attr_get</a>,</div>
-<div class="line">    NULL,</div>
-<div class="line">    <a class="code hl_function" href="csv_8c.html#a95eaa64c3a803ab984f1d5144f648c6a">csv_attr_set</a>,</div>
-<div class="line">    <a class="code hl_function" href="csv_8c.html#a09bc03f024ad4032ee2cde1b93b1ec39">csv_coord_set</a>,</div>
-<div class="line">    <a class="code hl_function" href="csv_8c.html#a936e57227ba5e07fe89172173a07720d">csv_type_set</a></div>
+<div class="line">    .item_coord_rewind = <a class="code hl_function" href="csv_8c.html#a323c670f36125f654f05180ad164e39d">csv_coord_rewind</a>,</div>
+<div class="line">    .item_coord_get = <a class="code hl_function" href="csv_8c.html#a183260183557d9fe66c48ddcd2b8755f">csv_coord_get</a>,</div>
+<div class="line">    .item_attr_rewind = <a class="code hl_function" href="csv_8c.html#ab93cf33c16ab9720c2167c889759ff29">csv_attr_rewind</a>,</div>
+<div class="line">    .item_attr_get = <a class="code hl_function" href="csv_8c.html#acbc49a0052bd8792eff330a29a54f730">csv_attr_get</a>,</div>
+<div class="line">    .item_coord_is_node = NULL,</div>
+<div class="line">    .item_attr_set = <a class="code hl_function" href="csv_8c.html#a95eaa64c3a803ab984f1d5144f648c6a">csv_attr_set</a>,</div>
+<div class="line">    .item_coord_set = <a class="code hl_function" href="csv_8c.html#a09bc03f024ad4032ee2cde1b93b1ec39">csv_coord_set</a>,</div>
+<div class="line">    .item_type_set = <a class="code hl_function" href="csv_8c.html#a936e57227ba5e07fe89172173a07720d">csv_type_set</a>,</div>
+<div class="line">    .item_coords_left = NULL,</div>
 <div class="line">}</div>
-<div class="ttc" id="acsv_8c_html_a09bc03f024ad4032ee2cde1b93b1ec39"><div class="ttname"><a href="csv_8c.html#a09bc03f024ad4032ee2cde1b93b1ec39">csv_coord_set</a></div><div class="ttdeci">static int csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode)</div><div class="ttdef"><b>Definition</b> csv.c:370</div></div>
-<div class="ttc" id="acsv_8c_html_a183260183557d9fe66c48ddcd2b8755f"><div class="ttname"><a href="csv_8c.html#a183260183557d9fe66c48ddcd2b8755f">csv_coord_get</a></div><div class="ttdeci">static int csv_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition</b> csv.c:192</div></div>
-<div class="ttc" id="acsv_8c_html_a323c670f36125f654f05180ad164e39d"><div class="ttname"><a href="csv_8c.html#a323c670f36125f654f05180ad164e39d">csv_coord_rewind</a></div><div class="ttdeci">static void csv_coord_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> csv.c:189</div></div>
-<div class="ttc" id="acsv_8c_html_a936e57227ba5e07fe89172173a07720d"><div class="ttname"><a href="csv_8c.html#a936e57227ba5e07fe89172173a07720d">csv_type_set</a></div><div class="ttdeci">static int csv_type_set(void *priv_data, enum item_type type)</div><div class="ttdef"><b>Definition</b> csv.c:337</div></div>
-<div class="ttc" id="acsv_8c_html_a95eaa64c3a803ab984f1d5144f648c6a"><div class="ttname"><a href="csv_8c.html#a95eaa64c3a803ab984f1d5144f648c6a">csv_attr_set</a></div><div class="ttdeci">static int csv_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)</div><div class="ttdef"><b>Definition</b> csv.c:263</div></div>
-<div class="ttc" id="acsv_8c_html_ab93cf33c16ab9720c2167c889759ff29"><div class="ttname"><a href="csv_8c.html#ab93cf33c16ab9720c2167c889759ff29">csv_attr_rewind</a></div><div class="ttdeci">static void csv_attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> csv.c:202</div></div>
-<div class="ttc" id="acsv_8c_html_acbc49a0052bd8792eff330a29a54f730"><div class="ttname"><a href="csv_8c.html#acbc49a0052bd8792eff330a29a54f730">csv_attr_get</a></div><div class="ttdeci">static int csv_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> csv.c:206</div></div>
+<div class="ttc" id="acsv_8c_html_a09bc03f024ad4032ee2cde1b93b1ec39"><div class="ttname"><a href="csv_8c.html#a09bc03f024ad4032ee2cde1b93b1ec39">csv_coord_set</a></div><div class="ttdeci">static int csv_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode)</div><div class="ttdef"><b>Definition</b> csv.c:366</div></div>
+<div class="ttc" id="acsv_8c_html_a183260183557d9fe66c48ddcd2b8755f"><div class="ttname"><a href="csv_8c.html#a183260183557d9fe66c48ddcd2b8755f">csv_coord_get</a></div><div class="ttdeci">static int csv_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition</b> csv.c:188</div></div>
+<div class="ttc" id="acsv_8c_html_a323c670f36125f654f05180ad164e39d"><div class="ttname"><a href="csv_8c.html#a323c670f36125f654f05180ad164e39d">csv_coord_rewind</a></div><div class="ttdeci">static void csv_coord_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> csv.c:185</div></div>
+<div class="ttc" id="acsv_8c_html_a936e57227ba5e07fe89172173a07720d"><div class="ttname"><a href="csv_8c.html#a936e57227ba5e07fe89172173a07720d">csv_type_set</a></div><div class="ttdeci">static int csv_type_set(void *priv_data, enum item_type type)</div><div class="ttdef"><b>Definition</b> csv.c:333</div></div>
+<div class="ttc" id="acsv_8c_html_a95eaa64c3a803ab984f1d5144f648c6a"><div class="ttname"><a href="csv_8c.html#a95eaa64c3a803ab984f1d5144f648c6a">csv_attr_set</a></div><div class="ttdeci">static int csv_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)</div><div class="ttdef"><b>Definition</b> csv.c:259</div></div>
+<div class="ttc" id="acsv_8c_html_ab93cf33c16ab9720c2167c889759ff29"><div class="ttname"><a href="csv_8c.html#ab93cf33c16ab9720c2167c889759ff29">csv_attr_rewind</a></div><div class="ttdeci">static void csv_attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> csv.c:198</div></div>
+<div class="ttc" id="acsv_8c_html_acbc49a0052bd8792eff330a29a54f730"><div class="ttname"><a href="csv_8c.html#acbc49a0052bd8792eff330a29a54f730">csv_attr_get</a></div><div class="ttdeci">static int csv_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> csv.c:202</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="csv_8c.html#ac5124d6c5a59322bcb40ec2bcf15b079">csv_create_item()</a>, <a class="el" href="csv_8c.html#aef15cc988d484224845727a5ae8c4cda">map_new_csv()</a>, and <a class="el" href="csv_8c.html#a5890bdedfe93d588852a0f1bae5cd25e">map_rect_new_csv()</a>.</p>
 

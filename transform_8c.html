@@ -97,21 +97,21 @@ $(document).ready(function(){initNavTree('transform_8c.html',''); initResizable(
   <div class="headertitle"><div class="title">transform.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;assert.h&gt;</code><br />
-<code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
-<code>#include &lt;limits.h&gt;</code><br />
-<code>#include &lt;glib.h&gt;</code><br />
-<code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
 <code>#include &quot;config.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
+<code>#include &lt;assert.h&gt;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
+<code>#include &lt;limits.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -132,9 +132,9 @@ Macros</h2></td></tr>
 <tr class="separator:a142f183c856d187544d5beb8db7b564f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21c9763d0694cbf3dd25e7b780434144" id="r_a21c9763d0694cbf3dd25e7b780434144"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#a21c9763d0694cbf3dd25e7b780434144">HOG</a>(t)&#160;&#160;&#160;0</td></tr>
 <tr class="separator:a21c9763d0694cbf3dd25e7b780434144"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4912c64aec0c943b7985db6cb61ff83a" id="r_a4912c64aec0c943b7985db6cb61ff83a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#a4912c64aec0c943b7985db6cb61ff83a">TWOPI</a>&#160;&#160;&#160;(<a class="el" href="osm_8c.html#ae71449b1cc6e6250b91f539153a7a0d3">M_PI</a>*2)</td></tr>
+<tr class="memitem:a4912c64aec0c943b7985db6cb61ff83a" id="r_a4912c64aec0c943b7985db6cb61ff83a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#a4912c64aec0c943b7985db6cb61ff83a">TWOPI</a>&#160;&#160;&#160;(<a class="el" href="osm_8c.html#ae71449b1cc6e6250b91f539153a7a0d3">M_PI</a> * 2)</td></tr>
 <tr class="separator:a4912c64aec0c943b7985db6cb61ff83a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5869507f3b4e971d6a69232734e892ac" id="r_a5869507f3b4e971d6a69232734e892ac"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#a5869507f3b4e971d6a69232734e892ac">GC2RAD</a>(<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)&#160;&#160;&#160;((<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>) * <a class="el" href="transform_8c.html#a4912c64aec0c943b7985db6cb61ff83a">TWOPI</a>/(1&lt;&lt;24))</td></tr>
+<tr class="memitem:a5869507f3b4e971d6a69232734e892ac" id="r_a5869507f3b4e971d6a69232734e892ac"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#a5869507f3b4e971d6a69232734e892ac">GC2RAD</a>(<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>)&#160;&#160;&#160;((<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>) * <a class="el" href="transform_8c.html#a4912c64aec0c943b7985db6cb61ff83a">TWOPI</a> / (1 &lt;&lt; 24))</td></tr>
 <tr class="separator:a5869507f3b4e971d6a69232734e892ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa841bb4d90b9745dab841c733126bdfe" id="r_aa841bb4d90b9745dab841c733126bdfe"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#aa841bb4d90b9745dab841c733126bdfe">minf</a>(a,  b)&#160;&#160;&#160;((a) &lt; (b) ? (a) : (b))</td></tr>
 <tr class="separator:aa841bb4d90b9745dab841c733126bdfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -316,9 +316,9 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a4ac22eb5a8ad44a5e462334cac8a3335" id="r_a4ac22eb5a8ad44a5e462334cac8a3335"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#a4ac22eb5a8ad44a5e462334cac8a3335">gar2geo_units</a> = 360.0/(1&lt;&lt;24)</td></tr>
+<tr class="memitem:a4ac22eb5a8ad44a5e462334cac8a3335" id="r_a4ac22eb5a8ad44a5e462334cac8a3335"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#a4ac22eb5a8ad44a5e462334cac8a3335">gar2geo_units</a> = 360.0 / (1 &lt;&lt; 24)</td></tr>
 <tr class="separator:a4ac22eb5a8ad44a5e462334cac8a3335"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe6ab06b67d0c3fc4c1e2e1a4dc9308c" id="r_abe6ab06b67d0c3fc4c1e2e1a4dc9308c"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#abe6ab06b67d0c3fc4c1e2e1a4dc9308c">geo2gar_units</a> = 1/(360.0/(1&lt;&lt;24))</td></tr>
+<tr class="memitem:abe6ab06b67d0c3fc4c1e2e1a4dc9308c" id="r_abe6ab06b67d0c3fc4c1e2e1a4dc9308c"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#abe6ab06b67d0c3fc4c1e2e1a4dc9308c">geo2gar_units</a> = 1 / (360.0 / (1 &lt;&lt; 24))</td></tr>
 <tr class="separator:abe6ab06b67d0c3fc4c1e2e1a4dc9308c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -353,7 +353,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a></td><td>)</td>
-          <td>&#160;&#160;&#160;((<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>) * <a class="el" href="transform_8c.html#a4912c64aec0c943b7985db6cb61ff83a">TWOPI</a>/(1&lt;&lt;24))</td>
+          <td>&#160;&#160;&#160;((<a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>) * <a class="el" href="transform_8c.html#a4912c64aec0c943b7985db6cb61ff83a">TWOPI</a> / (1 &lt;&lt; 24))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -447,7 +447,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define TWOPI&#160;&#160;&#160;(<a class="el" href="osm_8c.html#ae71449b1cc6e6250b91f539153a7a0d3">M_PI</a>*2)</td>
+          <td class="memname">#define TWOPI&#160;&#160;&#160;(<a class="el" href="osm_8c.html#ae71449b1cc6e6250b91f539153a7a0d3">M_PI</a> * 2)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -3529,7 +3529,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a> gar2geo_units = 360.0/(1&lt;&lt;24)</td>
+          <td class="memname">const <a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a> gar2geo_units = 360.0 / (1 &lt;&lt; 24)</td>
         </tr>
       </table>
   </td>
@@ -3553,7 +3553,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a> geo2gar_units = 1/(360.0/(1&lt;&lt;24))</td>
+          <td class="memname">const <a class="el" href="coord_8h.html#aae1a07a93ec5038cab0efff724660598">navit_float</a> geo2gar_units = 1 / (360.0 / (1 &lt;&lt; 24))</td>
         </tr>
       </table>
   </td>

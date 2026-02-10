@@ -1,5 +1,7 @@
 var NAVTREEINDEX32 =
 {
+"structcompass.html":[2,0,46],
+"structcompass.html#a2ccafb990c2a1c407ff819cc90b5d069":[2,0,46,4],
 "structcompass.html#a5dd1e48b06d52bcaab33d70ac251985b":[2,0,46,5],
 "structcompass.html#a8f1ca746debc72a36c7c5e718a09bf19":[2,0,46,3],
 "structcompass.html#a996b7639a2ac15f0293ed3e9aa1aefe7":[2,0,46,2],
@@ -20,7 +22,8 @@ var NAVTREEINDEX32 =
 "structcoord.html#a2b099692d87f98e4844b615136ca37fb":[2,0,51,1],
 "structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d":[2,0,51,0],
 "structcoordObject.html":[2,0,58],
-"structcoordObject.html#a4ea53bde0610cf7348e1983231ece1ec":[2,0,58,0],
+"structcoordObject.html#a5d782ce35422ce98319b7588c9b690b9":[2,0,58,1],
+"structcoordObject.html#aa0978dbe67401cd44fac6d928d92b96d":[2,0,58,0],
 "structcoord__3d.html":[2,0,52],
 "structcoord__3d.html#a01ca9e6ba3114ada537f2d80891c4746":[2,0,52,1],
 "structcoord__3d.html#a9099e133c6af345422b390d3d8f33ebf":[2,0,52,2],
@@ -39,7 +42,8 @@ var NAVTREEINDEX32 =
 "structcoord__rect.html#a0aa5ec921d6c01e81eea35f701962bd7":[2,0,56,1],
 "structcoord__rect.html#a8da493b41946d949510bada53c32667a":[2,0,56,0],
 "structcoord__rectObject.html":[2,0,57],
-"structcoord__rectObject.html#a1ef75000d3288b48e115245d59bad6d7":[2,0,57,0],
+"structcoord__rectObject.html#a5871492e1e956b37466d4091af7c1194":[2,0,57,1],
+"structcoord__rectObject.html#a7745ac261ce1109a6f05bcb3e9072ad5":[2,0,57,0],
 "structcountry.html":[2,0,60],
 "structcountry.html#a1d17d8108ff2b0dad8be266aed47a7e9":[2,0,60,1],
 "structcountry.html#a375e3f880e64f840f3ab996b3be51181":[2,0,60,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX32 =
 "structelement.html#aabcc56dfec299162ef0a8844316582b0":[2,0,89,0],
 "structelement.html#ab3f4c63a4e1748078fbf127f778b1474":[2,0,89,13],
 "structelement.html#abe19e1c5261ebc33432e03f130df652a":[2,0,89,16],
-"structelement.html#ac18d282a5471345a0d8f793e2452b574":[2,0,89,11],
-"structelement.html#ac1be4286ef670b00973a9d7bec9e48be":[2,0,89,5],
-"structelement.html#ac561e962bca3a8369172146c01be8517":[2,0,89,21],
-"structelement.html#ac5e252df6fb3f15d2a7f45b57f855cec":[2,0,89,8],
-"structelement.html#acc618d178997357592c3cd0e8643a036":[2,0,89,4]
+"structelement.html#ac18d282a5471345a0d8f793e2452b574":[2,0,89,11]
 };

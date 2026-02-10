@@ -100,13 +100,13 @@ $(document).ready(function(){initNavTree('font__freetype_8c.html',''); initResiz
 <div class="textblock"><code>#include &quot;config.h&quot;</code><br />
 <code>#include &lt;ft2build.h&gt;</code><br />
 <code>#include &lt;glib.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="color_8h_source.html">color.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="atom_8h_source.html">atom.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="color_8h_source.html">color.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="font__freetype_8h_source.html">font_freetype.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -123,7 +123,7 @@ Macros</h2></td></tr>
 <tr class="separator:ab4f43f98d68d91cc6f13b99f7482e841"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf5a1f28429fd400620dca0f548b3f7a" id="r_aaf5a1f28429fd400620dca0f548b3f7a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="font__freetype_8c.html#aaf5a1f28429fd400620dca0f548b3f7a">COLOR_BITDEPTH_OUTPUT</a>&#160;&#160;&#160;8</td></tr>
 <tr class="separator:aaf5a1f28429fd400620dca0f548b3f7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1cb7a49e2f3777a35a0a02aaeaf56e4c" id="r_a1cb7a49e2f3777a35a0a02aaeaf56e4c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="font__freetype_8c.html#a1cb7a49e2f3777a35a0a02aaeaf56e4c">COL_SHIFT</a>&#160;&#160;&#160;(<a class="el" href="color_8h.html#aab9344602d772fec4ef162c7a450a368">COLOR_BITDEPTH</a>-<a class="el" href="font__freetype_8c.html#aaf5a1f28429fd400620dca0f548b3f7a">COLOR_BITDEPTH_OUTPUT</a>)</td></tr>
+<tr class="memitem:a1cb7a49e2f3777a35a0a02aaeaf56e4c" id="r_a1cb7a49e2f3777a35a0a02aaeaf56e4c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="font__freetype_8c.html#a1cb7a49e2f3777a35a0a02aaeaf56e4c">COL_SHIFT</a>&#160;&#160;&#160;(<a class="el" href="color_8h.html#aab9344602d772fec4ef162c7a450a368">COLOR_BITDEPTH</a> - <a class="el" href="font__freetype_8c.html#aaf5a1f28429fd400620dca0f548b3f7a">COLOR_BITDEPTH_OUTPUT</a>)</td></tr>
 <tr class="separator:a1cb7a49e2f3777a35a0a02aaeaf56e4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -171,7 +171,7 @@ Variables</h2></td></tr>
 <tr class="separator:a81c4e804180d680f69fe733f95072b06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa116a93f8aa3ba20dfa42b8393548a04" id="r_aa116a93f8aa3ba20dfa42b8393548a04"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="font__freetype_8c.html#aa116a93f8aa3ba20dfa42b8393548a04">fontfamilies</a> []</td></tr>
 <tr class="separator:aa116a93f8aa3ba20dfa42b8393548a04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4c3ba6a3ca91e710501bb96de5b775f" id="r_ab4c3ba6a3ca91e710501bb96de5b775f"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structgraphics__font__methods.html">graphics_font_methods</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="font__freetype_8c.html#ab4c3ba6a3ca91e710501bb96de5b775f">font_methods</a></td></tr>
+<tr class="memitem:ab4c3ba6a3ca91e710501bb96de5b775f" id="r_ab4c3ba6a3ca91e710501bb96de5b775f"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structgraphics__font__methods.html">graphics_font_methods</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="font__freetype_8c.html#ab4c3ba6a3ca91e710501bb96de5b775f">font_methods</a> = {<a class="el" href="font__freetype_8c.html#aa89004525e442aba547f01f7279d5043">font_destroy</a>}</td></tr>
 <tr class="separator:ab4c3ba6a3ca91e710501bb96de5b775f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aceb013fe8197cf382d5d66cf84451d83" id="r_aceb013fe8197cf382d5d66cf84451d83"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structfont__freetype__methods.html">font_freetype_methods</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="font__freetype_8c.html#aceb013fe8197cf382d5d66cf84451d83">methods</a></td></tr>
 <tr class="separator:aceb013fe8197cf382d5d66cf84451d83"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,7 +184,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define COL_SHIFT&#160;&#160;&#160;(<a class="el" href="color_8h.html#aab9344602d772fec4ef162c7a450a368">COLOR_BITDEPTH</a>-<a class="el" href="font__freetype_8c.html#aaf5a1f28429fd400620dca0f548b3f7a">COLOR_BITDEPTH_OUTPUT</a>)</td>
+          <td class="memname">#define COL_SHIFT&#160;&#160;&#160;(<a class="el" href="color_8h.html#aab9344602d772fec4ef162c7a450a368">COLOR_BITDEPTH</a> - <a class="el" href="font__freetype_8c.html#aaf5a1f28429fd400620dca0f548b3f7a">COLOR_BITDEPTH_OUTPUT</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -776,7 +776,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">struct <a class="el" href="structgraphics__font__methods.html">graphics_font_methods</a> font_methods</td>
+          <td class="memname">struct <a class="el" href="structgraphics__font__methods.html">graphics_font_methods</a> font_methods = {<a class="el" href="font__freetype_8c.html#aa89004525e442aba547f01f7279d5043">font_destroy</a>}</td>
         </tr>
       </table>
   </td>
@@ -785,11 +785,7 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_function" href="font__freetype_8c.html#aa89004525e442aba547f01f7279d5043">font_destroy</a></div>
-<div class="line">}</div>
-<div class="ttc" id="afont__freetype_8c_html_aa89004525e442aba547f01f7279d5043"><div class="ttname"><a href="font__freetype_8c.html#aa89004525e442aba547f01f7279d5043">font_destroy</a></div><div class="ttdeci">static void font_destroy(struct graphics_font_priv *font)</div><div class="ttdef"><b>Definition</b> font_freetype.c:321</div></div>
-</div><!-- fragment -->
+
 <p class="reference">Referenced by <a class="el" href="font__freetype_8c.html#ab412c8d8a12a249c86117bd477d7a786">font_freetype_font_new()</a>.</p>
 
 </div>
@@ -814,13 +810,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <span class="stringliteral">&quot;Liberation Sans&quot;</span>,</div>
-<div class="line">    <span class="stringliteral">&quot;Arial&quot;</span>,</div>
-<div class="line">    <span class="stringliteral">&quot;NcrBI4nh&quot;</span>,</div>
-<div class="line">    <span class="stringliteral">&quot;luximbi&quot;</span>,</div>
-<div class="line">    <span class="stringliteral">&quot;FreeSans&quot;</span>,</div>
-<div class="line">    <span class="stringliteral">&quot;DejaVu Sans&quot;</span>,</div>
-<div class="line">    NULL,</div>
+<div class="line">    <span class="stringliteral">&quot;Liberation Sans&quot;</span>, <span class="stringliteral">&quot;Arial&quot;</span>, <span class="stringliteral">&quot;NcrBI4nh&quot;</span>, <span class="stringliteral">&quot;luximbi&quot;</span>, <span class="stringliteral">&quot;FreeSans&quot;</span>, <span class="stringliteral">&quot;DejaVu Sans&quot;</span>, NULL,</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>List of font families to use, in order of preference </p>
 
@@ -968,21 +958,21 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_function" href="font__freetype_8c.html#a9d7bd0e56e3959b3c35a95e1993b2c9e">font_freetype_destroy</a>,</div>
-<div class="line">    <a class="code hl_function" href="font__freetype_8c.html#ab412c8d8a12a249c86117bd477d7a786">font_freetype_font_new</a>,</div>
-<div class="line">    <a class="code hl_function" href="font__freetype_8c.html#abbe5149a3e3a0775661b68e3eba3293d">font_freetype_get_text_bbox</a>,</div>
-<div class="line">    <a class="code hl_function" href="font__freetype_8c.html#aaa1c35d08ec2515d0fd259a56dccd58b">font_freetype_text_new</a>,</div>
-<div class="line">    <a class="code hl_function" href="font__freetype_8c.html#a075c4e6a2eb1f4132cf65c9a694c0754">font_freetype_text_destroy</a>,</div>
-<div class="line">    <a class="code hl_function" href="font__freetype_8c.html#a28b8ecb564a87b5eff301e60509edf2e">font_freetype_glyph_get_shadow</a>,</div>
-<div class="line">    <a class="code hl_function" href="font__freetype_8c.html#a2db8514bc28e4ae706b25cd1f285a2e8">font_freetype_glyph_get_glyph</a>,</div>
+<div class="line">    .destroy = <a class="code hl_function" href="font__freetype_8c.html#a9d7bd0e56e3959b3c35a95e1993b2c9e">font_freetype_destroy</a>,</div>
+<div class="line">    .font_new = <a class="code hl_function" href="font__freetype_8c.html#ab412c8d8a12a249c86117bd477d7a786">font_freetype_font_new</a>,</div>
+<div class="line">    .get_text_bbox = <a class="code hl_function" href="font__freetype_8c.html#abbe5149a3e3a0775661b68e3eba3293d">font_freetype_get_text_bbox</a>,</div>
+<div class="line">    .text_new = <a class="code hl_function" href="font__freetype_8c.html#aaa1c35d08ec2515d0fd259a56dccd58b">font_freetype_text_new</a>,</div>
+<div class="line">    .text_destroy = <a class="code hl_function" href="font__freetype_8c.html#a075c4e6a2eb1f4132cf65c9a694c0754">font_freetype_text_destroy</a>,</div>
+<div class="line">    .get_shadow = <a class="code hl_function" href="font__freetype_8c.html#a28b8ecb564a87b5eff301e60509edf2e">font_freetype_glyph_get_shadow</a>,</div>
+<div class="line">    .get_glyph = <a class="code hl_function" href="font__freetype_8c.html#a2db8514bc28e4ae706b25cd1f285a2e8">font_freetype_glyph_get_glyph</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="afont__freetype_8c_html_a075c4e6a2eb1f4132cf65c9a694c0754"><div class="ttname"><a href="font__freetype_8c.html#a075c4e6a2eb1f4132cf65c9a694c0754">font_freetype_text_destroy</a></div><div class="ttdeci">static void font_freetype_text_destroy(struct font_freetype_text *text)</div><div class="ttdef"><b>Definition</b> font_freetype.c:331</div></div>
-<div class="ttc" id="afont__freetype_8c_html_a28b8ecb564a87b5eff301e60509edf2e"><div class="ttname"><a href="font__freetype_8c.html#a28b8ecb564a87b5eff301e60509edf2e">font_freetype_glyph_get_shadow</a></div><div class="ttdeci">static int font_freetype_glyph_get_shadow(struct font_freetype_glyph *g, unsigned char *data, int stride, struct color *foreground, struct color *background)</div><div class="ttdef"><b>Definition</b> font_freetype.c:512</div></div>
-<div class="ttc" id="afont__freetype_8c_html_a2db8514bc28e4ae706b25cd1f285a2e8"><div class="ttname"><a href="font__freetype_8c.html#a2db8514bc28e4ae706b25cd1f285a2e8">font_freetype_glyph_get_glyph</a></div><div class="ttdeci">static int font_freetype_glyph_get_glyph(struct font_freetype_glyph *g, unsigned char *data, int stride, struct color *fg, struct color *bg, struct color *transparent)</div><div class="ttdef"><b>Definition</b> font_freetype.c:565</div></div>
-<div class="ttc" id="afont__freetype_8c_html_a9d7bd0e56e3959b3c35a95e1993b2c9e"><div class="ttname"><a href="font__freetype_8c.html#a9d7bd0e56e3959b3c35a95e1993b2c9e">font_freetype_destroy</a></div><div class="ttdeci">static void font_freetype_destroy(void)</div><div class="ttdef"><b>Definition</b> font_freetype.c:600</div></div>
-<div class="ttc" id="afont__freetype_8c_html_aaa1c35d08ec2515d0fd259a56dccd58b"><div class="ttname"><a href="font__freetype_8c.html#aaa1c35d08ec2515d0fd259a56dccd58b">font_freetype_text_new</a></div><div class="ttdeci">static struct font_freetype_text * font_freetype_text_new(char *text, struct font_freetype_font *font, int dx, int dy)</div><div class="ttdef"><b>Definition</b> font_freetype.c:191</div></div>
-<div class="ttc" id="afont__freetype_8c_html_ab412c8d8a12a249c86117bd477d7a786"><div class="ttname"><a href="font__freetype_8c.html#ab412c8d8a12a249c86117bd477d7a786">font_freetype_font_new</a></div><div class="ttdeci">static struct font_freetype_font * font_freetype_font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *fontfamily, int size, int flags)</div><div class="ttdef"><b>Definition</b> font_freetype.c:370</div></div>
-<div class="ttc" id="afont__freetype_8c_html_abbe5149a3e3a0775661b68e3eba3293d"><div class="ttname"><a href="font__freetype_8c.html#abbe5149a3e3a0775661b68e3eba3293d">font_freetype_get_text_bbox</a></div><div class="ttdeci">static void font_freetype_get_text_bbox(struct graphics_priv *gr, struct font_freetype_font *font, char *text, int dx, int dy, struct point *ret, int estimate)</div><div class="ttdef"><b>Definition</b> font_freetype.c:89</div></div>
+<div class="ttc" id="afont__freetype_8c_html_a075c4e6a2eb1f4132cf65c9a694c0754"><div class="ttname"><a href="font__freetype_8c.html#a075c4e6a2eb1f4132cf65c9a694c0754">font_freetype_text_destroy</a></div><div class="ttdeci">static void font_freetype_text_destroy(struct font_freetype_text *text)</div><div class="ttdef"><b>Definition</b> font_freetype.c:324</div></div>
+<div class="ttc" id="afont__freetype_8c_html_a28b8ecb564a87b5eff301e60509edf2e"><div class="ttname"><a href="font__freetype_8c.html#a28b8ecb564a87b5eff301e60509edf2e">font_freetype_glyph_get_shadow</a></div><div class="ttdeci">static int font_freetype_glyph_get_shadow(struct font_freetype_glyph *g, unsigned char *data, int stride, struct color *foreground, struct color *background)</div><div class="ttdef"><b>Definition</b> font_freetype.c:499</div></div>
+<div class="ttc" id="afont__freetype_8c_html_a2db8514bc28e4ae706b25cd1f285a2e8"><div class="ttname"><a href="font__freetype_8c.html#a2db8514bc28e4ae706b25cd1f285a2e8">font_freetype_glyph_get_glyph</a></div><div class="ttdeci">static int font_freetype_glyph_get_glyph(struct font_freetype_glyph *g, unsigned char *data, int stride, struct color *fg, struct color *bg, struct color *transparent)</div><div class="ttdef"><b>Definition</b> font_freetype.c:548</div></div>
+<div class="ttc" id="afont__freetype_8c_html_a9d7bd0e56e3959b3c35a95e1993b2c9e"><div class="ttname"><a href="font__freetype_8c.html#a9d7bd0e56e3959b3c35a95e1993b2c9e">font_freetype_destroy</a></div><div class="ttdeci">static void font_freetype_destroy(void)</div><div class="ttdef"><b>Definition</b> font_freetype.c:580</div></div>
+<div class="ttc" id="afont__freetype_8c_html_aaa1c35d08ec2515d0fd259a56dccd58b"><div class="ttname"><a href="font__freetype_8c.html#aaa1c35d08ec2515d0fd259a56dccd58b">font_freetype_text_new</a></div><div class="ttdeci">static struct font_freetype_text * font_freetype_text_new(char *text, struct font_freetype_font *font, int dx, int dy)</div><div class="ttdef"><b>Definition</b> font_freetype.c:192</div></div>
+<div class="ttc" id="afont__freetype_8c_html_ab412c8d8a12a249c86117bd477d7a786"><div class="ttname"><a href="font__freetype_8c.html#ab412c8d8a12a249c86117bd477d7a786">font_freetype_font_new</a></div><div class="ttdeci">static struct font_freetype_font * font_freetype_font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *fontfamily, int size, int flags)</div><div class="ttdef"><b>Definition</b> font_freetype.c:363</div></div>
+<div class="ttc" id="afont__freetype_8c_html_abbe5149a3e3a0775661b68e3eba3293d"><div class="ttname"><a href="font__freetype_8c.html#abbe5149a3e3a0775661b68e3eba3293d">font_freetype_get_text_bbox</a></div><div class="ttdeci">static void font_freetype_get_text_bbox(struct graphics_priv *gr, struct font_freetype_font *font, char *text, int dx, int dy, struct point *ret, int estimate)</div><div class="ttdef"><b>Definition</b> font_freetype.c:88</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="graphics_2sdl_2event_8c.html#ab2524dbc2a8fb16c5332057153e8b710">event_sdl_new()</a>, <a class="el" href="event__sdl_8c.html#ab2524dbc2a8fb16c5332057153e8b710">event_sdl_new()</a>, <a class="el" href="font__freetype_8c.html#a8b3f86c5bd051d9d7ea71c6133864d8a">font_freetype_new()</a>, <a class="el" href="graphics__opengl_8h.html#aa62e34303bc6b6c97858da2439cad448">graphics_opengl_egl_new()</a>, <a class="el" href="graphics__opengl_8h.html#ac491172aae407cb11782487e5fab302b">graphics_opengl_x11_new()</a>, and <a class="el" href="graphics__sdl_8c.html#a72f5c79fd66732dfa32a07b7c6e38b62">graphics_sdl_new()</a>.</p>
 

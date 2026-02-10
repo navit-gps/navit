@@ -95,18 +95,18 @@ $(document).ready(function(){initNavTree('event__sdl_8c.html',''); initResizable
   <div class="headertitle"><div class="title">event_sdl.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;glib.h&gt;</code><br />
-<code>#include &lt;poll.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="event__sdl_8h_source.html">event_sdl.h</a>&quot;</code><br />
 <code>#include &quot;SDL.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
+<code>#include &quot;config.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="event_8h_source.html">event.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="graphics__sdl_8h_source.html">graphics_sdl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
+<code>#include &lt;poll.h&gt;</code><br />
 <code>#include &lt;pthread.h&gt;</code><br />
 <code>#include &lt;signal.h&gt;</code><br />
-<code>#include &quot;config.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="event_8h_source.html">event.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="event__sdl_8h_source.html">event_sdl.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="graphics__sdl_8h_source.html">graphics_sdl.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -680,15 +680,15 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_function" href="event__sdl_8c.html#a3eae4f33188fa305d822592aa0b3a602">event_sdl_main_loop_run</a>,</div>
-<div class="line">    <a class="code hl_function" href="event__sdl_8c.html#a00c8c7f76a1fc929f86dae12fbdc315f">event_sdl_main_loop_quit</a>,</div>
-<div class="line">    <a class="code hl_function" href="event__sdl_8c.html#aef1dcac31fdc410916638a8c5158b55b">event_sdl_add_watch</a>,</div>
-<div class="line">    <a class="code hl_function" href="event__sdl_8c.html#a12e5a91c352903bca1fb9a2f08cff40c">event_sdl_remove_watch</a>,</div>
-<div class="line">    <a class="code hl_function" href="event__sdl_8c.html#a9da56ab5c03d5adae8324f9202f77b66">event_sdl_add_timeout</a>,</div>
-<div class="line">    <a class="code hl_function" href="event__sdl_8c.html#a0a052b6a310ab13744a35d6d6576268e">event_sdl_remove_timeout</a>,</div>
-<div class="line">    <a class="code hl_function" href="event__sdl_8c.html#a7b6eb16a736b34036a02a11ffd2f8e56">event_sdl_add_idle</a>,</div>
-<div class="line">    <a class="code hl_function" href="event__sdl_8c.html#ae8a3a334f082b77a66d83e4664305df4">event_sdl_remove_idle</a>,</div>
-<div class="line">    <a class="code hl_function" href="event__sdl_8c.html#a82fd01a60c6b6fc1648d12d807dda6bf">event_sdl_call_callback</a>,</div>
+<div class="line">    .main_loop_run = <a class="code hl_function" href="event__sdl_8c.html#a3eae4f33188fa305d822592aa0b3a602">event_sdl_main_loop_run</a>,</div>
+<div class="line">    .main_loop_quit = <a class="code hl_function" href="event__sdl_8c.html#a00c8c7f76a1fc929f86dae12fbdc315f">event_sdl_main_loop_quit</a>,</div>
+<div class="line">    .add_watch = <a class="code hl_function" href="event__sdl_8c.html#aef1dcac31fdc410916638a8c5158b55b">event_sdl_add_watch</a>,</div>
+<div class="line">    .remove_watch = <a class="code hl_function" href="event__sdl_8c.html#a12e5a91c352903bca1fb9a2f08cff40c">event_sdl_remove_watch</a>,</div>
+<div class="line">    .add_timeout = <a class="code hl_function" href="event__sdl_8c.html#a9da56ab5c03d5adae8324f9202f77b66">event_sdl_add_timeout</a>,</div>
+<div class="line">    .remove_timeout = <a class="code hl_function" href="event__sdl_8c.html#a0a052b6a310ab13744a35d6d6576268e">event_sdl_remove_timeout</a>,</div>
+<div class="line">    .add_idle = <a class="code hl_function" href="event__sdl_8c.html#a7b6eb16a736b34036a02a11ffd2f8e56">event_sdl_add_idle</a>,</div>
+<div class="line">    .remove_idle = <a class="code hl_function" href="event__sdl_8c.html#ae8a3a334f082b77a66d83e4664305df4">event_sdl_remove_idle</a>,</div>
+<div class="line">    .call_callback = <a class="code hl_function" href="event__sdl_8c.html#a82fd01a60c6b6fc1648d12d807dda6bf">event_sdl_call_callback</a>,</div>
 <div class="line">}</div>
 <div class="ttc" id="aevent__sdl_8c_html_a00c8c7f76a1fc929f86dae12fbdc315f"><div class="ttname"><a href="event__sdl_8c.html#a00c8c7f76a1fc929f86dae12fbdc315f">event_sdl_main_loop_quit</a></div><div class="ttdeci">static void event_sdl_main_loop_quit(void)</div><div class="ttdef"><b>Definition</b> event_sdl.c:78</div></div>
 <div class="ttc" id="aevent__sdl_8c_html_a0a052b6a310ab13744a35d6d6576268e"><div class="ttname"><a href="event__sdl_8c.html#a0a052b6a310ab13744a35d6d6576268e">event_sdl_remove_timeout</a></div><div class="ttdeci">static void event_sdl_remove_timeout(struct event_timeout *)</div><div class="ttdef"><b>Definition</b> event_sdl.c:208</div></div>

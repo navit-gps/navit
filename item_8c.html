@@ -97,14 +97,14 @@ $(document).ready(function(){initNavTree('item_8c.html',''); initResizable(); })
   <div class="headertitle"><div class="title">item.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;glib.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="item__def_8h_source.html">item_def.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -120,7 +120,7 @@ Data Structures</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:a24d15da515f3431d5114956efe1cdc47" id="r_a24d15da515f3431d5114956efe1cdc47"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8c.html#a24d15da515f3431d5114956efe1cdc47">ITEM2</a>(x,  y)&#160;&#160;&#160;<a class="el" href="item_8c.html#a6420a1c34a992e8a722a47d278dd7783">ITEM</a>(y)</td></tr>
 <tr class="separator:a24d15da515f3431d5114956efe1cdc47"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6420a1c34a992e8a722a47d278dd7783" id="r_a6420a1c34a992e8a722a47d278dd7783"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8c.html#a6420a1c34a992e8a722a47d278dd7783">ITEM</a>(x)&#160;&#160;&#160;{ type_##x, #x },</td></tr>
+<tr class="memitem:a6420a1c34a992e8a722a47d278dd7783" id="r_a6420a1c34a992e8a722a47d278dd7783"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8c.html#a6420a1c34a992e8a722a47d278dd7783">ITEM</a>(x)&#160;&#160;&#160;{type_##x, #x},</td></tr>
 <tr class="separator:a6420a1c34a992e8a722a47d278dd7783"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -207,7 +207,7 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a9d74082234bf94fe04bd8585c40c7f90" id="r_a9d74082234bf94fe04bd8585c40c7f90"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structitem__range.html">item_range</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8c.html#a9d74082234bf94fe04bd8585c40c7f90">item_range_all</a> = { type_none, type_last }</td></tr>
+<tr class="memitem:a9d74082234bf94fe04bd8585c40c7f90" id="r_a9d74082234bf94fe04bd8585c40c7f90"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structitem__range.html">item_range</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8c.html#a9d74082234bf94fe04bd8585c40c7f90">item_range_all</a> = {type_none, type_last}</td></tr>
 <tr class="separator:a9d74082234bf94fe04bd8585c40c7f90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d33bb189d22c6814c6f293784b00a22" id="r_a0d33bb189d22c6814c6f293784b00a22"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structitem.html">item</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="item_8c.html#a0d33bb189d22c6814c6f293784b00a22">busy_item</a></td></tr>
 <tr class="memdesc:a0d33bb189d22c6814c6f293784b00a22"><td class="mdescLeft">&#160;</td><td class="mdescRight">An item indicating that the map driver is busy fetching more items.  <br /></td></tr>
@@ -233,7 +233,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">x</td><td>)</td>
-          <td>&#160;&#160;&#160;{ type_##x, #x },</td>
+          <td>&#160;&#160;&#160;{type_##x, #x},</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1550,8 +1550,8 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line"><span class="preprocessor">#define ITEM2(x,y)        </span></div>
-<div class="line"><span class="preprocessor">#define ITEM(x)                  </span></div>
+<div class="line"><span class="preprocessor">#define ITEM2(x, y)        </span></div>
+<div class="line"><span class="preprocessor">#define ITEM(x)                </span></div>
 <div class="line"> </div>
 <div class="line"> </div>
 <div class="line">}</div>
@@ -1567,7 +1567,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct <a class="el" href="structitem__range.html">item_range</a> item_range_all = { type_none, type_last }</td>
+          <td class="memname">struct <a class="el" href="structitem__range.html">item_range</a> item_range_all = {type_none, type_last}</td>
         </tr>
       </table>
 </div><div class="memdoc">

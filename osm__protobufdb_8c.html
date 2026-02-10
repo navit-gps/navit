@@ -97,18 +97,18 @@ $(document).ready(function(){initNavTree('osm__protobufdb_8c.html',''); initResi
   <div class="headertitle"><div class="title">osm_protobufdb.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
-<code>#include &lt;unistd.h&gt;</code><br />
-<code>#include &lt;time.h&gt;</code><br />
-<code>#include &lt;zlib.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="maptool_8h_source.html">maptool.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="linguistics_8h_source.html">linguistics.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
 <code>#include &quot;fileformat.pb-c.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="linguistics_8h_source.html">linguistics.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="maptool_8h_source.html">maptool.h</a>&quot;</code><br />
 <code>#include &quot;osmformat.pb-c.h&quot;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;zlib.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -181,7 +181,7 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a933d758f17d6368d11d83b13dfedac41" id="r_a933d758f17d6368d11d83b13dfedac41"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#a933d758f17d6368d11d83b13dfedac41">latlon_scale</a> =10000000.0</td></tr>
+<tr class="memitem:a933d758f17d6368d11d83b13dfedac41" id="r_a933d758f17d6368d11d83b13dfedac41"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#a933d758f17d6368d11d83b13dfedac41">latlon_scale</a> = 10000000.0</td></tr>
 <tr class="separator:a933d758f17d6368d11d83b13dfedac41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a015ac7b585010442a4bf6d4874675ea8" id="r_a015ac7b585010442a4bf6d4874675ea8"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structdb__config.html">db_config</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobufdb_8c.html#a015ac7b585010442a4bf6d4874675ea8">db_config</a></td></tr>
 <tr class="separator:a015ac7b585010442a4bf6d4874675ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -220,14 +220,14 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">        {\</div>
-<div class="line">        <span class="keywordtype">int</span> n=<span class="keyword">struct</span>-&gt;n_##member; \</div>
-<div class="line">        <span class="keywordtype">int</span> s=<span class="keyword">sizeof</span>(<span class="keyword">struct</span>-&gt;member[0]); \</div>
-<div class="line">        <span class="keyword">struct</span>-&gt;member=g_realloc(struct-&gt;member, (n+1)*s); \</div>
-<div class="line">        memmove(&amp;struct-&gt;member[n+1], &amp;struct-&gt;member[n], (pos-n)*s); \</div>
-<div class="line">        memset(&amp;struct-&gt;member[n], 0, s); \</div>
-<div class="line">        <span class="keyword">struct</span>-&gt;n_##member++;\</div>
-<div class="line">}</div>
+<b>Value:</b><div class="fragment"><div class="line">    {                                                                                                                  \</div>
+<div class="line">        <span class="keywordtype">int</span> n = <span class="keyword">struct</span>-&gt;n_##member;                                                                                    \</div>
+<div class="line">        <span class="keywordtype">int</span> s = <span class="keyword">sizeof</span>(<span class="keyword">struct</span>-&gt;member[0]);                                                                             \</div>
+<div class="line">        <span class="keyword">struct</span>-&gt;member = g_realloc(struct-&gt;member, (n + 1) * s);                                                       \</div>
+<div class="line">        memmove(&amp;struct-&gt;member[n + 1], &amp;struct-&gt;member[n], (pos - n) * s);                                            \</div>
+<div class="line">        memset(&amp;struct-&gt;member[n], 0, s);                                                                              \</div>
+<div class="line">        <span class="keyword">struct</span>-&gt;n_##member++;                                                                                          \</div>
+<div class="line">    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1287,9 +1287,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    200000, 30000, 500,</div>
-<div class="line">    40000,  1000,  30,</div>
-<div class="line">    10000,   500,  20,</div>
+<div class="line">    200000, 30000, 500, 40000, 1000, 30, 10000, 500, 20,</div>
 <div class="line">}</div>
 </div><!-- fragment -->
 </div>
@@ -1304,7 +1302,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double latlon_scale =10000000.0</td>
+          <td class="memname">double latlon_scale = 10000000.0</td>
         </tr>
       </table>
   </td>

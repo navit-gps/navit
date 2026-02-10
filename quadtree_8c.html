@@ -96,10 +96,10 @@ $(document).ready(function(){initNavTree('quadtree_8c.html',''); initResizable()
   <div class="headertitle"><div class="title">quadtree.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;stdlib.h&gt;</code><br />
-<code>#include &lt;glib.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="quadtree_8h_source.html">quadtree.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="quadtree_8h_source.html">quadtree.h</a>&quot;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -114,9 +114,9 @@ Macros</h2></td></tr>
 <tr class="separator:a70c3cfdd454c62fa4d1901faf0ff4610"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b65f4b50d2d129e2fe16f8febc172c4" id="r_a6b65f4b50d2d129e2fe16f8febc172c4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="quadtree_8c.html#a6b65f4b50d2d129e2fe16f8febc172c4">MAX_DOUBLE</a>&#160;&#160;&#160;9999999</td></tr>
 <tr class="separator:a6b65f4b50d2d129e2fe16f8febc172c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4ac8d4280cb0c708e705c24e75bd331" id="r_ac4ac8d4280cb0c708e705c24e75bd331"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="quadtree_8c.html#ac4ac8d4280cb0c708e705c24e75bd331">segments_overlap</a>(x11,  x12,  x21,  x22)&#160;&#160;&#160;(((x11)&lt;=(x21) &amp;&amp; (x21)&lt;=(x12)) || ((x21)&lt;=(x11) &amp;&amp; (x11)&lt;=(x22)))</td></tr>
+<tr class="memitem:ac4ac8d4280cb0c708e705c24e75bd331" id="r_ac4ac8d4280cb0c708e705c24e75bd331"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="quadtree_8c.html#ac4ac8d4280cb0c708e705c24e75bd331">segments_overlap</a>(x11,  x12,  x21,  x22)&#160;&#160;&#160;(((x11) &lt;= (x21) &amp;&amp; (x21) &lt;= (x12)) || ((x21) &lt;= (x11) &amp;&amp; (x11) &lt;= (x22)))</td></tr>
 <tr class="separator:ac4ac8d4280cb0c708e705c24e75bd331"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc555b5dd6b8a960e509c1d3484b82eb" id="r_adc555b5dd6b8a960e509c1d3484b82eb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="quadtree_8c.html#adc555b5dd6b8a960e509c1d3484b82eb">rects_overlap</a>(x11,  y11,  x12,  y12,  x21,  y21,  x22,  y22)&#160;&#160;&#160;(<a class="el" href="quadtree_8c.html#ac4ac8d4280cb0c708e705c24e75bd331">segments_overlap</a>(x11,x12, x21,x22) &amp;&amp; <a class="el" href="quadtree_8c.html#ac4ac8d4280cb0c708e705c24e75bd331">segments_overlap</a>(y11,y12, y21,y22))</td></tr>
+<tr class="memitem:adc555b5dd6b8a960e509c1d3484b82eb" id="r_adc555b5dd6b8a960e509c1d3484b82eb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="quadtree_8c.html#adc555b5dd6b8a960e509c1d3484b82eb">rects_overlap</a>(x11,  y11,  x12,  y12,  x21,  y21,  x22,  y22)&#160;&#160;&#160;    (<a class="el" href="quadtree_8c.html#ac4ac8d4280cb0c708e705c24e75bd331">segments_overlap</a>(x11, x12, x21, x22) &amp;&amp; <a class="el" href="quadtree_8c.html#ac4ac8d4280cb0c708e705c24e75bd331">segments_overlap</a>(y11, y12, y21, y22))</td></tr>
 <tr class="separator:adc555b5dd6b8a960e509c1d3484b82eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -246,7 +246,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;(<a class="el" href="quadtree_8c.html#ac4ac8d4280cb0c708e705c24e75bd331">segments_overlap</a>(x11,x12, x21,x22) &amp;&amp; <a class="el" href="quadtree_8c.html#ac4ac8d4280cb0c708e705c24e75bd331">segments_overlap</a>(y11,y12, y21,y22))</td>
+          <td></td><td>&#160;&#160;&#160;    (<a class="el" href="quadtree_8c.html#ac4ac8d4280cb0c708e705c24e75bd331">segments_overlap</a>(x11, x12, x21, x22) &amp;&amp; <a class="el" href="quadtree_8c.html#ac4ac8d4280cb0c708e705c24e75bd331">segments_overlap</a>(y11, y12, y21, y22))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -286,7 +286,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;(((x11)&lt;=(x21) &amp;&amp; (x21)&lt;=(x12)) || ((x21)&lt;=(x11) &amp;&amp; (x11)&lt;=(x22)))</td>
+          <td></td><td>&#160;&#160;&#160;(((x11) &lt;= (x21) &amp;&amp; (x21) &lt;= (x12)) || ((x21) &lt;= (x11) &amp;&amp; (x11) &lt;= (x22)))</td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -97,19 +97,19 @@ $(document).ready(function(){initNavTree('binding__python_8c.html',''); initResi
   <div class="headertitle"><div class="title">binding_python.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="common_8h_source.html">common.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="common_8h_source.html">common.h</a>&quot;</code><br />
 <code>#include &quot;config.h&quot;</code><br />
-<code>#include &lt;glib.h&gt;</code><br />
-<code>#include &lt;fcntl.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="mapset_8h_source.html">mapset.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a>&quot;</code><br />
+<code>#include &lt;fcntl.h&gt;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -128,6 +128,8 @@ Data Structures</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:a6bb1ff01fab2f8a8bb023f584a5aa272" id="r_a6bb1ff01fab2f8a8bb023f584a5aa272"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a>&#160;&#160;&#160;PyObject_HEAD_INIT(&amp;PyType_Type)</td></tr>
 <tr class="separator:a6bb1ff01fab2f8a8bb023f584a5aa272"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa75544c084c00c54e61365d048825a26" id="r_aa75544c084c00c54e61365d048825a26"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="binding__python_8c.html#aa75544c084c00c54e61365d048825a26">HEAD_INIT</a>&#160;&#160;&#160;PyObject_HEAD_INIT(&amp;PyType_Type)</td></tr>
+<tr class="separator:aa75544c084c00c54e61365d048825a26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -190,6 +192,20 @@ Variables</h2></td></tr>
 <tr class="separator:a2492dd837c2bfd5249a42fc2967e5163"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="aa75544c084c00c54e61365d048825a26" name="aa75544c084c00c54e61365d048825a26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa75544c084c00c54e61365d048825a26">&#9670;&#160;</a></span>HEAD_INIT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define HEAD_INIT&#160;&#160;&#160;PyObject_HEAD_INIT(&amp;PyType_Type)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a6bb1ff01fab2f8a8bb023f584a5aa272" name="a6bb1ff01fab2f8a8bb023f584a5aa272"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6bb1ff01fab2f8a8bb023f584a5aa272">&#9670;&#160;</a></span>Obj_HEAD</h2>
 
@@ -271,7 +287,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structcoordObject.html#a4ea53bde0610cf7348e1983231ece1ec">coordObject::c</a>, and <a class="el" href="group__coord.html#gad191c6f8f958bfe80345f76549c00dea">coord_destroy()</a>.</p>
+<p class="reference">References <a class="el" href="structcoordObject.html#aa0978dbe67401cd44fac6d928d92b96d">coordObject::c</a>, and <a class="el" href="group__coord.html#gad191c6f8f958bfe80345f76549c00dea">coord_destroy()</a>.</p>
 
 </div>
 </div>
@@ -309,7 +325,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structcoordObject.html#a4ea53bde0610cf7348e1983231ece1ec">coordObject::c</a>, <a class="el" href="group__coord.html#gaeb489edd13309353cb486f855c00dbe5">coord_new()</a>, and <a class="el" href="binding__python_8c.html#ad59fc07b133692093219cbc061de53c1">coord_Type</a>.</p>
+<p class="reference">References <a class="el" href="structcoordObject.html#aa0978dbe67401cd44fac6d928d92b96d">coordObject::c</a>, <a class="el" href="group__coord.html#gaeb489edd13309353cb486f855c00dbe5">coord_new()</a>, and <a class="el" href="binding__python_8c.html#ad59fc07b133692093219cbc061de53c1">coord_Type</a>.</p>
 
 </div>
 </div>
@@ -337,7 +353,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="group__coord.html#gafa70ead6ae4b05afd37d9eca3bd6e4a3">coord_rect_destroy()</a>, and <a class="el" href="structcoord__rectObject.html#a1ef75000d3288b48e115245d59bad6d7">coord_rectObject::r</a>.</p>
+<p class="reference">References <a class="el" href="group__coord.html#gafa70ead6ae4b05afd37d9eca3bd6e4a3">coord_rect_destroy()</a>, and <a class="el" href="structcoord__rectObject.html#a5871492e1e956b37466d4091af7c1194">coord_rectObject::r</a>.</p>
 
 </div>
 </div>
@@ -375,7 +391,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structcoordObject.html#a4ea53bde0610cf7348e1983231ece1ec">coordObject::c</a>, <a class="el" href="group__coord.html#ga63815cc089c2d7107496a8eb8512ac27">coord_rect_new()</a>, <a class="el" href="binding__python_8c.html#aed6a2e78a89ca46acf31e2378e613452">coord_rect_Type</a>, <a class="el" href="binding__python_8c.html#ad59fc07b133692093219cbc061de53c1">coord_Type</a>, <a class="el" href="structcoord__rect.html#a8da493b41946d949510bada53c32667a">coord_rect::lu</a>, and <a class="el" href="structcoord__rectObject.html#a1ef75000d3288b48e115245d59bad6d7">coord_rectObject::r</a>.</p>
+<p class="reference">References <a class="el" href="structcoordObject.html#aa0978dbe67401cd44fac6d928d92b96d">coordObject::c</a>, <a class="el" href="group__coord.html#ga63815cc089c2d7107496a8eb8512ac27">coord_rect_new()</a>, <a class="el" href="binding__python_8c.html#aed6a2e78a89ca46acf31e2378e613452">coord_rect_Type</a>, <a class="el" href="binding__python_8c.html#ad59fc07b133692093219cbc061de53c1">coord_Type</a>, <a class="el" href="structcoord__rect.html#a8da493b41946d949510bada53c32667a">coord_rect::lu</a>, and <a class="el" href="structcoord__rectObject.html#a5871492e1e956b37466d4091af7c1194">coord_rectObject::r</a>.</p>
 
 </div>
 </div>
@@ -403,7 +419,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structmapObject.html#a2618e7fc8340825a31ad36e5346cc74c">mapObject::m</a>, <a class="el" href="map_8c.html#a06f624f20492c8e9e9f3c7eb43b70396">map_destroy()</a>, and <a class="el" href="structmapObject.html#a28438dd5b36e742f8da620671b2acb47">mapObject::ref</a>.</p>
+<p class="reference">References <a class="el" href="structmapObject.html#a2618e7fc8340825a31ad36e5346cc74c">mapObject::m</a>, <a class="el" href="map_8c.html#a06f624f20492c8e9e9f3c7eb43b70396">map_destroy()</a>, and <a class="el" href="structmapObject.html#aa145cab29f63e616178b59ec9d8f24ad">mapObject::ref</a>.</p>
 
 </div>
 </div>
@@ -517,7 +533,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>, <a class="el" href="structmapObject.html#a2618e7fc8340825a31ad36e5346cc74c">mapObject::m</a>, <a class="el" href="map_8c.html#a397a9ad42674f121ab88aaafb77a489b">map_new()</a>, <a class="el" href="binding__python_8c.html#aec5decd69c84494456840de6ef256cfd">map_Type</a>, <a class="el" href="structmapObject.html#a28438dd5b36e742f8da620671b2acb47">mapObject::ref</a>, and <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>.</p>
+<p class="reference">References <a class="el" href="garmin__img_8c.html#a59aa20226ab9bcc66f5a649808ce874a">filename</a>, <a class="el" href="structmapObject.html#a2618e7fc8340825a31ad36e5346cc74c">mapObject::m</a>, <a class="el" href="map_8c.html#a397a9ad42674f121ab88aaafb77a489b">map_new()</a>, <a class="el" href="binding__python_8c.html#aec5decd69c84494456840de6ef256cfd">map_Type</a>, <a class="el" href="structmapObject.html#aa145cab29f63e616178b59ec9d8f24ad">mapObject::ref</a>, and <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>.</p>
 
 </div>
 </div>
@@ -537,7 +553,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structmapObject.html#a2618e7fc8340825a31ad36e5346cc74c">mapObject::m</a>, <a class="el" href="binding__python_8c.html#aec5decd69c84494456840de6ef256cfd">map_Type</a>, and <a class="el" href="structmapObject.html#a28438dd5b36e742f8da620671b2acb47">mapObject::ref</a>.</p>
+<p class="reference">References <a class="el" href="structmapObject.html#a2618e7fc8340825a31ad36e5346cc74c">mapObject::m</a>, <a class="el" href="binding__python_8c.html#aec5decd69c84494456840de6ef256cfd">map_Type</a>, and <a class="el" href="structmapObject.html#aa145cab29f63e616178b59ec9d8f24ad">mapObject::ref</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="binding_2python_2navigation_8c.html#a9edb75427f922bf8ed82fe1abc4f21ac">navigation_get_map_py()</a>, and <a class="el" href="binding_2python_2route_8c.html#a4c63ecfa39cff5663271979d142e9710">route_get_map_py()</a>.</p>
 
@@ -567,7 +583,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="map_8c.html#afe7311d63f1e8a4a697634cf79329f7d">map_rect_destroy()</a>, and <a class="el" href="structmap__rectObject.html#a4027f27f4e2127841e2dca091232f08b">map_rectObject::mr</a>.</p>
+<p class="reference">References <a class="el" href="map_8c.html#afe7311d63f1e8a4a697634cf79329f7d">map_rect_destroy()</a>, and <a class="el" href="structmap__rectObject.html#a2b07f7fee45daf99cb2efd7404fad835">map_rectObject::mr</a>.</p>
 
 </div>
 </div>
@@ -605,7 +621,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="binding__python_8c.html#aed6a2e78a89ca46acf31e2378e613452">coord_rect_Type</a>, <a class="el" href="structmapObject.html#a2618e7fc8340825a31ad36e5346cc74c">mapObject::m</a>, <a class="el" href="map_8c.html#a66dcad4a5e28d9a3a1e2f48449165dce">map_rect_new()</a>, <a class="el" href="binding__python_8c.html#a5307204907dfce841c177bf84ec9f45f">map_rect_Type</a>, and <a class="el" href="structmap__rectObject.html#a4027f27f4e2127841e2dca091232f08b">map_rectObject::mr</a>.</p>
+<p class="reference">References <a class="el" href="binding__python_8c.html#aed6a2e78a89ca46acf31e2378e613452">coord_rect_Type</a>, <a class="el" href="structmapObject.html#a2618e7fc8340825a31ad36e5346cc74c">mapObject::m</a>, <a class="el" href="map_8c.html#a66dcad4a5e28d9a3a1e2f48449165dce">map_rect_new()</a>, <a class="el" href="binding__python_8c.html#a5307204907dfce841c177bf84ec9f45f">map_rect_Type</a>, and <a class="el" href="structmap__rectObject.html#a2b07f7fee45daf99cb2efd7404fad835">map_rectObject::mr</a>.</p>
 
 </div>
 </div>
@@ -681,7 +697,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="mapset_8c.html#a1a9945ebe3171257d759ee3e7bd45790">mapset_add_attr()</a>, and <a class="el" href="structmapsetObject.html#a56c13b645681e7b556cf814a08790db3">mapsetObject::ms</a>.</p>
+<p class="reference">References <a class="el" href="mapset_8c.html#a1a9945ebe3171257d759ee3e7bd45790">mapset_add_attr()</a>, and <a class="el" href="structmapsetObject.html#a1b81076668e7e63875f1e4b8799363e1">mapsetObject::ms</a>.</p>
 
 </div>
 </div>
@@ -709,7 +725,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="mapset_8c.html#a3ce35b0b230f340967b7adccf5bdd0d2">mapset_destroy()</a>, and <a class="el" href="structmapsetObject.html#a56c13b645681e7b556cf814a08790db3">mapsetObject::ms</a>.</p>
+<p class="reference">References <a class="el" href="mapset_8c.html#a3ce35b0b230f340967b7adccf5bdd0d2">mapset_destroy()</a>, and <a class="el" href="structmapsetObject.html#a1b81076668e7e63875f1e4b8799363e1">mapsetObject::ms</a>.</p>
 
 </div>
 </div>
@@ -785,7 +801,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="mapset_8c.html#acdcf0b576818e5c606c03849f8fe893e">mapset_new()</a>, <a class="el" href="binding__python_8c.html#a3aa295c05123fb40575ea81a64d719b8">mapset_Type</a>, and <a class="el" href="structmapsetObject.html#a56c13b645681e7b556cf814a08790db3">mapsetObject::ms</a>.</p>
+<p class="reference">References <a class="el" href="mapset_8c.html#acdcf0b576818e5c606c03849f8fe893e">mapset_new()</a>, <a class="el" href="binding__python_8c.html#a3aa295c05123fb40575ea81a64d719b8">mapset_Type</a>, and <a class="el" href="structmapsetObject.html#a1b81076668e7e63875f1e4b8799363e1">mapsetObject::ms</a>.</p>
 
 </div>
 </div>
@@ -844,17 +860,14 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line"> </div>
-<div class="line"> </div>
-<div class="line"> </div>
-<div class="line">    PyObject_HEAD_INIT(&amp;PyType_Type)</div>
-<div class="line"> </div>
-<div class="line">    .tp_name=<span class="stringliteral">&quot;coord_rect&quot;</span>,</div>
-<div class="line">    .tp_basicsize=<span class="keyword">sizeof</span>(<a class="code hl_struct" href="structcoord__rectObject.html">coord_rectObject</a>),</div>
-<div class="line">    .tp_dealloc=(destructor)<a class="code hl_function" href="binding__python_8c.html#ab577828992a2a0d4d93a766d797d86c7">coord_rect_destroy_py</a>,</div>
+<div class="line">    <a class="code hl_define" href="binding__python_8c.html#aa75544c084c00c54e61365d048825a26">HEAD_INIT</a>,</div>
+<div class="line">    .tp_name = <span class="stringliteral">&quot;coord_rect&quot;</span>,</div>
+<div class="line">    .tp_basicsize = <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structcoord__rectObject.html">coord_rectObject</a>),</div>
+<div class="line">    .tp_dealloc = (destructor)<a class="code hl_function" href="binding__python_8c.html#ab577828992a2a0d4d93a766d797d86c7">coord_rect_destroy_py</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="abinding__python_8c_html_ab577828992a2a0d4d93a766d797d86c7"><div class="ttname"><a href="binding__python_8c.html#ab577828992a2a0d4d93a766d797d86c7">coord_rect_destroy_py</a></div><div class="ttdeci">static void coord_rect_destroy_py(coord_rectObject *self)</div><div class="ttdef"><b>Definition</b> binding_python.c:127</div></div>
-<div class="ttc" id="astructcoord__rectObject_html"><div class="ttname"><a href="structcoord__rectObject.html">coord_rectObject</a></div><div class="ttdef"><b>Definition</b> binding_python.c:98</div></div>
+<div class="ttc" id="abinding__python_8c_html_aa75544c084c00c54e61365d048825a26"><div class="ttname"><a href="binding__python_8c.html#aa75544c084c00c54e61365d048825a26">HEAD_INIT</a></div><div class="ttdeci">#define HEAD_INIT</div><div class="ttdef"><b>Definition</b> binding_python.c:43</div></div>
+<div class="ttc" id="abinding__python_8c_html_ab577828992a2a0d4d93a766d797d86c7"><div class="ttname"><a href="binding__python_8c.html#ab577828992a2a0d4d93a766d797d86c7">coord_rect_destroy_py</a></div><div class="ttdeci">static void coord_rect_destroy_py(coord_rectObject *self)</div><div class="ttdef"><b>Definition</b> binding_python.c:125</div></div>
+<div class="ttc" id="astructcoord__rectObject_html"><div class="ttname"><a href="structcoord__rectObject.html">coord_rectObject</a></div><div class="ttdef"><b>Definition</b> binding_python.c:101</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="binding__python_8c.html#aaebe3c09834240939c07c9ecdc54bfdd">coord_rect_new_py()</a>, and <a class="el" href="binding__python_8c.html#a22018bcc6d14e574186301173afa3fa8">map_rect_new_py()</a>.</p>
 
@@ -872,14 +885,14 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_define" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div>
-<div class="line">    .tp_name=<span class="stringliteral">&quot;coord&quot;</span>,</div>
-<div class="line">    .tp_basicsize=<span class="keyword">sizeof</span>(<a class="code hl_struct" href="structcoordObject.html">coordObject</a>),</div>
-<div class="line">    .tp_dealloc=(destructor)<a class="code hl_function" href="binding__python_8c.html#a515752a7f5bae09bc5a2cd68da6a0aa0">coord_destroy_py</a>,</div>
+<div class="line">    <a class="code hl_define" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a>,</div>
+<div class="line">    .tp_name = <span class="stringliteral">&quot;coord&quot;</span>,</div>
+<div class="line">    .tp_basicsize = <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structcoordObject.html">coordObject</a>),</div>
+<div class="line">    .tp_dealloc = (destructor)<a class="code hl_function" href="binding__python_8c.html#a515752a7f5bae09bc5a2cd68da6a0aa0">coord_destroy_py</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="abinding__python_8c_html_a515752a7f5bae09bc5a2cd68da6a0aa0"><div class="ttname"><a href="binding__python_8c.html#a515752a7f5bae09bc5a2cd68da6a0aa0">coord_destroy_py</a></div><div class="ttdeci">static void coord_destroy_py(coordObject *self)</div><div class="ttdef"><b>Definition</b> binding_python.c:92</div></div>
-<div class="ttc" id="abinding__python_8c_html_a6bb1ff01fab2f8a8bb023f584a5aa272"><div class="ttname"><a href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div><div class="ttdeci">#define Obj_HEAD</div><div class="ttdef"><b>Definition</b> binding_python.c:39</div></div>
-<div class="ttc" id="astructcoordObject_html"><div class="ttname"><a href="structcoordObject.html">coordObject</a></div><div class="ttdef"><b>Definition</b> binding_python.c:44</div></div>
+<div class="ttc" id="abinding__python_8c_html_a515752a7f5bae09bc5a2cd68da6a0aa0"><div class="ttname"><a href="binding__python_8c.html#a515752a7f5bae09bc5a2cd68da6a0aa0">coord_destroy_py</a></div><div class="ttdeci">static void coord_destroy_py(coordObject *self)</div><div class="ttdef"><b>Definition</b> binding_python.c:95</div></div>
+<div class="ttc" id="abinding__python_8c_html_a6bb1ff01fab2f8a8bb023f584a5aa272"><div class="ttname"><a href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div><div class="ttdeci">#define Obj_HEAD</div><div class="ttdef"><b>Definition</b> binding_python.c:37</div></div>
+<div class="ttc" id="astructcoordObject_html"><div class="ttname"><a href="structcoordObject.html">coordObject</a></div><div class="ttdef"><b>Definition</b> binding_python.c:48</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="binding__python_8c.html#a32ca4ad90f45e5680eb9ea4f2d026fd3">coord_new_py()</a>, and <a class="el" href="binding__python_8c.html#aaebe3c09834240939c07c9ecdc54bfdd">coord_rect_new_py()</a>.</p>
 
@@ -905,14 +918,14 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    {<span class="stringliteral">&quot;dump_file&quot;</span>,               (PyCFunction) <a class="code hl_function" href="binding__python_8c.html#a152d0fd180af8863ea44850e2f807ffb">map_dump_file_py</a>, METH_VARARGS },</div>
-<div class="line">    {<span class="stringliteral">&quot;map_rect_new&quot;</span>,    (PyCFunction) <a class="code hl_function" href="binding__python_8c.html#a22018bcc6d14e574186301173afa3fa8">map_rect_new_py</a>, METH_VARARGS },</div>
-<div class="line">    {<span class="stringliteral">&quot;set_attr&quot;</span>,                (PyCFunction) <a class="code hl_function" href="binding__python_8c.html#a5fa4d03182ae6bacfdc5892e436ec27f">map_set_attr_py</a>, METH_VARARGS },</div>
-<div class="line">    {NULL, NULL },</div>
+<div class="line">    {<span class="stringliteral">&quot;dump_file&quot;</span>, (PyCFunction)<a class="code hl_function" href="binding__python_8c.html#a152d0fd180af8863ea44850e2f807ffb">map_dump_file_py</a>, METH_VARARGS},</div>
+<div class="line">    {<span class="stringliteral">&quot;map_rect_new&quot;</span>, (PyCFunction)<a class="code hl_function" href="binding__python_8c.html#a22018bcc6d14e574186301173afa3fa8">map_rect_new_py</a>, METH_VARARGS},</div>
+<div class="line">    {<span class="stringliteral">&quot;set_attr&quot;</span>, (PyCFunction)<a class="code hl_function" href="binding__python_8c.html#a5fa4d03182ae6bacfdc5892e436ec27f">map_set_attr_py</a>, METH_VARARGS},</div>
+<div class="line">    {NULL, NULL},</div>
 <div class="line">}</div>
-<div class="ttc" id="abinding__python_8c_html_a152d0fd180af8863ea44850e2f807ffb"><div class="ttname"><a href="binding__python_8c.html#a152d0fd180af8863ea44850e2f807ffb">map_dump_file_py</a></div><div class="ttdeci">static PyObject * map_dump_file_py(mapObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:169</div></div>
-<div class="ttc" id="abinding__python_8c_html_a22018bcc6d14e574186301173afa3fa8"><div class="ttname"><a href="binding__python_8c.html#a22018bcc6d14e574186301173afa3fa8">map_rect_new_py</a></div><div class="ttdeci">static PyObject * map_rect_new_py(mapObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:152</div></div>
-<div class="ttc" id="abinding__python_8c_html_a5fa4d03182ae6bacfdc5892e436ec27f"><div class="ttname"><a href="binding__python_8c.html#a5fa4d03182ae6bacfdc5892e436ec27f">map_set_attr_py</a></div><div class="ttdeci">static PyObject * map_set_attr_py(mapObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:178</div></div>
+<div class="ttc" id="abinding__python_8c_html_a152d0fd180af8863ea44850e2f807ffb"><div class="ttname"><a href="binding__python_8c.html#a152d0fd180af8863ea44850e2f807ffb">map_dump_file_py</a></div><div class="ttdeci">static PyObject * map_dump_file_py(mapObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:161</div></div>
+<div class="ttc" id="abinding__python_8c_html_a22018bcc6d14e574186301173afa3fa8"><div class="ttname"><a href="binding__python_8c.html#a22018bcc6d14e574186301173afa3fa8">map_rect_new_py</a></div><div class="ttdeci">static PyObject * map_rect_new_py(mapObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:145</div></div>
+<div class="ttc" id="abinding__python_8c_html_a5fa4d03182ae6bacfdc5892e436ec27f"><div class="ttname"><a href="binding__python_8c.html#a5fa4d03182ae6bacfdc5892e436ec27f">map_set_attr_py</a></div><div class="ttdeci">static PyObject * map_set_attr_py(mapObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:169</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -928,17 +941,13 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line"> </div>
-<div class="line"> </div>
-<div class="line"> </div>
-<div class="line">    PyObject_HEAD_INIT(&amp;PyType_Type)</div>
-<div class="line"> </div>
-<div class="line">    .tp_name=<span class="stringliteral">&quot;map_rect&quot;</span>,</div>
-<div class="line">    .tp_basicsize=<span class="keyword">sizeof</span>(<a class="code hl_struct" href="structmap__rectObject.html">map_rectObject</a>),</div>
-<div class="line">    .tp_dealloc=(destructor)<a class="code hl_function" href="binding__python_8c.html#a382dda83bc2f3eb2d9f5d594d6830cbb">map_rect_destroy_py</a>,</div>
+<div class="line">    <a class="code hl_define" href="binding__python_8c.html#aa75544c084c00c54e61365d048825a26">HEAD_INIT</a>,</div>
+<div class="line">    .tp_name = <span class="stringliteral">&quot;map_rect&quot;</span>,</div>
+<div class="line">    .tp_basicsize = <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structmap__rectObject.html">map_rectObject</a>),</div>
+<div class="line">    .tp_dealloc = (destructor)<a class="code hl_function" href="binding__python_8c.html#a382dda83bc2f3eb2d9f5d594d6830cbb">map_rect_destroy_py</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="abinding__python_8c_html_a382dda83bc2f3eb2d9f5d594d6830cbb"><div class="ttname"><a href="binding__python_8c.html#a382dda83bc2f3eb2d9f5d594d6830cbb">map_rect_destroy_py</a></div><div class="ttdeci">static void map_rect_destroy_py(map_rectObject *self)</div><div class="ttdef"><b>Definition</b> binding_python.c:162</div></div>
-<div class="ttc" id="astructmap__rectObject_html"><div class="ttname"><a href="structmap__rectObject.html">map_rectObject</a></div><div class="ttdef"><b>Definition</b> binding_python.c:133</div></div>
+<div class="ttc" id="abinding__python_8c_html_a382dda83bc2f3eb2d9f5d594d6830cbb"><div class="ttname"><a href="binding__python_8c.html#a382dda83bc2f3eb2d9f5d594d6830cbb">map_rect_destroy_py</a></div><div class="ttdeci">static void map_rect_destroy_py(map_rectObject *self)</div><div class="ttdef"><b>Definition</b> binding_python.c:155</div></div>
+<div class="ttc" id="astructmap__rectObject_html"><div class="ttname"><a href="structmap__rectObject.html">map_rectObject</a></div><div class="ttdef"><b>Definition</b> binding_python.c:131</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="binding__python_8c.html#a22018bcc6d14e574186301173afa3fa8">map_rect_new_py()</a>.</p>
 
@@ -956,15 +965,15 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_define" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div>
-<div class="line">    .tp_name=<span class="stringliteral">&quot;map&quot;</span>,</div>
-<div class="line">    .tp_basicsize=<span class="keyword">sizeof</span>(<a class="code hl_struct" href="structmapObject.html">mapObject</a>),</div>
-<div class="line">    .tp_dealloc=(destructor)<a class="code hl_function" href="binding__python_8c.html#ad0ff1d802c46a262e16682d606c5d5aa">map_destroy_py</a>,</div>
-<div class="line">    .tp_getattr=<a class="code hl_function" href="binding__python_8c.html#a4050a2e7abec4b8340e80f6098292395">map_getattr_py</a>,</div>
+<div class="line">    <a class="code hl_define" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a>,</div>
+<div class="line">    .tp_name = <span class="stringliteral">&quot;map&quot;</span>,</div>
+<div class="line">    .tp_basicsize = <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structmapObject.html">mapObject</a>),</div>
+<div class="line">    .tp_dealloc = (destructor)<a class="code hl_function" href="binding__python_8c.html#ad0ff1d802c46a262e16682d606c5d5aa">map_destroy_py</a>,</div>
+<div class="line">    .tp_getattr = <a class="code hl_function" href="binding__python_8c.html#a4050a2e7abec4b8340e80f6098292395">map_getattr_py</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="abinding__python_8c_html_a4050a2e7abec4b8340e80f6098292395"><div class="ttname"><a href="binding__python_8c.html#a4050a2e7abec4b8340e80f6098292395">map_getattr_py</a></div><div class="ttdeci">static PyObject * map_getattr_py(PyObject *self, char *name)</div><div class="ttdef"><b>Definition</b> binding_python.c:195</div></div>
-<div class="ttc" id="abinding__python_8c_html_ad0ff1d802c46a262e16682d606c5d5aa"><div class="ttname"><a href="binding__python_8c.html#ad0ff1d802c46a262e16682d606c5d5aa">map_destroy_py</a></div><div class="ttdeci">static void map_destroy_py(mapObject *self)</div><div class="ttdef"><b>Definition</b> binding_python.c:220</div></div>
-<div class="ttc" id="astructmapObject_html"><div class="ttname"><a href="structmapObject.html">mapObject</a></div><div class="ttdef"><b>Definition</b> binding_python.c:61</div></div>
+<div class="ttc" id="abinding__python_8c_html_a4050a2e7abec4b8340e80f6098292395"><div class="ttname"><a href="binding__python_8c.html#a4050a2e7abec4b8340e80f6098292395">map_getattr_py</a></div><div class="ttdeci">static PyObject * map_getattr_py(PyObject *self, char *name)</div><div class="ttdef"><b>Definition</b> binding_python.c:184</div></div>
+<div class="ttc" id="abinding__python_8c_html_ad0ff1d802c46a262e16682d606c5d5aa"><div class="ttname"><a href="binding__python_8c.html#ad0ff1d802c46a262e16682d606c5d5aa">map_destroy_py</a></div><div class="ttdeci">static void map_destroy_py(mapObject *self)</div><div class="ttdef"><b>Definition</b> binding_python.c:208</div></div>
+<div class="ttc" id="astructmapObject_html"><div class="ttname"><a href="structmapObject.html">mapObject</a></div><div class="ttdef"><b>Definition</b> binding_python.c:64</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="binding__python_8c.html#ad14f5a8c73f5af4324c8e9130a0d1063">map_new_py()</a>, and <a class="el" href="binding__python_8c.html#a016e5ff111fbeab147bd3661308f9552">map_py_ref()</a>.</p>
 
@@ -990,10 +999,10 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    {<span class="stringliteral">&quot;add&quot;</span>,     (PyCFunction) <a class="code hl_function" href="binding__python_8c.html#aad2457d7591d2ffc177abf27b8a50b4d">mapset_add_py</a>, METH_VARARGS },</div>
-<div class="line">    {NULL, NULL },</div>
+<div class="line">    {<span class="stringliteral">&quot;add&quot;</span>, (PyCFunction)<a class="code hl_function" href="binding__python_8c.html#aad2457d7591d2ffc177abf27b8a50b4d">mapset_add_py</a>, METH_VARARGS},</div>
+<div class="line">    {NULL, NULL},</div>
 <div class="line">}</div>
-<div class="ttc" id="abinding__python_8c_html_aad2457d7591d2ffc177abf27b8a50b4d"><div class="ttname"><a href="binding__python_8c.html#aad2457d7591d2ffc177abf27b8a50b4d">mapset_add_py</a></div><div class="ttdeci">static PyObject * mapset_add_py(mapsetObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:249</div></div>
+<div class="ttc" id="abinding__python_8c_html_aad2457d7591d2ffc177abf27b8a50b4d"><div class="ttname"><a href="binding__python_8c.html#aad2457d7591d2ffc177abf27b8a50b4d">mapset_add_py</a></div><div class="ttdeci">static PyObject * mapset_add_py(mapsetObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:231</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="binding__python_8c.html#a47af2c210c9ba78d35c2d826667ab4a6">mapset_getattr_py()</a>.</p>
 
@@ -1011,19 +1020,15 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line"> </div>
-<div class="line"> </div>
-<div class="line"> </div>
-<div class="line">    PyObject_HEAD_INIT(&amp;PyType_Type)</div>
-<div class="line"> </div>
-<div class="line">    .tp_name=<span class="stringliteral">&quot;mapset&quot;</span>,</div>
-<div class="line">    .tp_basicsize=<span class="keyword">sizeof</span>(<a class="code hl_struct" href="structmapsetObject.html">mapsetObject</a>),</div>
-<div class="line">    .tp_dealloc=(destructor)<a class="code hl_function" href="binding__python_8c.html#a77fc29ba90b642ff74c2ca6723f73b45">mapset_destroy_py</a>,</div>
-<div class="line">    .tp_getattr=<a class="code hl_function" href="binding__python_8c.html#a47af2c210c9ba78d35c2d826667ab4a6">mapset_getattr_py</a>,</div>
+<div class="line">    <a class="code hl_define" href="binding__python_8c.html#aa75544c084c00c54e61365d048825a26">HEAD_INIT</a>,</div>
+<div class="line">    .tp_name = <span class="stringliteral">&quot;mapset&quot;</span>,</div>
+<div class="line">    .tp_basicsize = <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structmapsetObject.html">mapsetObject</a>),</div>
+<div class="line">    .tp_dealloc = (destructor)<a class="code hl_function" href="binding__python_8c.html#a77fc29ba90b642ff74c2ca6723f73b45">mapset_destroy_py</a>,</div>
+<div class="line">    .tp_getattr = <a class="code hl_function" href="binding__python_8c.html#a47af2c210c9ba78d35c2d826667ab4a6">mapset_getattr_py</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="abinding__python_8c_html_a47af2c210c9ba78d35c2d826667ab4a6"><div class="ttname"><a href="binding__python_8c.html#a47af2c210c9ba78d35c2d826667ab4a6">mapset_getattr_py</a></div><div class="ttdeci">static PyObject * mapset_getattr_py(PyObject *self, char *name)</div><div class="ttdef"><b>Definition</b> binding_python.c:265</div></div>
-<div class="ttc" id="abinding__python_8c_html_a77fc29ba90b642ff74c2ca6723f73b45"><div class="ttname"><a href="binding__python_8c.html#a77fc29ba90b642ff74c2ca6723f73b45">mapset_destroy_py</a></div><div class="ttdeci">static void mapset_destroy_py(mapsetObject *self)</div><div class="ttdef"><b>Definition</b> binding_python.c:278</div></div>
-<div class="ttc" id="astructmapsetObject_html"><div class="ttname"><a href="structmapsetObject.html">mapsetObject</a></div><div class="ttdef"><b>Definition</b> binding_python.c:228</div></div>
+<div class="ttc" id="abinding__python_8c_html_a47af2c210c9ba78d35c2d826667ab4a6"><div class="ttname"><a href="binding__python_8c.html#a47af2c210c9ba78d35c2d826667ab4a6">mapset_getattr_py</a></div><div class="ttdeci">static PyObject * mapset_getattr_py(PyObject *self, char *name)</div><div class="ttdef"><b>Definition</b> binding_python.c:245</div></div>
+<div class="ttc" id="abinding__python_8c_html_a77fc29ba90b642ff74c2ca6723f73b45"><div class="ttname"><a href="binding__python_8c.html#a77fc29ba90b642ff74c2ca6723f73b45">mapset_destroy_py</a></div><div class="ttdeci">static void mapset_destroy_py(mapsetObject *self)</div><div class="ttdef"><b>Definition</b> binding_python.c:258</div></div>
+<div class="ttc" id="astructmapsetObject_html"><div class="ttname"><a href="structmapsetObject.html">mapsetObject</a></div><div class="ttdef"><b>Definition</b> binding_python.c:215</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="binding__python_8c.html#a6b5ad2188ff3ec8c2b2e117b4d6215f5">mapset_new_py()</a>.</p>
 
@@ -1059,14 +1064,14 @@ Variables</h2></td></tr>
 <div class="line">    {<span class="stringliteral">&quot;pcoord&quot;</span>, <a class="code hl_function" href="common_8h.html#a7a51a89bd53adab894c1371e8847d127">pcoord_py</a>, METH_VARARGS},</div>
 <div class="line">    {NULL, NULL, 0, NULL}</div>
 <div class="line">}</div>
-<div class="ttc" id="abinding_2python_2attr_8c_html_a71cd477959272fe8a2e888df2f6257fe"><div class="ttname"><a href="binding_2python_2attr_8c.html#a71cd477959272fe8a2e888df2f6257fe">attr_new_py</a></div><div class="ttdeci">PyObject * attr_new_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> attr.c:69</div></div>
-<div class="ttc" id="abinding__python_8c_html_a32ca4ad90f45e5680eb9ea4f2d026fd3"><div class="ttname"><a href="binding__python_8c.html#a32ca4ad90f45e5680eb9ea4f2d026fd3">coord_new_py</a></div><div class="ttdeci">static PyObject * coord_new_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:82</div></div>
-<div class="ttc" id="abinding__python_8c_html_a6b5ad2188ff3ec8c2b2e117b4d6215f5"><div class="ttname"><a href="binding__python_8c.html#a6b5ad2188ff3ec8c2b2e117b4d6215f5">mapset_new_py</a></div><div class="ttdeci">static PyObject * mapset_new_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:269</div></div>
-<div class="ttc" id="abinding__python_8c_html_aabb8655b5242a5e43b1f9f6c828e5823"><div class="ttname"><a href="binding__python_8c.html#aabb8655b5242a5e43b1f9f6c828e5823">config_load_py</a></div><div class="ttdeci">static PyObject * config_load_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:282</div></div>
-<div class="ttc" id="abinding__python_8c_html_aaebe3c09834240939c07c9ecdc54bfdd"><div class="ttname"><a href="binding__python_8c.html#aaebe3c09834240939c07c9ecdc54bfdd">coord_rect_new_py</a></div><div class="ttdeci">static PyObject * coord_rect_new_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:117</div></div>
-<div class="ttc" id="abinding__python_8c_html_ad14f5a8c73f5af4324c8e9130a0d1063"><div class="ttname"><a href="binding__python_8c.html#ad14f5a8c73f5af4324c8e9130a0d1063">map_new_py</a></div><div class="ttdeci">static PyObject * map_new_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:200</div></div>
-<div class="ttc" id="acommon_8h_html_a7a51a89bd53adab894c1371e8847d127"><div class="ttname"><a href="common_8h.html#a7a51a89bd53adab894c1371e8847d127">pcoord_py</a></div><div class="ttdeci">PyObject * pcoord_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> pcoord.c:59</div></div>
-<div class="ttc" id="acommon_8h_html_a860bb89c2708ca0901bc953f9483ed86"><div class="ttname"><a href="common_8h.html#a860bb89c2708ca0901bc953f9483ed86">config_py</a></div><div class="ttdeci">PyObject * config_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> config.c:58</div></div>
+<div class="ttc" id="abinding_2python_2attr_8c_html_a71cd477959272fe8a2e888df2f6257fe"><div class="ttname"><a href="binding_2python_2attr_8c.html#a71cd477959272fe8a2e888df2f6257fe">attr_new_py</a></div><div class="ttdeci">PyObject * attr_new_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> attr.c:65</div></div>
+<div class="ttc" id="abinding__python_8c_html_a32ca4ad90f45e5680eb9ea4f2d026fd3"><div class="ttname"><a href="binding__python_8c.html#a32ca4ad90f45e5680eb9ea4f2d026fd3">coord_new_py</a></div><div class="ttdeci">static PyObject * coord_new_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:85</div></div>
+<div class="ttc" id="abinding__python_8c_html_a6b5ad2188ff3ec8c2b2e117b4d6215f5"><div class="ttname"><a href="binding__python_8c.html#a6b5ad2188ff3ec8c2b2e117b4d6215f5">mapset_new_py</a></div><div class="ttdeci">static PyObject * mapset_new_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:249</div></div>
+<div class="ttc" id="abinding__python_8c_html_aabb8655b5242a5e43b1f9f6c828e5823"><div class="ttname"><a href="binding__python_8c.html#aabb8655b5242a5e43b1f9f6c828e5823">config_load_py</a></div><div class="ttdeci">static PyObject * config_load_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:262</div></div>
+<div class="ttc" id="abinding__python_8c_html_aaebe3c09834240939c07c9ecdc54bfdd"><div class="ttname"><a href="binding__python_8c.html#aaebe3c09834240939c07c9ecdc54bfdd">coord_rect_new_py</a></div><div class="ttdeci">static PyObject * coord_rect_new_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:115</div></div>
+<div class="ttc" id="abinding__python_8c_html_ad14f5a8c73f5af4324c8e9130a0d1063"><div class="ttname"><a href="binding__python_8c.html#ad14f5a8c73f5af4324c8e9130a0d1063">map_new_py</a></div><div class="ttdeci">static PyObject * map_new_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> binding_python.c:188</div></div>
+<div class="ttc" id="acommon_8h_html_a7a51a89bd53adab894c1371e8847d127"><div class="ttname"><a href="common_8h.html#a7a51a89bd53adab894c1371e8847d127">pcoord_py</a></div><div class="ttdeci">PyObject * pcoord_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> pcoord.c:56</div></div>
+<div class="ttc" id="acommon_8h_html_a860bb89c2708ca0901bc953f9483ed86"><div class="ttname"><a href="common_8h.html#a860bb89c2708ca0901bc953f9483ed86">config_py</a></div><div class="ttdeci">PyObject * config_py(PyObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> config.c:55</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="binding__python_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init()</a>.</p>
 

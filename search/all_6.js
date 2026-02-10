@@ -221,7 +221,7 @@ var searchData=
   ['displaylist_5fupdate_5fhash_218',['displaylist_update_hash',['../graphics_8c.html#af77977e6348164bc3cfdfb2ab61b1f3f',1,'graphics.c']]],
   ['displaylist_5fupdate_5flayers_219',['displaylist_update_layers',['../graphics_8c.html#a22d42000a5f34e27c9d474c416699dc8',1,'graphics.c']]],
   ['displaymenu_220',['displayMenu',['../classBackend.html#a38e979a166fe0d95bce7dc2d0c772fad',1,'Backend']]],
-  ['dist_221',['dist',['../structpoi__param.html#afae856177f8237dd1475eefbc561b78e',1,'poi_param::dist'],['../structstreet__name__numbers.html#a397a7dc9531cce53d5b0930e1e067bd3',1,'street_name_numbers::dist'],['../structgeodesic.html#a1a7c66afdc70a64c46c674d9f2e993d6',1,'geodesic::DIST'],['../structitem__data.html#a092645828d64a634437540488e4e2b46',1,'item_data::dist']]],
+  ['dist_221',['dist',['../structstreet__name__numbers.html#a397a7dc9531cce53d5b0930e1e067bd3',1,'street_name_numbers::dist'],['../structgeodesic.html#a1a7c66afdc70a64c46c674d9f2e993d6',1,'geodesic::DIST'],['../structitem__data.html#a092645828d64a634437540488e4e2b46',1,'item_data::dist'],['../structpoi__param.html#afae856177f8237dd1475eefbc561b78e',1,'poi_param::dist']]],
   ['dist_5fsq_222',['dist_sq',['../quadtree_8c.html#ab19c760f9cf0bd84663551db094e6618',1,'quadtree.c']]],
   ['distance_223',['distance',['../classPoiObject.html#a8ce70ccea93506ae515152a48a4dc4eb',1,'PoiObject::distance() const'],['../classPoiObject.html#acac19e37563414a3f521afa7542d25e8',1,'PoiObject::distance'],['../structelement.html#a09e685f1ccad0d42287543aa385b8326',1,'element::distance']]],
   ['distance_5ffrom_5fll_224',['distance_from_ll',['../coastline_8c.html#a101b79175bdf9925bdbeabf15759153f',1,'coastline.c']]],

@@ -5,6 +5,7 @@ var binding__python_8c =
     [ "coord_rectObject", "structcoord__rectObject.html", "structcoord__rectObject" ],
     [ "map_rectObject", "structmap__rectObject.html", "structmap__rectObject" ],
     [ "mapsetObject", "structmapsetObject.html", "structmapsetObject" ],
+    [ "HEAD_INIT", "binding__python_8c.html#aa75544c084c00c54e61365d048825a26", null ],
     [ "Obj_HEAD", "binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272", null ],
     [ "config_load_py", "binding__python_8c.html#aabb8655b5242a5e43b1f9f6c828e5823", null ],
     [ "coord_destroy_py", "binding__python_8c.html#a515752a7f5bae09bc5a2cd68da6a0aa0", null ],

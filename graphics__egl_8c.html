@@ -98,27 +98,27 @@ $(document).ready(function(){initNavTree('graphics__egl_8c.html',''); initResiza
   <div class="headertitle"><div class="title">graphics_egl.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;glib.h&gt;</code><br />
-<code>#include &lt;unistd.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="color_8h_source.html">color.h</a>&quot;</code><br />
+<code>#include &quot;config.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="event_8h_source.html">event.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="keys_8h_source.html">keys.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="font__freetype_8h_source.html">navit/font/freetype/font_freetype.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="window_8h_source.html">window.h</a>&quot;</code><br />
+<code>#include &quot;SDL_image.h&quot;</code><br />
+<code>#include &lt;EGL/egl.h&gt;</code><br />
+<code>#include &lt;GLES2/gl2.h&gt;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
 <code>#include &lt;math.h&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;time.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
-<code>#include &quot;config.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="color_8h_source.html">color.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="event_8h_source.html">event.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="keys_8h_source.html">keys.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="window_8h_source.html">window.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="font__freetype_8h_source.html">navit/font/freetype/font_freetype.h</a>&quot;</code><br />
-<code>#include &quot;SDL_image.h&quot;</code><br />
-<code>#include &lt;GLES2/gl2.h&gt;</code><br />
-<code>#include &lt;EGL/egl.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -2200,20 +2200,19 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">    <span class="stringliteral">&quot;                                                      \</span></div>
-<div class="line"><span class="stringliteral">   uniform lowp vec4    avcolor;                        \</span></div>
-<div class="line"><span class="stringliteral">   uniform sampler2D    texture; \</span></div>
-<div class="line"><span class="stringliteral">   uniform bool         use_texture; \</span></div>
-<div class="line"><span class="stringliteral">   varying vec2         v_texture_position; \</span></div>
-<div class="line"><span class="stringliteral">   void  main()                                        \</span></div>
-<div class="line"><span class="stringliteral">   {                                                   \</span></div>
-<div class="line"><span class="stringliteral">      if (use_texture) { \</span></div>
-<div class="line"><span class="stringliteral">         gl_FragColor = texture2D(texture, v_texture_position);     \</span></div>
-<div class="line"><span class="stringliteral">      } else { \</span></div>
-<div class="line"><span class="stringliteral">         gl_FragColor = avcolor; \</span></div>
-<div class="line"><span class="stringliteral">      } \</span></div>
-<div class="line"><span class="stringliteral">   }                                                   \</span></div>
+<b>Initial value:</b><div class="fragment"><div class="line">= <span class="stringliteral">&quot;                                   \</span></div>
+<div class="line"><span class="stringliteral">   uniform lowp vec4    avcolor;                                \</span></div>
+<div class="line"><span class="stringliteral">   uniform sampler2D    texture;                                \</span></div>
+<div class="line"><span class="stringliteral">   uniform bool         use_texture;                            \</span></div>
+<div class="line"><span class="stringliteral">   varying vec2         v_texture_position;                     \</span></div>
+<div class="line"><span class="stringliteral">   void  main()                                                 \</span></div>
+<div class="line"><span class="stringliteral">   {                                                            \</span></div>
+<div class="line"><span class="stringliteral">      if (use_texture) {                                        \</span></div>
+<div class="line"><span class="stringliteral">         gl_FragColor = texture2D(texture, v_texture_position); \</span></div>
+<div class="line"><span class="stringliteral">      } else {                                                  \</span></div>
+<div class="line"><span class="stringliteral">         gl_FragColor = avcolor;                                \</span></div>
+<div class="line"><span class="stringliteral">      }                                                         \</span></div>
+<div class="line"><span class="stringliteral">   }                                                            \</span></div>
 <div class="line"><span class="stringliteral">&quot;</span></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="graphics__egl_8c.html#a703060fde7c9db292f094e993a074bb8">get_data()</a>, and <a class="el" href="graphics__opengl_8c.html#a703060fde7c9db292f094e993a074bb8">get_data()</a>.</p>
@@ -2240,17 +2239,17 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_function" href="graphics__egl_8c.html#a4f5a58361ff466402ab8cf75992715b3">gc_destroy</a>,</div>
-<div class="line">    <a class="code hl_function" href="graphics__egl_8c.html#add7dfa8917652d28c056970edf329468">gc_set_linewidth</a>,</div>
-<div class="line">    <a class="code hl_function" href="graphics__egl_8c.html#ad498b01d4e0dc67c63d88be7b859aa1d">gc_set_dashes</a>,</div>
-<div class="line">    <a class="code hl_function" href="graphics__egl_8c.html#a9883b50b443c2aa7ca6b30f86ea9ee51">gc_set_foreground</a>,</div>
-<div class="line">    <a class="code hl_function" href="graphics__egl_8c.html#aa1ba6c9692a5f32227a87a09ddec95b0">gc_set_background</a></div>
+<div class="line">    .gc_destroy = <a class="code hl_function" href="graphics__egl_8c.html#a4f5a58361ff466402ab8cf75992715b3">gc_destroy</a>,</div>
+<div class="line">    .gc_set_linewidth = <a class="code hl_function" href="graphics__egl_8c.html#add7dfa8917652d28c056970edf329468">gc_set_linewidth</a>,</div>
+<div class="line">    .gc_set_dashes = <a class="code hl_function" href="graphics__egl_8c.html#ad498b01d4e0dc67c63d88be7b859aa1d">gc_set_dashes</a>,</div>
+<div class="line">    .gc_set_foreground = <a class="code hl_function" href="graphics__egl_8c.html#a9883b50b443c2aa7ca6b30f86ea9ee51">gc_set_foreground</a>,</div>
+<div class="line">    .gc_set_background = <a class="code hl_function" href="graphics__egl_8c.html#aa1ba6c9692a5f32227a87a09ddec95b0">gc_set_background</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="agraphics__egl_8c_html_a4f5a58361ff466402ab8cf75992715b3"><div class="ttname"><a href="graphics__egl_8c.html#a4f5a58361ff466402ab8cf75992715b3">gc_destroy</a></div><div class="ttdeci">static void gc_destroy(struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:337</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_a9883b50b443c2aa7ca6b30f86ea9ee51"><div class="ttname"><a href="graphics__egl_8c.html#a9883b50b443c2aa7ca6b30f86ea9ee51">gc_set_foreground</a></div><div class="ttdeci">static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:401</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_aa1ba6c9692a5f32227a87a09ddec95b0"><div class="ttname"><a href="graphics__egl_8c.html#aa1ba6c9692a5f32227a87a09ddec95b0">gc_set_background</a></div><div class="ttdeci">static void gc_set_background(struct graphics_gc_priv *gc, struct color *c)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:408</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_ad498b01d4e0dc67c63d88be7b859aa1d"><div class="ttname"><a href="graphics__egl_8c.html#ad498b01d4e0dc67c63d88be7b859aa1d">gc_set_dashes</a></div><div class="ttdeci">static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, unsigned char *dash_list, int n)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:346</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_add7dfa8917652d28c056970edf329468"><div class="ttname"><a href="graphics__egl_8c.html#add7dfa8917652d28c056970edf329468">gc_set_linewidth</a></div><div class="ttdeci">static void gc_set_linewidth(struct graphics_gc_priv *gc, int w)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:342</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_a4f5a58361ff466402ab8cf75992715b3"><div class="ttname"><a href="graphics__egl_8c.html#a4f5a58361ff466402ab8cf75992715b3">gc_destroy</a></div><div class="ttdeci">static void gc_destroy(struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:333</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_a9883b50b443c2aa7ca6b30f86ea9ee51"><div class="ttname"><a href="graphics__egl_8c.html#a9883b50b443c2aa7ca6b30f86ea9ee51">gc_set_foreground</a></div><div class="ttdeci">static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:395</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_aa1ba6c9692a5f32227a87a09ddec95b0"><div class="ttname"><a href="graphics__egl_8c.html#aa1ba6c9692a5f32227a87a09ddec95b0">gc_set_background</a></div><div class="ttdeci">static void gc_set_background(struct graphics_gc_priv *gc, struct color *c)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:402</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_ad498b01d4e0dc67c63d88be7b859aa1d"><div class="ttname"><a href="graphics__egl_8c.html#ad498b01d4e0dc67c63d88be7b859aa1d">gc_set_dashes</a></div><div class="ttdeci">static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, unsigned char *dash_list, int n)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:342</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_add7dfa8917652d28c056970edf329468"><div class="ttname"><a href="graphics__egl_8c.html#add7dfa8917652d28c056970edf329468">gc_set_linewidth</a></div><div class="ttdeci">static void gc_set_linewidth(struct graphics_gc_priv *gc, int w)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:338</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="graphics__egl_8c.html#a07cd818b1139be8cc8cd9b54f02c8ac9">gc_new()</a>.</p>
 
@@ -2328,22 +2327,22 @@ Variables</h2></td></tr>
 <div class="line">    NULL, </div>
 <div class="line">    NULL, </div>
 <div class="line">}</div>
-<div class="ttc" id="agraphics__egl_8c_html_a07cd818b1139be8cc8cd9b54f02c8ac9"><div class="ttname"><a href="graphics__egl_8c.html#a07cd818b1139be8cc8cd9b54f02c8ac9">gc_new</a></div><div class="ttdeci">static struct graphics_gc_priv * gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:423</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_a1166f0e775e95efcad0040474546a4ff"><div class="ttname"><a href="graphics__egl_8c.html#a1166f0e775e95efcad0040474546a4ff">overlay_new</a></div><div class="ttdeci">static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:1082</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_a11a445d672efb2d812bf447c8b275923"><div class="ttname"><a href="graphics__egl_8c.html#a11a445d672efb2d812bf447c8b275923">draw_drag</a></div><div class="ttdeci">static void draw_drag(struct graphics_priv *gr, struct point *p)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:784</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_a18e3c2e64373fc85093d4d2d684e5ec8"><div class="ttname"><a href="graphics__egl_8c.html#a18e3c2e64373fc85093d4d2d684e5ec8">overlay_disable</a></div><div class="ttdeci">static void overlay_disable(struct graphics_priv *gr, int disable)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:951</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_a4267fcdc24196b92a1f2786683fbf743"><div class="ttname"><a href="graphics__egl_8c.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle</a></div><div class="ttdeci">static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:634</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_a5a6811ae094b9873bf200a4d02ffc841"><div class="ttname"><a href="graphics__egl_8c.html#a5a6811ae094b9873bf200a4d02ffc841">draw_image</a></div><div class="ttdeci">static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:779</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_a6585029b964eeceb550f0e4d0dab9286"><div class="ttname"><a href="graphics__egl_8c.html#a6585029b964eeceb550f0e4d0dab9286">draw_text</a></div><div class="ttdeci">static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:751</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_a703060fde7c9db292f094e993a074bb8"><div class="ttname"><a href="graphics__egl_8c.html#a703060fde7c9db292f094e993a074bb8">get_data</a></div><div class="ttdeci">static void * get_data(struct graphics_priv *this, const char *type)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:899</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_a758db79d3c2efab53a82169a999e147a"><div class="ttname"><a href="graphics__egl_8c.html#a758db79d3c2efab53a82169a999e147a">background_gc</a></div><div class="ttdeci">static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:791</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_a90d3c22cb1dfd9850c373c137ee4e84c"><div class="ttname"><a href="graphics__egl_8c.html#a90d3c22cb1dfd9850c373c137ee4e84c">draw_lines</a></div><div class="ttdeci">static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:597</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_a9bdf5fe6a62f63a9f5e3ab0e36acfa76"><div class="ttname"><a href="graphics__egl_8c.html#a9bdf5fe6a62f63a9f5e3ab0e36acfa76">image_new</a></div><div class="ttdeci">static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:434</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_aa2afce253f32a887536fee776d8290b2"><div class="ttname"><a href="graphics__egl_8c.html#aa2afce253f32a887536fee776d8290b2">image_free</a></div><div class="ttdeci">static void image_free(struct graphics_priv *gr, struct graphics_image_priv *gi)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:480</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_ab6bdd08d0de06ed02373ebf0434198c0"><div class="ttname"><a href="graphics__egl_8c.html#ab6bdd08d0de06ed02373ebf0434198c0">draw_mode</a></div><div class="ttdeci">static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:832</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_ad23ec2e18eb0e803d1db5ce00f624297"><div class="ttname"><a href="graphics__egl_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon</a></div><div class="ttdeci">static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:613</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_aec189fd649a7cbaf4513cc2c45ef2678"><div class="ttname"><a href="graphics__egl_8c.html#aec189fd649a7cbaf4513cc2c45ef2678">overlay_resize</a></div><div class="ttdeci">static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:958</div></div>
-<div class="ttc" id="agraphics__egl_8c_html_af4b6f172de9791e46ccdd4b36bb0b1a8"><div class="ttname"><a href="graphics__egl_8c.html#af4b6f172de9791e46ccdd4b36bb0b1a8">graphics_destroy</a></div><div class="ttdeci">static void graphics_destroy(struct graphics_priv *gr)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:328</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_a07cd818b1139be8cc8cd9b54f02c8ac9"><div class="ttname"><a href="graphics__egl_8c.html#a07cd818b1139be8cc8cd9b54f02c8ac9">gc_new</a></div><div class="ttdeci">static struct graphics_gc_priv * gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:417</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_a1166f0e775e95efcad0040474546a4ff"><div class="ttname"><a href="graphics__egl_8c.html#a1166f0e775e95efcad0040474546a4ff">overlay_new</a></div><div class="ttdeci">static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:1057</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_a11a445d672efb2d812bf447c8b275923"><div class="ttname"><a href="graphics__egl_8c.html#a11a445d672efb2d812bf447c8b275923">draw_drag</a></div><div class="ttdeci">static void draw_drag(struct graphics_priv *gr, struct point *p)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:766</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_a18e3c2e64373fc85093d4d2d684e5ec8"><div class="ttname"><a href="graphics__egl_8c.html#a18e3c2e64373fc85093d4d2d684e5ec8">overlay_disable</a></div><div class="ttdeci">static void overlay_disable(struct graphics_priv *gr, int disable)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:931</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_a4267fcdc24196b92a1f2786683fbf743"><div class="ttname"><a href="graphics__egl_8c.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle</a></div><div class="ttdeci">static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:623</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_a5a6811ae094b9873bf200a4d02ffc841"><div class="ttname"><a href="graphics__egl_8c.html#a5a6811ae094b9873bf200a4d02ffc841">draw_image</a></div><div class="ttdeci">static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:761</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_a6585029b964eeceb550f0e4d0dab9286"><div class="ttname"><a href="graphics__egl_8c.html#a6585029b964eeceb550f0e4d0dab9286">draw_text</a></div><div class="ttdeci">static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:735</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_a703060fde7c9db292f094e993a074bb8"><div class="ttname"><a href="graphics__egl_8c.html#a703060fde7c9db292f094e993a074bb8">get_data</a></div><div class="ttdeci">static void * get_data(struct graphics_priv *this, const char *type)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:880</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_a758db79d3c2efab53a82169a999e147a"><div class="ttname"><a href="graphics__egl_8c.html#a758db79d3c2efab53a82169a999e147a">background_gc</a></div><div class="ttdeci">static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:773</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_a90d3c22cb1dfd9850c373c137ee4e84c"><div class="ttname"><a href="graphics__egl_8c.html#a90d3c22cb1dfd9850c373c137ee4e84c">draw_lines</a></div><div class="ttdeci">static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:589</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_a9bdf5fe6a62f63a9f5e3ab0e36acfa76"><div class="ttname"><a href="graphics__egl_8c.html#a9bdf5fe6a62f63a9f5e3ab0e36acfa76">image_new</a></div><div class="ttdeci">static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:428</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_aa2afce253f32a887536fee776d8290b2"><div class="ttname"><a href="graphics__egl_8c.html#aa2afce253f32a887536fee776d8290b2">image_free</a></div><div class="ttdeci">static void image_free(struct graphics_priv *gr, struct graphics_image_priv *gi)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:473</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_ab6bdd08d0de06ed02373ebf0434198c0"><div class="ttname"><a href="graphics__egl_8c.html#ab6bdd08d0de06ed02373ebf0434198c0">draw_mode</a></div><div class="ttdeci">static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:814</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_ad23ec2e18eb0e803d1db5ce00f624297"><div class="ttname"><a href="graphics__egl_8c.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon</a></div><div class="ttdeci">static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:603</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_aec189fd649a7cbaf4513cc2c45ef2678"><div class="ttname"><a href="graphics__egl_8c.html#aec189fd649a7cbaf4513cc2c45ef2678">overlay_resize</a></div><div class="ttdeci">static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:938</div></div>
+<div class="ttc" id="agraphics__egl_8c_html_af4b6f172de9791e46ccdd4b36bb0b1a8"><div class="ttname"><a href="graphics__egl_8c.html#af4b6f172de9791e46ccdd4b36bb0b1a8">graphics_destroy</a></div><div class="ttdeci">static void graphics_destroy(struct graphics_priv *gr)</div><div class="ttdef"><b>Definition</b> graphics_egl.c:324</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="graphics__egl_8c.html#a43be278de9cc8f324bb5588a6ba1c79b">graphics_opengl_new_helper()</a>.</p>
 
@@ -2456,18 +2455,17 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">    <span class="stringliteral">&quot;                                        \</span></div>
-<div class="line"><span class="stringliteral">   attribute vec2        position;       \</span></div>
-<div class="line"><span class="stringliteral">   attribute vec2        texture_position;       \</span></div>
-<div class="line"><span class="stringliteral">   uniform mat4          mvp;             \</span></div>
-<div class="line"><span class="stringliteral">   varying vec2          v_texture_position; \</span></div>
-<div class="line"><span class="stringliteral">                                         \</span></div>
-<div class="line"><span class="stringliteral">   void main()                           \</span></div>
-<div class="line"><span class="stringliteral">   {                                     \</span></div>
-<div class="line"><span class="stringliteral">      v_texture_position=texture_position; \</span></div>
-<div class="line"><span class="stringliteral">      gl_Position = mvp*vec4(position, 0.0, 1.0);   \</span></div>
-<div class="line"><span class="stringliteral">   }                                     \</span></div>
+<b>Initial value:</b><div class="fragment"><div class="line">= <span class="stringliteral">&quot;                       \</span></div>
+<div class="line"><span class="stringliteral">   attribute vec2        position;                \</span></div>
+<div class="line"><span class="stringliteral">   attribute vec2        texture_position;        \</span></div>
+<div class="line"><span class="stringliteral">   uniform mat4          mvp;                     \</span></div>
+<div class="line"><span class="stringliteral">   varying vec2          v_texture_position;      \</span></div>
+<div class="line"><span class="stringliteral">                                                  \</span></div>
+<div class="line"><span class="stringliteral">   void main()                                    \</span></div>
+<div class="line"><span class="stringliteral">   {                                              \</span></div>
+<div class="line"><span class="stringliteral">      v_texture_position=texture_position;        \</span></div>
+<div class="line"><span class="stringliteral">      gl_Position = mvp*vec4(position, 0.0, 1.0); \</span></div>
+<div class="line"><span class="stringliteral">   }                                              \</span></div>
 <div class="line"><span class="stringliteral">&quot;</span></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="graphics__egl_8c.html#a703060fde7c9db292f094e993a074bb8">get_data()</a>, and <a class="el" href="graphics__opengl_8c.html#a703060fde7c9db292f094e993a074bb8">get_data()</a>.</p>

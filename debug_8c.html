@@ -97,21 +97,21 @@ $(document).ready(function(){initNavTree('debug_8c.html',''); initResizable(); }
   <div class="headertitle"><div class="title">debug.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;signal.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
+<code>#include &quot;config.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
+<code>#include &lt;signal.h&gt;</code><br />
 <code>#include &lt;stdarg.h&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;time.h&gt;</code><br />
-<code>#include &lt;glib.h&gt;</code><br />
 <code>#include &lt;sys/time.h&gt;</code><br />
-<code>#include &quot;config.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &lt;unistd.h&gt;</code><br />
-<code>#include &lt;execinfo.h&gt;</code><br />
 <code>#include &lt;errno.h&gt;</code><br />
+<code>#include &lt;execinfo.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -188,13 +188,13 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ae6a5410a3f6ce467cccb058b86ed663e" id="r_ae6a5410a3f6ce467cccb058b86ed663e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25">dbg_level</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8c.html#ae6a5410a3f6ce467cccb058b86ed663e">max_debug_level</a> =<a class="el" href="debug_8c.html#a18da678808a23365d00c58cdae11e29e">DEFAULT_DEBUG_LEVEL</a></td></tr>
+<tr class="memitem:ae6a5410a3f6ce467cccb058b86ed663e" id="r_ae6a5410a3f6ce467cccb058b86ed663e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25">dbg_level</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8c.html#ae6a5410a3f6ce467cccb058b86ed663e">max_debug_level</a> = <a class="el" href="debug_8c.html#a18da678808a23365d00c58cdae11e29e">DEFAULT_DEBUG_LEVEL</a></td></tr>
 <tr class="separator:ae6a5410a3f6ce467cccb058b86ed663e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9fd6a3633c76f4154b13524382a8dbd" id="r_ac9fd6a3633c76f4154b13524382a8dbd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25">dbg_level</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8c.html#ac9fd6a3633c76f4154b13524382a8dbd">global_debug_level</a> =<a class="el" href="debug_8c.html#ac08b27aa8cd764f3f9a43c7f1508a22e">GLOBAL_DEBUG_LEVEL_UNSET</a></td></tr>
+<tr class="memitem:ac9fd6a3633c76f4154b13524382a8dbd" id="r_ac9fd6a3633c76f4154b13524382a8dbd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25">dbg_level</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8c.html#ac9fd6a3633c76f4154b13524382a8dbd">global_debug_level</a> = <a class="el" href="debug_8c.html#ac08b27aa8cd764f3f9a43c7f1508a22e">GLOBAL_DEBUG_LEVEL_UNSET</a></td></tr>
 <tr class="separator:ac9fd6a3633c76f4154b13524382a8dbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aadd13f43f0ba86c456acca384085a675" id="r_aadd13f43f0ba86c456acca384085a675"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8c.html#aadd13f43f0ba86c456acca384085a675">segv_level</a> =0</td></tr>
+<tr class="memitem:aadd13f43f0ba86c456acca384085a675" id="r_aadd13f43f0ba86c456acca384085a675"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8c.html#aadd13f43f0ba86c456acca384085a675">segv_level</a> = 0</td></tr>
 <tr class="separator:aadd13f43f0ba86c456acca384085a675"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4da4ed167afb6a93f11470a2e07f14da" id="r_a4da4ed167afb6a93f11470a2e07f14da"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8c.html#a4da4ed167afb6a93f11470a2e07f14da">timestamp_prefix</a> =0</td></tr>
+<tr class="memitem:a4da4ed167afb6a93f11470a2e07f14da" id="r_a4da4ed167afb6a93f11470a2e07f14da"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8c.html#a4da4ed167afb6a93f11470a2e07f14da">timestamp_prefix</a> = 0</td></tr>
 <tr class="separator:a4da4ed167afb6a93f11470a2e07f14da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c1d654b7b6114d7a0abc8d351dd1bcd" id="r_a7c1d654b7b6114d7a0abc8d351dd1bcd"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8c.html#a7c1d654b7b6114d7a0abc8d351dd1bcd">dummy</a></td></tr>
 <tr class="separator:a7c1d654b7b6114d7a0abc8d351dd1bcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1380,7 +1380,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25">dbg_level</a> global_debug_level =<a class="el" href="debug_8c.html#ac08b27aa8cd764f3f9a43c7f1508a22e">GLOBAL_DEBUG_LEVEL_UNSET</a></td>
+          <td class="memname"><a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25">dbg_level</a> global_debug_level = <a class="el" href="debug_8c.html#ac08b27aa8cd764f3f9a43c7f1508a22e">GLOBAL_DEBUG_LEVEL_UNSET</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1428,7 +1428,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25">dbg_level</a> max_debug_level =<a class="el" href="debug_8c.html#a18da678808a23365d00c58cdae11e29e">DEFAULT_DEBUG_LEVEL</a></td>
+          <td class="memname"><a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25">dbg_level</a> max_debug_level = <a class="el" href="debug_8c.html#a18da678808a23365d00c58cdae11e29e">DEFAULT_DEBUG_LEVEL</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1444,7 +1444,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int segv_level =0</td>
+          <td class="memname">int segv_level = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1460,7 +1460,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int timestamp_prefix =0</td>
+          <td class="memname">int timestamp_prefix = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">

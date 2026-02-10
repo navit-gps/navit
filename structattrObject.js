@@ -1,5 +1,6 @@
 var structattrObject =
 [
     [ "attr", "structattrObject.html#a87512950ed7d36319f4334429cc8187c", null ],
-    [ "ref", "structattrObject.html#abc4ac0a8155c0131f59ebd84a1c1216d", null ]
+    [ "PyObject_HEAD", "structattrObject.html#ae3ee872a12aa9bd2dd59789a58e53177", null ],
+    [ "ref", "structattrObject.html#a7320b85734fd533215b45500a60b9c9f", null ]
 ];

@@ -238,10 +238,10 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">        (\</div>
-<div class="line">        ((LPCSTR)lpa == NULL) ? NULL : (\</div>
-<div class="line">                <a class="code hl_variable" href="group__vehicle-wince.html#gab77ccd1685e26d4a358b2d07e4af46cc">_wconvert</a> = alloca(strlen(lpa)*2+1),  mbstowcs(<a class="code hl_variable" href="group__vehicle-wince.html#gab77ccd1685e26d4a358b2d07e4af46cc">_wconvert</a>, lpa, strlen(lpa) * 2 + 1), <a class="code hl_variable" href="group__vehicle-wince.html#gab77ccd1685e26d4a358b2d07e4af46cc">_wconvert</a>) )</div>
-<div class="ttc" id="agroup__vehicle-wince_html_gab77ccd1685e26d4a358b2d07e4af46cc"><div class="ttname"><a href="group__vehicle-wince.html#gab77ccd1685e26d4a358b2d07e4af46cc">_wconvert</a></div><div class="ttdeci">wchar_t * _wconvert</div><div class="ttdef"><b>Definition</b> vehicle_wince.c:60</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    (((LPCSTR)lpa == NULL)                                                                                             \</div>
+<div class="line">         ? NULL                                                                                                        \</div>
+<div class="line">         : (<a class="code hl_variable" href="group__vehicle-wince.html#gab77ccd1685e26d4a358b2d07e4af46cc">_wconvert</a> = alloca(strlen(lpa) * 2 + 1), mbstowcs(<a class="code hl_variable" href="group__vehicle-wince.html#gab77ccd1685e26d4a358b2d07e4af46cc">_wconvert</a>, lpa, strlen(lpa) * 2 + 1), <a class="code hl_variable" href="group__vehicle-wince.html#gab77ccd1685e26d4a358b2d07e4af46cc">_wconvert</a>))</div>
+<div class="ttc" id="agroup__vehicle-wince_html_gab77ccd1685e26d4a358b2d07e4af46cc"><div class="ttname"><a href="group__vehicle-wince.html#gab77ccd1685e26d4a358b2d07e4af46cc">_wconvert</a></div><div class="ttdeci">wchar_t * _wconvert</div><div class="ttdef"><b>Definition</b> vehicle_wince.c:62</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -277,10 +277,9 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">        (\</div>
-<div class="line">        ((LPCSTR)lpw == NULL) ? NULL : (\</div>
-<div class="line">                <a class="code hl_variable" href="group__vehicle-wince.html#ga5c6d1798fab2190df6c0c9efa859aea4">_convert</a> = alloca(wcslen(lpw)+1),  wcstombs(<a class="code hl_variable" href="group__vehicle-wince.html#ga5c6d1798fab2190df6c0c9efa859aea4">_convert</a>, lpw, wcslen(lpw) + 1), <a class="code hl_variable" href="group__vehicle-wince.html#ga5c6d1798fab2190df6c0c9efa859aea4">_convert</a>) )</div>
-<div class="ttc" id="agroup__vehicle-wince_html_ga5c6d1798fab2190df6c0c9efa859aea4"><div class="ttname"><a href="group__vehicle-wince.html#ga5c6d1798fab2190df6c0c9efa859aea4">_convert</a></div><div class="ttdeci">char * _convert</div><div class="ttdef"><b>Definition</b> vehicle_wince.c:59</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    (((LPCSTR)lpw == NULL) ? NULL                                                                                      \</div>
+<div class="line">                           : (<a class="code hl_variable" href="group__vehicle-wince.html#ga5c6d1798fab2190df6c0c9efa859aea4">_convert</a> = alloca(wcslen(lpw) + 1), wcstombs(<a class="code hl_variable" href="group__vehicle-wince.html#ga5c6d1798fab2190df6c0c9efa859aea4">_convert</a>, lpw, wcslen(lpw) + 1), <a class="code hl_variable" href="group__vehicle-wince.html#ga5c6d1798fab2190df6c0c9efa859aea4">_convert</a>))</div>
+<div class="ttc" id="agroup__vehicle-wince_html_ga5c6d1798fab2190df6c0c9efa859aea4"><div class="ttname"><a href="group__vehicle-wince.html#ga5c6d1798fab2190df6c0c9efa859aea4">_convert</a></div><div class="ttdeci">char * _convert</div><div class="ttdef"><b>Definition</b> vehicle_wince.c:61</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1259,8 +1258,8 @@ Variables</h2></td></tr>
 <div class="line">    <a class="code hl_function" href="group__vehicle-wince.html#gae1276509657272f18777b2d21d4eb959">vehicle_wince_position_attr_get</a>,</div>
 <div class="line">    NULL,</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__vehicle-wince_html_gae1276509657272f18777b2d21d4eb959"><div class="ttname"><a href="group__vehicle-wince.html#gae1276509657272f18777b2d21d4eb959">vehicle_wince_position_attr_get</a></div><div class="ttdeci">static int vehicle_wince_position_attr_get(struct vehicle_priv *priv, enum attr_type type, struct attr *attr)</div><div class="ttdoc">Retrieves a vehicle attribute.</div><div class="ttdef"><b>Definition</b> vehicle_wince.c:781</div></div>
-<div class="ttc" id="agroup__vehicle-wince_html_gae4b9963c5710607996ae8456304e153b"><div class="ttname"><a href="group__vehicle-wince.html#gae4b9963c5710607996ae8456304e153b">vehicle_wince_destroy</a></div><div class="ttdeci">static void vehicle_wince_destroy(struct vehicle_priv *priv)</div><div class="ttdoc">Frees the wince_vehicle.</div><div class="ttdef"><b>Definition</b> vehicle_wince.c:756</div></div>
+<div class="ttc" id="agroup__vehicle-wince_html_gae1276509657272f18777b2d21d4eb959"><div class="ttname"><a href="group__vehicle-wince.html#gae1276509657272f18777b2d21d4eb959">vehicle_wince_position_attr_get</a></div><div class="ttdeci">static int vehicle_wince_position_attr_get(struct vehicle_priv *priv, enum attr_type type, struct attr *attr)</div><div class="ttdoc">Retrieves a vehicle attribute.</div><div class="ttdef"><b>Definition</b> vehicle_wince.c:769</div></div>
+<div class="ttc" id="agroup__vehicle-wince_html_gae4b9963c5710607996ae8456304e153b"><div class="ttname"><a href="group__vehicle-wince.html#gae4b9963c5710607996ae8456304e153b">vehicle_wince_destroy</a></div><div class="ttdeci">static void vehicle_wince_destroy(struct vehicle_priv *priv)</div><div class="ttdoc">Frees the wince_vehicle.</div><div class="ttdef"><b>Definition</b> vehicle_wince.c:744</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="group__vehicle-wince.html#gae33ece8fd0a3f94065ac9a5e6d39aaa0">vehicle_wince_new()</a>.</p>
 
@@ -1286,16 +1285,16 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
-<div class="line">    <a class="code hl_function" href="group__vehicle-wince.html#ga4e82f572ebb50ad9f1e4ab25baca696f">vehicle_wince_sat_attr_get</a>,</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
-<div class="line">    NULL,</div>
+<div class="line">    .item_coord_rewind = NULL,</div>
+<div class="line">    .item_coord_get = NULL,</div>
+<div class="line">    .item_attr_rewind = NULL,</div>
+<div class="line">    .item_attr_get = <a class="code hl_function" href="group__vehicle-wince.html#ga4e82f572ebb50ad9f1e4ab25baca696f">vehicle_wince_sat_attr_get</a>,</div>
+<div class="line">    .item_coord_is_node = NULL,</div>
+<div class="line">    .item_attr_set = NULL,</div>
+<div class="line">    .item_coord_set = NULL,</div>
+<div class="line">    .item_type_set = NULL,</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__vehicle-wince_html_ga4e82f572ebb50ad9f1e4ab25baca696f"><div class="ttname"><a href="group__vehicle-wince.html#ga4e82f572ebb50ad9f1e4ab25baca696f">vehicle_wince_sat_attr_get</a></div><div class="ttdeci">static int vehicle_wince_sat_attr_get(void *priv_data, enum attr_type type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> vehicle_wince.c:848</div></div>
+<div class="ttc" id="agroup__vehicle-wince_html_ga4e82f572ebb50ad9f1e4ab25baca696f"><div class="ttname"><a href="group__vehicle-wince.html#ga4e82f572ebb50ad9f1e4ab25baca696f">vehicle_wince_sat_attr_get</a></div><div class="ttdeci">static int vehicle_wince_sat_attr_get(void *priv_data, enum attr_type type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> vehicle_wince.c:834</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="group__vehicle-wince.html#gae33ece8fd0a3f94065ac9a5e6d39aaa0">vehicle_wince_new()</a>.</p>
 

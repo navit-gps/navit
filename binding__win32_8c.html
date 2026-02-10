@@ -96,35 +96,35 @@ $(document).ready(function(){initNavTree('binding__win32_8c.html',''); initResiz
   <div class="headertitle"><div class="title">binding_win32.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;glib.h&gt;</code><br />
-<code>#include &lt;windows.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="binding__win32_8h_source.html">binding_win32.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="command_8h_source.html">command.h</a>&quot;</code><br />
 <code>#include &quot;config.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="config___8h_source.html">config_.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="navit_8h_source.html">navit.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="layout_8h_source.html">layout.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="navigation_8h_source.html">navigation.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="command_8h_source.html">command.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="track_8h_source.html">track.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="vehicle_8h_source.html">vehicle.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="vehicleprofile_8h_source.html">vehicleprofile.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gui_8h_source.html">gui.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="layout_8h_source.html">layout.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="mapset_8h_source.html">mapset.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="navigation_8h_source.html">navigation.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="navit_8h_source.html">navit.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="osd_8h_source.html">osd.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="route_8h_source.html">route.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="search_8h_source.html">search.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="gui_8h_source.html">gui.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="track_8h_source.html">track.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="util_8h_source.html">util.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="binding__win32_8h_source.html">binding_win32.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="vehicle_8h_source.html">vehicle.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="vehicleprofile_8h_source.html">vehicleprofile.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a>&quot;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;windows.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -373,9 +373,9 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    {<span class="stringliteral">&quot;win32_send&quot;</span>,<a class="code hl_define" href="command_8h.html#ab27de639f21fb54d98b11aa1ae7c9445">command_cast</a>(<a class="code hl_function" href="binding__win32_8c.html#ada80e5c55d9547a92b3f4c385a862c58">win32_cmd_send_signal</a>)},</div>
+<div class="line">    {<span class="stringliteral">&quot;win32_send&quot;</span>, <a class="code hl_define" href="command_8h.html#ab27de639f21fb54d98b11aa1ae7c9445">command_cast</a>(<a class="code hl_function" href="binding__win32_8c.html#ada80e5c55d9547a92b3f4c385a862c58">win32_cmd_send_signal</a>)},</div>
 <div class="line">}</div>
-<div class="ttc" id="abinding__win32_8c_html_ada80e5c55d9547a92b3f4c385a862c58"><div class="ttname"><a href="binding__win32_8c.html#ada80e5c55d9547a92b3f4c385a862c58">win32_cmd_send_signal</a></div><div class="ttdeci">static int win32_cmd_send_signal(struct navit *navit, char *command, struct attr **in, struct attr ***out)</div><div class="ttdef"><b>Definition</b> binding_win32.c:60</div></div>
+<div class="ttc" id="abinding__win32_8c_html_ada80e5c55d9547a92b3f4c385a862c58"><div class="ttname"><a href="binding__win32_8c.html#ada80e5c55d9547a92b3f4c385a862c58">win32_cmd_send_signal</a></div><div class="ttdeci">static int win32_cmd_send_signal(struct navit *navit, char *command, struct attr **in, struct attr ***out)</div><div class="ttdef"><b>Definition</b> binding_win32.c:57</div></div>
 <div class="ttc" id="acommand_8h_html_ab27de639f21fb54d98b11aa1ae7c9445"><div class="ttname"><a href="command_8h.html#ab27de639f21fb54d98b11aa1ae7c9445">command_cast</a></div><div class="ttdeci">#define command_cast(x)</div><div class="ttdef"><b>Definition</b> command.h:34</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="binding__win32_8c.html#a5a209621fdc3c4bcb3a1632fccaa87b0">win32_main_navit()</a>.</p>

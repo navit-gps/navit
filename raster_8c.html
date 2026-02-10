@@ -96,9 +96,9 @@ $(document).ready(function(){initNavTree('raster_8c.html',''); initResizable(); 
   <div class="headertitle"><div class="title">raster.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;math.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="raster_8h_source.html">raster.h</a>&quot;</code><br />
 <code>#include &lt;glib.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="raster_8h_source.html">raster.h</a>&quot;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -108,11 +108,11 @@ Macros</h2></td></tr>
 <tr class="separator:ad931d5cb2af95305d637c864d821d2b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adeb851ac45f74ddec914212dd3297433" id="r_adeb851ac45f74ddec914212dd3297433"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8c.html#adeb851ac45f74ddec914212dd3297433">clip_xmin</a>(surface)&#160;&#160;&#160;surface-&gt;clip_rect.x</td></tr>
 <tr class="separator:adeb851ac45f74ddec914212dd3297433"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add68946c6ecf1a5b8935309d30b85cab" id="r_add68946c6ecf1a5b8935309d30b85cab"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8c.html#add68946c6ecf1a5b8935309d30b85cab">clip_xmax</a>(surface)&#160;&#160;&#160;surface-&gt;clip_rect.x+surface-&gt;clip_rect.w-1</td></tr>
+<tr class="memitem:add68946c6ecf1a5b8935309d30b85cab" id="r_add68946c6ecf1a5b8935309d30b85cab"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8c.html#add68946c6ecf1a5b8935309d30b85cab">clip_xmax</a>(surface)&#160;&#160;&#160;surface-&gt;clip_rect.x + surface-&gt;clip_rect.w - 1</td></tr>
 <tr class="separator:add68946c6ecf1a5b8935309d30b85cab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc94a05f9b044427c21a77cc468aa5d4" id="r_afc94a05f9b044427c21a77cc468aa5d4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8c.html#afc94a05f9b044427c21a77cc468aa5d4">clip_ymin</a>(surface)&#160;&#160;&#160;surface-&gt;clip_rect.y</td></tr>
 <tr class="separator:afc94a05f9b044427c21a77cc468aa5d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f0d9475a02c76e14c8bcba854ac7067" id="r_a2f0d9475a02c76e14c8bcba854ac7067"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8c.html#a2f0d9475a02c76e14c8bcba854ac7067">clip_ymax</a>(surface)&#160;&#160;&#160;surface-&gt;clip_rect.y+surface-&gt;clip_rect.h-1</td></tr>
+<tr class="memitem:a2f0d9475a02c76e14c8bcba854ac7067" id="r_a2f0d9475a02c76e14c8bcba854ac7067"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8c.html#a2f0d9475a02c76e14c8bcba854ac7067">clip_ymax</a>(surface)&#160;&#160;&#160;surface-&gt;clip_rect.y + surface-&gt;clip_rect.h - 1</td></tr>
 <tr class="separator:a2f0d9475a02c76e14c8bcba854ac7067"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7260a99c00538400ab4be67304ad36c" id="r_ac7260a99c00538400ab4be67304ad36c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8c.html#ac7260a99c00538400ab4be67304ad36c">CLIP_LEFT_EDGE</a>&#160;&#160;&#160;0x1</td></tr>
 <tr class="separator:ac7260a99c00538400ab4be67304ad36c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -124,9 +124,9 @@ Macros</h2></td></tr>
 <tr class="separator:acd233fdea48722eb128c4c48f619a605"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f497d83ed5f593a5bc56c2ba7e13f5b" id="r_a3f497d83ed5f593a5bc56c2ba7e13f5b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8c.html#a3f497d83ed5f593a5bc56c2ba7e13f5b">CLIP_INSIDE</a>(a)&#160;&#160;&#160;(!a)</td></tr>
 <tr class="separator:a3f497d83ed5f593a5bc56c2ba7e13f5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1e60af8e37b6b372dcfd2d88299b662" id="r_ac1e60af8e37b6b372dcfd2d88299b662"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8c.html#ac1e60af8e37b6b372dcfd2d88299b662">CLIP_REJECT</a>(a,  b)&#160;&#160;&#160;(a&amp;b)</td></tr>
+<tr class="memitem:ac1e60af8e37b6b372dcfd2d88299b662" id="r_ac1e60af8e37b6b372dcfd2d88299b662"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8c.html#ac1e60af8e37b6b372dcfd2d88299b662">CLIP_REJECT</a>(a,  b)&#160;&#160;&#160;(a &amp; b)</td></tr>
 <tr class="separator:ac1e60af8e37b6b372dcfd2d88299b662"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a004c35133422cb574c41bb114d4592c6" id="r_a004c35133422cb574c41bb114d4592c6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8c.html#a004c35133422cb574c41bb114d4592c6">CLIP_ACCEPT</a>(a,  b)&#160;&#160;&#160;(!(a|b))</td></tr>
+<tr class="memitem:a004c35133422cb574c41bb114d4592c6" id="r_a004c35133422cb574c41bb114d4592c6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8c.html#a004c35133422cb574c41bb114d4592c6">CLIP_ACCEPT</a>(a,  b)&#160;&#160;&#160;(!(a | b))</td></tr>
 <tr class="separator:a004c35133422cb574c41bb114d4592c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a519bc2d4d753c51da1b956d6c200bff1" id="r_a519bc2d4d753c51da1b956d6c200bff1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="raster_8c.html#a519bc2d4d753c51da1b956d6c200bff1">AAlevels</a>&#160;&#160;&#160;256</td></tr>
 <tr class="separator:a519bc2d4d753c51da1b956d6c200bff1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -239,7 +239,7 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;(!(a|b))</td>
+          <td></td><td>&#160;&#160;&#160;(!(a | b))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -313,7 +313,7 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;(a&amp;b)</td>
+          <td></td><td>&#160;&#160;&#160;(a &amp; b)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -359,7 +359,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">surface</td><td>)</td>
-          <td>&#160;&#160;&#160;surface-&gt;clip_rect.x+surface-&gt;clip_rect.w-1</td>
+          <td>&#160;&#160;&#160;surface-&gt;clip_rect.x + surface-&gt;clip_rect.w - 1</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -395,7 +395,7 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">surface</td><td>)</td>
-          <td>&#160;&#160;&#160;surface-&gt;clip_rect.y+surface-&gt;clip_rect.h-1</td>
+          <td>&#160;&#160;&#160;surface-&gt;clip_rect.y + surface-&gt;clip_rect.h - 1</td>
         </tr>
       </table>
 </div><div class="memdoc">

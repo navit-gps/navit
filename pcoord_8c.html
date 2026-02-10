@@ -251,7 +251,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="group__coord.html#ga5da12a5ec4414c17c5c845a46083ccfb">coord_parse()</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structpcoordObject.html#a1860fc117a52cee2fb5a3ed0021a521c">pcoordObject::pc</a>, <a class="el" href="pcoord_8c.html#a770ddde01fbc685d1e5d2790159142f2">pcoord_Type</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
+<p class="reference">References <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="group__coord.html#ga5da12a5ec4414c17c5c845a46083ccfb">coord_parse()</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structpcoordObject.html#a40061ac08653d2c5d63bcd6dee754adb">pcoordObject::pc</a>, <a class="el" href="pcoord_8c.html#a770ddde01fbc685d1e5d2790159142f2">pcoord_Type</a>, <a class="el" href="structpcoord.html#a3f0d3a1ce2a3798b305b32c2a2c13495">pcoord::pro</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, and <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>.</p>
 
 </div>
 </div>
@@ -296,8 +296,8 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    {<span class="stringliteral">&quot;func&quot;</span>,    (PyCFunction) <a class="code hl_function" href="pcoord_8c.html#af9d5bc4db2d1d6df1dc9b7cf088afee6">pcoord_func</a>, METH_VARARGS },</div>
-<div class="line">    {NULL, NULL },</div>
+<div class="line">    {<span class="stringliteral">&quot;func&quot;</span>, (PyCFunction)<a class="code hl_function" href="pcoord_8c.html#af9d5bc4db2d1d6df1dc9b7cf088afee6">pcoord_func</a>, METH_VARARGS},</div>
+<div class="line">    {NULL, NULL},</div>
 <div class="line">}</div>
 <div class="ttc" id="apcoord_8c_html_af9d5bc4db2d1d6df1dc9b7cf088afee6"><div class="ttname"><a href="pcoord_8c.html#af9d5bc4db2d1d6df1dc9b7cf088afee6">pcoord_func</a></div><div class="ttdeci">static PyObject * pcoord_func(pcoordObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> pcoord.c:28</div></div>
 </div><!-- fragment -->
@@ -317,15 +317,15 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_define" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div>
-<div class="line">    .tp_name=<span class="stringliteral">&quot;pcoord&quot;</span>,</div>
-<div class="line">    .tp_basicsize=<span class="keyword">sizeof</span>(<a class="code hl_struct" href="structpcoordObject.html">pcoordObject</a>),</div>
-<div class="line">    .tp_dealloc=(destructor)<a class="code hl_function" href="pcoord_8c.html#a0d5896988dd908b8631c736e5a17df5b">pcoord_destroy_py</a>,</div>
-<div class="line">    .tp_getattr=<a class="code hl_function" href="pcoord_8c.html#ab49ac2076e79142f5f2c999dbfaf2ca0">pcoord_getattr_py</a>,</div>
+<div class="line">    <a class="code hl_define" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a>,</div>
+<div class="line">    .tp_name = <span class="stringliteral">&quot;pcoord&quot;</span>,</div>
+<div class="line">    .tp_basicsize = <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structpcoordObject.html">pcoordObject</a>),</div>
+<div class="line">    .tp_dealloc = (destructor)<a class="code hl_function" href="pcoord_8c.html#a0d5896988dd908b8631c736e5a17df5b">pcoord_destroy_py</a>,</div>
+<div class="line">    .tp_getattr = <a class="code hl_function" href="pcoord_8c.html#ab49ac2076e79142f5f2c999dbfaf2ca0">pcoord_getattr_py</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="abinding__python_8c_html_a6bb1ff01fab2f8a8bb023f584a5aa272"><div class="ttname"><a href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div><div class="ttdeci">#define Obj_HEAD</div><div class="ttdef"><b>Definition</b> binding_python.c:39</div></div>
-<div class="ttc" id="apcoord_8c_html_a0d5896988dd908b8631c736e5a17df5b"><div class="ttname"><a href="pcoord_8c.html#a0d5896988dd908b8631c736e5a17df5b">pcoord_destroy_py</a></div><div class="ttdeci">static void pcoord_destroy_py(pcoordObject *self)</div><div class="ttdef"><b>Definition</b> pcoord.c:48</div></div>
-<div class="ttc" id="apcoord_8c_html_ab49ac2076e79142f5f2c999dbfaf2ca0"><div class="ttname"><a href="pcoord_8c.html#ab49ac2076e79142f5f2c999dbfaf2ca0">pcoord_getattr_py</a></div><div class="ttdeci">static PyObject * pcoord_getattr_py(PyObject *self, char *name)</div><div class="ttdef"><b>Definition</b> pcoord.c:44</div></div>
+<div class="ttc" id="abinding__python_8c_html_a6bb1ff01fab2f8a8bb023f584a5aa272"><div class="ttname"><a href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div><div class="ttdeci">#define Obj_HEAD</div><div class="ttdef"><b>Definition</b> binding_python.c:37</div></div>
+<div class="ttc" id="apcoord_8c_html_a0d5896988dd908b8631c736e5a17df5b"><div class="ttname"><a href="pcoord_8c.html#a0d5896988dd908b8631c736e5a17df5b">pcoord_destroy_py</a></div><div class="ttdeci">static void pcoord_destroy_py(pcoordObject *self)</div><div class="ttdef"><b>Definition</b> pcoord.c:45</div></div>
+<div class="ttc" id="apcoord_8c_html_ab49ac2076e79142f5f2c999dbfaf2ca0"><div class="ttname"><a href="pcoord_8c.html#ab49ac2076e79142f5f2c999dbfaf2ca0">pcoord_getattr_py</a></div><div class="ttdeci">static PyObject * pcoord_getattr_py(PyObject *self, char *name)</div><div class="ttdef"><b>Definition</b> pcoord.c:41</div></div>
 <div class="ttc" id="astructpcoordObject_html"><div class="ttname"><a href="structpcoordObject.html">pcoordObject</a></div><div class="ttdef"><b>Definition</b> pcoord.c:23</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="binding_2python_2navit_8c.html#a3c06c4f07c7bbf4c03e9aaeb0aabf0c0">navit_set_center_py()</a>, <a class="el" href="binding_2python_2navit_8c.html#ac6fc01bbb1fc0209b863547a465dddc3">navit_set_destination_py()</a>, <a class="el" href="binding_2python_2navit_8c.html#ab41377f6906634e30e8296649bd2475f">navit_set_position_py()</a>, and <a class="el" href="common_8h.html#a7a51a89bd53adab894c1371e8847d127">pcoord_py()</a>.</p>

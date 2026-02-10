@@ -57,7 +57,7 @@ var searchData=
   ['animate_5fcallback_54',['animate_callback',['../structvehicle.html#aa1c854dd862f1d5a85cb524bba7edcca',1,'vehicle']]],
   ['animate_5fcursor_55',['animate_cursor',['../structnavit__vehicle.html#afcfe67498f6b13f5f863fbde05583f69',1,'navit_vehicle']]],
   ['animate_5ftimer_56',['animate_timer',['../structvehicle.html#a287885e3953cbd912e06b9f8f9f52bd6',1,'vehicle']]],
-  ['announce_57',['announce',['../structnavigation.html#a91526af69c26d512570fcfd97f5fb24e',1,'navigation']]],
+  ['announce_57',['announce',['../structnavigation.html#a3f81572729c317cd6bce123c03528e88',1,'navigation']]],
   ['announce_5fon_58',['announce_on',['../structosd__speed__cam.html#a7ae979efc85c10df7d46feb52e210add',1,'osd_speed_cam::announce_on'],['../structosd__speed__warner.html#a516827abe7cc0f39a8680f52c6bddb3f',1,'osd_speed_warner::announce_on']]],
   ['announce_5fstate_59',['announce_state',['../structosd__speed__cam.html#a1d8e135c73757827caae920e9dc8091c',1,'osd_speed_cam::announce_state'],['../structosd__speed__warner.html#abd0b26718acca19cb95e9666e9f76354',1,'osd_speed_warner::announce_state']]],
   ['ap_60',['ap',['../structitem__priv.html#ad05d076677799f47601749803bc615b3',1,'item_priv']]],

@@ -1,5 +1,10 @@
 var NAVTREEINDEX38 =
 {
+"structmap__priv.html#ab3aaf7693ebea8d8569a42afcffc1a42":[2,0,195,33],
+"structmap__priv.html#abeb769fe199791111f79f5b11e1a185e":[2,0,195,38],
+"structmap__priv.html#acd2c49c174d0ee4b8c51ae2d9f1b0eae":[2,0,195,36],
+"structmap__priv.html#ad4af475a2d4e0a7f7cdc2c3d80ff511b":[2,0,195,1],
+"structmap__priv.html#ada21580aacc179dfa592b8cd99780f12":[2,0,195,45],
 "structmap__priv.html#adbc8803857348b8e9fe16048f6deec4c":[2,0,195,8],
 "structmap__priv.html#adfe93844e3c1d746ae253f65e8a5565a":[2,0,195,18],
 "structmap__priv.html#ae2e94d631b562cfb0b5a324aa75d4c4d":[2,0,195,12],
@@ -13,7 +18,8 @@ var NAVTREEINDEX38 =
 "structmap__rect.html#aaee66563c8a5a1fae043efa4f726dfd4":[2,0,196,1],
 "structmap__rect.html#ac5e820290b88392c5ef6f75807e24b73":[2,0,196,0],
 "structmap__rectObject.html":[2,0,198],
-"structmap__rectObject.html#a4027f27f4e2127841e2dca091232f08b":[2,0,198,0],
+"structmap__rectObject.html#a2b07f7fee45daf99cb2efd7404fad835":[2,0,198,0],
+"structmap__rectObject.html#a72daba5330faf74efea685cbd6fb5309":[2,0,198,1],
 "structmap__rect__priv.html":[2,0,197],
 "structmap__rect__priv.html#a012f0a096dc65e6ac93580b59449eca2":[2,0,197,25],
 "structmap__rect__priv.html#a0163c9c41cb4fdfb8ab71cdbf40abd6a":[2,0,197,141],
@@ -203,7 +209,8 @@ var NAVTREEINDEX38 =
 "structmapset.html":[2,0,205],
 "structmapset.html#ad4d00bf392242956c1c63a919e06cc10":[2,0,205,0],
 "structmapsetObject.html":[2,0,208],
-"structmapsetObject.html#a56c13b645681e7b556cf814a08790db3":[2,0,208,0],
+"structmapsetObject.html#a1b81076668e7e63875f1e4b8799363e1":[2,0,208,0],
+"structmapsetObject.html#a69e412bf56516cecc36d7d2af263e06a":[2,0,208,1],
 "structmapset__handle.html":[2,0,206],
 "structmapset__handle.html#a0f53ed52141511e70184790e2863a357":[2,0,206,0],
 "structmapset__search.html":[2,0,207],
@@ -242,12 +249,5 @@ var NAVTREEINDEX38 =
 "structmaptool__params.html#a8540a3acc750f95a9de7e73985782eb9":[2,0,211,19],
 "structmaptool__params.html#a8db99fe56a16a740ae27a65505f5282d":[2,0,211,18],
 "structmaptool__params.html#a91a4351c0b2917d7907d676f3038e8bd":[2,0,211,1],
-"structmaptool__params.html#a98e56026140eb77302a65a27a347f843":[2,0,211,14],
-"structmaptool__params.html#a9c0c00ea762a07c3f666bf4fc4716c88":[2,0,211,12],
-"structmaptool__params.html#ab446733a3ad3305674124805b08e837f":[2,0,211,0],
-"structmaptool__params.html#abcff97734aaa5f3f2a422f29aec86b9d":[2,0,211,22],
-"structmaptool__params.html#acfbf27be4a887154c44001fb4f4b799c":[2,0,211,3],
-"structmaptool__params.html#ad34d8ca7da99189414c600150d2ac8b8":[2,0,211,10],
-"structmaptool__params.html#ad560c1737904315422fb5ba3b5516457":[2,0,211,13],
-"structmaptool__params.html#ae1e8c256c17c713f54a7333d900951e1":[2,0,211,24]
+"structmaptool__params.html#a98e56026140eb77302a65a27a347f843":[2,0,211,14]
 };

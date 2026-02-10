@@ -96,8 +96,8 @@ $(document).ready(function(){initNavTree('binding_2python_2navigation_8c.html','
   <div class="headertitle"><div class="title">navigation.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="common_8h_source.html">common.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="navigation_8h_source.html">navigation.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="navigation_8h_source.html">navigation.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="common_8h_source.html">common.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -185,7 +185,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="binding__python_8c.html#a016e5ff111fbeab147bd3661308f9552">map_py_ref()</a>, <a class="el" href="structnavigationObject.html#aa40d8c62afdc1c2adfaba0e4be74964a">navigationObject::navigation</a>, and <a class="el" href="navigation_8c.html#a9520bdb482223ec077826ca0ee35ead2">navigation_get_map()</a>.</p>
+<p class="reference">References <a class="el" href="binding__python_8c.html#a016e5ff111fbeab147bd3661308f9552">map_py_ref()</a>, <a class="el" href="structnavigationObject.html#a02a2c3fb74e5453fa3708264788d49cb">navigationObject::navigation</a>, and <a class="el" href="navigation_8c.html#a9520bdb482223ec077826ca0ee35ead2">navigation_get_map()</a>.</p>
 
 </div>
 </div>
@@ -273,7 +273,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structnavigationObject.html#aa40d8c62afdc1c2adfaba0e4be74964a">navigationObject::navigation</a>, and <a class="el" href="binding_2python_2navigation_8c.html#af5c5f68f4eb9cf0c85154e6cdab97f66">navigation_Type</a>.</p>
+<p class="reference">References <a class="el" href="structnavigationObject.html#a02a2c3fb74e5453fa3708264788d49cb">navigationObject::navigation</a>, and <a class="el" href="binding_2python_2navigation_8c.html#af5c5f68f4eb9cf0c85154e6cdab97f66">navigation_Type</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="binding__python_8c.html#a417d7b7e39216d62f7b3739433ddc689">python_object_from_attr()</a>.</p>
 
@@ -300,8 +300,8 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    {<span class="stringliteral">&quot;get_map&quot;</span>, (PyCFunction) <a class="code hl_function" href="binding_2python_2navigation_8c.html#a9edb75427f922bf8ed82fe1abc4f21ac">navigation_get_map_py</a>, METH_VARARGS },</div>
-<div class="line">    {NULL, NULL },</div>
+<div class="line">    {<span class="stringliteral">&quot;get_map&quot;</span>, (PyCFunction)<a class="code hl_function" href="binding_2python_2navigation_8c.html#a9edb75427f922bf8ed82fe1abc4f21ac">navigation_get_map_py</a>, METH_VARARGS},</div>
+<div class="line">    {NULL, NULL},</div>
 <div class="line">}</div>
 <div class="ttc" id="abinding_2python_2navigation_8c_html_a9edb75427f922bf8ed82fe1abc4f21ac"><div class="ttname"><a href="binding_2python_2navigation_8c.html#a9edb75427f922bf8ed82fe1abc4f21ac">navigation_get_map_py</a></div><div class="ttdeci">static PyObject * navigation_get_map_py(navigationObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> navigation.c:28</div></div>
 </div><!-- fragment -->
@@ -321,15 +321,15 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_define" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div>
-<div class="line">    .tp_name=<span class="stringliteral">&quot;navigation&quot;</span>,</div>
-<div class="line">    .tp_basicsize=<span class="keyword">sizeof</span>(<a class="code hl_struct" href="structnavigationObject.html">navigationObject</a>),</div>
-<div class="line">    .tp_dealloc=(destructor)<a class="code hl_function" href="binding_2python_2navigation_8c.html#ac155a8d28fdc3a8217f0e0a1adf99e97">navigation_destroy_py</a>,</div>
-<div class="line">    .tp_getattr=<a class="code hl_function" href="binding_2python_2navigation_8c.html#aa6d6c6832f11891bf52de8775fb55a1c">navigation_getattr_py</a>,</div>
+<div class="line">    <a class="code hl_define" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a>,</div>
+<div class="line">    .tp_name = <span class="stringliteral">&quot;navigation&quot;</span>,</div>
+<div class="line">    .tp_basicsize = <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structnavigationObject.html">navigationObject</a>),</div>
+<div class="line">    .tp_dealloc = (destructor)<a class="code hl_function" href="binding_2python_2navigation_8c.html#ac155a8d28fdc3a8217f0e0a1adf99e97">navigation_destroy_py</a>,</div>
+<div class="line">    .tp_getattr = <a class="code hl_function" href="binding_2python_2navigation_8c.html#aa6d6c6832f11891bf52de8775fb55a1c">navigation_getattr_py</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="abinding_2python_2navigation_8c_html_aa6d6c6832f11891bf52de8775fb55a1c"><div class="ttname"><a href="binding_2python_2navigation_8c.html#aa6d6c6832f11891bf52de8775fb55a1c">navigation_getattr_py</a></div><div class="ttdeci">static PyObject * navigation_getattr_py(PyObject *self, char *name)</div><div class="ttdef"><b>Definition</b> navigation.c:42</div></div>
-<div class="ttc" id="abinding_2python_2navigation_8c_html_ac155a8d28fdc3a8217f0e0a1adf99e97"><div class="ttname"><a href="binding_2python_2navigation_8c.html#ac155a8d28fdc3a8217f0e0a1adf99e97">navigation_destroy_py</a></div><div class="ttdeci">static void navigation_destroy_py(navigationObject *self)</div><div class="ttdef"><b>Definition</b> navigation.c:46</div></div>
-<div class="ttc" id="abinding__python_8c_html_a6bb1ff01fab2f8a8bb023f584a5aa272"><div class="ttname"><a href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div><div class="ttdeci">#define Obj_HEAD</div><div class="ttdef"><b>Definition</b> binding_python.c:39</div></div>
+<div class="ttc" id="abinding_2python_2navigation_8c_html_aa6d6c6832f11891bf52de8775fb55a1c"><div class="ttname"><a href="binding_2python_2navigation_8c.html#aa6d6c6832f11891bf52de8775fb55a1c">navigation_getattr_py</a></div><div class="ttdeci">static PyObject * navigation_getattr_py(PyObject *self, char *name)</div><div class="ttdef"><b>Definition</b> navigation.c:39</div></div>
+<div class="ttc" id="abinding_2python_2navigation_8c_html_ac155a8d28fdc3a8217f0e0a1adf99e97"><div class="ttname"><a href="binding_2python_2navigation_8c.html#ac155a8d28fdc3a8217f0e0a1adf99e97">navigation_destroy_py</a></div><div class="ttdeci">static void navigation_destroy_py(navigationObject *self)</div><div class="ttdef"><b>Definition</b> navigation.c:43</div></div>
+<div class="ttc" id="abinding__python_8c_html_a6bb1ff01fab2f8a8bb023f584a5aa272"><div class="ttname"><a href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div><div class="ttdeci">#define Obj_HEAD</div><div class="ttdef"><b>Definition</b> binding_python.c:37</div></div>
 <div class="ttc" id="astructnavigationObject_html"><div class="ttname"><a href="structnavigationObject.html">navigationObject</a></div><div class="ttdef"><b>Definition</b> navigation.c:23</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="common_8h.html#a4f31e09bfa0d2239d258ef965fca3dd0">navigation_py()</a>, and <a class="el" href="common_8h.html#a8150a73e44b5bc8f0fef9b6de61ff2d9">navigation_py_ref()</a>.</p>

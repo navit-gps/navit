@@ -96,10 +96,10 @@ $(document).ready(function(){initNavTree('binding_2python_2route_8c.html',''); i
   <div class="headertitle"><div class="title">route.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="common_8h_source.html">common.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="route_8h_source.html">route.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="common_8h_source.html">common.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="route_8h_source.html">route.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -187,7 +187,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="binding__python_8c.html#a016e5ff111fbeab147bd3661308f9552">map_py_ref()</a>, <a class="el" href="structrouteObject.html#a84927ceb35ee9321e8fad66471acb32e">routeObject::route</a>, and <a class="el" href="route_8c.html#a9d50098670b807f91574cb6a1d828c49">route_get_map()</a>.</p>
+<p class="reference">References <a class="el" href="binding__python_8c.html#a016e5ff111fbeab147bd3661308f9552">map_py_ref()</a>, <a class="el" href="structrouteObject.html#a44be0e79e5e4e07518e72847e026ec1b">routeObject::route</a>, and <a class="el" href="route_8c.html#a9d50098670b807f91574cb6a1d828c49">route_get_map()</a>.</p>
 
 </div>
 </div>
@@ -275,7 +275,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structrouteObject.html#a84927ceb35ee9321e8fad66471acb32e">routeObject::route</a>, and <a class="el" href="binding_2python_2route_8c.html#aad076f9ced37a42b12ac49d7b680a132">route_Type</a>.</p>
+<p class="reference">References <a class="el" href="structrouteObject.html#a44be0e79e5e4e07518e72847e026ec1b">routeObject::route</a>, and <a class="el" href="binding_2python_2route_8c.html#aad076f9ced37a42b12ac49d7b680a132">route_Type</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="binding__python_8c.html#a417d7b7e39216d62f7b3739433ddc689">python_object_from_attr()</a>.</p>
 
@@ -302,8 +302,8 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    {<span class="stringliteral">&quot;get_map&quot;</span>, (PyCFunction) <a class="code hl_function" href="binding_2python_2route_8c.html#a4c63ecfa39cff5663271979d142e9710">route_get_map_py</a>, METH_VARARGS },</div>
-<div class="line">    {NULL, NULL },</div>
+<div class="line">    {<span class="stringliteral">&quot;get_map&quot;</span>, (PyCFunction)<a class="code hl_function" href="binding_2python_2route_8c.html#a4c63ecfa39cff5663271979d142e9710">route_get_map_py</a>, METH_VARARGS},</div>
+<div class="line">    {NULL, NULL},</div>
 <div class="line">}</div>
 <div class="ttc" id="abinding_2python_2route_8c_html_a4c63ecfa39cff5663271979d142e9710"><div class="ttname"><a href="binding_2python_2route_8c.html#a4c63ecfa39cff5663271979d142e9710">route_get_map_py</a></div><div class="ttdeci">static PyObject * route_get_map_py(routeObject *self, PyObject *args)</div><div class="ttdef"><b>Definition</b> route.c:30</div></div>
 </div><!-- fragment -->
@@ -323,15 +323,15 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_define" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div>
-<div class="line">    .tp_name=<span class="stringliteral">&quot;route&quot;</span>,</div>
-<div class="line">    .tp_basicsize=<span class="keyword">sizeof</span>(<a class="code hl_struct" href="structrouteObject.html">routeObject</a>),</div>
-<div class="line">    .tp_dealloc=(destructor)<a class="code hl_function" href="binding_2python_2route_8c.html#a8779ebf3511455f5c042d69696c3ec5e">route_destroy_py</a>,</div>
-<div class="line">    .tp_getattr=<a class="code hl_function" href="binding_2python_2route_8c.html#a4d011d836f377a9e2201ff013e360b7d">route_getattr_py</a>,</div>
+<div class="line">    <a class="code hl_define" href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a>,</div>
+<div class="line">    .tp_name = <span class="stringliteral">&quot;route&quot;</span>,</div>
+<div class="line">    .tp_basicsize = <span class="keyword">sizeof</span>(<a class="code hl_struct" href="structrouteObject.html">routeObject</a>),</div>
+<div class="line">    .tp_dealloc = (destructor)<a class="code hl_function" href="binding_2python_2route_8c.html#a8779ebf3511455f5c042d69696c3ec5e">route_destroy_py</a>,</div>
+<div class="line">    .tp_getattr = <a class="code hl_function" href="binding_2python_2route_8c.html#a4d011d836f377a9e2201ff013e360b7d">route_getattr_py</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="abinding_2python_2route_8c_html_a4d011d836f377a9e2201ff013e360b7d"><div class="ttname"><a href="binding_2python_2route_8c.html#a4d011d836f377a9e2201ff013e360b7d">route_getattr_py</a></div><div class="ttdeci">static PyObject * route_getattr_py(PyObject *self, char *name)</div><div class="ttdef"><b>Definition</b> route.c:44</div></div>
-<div class="ttc" id="abinding_2python_2route_8c_html_a8779ebf3511455f5c042d69696c3ec5e"><div class="ttname"><a href="binding_2python_2route_8c.html#a8779ebf3511455f5c042d69696c3ec5e">route_destroy_py</a></div><div class="ttdeci">static void route_destroy_py(routeObject *self)</div><div class="ttdef"><b>Definition</b> route.c:48</div></div>
-<div class="ttc" id="abinding__python_8c_html_a6bb1ff01fab2f8a8bb023f584a5aa272"><div class="ttname"><a href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div><div class="ttdeci">#define Obj_HEAD</div><div class="ttdef"><b>Definition</b> binding_python.c:39</div></div>
+<div class="ttc" id="abinding_2python_2route_8c_html_a4d011d836f377a9e2201ff013e360b7d"><div class="ttname"><a href="binding_2python_2route_8c.html#a4d011d836f377a9e2201ff013e360b7d">route_getattr_py</a></div><div class="ttdeci">static PyObject * route_getattr_py(PyObject *self, char *name)</div><div class="ttdef"><b>Definition</b> route.c:41</div></div>
+<div class="ttc" id="abinding_2python_2route_8c_html_a8779ebf3511455f5c042d69696c3ec5e"><div class="ttname"><a href="binding_2python_2route_8c.html#a8779ebf3511455f5c042d69696c3ec5e">route_destroy_py</a></div><div class="ttdeci">static void route_destroy_py(routeObject *self)</div><div class="ttdef"><b>Definition</b> route.c:45</div></div>
+<div class="ttc" id="abinding__python_8c_html_a6bb1ff01fab2f8a8bb023f584a5aa272"><div class="ttname"><a href="binding__python_8c.html#a6bb1ff01fab2f8a8bb023f584a5aa272">Obj_HEAD</a></div><div class="ttdeci">#define Obj_HEAD</div><div class="ttdef"><b>Definition</b> binding_python.c:37</div></div>
 <div class="ttc" id="astructrouteObject_html"><div class="ttname"><a href="structrouteObject.html">routeObject</a></div><div class="ttdef"><b>Definition</b> route.c:25</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="common_8h.html#a5704b52a14e6784c9cd3b6288cd78e7f">route_py()</a>, and <a class="el" href="common_8h.html#a9efcf118138ffdeb8ea2be0dbc3e3df6">route_py_ref()</a>.</p>

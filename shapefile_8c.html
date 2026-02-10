@@ -97,22 +97,22 @@ $(document).ready(function(){initNavTree('shapefile_8c.html',''); initResizable(
   <div class="headertitle"><div class="title">shapefile.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;stdlib.h&gt;</code><br />
-<code>#include &lt;glib.h&gt;</code><br />
-<code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
 <code>#include &quot;config.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="maptype_8h_source.html">maptype.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
 <code>#include &quot;shapefil.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
+<code>#include &lt;glib.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -1678,11 +1678,11 @@ Variables</h2></td></tr>
 <div class="line">    <a class="code hl_function" href="shapefile_8c.html#a667fdb5a7a2624a08e882da6ca5252cd">map_rect_get_item_byid_shapefile</a>,</div>
 <div class="line">}</div>
 <div class="ttc" id="aprojection_8h_html_a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064"><div class="ttname"><a href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a></div><div class="ttdeci">@ projection_mg</div><div class="ttdef"><b>Definition</b> projection.h:25</div></div>
-<div class="ttc" id="ashapefile_8c_html_a179470ce903b7a4cff6afc2a7bb260a3"><div class="ttname"><a href="shapefile_8c.html#a179470ce903b7a4cff6afc2a7bb260a3">map_rect_new_shapefile</a></div><div class="ttdeci">static struct map_rect_priv * map_rect_new_shapefile(struct map_priv *map, struct map_selection *sel)</div><div class="ttdef"><b>Definition</b> shapefile.c:464</div></div>
-<div class="ttc" id="ashapefile_8c_html_a667fdb5a7a2624a08e882da6ca5252cd"><div class="ttname"><a href="shapefile_8c.html#a667fdb5a7a2624a08e882da6ca5252cd">map_rect_get_item_byid_shapefile</a></div><div class="ttdeci">static struct item * map_rect_get_item_byid_shapefile(struct map_rect_priv *mr, int id_hi, int id_lo)</div><div class="ttdef"><b>Definition</b> shapefile.c:572</div></div>
-<div class="ttc" id="ashapefile_8c_html_a84c9c7b48dc4f2e1e43d2babb7fb82a7"><div class="ttname"><a href="shapefile_8c.html#a84c9c7b48dc4f2e1e43d2babb7fb82a7">map_destroy_shapefile</a></div><div class="ttdeci">static void map_destroy_shapefile(struct map_priv *m)</div><div class="ttdef"><b>Definition</b> shapefile.c:76</div></div>
-<div class="ttc" id="ashapefile_8c_html_ad53d816d68d35c83f45c655b9eefd16d"><div class="ttname"><a href="shapefile_8c.html#ad53d816d68d35c83f45c655b9eefd16d">map_rect_get_item_shapefile</a></div><div class="ttdeci">static struct item * map_rect_get_item_shapefile(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> shapefile.c:522</div></div>
-<div class="ttc" id="ashapefile_8c_html_affacb55441f7b24f74fabec7a0045ee2"><div class="ttname"><a href="shapefile_8c.html#affacb55441f7b24f74fabec7a0045ee2">map_rect_destroy_shapefile</a></div><div class="ttdeci">static void map_rect_destroy_shapefile(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> shapefile.c:514</div></div>
+<div class="ttc" id="ashapefile_8c_html_a179470ce903b7a4cff6afc2a7bb260a3"><div class="ttname"><a href="shapefile_8c.html#a179470ce903b7a4cff6afc2a7bb260a3">map_rect_new_shapefile</a></div><div class="ttdeci">static struct map_rect_priv * map_rect_new_shapefile(struct map_priv *map, struct map_selection *sel)</div><div class="ttdef"><b>Definition</b> shapefile.c:459</div></div>
+<div class="ttc" id="ashapefile_8c_html_a667fdb5a7a2624a08e882da6ca5252cd"><div class="ttname"><a href="shapefile_8c.html#a667fdb5a7a2624a08e882da6ca5252cd">map_rect_get_item_byid_shapefile</a></div><div class="ttdeci">static struct item * map_rect_get_item_byid_shapefile(struct map_rect_priv *mr, int id_hi, int id_lo)</div><div class="ttdef"><b>Definition</b> shapefile.c:566</div></div>
+<div class="ttc" id="ashapefile_8c_html_a84c9c7b48dc4f2e1e43d2babb7fb82a7"><div class="ttname"><a href="shapefile_8c.html#a84c9c7b48dc4f2e1e43d2babb7fb82a7">map_destroy_shapefile</a></div><div class="ttdeci">static void map_destroy_shapefile(struct map_priv *m)</div><div class="ttdef"><b>Definition</b> shapefile.c:74</div></div>
+<div class="ttc" id="ashapefile_8c_html_ad53d816d68d35c83f45c655b9eefd16d"><div class="ttname"><a href="shapefile_8c.html#ad53d816d68d35c83f45c655b9eefd16d">map_rect_get_item_shapefile</a></div><div class="ttdeci">static struct item * map_rect_get_item_shapefile(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> shapefile.c:516</div></div>
+<div class="ttc" id="ashapefile_8c_html_affacb55441f7b24f74fabec7a0045ee2"><div class="ttname"><a href="shapefile_8c.html#affacb55441f7b24f74fabec7a0045ee2">map_rect_destroy_shapefile</a></div><div class="ttdeci">static void map_rect_destroy_shapefile(struct map_rect_priv *mr)</div><div class="ttdef"><b>Definition</b> shapefile.c:508</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="shapefile_8c.html#a266e359fc997a8d2bcb839c53ae0f917">map_new_shapefile()</a>.</p>
 
@@ -1713,10 +1713,10 @@ Variables</h2></td></tr>
 <div class="line">    <a class="code hl_function" href="shapefile_8c.html#af6b24632341e70c80296ed2beae50662">shapefile_attr_rewind</a>,</div>
 <div class="line">    <a class="code hl_function" href="shapefile_8c.html#a56a5e298c06e0cbfba10630578790661">shapefile_attr_get</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="ashapefile_8c_html_a4331f90dabdc80eadccae0deea10229b"><div class="ttname"><a href="shapefile_8c.html#a4331f90dabdc80eadccae0deea10229b">shapefile_coord_rewind</a></div><div class="ttdeci">static void shapefile_coord_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> shapefile.c:81</div></div>
-<div class="ttc" id="ashapefile_8c_html_a56a5e298c06e0cbfba10630578790661"><div class="ttname"><a href="shapefile_8c.html#a56a5e298c06e0cbfba10630578790661">shapefile_attr_get</a></div><div class="ttdeci">static int shapefile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> shapefile.c:402</div></div>
-<div class="ttc" id="ashapefile_8c_html_a61af1af0981bd1c2086b070b6f8ae85e"><div class="ttname"><a href="shapefile_8c.html#a61af1af0981bd1c2086b070b6f8ae85e">shapefile_coord_get</a></div><div class="ttdeci">static int shapefile_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition</b> shapefile.c:103</div></div>
-<div class="ttc" id="ashapefile_8c_html_af6b24632341e70c80296ed2beae50662"><div class="ttname"><a href="shapefile_8c.html#af6b24632341e70c80296ed2beae50662">shapefile_attr_rewind</a></div><div class="ttdeci">static void shapefile_attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> shapefile.c:133</div></div>
+<div class="ttc" id="ashapefile_8c_html_a4331f90dabdc80eadccae0deea10229b"><div class="ttname"><a href="shapefile_8c.html#a4331f90dabdc80eadccae0deea10229b">shapefile_coord_rewind</a></div><div class="ttdeci">static void shapefile_coord_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> shapefile.c:79</div></div>
+<div class="ttc" id="ashapefile_8c_html_a56a5e298c06e0cbfba10630578790661"><div class="ttname"><a href="shapefile_8c.html#a56a5e298c06e0cbfba10630578790661">shapefile_attr_get</a></div><div class="ttdeci">static int shapefile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> shapefile.c:397</div></div>
+<div class="ttc" id="ashapefile_8c_html_a61af1af0981bd1c2086b070b6f8ae85e"><div class="ttname"><a href="shapefile_8c.html#a61af1af0981bd1c2086b070b6f8ae85e">shapefile_coord_get</a></div><div class="ttdeci">static int shapefile_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition</b> shapefile.c:101</div></div>
+<div class="ttc" id="ashapefile_8c_html_af6b24632341e70c80296ed2beae50662"><div class="ttname"><a href="shapefile_8c.html#af6b24632341e70c80296ed2beae50662">shapefile_attr_rewind</a></div><div class="ttdeci">static void shapefile_attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> shapefile.c:131</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="shapefile_8c.html#a179470ce903b7a4cff6afc2a7bb260a3">map_rect_new_shapefile()</a>.</p>
 

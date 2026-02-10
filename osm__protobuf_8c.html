@@ -96,18 +96,18 @@ $(document).ready(function(){initNavTree('osm__protobuf_8c.html',''); initResiza
   <div class="headertitle"><div class="title">osm_protobuf.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
-<code>#include &lt;unistd.h&gt;</code><br />
-<code>#include &lt;time.h&gt;</code><br />
-<code>#include &lt;zlib.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="maptool_8h_source.html">maptool.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="linguistics_8h_source.html">linguistics.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
 <code>#include &quot;fileformat.pb-c.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="linguistics_8h_source.html">linguistics.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="maptool_8h_source.html">maptool.h</a>&quot;</code><br />
 <code>#include &quot;osmformat.pb-c.h&quot;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;zlib.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -145,7 +145,7 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a933d758f17d6368d11d83b13dfedac41" id="r_a933d758f17d6368d11d83b13dfedac41"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a933d758f17d6368d11d83b13dfedac41">latlon_scale</a> =10000000.0</td></tr>
+<tr class="memitem:a933d758f17d6368d11d83b13dfedac41" id="r_a933d758f17d6368d11d83b13dfedac41"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__protobuf_8c.html#a933d758f17d6368d11d83b13dfedac41">latlon_scale</a> = 10000000.0</td></tr>
 <tr class="separator:a933d758f17d6368d11d83b13dfedac41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
@@ -202,12 +202,13 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">        <span class="keywordflow">if</span> (<a class="code hl_variable" href="garmin__img_8c.html#a9f59b34b1f25fe00023291b678246bcc">length</a> &gt; max_length){                                          \</div>
-<div class="line">                fprintf(stderr,<span class="stringliteral">&quot;Not a valid protobuf file. &quot;</span>               \</div>
-<div class="line">                        <span class="stringliteral">&quot;Invalid block size in input: %d, max is %d. \n&quot;</span>,  \</div>
-<div class="line">                                <a class="code hl_variable" href="garmin__img_8c.html#a9f59b34b1f25fe00023291b678246bcc">length</a>, max_length);                       \</div>
-<div class="line">                <span class="keywordflow">return</span> NULL;                                                   \</div>
-<div class="line">        }</div>
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">if</span> (<a class="code hl_variable" href="garmin__img_8c.html#a9f59b34b1f25fe00023291b678246bcc">length</a> &gt; max_length) {                                                                                         \</div>
+<div class="line">        fprintf(stderr,                                                                                                \</div>
+<div class="line">                <span class="stringliteral">&quot;Not a valid protobuf file. &quot;</span>                                                                          \</div>
+<div class="line">                <span class="stringliteral">&quot;Invalid block size in input: %d, max is %d. \n&quot;</span>,                                                      \</div>
+<div class="line">                <a class="code hl_variable" href="garmin__img_8c.html#a9f59b34b1f25fe00023291b678246bcc">length</a>, max_length);                                                                                   \</div>
+<div class="line">        <span class="keywordflow">return</span> NULL;                                                                                                   \</div>
+<div class="line">    }</div>
 <div class="ttc" id="agarmin__img_8c_html_a9f59b34b1f25fe00023291b678246bcc"><div class="ttname"><a href="garmin__img_8c.html#a9f59b34b1f25fe00023291b678246bcc">length</a></div><div class="ttdeci">int length</div><div class="ttdef"><b>Definition</b> garmin_img.c:1</div></div>
 </div><!-- fragment -->
 </div>
@@ -688,7 +689,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double latlon_scale =10000000.0</td>
+          <td class="memname">double latlon_scale = 10000000.0</td>
         </tr>
       </table>
   </td>

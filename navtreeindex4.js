@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"classNGQProxyBookmarks.html#af1b2c3e9c666c359b4930099d23359f5":[2,0,244,10],
 "classNGQProxyGui.html":[2,0,245],
 "classNGQProxyGui.html#a0846564e026af37885db718d1365b585":[2,0,245,20],
 "classNGQProxyGui.html#a0c2f4fe10de148aa39d3f78f21a208f0":[2,0,245,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#a3e3dd27c18c550db77cd48a366a99648":[2,0,0,0,0,0,16],
 "classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#a4128c9592fd760534619fb8a83222f89":[2,0,0,0,0,0,29],
 "classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#a46fb65b582e02112e3130234c97803c0":[2,0,0,0,0,0,26],
-"classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#a4a7932c48d90c7228f154751f422abc3":[2,0,0,0,0,0,21],
-"classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#a54555ad511262e70f2f8ec09bae31ce3":[2,0,0,0,0,0,13]
+"classorg_1_1navitproject_1_1navit_1_1FileBrowserActivity.html#a4a7932c48d90c7228f154751f422abc3":[2,0,0,0,0,0,21]
 };
