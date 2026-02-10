@@ -21,10 +21,11 @@
 #include "attr.h"
 #include "coord.h"
 #include "debug.h"
-#include "item.h"
+#include "item_type_def.h"
 #include "navit.h"
 #include "xmlconfig.h"
 #include <glib.h>
+#include <glib/gtypes.h>
 #include <string.h>
 
 /**

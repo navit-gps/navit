@@ -16,15 +16,16 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-
-#include "config.h"
-
+#include "attr.h"
+#include "attr_type_def.h"
 #include "callback.h"
+#include "config.h"
 #include "coord.h"
 #include "debug.h"
 #include "event.h"
 #include "file.h"
 #include "item.h"
+#include "item_type_def.h"
 #include "plugin.h"
 #include "vehicle.h"
 #include <fcntl.h>
@@ -33,7 +34,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 #ifdef _WIN32
 #    include <serial_io.h>
 #else
@@ -42,7 +42,6 @@
 #ifdef HAVE_SOCKET
 #    include <arpa/inet.h>
 #    include <netinet/in.h>
-#    include <stdlib.h>
 #    include <sys/socket.h>
 #endif
 #ifdef HAVE_UNISTD_H
@@ -50,6 +49,10 @@
 #endif /* HAVE_UNISTD_H */
 #ifdef HAVE_WINSOCK
 #    include <winsock2.h>
+
+struct callback_list;
+struct vehicle_priv;
+
 int inet_aton(const char *cp, struct in_addr *inp);
 
 int inet_aton(const char *cp, struct in_addr *inp) {

@@ -18,14 +18,15 @@
  */
 
 #include "coord.h"
+#include "attr.h"
+#include "attr_type_def.h"
 #include "debug.h"
-#include "item.h"
 #include "projection.h"
 #include "transform.h"
 #include <glib.h>
+#include <glib/gtypes.h>
 #include <math.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 /**
  * @defgroup coord Coordinate handling functions

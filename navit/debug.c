@@ -18,20 +18,24 @@
  */
 
 #include "debug.h"
+#include "attr.h"
+#include "attr_type_def.h"
 #include "config.h"
+#include "debug.h"
 #include "file.h"
 #include "item.h"
 #include <glib.h>
+#include <glib/gtypes.h>
 #include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
-
+#include <sys/types.h>
 #ifndef _MSC_VER
 #    include <sys/time.h>
 #endif /* _MSC_VER */
+
 #ifdef HAVE_API_ANDROID
 #    include <android/log.h>
 #endif
@@ -52,7 +56,6 @@
 #ifdef HAVE_SOCKET
 #    include <arpa/inet.h>
 #    include <netinet/in.h>
-#    include <stdlib.h>
 #    include <sys/socket.h>
 
 static int debug_socket = -1;

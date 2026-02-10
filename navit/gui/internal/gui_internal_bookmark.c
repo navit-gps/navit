@@ -1,20 +1,22 @@
 #include "gui_internal_bookmark.h"
+#include "attr.h"
+#include "attr_type_def.h"
 #include "bookmarks.h"
-#include "callback.h"
-#include "color.h"
 #include "coord.h"
 #include "debug.h"
-#include "graphics.h"
 #include "gui_internal.h"
 #include "gui_internal_keyboard.h"
 #include "gui_internal_menu.h"
 #include "gui_internal_priv.h"
 #include "gui_internal_widget.h"
+#include "item.h"
+#include "item_type_def.h"
 #include "navit.h"
 #include "navit_nls.h"
-#include "point.h"
+#include "projection.h"
 #include <glib.h>
 #include <stdlib.h>
+#include <string.h>
 
 static void gui_internal_cmd_add_bookmark_do(struct gui_priv *this, struct widget *widget) {
     GList *l;

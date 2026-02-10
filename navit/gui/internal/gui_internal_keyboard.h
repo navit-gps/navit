@@ -1,6 +1,8 @@
 /**
  * Modes for the on-screen keyboard
  */
+#ifndef __NAVIT_GUI_INTERNAL_KEYBOARD_H_
+#define __NAVIT_GUI_INTERNAL_KEYBOARD_H_
 enum vkbd_mode {
     /* layouts */
     VKBD_LATIN_UPPER = 0,     /*!< Latin uppercase characters */
@@ -32,3 +34,4 @@ int gui_internal_keyboard_init_mode(char *lang);
 void gui_internal_keyboard_to_upper_case(struct gui_priv *this);
 void gui_internal_keyboard_to_lower_case(struct gui_priv *this);
 /* end of prototypes */
+#endif
