@@ -26,36 +26,35 @@
  * remote system.
  */
 
+#include "attr.h"
+#include "callback.h"
+#include "config.h"
+#include "coord.h"
+#include "debug.h"
+#include "event.h"
+#include "glib_slice.h"
+#include "item.h"
+#include "map.h"
+#include "navigation.h"
+#include "navit.h"
+#include "plugin.h"
+#include "route.h"
+#include "route_protected.h"
+#include "thread.h"
+#include "traffic.h"
+#include "transform.h"
+#include "util.h"
+#include "vehicle.h"
+#include "xmlconfig.h"
+#include <curl/curl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
 #ifdef _POSIX_C_SOURCE
-#include <sys/types.h>
+#    include <sys/types.h>
 #endif
-
-#include <curl/curl.h>
-#include "thread.h"
-#include "glib_slice.h"
-#include "config.h"
-#include "item.h"
-#include "attr.h"
-#include "coord.h"
-#include "map.h"
-#include "route_protected.h"
-#include "route.h"
-#include "transform.h"
-#include "event.h"
-#include "xmlconfig.h"
-#include "traffic.h"
-#include "plugin.h"
-#include "callback.h"
-#include "vehicle.h"
-#include "debug.h"
-#include "navit.h"
-#include "util.h"
-#include "navigation.h"
 
 /**
  * @brief Default poll interval, in msec.
@@ -102,17 +101,17 @@ struct traffic_priv {
  * @brief Stores HTTP response data.
  */
 struct curl_result {
-    char *data;                 /**< Result data */
-    size_t size;                /**< Size of data stored in `memory` */
+    char *data;  /**< Result data */
+    size_t size; /**< Size of data stored in `memory` */
 };
 
-void traffic_traff_http_destroy(struct traffic_priv * this_);
-struct traffic_message ** traffic_traff_http_get_messages(struct traffic_priv * this_);
+void traffic_traff_http_destroy(struct traffic_priv *this_);
+struct traffic_message **traffic_traff_http_get_messages(struct traffic_priv *this_);
 
 /**
  * @brief Destructor.
  */
-void traffic_traff_http_destroy(struct traffic_priv * this_) {
+void traffic_traff_http_destroy(struct traffic_priv *this_) {
     /* tell the worker thread to clean up and exit */
     this_->exiting = 1;
     thread_event_signal(this_->queue_event);
@@ -132,7 +131,7 @@ void traffic_traff_http_destroy(struct traffic_priv * this_) {
  *
  * @return Always `NULL`
  */
-struct traffic_message ** traffic_traff_http_get_messages(struct traffic_priv * this_) {
+struct traffic_message **traffic_traff_http_get_messages(struct traffic_priv *this_) {
     return NULL;
 }
 
@@ -143,7 +142,6 @@ static struct traffic_methods traffic_traff_http_meth = {
     traffic_traff_http_get_messages,
     traffic_traff_http_destroy,
 };
-
 
 /**
  * @brief Callback function to process HTTP response data.
@@ -178,7 +176,6 @@ static size_t curl_result_callback(void *contents, size_t size, size_t nmemb, vo
     return realsize;
 }
 
-
 /**
  * @brief Sends an HTTP request and returns the result.
  *
@@ -188,8 +185,8 @@ static size_t curl_result_callback(void *contents, size_t size, size_t nmemb, vo
  * @result Pointer to a `struct curl_result` representing the data returned. The caller is responsible
  * for freeing up both the struct and the memory pointed to by its `data` member.
  */
-static struct curl_result * curl_post(char * url, char * data) {
-    struct curl_result * ret;
+static struct curl_result *curl_post(char *url, char *data) {
+    struct curl_result *ret;
     CURL *curl_handle;
     CURLcode curl_res;
 
@@ -229,7 +226,6 @@ static struct curl_result * curl_post(char * url, char * data) {
     return NULL;
 }
 
-
 /**
  * @brief Called when a new TraFF feed is received.
  *
@@ -241,9 +237,8 @@ static struct curl_result * curl_post(char * url, char * data) {
  * @param messages Parsed messages
  * @param cb Pointer to the callback used to call this function
  */
-static void traffic_traff_http_on_feed_received(struct traffic * traffic,
-                                                struct traffic_message ** messages,
-                                                struct callback ** cb) {
+static void traffic_traff_http_on_feed_received(struct traffic *traffic, struct traffic_message **messages,
+                                                struct callback **cb) {
     dbg(lvl_debug, "enter");
     callback_destroy(*cb);
     g_free(cb);
@@ -263,10 +258,9 @@ static void traffic_traff_http_on_feed_received(struct traffic * traffic,
  *
  * @return True if messages were received, false if not
  */
-static int traffic_traff_http_process_response(struct traffic_priv * this_,
-                                           struct traffic_response * response) {
+static int traffic_traff_http_process_response(struct traffic_priv *this_, struct traffic_response *response) {
     int ret = 0;
-    struct callback ** cb;
+    struct callback **cb;
     if (!strcmp(response->status, "OK") || !strcmp(response->status, "PARTIALLY_COVERED")) {
         if (response->subscription_id) {
             this_->subscription_id = response->subscription_id;
@@ -275,8 +269,8 @@ static int traffic_traff_http_process_response(struct traffic_priv * this_,
         if (response->messages && *(response->messages)) {
             dbg(lvl_debug, "response contains messages, posting traffic feed");
             cb = g_new0(struct callback *, 1);
-            *cb = callback_new_3(callback_cast(traffic_traff_http_on_feed_received), this_->traffic,
-                                 response->messages, cb);
+            *cb = callback_new_3(callback_cast(traffic_traff_http_on_feed_received), this_->traffic, response->messages,
+                                 cb);
             event_add_timeout(1, 0, *cb);
         }
         ret = !!(response->messages);
@@ -288,7 +282,6 @@ static int traffic_traff_http_process_response(struct traffic_priv * this_,
     return ret;
 }
 
-
 /**
  * @brief Main function for the worker thread.
  *
@@ -298,22 +291,22 @@ static int traffic_traff_http_process_response(struct traffic_priv * this_,
  * @param this_gpointer Pointer to the `struct traffic_priv` for the plugin instance
  */
 static int traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
-    struct traffic_priv * this_ = (struct traffic_priv *) this_gpointer;
+    struct traffic_priv *this_ = (struct traffic_priv *)this_gpointer;
 
     /* Whether the current run of the loop should poll the source */
     int poll;
 
     /* Partial request data (from queue), if any */
-    char * rdata;
+    char *rdata;
 
     /* Data for the request, if any */
-    char * request;
+    char *request;
 
     /* Result for the request */
-    struct curl_result * chunk;
+    struct curl_result *chunk;
 
     /* Decoded response */
-    struct traffic_response * response;
+    struct traffic_response *response;
 
     while (1) {
         /* by default, poll the source every time the loop runs, unless we’re exiting */
@@ -337,7 +330,8 @@ static int traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
 
             /* unsubscribe if we are subscribed */
             if (this_->subscription_id) {
-                request = g_strdup_printf("<request operation='UNSUBSCRIBE' subscription_id='%s'/>", this_->subscription_id);
+                request =
+                    g_strdup_printf("<request operation='UNSUBSCRIBE' subscription_id='%s'/>", this_->subscription_id);
                 chunk = curl_post(this_->source, request);
                 if (chunk) {
                     g_free(chunk->data);
@@ -359,7 +353,7 @@ static int traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
             /* send the request and process its results */
             if (this_->subscription_id)
                 request = g_strdup_printf("<request operation='CHANGE' subscription_id='%s'>\n%s\n</request>",
-                        this_->subscription_id, rdata);
+                                          this_->subscription_id, rdata);
             else
                 request = g_strdup_printf("<request operation='SUBSCRIBE'>\n%s\n</request>", rdata);
             dbg(lvl_error, "sending request: \n%s", request);
@@ -425,14 +419,13 @@ static void coordtostr(char *dst, size_t dstsize, navit_float a, navit_float b, 
  *
  * @param this_ The instance which will handle the selection update
  */
-static void traffic_traff_http_set_selection(struct traffic_priv * this_) {
-    struct route * route;
+static void traffic_traff_http_set_selection(struct traffic_priv *this_) {
+    struct route *route;
     struct coord_geo lu, rl;
     gchar *filter_list;
-    struct map_selection * sel;
+    struct map_selection *sel;
     gchar *min_road_class;
     char coordbuf[80] = "";
-
 
     if (this_->route_map_sel)
         route_free_selection(this_->route_map_sel);
@@ -467,7 +460,6 @@ static void traffic_traff_http_set_selection(struct traffic_priv * this_) {
     thread_lock_release_write(this_->queue_lock);
 }
 
-
 /**
  * @brief Callback for the traffic attribute
  *
@@ -478,14 +470,14 @@ static void traffic_traff_http_set_selection(struct traffic_priv * this_) {
  *
  * @param this_ The instance which will handle the update
  */
-static void traffic_traff_http_traffic_callback(struct traffic_priv * this_) {
-    struct attr * attr;
-    struct attr_iter * a_iter;
+static void traffic_traff_http_traffic_callback(struct traffic_priv *this_) {
+    struct attr *attr;
+    struct attr_iter *a_iter;
 
     attr = g_new0(struct attr, 1);
     a_iter = navit_attr_iter_new(NULL);
     if (navit_get_attr(this_->nav, attr_traffic, attr, a_iter))
-        this_->traffic = (struct traffic *) attr->u.navit_object;
+        this_->traffic = (struct traffic *)attr->u.navit_object;
     navit_attr_iter_destroy(a_iter);
     g_free(attr);
 
@@ -495,16 +487,14 @@ static void traffic_traff_http_traffic_callback(struct traffic_priv * this_) {
     }
 }
 
-
 /**
  * @brief Callback for destination changes
  *
  * @param this_ The instance which will handle the destination update
  */
-static void traffic_traff_http_destination_callback(struct traffic_priv * this_) {
+static void traffic_traff_http_destination_callback(struct traffic_priv *this_) {
     traffic_traff_http_set_selection(this_);
 }
-
 
 /**
  * @brief Callback for navigation status changes
@@ -516,7 +506,7 @@ static void traffic_traff_http_destination_callback(struct traffic_priv * this_)
  * @param this_ The instance which will handle the navigation status update
  * @param status The status of the navigation engine (the value of the {@code nav_status} attribute)
  */
-static void traffic_traff_http_status_callback(struct traffic_priv * this_, int status) {
+static void traffic_traff_http_status_callback(struct traffic_priv *this_, int status) {
     int new_position_valid = (status != 1);
     if (new_position_valid && !this_->position_valid) {
         this_->position_valid = new_position_valid;
@@ -524,7 +514,6 @@ static void traffic_traff_http_status_callback(struct traffic_priv * this_, int 
     } else if (new_position_valid != this_->position_valid)
         this_->position_valid = new_position_valid;
 }
-
 
 /**
  * @brief Callback for position changes
@@ -538,8 +527,8 @@ static void traffic_traff_http_status_callback(struct traffic_priv * this_, int 
  * @param navit The Navit instance
  * @param vehicle The vehicle which delivered the position update and from which the position can be queried
  */
-static void traffic_traff_http_position_callback(struct traffic_priv * this_, struct navit *navit,
-        struct vehicle *vehicle) {
+static void traffic_traff_http_position_callback(struct traffic_priv *this_, struct navit *navit,
+                                                 struct vehicle *vehicle) {
     struct attr attr;
     struct coord c;
     struct coord_rect cr;
@@ -564,14 +553,13 @@ static void traffic_traff_http_position_callback(struct traffic_priv * this_, st
     }
 }
 
-
 /**
  * @brief Initializes a traff_http plugin
  *
  * @return True on success, false on failure
  */
-static int traffic_traff_http_init(struct traffic_priv * this_) {
-    struct navigation * navigation;
+static int traffic_traff_http_init(struct traffic_priv *this_) {
+    struct navigation *navigation;
 
     /* TODO verify event system, accept if thread-safe, warn if functions are missing, else exit
      *
@@ -582,8 +570,7 @@ static int traffic_traff_http_init(struct traffic_priv * this_) {
      */
     if (!strcmp("null", event_system()) || !strcmp("opengl", event_system())) {
         /* null and opengl do not implement functions we require */
-        dbg(lvl_error, "event system %s is incomplete, preventing the traff_http plugin from working",
-            event_system());
+        dbg(lvl_error, "event system %s is incomplete, preventing the traff_http plugin from working", event_system());
         return 0;
     } else if (strcmp("glib", event_system()) && strcmp("android", event_system())) {
         /*
@@ -598,21 +585,21 @@ static int traffic_traff_http_init(struct traffic_priv * this_) {
     /* TODO anything else to do here? */
 
     /* register callback for traffic module so we can finish setting up */
-    navit_add_callback(this_->nav, callback_new_attr_1(callback_cast(traffic_traff_http_traffic_callback),
-            attr_traffic, this_));
+    navit_add_callback(this_->nav,
+                       callback_new_attr_1(callback_cast(traffic_traff_http_traffic_callback), attr_traffic, this_));
 
     /* register callbacks for position and destination changes */
     navit_add_callback(this_->nav, callback_new_attr_1(callback_cast(traffic_traff_http_position_callback),
-                       attr_position_coord_geo, this_));
+                                                       attr_position_coord_geo, this_));
     navit_add_callback(this_->nav, callback_new_attr_1(callback_cast(traffic_traff_http_destination_callback),
-                       attr_destination, this_));
+                                                       attr_destination, this_));
     if ((navigation = navit_get_navigation(this_->nav)))
-        navigation_register_callback(navigation, attr_nav_status,
-                                     callback_new_attr_1(callback_cast(traffic_traff_http_status_callback), attr_nav_status, this_));
+        navigation_register_callback(
+            navigation, attr_nav_status,
+            callback_new_attr_1(callback_cast(traffic_traff_http_status_callback), attr_nav_status, this_));
 
     return 1;
 }
-
 
 /**
  * @brief Registers a new traff_http traffic plugin
@@ -624,10 +611,10 @@ static int traffic_traff_http_init(struct traffic_priv * this_) {
  *
  * @return A pointer to a `traffic_priv` structure for the plugin instance
  */
-static struct traffic_priv * traffic_traff_http_new(struct navit *nav, struct traffic_methods *meth,
-        struct attr **attrs, struct callback_list *cbl) {
+static struct traffic_priv *traffic_traff_http_new(struct navit *nav, struct traffic_methods *meth, struct attr **attrs,
+                                                   struct callback_list *cbl) {
     struct traffic_priv *ret;
-    struct attr * attr;
+    struct attr *attr;
 
     dbg(lvl_debug, "enter");
 

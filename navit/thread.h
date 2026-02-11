@@ -63,45 +63,44 @@ extern "C" {
 #include "config.h"
 
 #ifdef HAVE_API_WIN32_BASE
-#undef HAVE_POSIX_THREADS
-#ifdef HAVE_API_WIN32
-#define HAVE_NAVIT_THREADS 1
+#    undef HAVE_POSIX_THREADS
+#    ifdef HAVE_API_WIN32
+#        define HAVE_NAVIT_THREADS 1
+#    else
+#        undef HAVE_NAVIT_THREADS
+#        warning "threads are not supported on this platform, building a single-threaded version"
+#    endif
+#    include <windows.h>
 #else
-#undef HAVE_NAVIT_THREADS
-#warning "threads are not supported on this platform, building a single-threaded version"
+#    define HAVE_POSIX_THREADS 1
+#    define HAVE_NAVIT_THREADS 1
+#    define _GNU_SOURCE
+#    include <pthread.h>
 #endif
-#include <windows.h>
-#else
-#define HAVE_POSIX_THREADS 1
-#define HAVE_NAVIT_THREADS 1
-#define _GNU_SOURCE
-#include <pthread.h>
-#endif
-
 
 #ifdef HAVE_POSIX_THREADS
 
-#define thread pthread_t
-#define thread_lock pthread_rwlock_t
-#define thread_id pthread_t
+#    define thread pthread_t
+#    define thread_lock pthread_rwlock_t
+#    define thread_id pthread_t
 
 struct thread_event_pthread;
 
-#define thread_event struct thread_event_pthread
+#    define thread_event struct thread_event_pthread
 
 #elif HAVE_API_WIN32
 
-#define thread HANDLE
-#define thread_lock HANDLE
-#define thread_id DWORD
-#define thread_event HANDLE
+#    define thread HANDLE
+#    define thread_lock HANDLE
+#    define thread_id DWORD
+#    define thread_event HANDLE
 
 #else
 
-#define thread int
-#define thread_lock int
-#define thread_id int
-#define thread_event int
+#    define thread int
+#    define thread_lock int
+#    define thread_id int
+#    define thread_event int
 
 #endif
 
@@ -120,14 +119,14 @@ struct thread_event_pthread;
  *
  * @return The new thread, or NULL if an error occurred.
  */
-thread *thread_new(int (*main)(void *), void * data, char * name);
+thread *thread_new(int (*main)(void *), void *data, char *name);
 
 /**
  * @brief Frees all resources associated with the thread.
  *
  * If Navit was built without thread support, this is a no-op.
  */
-void thread_destroy(thread* this_);
+void thread_destroy(thread *this_);
 
 /**
  * @brief Pauses the current thread for a set amount of time.
@@ -158,7 +157,7 @@ void thread_exit(int result);
  *
  * @return The thread’s exit value, -1 if an error was encountered.
  */
-int thread_join(thread * this_);
+int thread_join(thread *this_);
 
 /**
  * @brief Returns the ID of the calling thread.
@@ -349,7 +348,6 @@ int thread_lock_try_write(thread_lock *this_);
  * If Navit was built without thread support, this is a no-op.
  */
 void thread_lock_release_write(thread_lock *this_);
-
 
 #ifdef __cplusplus
 }
