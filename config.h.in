@@ -105,3 +105,7 @@
 
 #cmakedefine ENABLE_ROLL 1
 
+#cmakedefine HAVE_PTHREAD 1
+
+#cmakedefine HAVE_SQLITE3 1
+
