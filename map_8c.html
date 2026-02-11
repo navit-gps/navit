@@ -100,12 +100,13 @@ $(document).ready(function(){initNavTree('map_8c.html',''); initResizable(); });
 <p>Contains code that makes navit able to load maps.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="country_8h_source.html">country.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="maptype_8h_source.html">maptype.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="navit_8h_source.html">navit.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="projection_8h_source.html">projection.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="transform_8h_source.html">transform.h</a>&quot;</code><br />
@@ -1516,10 +1517,10 @@ Variables</h2></td></tr>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#abbb9ed4adaef7076bdd82f67fca0fcfd">object_func_ref</a>)<a class="code hl_function" href="xmlconfig_8c.html#aaf5d0d4afa6fc99f63e55be0ca05cce8">navit_object_ref</a>,</div>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#a9930581a52d017db7539640ff6193a84">object_func_unref</a>)<a class="code hl_function" href="xmlconfig_8c.html#a66413cce5610bb877cc25f77803a2e9c">navit_object_unref</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="amap_8c_html_a06f624f20492c8e9e9f3c7eb43b70396"><div class="ttname"><a href="map_8c.html#a06f624f20492c8e9e9f3c7eb43b70396">map_destroy</a></div><div class="ttdeci">void map_destroy(struct map *m)</div><div class="ttdoc">Destroys an opened map.</div><div class="ttdef"><b>Definition</b> map.c:266</div></div>
-<div class="ttc" id="amap_8c_html_a397a9ad42674f121ab88aaafb77a489b"><div class="ttname"><a href="map_8c.html#a397a9ad42674f121ab88aaafb77a489b">map_new</a></div><div class="ttdeci">struct map * map_new(struct attr *parent, struct attr **attrs)</div><div class="ttdoc">Opens a new map.</div><div class="ttdef"><b>Definition</b> map.c:81</div></div>
-<div class="ttc" id="amap_8c_html_a6a56a78da425713d4fe965e724d9e09e"><div class="ttname"><a href="map_8c.html#a6a56a78da425713d4fe965e724d9e09e">map_set_attr</a></div><div class="ttdeci">int map_set_attr(struct map *this_, struct attr *attr)</div><div class="ttdoc">Sets an attribute of a map.</div><div class="ttdef"><b>Definition</b> map.c:144</div></div>
-<div class="ttc" id="amap_8c_html_aea4bb45171274a8b6bd4de3d33606f35"><div class="ttname"><a href="map_8c.html#aea4bb45171274a8b6bd4de3d33606f35">map_get_attr</a></div><div class="ttdeci">int map_get_attr(struct map *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)</div><div class="ttdoc">Gets an attribute from a map.</div><div class="ttdef"><b>Definition</b> map.c:119</div></div>
+<div class="ttc" id="amap_8c_html_a06f624f20492c8e9e9f3c7eb43b70396"><div class="ttname"><a href="map_8c.html#a06f624f20492c8e9e9f3c7eb43b70396">map_destroy</a></div><div class="ttdeci">void map_destroy(struct map *m)</div><div class="ttdoc">Destroys an opened map.</div><div class="ttdef"><b>Definition</b> map.c:269</div></div>
+<div class="ttc" id="amap_8c_html_a397a9ad42674f121ab88aaafb77a489b"><div class="ttname"><a href="map_8c.html#a397a9ad42674f121ab88aaafb77a489b">map_new</a></div><div class="ttdeci">struct map * map_new(struct attr *parent, struct attr **attrs)</div><div class="ttdoc">Opens a new map.</div><div class="ttdef"><b>Definition</b> map.c:84</div></div>
+<div class="ttc" id="amap_8c_html_a6a56a78da425713d4fe965e724d9e09e"><div class="ttname"><a href="map_8c.html#a6a56a78da425713d4fe965e724d9e09e">map_set_attr</a></div><div class="ttdeci">int map_set_attr(struct map *this_, struct attr *attr)</div><div class="ttdoc">Sets an attribute of a map.</div><div class="ttdef"><b>Definition</b> map.c:147</div></div>
+<div class="ttc" id="amap_8c_html_aea4bb45171274a8b6bd4de3d33606f35"><div class="ttname"><a href="map_8c.html#aea4bb45171274a8b6bd4de3d33606f35">map_get_attr</a></div><div class="ttdeci">int map_get_attr(struct map *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)</div><div class="ttdoc">Gets an attribute from a map.</div><div class="ttdef"><b>Definition</b> map.c:122</div></div>
 <div class="ttc" id="axmlconfig_8c_html_a66413cce5610bb877cc25f77803a2e9c"><div class="ttname"><a href="xmlconfig_8c.html#a66413cce5610bb877cc25f77803a2e9c">navit_object_unref</a></div><div class="ttdeci">void * navit_object_unref(struct navit_object *obj)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1289</div></div>
 <div class="ttc" id="axmlconfig_8c_html_aaf5d0d4afa6fc99f63e55be0ca05cce8"><div class="ttname"><a href="xmlconfig_8c.html#aaf5d0d4afa6fc99f63e55be0ca05cce8">navit_object_ref</a></div><div class="ttdeci">struct navit_object * navit_object_ref(struct navit_object *obj)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1283</div></div>
 <div class="ttc" id="axmlconfig_8h_html_a080f3b0bde669c292c4256ac394b2cbe"><div class="ttname"><a href="xmlconfig_8h.html#a080f3b0bde669c292c4256ac394b2cbe">object_func_iter_new</a></div><div class="ttdeci">struct attr_iter *(* object_func_iter_new)(void *)</div><div class="ttdef"><b>Definition</b> xmlconfig.h:61</div></div>

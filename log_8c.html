@@ -111,7 +111,6 @@ $(document).ready(function(){initNavTree('log_8c.html',''); initResizable(); });
 <code>#include &lt;glib.h&gt;</code><br />
 <code>#include &lt;stdarg.h&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;time.h&gt;</code><br />
 <code>#include &lt;errno.h&gt;</code><br />
@@ -1021,8 +1020,8 @@ Variables</h2></td></tr>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#abbb9ed4adaef7076bdd82f67fca0fcfd">object_func_ref</a>)<a class="code hl_function" href="xmlconfig_8c.html#aaf5d0d4afa6fc99f63e55be0ca05cce8">navit_object_ref</a>,</div>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#a9930581a52d017db7539640ff6193a84">object_func_unref</a>)<a class="code hl_function" href="xmlconfig_8c.html#a66413cce5610bb877cc25f77803a2e9c">navit_object_unref</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="alog_8c_html_a551fa9151db927e9394c51bd9c019e32"><div class="ttname"><a href="log_8c.html#a551fa9151db927e9394c51bd9c019e32">log_destroy</a></div><div class="ttdeci">void log_destroy(struct log *this_)</div><div class="ttdoc">Destroys a log object and frees up its memory.</div><div class="ttdef"><b>Definition</b> log.c:529</div></div>
-<div class="ttc" id="alog_8c_html_a95ee62799599a7e6b1b9fc29968dfae8"><div class="ttname"><a href="log_8c.html#a95ee62799599a7e6b1b9fc29968dfae8">log_new</a></div><div class="ttdeci">struct log * log_new(struct attr *parent, struct attr **attrs)</div><div class="ttdoc">Creates and initializes a new log object.</div><div class="ttdef"><b>Definition</b> log.c:362</div></div>
+<div class="ttc" id="alog_8c_html_a551fa9151db927e9394c51bd9c019e32"><div class="ttname"><a href="log_8c.html#a551fa9151db927e9394c51bd9c019e32">log_destroy</a></div><div class="ttdeci">void log_destroy(struct log *this_)</div><div class="ttdoc">Destroys a log object and frees up its memory.</div><div class="ttdef"><b>Definition</b> log.c:528</div></div>
+<div class="ttc" id="alog_8c_html_a95ee62799599a7e6b1b9fc29968dfae8"><div class="ttname"><a href="log_8c.html#a95ee62799599a7e6b1b9fc29968dfae8">log_new</a></div><div class="ttdeci">struct log * log_new(struct attr *parent, struct attr **attrs)</div><div class="ttdoc">Creates and initializes a new log object.</div><div class="ttdef"><b>Definition</b> log.c:361</div></div>
 <div class="ttc" id="axmlconfig_8c_html_a055a1d4894f2baa57c0c26ef73c583ab"><div class="ttname"><a href="xmlconfig_8c.html#a055a1d4894f2baa57c0c26ef73c583ab">navit_object_set_attr</a></div><div class="ttdeci">int navit_object_set_attr(struct navit_object *obj, struct attr *attr)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1345</div></div>
 <div class="ttc" id="axmlconfig_8c_html_a0b92fc24021de74b6f392713a6990853"><div class="ttname"><a href="xmlconfig_8c.html#a0b92fc24021de74b6f392713a6990853">navit_object_remove_attr</a></div><div class="ttdeci">int navit_object_remove_attr(struct navit_object *obj, struct attr *attr)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1374</div></div>
 <div class="ttc" id="axmlconfig_8c_html_a23961ccaf9ae2f89b0397fe64953dcb3"><div class="ttname"><a href="xmlconfig_8c.html#a23961ccaf9ae2f89b0397fe64953dcb3">navit_object_get_attr</a></div><div class="ttdeci">int navit_object_get_attr(struct navit_object *obj, enum attr_type type, struct attr *attr, struct attr_iter *iter)</div><div class="ttdoc">Generic get function.</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1336</div></div>

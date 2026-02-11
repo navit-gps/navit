@@ -97,17 +97,18 @@ $(document).ready(function(){initNavTree('osd_8c.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="osd_8h_source.html">osd.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="color_8h_source.html">color.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="command_8h_source.html">command.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="navit_8h_source.html">navit.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a>&quot;</code><br />
 <code>#include &lt;glib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -923,10 +924,10 @@ Variables</h2></td></tr>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#abbb9ed4adaef7076bdd82f67fca0fcfd">object_func_ref</a>)<a class="code hl_function" href="xmlconfig_8c.html#aaf5d0d4afa6fc99f63e55be0ca05cce8">navit_object_ref</a>,</div>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#a9930581a52d017db7539640ff6193a84">object_func_unref</a>)<a class="code hl_function" href="xmlconfig_8c.html#a66413cce5610bb877cc25f77803a2e9c">navit_object_unref</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="aosd_8c_html_a5dbde50e33837184d99b5a32f2313990"><div class="ttname"><a href="osd_8c.html#a5dbde50e33837184d99b5a32f2313990">osd_new</a></div><div class="ttdeci">struct osd * osd_new(struct attr *parent, struct attr **attrs)</div><div class="ttdef"><b>Definition</b> osd.c:43</div></div>
-<div class="ttc" id="aosd_8c_html_aac49f97b5a2c83888fb509638e9aa1d2"><div class="ttname"><a href="osd_8c.html#aac49f97b5a2c83888fb509638e9aa1d2">osd_set_attr</a></div><div class="ttdeci">int osd_set_attr(struct osd *osd, struct attr *attr)</div><div class="ttdef"><b>Definition</b> osd.c:86</div></div>
-<div class="ttc" id="aosd_8c_html_adb85c6bb843f617e8d8a33b7b25f139a"><div class="ttname"><a href="osd_8c.html#adb85c6bb843f617e8d8a33b7b25f139a">osd_destroy</a></div><div class="ttdeci">static void osd_destroy(struct osd *osd)</div><div class="ttdef"><b>Definition</b> osd.c:98</div></div>
-<div class="ttc" id="aosd_8c_html_af06e33c03ece06ebd596ca8014784a09"><div class="ttname"><a href="osd_8c.html#af06e33c03ece06ebd596ca8014784a09">osd_get_attr</a></div><div class="ttdeci">int osd_get_attr(struct osd *osd, enum attr_type type, struct attr *attr, struct attr_iter *iter)</div><div class="ttdef"><b>Definition</b> osd.c:74</div></div>
+<div class="ttc" id="aosd_8c_html_a5dbde50e33837184d99b5a32f2313990"><div class="ttname"><a href="osd_8c.html#a5dbde50e33837184d99b5a32f2313990">osd_new</a></div><div class="ttdeci">struct osd * osd_new(struct attr *parent, struct attr **attrs)</div><div class="ttdef"><b>Definition</b> osd.c:44</div></div>
+<div class="ttc" id="aosd_8c_html_aac49f97b5a2c83888fb509638e9aa1d2"><div class="ttname"><a href="osd_8c.html#aac49f97b5a2c83888fb509638e9aa1d2">osd_set_attr</a></div><div class="ttdeci">int osd_set_attr(struct osd *osd, struct attr *attr)</div><div class="ttdef"><b>Definition</b> osd.c:87</div></div>
+<div class="ttc" id="aosd_8c_html_adb85c6bb843f617e8d8a33b7b25f139a"><div class="ttname"><a href="osd_8c.html#adb85c6bb843f617e8d8a33b7b25f139a">osd_destroy</a></div><div class="ttdeci">static void osd_destroy(struct osd *osd)</div><div class="ttdef"><b>Definition</b> osd.c:99</div></div>
+<div class="ttc" id="aosd_8c_html_af06e33c03ece06ebd596ca8014784a09"><div class="ttname"><a href="osd_8c.html#af06e33c03ece06ebd596ca8014784a09">osd_get_attr</a></div><div class="ttdeci">int osd_get_attr(struct osd *osd, enum attr_type type, struct attr *attr, struct attr_iter *iter)</div><div class="ttdef"><b>Definition</b> osd.c:75</div></div>
 <div class="ttc" id="axmlconfig_8c_html_a0b92fc24021de74b6f392713a6990853"><div class="ttname"><a href="xmlconfig_8c.html#a0b92fc24021de74b6f392713a6990853">navit_object_remove_attr</a></div><div class="ttdeci">int navit_object_remove_attr(struct navit_object *obj, struct attr *attr)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1374</div></div>
 <div class="ttc" id="axmlconfig_8c_html_a3fc27492e72f7a53a584d328a5cfc802"><div class="ttname"><a href="xmlconfig_8c.html#a3fc27492e72f7a53a584d328a5cfc802">navit_object_attr_iter_destroy</a></div><div class="ttdeci">void navit_object_attr_iter_destroy(struct attr_iter *iter)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1307</div></div>
 <div class="ttc" id="axmlconfig_8c_html_a54906c354282fe9a135e15400e86742e"><div class="ttname"><a href="xmlconfig_8c.html#a54906c354282fe9a135e15400e86742e">navit_object_attr_iter_new</a></div><div class="ttdeci">struct attr_iter * navit_object_attr_iter_new(void *unused)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1303</div></div>

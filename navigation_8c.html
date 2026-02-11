@@ -99,6 +99,7 @@ $(document).ready(function(){initNavTree('navigation_8c.html',''); initResizable
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="navigation_8h_source.html">navigation.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
@@ -106,7 +107,6 @@ $(document).ready(function(){initNavTree('navigation_8c.html',''); initResizable
 <code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="linguistics_8h_source.html">linguistics.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="map_8h_source.html">map.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="mapset_8h_source.html">mapset.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="navit_8h_source.html">navit.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="navit__nls_8h_source.html">navit_nls.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
@@ -120,7 +120,6 @@ $(document).ready(function(){initNavTree('navigation_8c.html',''); initResizable
 <code>#include &quot;<a class="el" href="xmlconfig_8h_source.html">xmlconfig.h</a>&quot;</code><br />
 <code>#include &lt;ctype.h&gt;</code><br />
 <code>#include &lt;glib.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
@@ -413,11 +412,7 @@ Variables</h2></td></tr>
 <tr class="separator:a67657ae1ed8eaea55d26b24c019d66bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Navit, a modular navigation system. Copyright (C) 2005-2015 Navit Team</p>
-<p>This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.</p>
-<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
-<p>You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</p>
-<p>Generates navigation messages for a calculated route. </p>
+<div class="textblock"><p>Generates navigation messages for a calculated route. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="acff11afeca273ec6cc9d1f1f077fc99c" name="acff11afeca273ec6cc9d1f1f077fc99c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acff11afeca273ec6cc9d1f1f077fc99c">&#9670;&#160;</a></span>LAST_DISTANCE</h2>
@@ -3886,10 +3881,10 @@ in..., then turn right" </td></tr>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#abbb9ed4adaef7076bdd82f67fca0fcfd">object_func_ref</a>)<a class="code hl_function" href="xmlconfig_8c.html#aaf5d0d4afa6fc99f63e55be0ca05cce8">navit_object_ref</a>,</div>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#a9930581a52d017db7539640ff6193a84">object_func_unref</a>)<a class="code hl_function" href="xmlconfig_8c.html#a66413cce5610bb877cc25f77803a2e9c">navit_object_unref</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="anavigation_8c_html_a64ee955192b27aefc5d6a7a80cb7f1a6"><div class="ttname"><a href="navigation_8c.html#a64ee955192b27aefc5d6a7a80cb7f1a6">navigation_new</a></div><div class="ttdeci">struct navigation * navigation_new(struct attr *parent, struct attr **attrs)</div><div class="ttdef"><b>Definition</b> navigation.c:778</div></div>
-<div class="ttc" id="anavigation_8c_html_ad3dfa1aabdcb3ee153eddbb91d5c6782"><div class="ttname"><a href="navigation_8c.html#ad3dfa1aabdcb3ee153eddbb91d5c6782">navigation_destroy</a></div><div class="ttdeci">void navigation_destroy(struct navigation *this_)</div><div class="ttdef"><b>Definition</b> navigation.c:3819</div></div>
-<div class="ttc" id="anavigation_8c_html_af44538ba61ffd85df204d405749f6029"><div class="ttname"><a href="navigation_8c.html#af44538ba61ffd85df204d405749f6029">navigation_set_attr</a></div><div class="ttdeci">int navigation_set_attr(struct navigation *this_, struct attr *attr)</div><div class="ttdef"><b>Definition</b> navigation.c:764</div></div>
-<div class="ttc" id="anavigation_8c_html_af52411918a519cbfb8ee3dd4be14b178"><div class="ttname"><a href="navigation_8c.html#af52411918a519cbfb8ee3dd4be14b178">navigation_get_attr</a></div><div class="ttdeci">int navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)</div><div class="ttdef"><b>Definition</b> navigation.c:712</div></div>
+<div class="ttc" id="anavigation_8c_html_a64ee955192b27aefc5d6a7a80cb7f1a6"><div class="ttname"><a href="navigation_8c.html#a64ee955192b27aefc5d6a7a80cb7f1a6">navigation_new</a></div><div class="ttdeci">struct navigation * navigation_new(struct attr *parent, struct attr **attrs)</div><div class="ttdef"><b>Definition</b> navigation.c:779</div></div>
+<div class="ttc" id="anavigation_8c_html_ad3dfa1aabdcb3ee153eddbb91d5c6782"><div class="ttname"><a href="navigation_8c.html#ad3dfa1aabdcb3ee153eddbb91d5c6782">navigation_destroy</a></div><div class="ttdeci">void navigation_destroy(struct navigation *this_)</div><div class="ttdef"><b>Definition</b> navigation.c:3820</div></div>
+<div class="ttc" id="anavigation_8c_html_af44538ba61ffd85df204d405749f6029"><div class="ttname"><a href="navigation_8c.html#af44538ba61ffd85df204d405749f6029">navigation_set_attr</a></div><div class="ttdeci">int navigation_set_attr(struct navigation *this_, struct attr *attr)</div><div class="ttdef"><b>Definition</b> navigation.c:765</div></div>
+<div class="ttc" id="anavigation_8c_html_af52411918a519cbfb8ee3dd4be14b178"><div class="ttname"><a href="navigation_8c.html#af52411918a519cbfb8ee3dd4be14b178">navigation_get_attr</a></div><div class="ttdeci">int navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)</div><div class="ttdef"><b>Definition</b> navigation.c:713</div></div>
 <div class="ttc" id="axmlconfig_8c_html_a0b92fc24021de74b6f392713a6990853"><div class="ttname"><a href="xmlconfig_8c.html#a0b92fc24021de74b6f392713a6990853">navit_object_remove_attr</a></div><div class="ttdeci">int navit_object_remove_attr(struct navit_object *obj, struct attr *attr)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1374</div></div>
 <div class="ttc" id="axmlconfig_8c_html_a3fc27492e72f7a53a584d328a5cfc802"><div class="ttname"><a href="xmlconfig_8c.html#a3fc27492e72f7a53a584d328a5cfc802">navit_object_attr_iter_destroy</a></div><div class="ttdeci">void navit_object_attr_iter_destroy(struct attr_iter *iter)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1307</div></div>
 <div class="ttc" id="axmlconfig_8c_html_a54906c354282fe9a135e15400e86742e"><div class="ttname"><a href="xmlconfig_8c.html#a54906c354282fe9a135e15400e86742e">navit_object_attr_iter_new</a></div><div class="ttdeci">struct attr_iter * navit_object_attr_iter_new(void *unused)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1303</div></div>
@@ -3938,10 +3933,10 @@ in..., then turn right" </td></tr>
 <div class="line">    <a class="code hl_function" href="navigation_8c.html#ae273bcdc7c3b6d76e7d0c72c362b0b93">navigation_map_item_attr_rewind</a>,</div>
 <div class="line">    <a class="code hl_function" href="navigation_8c.html#a83e3736ec11941100decd7fa3b885d5d">navigation_map_item_attr_get</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="anavigation_8c_html_a24ad9cf499ab3cff79f56fd40f5008e0"><div class="ttname"><a href="navigation_8c.html#a24ad9cf499ab3cff79f56fd40f5008e0">navigation_map_item_coord_rewind</a></div><div class="ttdeci">static void navigation_map_item_coord_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> navigation.c:3942</div></div>
-<div class="ttc" id="anavigation_8c_html_a83e3736ec11941100decd7fa3b885d5d"><div class="ttname"><a href="navigation_8c.html#a83e3736ec11941100decd7fa3b885d5d">navigation_map_item_attr_get</a></div><div class="ttdeci">static int navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> navigation.c:3947</div></div>
-<div class="ttc" id="anavigation_8c_html_ae051fedc1b8514b846530dcc9f666653"><div class="ttname"><a href="navigation_8c.html#ae051fedc1b8514b846530dcc9f666653">navigation_map_item_coord_get</a></div><div class="ttdeci">static int navigation_map_item_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition</b> navigation.c:3933</div></div>
-<div class="ttc" id="anavigation_8c_html_ae273bcdc7c3b6d76e7d0c72c362b0b93"><div class="ttname"><a href="navigation_8c.html#ae273bcdc7c3b6d76e7d0c72c362b0b93">navigation_map_item_attr_rewind</a></div><div class="ttdeci">static void navigation_map_item_attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> navigation.c:4165</div></div>
+<div class="ttc" id="anavigation_8c_html_a24ad9cf499ab3cff79f56fd40f5008e0"><div class="ttname"><a href="navigation_8c.html#a24ad9cf499ab3cff79f56fd40f5008e0">navigation_map_item_coord_rewind</a></div><div class="ttdeci">static void navigation_map_item_coord_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> navigation.c:3943</div></div>
+<div class="ttc" id="anavigation_8c_html_a83e3736ec11941100decd7fa3b885d5d"><div class="ttname"><a href="navigation_8c.html#a83e3736ec11941100decd7fa3b885d5d">navigation_map_item_attr_get</a></div><div class="ttdeci">static int navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> navigation.c:3948</div></div>
+<div class="ttc" id="anavigation_8c_html_ae051fedc1b8514b846530dcc9f666653"><div class="ttname"><a href="navigation_8c.html#ae051fedc1b8514b846530dcc9f666653">navigation_map_item_coord_get</a></div><div class="ttdeci">static int navigation_map_item_coord_get(void *priv_data, struct coord *c, int count)</div><div class="ttdef"><b>Definition</b> navigation.c:3934</div></div>
+<div class="ttc" id="anavigation_8c_html_ae273bcdc7c3b6d76e7d0c72c362b0b93"><div class="ttname"><a href="navigation_8c.html#ae273bcdc7c3b6d76e7d0c72c362b0b93">navigation_map_item_attr_rewind</a></div><div class="ttdeci">static void navigation_map_item_attr_rewind(void *priv_data)</div><div class="ttdef"><b>Definition</b> navigation.c:4166</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="navigation_8c.html#a580509b3260696b3d8f1a379f13ac420">navigation_map_rect_new()</a>.</p>
 
@@ -3978,11 +3973,11 @@ in..., then turn right" </td></tr>
 <div class="line">    NULL,</div>
 <div class="line">    NULL,</div>
 <div class="line">}</div>
-<div class="ttc" id="anavigation_8c_html_a1488b6843abdcc02dd7f841a13da2a44"><div class="ttname"><a href="navigation_8c.html#a1488b6843abdcc02dd7f841a13da2a44">navigation_map_get_item_byid</a></div><div class="ttdeci">static struct item * navigation_map_get_item_byid(struct map_rect_priv *priv, int id_hi, int id_lo)</div><div class="ttdoc">Gets the item with the specified ID from the navigation map.</div><div class="ttdef"><b>Definition</b> navigation.c:4301</div></div>
-<div class="ttc" id="anavigation_8c_html_a1926b2620898cd9c7c11348aaaea78a1"><div class="ttname"><a href="navigation_8c.html#a1926b2620898cd9c7c11348aaaea78a1">navigation_map_get_item</a></div><div class="ttdeci">static struct item * navigation_map_get_item(struct map_rect_priv *priv)</div><div class="ttdoc">Gets the next item from the navigation map.</div><div class="ttdef"><b>Definition</b> navigation.c:4225</div></div>
-<div class="ttc" id="anavigation_8c_html_a580509b3260696b3d8f1a379f13ac420"><div class="ttname"><a href="navigation_8c.html#a580509b3260696b3d8f1a379f13ac420">navigation_map_rect_new</a></div><div class="ttdeci">static struct map_rect_priv * navigation_map_rect_new(struct map_priv *priv, struct map_selection *sel)</div><div class="ttdef"><b>Definition</b> navigation.c:4187</div></div>
-<div class="ttc" id="anavigation_8c_html_ae80917687213d8060b8cb81d6dc2bff6"><div class="ttname"><a href="navigation_8c.html#ae80917687213d8060b8cb81d6dc2bff6">navigation_map_destroy</a></div><div class="ttdeci">static void navigation_map_destroy(struct map_priv *priv)</div><div class="ttdef"><b>Definition</b> navigation.c:4178</div></div>
-<div class="ttc" id="anavigation_8c_html_af19a01456ab172b7134224735257dfd8"><div class="ttname"><a href="navigation_8c.html#af19a01456ab172b7134224735257dfd8">navigation_map_rect_destroy</a></div><div class="ttdeci">static void navigation_map_rect_destroy(struct map_rect_priv *priv)</div><div class="ttdef"><b>Definition</b> navigation.c:4200</div></div>
+<div class="ttc" id="anavigation_8c_html_a1488b6843abdcc02dd7f841a13da2a44"><div class="ttname"><a href="navigation_8c.html#a1488b6843abdcc02dd7f841a13da2a44">navigation_map_get_item_byid</a></div><div class="ttdeci">static struct item * navigation_map_get_item_byid(struct map_rect_priv *priv, int id_hi, int id_lo)</div><div class="ttdoc">Gets the item with the specified ID from the navigation map.</div><div class="ttdef"><b>Definition</b> navigation.c:4302</div></div>
+<div class="ttc" id="anavigation_8c_html_a1926b2620898cd9c7c11348aaaea78a1"><div class="ttname"><a href="navigation_8c.html#a1926b2620898cd9c7c11348aaaea78a1">navigation_map_get_item</a></div><div class="ttdeci">static struct item * navigation_map_get_item(struct map_rect_priv *priv)</div><div class="ttdoc">Gets the next item from the navigation map.</div><div class="ttdef"><b>Definition</b> navigation.c:4226</div></div>
+<div class="ttc" id="anavigation_8c_html_a580509b3260696b3d8f1a379f13ac420"><div class="ttname"><a href="navigation_8c.html#a580509b3260696b3d8f1a379f13ac420">navigation_map_rect_new</a></div><div class="ttdeci">static struct map_rect_priv * navigation_map_rect_new(struct map_priv *priv, struct map_selection *sel)</div><div class="ttdef"><b>Definition</b> navigation.c:4188</div></div>
+<div class="ttc" id="anavigation_8c_html_ae80917687213d8060b8cb81d6dc2bff6"><div class="ttname"><a href="navigation_8c.html#ae80917687213d8060b8cb81d6dc2bff6">navigation_map_destroy</a></div><div class="ttdeci">static void navigation_map_destroy(struct map_priv *priv)</div><div class="ttdef"><b>Definition</b> navigation.c:4179</div></div>
+<div class="ttc" id="anavigation_8c_html_af19a01456ab172b7134224735257dfd8"><div class="ttname"><a href="navigation_8c.html#af19a01456ab172b7134224735257dfd8">navigation_map_rect_destroy</a></div><div class="ttdeci">static void navigation_map_rect_destroy(struct map_rect_priv *priv)</div><div class="ttdef"><b>Definition</b> navigation.c:4201</div></div>
 <div class="ttc" id="aprojection_8h_html_a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064"><div class="ttname"><a href="projection_8h.html#a380c9c985eef434d23f9a7b95a52cbc1a9cbc062a5d78cd25a4ffbf49619f0064">projection_mg</a></div><div class="ttdeci">@ projection_mg</div><div class="ttdef"><b>Definition</b> projection.h:25</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="navigation_8c.html#a796b6f383b108e713965beef98493a48">navigation_map_new()</a>.</p>

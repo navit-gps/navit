@@ -97,6 +97,7 @@ $(document).ready(function(){initNavTree('vehicle_8c.html',''); initResizable();
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="vehicle_8h_source.html">vehicle.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="attr_8h_source.html">attr.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="callback_8h_source.html">callback.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="color_8h_source.html">color.h</a>&quot;</code><br />
 <code>#include &quot;config.h&quot;</code><br />
@@ -104,9 +105,10 @@ $(document).ready(function(){initNavTree('vehicle_8c.html',''); initResizable();
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="event_8h_source.html">event.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="graphics_8h_source.html">graphics.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="item__type__def_8h_source.html">item_type_def.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="layout_8h_source.html">layout.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="log_8h_source.html">log.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="navit_8h_source.html">navit.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="navit__nls_8h_source.html">navit_nls.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="point_8h_source.html">point.h</a>&quot;</code><br />
@@ -118,7 +120,6 @@ $(document).ready(function(){initNavTree('vehicle_8c.html',''); initResizable();
 <code>#include &lt;math.h&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;time.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -995,14 +996,14 @@ Variables</h2></td></tr>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#abbb9ed4adaef7076bdd82f67fca0fcfd">object_func_ref</a>)<a class="code hl_function" href="xmlconfig_8c.html#aaf5d0d4afa6fc99f63e55be0ca05cce8">navit_object_ref</a>,</div>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#a9930581a52d017db7539640ff6193a84">object_func_unref</a>)<a class="code hl_function" href="xmlconfig_8c.html#a66413cce5610bb877cc25f77803a2e9c">navit_object_unref</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="avehicle_8c_html_a5f940ec1c91e1d2bc0e8872a8fe6a45c"><div class="ttname"><a href="vehicle_8c.html#a5f940ec1c91e1d2bc0e8872a8fe6a45c">vehicle_set_attr</a></div><div class="ttdeci">int vehicle_set_attr(struct vehicle *this_, struct attr *attr)</div><div class="ttdef"><b>Definition</b> vehicle.c:222</div></div>
-<div class="ttc" id="avehicle_8c_html_a7d56f4d095d896034979dbd18699af13"><div class="ttname"><a href="vehicle_8c.html#a7d56f4d095d896034979dbd18699af13">vehicle_remove_attr</a></div><div class="ttdeci">int vehicle_remove_attr(struct vehicle *this_, struct attr *attr)</div><div class="ttdoc">Generic remove function.</div><div class="ttdef"><b>Definition</b> vehicle.c:275</div></div>
-<div class="ttc" id="avehicle_8c_html_a85f330e1ac6fbc2f998e9b5da61d4c4d"><div class="ttname"><a href="vehicle_8c.html#a85f330e1ac6fbc2f998e9b5da61d4c4d">vehicle_attr_iter_destroy</a></div><div class="ttdeci">void vehicle_attr_iter_destroy(struct attr_iter *iter)</div><div class="ttdef"><b>Definition</b> vehicle.c:187</div></div>
-<div class="ttc" id="avehicle_8c_html_aa5fc36fa2f986301722aaed249a05db0"><div class="ttname"><a href="vehicle_8c.html#aa5fc36fa2f986301722aaed249a05db0">vehicle_attr_iter_new</a></div><div class="ttdeci">struct attr_iter * vehicle_attr_iter_new(void *unused)</div><div class="ttdef"><b>Definition</b> vehicle.c:178</div></div>
-<div class="ttc" id="avehicle_8c_html_aa8269db631d0500ef0368b8373d35b7e"><div class="ttname"><a href="vehicle_8c.html#aa8269db631d0500ef0368b8373d35b7e">vehicle_new</a></div><div class="ttdeci">struct vehicle * vehicle_new(struct attr *parent, struct attr **attrs)</div><div class="ttdoc">Creates a new vehicle.</div><div class="ttdef"><b>Definition</b> vehicle.c:101</div></div>
-<div class="ttc" id="avehicle_8c_html_aa90d6b5f10e041eb3e7d627040d716ef"><div class="ttname"><a href="vehicle_8c.html#aa90d6b5f10e041eb3e7d627040d716ef">vehicle_destroy</a></div><div class="ttdeci">void vehicle_destroy(struct vehicle *this_)</div><div class="ttdoc">Destroys a vehicle.</div><div class="ttdef"><b>Definition</b> vehicle.c:158</div></div>
-<div class="ttc" id="avehicle_8c_html_ab577c5088da819c7a9d6beb98a0f1e90"><div class="ttname"><a href="vehicle_8c.html#ab577c5088da819c7a9d6beb98a0f1e90">vehicle_get_attr</a></div><div class="ttdeci">int vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)</div><div class="ttdef"><b>Definition</b> vehicle.c:201</div></div>
-<div class="ttc" id="avehicle_8c_html_ae64bdc4e1acf7c58034e288545c0d4fe"><div class="ttname"><a href="vehicle_8c.html#ae64bdc4e1acf7c58034e288545c0d4fe">vehicle_add_attr</a></div><div class="ttdeci">int vehicle_add_attr(struct vehicle *this_, struct attr *attr)</div><div class="ttdef"><b>Definition</b> vehicle.c:246</div></div>
+<div class="ttc" id="avehicle_8c_html_a5f940ec1c91e1d2bc0e8872a8fe6a45c"><div class="ttname"><a href="vehicle_8c.html#a5f940ec1c91e1d2bc0e8872a8fe6a45c">vehicle_set_attr</a></div><div class="ttdeci">int vehicle_set_attr(struct vehicle *this_, struct attr *attr)</div><div class="ttdef"><b>Definition</b> vehicle.c:226</div></div>
+<div class="ttc" id="avehicle_8c_html_a7d56f4d095d896034979dbd18699af13"><div class="ttname"><a href="vehicle_8c.html#a7d56f4d095d896034979dbd18699af13">vehicle_remove_attr</a></div><div class="ttdeci">int vehicle_remove_attr(struct vehicle *this_, struct attr *attr)</div><div class="ttdoc">Generic remove function.</div><div class="ttdef"><b>Definition</b> vehicle.c:279</div></div>
+<div class="ttc" id="avehicle_8c_html_a85f330e1ac6fbc2f998e9b5da61d4c4d"><div class="ttname"><a href="vehicle_8c.html#a85f330e1ac6fbc2f998e9b5da61d4c4d">vehicle_attr_iter_destroy</a></div><div class="ttdeci">void vehicle_attr_iter_destroy(struct attr_iter *iter)</div><div class="ttdef"><b>Definition</b> vehicle.c:191</div></div>
+<div class="ttc" id="avehicle_8c_html_aa5fc36fa2f986301722aaed249a05db0"><div class="ttname"><a href="vehicle_8c.html#aa5fc36fa2f986301722aaed249a05db0">vehicle_attr_iter_new</a></div><div class="ttdeci">struct attr_iter * vehicle_attr_iter_new(void *unused)</div><div class="ttdef"><b>Definition</b> vehicle.c:182</div></div>
+<div class="ttc" id="avehicle_8c_html_aa8269db631d0500ef0368b8373d35b7e"><div class="ttname"><a href="vehicle_8c.html#aa8269db631d0500ef0368b8373d35b7e">vehicle_new</a></div><div class="ttdeci">struct vehicle * vehicle_new(struct attr *parent, struct attr **attrs)</div><div class="ttdoc">Creates a new vehicle.</div><div class="ttdef"><b>Definition</b> vehicle.c:105</div></div>
+<div class="ttc" id="avehicle_8c_html_aa90d6b5f10e041eb3e7d627040d716ef"><div class="ttname"><a href="vehicle_8c.html#aa90d6b5f10e041eb3e7d627040d716ef">vehicle_destroy</a></div><div class="ttdeci">void vehicle_destroy(struct vehicle *this_)</div><div class="ttdoc">Destroys a vehicle.</div><div class="ttdef"><b>Definition</b> vehicle.c:162</div></div>
+<div class="ttc" id="avehicle_8c_html_ab577c5088da819c7a9d6beb98a0f1e90"><div class="ttname"><a href="vehicle_8c.html#ab577c5088da819c7a9d6beb98a0f1e90">vehicle_get_attr</a></div><div class="ttdeci">int vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)</div><div class="ttdef"><b>Definition</b> vehicle.c:205</div></div>
+<div class="ttc" id="avehicle_8c_html_ae64bdc4e1acf7c58034e288545c0d4fe"><div class="ttname"><a href="vehicle_8c.html#ae64bdc4e1acf7c58034e288545c0d4fe">vehicle_add_attr</a></div><div class="ttdeci">int vehicle_add_attr(struct vehicle *this_, struct attr *attr)</div><div class="ttdef"><b>Definition</b> vehicle.c:250</div></div>
 <div class="ttc" id="axmlconfig_8c_html_a66413cce5610bb877cc25f77803a2e9c"><div class="ttname"><a href="xmlconfig_8c.html#a66413cce5610bb877cc25f77803a2e9c">navit_object_unref</a></div><div class="ttdeci">void * navit_object_unref(struct navit_object *obj)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1289</div></div>
 <div class="ttc" id="axmlconfig_8c_html_aaf5d0d4afa6fc99f63e55be0ca05cce8"><div class="ttname"><a href="xmlconfig_8c.html#aaf5d0d4afa6fc99f63e55be0ca05cce8">navit_object_ref</a></div><div class="ttdeci">struct navit_object * navit_object_ref(struct navit_object *obj)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1283</div></div>
 <div class="ttc" id="axmlconfig_8h_html_a080f3b0bde669c292c4256ac394b2cbe"><div class="ttname"><a href="xmlconfig_8h.html#a080f3b0bde669c292c4256ac394b2cbe">object_func_iter_new</a></div><div class="ttdeci">struct attr_iter *(* object_func_iter_new)(void *)</div><div class="ttdef"><b>Definition</b> xmlconfig.h:61</div></div>
