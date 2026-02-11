@@ -183,8 +183,10 @@ Navigation</text></img>
 Waypoint</text></img>
 				<img cond='navit.waypoints_flag &amp;&amp; (navit.route.route_status&amp;1)' src='gui_stop' onclick='navit.route_remove_next_waypoint()'><text>Drop next
 Waypoint</text></img>
+				<!-- Driver Break plugin menu (enable when plugin/driver_break is built)
 				<img src='gui_settings' onclick='navit.driver_break_configure_intervals()'><text>Configure Driver Break Intervals</text></img>
 				<img src='gui_settings' onclick='navit.driver_break_configure_overnight()'><text>Configure Overnight Stops</text></img>
+				-->
 			</a>
 			<a name='Map Point'><text>Map Point</text>
 				<script>position(click_coord_geo,_("Map Point"),8|16|32|64|256)</script>
@@ -253,8 +255,9 @@ Waypoint</text></img>
 		https://navit.readthedocs.io/en/latest/user/configuration/OSD.html -->
 		<osd enabled="no" type="compass"/>
 		<osd enabled="no" type="navigation_next_turn"/>
-		<!-- Driver Break plugin OSD - registers menu commands (driver_break_configure_intervals, etc.) -->
+		<!-- Driver Break plugin OSD (enable when plugin/driver_break is built)
 		<osd enabled="yes" type="driver_break"/>
+		-->
 		<!-- APRS plugin OSD - registers menu commands (setting_aprs, aprs_freq_*, etc.) -->
 		<osd enabled="yes" type="aprs"/>
 

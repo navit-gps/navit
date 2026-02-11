@@ -6,20 +6,9 @@ Navit includes several plugins that extend its functionality:
 .. toctree::
    :maxdepth: 1
 
-   driver_break
-   driver_break_test_results
    aprs
    aprs_test_results
    aprs_sdr
-
-Driver Break Plugin
--------------------
-
-The Driver Break plugin provides dynamic rest period management for vehicles, with support for both cars and trucks. It tracks driving time, suggests rest stops based on OpenStreetMap data, discovers nearby Points of Interest (POIs), and ensures compliance with EU Regulation EC 561/2006 for commercial vehicles.
-
-See :doc:`driver_break` for complete documentation.
-
-Test results: :doc:`driver_break_test_results`
 
 APRS Plugin
 -----------
