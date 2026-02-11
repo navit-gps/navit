@@ -102,7 +102,7 @@ int main(int argc, char **argv) {
     }
 
     /* convert the longitude to an integer */
-    intlng = lng * 6371000.0 * M_PI / 180;
+    intlng = lng * 6371000.0 * G_PI / 180;
 
     /* aparently if inlng < 0 , inlng needs to be inverted and a - sign used in the output */
     strcpy(lngsign, "0x");
@@ -112,7 +112,7 @@ int main(int argc, char **argv) {
     }
 
     /* and the same for the latitude */
-    intlat = log(tan(M_PI_4 + lat * M_PI / 360)) * 6371000.0;
+    intlat = log(tan(G_PI_4 + lat * G_PI / 360)) * 6371000.0;
 
     /* aparently if inlat < 0 , inlat needs to be inverted and a - sign used in the output */
     strcpy(latsign, "0x");

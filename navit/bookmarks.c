@@ -23,7 +23,6 @@
 #include "config.h"
 #include "coord.h"
 #include "debug.h"
-#include "file.h"
 #include "map.h"
 #include "navit.h"
 #include "navit_nls.h"
@@ -41,6 +40,7 @@
 /* FIXME: Move this to support directory */
 #ifdef _MSC_VER
 #    include <windows.h>
+
 static int ftruncate(int fd, __int64 length) {
     HANDLE fh = (HANDLE)_get_osfhandle(fd);
     if (!fh || _lseeki64(fd, length, SEEK_SET)) {

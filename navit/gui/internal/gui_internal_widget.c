@@ -1,5 +1,4 @@
 #include "gui_internal_widget.h"
-#include "callback.h"
 #include "color.h"
 #include "coord.h"
 #include "debug.h"
@@ -10,6 +9,7 @@
 #include "navit_nls.h"
 #include "point.h"
 #include <glib.h>
+#include <string.h>
 
 static void gui_internal_scroll_buttons_init(struct gui_priv *this, struct widget *widget, struct scroll_buttons *sb);
 void gui_internal_box_pack(struct gui_priv *this, struct widget *w);

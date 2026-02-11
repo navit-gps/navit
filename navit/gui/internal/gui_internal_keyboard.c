@@ -1,7 +1,5 @@
 #include "gui_internal_keyboard.h"
-#include "callback.h"
 #include "color.h"
-#include "coord.h"
 #include "debug.h"
 #include "graphics.h"
 #include "gui_internal.h"
@@ -11,6 +9,7 @@
 #include "point.h"
 #include <glib.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * @brief Switch keyboard mode to uppercase if it's in lowercase mode and  {@code VKBD_MODE_2} is set.

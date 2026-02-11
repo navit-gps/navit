@@ -1,7 +1,7 @@
 #include "gui_internal_menu.h"
+#include "attr.h"
 #include "callback.h"
 #include "color.h"
-#include "coord.h"
 #include "debug.h"
 #include "graphics.h"
 #include "gui_internal.h"
@@ -9,11 +9,11 @@
 #include "gui_internal_priv.h"
 #include "gui_internal_search.h"
 #include "gui_internal_widget.h"
-#include "navit.h"
 #include "navit_nls.h"
 #include "point.h"
 #include "xmlconfig.h"
 #include <glib.h>
+#include <stddef.h>
 
 /**
  * @brief Utility function to check if a menu widget is adapted to the display size or needs resizing (if so, the widget

@@ -18,12 +18,6 @@
  */
 
 #include "phrase.h"
-#include "coord.h"
-#include "item.h"
-#include "route.h"
-#include "speech.h"
-#include <glib.h>
-#include <time.h>
 
 void phrase_route_calc(void *speech) {
 #if 0

@@ -18,10 +18,9 @@
  */
 
 #include "config_.h"
-#include "callback.h"
+#include "attr.h"
 #include "debug.h"
 #include "file.h"
-#include "item.h"
 #include "navit.h"
 #include "xmlconfig.h"
 #include <glib.h>

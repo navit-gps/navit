@@ -28,10 +28,10 @@
 
 #include "graphics.h"
 #include "callback.h"
+#include "color.h"
 #include "config.h"
 #include "coord.h"
 #include "debug.h"
-#include "draw_info.h"
 #include "event.h"
 #include "file.h"
 #include "item.h"
@@ -43,12 +43,12 @@
 #include "point.h"
 #include "profile.h"
 #include "projection.h"
-#include "route.h"
 #include "string.h"
 #include "transform.h"
 #include "util.h"
 #include "xmlconfig.h"
 #include <glib.h>
+#include <glib/gtypes.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1389,8 +1389,9 @@ int graphics_hide_native_keyboard(struct graphics *this_, struct graphics_keyboa
 }
 
 #include "attr.h"
-#include "popup.h"
-#include <stdio.h>
+
+struct callback_list;
+struct navit;
 
 struct displayitem_poly_holes {
     int count;

@@ -18,11 +18,9 @@
  */
 
 #include "maptype.h"
-#include "debug.h"
-#include "item.h"
-#include "map.h"
 #include "projection.h"
 #include <glib.h>
+#include <stddef.h>
 
 static struct maptype *maptype_root;
 

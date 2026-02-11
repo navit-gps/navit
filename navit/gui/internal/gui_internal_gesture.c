@@ -1,5 +1,12 @@
+#include "gui_internal_gesture.h"
+#include "color.h"
 #include "config.h"
-#include <glib.h>
+#include "debug.h"
+#include "gui_internal.h"
+#include "gui_internal_priv.h"
+#include "gui_internal_widget.h"
+#include "point.h"
+#include "types.h"
 #include <stdlib.h>
 #ifdef HAVE_API_WIN32_BASE
 #    include <windows.h>
@@ -7,25 +14,6 @@
 #ifndef _MSC_VER
 #    include <sys/time.h>
 #endif /* _MSC_VER */
-#include "callback.h"
-#include "color.h"
-#include "coord.h"
-#include "country.h"
-#include "debug.h"
-#include "event.h"
-#include "graphics.h"
-#include "gui_internal.h"
-#include "gui_internal_gesture.h"
-#include "gui_internal_html.h"
-#include "gui_internal_menu.h"
-#include "gui_internal_priv.h"
-#include "gui_internal_widget.h"
-#include "navit.h"
-#include "navit_nls.h"
-#include "point.h"
-#include "search.h"
-#include "track.h"
-#include "types.h"
 
 void gui_internal_gesture_ring_clear(struct gui_priv *this) {
     this->gesture_ring_last = this->gesture_ring_first = 0;

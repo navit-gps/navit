@@ -107,13 +107,13 @@ static void transform_set_screen_dist(struct transformation *t, int dist) {
 static void transform_setup_matrix(struct transformation *t) {
     navit_float det;
     navit_float fac;
-    navit_float yawc = navit_cos(-M_PI * t->yaw / 180);
-    navit_float yaws = navit_sin(-M_PI * t->yaw / 180);
-    navit_float pitchc = navit_cos(-M_PI * t->pitch / 180);
-    navit_float pitchs = navit_sin(-M_PI * t->pitch / 180);
+    navit_float yawc = navit_cos(-G_PI * t->yaw / 180);
+    navit_float yaws = navit_sin(-G_PI * t->yaw / 180);
+    navit_float pitchc = navit_cos(-G_PI * t->pitch / 180);
+    navit_float pitchs = navit_sin(-G_PI * t->pitch / 180);
 #ifdef ENABLE_ROLL
-    navit_float rollc = navit_cos(M_PI * t->roll / 180);
-    navit_float rolls = navit_sin(M_PI * t->roll / 180);
+    navit_float rollc = navit_cos(G_PI * t->roll / 180);
+    navit_float rolls = navit_sin(G_PI * t->roll / 180);
 #else
     navit_float rollc = 1;
     navit_float rolls = 0;
@@ -271,8 +271,8 @@ void transform_to_geo(enum projection pro, const struct coord *c, struct coord_g
     int x, y, northern, zone;
     switch (pro) {
     case projection_mg:
-        g->lng = c->x / 6371000.0 / M_PI * 180;
-        g->lat = navit_atan(exp(c->y / 6371000.0)) / M_PI * 360 - 90;
+        g->lng = c->x / 6371000.0 / G_PI * 180;
+        g->lat = navit_atan(exp(c->y / 6371000.0)) / G_PI * 360 - 90;
         break;
     case projection_garmin:
         g->lng = c->x * gar2geo_units;
@@ -307,8 +307,8 @@ void transform_to_geo(enum projection pro, const struct coord *c, struct coord_g
 void transform_from_geo(enum projection pro, const struct coord_geo *g, struct coord *c) {
     switch (pro) {
     case projection_mg:
-        c->x = g->lng * 6371000.0 * M_PI / 180;
-        c->y = log(navit_tan(M_PI_4 + g->lat * M_PI / 360)) * 6371000.0;
+        c->x = g->lng * 6371000.0 * G_PI / 180;
+        c->y = log(navit_tan(G_PI_4 + g->lat * G_PI / 360)) * 6371000.0;
         break;
     case projection_garmin:
         c->x = g->lng * geo2gar_units;
@@ -379,8 +379,8 @@ void transform_cart_to_geo(struct coord_geo_cart *cart, navit_float a, navit_flo
         lat = navit_atan((cart->z + ee * n * navit_sin(lat)) / navit_sqrt(cart->x * cart->x + cart->y * cart->y));
     } while (fabs(lat - lati) >= 0.000000000000001);
 
-    geo->lng = lng / M_PI * 180;
-    geo->lat = lat / M_PI * 180;
+    geo->lng = lng / G_PI * 180;
+    geo->lat = lat / G_PI * 180;
 }
 
 /**
@@ -406,7 +406,7 @@ void transform_utm_to_geo(const double UTMEasting, const double UTMNorthing, int
     double LongOrigin;
     double mu, phi1Rad;
     double x, y;
-    double rad2deg = 180 / M_PI;
+    double rad2deg = 180 / G_PI;
 
     x = UTMEasting - 500000.0;  // remove 500,000 meter offset for longitude
     y = UTMNorthing;
@@ -943,7 +943,7 @@ int transform_get_order(struct transformation *t) {
     return t->order;
 }
 
-#define TWOPI (M_PI * 2)
+#define TWOPI (G_PI * 2)
 #define GC2RAD(c) ((c) * TWOPI / (1 << 24))
 #define minf(a, b) ((a) < (b) ? (a) : (b))
 
@@ -990,7 +990,7 @@ double transform_scale(int y) {
     c.x = 0;
     c.y = y;
     transform_to_geo(projection_mg, &c, &g);
-    return 1 / navit_cos(g.lat / 180 * M_PI);
+    return 1 / navit_cos(g.lat / 180 * G_PI);
 }
 
 #ifdef AVOID_FLOAT
@@ -1076,8 +1076,8 @@ void transform_project(enum projection pro, struct coord *c, int distance, int a
     switch (pro) {
     case projection_mg:
         scale = transform_scale(c->y);
-        res->x = c->x + distance * sin(angle * M_PI / 180) * scale;
-        res->y = c->y + distance * cos(angle * M_PI / 180) * scale;
+        res->x = c->x + distance * sin(angle * G_PI / 180) * scale;
+        res->y = c->y + distance * cos(angle * G_PI / 180) * scale;
         break;
     default:
         dbg(lvl_error, "Unsupported projection: %d", pro);
@@ -1368,7 +1368,7 @@ int transform_get_angle_delta(struct coord *c1, struct coord *c2, int dir) {
 #ifndef AVOID_FLOAT
     double angle;
     angle = atan2(dx, dy);
-    angle *= 180 / M_PI;
+    angle *= 180 / G_PI;
 #else
     int angle;
     angle = atan2_int(dx, dy);

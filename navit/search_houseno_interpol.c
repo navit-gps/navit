@@ -18,21 +18,16 @@
  */
 
 #include "search_houseno_interpol.h"
+#include "attr.h"
+#include "attr_type_def.h"
 #include "coord.h"
-#include "country.h"
 #include "debug.h"
-#include "geom.h"
 #include "item.h"
-#include "linguistics.h"
 #include "map.h"
-#include "mapset.h"
-#include "projection.h"
-#include "search.h"
 #include "transform.h"
-#include "util.h"
 #include "xmlconfig.h"
 #include <glib.h>
-#include <math.h>
+#include <math.h>  // IWYU pragma: keep for sqrt
 #include <stdlib.h>
 #include <string.h>
 

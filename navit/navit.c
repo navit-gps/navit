@@ -18,14 +18,12 @@
  */
 
 #define _USE_MATH_DEFINES 1
-#include "config.h"
-#ifdef HAVE_UNISTD_H
-#    include <unistd.h>
-#endif
+#include "navit.h"
 #include "attr.h"
 #include "bookmarks.h"
 #include "callback.h"
 #include "command.h"
+#include "config.h"
 #include "coord.h"
 #include "data_window.h"
 #include "debug.h"
@@ -34,15 +32,13 @@
 #include "graphics.h"
 #include "gui.h"
 #include "item.h"
+#include "item_type_def.h"
 #include "layout.h"
 #include "log.h"
-#include "main.h"
 #include "map.h"
 #include "mapset.h"
-#include "menu.h"
 #include "messages.h"
 #include "navigation.h"
-#include "navit.h"
 #include "navit_nls.h"
 #include "param.h"
 #include "point.h"
@@ -60,17 +56,20 @@
 #include "vehicleprofile.h"
 #include "xmlconfig.h"
 #include <errno.h>
-#include <fcntl.h>
 #include <glib.h>
+#include <glib/gtypes.h>
 #include <math.h>
-#include <signal.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
+
+struct log;
+struct vehicle;
 #ifdef HAVE_API_WIN32_BASE
-#    include "util.h"
 #    include <windows.h>
+
+#    include "util.h"
 #endif
 #ifdef HAVE_API_WIN32_CE
 #    include "libc.h"
@@ -2441,8 +2440,8 @@ static int navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_o
             mdir = nv->dir - this_->orientation;
         }
 
-        p->x = (50 - offset * sin(M_PI * mdir / 180.)) * width / 100;
-        p->y = (50 + offset * cos(M_PI * mdir / 180.)) * height / 100;
+        p->x = (50 - offset * sin(G_PI * mdir / 180.)) * width / 100;
+        p->y = (50 + offset * cos(G_PI * mdir / 180.)) * height / 100;
         if (dir)
             *dir = this_->orientation;
     }

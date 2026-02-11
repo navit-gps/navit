@@ -127,6 +127,7 @@
 <!ATTLIST osd y CDATA #IMPLIED>
 <!ATTLIST osd src CDATA #IMPLIED>
 <!ATTLIST osd command CDATA #IMPLIED>
+<!ATTLIST osd data CDATA #IMPLIED>
 <!ELEMENT itemgra (polygon|polyline|text|circle|icon|image|arrows|spikes)*>
 <!ATTLIST itemgra item_types CDATA #IMPLIED>
 <!ATTLIST itemgra order CDATA #IMPLIED>
