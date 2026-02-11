@@ -26,11 +26,11 @@
 #include <glib.h>
 #include <math.h>
 #ifdef HAVE_API_WIN32_BASE
-#include <windows.h>
+#    include <windows.h>
 #else
-#include <errno.h>
-#include <sys/time.h>
-#define _GNU_SOURCE
+#    include <errno.h>
+#    include <sys/time.h>
+#    define _GNU_SOURCE
 #endif
 #include "debug.h"
 
@@ -38,8 +38,8 @@
  * @brief Describes the main function for a thread.
  */
 struct thread_main_data {
-    int (*main)(void *);       /**< The thread’s main function. */
-    void * data;               /**< The argument for the function. */
+    int (*main)(void *); /**< The thread’s main function. */
+    void *data;          /**< The argument for the function. */
 };
 
 #ifdef HAVE_POSIX_THREADS
@@ -60,15 +60,15 @@ struct thread_event_pthread {
  *
  * @param data Pointer to a `struct thread_main_data` encapsulating the main function and its argument.
  */
-static void *thread_main_wrapper(void * data) {
-    struct thread_main_data * main_data = (struct thread_main_data *) data;
-    void * ret = (void *) (main_data->main(main_data->data));
+static void *thread_main_wrapper(void *data) {
+    struct thread_main_data *main_data = (struct thread_main_data *)data;
+    void *ret = (void *)(main_data->main(main_data->data));
     // FIXME free up `data`
     return ret;
 }
 
-char * thread_format_error(int error) {
-    switch(error) {
+char *thread_format_error(int error) {
+    switch (error) {
     case EPERM:
         return "EPERM (Operation not permitted)";
     case ENOENT:
@@ -158,8 +158,8 @@ char * thread_format_error(int error) {
  * @param data Pointer to a `struct thread_main_data` encapsulating the main function and its argument.
  */
 static DWORD WINAPI *thread_main_wrapper(_In_ LPVOID data) {
-    struct thread_main_data * main_data = (struct thread_main_data *) data;
-    DWORD ret = (DWORD) (main_data->main(main_data->data));
+    struct thread_main_data *main_data = (struct thread_main_data *)data;
+    DWORD ret = (DWORD)(main_data->main(main_data->data));
     // FIXME free up `data`
     return ret;
 }
@@ -171,34 +171,34 @@ static DWORD WINAPI *thread_main_wrapper(_In_ LPVOID data) {
  * Wrapping the function in a conditional causes the build to fail if thread_new() is called on a
  * platform without thread support.
  */
-thread *thread_new(int (*main)(void *), void * data, char * name) {
-#ifdef HAVE_POSIX_THREADS
+thread *thread_new(int (*main)(void *), void *data, char *name) {
+#    ifdef HAVE_POSIX_THREADS
     int err;
-    thread * ret = g_new0(thread, 1);
-    struct thread_main_data * main_data = g_new0(struct thread_main_data, 1);
+    thread *ret = g_new0(thread, 1);
+    struct thread_main_data *main_data = g_new0(struct thread_main_data, 1);
     main_data->main = main;
     main_data->data = data;
-    err = pthread_create(ret, NULL, thread_main_wrapper, (void *) main_data);
+    err = pthread_create(ret, NULL, thread_main_wrapper, (void *)main_data);
     if (err) {
         dbg(lvl_error, "error %d %s, thread=%p", err, thread_format_error(err), ret);
         g_free(ret);
         return NULL;
     }
-#ifdef HAVE_PTHREAD_SETNAME_NP
+#        ifdef HAVE_PTHREAD_SETNAME_NP
     if (name) {
         err = pthread_setname_np(*ret, name);
         if (err)
             dbg(lvl_warning, "error %d %s, thread=%p", err, thread_format_error(err), ret);
     }
-#endif
+#        endif
     return ret;
-#elif HAVE_API_WIN32
-    thread * ret = g_new0(thread, 1);
-    struct thread_main_data * main_data = g_new0(struct thread_main_data, 1);
+#    elif HAVE_API_WIN32
+    thread *ret = g_new0(thread, 1);
+    struct thread_main_data *main_data = g_new0(struct thread_main_data, 1);
     DWORD err;
     main_data->main = main;
     main_data->data = data;
-    ret = CreateThread(NULL, 0, thread_main_wrapper, (LPVOID) main_data, 0, NULL);
+    ret = CreateThread(NULL, 0, thread_main_wrapper, (LPVOID)main_data, 0, NULL);
     if (!*ret) {
         err = GetLastError();
         dbg(lvl_error, "error %d, thread=%p", err, ret);
@@ -206,19 +206,19 @@ thread *thread_new(int (*main)(void *), void * data, char * name) {
         return NULL;
     }
     return ret;
-#else
+#    else
     dbg(lvl_error, "call to thread_new() on a platform without thread support");
     return NULL;
-#endif
+#    endif
 }
 #endif
 
-void thread_destroy(thread* this_) {
+void thread_destroy(thread *this_) {
 #ifdef HAVE_POSIX_THREADS
     g_free(this_);
 #elif HAVE_API_WIN32
     DWORD err;
-    if (!CloseHandle (*this_)) {
+    if (!CloseHandle(*this_)) {
         err = GetLastError();
         dbg(lvl_warning, "error %d, thread=%p", err, this_);
     }
@@ -231,7 +231,7 @@ void thread_sleep(long msec) {
     Sleep(msec);
 #else
     struct timespec req, rem;
-    req.tv_sec = (msec /1000);
+    req.tv_sec = (msec / 1000);
     req.tv_nsec = (msec % 1000) * 1000000;
     while ((nanosleep(&req, &rem) == -1) && errno == EINTR)
         req = rem;
@@ -240,23 +240,23 @@ void thread_sleep(long msec) {
 
 void thread_exit(int result) {
 #ifdef HAVE_POSIX_THREADS
-    pthread_exit((void *) result);
+    pthread_exit((void *)result);
 #elif HAVE_API_WIN32
-    ExitThread((DWORD) result);
+    ExitThread((DWORD)result);
 #else
     return;
 #endif
 }
 
-int thread_join(thread * this_) {
+int thread_join(thread *this_) {
 #ifdef HAVE_POSIX_THREADS
-    void * ret;
+    void *ret;
     int err = pthread_join(*this_, &ret);
     if (err) {
         dbg(lvl_error, "error %d %s, thread=%p", err, thread_format_error(err), this_);
         return -1;
     }
-    return (int) ret;
+    return (int)ret;
 #elif HAVE_API_WIN32
     DWORD res;
     DWORD err;
@@ -315,7 +315,7 @@ void thread_event_destroy(thread_event *this_) {
     g_free(this_);
 #elif HAVE_API_WIN32
     DWORD err;
-    if (!CloseHandle (*this_)) {
+    if (!CloseHandle(*this_)) {
         err = GetLastError();
         dbg(lvl_warning, "error %d, event=%p", err, this_);
     }
@@ -397,7 +397,7 @@ thread_lock *thread_lock_new(void) {
     }
     return ret;
 #elif HAVE_API_WIN32
-    thread_lock * ret = g_new0(thread_lock, 1);
+    thread_lock *ret = g_new0(thread_lock, 1);
     DWORD err;
     /*
      * On Windows, locks are implemented as mutexes since locks (SRWLock) were not introduced until
@@ -427,7 +427,7 @@ void thread_lock_destroy(thread_lock *this_) {
     g_free(this_);
 #elif HAVE_API_WIN32
     DWORD err;
-    if (!CloseHandle (*this_)) {
+    if (!CloseHandle(*this_)) {
         err = GetLastError();
         dbg(lvl_warning, "error %d, lock=%p", err, this_);
     }
