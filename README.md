@@ -37,6 +37,15 @@ Current vehicle position from \
 — the location service of several mobile platforms. \
 — a UDP server (friends tracking) (experimental).
 
+Plugins
+=======
+
+Navit includes several plugins that extend its functionality:
+
+- **Driver Break Plugin** — Rest period management, rest stop suggestions, and POI discovery (EU Regulation EC 561/2006)
+
+For complete plugin documentation, see the `Navit User Manual <https://navit.readthedocs.io/en/latest/user/plugins/index.html>`_.
+
 Translation
 ===========
 The [Hosted Weblate](https://hosted.weblate.org/projects/navit/) platform is used to manage translations, which runs [Weblate](https://weblate.org).
