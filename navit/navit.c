@@ -3119,7 +3119,7 @@ static int navit_add_layout(struct navit *this_, struct layout *layout) {
 }
 
 int navit_add_attr(struct navit *this_, struct attr *attr) {
-    int ret=1;
+    int ret = 1;
     struct attr speechattr;
     struct attr activeattr;
     
