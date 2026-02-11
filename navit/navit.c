@@ -2742,6 +2742,9 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
             l = g_list_next(l);
         }
         break;
+    case attr_vehicleprofile:
+        attr_updated=navit_set_vehicleprofile(this_, attr->u.vehicleprofile);
+        break;
     case attr_zoom:
         zoom = transform_get_scale(this_->trans);
         attr_updated = (zoom != attr->u.num);
@@ -3152,7 +3155,6 @@ int navit_add_attr(struct navit *this_, struct attr *attr) {
         break;
     case attr_speech:
         this_->voiceprofiles = g_list_append(this_->voiceprofiles, attr->u.speech);
-        // TODO Only active voice
         if (speech_get_attr(attr->u.speech, attr_active, &activeattr, NULL)) {
             if (activeattr.u.num == 1) {
                 this_->speech = attr->u.speech;

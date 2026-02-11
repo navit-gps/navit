@@ -21,16 +21,6 @@ GridLayout {
     }
 
     MainButton {
-        text: "Voices"
-        icon: "icons/appbar.transit.car.svg"
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-        onClicked: {
-            menucontent.source = "voices.qml"
-        }
-    }
-
-    MainButton {
         text: "Vehicles"
         icon: "icons/appbar.transit.car.svg"
         Layout.fillHeight: true

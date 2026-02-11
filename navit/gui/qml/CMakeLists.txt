@@ -16,7 +16,6 @@ module_add_library(gui_qml gui_qml.cpp
 	${CMAKE_CURRENT_BINARY_DIR}/ngqpoint.moc
 	${CMAKE_CURRENT_BINARY_DIR}/searchProxy.moc
 	${CMAKE_CURRENT_BINARY_DIR}/bookmarksProxy.moc
-	${CMAKE_CURRENT_BINARY_DIR}/voiceProxy.moc
 	${CMAKE_CURRENT_BINARY_DIR}/vehicleProxy.moc
 	${CMAKE_CURRENT_BINARY_DIR}/navitProxy.moc
 	${CMAKE_CURRENT_BINARY_DIR}/guiProxy.moc
