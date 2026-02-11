@@ -22,17 +22,17 @@
  * @date 2008-2009
  */
 
+#include "callback.h"
+#include "coord.h"
+#include "debug.h"
+#include "item.h"
+#include "plugin.h"
+#include "vehicle.h"
 #include <config.h>
-#include <string.h>
 #include <glib.h>
 #include <math.h>
+#include <string.h>
 #include <time.h>
-#include "debug.h"
-#include "callback.h"
-#include "plugin.h"
-#include "coord.h"
-#include "item.h"
-#include "vehicle.h"
 
 /**
  * @defgroup vehicle-null Vehicle Null
@@ -55,7 +55,7 @@ struct vehicle_priv {
     int sats;
     int sats_used;
     int have_coords;
-    struct attr ** attrs;
+    struct attr **attrs;
 };
 
 /**
@@ -65,7 +65,7 @@ struct vehicle_priv {
  * @returns nothing
  */
 static void vehicle_null_destroy(struct vehicle_priv *priv) {
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter");
     g_free(priv);
 }
 
@@ -77,9 +77,8 @@ static void vehicle_null_destroy(struct vehicle_priv *priv) {
  * @param attr
  * @returns true/false
  */
-static int vehicle_null_position_attr_get(struct vehicle_priv *priv,
-        enum attr_type type, struct attr *attr) {
-    dbg(lvl_debug,"enter %s",attr_to_name(type));
+static int vehicle_null_position_attr_get(struct vehicle_priv *priv, enum attr_type type, struct attr *attr) {
+    dbg(lvl_debug, "enter %s", attr_to_name(type));
     switch (type) {
     case attr_position_height:
         attr->u.numd = &priv->height;
@@ -99,12 +98,12 @@ static int vehicle_null_position_attr_get(struct vehicle_priv *priv,
             return 0;
         break;
     case attr_position_time_iso8601:
-        attr->u.str=priv->fixiso8601;
+        attr->u.str = priv->fixiso8601;
         break;
     default:
         return 0;
     }
-    dbg(lvl_debug,"ok");
+    dbg(lvl_debug, "ok");
     attr->type = type;
     return 1;
 }
@@ -112,14 +111,14 @@ static int vehicle_null_position_attr_get(struct vehicle_priv *priv,
 static int vehicle_null_set_attr(struct vehicle_priv *priv, struct attr *attr) {
     switch (attr->type) {
     case attr_position_speed:
-        priv->speed=*attr->u.numd;
+        priv->speed = *attr->u.numd;
         break;
     case attr_position_direction:
-        priv->direction=*attr->u.numd;
+        priv->direction = *attr->u.numd;
         break;
     case attr_position_coord_geo:
-        priv->geo=*attr->u.coord_geo;
-        priv->have_coords=1;
+        priv->geo = *attr->u.coord_geo;
+        priv->have_coords = 1;
         break;
     default:
         break;
@@ -127,7 +126,6 @@ static int vehicle_null_set_attr(struct vehicle_priv *priv, struct attr *attr) {
     callback_list_call_attr_0(priv->cbl, attr->type);
     return 1;
 }
-
 
 struct vehicle_methods vehicle_null_methods = {
     vehicle_null_destroy,
@@ -143,9 +141,8 @@ struct vehicle_methods vehicle_null_methods = {
  * @param attrs
  * @returns vehicle_priv
  */
-static struct vehicle_priv *vehicle_null_new_null(struct vehicle_methods *meth,
-        struct callback_list *cbl,
-        struct attr **attrs) {
+static struct vehicle_priv *vehicle_null_new_null(struct vehicle_methods *meth, struct callback_list *cbl,
+                                                  struct attr **attrs) {
     struct vehicle_priv *ret;
 
     dbg(lvl_debug, "enter");

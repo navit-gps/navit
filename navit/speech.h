@@ -20,6 +20,7 @@
 #ifndef NAVIT_SPEECH_H
 #define NAVIT_SPEECH_H
 
+#include "attr.h"
 #include "attr_type_def.h"
 
 struct speech_priv;

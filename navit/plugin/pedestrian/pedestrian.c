@@ -1271,10 +1271,10 @@ static void pedestrian_navit_init(struct navit *nav) {
     map.type = attr_map;
     map.u.map = map_new(NULL, (struct attr *[]){
                                   &(struct attr){attr_type,        {"route_occluded"}},
-                                   &(struct attr){attr_data,        {""}              },
+                                  &(struct attr){attr_data,        {""}              },
                                   &(struct attr){attr_description, {"Occluded Route"}},
                                   &(struct attr){attr_navit,       {(void *)nav}     },
-                                   NULL
+                                  NULL,
     });
     global_map = map.u.map;
     mapset_add_attr(mapset.u.mapset, &map);

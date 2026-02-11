@@ -22,7 +22,7 @@
 /**
  * store gpx metadata into text file
  */
-void setMetadata(parsedata * pdata) {
+void setMetadata(parsedata *pdata) {
     g2sprop *prop = pdata->prop;
     g2sattr *attr = pdata->attr;
     FILE *metafile;

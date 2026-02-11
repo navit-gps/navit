@@ -4,6 +4,12 @@
  *
  */
 
+#ifndef _NAVIT_INTERNAL_POI_H
+#define _NAVIT_INTERNAL_POI_H
+
+#include "route.h"
+#include <glib.h>
+
 struct poi_param {
 
     /**
@@ -56,3 +62,5 @@ char *gui_internal_compose_item_address_string(struct item *item, int prependPos
 void gui_internal_cmd_pois_filter(struct gui_priv *this, struct widget *wm, void *data);
 void gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data);
 /* end of prototypes */
+
+#endif

@@ -17,26 +17,26 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <glib.h>
-#include "config.h"
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#include "item.h"
-#include "point.h"
-#include "graphics.h"
-#include "color.h"
-#include "plugin.h"
-#include "event.h"
-#include "debug.h"
-#include "window.h"
 #include "callback.h"
-#if defined(WINDOWS) || defined(WIN32) || defined (HAVE_API_WIN32_CE)
-#include <windows.h>
-# define sleep(i) Sleep(i * 1000)
+#include "color.h"
+#include "config.h"
+#include "debug.h"
+#include "event.h"
+#include "graphics.h"
+#include "item.h"
+#include "plugin.h"
+#include "point.h"
+#include "window.h"
+#include <glib.h>
+#ifdef HAVE_UNISTD_H
+#    include <unistd.h>
+#endif
+#if defined(WINDOWS) || defined(WIN32) || defined(HAVE_API_WIN32_CE)
+#    include <windows.h>
+#    define sleep(i) Sleep(i * 1000)
 #endif
 
-static struct callback_list* callbacks;
+static struct callback_list *callbacks;
 
 static struct graphics_priv {
     int dummy;
@@ -58,16 +58,15 @@ static void graphics_destroy(struct graphics_priv *gr) {
 }
 
 static void font_destroy(struct graphics_font_priv *font) {
-
 }
 
 static struct graphics_font_methods font_methods = {
-    font_destroy
+    font_destroy,
 };
 
 static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font,
-        int size, int flags) {
-    *meth=font_methods;
+                                           int size, int flags) {
+    *meth = font_methods;
     return &graphics_font_priv;
 }
 
@@ -87,20 +86,20 @@ static void gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
 }
 
 static struct graphics_gc_methods gc_methods = {
-    gc_destroy,
-    gc_set_linewidth,
-    gc_set_dashes,
-    gc_set_foreground,
-    gc_set_background
+    .gc_destroy = gc_destroy,
+    .gc_set_linewidth = gc_set_linewidth,
+    .gc_set_dashes = gc_set_dashes,
+    .gc_set_foreground = gc_set_foreground,
+    .gc_set_background = gc_set_background,
 };
 
 static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth) {
-    *meth=gc_methods;
+    *meth = gc_methods;
     return &graphics_gc_priv;
 }
 
 static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path,
-        int *w, int *h, struct point *hot, int rotation) {
+                                             int *w, int *h, struct point *hot, int rotation) {
     return &graphics_image_priv;
 }
 
@@ -115,7 +114,6 @@ static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc
 
 static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r) {
 }
-
 
 static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg,
                       struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
@@ -134,8 +132,8 @@ static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
 }
 
-static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
-        int w, int h, int wraparound);
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
+                                         int w, int h, int wraparound);
 
 static void resize_callback(int w, int h) {
     callback_list_call_attr_2(callbacks, attr_resize, GINT_TO_POINTER(1), GINT_TO_POINTER(1));
@@ -155,7 +153,7 @@ static void *get_data(struct graphics_priv *this, char const *type) {
         win->priv = this;
         win->fullscreen = graphics_null_fullscreen;
         win->disable_suspend = graphics_null_disable_suspend;
-        resize_callback(1,1);
+        resize_callback(1, 1);
         return win;
     }
     return NULL;
@@ -200,16 +198,15 @@ static struct graphics_methods graphics_methods = {
 };
 
 static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
-        int w, int h, int wraparound) {
-    *meth=graphics_methods;
+                                         int w, int h, int wraparound) {
+    *meth = graphics_methods;
     return &graphics_priv;
 }
 
-
 static struct graphics_priv *graphics_null_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
-        struct callback_list *cbl) {
+                                               struct callback_list *cbl) {
     struct attr *event_loop_system = NULL;
-    *meth=graphics_methods;
+    *meth = graphics_methods;
 
     event_loop_system = attr_search(attrs, attr_event_loop_system);
 
@@ -222,72 +219,68 @@ static struct graphics_priv *graphics_null_new(struct navit *nav, struct graphic
             return NULL;
     }
     callbacks = cbl;
-    resize_callback(1,1);
+    resize_callback(1, 1);
     return &graphics_priv;
 }
 
 static void event_null_main_loop_run(void) {
 
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter");
     for (;;)
         sleep(1);
-
 }
 
 static void event_null_main_loop_quit(void) {
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter");
 }
 
 static struct event_watch *event_null_add_watch(int h, enum event_watch_cond cond, struct callback *cb) {
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter");
     return NULL;
 }
 
 static void event_null_remove_watch(struct event_watch *ev) {
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter");
 }
 
-
 static struct event_timeout *event_null_add_timeout(int timeout, int multi, struct callback *cb) {
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter");
     return NULL;
 }
 
 static void event_null_remove_timeout(struct event_timeout *to) {
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter");
 }
 
-
 static struct event_idle *event_null_add_idle(int priority, struct callback *cb) {
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter");
     return NULL;
 }
 
 static void event_null_remove_idle(struct event_idle *ev) {
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter");
 }
 
 static void event_null_call_callback(struct callback_list *cb) {
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter");
 }
 
 static struct event_methods event_null_methods = {
-    event_null_main_loop_run,
-    event_null_main_loop_quit,
-    event_null_add_watch,
-    event_null_remove_watch,
-    event_null_add_timeout,
-    event_null_remove_timeout,
-    event_null_add_idle,
-    event_null_remove_idle,
-    event_null_call_callback,
+    .main_loop_run = event_null_main_loop_run,
+    .main_loop_quit = event_null_main_loop_quit,
+    .add_watch = event_null_add_watch,
+    .remove_watch = event_null_remove_watch,
+    .add_timeout = event_null_add_timeout,
+    .remove_timeout = event_null_remove_timeout,
+    .add_idle = event_null_add_idle,
+    .remove_idle = event_null_remove_idle,
+    .call_callback = event_null_call_callback,
 };
 
 static struct event_priv *event_null_new(struct event_methods *meth) {
-    *meth=event_null_methods;
+    *meth = event_null_methods;
     return NULL;
 }
-
 
 void plugin_init(void) {
     plugin_register_category_graphics("null", graphics_null_new);

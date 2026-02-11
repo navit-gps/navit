@@ -20,9 +20,6 @@
 #ifndef __NAVIT_MAPTOOL_H_
 #define __NAVIT_MAPTOOL_H_
 
-#include <glib.h>
-#include <stdio.h>
-
 #include "attr.h"
 #include "attr_type_def.h"
 #include "config.h"
@@ -31,6 +28,7 @@
 #include "item.h"
 #include "item_type_def.h"
 #include "types.h"
+#include <glib.h>
 
 #define sq(x) ((double)(x) * (x))
 

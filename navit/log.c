@@ -26,29 +26,29 @@
  * @date 2005-2014
  */
 
+#include "log.h"
+#include "callback.h"
 #include "config.h"
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#ifdef HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
-#include <fcntl.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <time.h>
-#include <glib.h>
+#include "debug.h"
+#include "event.h"
 #include "file.h"
 #include "item.h"
-#include "event.h"
-#include "callback.h"
-#include "debug.h"
 #include "xmlconfig.h"
-#include "log.h"
+#include <fcntl.h>
+#include <glib.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#ifdef HAVE_UNISTD_H
+#    include <unistd.h>
+#endif
+#ifdef HAVE_SYS_TIME_H
+#    include <sys/time.h>
+#endif
 #ifndef HAVE_API_WIN32_BASE
-#include <errno.h>
+#    include <errno.h>
 #endif
 struct log_data {
     int len;
@@ -93,8 +93,8 @@ static void strftime_localtime(char *buffer, int size, char *fmt) {
     time_t t;
     struct tm *tm;
 
-    t=time(NULL);
-    tm=localtime(&t);
+    t = time(NULL);
+    tm = localtime(&t);
     strftime(buffer, size - 1, fmt, tm);
 }
 
@@ -109,25 +109,25 @@ static void strftime_localtime(char *buffer, int size, char *fmt) {
  * @param this_ The log object.
  */
 static void expand_filenames(struct log *this_) {
-    char *pos,buffer[4096];
+    char *pos, buffer[4096];
     int i;
 
     strftime_localtime(buffer, 4096, this_->filename);
-    this_->filename_ex1=g_strdup(buffer);
-    if ((pos=strstr(this_->filename_ex1,"%i"))) {
+    this_->filename_ex1 = g_strdup(buffer);
+    if ((pos = strstr(this_->filename_ex1, "%i"))) {
 #ifdef HAVE_API_ANDROID
-        pos[1]='d';
+        pos[1] = 'd';
 #endif
-        i=0;
+        i = 0;
         do {
             g_free(this_->filename_ex2);
-            this_->filename_ex2=g_strdup_printf(this_->filename_ex1,i++);
+            this_->filename_ex2 = g_strdup_printf(this_->filename_ex1, i++);
         } while (file_exists(this_->filename_ex2));
 #ifdef HAVE_API_ANDROID
-        pos[1]='i';
+        pos[1] = 'i';
 #endif
     } else
-        this_->filename_ex2=g_strdup(this_->filename_ex1);
+        this_->filename_ex2 = g_strdup(this_->filename_ex1);
 }
 
 /**
@@ -164,15 +164,15 @@ static void log_set_last_flush(struct log *this_) {
 static void log_open(struct log *this_) {
     char *mode;
     if (this_->overwrite)
-        mode="w";
+        mode = "w";
     else
-        mode="r+";
+        mode = "r+";
     if (this_->mkdir)
         file_mkdir(this_->filename_ex2, 2);
-    this_->f=fopen(this_->filename_ex2, mode);
-    if (! this_->f)
-        this_->f=fopen(this_->filename_ex2, "w");
-    if (! this_->f)
+    this_->f = fopen(this_->filename_ex2, mode);
+    if (!this_->f)
+        this_->f = fopen(this_->filename_ex2, "w");
+    if (!this_->f)
         return;
     if (!this_->overwrite)
         fseek(this_->f, 0, SEEK_END);
@@ -188,13 +188,13 @@ static void log_open(struct log *this_) {
  * @param this_ The log object.
  */
 static void log_close(struct log *this_) {
-    if (! this_->f)
+    if (!this_->f)
         return;
     if (this_->trailer.len)
         fwrite(this_->trailer.data, 1, this_->trailer.len, this_->f);
     fflush(this_->f);
     fclose(this_->f);
-    this_->f=NULL;
+    this_->f = NULL;
 }
 
 /**
@@ -218,9 +218,10 @@ static void log_close(struct log *this_) {
  * <br>
  * {@code log_flag_keep_pointer}: keeps the file pointer at the start position of the new data
  * <br>
- * {@code log_flag_keep_buffer}: prevents clearing of the buffer after a successful write (default is to clear the buffer).
- * <br>
- * {@code log_flag_truncate}: truncates the log file at the current position. On the Win32 Base API, this flag has no effect.
+ * {@code log_flag_keep_buffer}: prevents clearing of the buffer after a successful write (default is to clear the
+ * buffer). <br>
+ * {@code log_flag_truncate}: truncates the log file at the current position. On the Win32 Base API, this flag has no
+ * effect.
  */
 static void log_flush(struct log *this_, enum log_flags flags) {
     long pos;
@@ -229,24 +230,24 @@ static void log_flush(struct log *this_, enum log_flags flags) {
             return;
         log_open(this_);
     }
-    if (! this_->f)
+    if (!this_->f)
         return;
     if (this_->empty) {
         if (this_->header.len)
             fwrite(this_->header.data, 1, this_->header.len, this_->f);
         if (this_->header.len || this_->data.len)
-            this_->empty=0;
+            this_->empty = 0;
     }
     fwrite(this_->data.data, 1, this_->data.len, this_->f);
 #ifndef HAVE_API_WIN32_BASE
     if (flags & log_flag_truncate) {
-        pos=ftell(this_->f);
-        if(ftruncate(fileno(this_->f), pos) <0)
-            dbg(lvl_error,"Error on fruncate (%s)", strerror(errno));
+        pos = ftell(this_->f);
+        if (ftruncate(fileno(this_->f), pos) < 0)
+            dbg(lvl_error, "Error on fruncate (%s)", strerror(errno));
     }
 #endif
     if (this_->trailer.len) {
-        pos=ftell(this_->f);
+        pos = ftell(this_->f);
         if (pos > 0) {
             fwrite(this_->trailer.data, 1, this_->trailer.len, this_->f);
             fseek(this_->f, pos, SEEK_SET);
@@ -257,8 +258,8 @@ static void log_flush(struct log *this_, enum log_flags flags) {
     fflush(this_->f);
     if (!(flags & log_flag_keep_buffer)) {
         g_free(this_->data.data);
-        this_->data.data=NULL;
-        this_->data.max_len=this_->data.len=0;
+        this_->data.data = NULL;
+        this_->data.max_len = this_->data.len = 0;
     }
     log_set_last_flush(this_);
 }
@@ -295,10 +296,10 @@ static int log_flush_required(struct log *this_) {
  * @param this_ The log object.
  */
 static void log_change(struct log *this_) {
-    log_flush(this_,0);
+    log_flush(this_, 0);
     log_close(this_);
     expand_filenames(this_);
-    if (! this_->lazy)
+    if (!this_->lazy)
         log_open(this_);
 }
 
@@ -331,10 +332,10 @@ static void log_timer(struct log *this_) {
     struct timeval tv;
     int delta;
     gettimeofday(&tv, NULL);
-    delta=(tv.tv_sec-this_->last_flush.tv_sec)*1000+(tv.tv_usec-this_->last_flush.tv_usec)/1000;
-    dbg(lvl_debug,"delta=%d flush_time=%d", delta, this_->flush_time);
-    if (this_->flush_time && delta >= this_->flush_time*1000)
-        log_flush(this_,0);
+    delta = (tv.tv_sec - this_->last_flush.tv_sec) * 1000 + (tv.tv_usec - this_->last_flush.tv_usec) / 1000;
+    dbg(lvl_debug, "delta=%d flush_time=%d", delta, this_->flush_time);
+    if (this_->flush_time && delta >= this_->flush_time * 1000)
+        log_flush(this_, 0);
 #endif
 }
 
@@ -351,7 +352,6 @@ int log_get_attr(struct log *this_, enum attr_type type, struct attr *attr, stru
     return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
 }
 
-
 /**
  * @brief Creates and initializes a new log object.
  *
@@ -359,55 +359,54 @@ int log_get_attr(struct log *this_, enum attr_type type, struct attr *attr, stru
  * @param attrs Points to an array of pointers to attributes for the new log object
  * @return The new log object, or NULL if creation fails.
  */
-struct log *
-log_new(struct attr * parent,struct attr **attrs) {
-    struct log *ret=g_new0(struct log, 1);
-    struct attr *data,*overwrite,*lazy,*mkdir,*flush_size,*flush_time;
+struct log *log_new(struct attr *parent, struct attr **attrs) {
+    struct log *ret = g_new0(struct log, 1);
+    struct attr *data, *overwrite, *lazy, *mkdir, *flush_size, *flush_time;
     struct file_wordexp *wexp;
     char *filename, **wexp_data;
 
-    dbg(lvl_debug,"enter");
-    ret->func=&log_func;
+    dbg(lvl_debug, "enter");
+    ret->func = &log_func;
     navit_object_ref((struct navit_object *)ret);
-    data=attr_search(attrs, attr_data);
-    if (! data)
+    data = attr_search(attrs, attr_data);
+    if (!data)
         return NULL;
-    filename=data->u.str;
-    wexp=file_wordexp_new(filename);
+    filename = data->u.str;
+    wexp = file_wordexp_new(filename);
     if (wexp && file_wordexp_get_count(wexp) > 0) {
-        wexp_data=file_wordexp_get_array(wexp);
-        filename=wexp_data[0];
+        wexp_data = file_wordexp_get_array(wexp);
+        filename = wexp_data[0];
     }
     if (filename)
-        ret->filename=g_strdup(filename);
+        ret->filename = g_strdup(filename);
     if (wexp)
         file_wordexp_destroy(wexp);
-    overwrite=attr_search(attrs, attr_overwrite);
+    overwrite = attr_search(attrs, attr_overwrite);
     if (overwrite)
-        ret->overwrite=overwrite->u.num;
-    lazy=attr_search(attrs, attr_lazy);
+        ret->overwrite = overwrite->u.num;
+    lazy = attr_search(attrs, attr_lazy);
     if (lazy)
-        ret->lazy=lazy->u.num;
-    mkdir=attr_search(attrs, attr_mkdir);
+        ret->lazy = lazy->u.num;
+    mkdir = attr_search(attrs, attr_mkdir);
     if (mkdir)
-        ret->mkdir=mkdir->u.num;
-    flush_size=attr_search(attrs, attr_flush_size);
+        ret->mkdir = mkdir->u.num;
+    flush_size = attr_search(attrs, attr_flush_size);
     if (flush_size)
-        ret->flush_size=flush_size->u.num;
-    flush_time=attr_search(attrs, attr_flush_time);
+        ret->flush_size = flush_size->u.num;
+    flush_time = attr_search(attrs, attr_flush_time);
     if (flush_time)
-        ret->flush_time=flush_time->u.num;
+        ret->flush_time = flush_time->u.num;
     if (ret->flush_time) {
-        dbg(lvl_debug,"interval %d", ret->flush_time*1000);
-        ret->timer_callback=callback_new_1(callback_cast(log_timer), ret);
-        ret->timer=event_add_timeout(ret->flush_time*1000, 1, ret->timer_callback);
+        dbg(lvl_debug, "interval %d", ret->flush_time * 1000);
+        ret->timer_callback = callback_new_1(callback_cast(log_timer), ret);
+        ret->timer = event_add_timeout(ret->flush_time * 1000, 1, ret->timer_callback);
     }
     expand_filenames(ret);
     if (ret->lazy)
         log_set_last_flush(ret);
     else
         log_open(ret);
-    ret->attrs=attr_list_dup(attrs);
+    ret->attrs = attr_list_dup(attrs);
     return ret;
 }
 
@@ -422,8 +421,8 @@ log_new(struct attr * parent,struct attr **attrs) {
  * @param len Size of the header data to be copied, in bytes.
  */
 void log_set_header(struct log *this_, char *data, int len) {
-    this_->header.data=g_malloc(len);
-    this_->header.max_len=this_->header.len=len;
+    this_->header.data = g_malloc(len);
+    this_->header.max_len = this_->header.len = len;
     memcpy(this_->header.data, data, len);
 }
 
@@ -438,8 +437,8 @@ void log_set_header(struct log *this_, char *data, int len) {
  * @param len Size of the trailer data to be copied, in bytes.
  */
 void log_set_trailer(struct log *this_, char *data, int len) {
-    this_->trailer.data=g_malloc(len);
-    this_->trailer.max_len=this_->trailer.len=len;
+    this_->trailer.data = g_malloc(len);
+    this_->trailer.max_len = this_->trailer.len = len;
     memcpy(this_->trailer.data, data, len);
 }
 
@@ -466,20 +465,20 @@ void log_set_trailer(struct log *this_, char *data, int len) {
  * {@code log_flag_truncate}: ignored
  */
 void log_write(struct log *this_, char *data, int len, enum log_flags flags) {
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter");
     if (log_change_required(this_)) {
-        dbg(lvl_debug,"log_change");
+        dbg(lvl_debug, "log_change");
         log_change(this_);
     }
     if (flags & log_flag_replace_buffer)
-        this_->data.len=0;
+        this_->data.len = 0;
     if (this_->data.len + len > this_->data.max_len) {
-        dbg(lvl_info,"overflow");
-        this_->data.max_len+=16384; // FIXME: what if len exceeds this->data.max_len by more than 16384 bytes?
-        this_->data.data=g_realloc(this_->data.data,this_->data.max_len);
+        dbg(lvl_info, "overflow");
+        this_->data.max_len += 16384;  // FIXME: what if len exceeds this->data.max_len by more than 16384 bytes?
+        this_->data.data = g_realloc(this_->data.data, this_->data.max_len);
     }
-    memcpy(this_->data.data+this_->data.len, data, len);
-    this_->data.len+=len;
+    memcpy(this_->data.data + this_->data.len, data, len);
+    this_->data.len += len;
     if (log_flush_required(this_) || (flags & log_flag_force_flush))
         log_flush(this_, flags);
 }
@@ -494,10 +493,9 @@ void log_write(struct log *this_, char *data, int len, enum log_flags flags) {
  */
 void *log_get_buffer(struct log *this_, int *len) {
     if (len)
-        *len=this_->data.len;
+        *len = this_->data.len;
     return this_->data.data;
 }
-
 
 /**
  * @brief Writes a formatted string to a log.
@@ -529,11 +527,11 @@ void log_printf(struct log *this_, char *fmt, ...) {
  * @param this_ The log object.
  */
 void log_destroy(struct log *this_) {
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter");
     attr_list_free(this_->attrs);
     callback_destroy(this_->timer_callback);
     event_remove_timeout(this_->timer);
-    log_flush(this_,0);
+    log_flush(this_, 0);
     log_close(this_);
     g_free(this_);
 }
@@ -553,4 +551,3 @@ struct object_func log_func = {
     (object_func_ref)navit_object_ref,
     (object_func_unref)navit_object_unref,
 };
-

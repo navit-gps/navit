@@ -17,14 +17,15 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#ifndef NAVIT_types_H
-#    define NAVIT_types_H
+#ifndef __NAVIT_types_H
+#define __NAVIT_types_H
 
-#    include "config.h"
-#    include <ctype.h>
-#    include <time.h>
+#include "config.h"
+#include <ctype.h>
+#include <glib.h>
+#include <time.h>
 
-#    define MAX_MISMATCH 100
+#define MAX_MISMATCH 100
 
 /**
  * @brief Escape modes for function str_escape()
@@ -52,13 +53,13 @@ int compare_name_systematic(const char *s1, const char *s2);
 GList *g_hash_to_list(GHashTable *h);
 GList *g_hash_to_list_keys(GHashTable *h);
 gchar *g_strconcat_printf(gchar *buffer, gchar *fmt, ...);
-#    if defined(_WIN32) || defined(__CEGCC__) || defined(__APPLE__) || defined(HAVE_API_ANDROID)
-#        if defined(_UNICODE)
+#if defined(_WIN32) || defined(__CEGCC__) || defined(__APPLE__) || defined(HAVE_API_ANDROID)
+#    if defined(_UNICODE)
 wchar_t *newSysString(const char *toconvert);
-#        else
+#    else
 char *newSysString(const char *toconvert);
-#        endif
 #    endif
+#endif
 
 void square_shape_str(char *s);
 
@@ -68,13 +69,13 @@ time_t iso8601_to_time(char *iso8601);
 char *time_to_iso8601(time_t time);
 char *current_to_iso8601(void);
 
-#    if defined(_MSC_VER) || (!defined(HAVE_GETTIMEOFDAY) && defined(HAVE_API_WIN32_BASE))
+#if defined(_MSC_VER) || (!defined(HAVE_GETTIMEOFDAY) && defined(HAVE_API_WIN32_BASE))
 
-#        include <winsock.h>
+#    include <winsock.h>
 
 int gettimeofday(struct timeval *time, void *);
 
-#    endif
+#endif
 
 struct spawn_process_info;
 char *shell_escape(char *arg);
@@ -84,6 +85,5 @@ int spawn_process_check_status(struct spawn_process_info *pi, int block);
 void spawn_process_info_free(struct spawn_process_info *pi);
 void spawn_process_init(void);
 
-#endif
-
 void get_compass_direction(char *buffer, int angle, int mode);
+#endif

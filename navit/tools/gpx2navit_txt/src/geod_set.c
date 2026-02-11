@@ -25,12 +25,12 @@
 
 #define _IN_GEOD_SET
 
-#include <string.h>
-#include "projects.h"
-#include "geodesic.h"
 #include "emess.h"
+#include "geodesic.h"
+#include "projects.h"
+#include <string.h>
 void geod_set(int argc, char **argv) {
-    paralist *start = 0, *curr = NULL;	/* added NULL */
+    paralist *start = 0, *curr = NULL; /* added NULL */
     double es;
     char *name;
     int i;
@@ -53,16 +53,17 @@ void geod_set(int argc, char **argv) {
     /*
      * set units
      */
-    if ((name = pj_param(start, "sunits").s)) {	/* added parentheses */
+    if ((name = pj_param(start, "sunits").s)) { /* added parentheses */
         char *s;
 
-        for (i = 0; (s = pj_units[i].id) && strcmp(name, s); ++i);
+        for (i = 0; (s = pj_units[i].id) && strcmp(name, s); ++i)
+            ;
         if (!s)
             emess(1, "%s unknown unit conversion id", name);
         fr_meter = 1. / (to_meter = atof(pj_units[i].to_meter));
     } else
         to_meter = fr_meter = 1.;
-    if ((ellipse = es != 0.)) {	/* added parentheses */
+    if ((ellipse = es != 0.)) { /* added parentheses */
         onef = sqrt(1. - es);
         geod_f = 1 - onef;
         f2 = geod_f / 2;
@@ -87,8 +88,8 @@ void geod_set(int argc, char **argv) {
             geod_pre();
         } else if ((geod_S = pj_param(start, "dS").f)) {
             /* added
-            							 * parentheses
-            							 */
+             * parentheses
+             */
             al12 = pj_param(start, "rA").f;
             geod_pre();
             geod_for();
@@ -99,8 +100,8 @@ void geod_set(int argc, char **argv) {
                 emess(1, "del azimuth == 0");
         } else if ((del_S = fabs(pj_param(start, "ddel_S").f))) {
             /* added
-            								 * parentheses
-            								 */
+             * parentheses
+             */
             n_S = geod_S / del_S + .5;
         } else if ((n_S = pj_param(start, "in_S").i) <= 0)
             emess(1, "no interval divisor selected");

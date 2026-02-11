@@ -53,6 +53,9 @@
 #ifndef NAVIT_TRAFFIC_H
 #define NAVIT_TRAFFIC_H
 
+#include "route.h"
+#include <time.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

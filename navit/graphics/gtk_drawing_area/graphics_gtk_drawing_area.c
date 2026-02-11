@@ -18,46 +18,43 @@
  */
 
 #define GDK_ENABLE_BROKEN
+#include "callback.h"
+#include "color.h"
 #include "config.h"
-#include <stdlib.h>
-#include <signal.h>
-#include <sys/time.h>
-#include <math.h>
-#include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h>
+#include "debug.h"
+#include "event.h"
+#include "graphics.h"
+#include "item.h"
+#include "keys.h"
+#include "navit.h"
+#include "navit/font/freetype/font_freetype.h"
+#include "plugin.h"
+#include "point.h"
+#include "window.h"
 #include <cairo.h>
+#include <errno.h>
+#include <gdk/gdkkeysyms.h>
+#include <gtk/gtk.h>
 #include <locale.h> /* For WIN32 */
+#include <math.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <sys/time.h>
 #if !defined(GDK_KEY_Book) || !defined(GDK_Book) || !defined(GDK_Calendar)
-#include <X11/XF86keysym.h>
+#    include <X11/XF86keysym.h>
 #endif
 #ifdef HAVE_IMLIB2
-#include <Imlib2.h>
+#    include <Imlib2.h>
 #endif
-
 #ifndef _WIN32
-#include <gdk/gdkx.h>
+#    include <gdk/gdkx.h>
 #endif
-#include "event.h"
-#include "debug.h"
-#include "point.h"
-#include "graphics.h"
-#include "color.h"
-#include "item.h"
-#include "window.h"
-#include "callback.h"
-#include "keys.h"
-#include "plugin.h"
-#include "navit/font/freetype/font_freetype.h"
-#include "navit.h"
-#include <errno.h>
-
 #ifndef GDK_KEY_Book
-#define GDK_KEY_Book XF86XK_Book
+#    define GDK_KEY_Book XF86XK_Book
 #endif
 #ifndef GDK_KEY_Calendar
-#define GDK_KEY_Calendar XF86XK_Calendar
+#    define GDK_KEY_Calendar XF86XK_Calendar
 #endif
-
 
 struct graphics_priv {
     GdkEventButton button_event;
@@ -90,7 +87,6 @@ struct graphics_priv {
     char *window_title;
 };
 
-
 struct graphics_gc_priv {
     struct graphics_priv *gr;
     struct color c;
@@ -111,19 +107,18 @@ struct graphics_image_priv {
 };
 
 static void set_drawing_color(cairo_t *cairo, struct color c) {
-    double col_max = 1<<COLOR_BITDEPTH;
-    cairo_set_source_rgba(cairo, c.r/col_max, c.g/col_max, c.b/col_max, c.a/col_max);
+    double col_max = 1 << COLOR_BITDEPTH;
+    cairo_set_source_rgba(cairo, c.r / col_max, c.g / col_max, c.b / col_max, c.a / col_max);
 }
 
-
 static void graphics_destroy(struct graphics_priv *gr) {
-    dbg(lvl_debug,"enter parent %p",gr->parent);
+    dbg(lvl_debug, "enter parent %p", gr->parent);
     gr->freetype_methods.destroy();
     if (!gr->parent) {
-        dbg(lvl_debug,"enter win %p",gr->win);
+        dbg(lvl_debug, "enter win %p", gr->win);
         if (gr->win)
             gtk_widget_destroy(gr->win);
-        dbg(lvl_debug,"widget %p",gr->widget);
+        dbg(lvl_debug, "widget %p", gr->widget);
         if (gr->widget)
             gtk_widget_destroy(gr->widget);
         g_free(gr->window_title);
@@ -132,8 +127,8 @@ static void graphics_destroy(struct graphics_priv *gr) {
 }
 
 static void gc_destroy(struct graphics_gc_priv *gc) {
-    if(gc->texture != NULL)
-        cairo_surface_destroy (gc->texture);
+    if (gc->texture != NULL)
+        cairo_surface_destroy(gc->texture);
     g_free(gc);
 }
 
@@ -144,94 +139,94 @@ static void gc_set_linewidth(struct graphics_gc_priv *gc, int w) {
 static void gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n) {
     int i;
     g_free(gc->dashes);
-    gc->ndashes=n;
-    gc->offset=offset;
-    if(n) {
-        gc->dashes=g_malloc_n(n, sizeof(double));
-        for (i=0; i<n; i++) {
-            gc->dashes[i]=dash_list[i];
+    gc->ndashes = n;
+    gc->offset = offset;
+    if (n) {
+        gc->dashes = g_malloc_n(n, sizeof(double));
+        for (i = 0; i < n; i++) {
+            gc->dashes[i] = dash_list[i];
         }
     } else {
-        gc->dashes=NULL;
+        gc->dashes = NULL;
     }
 }
 
 static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
-    gc->c=*c;
+    gc->c = *c;
 }
 
 static void gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
 }
 
-static void gc_set_texture (struct graphics_gc_priv *gc, struct graphics_image_priv *img) {
+static void gc_set_texture(struct graphics_gc_priv *gc, struct graphics_image_priv *img) {
     cairo_surface_t *surface;
     cairo_t *cr;
 
-    //If called twice, clean up
-    if(gc->texture != NULL)
-        cairo_surface_destroy (gc->texture);
+    // If called twice, clean up
+    if (gc->texture != NULL)
+        cairo_surface_destroy(gc->texture);
     gc->texture = NULL;
 
-    //build fill pattern
-    if((img != NULL) && (img->pixbuf !=NULL)) {
+    // build fill pattern
+    if ((img != NULL) && (img->pixbuf != NULL)) {
 
         // create a new surface same size as the image
-        surface = cairo_image_surface_create (gdk_pixbuf_get_has_alpha (img->pixbuf) ? CAIRO_FORMAT_ARGB32 : CAIRO_FORMAT_RGB24,
-                                              gdk_pixbuf_get_height(img->pixbuf), gdk_pixbuf_get_width(img->pixbuf));
-        //run cairo on it
-        cr = cairo_create (surface);
-        //paint background
+        surface =
+            cairo_image_surface_create(gdk_pixbuf_get_has_alpha(img->pixbuf) ? CAIRO_FORMAT_ARGB32 : CAIRO_FORMAT_RGB24,
+                                       gdk_pixbuf_get_height(img->pixbuf), gdk_pixbuf_get_width(img->pixbuf));
+        // run cairo on it
+        cr = cairo_create(surface);
+        // paint background
         set_drawing_color(cr, gc->c);
         cairo_rectangle(cr, 0, 0, gdk_pixbuf_get_height(img->pixbuf), gdk_pixbuf_get_width(img->pixbuf));
         cairo_fill(cr);
-        //paint image on top
+        // paint image on top
         gdk_cairo_set_source_pixbuf(cr, img->pixbuf, 0, 0);
         cairo_paint(cr);
-        //destroy the cairo context, but keep the surface.
+        // destroy the cairo context, but keep the surface.
         cairo_destroy(cr);
-        gc->texture=surface;
+        gc->texture = surface;
     }
 }
 
 static struct graphics_gc_methods gc_methods = {
-    gc_destroy,
-    gc_set_linewidth,
-    gc_set_dashes,
-    gc_set_foreground,
-    gc_set_background,
-    gc_set_texture,
+    .gc_destroy = gc_destroy,
+    .gc_set_linewidth = gc_set_linewidth,
+    .gc_set_dashes = gc_set_dashes,
+    .gc_set_foreground = gc_set_foreground,
+    .gc_set_background = gc_set_background,
+    .gc_set_texture = gc_set_texture,
 };
 
 static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth) {
-    struct graphics_gc_priv *gc=g_new(struct graphics_gc_priv, 1);
+    struct graphics_gc_priv *gc = g_new(struct graphics_gc_priv, 1);
 
-    *meth=gc_methods;
-    gc->gr=gr;
+    *meth = gc_methods;
+    gc->gr = gr;
 
-    gc->linewidth=1;
-    gc->c.r=0;
-    gc->c.g=0;
-    gc->c.b=0;
-    gc->c.a=0;
-    gc->dashes=NULL;
-    gc->ndashes=0;
-    gc->offset=0;
-    gc->texture=NULL;
+    gc->linewidth = 1;
+    gc->c.r = 0;
+    gc->c.g = 0;
+    gc->c.b = 0;
+    gc->c.a = 0;
+    gc->dashes = NULL;
+    gc->ndashes = 0;
+    gc->offset = 0;
+    gc->texture = NULL;
 
     return gc;
 }
 
-
 static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name,
-        int *w, int *h, struct point *hot, int rotation) {
+                                             int *w, int *h, struct point *hot, int rotation) {
     GdkPixbuf *pixbuf;
     struct graphics_image_priv *ret;
     const char *option;
 
     if (*w == IMAGE_W_H_UNSET && *h == IMAGE_W_H_UNSET)
-        pixbuf=gdk_pixbuf_new_from_file(name, NULL);
+        pixbuf = gdk_pixbuf_new_from_file(name, NULL);
     else
-        pixbuf=gdk_pixbuf_new_from_file_at_size(name, *w, *h, NULL);
+        pixbuf = gdk_pixbuf_new_from_file_at_size(name, *w, *h, NULL);
 
     if (!pixbuf)
         return NULL;
@@ -240,18 +235,18 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
         GdkPixbuf *tmp;
         switch (rotation) {
         case 90:
-            rotation=270;
+            rotation = 270;
             break;
         case 180:
             break;
         case 270:
-            rotation=90;
+            rotation = 90;
             break;
         default:
             return NULL;
         }
 
-        tmp=gdk_pixbuf_rotate_simple(pixbuf, rotation);
+        tmp = gdk_pixbuf_rotate_simple(pixbuf, rotation);
 
         if (!tmp) {
             g_object_unref(pixbuf);
@@ -259,26 +254,26 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
         }
 
         g_object_unref(pixbuf);
-        pixbuf=tmp;
+        pixbuf = tmp;
     }
 
-    ret=g_new0(struct graphics_image_priv, 1);
-    ret->pixbuf=pixbuf;
-    ret->w=gdk_pixbuf_get_width(pixbuf);
-    ret->h=gdk_pixbuf_get_height(pixbuf);
-    *w=ret->w;
-    *h=ret->h;
+    ret = g_new0(struct graphics_image_priv, 1);
+    ret->pixbuf = pixbuf;
+    ret->w = gdk_pixbuf_get_width(pixbuf);
+    ret->h = gdk_pixbuf_get_height(pixbuf);
+    *w = ret->w;
+    *h = ret->h;
     if (hot) {
-        option=gdk_pixbuf_get_option(pixbuf, "x_hot");
+        option = gdk_pixbuf_get_option(pixbuf, "x_hot");
         if (option)
-            hot->x=atoi(option);
+            hot->x = atoi(option);
         else
-            hot->x=ret->w/2-1;
-        option=gdk_pixbuf_get_option(pixbuf, "y_hot");
+            hot->x = ret->w / 2 - 1;
+        option = gdk_pixbuf_get_option(pixbuf, "y_hot");
         if (option)
-            hot->y=atoi(option);
+            hot->y = atoi(option);
         else
-            hot->y=ret->h/2-1;
+            hot->y = ret->h / 2 - 1;
     }
     return ret;
 }
@@ -299,7 +294,7 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
     if (!count)
         return;
     cairo_move_to(gr->cairo, p[0].x, p[0].y);
-    for (i=1; i<count; i++) {
+    for (i = 1; i < count; i++) {
         cairo_line_to(gr->cairo, p[i].x, p[i].y);
     }
     set_stroke_params_from_gc(gr->cairo, gc);
@@ -309,46 +304,46 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
 static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     int i;
     set_drawing_color(gr->cairo, gc->c);
-    if(gc->texture != NULL) {
+    if (gc->texture != NULL) {
         cairo_set_source_surface(gr->cairo, gc->texture, 0, 0);
         cairo_pattern_set_extend(cairo_get_source(gr->cairo), CAIRO_EXTEND_REPEAT);
     }
     cairo_move_to(gr->cairo, p[0].x, p[0].y);
-    for (i=1; i<count; i++) {
+    for (i = 1; i < count; i++) {
         cairo_line_to(gr->cairo, p[i].x, p[i].y);
     }
     cairo_fill(gr->cairo);
 }
 
-static void draw_polygon_with_holes (struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count,
-                                     int hole_count, int* ccount, struct point **holes) {
+static void draw_polygon_with_holes(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count,
+                                    int hole_count, int *ccount, struct point **holes) {
     int i;
     int j;
     cairo_fill_rule_t old_rule;
     set_drawing_color(gr->cairo, gc->c);
-    if(gc->texture != NULL) {
+    if (gc->texture != NULL) {
         cairo_set_source_surface(gr->cairo, gc->texture, 0, 0);
         cairo_pattern_set_extend(cairo_get_source(gr->cairo), CAIRO_EXTEND_REPEAT);
     }
     /* remember current fill rule */
-    old_rule = cairo_get_fill_rule (gr->cairo);
+    old_rule = cairo_get_fill_rule(gr->cairo);
     /* set fill rule */
     cairo_set_fill_rule(gr->cairo, CAIRO_FILL_RULE_EVEN_ODD);
     cairo_move_to(gr->cairo, p[0].x, p[0].y);
-    for (i=1; i<count; i++) {
+    for (i = 1; i < count; i++) {
         cairo_line_to(gr->cairo, p[i].x, p[i].y);
     }
-    for(j = 0; j < hole_count; j ++) {
-        if(hole_count > 0) {
+    for (j = 0; j < hole_count; j++) {
+        if (hole_count > 0) {
             cairo_move_to(gr->cairo, holes[j][0].x, holes[j][0].y);
-            for(i=0; i < ccount[j]; i ++) {
+            for (i = 0; i < ccount[j]; i++) {
                 cairo_line_to(gr->cairo, holes[j][i].x, holes[j][i].y);
             }
         }
     }
     cairo_fill(gr->cairo);
     /* restore fill rule */
-    cairo_set_fill_rule (gr->cairo,old_rule);
+    cairo_set_fill_rule(gr->cairo, old_rule);
 }
 
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
@@ -363,15 +358,15 @@ static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc
 }
 
 static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r) {
-    cairo_arc (gr->cairo,  p->x, p->y, r/2, 0.0, 2*M_PI);
+    cairo_arc(gr->cairo, p->x, p->y, r / 2, 0.0, 2 * M_PI);
     set_stroke_params_from_gc(gr->cairo, gc);
     cairo_stroke(gr->cairo);
 }
 
 static void draw_rgb_image_buffer(cairo_t *cairo, int buffer_width, int buffer_height, int draw_pos_x, int draw_pos_y,
                                   int stride, unsigned char *buffer) {
-    cairo_surface_t *buffer_surface = cairo_image_surface_create_for_data(
-                                          buffer, CAIRO_FORMAT_ARGB32, buffer_width, buffer_height, stride);
+    cairo_surface_t *buffer_surface =
+        cairo_image_surface_create_for_data(buffer, CAIRO_FORMAT_ARGB32, buffer_width, buffer_height, stride);
     cairo_set_source_surface(cairo, buffer_surface, draw_pos_x, draw_pos_y);
     cairo_paint(cairo);
     cairo_surface_destroy(buffer_surface);
@@ -379,43 +374,44 @@ static void draw_rgb_image_buffer(cairo_t *cairo, int buffer_width, int buffer_h
 
 static void display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg,
                               struct graphics_gc_priv *bg, struct point *p) {
-    int i,x,y,stride;
+    int i, x, y, stride;
     struct font_freetype_glyph *g, **gp;
-    struct color transparent= {0x0,0x0,0x0,0x0};
+    struct color transparent = {0x0, 0x0, 0x0, 0x0};
 
-    gp=text->glyph;
-    i=text->glyph_count;
-    x=p->x << 6;
-    y=p->y << 6;
+    gp = text->glyph;
+    i = text->glyph_count;
+    x = p->x << 6;
+    y = p->y << 6;
     while (i-- > 0) {
-        g=*gp++;
-        if (g->w && g->h && bg ) {
+        g = *gp++;
+        if (g->w && g->h && bg) {
             unsigned char *shadow;
-            stride=cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, g->w+2);
-            shadow=g_malloc(stride*(g->h+2));
+            stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, g->w + 2);
+            shadow = g_malloc(stride * (g->h + 2));
             gr->freetype_methods.get_shadow(g, shadow, stride, &bg->c, &transparent);
-            draw_rgb_image_buffer(gr->cairo, g->w+2, g->h+2, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, stride, shadow);
+            draw_rgb_image_buffer(gr->cairo, g->w + 2, g->h + 2, ((x + g->x) >> 6) - 1, ((y + g->y) >> 6) - 1, stride,
+                                  shadow);
             g_free(shadow);
         }
-        x+=g->dx;
-        y+=g->dy;
+        x += g->dx;
+        y += g->dy;
     }
-    x=p->x << 6;
-    y=p->y << 6;
-    gp=text->glyph;
-    i=text->glyph_count;
+    x = p->x << 6;
+    y = p->y << 6;
+    gp = text->glyph;
+    i = text->glyph_count;
     while (i-- > 0) {
-        g=*gp++;
+        g = *gp++;
         if (g->w && g->h) {
             unsigned char *glyph;
-            stride=cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, g->w);
-            glyph=g_malloc(stride*g->h);
-            gr->freetype_methods.get_glyph(g, glyph, stride, &fg->c, bg?&bg->c:&transparent, &transparent);
-            draw_rgb_image_buffer(gr->cairo, g->w, g->h, (x+g->x)>>6, (y+g->y)>>6, stride, glyph);
+            stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, g->w);
+            glyph = g_malloc(stride * g->h);
+            gr->freetype_methods.get_glyph(g, glyph, stride, &fg->c, bg ? &bg->c : &transparent, &transparent);
+            draw_rgb_image_buffer(gr->cairo, g->w, g->h, (x + g->x) >> 6, (y + g->y) >> 6, stride, glyph);
             g_free(glyph);
         }
-        x+=g->dx;
-        y+=g->dy;
+        x += g->dx;
+        y += g->dy;
     }
 }
 
@@ -423,8 +419,8 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
                       struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     struct font_freetype_text *t;
 
-    if (! font) {
-        dbg(lvl_error,"no font, returning");
+    if (!font) {
+        dbg(lvl_error, "no font, returning");
         return;
     }
 #if 0 /* Temporarily disabled because it destroys text rendering of overlays and in gui internal in some places */
@@ -439,8 +435,8 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
     }
 #endif
     if (bg && !bg->c.a)
-        bg=NULL;
-    t=gr->freetype_methods.text_new(text, (struct font_freetype_font *)font, dx, dy);
+        bg = NULL;
+    t = gr->freetype_methods.text_new(text, (struct font_freetype_font *)font, dx, dy);
     display_text_draw(t, gr, fg, bg, p);
     gr->freetype_methods.text_destroy(t);
 }
@@ -452,94 +448,95 @@ static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, st
 }
 
 #ifdef HAVE_IMLIB2
-static unsigned char* create_buffer_with_stride_if_required(unsigned char *input_buffer, int w, int h,
-        size_t bytes_per_pixel, size_t output_stride) {
+static unsigned char *create_buffer_with_stride_if_required(unsigned char *input_buffer, int w, int h,
+                                                            size_t bytes_per_pixel, size_t output_stride) {
     int line;
     size_t input_offset, output_offset;
     unsigned char *out_buf;
-    size_t input_stride = w*bytes_per_pixel;
+    size_t input_stride = w * bytes_per_pixel;
     if (input_stride == output_stride) {
         return NULL;
     }
 
-    out_buf = g_malloc(h*output_stride);
+    out_buf = g_malloc(h * output_stride);
     for (line = 0; line < h; line++) {
-        input_offset =  line*input_stride;
-        output_offset = line*output_stride;
-        memcpy(out_buf+output_offset, input_buffer+input_offset, input_stride);
+        input_offset = line * input_stride;
+        output_offset = line * output_stride;
+        memcpy(out_buf + output_offset, input_buffer + input_offset, input_stride);
     }
     return out_buf;
 }
 
 static void draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count,
                             struct graphics_image_priv *img) {
-    int w,h;
+    int w, h;
     DATA32 *intermediate_buffer;
-    unsigned char* intermediate_buffer_aligned;
+    unsigned char *intermediate_buffer_aligned;
     Imlib_Image intermediate_image;
     size_t stride;
-    dbg(lvl_debug,"draw_image_warp data=%p", img);
+    dbg(lvl_debug, "draw_image_warp data=%p", img);
     w = img->w;
     h = img->h;
     if (!img->image) {
-        int x,y;
-        img->image=imlib_create_image(w, h);
+        int x, y;
+        img->image = imlib_create_image(w, h);
         imlib_context_set_image(img->image);
-        if (gdk_pixbuf_get_colorspace(img->pixbuf) != GDK_COLORSPACE_RGB || gdk_pixbuf_get_bits_per_sample(img->pixbuf) != 8) {
-            dbg(lvl_error,"implement me");
+        if (gdk_pixbuf_get_colorspace(img->pixbuf) != GDK_COLORSPACE_RGB
+            || gdk_pixbuf_get_bits_per_sample(img->pixbuf) != 8) {
+            dbg(lvl_error, "implement me");
         } else if (gdk_pixbuf_get_has_alpha(img->pixbuf) && gdk_pixbuf_get_n_channels(img->pixbuf) == 4) {
-            for (y=0 ; y < h ; y++) {
-                unsigned int *dst=imlib_image_get_data()+y*w;
-                unsigned char *src=gdk_pixbuf_get_pixels(img->pixbuf)+y*gdk_pixbuf_get_rowstride(img->pixbuf);
-                for (x=0 ; x < w ; x++) {
-                    *dst++=0xff000000|(src[0] << 16)|(src[1] << 8)|src[2];
-                    src+=4;
+            for (y = 0; y < h; y++) {
+                unsigned int *dst = imlib_image_get_data() + y * w;
+                unsigned char *src = gdk_pixbuf_get_pixels(img->pixbuf) + y * gdk_pixbuf_get_rowstride(img->pixbuf);
+                for (x = 0; x < w; x++) {
+                    *dst++ = 0xff000000 | (src[0] << 16) | (src[1] << 8) | src[2];
+                    src += 4;
                 }
             }
         } else if (!gdk_pixbuf_get_has_alpha(img->pixbuf) && gdk_pixbuf_get_n_channels(img->pixbuf) == 3) {
-            for (y=0 ; y < h ; y++) {
-                unsigned int *dst=imlib_image_get_data()+y*w;
-                unsigned char *src=gdk_pixbuf_get_pixels(img->pixbuf)+y*gdk_pixbuf_get_rowstride(img->pixbuf);
-                for (x=0 ; x < w ; x++) {
-                    *dst++=0xff000000|(src[0] << 16)|(src[1] << 8)|src[2];
-                    src+=3;
+            for (y = 0; y < h; y++) {
+                unsigned int *dst = imlib_image_get_data() + y * w;
+                unsigned char *src = gdk_pixbuf_get_pixels(img->pixbuf) + y * gdk_pixbuf_get_rowstride(img->pixbuf);
+                for (x = 0; x < w; x++) {
+                    *dst++ = 0xff000000 | (src[0] << 16) | (src[1] << 8) | src[2];
+                    src += 3;
                 }
             }
         } else {
-            dbg(lvl_error,"implement me");
+            dbg(lvl_error, "implement me");
         }
-
     }
 
-    intermediate_buffer = g_malloc0(gr->width*gr->height*4);
+    intermediate_buffer = g_malloc0(gr->width * gr->height * 4);
     intermediate_image = imlib_create_image_using_data(gr->width, gr->height, intermediate_buffer);
     imlib_context_set_image(intermediate_image);
     imlib_image_set_has_alpha(1);
 
     if (count == 3) {
         /* 0 1
-        	   2   */
-        imlib_blend_image_onto_image_skewed(img->image, 1, 0, 0, w, h, p[0].x, p[0].y, p[1].x-p[0].x, p[1].y-p[0].y,
-                                            p[2].x-p[0].x, p[2].y-p[0].y);
+                   2   */
+        imlib_blend_image_onto_image_skewed(img->image, 1, 0, 0, w, h, p[0].x, p[0].y, p[1].x - p[0].x, p[1].y - p[0].y,
+                                            p[2].x - p[0].x, p[2].y - p[0].y);
     }
     if (count == 2) {
         /* 0
-        	     1 */
-        imlib_blend_image_onto_image_skewed(img->image, 1, 0, 0, w, h, p[0].x, p[0].y, p[1].x-p[0].x, 0, 0, p[1].y-p[0].y);
+                     1 */
+        imlib_blend_image_onto_image_skewed(img->image, 1, 0, 0, w, h, p[0].x, p[0].y, p[1].x - p[0].x, 0, 0,
+                                            p[1].y - p[0].y);
     }
     if (count == 1) {
         /*
                    0
-        	     */
-        imlib_blend_image_onto_image_skewed(img->image, 1, 0, 0, w, h, p[0].x-w/2, p[0].y-h/2, w, 0, 0, h);
+                     */
+        imlib_blend_image_onto_image_skewed(img->image, 1, 0, 0, w, h, p[0].x - w / 2, p[0].y - h / 2, w, 0, 0, h);
     }
 
     stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, gr->width);
-    intermediate_buffer_aligned = create_buffer_with_stride_if_required(
-                                      (unsigned char* )intermediate_buffer, gr->width, gr->height, sizeof(DATA32), stride);
+    intermediate_buffer_aligned = create_buffer_with_stride_if_required((unsigned char *)intermediate_buffer, gr->width,
+                                                                        gr->height, sizeof(DATA32), stride);
     cairo_surface_t *buffer_surface = cairo_image_surface_create_for_data(
-                                          intermediate_buffer_aligned ? intermediate_buffer_aligned : (unsigned char*)intermediate_buffer,
-                                          CAIRO_FORMAT_ARGB32, gr->width, gr->height, stride);
+        intermediate_buffer_aligned ? intermediate_buffer_aligned : (unsigned char *)intermediate_buffer,
+        CAIRO_FORMAT_ARGB32, gr->width, gr->height, stride);
     cairo_set_source_surface(gr->cairo, buffer_surface, 0, 0);
     cairo_paint(gr->cairo);
 
@@ -551,10 +548,10 @@ static void draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *f
 #endif
 
 static void overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *r) {
-    r->x=overlay->p.x;
-    r->y=overlay->p.y;
-    r->width=overlay->width;
-    r->height=overlay->height;
+    r->x = overlay->p.x;
+    r->y = overlay->p.y;
+    r->width = overlay->width;
+    r->height = overlay->height;
     if (!overlay->wraparound)
         return;
     if (r->x < 0)
@@ -573,10 +570,10 @@ static void overlay_draw(struct graphics_priv *parent, struct graphics_priv *ove
     if (parent->overlay_disabled || overlay->overlay_disabled || overlay->overlay_autodisabled)
         return;
     overlay_rect(parent, overlay, &or);
-    if (! gdk_rectangle_intersect(re, &or, &ir))
+    if (!gdk_rectangle_intersect(re, &or, &ir))
         return;
-    or.x-=re->x;
-    or.y-=re->y;
+    or.x -= re->x;
+    or.y -= re->y;
     cairo_surface_t *overlay_surface = cairo_get_target(overlay->cairo);
     cairo_set_source_surface(cairo, overlay_surface, or.x, or.y);
     cairo_paint(cairo);
@@ -584,16 +581,15 @@ static void overlay_draw(struct graphics_priv *parent, struct graphics_priv *ove
 
 static void draw_drag(struct graphics_priv *gr, struct point *p) {
     if (p)
-        gr->p=*p;
+        gr->p = *p;
     else {
-        gr->p.x=0;
-        gr->p.y=0;
+        gr->p.x = 0;
+        gr->p.y = 0;
     }
 }
 
-
 static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
-    gr->background_gc=gc;
+    gr->background_gc = gc;
 }
 
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
@@ -606,35 +602,35 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
 
 /* Events */
 
-static gint configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data) {
-    struct graphics_priv *gra=user_data;
-    if (! gra->visible)
+static gint configure(GtkWidget *widget, GdkEventConfigure *event, gpointer user_data) {
+    struct graphics_priv *gra = user_data;
+    if (!gra->visible)
         return TRUE;
 #ifndef _WIN32
-    dbg(lvl_debug,"window=%lu", GDK_WINDOW_XID(widget->window));
+    dbg(lvl_debug, "window=%lu", GDK_WINDOW_XID(widget->window));
 #endif
-    gra->width=widget->allocation.width;
-    gra->height=widget->allocation.height;
+    gra->width = widget->allocation.width;
+    gra->height = widget->allocation.height;
     cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, gra->width, gra->height);
     if (gra->cairo)
         cairo_destroy(gra->cairo);
     gra->cairo = cairo_create(surface);
     cairo_surface_destroy(surface);
-    cairo_set_antialias (gra->cairo, CAIRO_ANTIALIAS_GOOD);
+    cairo_set_antialias(gra->cairo, CAIRO_ANTIALIAS_GOOD);
     callback_list_call_attr_2(gra->cbl, attr_resize, GINT_TO_POINTER(gra->width), GINT_TO_POINTER(gra->height));
     return TRUE;
 }
 
-static gint expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data) {
-    struct graphics_priv *gra=user_data;
-    struct graphics_gc_priv *background_gc=gra->background_gc;
+static gint expose(GtkWidget *widget, GdkEventExpose *event, gpointer user_data) {
+    struct graphics_priv *gra = user_data;
+    struct graphics_gc_priv *background_gc = gra->background_gc;
     struct graphics_priv *overlay;
 
-    gra->visible=1;
-    if (! gra->cairo)
+    gra->visible = 1;
+    if (!gra->cairo)
         configure(widget, NULL, user_data);
 
-    cairo_t *cairo=gdk_cairo_create(widget->window);
+    cairo_t *cairo = gdk_cairo_create(widget->window);
     if (gra->p.x || gra->p.y) {
         set_drawing_color(cairo, background_gc->c);
         cairo_paint(cairo);
@@ -644,8 +640,8 @@ static gint expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_dat
 
     overlay = gra->overlays;
     while (overlay) {
-        overlay_draw(gra,overlay,&event->area,cairo);
-        overlay=overlay->next;
+        overlay_draw(gra, overlay, &event->area, cairo);
+        overlay = overlay->next;
     }
 
     cairo_destroy(cairo);
@@ -653,13 +649,13 @@ static gint expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_dat
 }
 
 static int tv_delta(struct timeval *old, struct timeval *new) {
-    if (new->tv_sec-old->tv_sec >= INT_MAX/1000)
+    if (new->tv_sec - old->tv_sec >= INT_MAX / 1000)
         return INT_MAX;
-    return (new->tv_sec-old->tv_sec)*1000+(new->tv_usec-old->tv_usec)/1000;
+    return (new->tv_sec - old->tv_sec) * 1000 + (new->tv_usec - old->tv_usec) / 1000;
 }
 
-static gint button_press(GtkWidget * widget, GdkEventButton * event, gpointer user_data) {
-    struct graphics_priv *this=user_data;
+static gint button_press(GtkWidget *widget, GdkEventButton *event, gpointer user_data) {
+    struct graphics_priv *this = user_data;
     struct point p;
     struct timeval tv;
     struct timezone tz;
@@ -669,18 +665,18 @@ static gint button_press(GtkWidget * widget, GdkEventButton * event, gpointer us
     if (event->button < 8) {
         if (tv_delta(&this->button_press[event->button], &tv) < this->timeout)
             return FALSE;
-        this->button_press[event->button]= tv;
-        this->button_release[event->button].tv_sec=0;
-        this->button_release[event->button].tv_usec=0;
+        this->button_press[event->button] = tv;
+        this->button_release[event->button].tv_sec = 0;
+        this->button_release[event->button].tv_usec = 0;
     }
-    p.x=event->x;
-    p.y=event->y;
+    p.x = event->x;
+    p.y = event->y;
     callback_list_call_attr_3(this->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(event->button), (void *)&p);
     return FALSE;
 }
 
-static gint button_release(GtkWidget * widget, GdkEventButton * event, gpointer user_data) {
-    struct graphics_priv *this=user_data;
+static gint button_release(GtkWidget *widget, GdkEventButton *event, gpointer user_data) {
+    struct graphics_priv *this = user_data;
     struct point p;
     struct timeval tv;
     struct timezone tz;
@@ -690,34 +686,32 @@ static gint button_release(GtkWidget * widget, GdkEventButton * event, gpointer 
     if (event->button < 8) {
         if (tv_delta(&this->button_release[event->button], &tv) < this->timeout)
             return FALSE;
-        this->button_release[event->button]= tv;
-        this->button_press[event->button].tv_sec=0;
-        this->button_press[event->button].tv_usec=0;
+        this->button_release[event->button] = tv;
+        this->button_press[event->button].tv_sec = 0;
+        this->button_press[event->button].tv_usec = 0;
     }
-    p.x=event->x;
-    p.y=event->y;
+    p.x = event->x;
+    p.y = event->y;
     callback_list_call_attr_3(this->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(event->button), (void *)&p);
     return FALSE;
 }
 
-
-
-static gint scroll(GtkWidget * widget, GdkEventScroll * event, gpointer user_data) {
-    struct graphics_priv *this=user_data;
+static gint scroll(GtkWidget *widget, GdkEventScroll *event, gpointer user_data) {
+    struct graphics_priv *this = user_data;
     struct point p;
     int button;
 
-    p.x=event->x;
-    p.y=event->y;
+    p.x = event->x;
+    p.y = event->y;
     switch (event->direction) {
     case GDK_SCROLL_UP:
-        button=4;
+        button = 4;
         break;
     case GDK_SCROLL_DOWN:
-        button=5;
+        button = 5;
         break;
     default:
-        button=-1;
+        button = -1;
         break;
     }
     if (button != -1) {
@@ -727,12 +721,12 @@ static gint scroll(GtkWidget * widget, GdkEventScroll * event, gpointer user_dat
     return FALSE;
 }
 
-static gint motion_notify(GtkWidget * widget, GdkEventMotion * event, gpointer user_data) {
-    struct graphics_priv *this=user_data;
+static gint motion_notify(GtkWidget *widget, GdkEventMotion *event, gpointer user_data) {
+    struct graphics_priv *this = user_data;
     struct point p;
 
-    p.x=event->x;
-    p.y=event->y;
+    p.x = event->x;
+    p.y = event->y;
     callback_list_call_attr_1(this->cbl, attr_motion, (void *)&p);
     return FALSE;
 }
@@ -745,11 +739,11 @@ static gint motion_notify(GtkWidget * widget, GdkEventMotion * event, gpointer u
  * * @returns TRUE
  * */
 static gint delete(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
-    struct graphics_priv *this=user_data;
-    dbg(lvl_debug,"enter this->win=%p",this->win);
+    struct graphics_priv *this = user_data;
+    dbg(lvl_debug, "enter this->win=%p", this->win);
     if (this->delay & 2) {
         if (this->win)
-            this->win=NULL;
+            this->win = NULL;
     } else {
         callback_list_call_attr_0(this->cbl, attr_window_closed);
     }
@@ -757,78 +751,78 @@ static gint delete(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
 }
 
 static gint keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
-    struct graphics_priv *this=user_data;
-    int len,ucode;
+    struct graphics_priv *this = user_data;
+    int len, ucode;
     char key[8];
-    ucode=gdk_keyval_to_unicode(event->keyval);
-    len=g_unichar_to_utf8(ucode, key);
-    key[len]='\0';
+    ucode = gdk_keyval_to_unicode(event->keyval);
+    len = g_unichar_to_utf8(ucode, key);
+    key[len] = '\0';
 
     switch (event->keyval) {
     case GDK_KEY_Up:
-        key[0]=NAVIT_KEY_UP;
-        key[1]='\0';
+        key[0] = NAVIT_KEY_UP;
+        key[1] = '\0';
         break;
     case GDK_KEY_Down:
-        key[0]=NAVIT_KEY_DOWN;
-        key[1]='\0';
+        key[0] = NAVIT_KEY_DOWN;
+        key[1] = '\0';
         break;
     case GDK_KEY_Left:
-        key[0]=NAVIT_KEY_LEFT;
-        key[1]='\0';
+        key[0] = NAVIT_KEY_LEFT;
+        key[1] = '\0';
         break;
     case GDK_KEY_Right:
-        key[0]=NAVIT_KEY_RIGHT;
-        key[1]='\0';
+        key[0] = NAVIT_KEY_RIGHT;
+        key[1] = '\0';
         break;
     case GDK_KEY_BackSpace:
-        key[0]=NAVIT_KEY_BACKSPACE;
-        key[1]='\0';
+        key[0] = NAVIT_KEY_BACKSPACE;
+        key[1] = '\0';
         break;
     case GDK_KEY_Tab:
-        key[0]='\t';
-        key[1]='\0';
+        key[0] = '\t';
+        key[1] = '\0';
         break;
     case GDK_KEY_Delete:
-        key[0]=NAVIT_KEY_DELETE;
-        key[1]='\0';
+        key[0] = NAVIT_KEY_DELETE;
+        key[1] = '\0';
         break;
     case GDK_KEY_Escape:
-        key[0]=NAVIT_KEY_BACK;
-        key[1]='\0';
+        key[0] = NAVIT_KEY_BACK;
+        key[1] = '\0';
         break;
     case GDK_KEY_Return:
     case GDK_KEY_KP_Enter:
-        key[0]=NAVIT_KEY_RETURN;
-        key[1]='\0';
+        key[0] = NAVIT_KEY_RETURN;
+        key[1] = '\0';
         break;
     case GDK_KEY_Book:
 #ifdef USE_HILDON
     case GDK_KEY_F7:
 #endif
-        key[0]=NAVIT_KEY_ZOOM_IN;
-        key[1]='\0';
+        key[0] = NAVIT_KEY_ZOOM_IN;
+        key[1] = '\0';
         break;
     case GDK_KEY_Calendar:
 #ifdef USE_HILDON
     case GDK_KEY_F8:
 #endif
-        key[0]=NAVIT_KEY_ZOOM_OUT;
-        key[1]='\0';
+        key[0] = NAVIT_KEY_ZOOM_OUT;
+        key[1] = '\0';
         break;
     case GDK_KEY_Page_Up:
-        key[0]=NAVIT_KEY_PAGE_UP;
-        key[1]='\0';
+        key[0] = NAVIT_KEY_PAGE_UP;
+        key[1] = '\0';
         break;
     case GDK_KEY_Page_Down:
-        key[0]=NAVIT_KEY_PAGE_DOWN;
-        key[1]='\0';
+        key[0] = NAVIT_KEY_PAGE_DOWN;
+        key[1] = '\0';
         break;
     }
     if (key[0])
         callback_list_call_attr_1(this->cbl, attr_keypress, (void *)key);
     else
-        dbg(lvl_debug,"keyval 0x%x", event->keyval);
+        dbg(lvl_debug, "keyval 0x%x", event->keyval);
 
     return FALSE;
 }
@@ -837,7 +831,7 @@ static struct graphics_priv *graphics_gtk_drawing_area_new_helper(struct graphic
 
 static void overlay_disable(struct graphics_priv *gr, int disabled) {
     if (!gr->overlay_disabled != !disabled) {
-        gr->overlay_disabled=disabled;
+        gr->overlay_disabled = disabled;
         if (gr->parent) {
             GdkRectangle r;
             overlay_rect(gr->parent, gr, &r);
@@ -847,13 +841,13 @@ static void overlay_disable(struct graphics_priv *gr, int disabled) {
 }
 
 static void overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int wraparound) {
-    //do not dereference parent for non overlay osds
-    if(!this->parent) {
+    // do not dereference parent for non overlay osds
+    if (!this->parent) {
         return;
     }
 
     int changed = 0;
-    int w2,h2;
+    int w2, h2;
 
     if (w == 0) {
         w2 = 1;
@@ -883,7 +877,7 @@ static void overlay_resize(struct graphics_priv *this, struct point *p, int w, i
     if (changed) {
         cairo_destroy(this->cairo);
         cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w2, h2);
-        this->cairo=cairo_create(surface);
+        this->cairo = cairo_create(surface);
         cairo_surface_destroy(surface);
 
         if ((w == 0) || (h == 0)) {
@@ -904,16 +898,16 @@ static void get_data_window(struct graphics_priv *this, unsigned int xid) {
     if (!gtk_widget_get_parent(this->widget))
         gtk_widget_ref(this->widget);
     gtk_window_set_default_size(GTK_WINDOW(this->win), this->win_w, this->win_h);
-    dbg(lvl_debug,"h= %i, w= %i",this->win_h, this->win_w);
+    dbg(lvl_debug, "h= %i, w= %i", this->win_h, this->win_w);
     gtk_window_set_title(GTK_WINDOW(this->win), this->window_title);
-    gtk_window_set_wmclass (GTK_WINDOW (this->win), "navit", this->window_title);
+    gtk_window_set_wmclass(GTK_WINDOW(this->win), "navit", this->window_title);
     gtk_widget_realize(this->win);
     if (gtk_widget_get_parent(this->widget))
         gtk_widget_reparent(this->widget, this->win);
     else
         gtk_container_add(GTK_CONTAINER(this->win), this->widget);
     gtk_widget_show_all(this->win);
-    GTK_WIDGET_SET_FLAGS (this->widget, GTK_CAN_FOCUS);
+    GTK_WIDGET_SET_FLAGS(this->widget, GTK_CAN_FOCUS);
     gtk_widget_set_sensitive(this->widget, TRUE);
     gtk_widget_grab_focus(this->widget);
     g_signal_connect(G_OBJECT(this->widget), "key-press-event", G_CALLBACK(keypress), this);
@@ -921,7 +915,7 @@ static void get_data_window(struct graphics_priv *this, unsigned int xid) {
 }
 
 static int set_attr(struct graphics_priv *gr, struct attr *attr) {
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter");
     switch (attr->type) {
     case attr_windowid:
         get_data_window(gr, attr->u.num);
@@ -932,14 +926,14 @@ static int set_attr(struct graphics_priv *gr, struct attr *attr) {
 }
 
 static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
-        int w, int h, int wraparound) {
-    int w2,h2;
-    struct graphics_priv *this=graphics_gtk_drawing_area_new_helper(meth);
-    this->widget=gr->widget;
-    this->p=*p;
-    this->width=w;
-    this->height=h;
-    this->parent=gr;
+                                         int w, int h, int wraparound) {
+    int w2, h2;
+    struct graphics_priv *this = graphics_gtk_drawing_area_new_helper(meth);
+    this->widget = gr->widget;
+    this->p = *p;
+    this->width = w;
+    this->height = h;
+    this->parent = gr;
 
     /* If either height or width is 0, we set it to 1 to avoid warnings, and
      * disable the overlay. */
@@ -956,7 +950,7 @@ static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphi
     }
 
     cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w2, h2);
-    this->cairo=cairo_create(surface);
+    this->cairo = cairo_create(surface);
     cairo_surface_destroy(surface);
 
     if ((w == 0) || (h == 0)) {
@@ -965,18 +959,17 @@ static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphi
         this->overlay_autodisabled = 0;
     }
 
-    this->next=gr->overlays;
-    this->wraparound=wraparound;
-    gr->overlays=this;
+    this->next = gr->overlays;
+    this->wraparound = wraparound;
+    gr->overlays = this;
     return this;
 }
 
 static int gtk_argc;
-static char **gtk_argv= {NULL};
-
+static char **gtk_argv = {NULL};
 
 static int graphics_gtk_drawing_area_fullscreen(struct window *w, int on) {
-    struct graphics_priv *gr=w->priv;
+    struct graphics_priv *gr = w->priv;
     if (on)
         gtk_window_fullscreen(GTK_WINDOW(gr->win));
     else
@@ -985,7 +978,7 @@ static int graphics_gtk_drawing_area_fullscreen(struct window *w, int on) {
 }
 
 static void graphics_gtk_drawing_area_disable_suspend(struct window *w) {
-    struct graphics_priv *gr=w->priv;
+    struct graphics_priv *gr = w->priv;
 
 #ifndef _WIN32
     if (gr->pid)
@@ -995,34 +988,33 @@ static void graphics_gtk_drawing_area_disable_suspend(struct window *w) {
 #endif
 }
 
-
 static void *get_data(struct graphics_priv *this, char const *type) {
     FILE *f;
-    if (!strcmp(type,"gtk_widget"))
+    if (!strcmp(type, "gtk_widget"))
         return this->widget;
 #ifndef _WIN32
-    if (!strcmp(type,"xwindow_id"))
+    if (!strcmp(type, "xwindow_id"))
         return (void *)GDK_WINDOW_XID(this->win ? this->win->window : this->widget->window);
 #endif
-    if (!strcmp(type,"window")) {
+    if (!strcmp(type, "window")) {
         char *cp = getenv("NAVIT_XID");
         unsigned xid = 0;
         if (cp)
             xid = strtol(cp, NULL, 0);
         if (!(this->delay & 1))
             get_data_window(this, xid);
-        this->window.fullscreen=graphics_gtk_drawing_area_fullscreen;
-        this->window.disable_suspend=graphics_gtk_drawing_area_disable_suspend;
-        this->window.priv=this;
+        this->window.fullscreen = graphics_gtk_drawing_area_fullscreen;
+        this->window.disable_suspend = graphics_gtk_drawing_area_disable_suspend;
+        this->window.priv = this;
 #if !defined(_WIN32) && !defined(__CEGCC__)
-        f=popen("pidof /usr/bin/ipaq-sleep","r");
+        f = popen("pidof /usr/bin/ipaq-sleep", "r");
         if (f) {
             int fscanf_result;
-            fscanf_result = fscanf(f,"%d",&this->pid);
+            fscanf_result = fscanf(f, "%d", &this->pid);
             if ((fscanf_result == EOF) || (fscanf_result == 0)) {
                 dbg(lvl_warning, "Failed to open iPaq sleep file. Error-Code: %d", errno);
             }
-            dbg(lvl_debug,"ipaq_sleep pid=%d", this->pid);
+            dbg(lvl_debug, "ipaq_sleep pid=%d", this->pid);
             pclose(f);
         }
 #endif
@@ -1036,13 +1028,13 @@ static void *get_data(struct graphics_priv *this, char const *type) {
  * @param gr self handle
  * @return dpi value
  */
-static navit_float get_dpi(struct graphics_priv * gr) {
+static navit_float get_dpi(struct graphics_priv *gr) {
     gdouble dpi = 96;
     GdkScreen *screen = gtk_widget_get_screen(gr->widget);
-    if(screen != NULL) {
-        dpi = gdk_screen_get_resolution (screen);
+    if (screen != NULL) {
+        dpi = gdk_screen_get_resolution(screen);
     }
-    return (navit_float) dpi;
+    return (navit_float)dpi;
 }
 
 static struct graphics_methods graphics_methods = {
@@ -1071,58 +1063,60 @@ static struct graphics_methods graphics_methods = {
     overlay_disable,
     overlay_resize,
     set_attr,
-    NULL, /* show_native_keyboard */
-    NULL, /* hide_native_keyboard */
+    NULL,    /* show_native_keyboard */
+    NULL,    /* hide_native_keyboard */
     get_dpi, /* get dpi */
-    draw_polygon_with_holes
+    draw_polygon_with_holes,
 };
 
 static struct graphics_priv *graphics_gtk_drawing_area_new_helper(struct graphics_methods *meth) {
-    struct font_priv * (*font_freetype_new)(void *meth);
-    font_freetype_new=plugin_get_category_font("freetype");
+    struct font_priv *(*font_freetype_new)(void *meth);
+    font_freetype_new = plugin_get_category_font("freetype");
     if (!font_freetype_new)
         return NULL;
-    struct graphics_priv *this=g_new0(struct graphics_priv,1);
+    struct graphics_priv *this = g_new0(struct graphics_priv, 1);
     font_freetype_new(&this->freetype_methods);
-    *meth=graphics_methods;
-    meth->font_new=(struct graphics_font_priv *(*)(struct graphics_priv *, struct graphics_font_methods *, char *,  int,
-                    int))this->freetype_methods.font_new;
-    meth->get_text_bbox=(void(*)(struct graphics_priv*, struct graphics_font_priv *, char *, int, int, struct point *,
-                                 int))this->freetype_methods.get_text_bbox;
+    *meth = graphics_methods;
+    meth->font_new = (struct graphics_font_priv
+                      * (*)(struct graphics_priv *, struct graphics_font_methods *, char *, int,
+                            int)) this->freetype_methods.font_new;
+    meth->get_text_bbox = (void (*)(struct graphics_priv *, struct graphics_font_priv *, char *, int, int,
+                                    struct point *, int))this->freetype_methods.get_text_bbox;
     return this;
 }
 
 static struct graphics_priv *graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth,
-        struct attr **attrs, struct callback_list *cbl) {
+                                                           struct attr **attrs, struct callback_list *cbl) {
     int i;
     GtkWidget *draw;
     struct attr *attr;
 
-    if (! event_request_system("glib","graphics_gtk_drawing_area_new"))
+    if (!event_request_system("glib", "graphics_gtk_drawing_area_new"))
         return NULL;
 
-    draw=gtk_drawing_area_new();
-    struct graphics_priv *this=graphics_gtk_drawing_area_new_helper(meth);
+    draw = gtk_drawing_area_new();
+    struct graphics_priv *this = graphics_gtk_drawing_area_new_helper(meth);
     this->nav = nav;
-    this->widget=draw;
-    this->win_w=792;
-    if ((attr=attr_search(attrs, attr_w)))
-        this->win_w=attr->u.num;
-    this->win_h=547;
-    if ((attr=attr_search(attrs, attr_h)))
-        this->win_h=attr->u.num;
-    this->timeout=100;
-    if ((attr=attr_search(attrs, attr_timeout)))
-        this->timeout=attr->u.num;
-    this->delay=0;
-    if ((attr=attr_search(attrs, attr_delay)))
-        this->delay=attr->u.num;
-    if ((attr=attr_search(attrs, attr_window_title)))
-        this->window_title=g_strdup(attr->u.str);
+    this->widget = draw;
+    this->win_w = 792;
+    if ((attr = attr_search(attrs, attr_w)))
+        this->win_w = attr->u.num;
+    this->win_h = 547;
+    if ((attr = attr_search(attrs, attr_h)))
+        this->win_h = attr->u.num;
+    this->timeout = 100;
+    if ((attr = attr_search(attrs, attr_timeout)))
+        this->timeout = attr->u.num;
+    this->delay = 0;
+    if ((attr = attr_search(attrs, attr_delay)))
+        this->delay = attr->u.num;
+    if ((attr = attr_search(attrs, attr_window_title)))
+        this->window_title = g_strdup(attr->u.str);
     else
-        this->window_title=g_strdup("Navit");
-    this->cbl=cbl;
-    gtk_widget_set_events(draw, GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK|GDK_POINTER_MOTION_MASK|GDK_KEY_PRESS_MASK);
+        this->window_title = g_strdup("Navit");
+    this->cbl = cbl;
+    gtk_widget_set_events(draw, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK
+                                    | GDK_KEY_PRESS_MASK);
     g_signal_connect(G_OBJECT(draw), "expose_event", G_CALLBACK(expose), this);
     g_signal_connect(G_OBJECT(draw), "configure_event", G_CALLBACK(configure), this);
     g_signal_connect(G_OBJECT(draw), "button_press_event", G_CALLBACK(button_press), this);

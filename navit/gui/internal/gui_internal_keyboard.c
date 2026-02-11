@@ -1,16 +1,16 @@
-#include <glib.h>
-#include <stdlib.h>
+#include "gui_internal_keyboard.h"
+#include "callback.h"
 #include "color.h"
 #include "coord.h"
-#include "point.h"
-#include "callback.h"
-#include "graphics.h"
 #include "debug.h"
+#include "graphics.h"
 #include "gui_internal.h"
-#include "gui_internal_widget.h"
-#include "gui_internal_priv.h"
 #include "gui_internal_menu.h"
-#include "gui_internal_keyboard.h"
+#include "gui_internal_priv.h"
+#include "gui_internal_widget.h"
+#include "point.h"
+#include <glib.h>
+#include <stdlib.h>
 
 /**
  * @brief Switch keyboard mode to uppercase if it's in lowercase mode and  {@code VKBD_MODE_2} is set.
@@ -25,7 +25,7 @@ void gui_internal_keyboard_to_upper_case(struct gui_priv *this) {
     if (!this->keyboard)
         return;
 
-    md=gui_internal_menu_data(this);
+    md = gui_internal_menu_data(this);
 
     if (md->keyboard_mode == (VKBD_LATIN_LOWER | VKBD_FLAG_2))
         gui_internal_keyboard_do(this, md->keyboard, VKBD_LATIN_UPPER | VKBD_FLAG_2);
@@ -50,7 +50,7 @@ void gui_internal_keyboard_to_lower_case(struct gui_priv *this) {
     if (!this->keyboard)
         return;
 
-    md=gui_internal_menu_data(this);
+    md = gui_internal_menu_data(this);
 
     if (md->keyboard_mode == (VKBD_LATIN_UPPER | VKBD_FLAG_2))
         gui_internal_keyboard_do(this, md->keyboard, VKBD_LATIN_LOWER | VKBD_FLAG_2);
@@ -73,33 +73,34 @@ void gui_internal_keyboard_to_lower_case(struct gui_priv *this) {
  * @param data Not used
  */
 static void gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm, void *data) {
-    gui_internal_keypress_do(this, (char *) wm->data);
+    gui_internal_keypress_do(this, (char *)wm->data);
 }
 
 static struct widget *gui_internal_keyboard_key_data(struct gui_priv *this, struct widget *wkbd, char *text, int font,
-        void(*func)(struct gui_priv *priv, struct widget *widget, void *data), void *data, void (*data_free)(void *data), int w,
-        int h) {
+                                                     void (*func)(struct gui_priv *priv, struct widget *widget,
+                                                                  void *data),
+                                                     void *data, void (*data_free)(void *data), int w, int h) {
     struct widget *wk;
-    gui_internal_widget_append(wkbd, wk=gui_internal_button_font_new_with_callback(this, text, font,
-                                        NULL, gravity_center|orientation_vertical, func, data));
-    wk->data_free=data_free;
-    wk->background=this->background;
-    wk->bl=0;
-    wk->br=0;
-    wk->bt=0;
-    wk->bb=0;
-    wk->w=w;
-    wk->h=h;
+    gui_internal_widget_append(wkbd, wk = gui_internal_button_font_new_with_callback(
+                                         this, text, font, NULL, gravity_center | orientation_vertical, func, data));
+    wk->data_free = data_free;
+    wk->background = this->background;
+    wk->bl = 0;
+    wk->br = 0;
+    wk->bt = 0;
+    wk->bb = 0;
+    wk->w = w;
+    wk->h = h;
     return wk;
 }
 
 static struct widget *gui_internal_keyboard_key(struct gui_priv *this, struct widget *wkbd, char *text, char *key,
-        int w, int h) {
-    return gui_internal_keyboard_key_data(this, wkbd, text, 0, gui_internal_cmd_keypress, g_strdup(key), g_free_func,w,h);
+                                                int w, int h) {
+    return gui_internal_keyboard_key_data(this, wkbd, text, 0, gui_internal_cmd_keypress, g_strdup(key), g_free_func, w,
+                                          h);
 }
 
 static void gui_internal_keyboard_change(struct gui_priv *this, struct widget *key, void *data);
-
 
 /**
  * @struct gui_internal_keyb_mode
@@ -110,40 +111,47 @@ static void gui_internal_keyboard_change(struct gui_priv *this, struct widget *k
  * @brief A list of all available keyboard modes
  */
 struct gui_internal_keyb_mode {
-    char title[16];		/**< Label to be displayed on keys that switch to it */
-    int font;			/**< Font size of label */
-    int case_mode;		/**< Mode to switch to when case CHANGE() key is pressed. */
-    int umlaut_mode;	/**< Mode to switch to when UMLAUT() key is pressed. */
-} gui_internal_keyb_modes[]= {
+    char title[16];  /**< Label to be displayed on keys that switch to it */
+    int font;        /**< Font size of label */
+    int case_mode;   /**< Mode to switch to when case CHANGE() key is pressed. */
+    int umlaut_mode; /**< Mode to switch to when UMLAUT() key is pressed. */
+} gui_internal_keyb_modes[] = {
     /* 0: VKBD_LATIN_UPPER   */ {"ABC", 2, VKBD_LATIN_LOWER,    VKBD_UMLAUT_UPPER},
-    /* 8: VKBD_LATIN_LOWER   */ {"abc", 2, VKBD_LATIN_UPPER,    VKBD_UMLAUT_LOWER},
-    /*16: VKBD_NUMERIC       */ {"123", 2, VKBD_LATIN_UPPER,    VKBD_UMLAUT_UPPER},
-    /*24: VKBD_UMLAUT_UPPER  */ {"ÄÖÜ", 2, VKBD_UMLAUT_LOWER,   VKBD_LATIN_UPPER},
-    /*32: VKBD_UMLAUT_LOWER  */ {"äöü", 2, VKBD_UMLAUT_UPPER,   VKBD_LATIN_LOWER},
-    /*40: VKBD_CYRILLIC_UPPER*/ {"АБВ", 2, VKBD_CYRILLIC_LOWER, VKBD_LATIN_UPPER},
-    /*48: VKBD_CYRILLIC_LOWER*/ {"абв", 2, VKBD_CYRILLIC_UPPER, VKBD_LATIN_LOWER},
-    /*56: VKBD_DEGREE        */ {"DEG", 2, VKBD_FLAG_2,         VKBD_FLAG_2},
-    /*64: VKBD_GREEK_UPPER   */ {"ABΓ", 2, VKBD_GREEK_LOWER,    VKBD_LATIN_UPPER},
-    /*72: VKBD_GREEK_LOWER   */ {"abγ", 2, VKBD_GREEK_UPPER,    VKBD_LATIN_LOWER}
+    /* 8: VKBD_LATIN_LOWER   */
+    {"abc", 2, VKBD_LATIN_UPPER,    VKBD_UMLAUT_LOWER},
+    /*16: VKBD_NUMERIC       */
+    {"123", 2, VKBD_LATIN_UPPER,    VKBD_UMLAUT_UPPER},
+    /*24: VKBD_UMLAUT_UPPER  */
+    {"ÄÖÜ", 2, VKBD_UMLAUT_LOWER,   VKBD_LATIN_UPPER },
+    /*32: VKBD_UMLAUT_LOWER  */
+    {"äöü", 2, VKBD_UMLAUT_UPPER,   VKBD_LATIN_LOWER },
+    /*40: VKBD_CYRILLIC_UPPER*/
+    {"АБВ", 2, VKBD_CYRILLIC_LOWER, VKBD_LATIN_UPPER },
+    /*48: VKBD_CYRILLIC_LOWER*/
+    {"абв", 2, VKBD_CYRILLIC_UPPER, VKBD_LATIN_LOWER },
+    /*56: VKBD_DEGREE        */
+    {"DEG", 2, VKBD_FLAG_2,         VKBD_FLAG_2      },
+    /*64: VKBD_GREEK_UPPER   */
+    {"ABΓ", 2, VKBD_GREEK_LOWER,    VKBD_LATIN_UPPER },
+    /*72: VKBD_GREEK_LOWER   */
+    {"abγ", 2, VKBD_GREEK_UPPER,    VKBD_LATIN_LOWER }
 };
-
 
 // Some macros that make the keyboard layout easier to visualise in
 // the source code. The macros are #undef'd after this function.
 #define KEY(x) gui_internal_keyboard_key(this, wkbd, (x), (x), max_w, max_h)
-#define SPACER() gui_internal_keyboard_key_data(this, wkbd, "", 0, NULL, NULL, NULL,max_w,max_h)
-#define MODE(x) gui_internal_keyboard_key_data(this, wkbd, \
-		gui_internal_keyb_modes[(x)/8].title, \
-		gui_internal_keyb_modes[(x)/8].font, \
-		gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h) \
-			-> datai = (mode & VKBD_MASK_7) | ((x) & VKBD_LAYOUT_MASK)
-#define SWCASE() MODE(gui_internal_keyb_modes[mode/8].case_mode)
-#define UMLAUT() MODE(gui_internal_keyb_modes[mode/8].umlaut_mode)
+#define SPACER() gui_internal_keyboard_key_data(this, wkbd, "", 0, NULL, NULL, NULL, max_w, max_h)
+#define MODE(x)                                                                                                        \
+    gui_internal_keyboard_key_data(this, wkbd, gui_internal_keyb_modes[(x) / 8].title,                                 \
+                                   gui_internal_keyb_modes[(x) / 8].font, gui_internal_keyboard_change, wkbdb, NULL,   \
+                                   max_w, max_h)                                                                       \
+        ->datai = (mode & VKBD_MASK_7) | ((x) & VKBD_LAYOUT_MASK)
+#define SWCASE() MODE(gui_internal_keyb_modes[mode / 8].case_mode)
+#define UMLAUT() MODE(gui_internal_keyb_modes[mode / 8].umlaut_mode)
 
-
-static void gui_internal_keyboard_topbox_resize(struct gui_priv *this, struct widget *w, void *data,
-        int neww, int newh) {
-    struct menu_data *md=gui_internal_menu_data(this);
+static void gui_internal_keyboard_topbox_resize(struct gui_priv *this, struct widget *w, void *data, int neww,
+                                                int newh) {
+    struct menu_data *md = gui_internal_menu_data(this);
     struct widget *old_wkbdb = md->keyboard;
 
     dbg(lvl_debug, "resize called for keyboard widget %p with w=%d, h=%d", w, neww, newh);
@@ -164,98 +172,100 @@ static void gui_internal_keyboard_topbox_resize(struct gui_priv *this, struct wi
  *
  * @return {@code wkbdb} if a non-NULL value was passed, else a new keyboard widget will be returned.
  */
-struct widget *
-gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) {
-    struct widget *wkbd,*wk;
-    struct menu_data *md=gui_internal_menu_data(this);
-    int i, max_w=this->root.w, max_h=this->root.h;
-    int render=0;
-    char *space="_";
-    char *backspace="←";
-    char *hide="▼";
-    char *unhide="▲";
+struct widget *gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) {
+    struct widget *wkbd, *wk;
+    struct menu_data *md = gui_internal_menu_data(this);
+    int i, max_w = this->root.w, max_h = this->root.h;
+    int render = 0;
+    char *space = "_";
+    char *backspace = "←";
+    char *hide = "▼";
+    char *unhide = "▲";
 
     if (wkbdb) {
-        this->current.x=-1;
-        this->current.y=-1;
+        this->current.x = -1;
+        this->current.y = -1;
         gui_internal_highlight(this);
         if (md->keyboard_mode & VKBD_FLAG_1024)
-            render=2;
+            render = 2;
         else
-            render=1;
+            render = 1;
         gui_internal_widget_children_destroy(this, wkbdb);
         gui_internal_widget_reset_pack(this, wkbdb);
         gui_internal_widget_pack(this, wkbdb);
     } else
-        wkbdb=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
-    md->keyboard=wkbdb;
-    md->keyboard_mode=mode;
-    wkbd=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
-    wkbd->background=this->background;
-    wkbd->cols=8;
-    wkbd->spx=0;
-    wkbd->spy=0;
-    wkbd->on_resize=gui_internal_keyboard_topbox_resize;
-    max_w=max_w/8;
-    max_h=max_h/8; // Allows 3 results in the list when searching for Towns
-    wkbd->p.y=max_h*2;
-    if (((mode & VKBD_LAYOUT_MASK) == VKBD_CYRILLIC_UPPER)
-            || ((mode & VKBD_LAYOUT_MASK) == VKBD_CYRILLIC_LOWER)
-            || ((mode & VKBD_LAYOUT_MASK) == VKBD_GREEK_UPPER)
-            || ((mode & VKBD_LAYOUT_MASK) == VKBD_GREEK_LOWER)) { // Russian/Ukrainian/Belarussian/Greek layout needs more space...
-        max_h=max_h*4/5;
-        max_w=max_w*8/9;
-        wkbd->cols=9;
+        wkbdb = gui_internal_box_new(this, gravity_center | orientation_horizontal_vertical | flags_fill);
+    md->keyboard = wkbdb;
+    md->keyboard_mode = mode;
+    wkbd = gui_internal_box_new(this, gravity_center | orientation_horizontal_vertical | flags_fill);
+    wkbd->background = this->background;
+    wkbd->cols = 8;
+    wkbd->spx = 0;
+    wkbd->spy = 0;
+    wkbd->on_resize = gui_internal_keyboard_topbox_resize;
+    max_w = max_w / 8;
+    max_h = max_h / 8;  // Allows 3 results in the list when searching for Towns
+    wkbd->p.y = max_h * 2;
+    if (((mode & VKBD_LAYOUT_MASK) == VKBD_CYRILLIC_UPPER) || ((mode & VKBD_LAYOUT_MASK) == VKBD_CYRILLIC_LOWER)
+        || ((mode & VKBD_LAYOUT_MASK) == VKBD_GREEK_UPPER)
+        || ((mode & VKBD_LAYOUT_MASK)
+            == VKBD_GREEK_LOWER)) {  // Russian/Ukrainian/Belarussian/Greek layout needs more space...
+        max_h = max_h * 4 / 5;
+        max_w = max_w * 8 / 9;
+        wkbd->cols = 9;
     }
 
     if ((mode & VKBD_LAYOUT_MASK) == VKBD_LATIN_UPPER) {
-        for (i = 0 ; i < 26 ; i++) {
-            char text[]= {'A'+i,'\0'};
+        for (i = 0; i < 26; i++) {
+            char text[] = {'A' + i, '\0'};
             KEY(text);
         }
-        gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, space, " ", max_w, max_h);
         if (!(mode & VKBD_MASK_7)) {
             KEY("-");
             KEY("'");
-            wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
+            wk = gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL, max_w,
+                                                max_h);
             wk->datai = mode | VKBD_FLAG_1024;
         } else {
-            wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
+            wk = gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL, max_w,
+                                                max_h);
             wk->datai = mode | VKBD_FLAG_1024;
             SWCASE();
             MODE(VKBD_NUMERIC);
-
         }
         UMLAUT();
-        gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, backspace, "\b", max_w, max_h);
     }
     if ((mode & VKBD_LAYOUT_MASK) == VKBD_LATIN_LOWER) {
-        for (i = 0 ; i < 26 ; i++) {
-            char text[]= {'a'+i,'\0'};
+        for (i = 0; i < 26; i++) {
+            char text[] = {'a' + i, '\0'};
             KEY(text);
         }
-        gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, space, " ", max_w, max_h);
         if (!(mode & VKBD_MASK_7)) {
             KEY("-");
             KEY("'");
-            wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
+            wk = gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL, max_w,
+                                                max_h);
             wk->datai = mode | VKBD_FLAG_1024;
         } else {
-            wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
+            wk = gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL, max_w,
+                                                max_h);
             wk->datai = mode | VKBD_FLAG_1024;
             SWCASE();
 
             MODE(VKBD_NUMERIC);
         }
         UMLAUT();
-        gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, backspace, "\b", max_w, max_h);
     }
     if ((mode & VKBD_LAYOUT_MASK) == VKBD_NUMERIC) {
-        for (i = 0 ; i < 10 ; i++) {
-            char text[]= {'0'+i,'\0'};
+        for (i = 0; i < 10; i++) {
+            char text[] = {'0' + i, '\0'};
             KEY(text);
         }
-        /* ("8")     ("9")*/KEY(".");
+        /* ("8")     ("9")*/ KEY(".");
         KEY("°");
         KEY("'");
         KEY("\"");
@@ -270,13 +280,12 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
         KEY(":");
         KEY("_");
 
-
-
         if (!(mode & VKBD_MASK_7)) {
             MODE(VKBD_GREEK_UPPER);
             KEY("-");
             KEY("'");
-            wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
+            wk = gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL, max_w,
+                                                max_h);
             wk->datai = mode | VKBD_FLAG_1024;
             SPACER();
             SPACER();
@@ -287,13 +296,14 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
                 MODE(VKBD_GREEK_UPPER);
             MODE(VKBD_CYRILLIC_UPPER);
             MODE(VKBD_CYRILLIC_LOWER);
-            wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
+            wk = gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL, max_w,
+                                                max_h);
             wk->datai = mode | VKBD_FLAG_1024;
             MODE(VKBD_LATIN_UPPER);
             MODE(VKBD_LATIN_LOWER);
         }
         UMLAUT();
-        gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, backspace, "\b", max_w, max_h);
     }
     if ((mode & VKBD_LAYOUT_MASK) == VKBD_UMLAUT_UPPER) {
         KEY("Ä");
@@ -329,7 +339,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
 
         UMLAUT();
 
-        gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, backspace, "\b", max_w, max_h);
     }
     if ((mode & VKBD_LAYOUT_MASK) == VKBD_UMLAUT_LOWER) {
         KEY("ä");
@@ -365,7 +375,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
 
         UMLAUT();
 
-        gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, backspace, "\b", max_w, max_h);
     }
     if ((mode & VKBD_LAYOUT_MASK) == VKBD_CYRILLIC_UPPER) {
         KEY("А");
@@ -407,9 +417,10 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
         SPACER();
         SPACER();
         SPACER();
-        gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, space, " ", max_w, max_h);
 
-        wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
+        wk = gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL, max_w,
+                                            max_h);
         wk->datai = mode | VKBD_FLAG_1024;
 
         SWCASE();
@@ -418,7 +429,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
 
         SPACER();
 
-        gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, backspace, "\b", max_w, max_h);
     }
     if ((mode & VKBD_LAYOUT_MASK) == VKBD_CYRILLIC_LOWER) {
         KEY("а");
@@ -460,9 +471,10 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
         SPACER();
         SPACER();
         SPACER();
-        gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, space, " ", max_w, max_h);
 
-        wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
+        wk = gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL, max_w,
+                                            max_h);
         wk->datai = mode | VKBD_FLAG_1024;
 
         SWCASE();
@@ -471,7 +483,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
 
         SPACER();
 
-        gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, backspace, "\b", max_w, max_h);
     }
     if ((mode & VKBD_LAYOUT_MASK) == VKBD_GREEK_UPPER) {
         KEY("Α");
@@ -513,9 +525,10 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
         SPACER();
         SPACER();
         SPACER();
-        gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, space, " ", max_w, max_h);
 
-        wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
+        wk = gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL, max_w,
+                                            max_h);
         wk->datai = mode | VKBD_FLAG_1024;
 
         SWCASE();
@@ -524,7 +537,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
 
         SPACER();
 
-        gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, backspace, "\b", max_w, max_h);
     }
     if ((mode & VKBD_LAYOUT_MASK) == VKBD_GREEK_LOWER) {
         KEY("α");
@@ -566,9 +579,10 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
         SPACER();
         SPACER();
         SPACER();
-        gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, space, " ", max_w, max_h);
 
-        wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
+        wk = gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL, max_w,
+                                            max_h);
         wk->datai = mode | VKBD_FLAG_1024;
 
         SWCASE();
@@ -577,12 +591,11 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
 
         SPACER();
 
-        gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, backspace, "\b", max_w, max_h);
     }
 
-
-    if(md->search_list && md->search_list->type==widget_table) {
-        struct table_data *td=(struct table_data*)(md->search_list->data);
+    if (md->search_list && md->search_list->type == widget_table) {
+        struct table_data *td = (struct table_data *)(md->search_list->data);
         td->scroll_buttons.button_box_hide = !(mode & VKBD_FLAG_1024);
     }
 
@@ -606,42 +619,43 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
         KEY("°");
         KEY(".");
         KEY("'");
-        gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, space, " ", max_w, max_h);
         SPACER();
 
-        wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
+        wk = gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL, max_w,
+                                            max_h);
         wk->datai = mode | VKBD_FLAG_1024;
 
         SPACER();
-        gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
+        gui_internal_keyboard_key(this, wkbd, backspace, "\b", max_w, max_h);
     }
 
     if (mode & VKBD_FLAG_1024) {
-        char *text=NULL;
-        int font=0;
+        char *text = NULL;
+        int font = 0;
         struct widget *wkl;
         mode &= ~VKBD_FLAG_1024;
-        text=gui_internal_keyb_modes[mode/8].title;
-        font=gui_internal_keyb_modes[mode/8].font;
-        wk=gui_internal_box_new(this, gravity_center|orientation_horizontal|flags_fill);
-        wk->func=gui_internal_keyboard_change;
-        wk->data=wkbdb;
-        wk->background=this->background;
-        wk->bl=0;
-        wk->br=0;
-        wk->bt=0;
-        wk->bb=0;
-        wk->w=max_w;
-        wk->h=max_h;
-        wk->datai=mode;
+        text = gui_internal_keyb_modes[mode / 8].title;
+        font = gui_internal_keyb_modes[mode / 8].font;
+        wk = gui_internal_box_new(this, gravity_center | orientation_horizontal | flags_fill);
+        wk->func = gui_internal_keyboard_change;
+        wk->data = wkbdb;
+        wk->background = this->background;
+        wk->bl = 0;
+        wk->br = 0;
+        wk->bt = 0;
+        wk->bb = 0;
+        wk->w = max_w;
+        wk->h = max_h;
+        wk->datai = mode;
         wk->state |= STATE_SENSITIVE;
-        gui_internal_widget_append(wk, wkl=gui_internal_label_new(this, unhide));
-        wkl->background=NULL;
-        gui_internal_widget_append(wk, wkl=gui_internal_label_font_new(this, text, font));
-        wkl->background=NULL;
+        gui_internal_widget_append(wk, wkl = gui_internal_label_new(this, unhide));
+        wkl->background = NULL;
+        gui_internal_widget_append(wk, wkl = gui_internal_label_font_new(this, text, font));
+        wkl->background = NULL;
         gui_internal_widget_append(wkbd, wk);
         if (render)
-            render=2;
+            render = 2;
     }
     gui_internal_widget_append(wkbdb, wkbd);
     if (render == 1) {
@@ -672,9 +686,8 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode) 
  *
  * @return A new keyboard widget
  */
-struct widget *
-gui_internal_keyboard(struct gui_priv *this, int mode) {
-    if (! this->keyboard)
+struct widget *gui_internal_keyboard(struct gui_priv *this, int mode) {
+    if (!this->keyboard)
         return NULL;
     return gui_internal_keyboard_do(this, NULL, mode);
 }
@@ -695,42 +708,41 @@ static void gui_internal_keyboard_change(struct gui_priv *this, struct widget *k
  * {@code VKBD_LATIN_UPPER} otherwise
  */
 int gui_internal_keyboard_init_mode(char *lang) {
-    int ret=0;
+    int ret = 0;
     /* do not crash if lang is NULL, which may be returned by getenv*/
-    if(lang == NULL)
+    if (lang == NULL)
         return VKBD_LATIN_UPPER;
 
     /* Converting to upper case here is required for Android */
-    lang=g_ascii_strup(lang,-1);
+    lang = g_ascii_strup(lang, -1);
     /*
-    * Set cyrillic keyboard for countries using Cyrillic alphabet
-    */
-    if (strstr(lang,"RU"))
+     * Set cyrillic keyboard for countries using Cyrillic alphabet
+     */
+    if (strstr(lang, "RU"))
         ret = VKBD_CYRILLIC_UPPER;
-    else if (strstr(lang,"UA"))
+    else if (strstr(lang, "UA"))
         ret = VKBD_CYRILLIC_UPPER;
-    else if (strstr(lang,"BY"))
+    else if (strstr(lang, "BY"))
         ret = VKBD_CYRILLIC_UPPER;
-    else if (strstr(lang,"RS"))
+    else if (strstr(lang, "RS"))
         ret = VKBD_CYRILLIC_UPPER;
-    else if (strstr(lang,"BG"))
+    else if (strstr(lang, "BG"))
         ret = VKBD_CYRILLIC_UPPER;
-    else if (strstr(lang,"MK"))
+    else if (strstr(lang, "MK"))
         ret = VKBD_CYRILLIC_UPPER;
-    else if (strstr(lang,"KZ"))
+    else if (strstr(lang, "KZ"))
         ret = VKBD_CYRILLIC_UPPER;
-    else if (strstr(lang,"KG"))
+    else if (strstr(lang, "KG"))
         ret = VKBD_CYRILLIC_UPPER;
-    else if (strstr(lang,"TJ"))
+    else if (strstr(lang, "TJ"))
         ret = VKBD_CYRILLIC_UPPER;
-    else if (strstr(lang,"MN"))
+    else if (strstr(lang, "MN"))
         ret = VKBD_CYRILLIC_UPPER;
-    else if (strstr(lang,"GR"))
+    else if (strstr(lang, "GR"))
         ret = VKBD_GREEK_UPPER;
     g_free(lang);
     return ret;
 }
-
 
 /**
  * @brief Hides the platform's native on-screen keyboard or other input method
@@ -750,7 +762,7 @@ int gui_internal_keyboard_init_mode(char *lang) {
  * @param w The placeholder widget
  */
 static void gui_internal_keyboard_hide_native(struct gui_priv *this_, struct widget *w) {
-    struct graphics_keyboard *kbd = (struct graphics_keyboard *) w->data;
+    struct graphics_keyboard *kbd = (struct graphics_keyboard *)w->data;
 
     if (kbd) {
         graphics_hide_native_keyboard(this_->gra, kbd);
@@ -760,7 +772,6 @@ static void gui_internal_keyboard_hide_native(struct gui_priv *this_, struct wid
         dbg(lvl_warning, "no graphics_keyboard found, cleanup failed");
     g_free(w);
 }
-
 
 /**
  * @brief Shows the platform's native on-screen keyboard or other input method
@@ -787,7 +798,7 @@ static void gui_internal_keyboard_hide_native(struct gui_priv *this_, struct wid
  *
  * @return The placeholder widget for the on-screen keyboard, may be {@code NULL}
  */
-struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct widget *w, int mode, char *lang) {
+struct widget *gui_internal_keyboard_show_native(struct gui_priv *this, struct widget *w, int mode, char *lang) {
     struct widget *ret = NULL;
     struct menu_data *md = gui_internal_menu_data(this);
     struct graphics_keyboard *kbd = g_new0(struct graphics_keyboard, 1);
@@ -798,7 +809,7 @@ struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct 
         kbd->lang = g_strdup(lang);
     res = graphics_show_native_keyboard(this->gra, kbd);
 
-    switch(res) {
+    switch (res) {
     case -1:
         dbg(lvl_error, "graphics has no show_native_keyboard method, cannot display keyboard");
     /* fall through */
@@ -807,9 +818,9 @@ struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct 
         return NULL;
     }
 
-    ret = gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
+    ret = gui_internal_box_new(this, gravity_center | orientation_horizontal_vertical | flags_fill);
     md->keyboard = ret;
-    md->keyboard_mode=mode;
+    md->keyboard_mode = mode;
     ret->wfree = gui_internal_keyboard_hide_native;
     if (kbd->h < 0) {
         ret->h = w->h;
@@ -822,7 +833,7 @@ struct widget * gui_internal_keyboard_show_native(struct gui_priv *this, struct 
     } else
         ret->w = kbd->w;
     dbg(lvl_error, "ret->w=%d, ret->h=%d", ret->w, ret->h);
-    ret->data = (void *) kbd;
+    ret->data = (void *)kbd;
     gui_internal_widget_append(w, ret);
     dbg(lvl_error, "return");
     return ret;

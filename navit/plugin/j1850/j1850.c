@@ -134,8 +134,10 @@ static void j1850_idle(struct j1850 *j1850) {
     struct timeval tv;  // used to timestamp the logs
     struct attr navit;
 
-    const char *init_string[] = {"ATZ\r\n",  "ATI\r\n",  "ATL1\r\n", "ATH1\r\n",
-                                 "ATS1\r\n", "ATAL\r\n", "ATMA\r\n", NULL};
+    const char *init_string[] = {
+        "ATZ\r\n",  "ATI\r\n",  "ATL1\r\n", "ATH1\r\n",  //
+        "ATS1\r\n", "ATAL\r\n", "ATMA\r\n", NULL,
+    };
 
     // Make sure we sent all init commands before trying to read
     if (init_string[j1850->init_string_index]) {
