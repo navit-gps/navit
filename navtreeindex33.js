@@ -1,7 +1,5 @@
 var NAVTREEINDEX33 =
 {
-"structelement.html#ac1be4286ef670b00973a9d7bec9e48be":[2,0,89,5],
-"structelement.html#ac561e962bca3a8369172146c01be8517":[2,0,89,21],
 "structelement.html#ac5e252df6fb3f15d2a7f45b57f855cec":[2,0,89,8],
 "structelement.html#acc618d178997357592c3cd0e8643a036":[2,0,89,4],
 "structelement.html#ad157e2bf31faa11ff3784b602ef9f88f":[2,0,89,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX33 =
 "structgeodesic.html#a69509b674b8018cecfdeaca295779198":[2,0,119,6],
 "structgeodesic.html#a7d62ec97693d26efb597bce7b070f93a":[2,0,119,12],
 "structgeodesic.html#aaadc0a6a43c47841d16e15c35b2475ec":[2,0,119,7],
-"structgeodesic.html#ab39f00c50b63ab80922b4ec34b328d30":[2,0,119,11]
+"structgeodesic.html#ab39f00c50b63ab80922b4ec34b328d30":[2,0,119,11],
+"structgeodesic.html#ab47dc4bb3b56b08368f0b0e4502261ee":[2,0,119,8],
+"structgeodesic.html#ab85597f33a03e8aee70df3ae83e6ddc4":[2,0,119,1]
 };

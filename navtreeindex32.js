@@ -1,7 +1,5 @@
 var NAVTREEINDEX32 =
 {
-"structcompass.html":[2,0,46],
-"structcompass.html#a2ccafb990c2a1c407ff819cc90b5d069":[2,0,46,4],
 "structcompass.html#a5dd1e48b06d52bcaab33d70ac251985b":[2,0,46,5],
 "structcompass.html#a8f1ca746debc72a36c7c5e718a09bf19":[2,0,46,3],
 "structcompass.html#a996b7639a2ac15f0293ed3e9aa1aefe7":[2,0,46,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX32 =
 "structelement.html#aabcc56dfec299162ef0a8844316582b0":[2,0,89,0],
 "structelement.html#ab3f4c63a4e1748078fbf127f778b1474":[2,0,89,13],
 "structelement.html#abe19e1c5261ebc33432e03f130df652a":[2,0,89,16],
-"structelement.html#ac18d282a5471345a0d8f793e2452b574":[2,0,89,11]
+"structelement.html#ac18d282a5471345a0d8f793e2452b574":[2,0,89,11],
+"structelement.html#ac1be4286ef670b00973a9d7bec9e48be":[2,0,89,5],
+"structelement.html#ac561e962bca3a8369172146c01be8517":[2,0,89,21]
 };

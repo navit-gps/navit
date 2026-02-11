@@ -72,7 +72,7 @@ var searchData=
   ['ddd_69',['ddd',['../structtransformation.html#a518054aef93ffdc5600d67b31729bb29',1,'transformation']]],
   ['ddlog_70',['ddlog',['../garmin_8h.html#a3649d8ae82bcc7c608c1ed9cd6e64d9e',1,'garmin.h']]],
   ['ddsg_5fnode_5findex_71',['ddsg_node_index',['../ch_8c.html#a22d823106b958666e51838b8864f1245',1,'ch.c']]],
-  ['debug_72',['debug',['../structtown__priv.html#ab76c0a94647e6371e6b16855473c7caa',1,'town_priv::debug'],['../structstreet__priv.html#ac4f14221af31a85c19506ad903fd4f2b',1,'street_priv::debug'],['../garmin__img_8c.html#ac3e1795766a80ec63b157951b4b9a7d4',1,'debug:&#160;garmin_img.c'],['../pedestrian_8c.html#a7f0158669de514eb00dcf8d3a7408285',1,'debug:&#160;pedestrian.c'],['../gpx2navit__txt_8h.html#ad72dbcf6d0153db1b8d8a58001feed83',1,'DEBUG:&#160;gpx2navit_txt.h']]],
+  ['debug_72',['debug',['../structtown__priv.html#ab76c0a94647e6371e6b16855473c7caa',1,'town_priv::debug'],['../structstreet__priv.html#ac4f14221af31a85c19506ad903fd4f2b',1,'street_priv::debug'],['../gpx2navit__txt_8h.html#ad72dbcf6d0153db1b8d8a58001feed83',1,'DEBUG:&#160;gpx2navit_txt.h'],['../garmin__img_8c.html#ac3e1795766a80ec63b157951b4b9a7d4',1,'debug:&#160;garmin_img.c'],['../pedestrian_8c.html#a7f0158669de514eb00dcf8d3a7408285',1,'debug:&#160;pedestrian.c']]],
   ['debug_2ec_73',['debug.c',['../debug_8c.html',1,'']]],
   ['debug_2eh_74',['debug.h',['../debug_8h.html',1,'']]],
   ['debug2_75',['debug2',['../pedestrian_8c.html#a5f3efd2de3c29aabcc4e12ca8821423f',1,'pedestrian.c']]],

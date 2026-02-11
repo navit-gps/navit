@@ -13,8 +13,6 @@ var osm_8c =
     [ "process_turn_restrictions_setup_thread", "structprocess__turn__restrictions__setup__thread.html", "structprocess__turn__restrictions__setup__thread" ],
     [ "GET_REF", "osm_8c.html#a06a84d471b5554386bc7bdaea86a9199", null ],
     [ "IS_REF", "osm_8c.html#ab3514a2e2cfaa8f4ae37c9f85c13b02b", null ],
-    [ "M_PI", "osm_8c.html#ae71449b1cc6e6250b91f539153a7a0d3", null ],
-    [ "M_PI_4", "osm_8c.html#aeb24420b096a677f3a2dc5a72b36bf22", null ],
     [ "MAX_COORD_COUNT", "osm_8c.html#a034e491d09a2faefb8421073a621d716", null ],
     [ "MAX_TOWN_ADMIN_LEVELS", "osm_8c.html#a20ecad6148374a0a6e1edae1badccd2f", null ],
     [ "REF_MARKER", "osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4", null ],

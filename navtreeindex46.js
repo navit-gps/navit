@@ -1,7 +1,5 @@
 var NAVTREEINDEX46 =
 {
-"structxmlstate.html#aaaeade6d9876fe98d4541fd931bc0e4d":[2,0,433,0],
-"structxmlstate.html#ad6e1974df86c9f949b445f2e24bcb34a":[2,0,433,7],
 "structxmlstate.html#ae2f6b21dab92b95c035529886944c9f7":[2,0,433,1],
 "structz__clip__result.html":[2,0,436],
 "structz__clip__result.html#a8587074ae8345599aa5d8afa78fd3730":[2,0,436,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX46 =
 "tools_2gpx2navit__txt_2src_2misc_8c.html#abfb12e3a831598734d67fab9e64ab71b":[3,0,12,0,0,9,5],
 "topics.html":[0],
 "town_8c.html":[3,0,6,5,5],
-"town_8c.html#a0b912d381cfba43f06a1b1623e512e05":[3,0,6,5,5,7]
+"town_8c.html#a0b912d381cfba43f06a1b1623e512e05":[3,0,6,5,5,7],
+"town_8c.html#a4ddc018df7dfd4ee0791f0014b06705e":[3,0,6,5,5,2],
+"town_8c.html#a53c3b0f0dbe26fb2fc3161f0cb0e67de":[3,0,6,5,5,9]
 };

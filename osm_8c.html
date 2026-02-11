@@ -113,6 +113,7 @@ $(document).ready(function(){initNavTree('osm_8c.html',''); initResizable(); });
 <code>#include &quot;<a class="el" href="coord_8h_source.html">coord.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="country_8h_source.html">country.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="debug_8h_source.html">debug.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="file_8h_source.html">file.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="geom_8h_source.html">geom.h</a>&quot;</code><br />
 <code>#include &quot;glib.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="item_8h_source.html">item.h</a>&quot;</code><br />
@@ -150,10 +151,6 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ae71449b1cc6e6250b91f539153a7a0d3" id="r_ae71449b1cc6e6250b91f539153a7a0d3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#ae71449b1cc6e6250b91f539153a7a0d3">M_PI</a>&#160;&#160;&#160;3.14159265358979323846</td></tr>
-<tr class="separator:ae71449b1cc6e6250b91f539153a7a0d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb24420b096a677f3a2dc5a72b36bf22" id="r_aeb24420b096a677f3a2dc5a72b36bf22"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#aeb24420b096a677f3a2dc5a72b36bf22">M_PI_4</a>&#160;&#160;&#160;0.785398163397448309616</td></tr>
-<tr class="separator:aeb24420b096a677f3a2dc5a72b36bf22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a034e491d09a2faefb8421073a621d716" id="r_a034e491d09a2faefb8421073a621d716"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#a034e491d09a2faefb8421073a621d716">MAX_COORD_COUNT</a>&#160;&#160;&#160;65536</td></tr>
 <tr class="separator:a034e491d09a2faefb8421073a621d716"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8ff47ec415b43267adb3f1fe87a2dc4" id="r_ad8ff47ec415b43267adb3f1fe87a2dc4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a>&#160;&#160;&#160;(1ull &lt;&lt; 30)</td></tr>
@@ -530,34 +527,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ae71449b1cc6e6250b91f539153a7a0d3" name="ae71449b1cc6e6250b91f539153a7a0d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae71449b1cc6e6250b91f539153a7a0d3">&#9670;&#160;</a></span>M_PI</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define M_PI&#160;&#160;&#160;3.14159265358979323846</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aeb24420b096a677f3a2dc5a72b36bf22" name="aeb24420b096a677f3a2dc5a72b36bf22"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb24420b096a677f3a2dc5a72b36bf22">&#9670;&#160;</a></span>M_PI_4</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define M_PI_4&#160;&#160;&#160;0.785398163397448309616</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a034e491d09a2faefb8421073a621d716" name="a034e491d09a2faefb8421073a621d716"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a034e491d09a2faefb8421073a621d716">&#9670;&#160;</a></span>MAX_COORD_COUNT</h2>
 
@@ -644,7 +613,7 @@ Variables</h2></td></tr>
 <div class="line">        (<a class="code hl_variable" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>).y = (<a class="code hl_typedef" href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a>)(ref) &amp; 0x7fffffffull;                                                                          \</div>
 <div class="line">    } <span class="keywordflow">while</span> (0)</div>
 <div class="ttc" id="amaptool_8h_html_abe8b7806b2d8aaf7604b547999ebc45a"><div class="ttname"><a href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a></div><div class="ttdeci">unsigned long long int osmid</div><div class="ttdef"><b>Definition</b> maptool.h:133</div></div>
-<div class="ttc" id="aosm_8c_html_ad8ff47ec415b43267adb3f1fe87a2dc4"><div class="ttname"><a href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a></div><div class="ttdeci">#define REF_MARKER</div><div class="ttdef"><b>Definition</b> osm.c:139</div></div>
+<div class="ttc" id="aosm_8c_html_ad8ff47ec415b43267adb3f1fe87a2dc4"><div class="ttname"><a href="osm_8c.html#ad8ff47ec415b43267adb3f1fe87a2dc4">REF_MARKER</a></div><div class="ttdeci">#define REF_MARKER</div><div class="ttdef"><b>Definition</b> osm.c:135</div></div>
 <div class="ttc" id="apopup_8c_html_aafe71b070668214be9b4b4849985dc6b"><div class="ttname"><a href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a></div><div class="ttdeci">static struct pcoord c</div><div class="ttdef"><b>Definition</b> popup.c:368</div></div>
 </div><!-- fragment -->
 </div>
@@ -1897,7 +1866,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="osm_8c.html#a324e2ce146448c0d66641423c6a9df8d">allocate_node_item_in_buffer()</a>, <a class="el" href="osm_8c.html#ad95352618b96bc6dcd95e059b4f3648f">attr_strings_clear()</a>, <a class="el" href="structbuffer.html#a0d86c461fecdc90bf044e7715b8e1876">buffer::base</a>, <a class="el" href="structnode__item.html#af626daab130d540d2f24f1b056b320d4">node_item::c</a>, <a class="el" href="osm_8c.html#a7b9c4e012656fca93740410363bbdd64">current_node</a>, <a class="el" href="debug_8h.html#aa1ea27a449d096a072c270f9276a8f9f">dbg_assert</a>, <a class="el" href="osm_8c.html#adaff2e4cfee49af417f57e1e60528b2a">debug_attr_buffer</a>, <a class="el" href="osm_8c.html#a6296a5c70a1393038f181da4def28852">id_last_node</a>, <a class="el" href="osm_8c.html#a9d61e1ec54768c2d1e3f101ae39cbd1a">in_node</a>, <a class="el" href="osm_8c.html#a5c05bae17d3d81b2e7be3505c7ffd512">is_in_buffer</a>, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, <a class="el" href="structattr__bin.html#a225f7e97e79cb7b5f9f3a447fb1c9a92">attr_bin::len</a>, <a class="el" href="osm_8c.html#ae71449b1cc6e6250b91f539153a7a0d3">M_PI</a>, <a class="el" href="osm_8c.html#aeb24420b096a677f3a2dc5a72b36bf22">M_PI_4</a>, <a class="el" href="structnode__item.html#a9a0fdc00c3bb8e6d51f3f5095c7ece9b">node_item::nd_id</a>, <a class="el" href="maptool_8c.html#a0b53520d78b890b21ffd75aad5a003d8">node_buffer</a>, <a class="el" href="osm_8c.html#a92d93496e7d9c5cbd543109e29cee001">node_buffer_to_hash()</a>, <a class="el" href="osm_8c.html#a6a87c1adabf67f9ac6393389434af3d9">node_hash</a>, <a class="el" href="maptool_8h.html#a50a3ebef15b437fc4fbca7e26d519c51">NODE_ID_BITS</a>, <a class="el" href="osm_8c.html#a08b2b0bfafbb7e5344211c940470cd12">node_is_tagged</a>, <a class="el" href="osm_8c.html#a5be320dc30128e919f5026a06eba9499">nodeid</a>, <a class="el" href="osm_8c.html#a980a5ccb5a9705da8a2eed4ac9bad0f7">osmid_attr</a>, <a class="el" href="osm_8c.html#a7e91393a1a88b00377e9c8d99a96f047">osmid_attr_value</a>, <a class="el" href="maptool_8h.html#a284a3e557997d8ce7c36fbeadb56f282">OSMID_FMT</a>, <a class="el" href="structnode__item.html#a3a87d515809028f91278e599cbe53aca">node_item::ref_way</a>, <a class="el" href="osm_8c.html#a4f9967fd452aed0c702c60ef97c1e2a8">remove_last_node_item_from_buffer()</a>, <a class="el" href="structitem.html#a3abafd36669ef817be82676acd8e5989">item::type</a>, <a class="el" href="structattr__bin.html#aebb2e5921fa6786feb393ff7b28c2507">attr_bin::type</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, and <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>.</p>
+<p class="reference">References <a class="el" href="osm_8c.html#a324e2ce146448c0d66641423c6a9df8d">allocate_node_item_in_buffer()</a>, <a class="el" href="osm_8c.html#ad95352618b96bc6dcd95e059b4f3648f">attr_strings_clear()</a>, <a class="el" href="structbuffer.html#a0d86c461fecdc90bf044e7715b8e1876">buffer::base</a>, <a class="el" href="structnode__item.html#af626daab130d540d2f24f1b056b320d4">node_item::c</a>, <a class="el" href="osm_8c.html#a7b9c4e012656fca93740410363bbdd64">current_node</a>, <a class="el" href="debug_8h.html#aa1ea27a449d096a072c270f9276a8f9f">dbg_assert</a>, <a class="el" href="osm_8c.html#adaff2e4cfee49af417f57e1e60528b2a">debug_attr_buffer</a>, <a class="el" href="osm_8c.html#a6296a5c70a1393038f181da4def28852">id_last_node</a>, <a class="el" href="osm_8c.html#a9d61e1ec54768c2d1e3f101ae39cbd1a">in_node</a>, <a class="el" href="osm_8c.html#a5c05bae17d3d81b2e7be3505c7ffd512">is_in_buffer</a>, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, <a class="el" href="structattr__bin.html#a225f7e97e79cb7b5f9f3a447fb1c9a92">attr_bin::len</a>, <a class="el" href="structnode__item.html#a9a0fdc00c3bb8e6d51f3f5095c7ece9b">node_item::nd_id</a>, <a class="el" href="maptool_8c.html#a0b53520d78b890b21ffd75aad5a003d8">node_buffer</a>, <a class="el" href="osm_8c.html#a92d93496e7d9c5cbd543109e29cee001">node_buffer_to_hash()</a>, <a class="el" href="osm_8c.html#a6a87c1adabf67f9ac6393389434af3d9">node_hash</a>, <a class="el" href="maptool_8h.html#a50a3ebef15b437fc4fbca7e26d519c51">NODE_ID_BITS</a>, <a class="el" href="osm_8c.html#a08b2b0bfafbb7e5344211c940470cd12">node_is_tagged</a>, <a class="el" href="osm_8c.html#a5be320dc30128e919f5026a06eba9499">nodeid</a>, <a class="el" href="osm_8c.html#a980a5ccb5a9705da8a2eed4ac9bad0f7">osmid_attr</a>, <a class="el" href="osm_8c.html#a7e91393a1a88b00377e9c8d99a96f047">osmid_attr_value</a>, <a class="el" href="maptool_8h.html#a284a3e557997d8ce7c36fbeadb56f282">OSMID_FMT</a>, <a class="el" href="structnode__item.html#a3a87d515809028f91278e599cbe53aca">node_item::ref_way</a>, <a class="el" href="osm_8c.html#a4f9967fd452aed0c702c60ef97c1e2a8">remove_last_node_item_from_buffer()</a>, <a class="el" href="structitem.html#a3abafd36669ef817be82676acd8e5989">item::type</a>, <a class="el" href="structattr__bin.html#aebb2e5921fa6786feb393ff7b28c2507">attr_bin::type</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, and <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="maptool_8h.html#a2e65c7b20a008ebcfb0db2b8b0e6a786">map_collect_data_osm_o5m()</a>, <a class="el" href="osm__xml_8c.html#a819711c1412395433d88e38558bb61d8">parse_node()</a>, and <a class="el" href="osm__protobuf_8c.html#a2b65c9efea2e62430b5864e518b1c302">process_dense()</a>.</p>
 
