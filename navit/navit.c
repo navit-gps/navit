@@ -163,6 +163,7 @@ struct navit {
     int use_mousewheel;
     struct messagelist *messages;
     struct callback *resize_callback, *button_callback, *motion_callback, *predraw_callback;
+    GList *voiceprofiles;
     struct vehicleprofile *vehicleprofile;
     GList *vehicleprofiles;
     int pitch;
