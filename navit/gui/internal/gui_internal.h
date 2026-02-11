@@ -2,6 +2,8 @@
 #ifndef _NAVIT_GUID_INTERNAL_H
 #define _NAVIT_GUID_INTERNAL_H
 
+#include "callback.h"
+
 struct widget;
 struct graphics_image;
 struct gui_priv;

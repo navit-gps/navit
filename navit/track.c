@@ -242,12 +242,12 @@ static void tracking_process_cdf(struct cdf_data *cdf, struct pcoord *pin, struc
             sy /= len;
 
             // Calculate the new direction
-            *dirout = (int)rint(atan(sx / sy) / M_PI * 180 + 180);
+            *dirout = (int)rint(atan(sx / sy) / G_PI * 180 + 180);
         } else {
             // If we only have one position, we can't use differences of positions, but we have to use the reported
             // direction of that position
-            sx = sin((double)cdf->dir_hist[cdf->first_pos] / 180 * M_PI);
-            sy = cos((double)cdf->dir_hist[cdf->first_pos] / 180 * M_PI);
+            sx = sin((double)cdf->dir_hist[cdf->first_pos] / 180 * G_PI);
+            sy = cos((double)cdf->dir_hist[cdf->first_pos] / 180 * G_PI);
             *dirout = cdf->dir_hist[cdf->first_pos];
         }
 

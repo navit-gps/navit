@@ -28,19 +28,19 @@
  */
 
 #include "config.h"
-
-#include "coord.h"
 #include "debug.h"
 #include "glib_slice.h"
-#include "item.h"
 #include "plugin.h"
 #include "traffic.h"
 #include "xmlconfig.h"
 #include <string.h>
-#include <time.h>
 #ifdef _POSIX_C_SOURCE
 #    include <sys/types.h>
 #endif
+
+struct attr;
+struct callback_list;
+struct navit;
 
 /**
  * @brief Stores information about the plugin instance.

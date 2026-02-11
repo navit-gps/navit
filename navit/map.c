@@ -39,18 +39,21 @@
  */
 
 #include "map.h"
+#include "attr.h"
 #include "callback.h"
 #include "coord.h"
 #include "country.h"
 #include "debug.h"
 #include "item.h"
-#include "maptype.h"
+#include "navit.h"
 #include "plugin.h"
 #include "projection.h"
 #include "transform.h"
 #include "xmlconfig.h"
 #include <glib.h>
 #include <string.h>
+
+struct callback_list;
 
 struct map {
     NAVIT_OBJECT

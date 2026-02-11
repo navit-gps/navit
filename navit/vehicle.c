@@ -30,6 +30,7 @@
  */
 
 #include "vehicle.h"
+#include "attr.h"
 #include "callback.h"
 #include "color.h"
 #include "config.h"
@@ -37,9 +38,10 @@
 #include "debug.h"
 #include "event.h"
 #include "graphics.h"
-#include "item.h"
+#include "item_type_def.h"
 #include "layout.h"
 #include "log.h"
+#include "navit.h"
 #include "navit_nls.h"
 #include "plugin.h"
 #include "point.h"
@@ -48,10 +50,12 @@
 #include "util.h"
 #include "xmlconfig.h"
 #include <glib.h>
-#include <math.h> /* for sqrt from coord.h */
+#include <math.h>  // IWYU pragma: keep for sqrt
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
+
+struct callback_list;
+struct log;
 
 struct vehicle {
     NAVIT_OBJECT

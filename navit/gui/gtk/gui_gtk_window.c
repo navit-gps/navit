@@ -161,8 +161,8 @@ static gboolean keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv 
         t = navit_get_trans(this->nav);
         p = transform_center(t);
         pc.pro = projection_mg;
-        p->y += 50 * cos(transform_get_yaw(t) * M_PI / 180);
-        p->x += 50 * sin(transform_get_yaw(t) * M_PI / 180);
+        p->y += 50 * cos(transform_get_yaw(t) * G_PI / 180);
+        p->x += 50 * sin(transform_get_yaw(t) * G_PI / 180);
         pc.x = p->x;
         pc.y = p->y;
         navit_set_center(this->nav, &pc, 1);
@@ -173,8 +173,8 @@ static gboolean keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv 
         t = navit_get_trans(this->nav);
         p = transform_center(t);
         pc.pro = projection_mg;
-        p->y -= 50 * cos(transform_get_yaw(t) * M_PI / 180);
-        p->x -= 50 * sin(transform_get_yaw(t) * M_PI / 180);
+        p->y -= 50 * cos(transform_get_yaw(t) * G_PI / 180);
+        p->x -= 50 * sin(transform_get_yaw(t) * G_PI / 180);
         pc.x = p->x;
         pc.y = p->y;
         navit_set_center(this->nav, &pc, 1);

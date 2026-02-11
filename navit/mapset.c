@@ -27,13 +27,12 @@
  */
 
 #include "mapset.h"
+#include "attr.h"
 #include "debug.h"
-#include "item.h"
 #include "map.h"
-#include "projection.h"
+#include "navit.h"
 #include "xmlconfig.h"
 #include <glib.h>
-#include <glib/gprintf.h>
 #include <string.h>
 
 struct mapset {

@@ -41,6 +41,7 @@
 #include "util.h"
 #include "xmlconfig.h"
 #include <glib.h>
+#include <glib/gtypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

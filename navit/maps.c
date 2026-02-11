@@ -17,15 +17,15 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include "attr.h"
+#include "attr_type_def.h"
 #include "debug.h"
 #include "file.h"
-#include "item.h"
 #include "map.h"
 #include "mapset.h"
 #include "xmlconfig.h"
 #include <glib.h>
-
-struct maps;
+#include <stddef.h>
 
 struct maps *maps_new(struct attr *parent, struct attr **attrs) {
     struct attr *data, **attrs_dup;

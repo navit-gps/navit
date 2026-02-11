@@ -1,14 +1,9 @@
 #include "command.h"
+#include "attr.h"
 #include "callback.h"
 #include "debug.h"
 #include "event.h"
-#include "gui.h"
-#include "item.h"
-#include "main.h"
-#include "navit.h"
 #include "navit_nls.h"
-#include "speech.h"
-#include "vehicle.h"
 #include "xmlconfig.h"
 #include <glib.h>
 #include <stdarg.h>
