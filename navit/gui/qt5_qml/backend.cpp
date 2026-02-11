@@ -91,6 +91,7 @@ void Backend::get_maps() {
     emit mapsChanged();
 }
 
+
 /**
  * @brief update the private m_vehicles list. Expected to be called from QML
  * @param none
@@ -277,6 +278,7 @@ QQmlListProperty<QObject> Backend::getBookmarks() {
 QQmlListProperty<QObject> Backend::getMaps() {
     return QQmlListProperty<QObject>(this, _maps);
 }
+
 
 /**
  * @brief get the vehicles as a QList

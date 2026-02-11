@@ -19,7 +19,6 @@ GridLayout {
             menucontent.source = "maps.qml"
         }
     }
-
     MainButton {
         text: "Vehicles"
         icon: "icons/appbar.transit.car.svg"
@@ -29,7 +28,6 @@ GridLayout {
             menucontent.source = "vehicles.qml"
         }
     }
-
     MainButton {
         text: "Display"
         icon: "icons/appbar.fullscreen.box.svg"
