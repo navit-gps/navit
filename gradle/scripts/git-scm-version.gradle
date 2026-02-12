@@ -1,34 +1,44 @@
-//THX to https://proandroiddev.com/configuring-android-project-version-name-code-b168952f3323
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'org.ajoberstar.grgit:grgit-core:5.3.3'
-    }
-}
-
-import org.ajoberstar.grgit.Grgit
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+//import org.gradle.internal.service.ServiceRegistry
+
+def execOps = project.services.get(org.gradle.process.ExecOperations)
 
 ext {
-    git = Grgit.open(currentDir: projectDir)
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'describe', '--tags', '--match', 'v[0-9.rc]*', '--dirty'
-        standardOutput = stdout
-        ignoreExitValue true
+    // git describe
+    def stdoutName = new ByteArrayOutputStream()
+    execOps.exec {
+        it.commandLine 'git', 'describe', '--tags', '--match', 'v[0-9.rc]*', '--dirty'
+        it.standardOutput = stdoutName
+        it.ignoreExitValue = true
     }
-    gitVersionName = stdout.toString().trim()
-    hh = Integer.parseInt(DateTimeFormatter.ofPattern("HH").format(git.head().dateTime))
-    mm = Integer.parseInt(DateTimeFormatter.ofPattern("mm").format(git.head().dateTime))
-    hhmm = Math.round((hh*4)+(mm/15)).toString()
-    yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd").format(git.head().dateTime)
+
+    gitVersionName = stdoutName.toString().trim()
+
+    // Date from last commit
+    def stdoutDate = new ByteArrayOutputStream()
+    execOps.exec {
+        it.commandLine 'git', 'log', '-1', '--format=%cI'
+        it.standardOutput = stdoutDate
+        it.ignoreExitValue = true
+    }
+
+    def commitDateString = stdoutDate.toString().trim()
+    def date = commitDateString.isEmpty() ?
+            LocalDateTime.now() :
+            LocalDateTime.parse(commitDateString, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+
+    def hh = date.hour
+    def mm = date.minute
+    def hhmm = Math.round((hh * 4) + (mm / 15)).toString().padLeft(2, '0')
+    def yyyyMMdd = date.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+
     gitVersionCode = Integer.parseInt(yyyyMMdd + hhmm)
 }
 
-task printVersion() {
-    println("Version Name: $gitVersionName")
-    println("Version Code: $gitVersionCode")
+tasks.register('printVersion') {
+    doFirst {
+        println "Version Name: $gitVersionName"
+        println "Version Code: $gitVersionCode"
+    }
 }
