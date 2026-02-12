@@ -36,7 +36,7 @@ Builds:
       - apt-get install -y build-essential cmake gettext libpng-dev librsvg2-bin libsaxonb-java rename zlib1g-dev
     gradle:
       - yes
-    output: build/outputs/apk/release/navit-release.apk
+    output: build/outputs/apk/release/navit-*.apk
     rm:
       - navit/support/espeak/espeak-data/*
     prebuild:
