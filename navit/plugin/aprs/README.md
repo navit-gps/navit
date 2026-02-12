@@ -4,6 +4,10 @@
 
 The APRS (Automatic Packet Reporting System) plugin for Navit provides real-time tracking of APRS stations on the map. It decodes APRS packets (Bell 202 / AX.25), stores station information in a SQLite database, and displays moving objects on the Navit map.
 
+### Why the APRS plugin has a database
+
+Many APRS transmitters use transmission intervals that depend on how fast the attached object is moving. Intervals can vary widely, for example from 3000 seconds down to 20 seconds. A database allows the plugin to retain station positions between updates. Setting a reasonably long timeout on the database (for example 180 minutes) also prevents moving stations that have stopped from disappearing from the map too quickly, so you can still create a route to them once routing to APRS stations is supported on hardware.
+
 ## Plugin Architecture
 
 The APRS functionality is split into two modular plugins for clean separation of concerns:
