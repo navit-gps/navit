@@ -51,7 +51,7 @@ jobs:
           destination: rpmbuild
   merge_trunk_in_master:
     docker:
-      - image: cimg/base:2020.12
+      - image: cimg/base:2026.02
     steps:
       - checkout
       - run:
