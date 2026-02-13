@@ -278,7 +278,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Merge to master branch
-        uses: devmasx/merge-branch@v1.1.0
+        uses: devmasx/merge-branch@v1.4.0
         with:
           type: now
           target_branch: 'master'
