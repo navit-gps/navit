@@ -69,7 +69,6 @@ struct log;
 struct vehicle;
 #ifdef HAVE_API_WIN32_BASE
 #    include <windows.h>
-
 #    include "util.h"
 #endif
 #ifdef HAVE_API_WIN32_CE
