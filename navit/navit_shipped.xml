@@ -410,6 +410,8 @@ Waypoint</text></img>
                 <speech name="Dutch female" type="cmdline" name="Dutch female" data="espeak-ng -v dutch-mbrola-3 -s 130 %s" vocabulary_name="1" vocabulary_name_systematic="1" vocabulary_distances="1" active="1" />
 
 		Instead of using a speech synthesizer, navit can also play pre-recorded samples for each word.
+		See https://navit.readthedocs.io/en/latest/user/configuration/advanced/introduction.html#prerecorded-samples
+		<speech name="Sample" type="cmdline" data="aplay -q %s"
 		See https://navit.readthedocs.io/en/latest/user/configuration/advanced/options.html#prerecorded-samples for details.
 		-->
 		<speech name="Sample" type="cmdline" data="aplay -q %s"

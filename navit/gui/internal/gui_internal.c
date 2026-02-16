@@ -1980,7 +1980,6 @@ static void gui_internal_cmd_set_active_profile(struct gui_priv *this, struct wi
  * profile for the voice.
  */
 static void gui_internal_add_voice_profile(struct gui_priv *this, struct widget *parent, struct speech *profile) {
-    // Just here to show up in the translation file, nice and close to where the translations are actually used.
     struct attr name_attr;
     struct attr *attr = NULL;
     char *name = NULL;
