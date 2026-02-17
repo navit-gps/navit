@@ -1082,7 +1082,8 @@ void pedestrian_setup_tilt(struct navit *nav) {
 float sensors[2][3];
 
 static void android_sensors(struct navit *nav, int sensor, float *x, float *y, float *z) {
-    int yaw = 0, pitch = 0;
+    int yaw = 0;
+    float pitch = 0;
     struct attr attr;
     sensors[sensor - 1][0] = *x;
     sensors[sensor - 1][1] = *y;
@@ -1126,7 +1127,7 @@ static void android_sensors(struct navit *nav, int sensor, float *x, float *y, f
         break;
     case ORIENTATION_LANDSCAPE:
         if (sensor == TYPE_ACCELEROMETER) {
-            pitch = (int)(atan2f(*x, *z) * 180 / G_PI);
+            pitch = (atan2f(*x, *z) * 180 / G_PI);
         }
         if (sensor == TYPE_MAGNETIC_FIELD) {
             yaw = (int)(atan2f(-*y, *z) * 180 / G_PI + 180);
@@ -1134,7 +1135,7 @@ static void android_sensors(struct navit *nav, int sensor, float *x, float *y, f
         break;
     case ORIENTATION_PORTRAIT:
         if (sensor == TYPE_ACCELEROMETER) {
-            pitch = (int)(atan2f(*y, *z) * 180 / G_PI);
+            pitch = (atan2f(*y, *z) * 180 / G_PI);
         }
         if (sensor == TYPE_MAGNETIC_FIELD) {
             yaw = (int)(atan2f(*x, *z) * 180 / G_PI + 180);
@@ -1150,7 +1151,7 @@ static void android_sensors(struct navit *nav, int sensor, float *x, float *y, f
                 pitch += 2.0;
             }
             transform_set_pitch(trans, pitch);
-            dbg(lvl_debug, "pich %d %i", orientation, pitch);
+            dbg(lvl_debug, "pitch %f %i", orientation, pitch);
         } else {
             struct attr attr;
             attr.type = attr_orientation;

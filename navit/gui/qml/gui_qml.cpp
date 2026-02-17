@@ -362,7 +362,7 @@ static int gui_qml_set_attr(struct gui_priv *this_, struct attr *attr) {
         this_->fullscreen = attr->u.num;
         return 1;
     case attr_pitch:
-        this_->pitch = attr->u.num;
+        this_->pitch = attr->u.numd;
         return 1;
     case attr_radius:
         this_->radius = attr->u.num;

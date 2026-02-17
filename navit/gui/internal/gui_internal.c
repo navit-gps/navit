@@ -3291,7 +3291,7 @@ static struct gui_priv *gui_internal_new(struct navit *nav, struct gui_methods *
         this->osd_configuration = *attr;
 
     if ((attr = attr_search(attrs, attr_pitch)))
-        this->pitch = attr->u.num;
+        this->pitch = attr->u.numd;
     else
         this->pitch = 20;
     if ((attr = attr_search(attrs, attr_flags_town)))
