@@ -5,9 +5,9 @@
 # mansv68 https://launchpad.net/~mansv68
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.5.6\n"
+"Project-Id-Version: navit 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:22+0100\n"
+"POT-Creation-Date: 2026-01-31 07:33+0100\n"
 "PO-Revision-Date: 2024-04-13 17:26+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://hosted.weblate.org/projects/navit/navit-core/th/"
@@ -2166,6 +2166,126 @@ msgstr ""
 msgid "Display"
 msgstr "แสดง"
 
+msgid "APRS"
+msgstr ""
+
+msgid "APRS Settings"
+msgstr ""
+
+msgid "RX Frequency"
+msgstr ""
+
+msgid "Station Timeout"
+msgstr ""
+
+msgid "Device"
+msgstr ""
+
+msgid "NMEA Settings"
+msgstr ""
+
+msgid "APRS RX Frequency"
+msgstr ""
+
+msgid "144.39 MHz (North America)"
+msgstr ""
+
+msgid "144.80 MHz (Europe)"
+msgstr ""
+
+msgid "145.175 MHz (Australia)"
+msgstr ""
+
+msgid "144.575 MHz (New Zealand)"
+msgstr ""
+
+msgid "144.64 MHz (China/Japan)"
+msgstr ""
+
+msgid "144.66 MHz (Japan Kyushu)"
+msgstr ""
+
+msgid "144.93 MHz (Argentina/Uruguay)"
+msgstr ""
+
+msgid "145.57 MHz (Brazil)"
+msgstr ""
+
+msgid "APRS Station Timeout"
+msgstr ""
+
+msgid "30 minutes"
+msgstr ""
+
+msgid "60 minutes"
+msgstr ""
+
+msgid "90 minutes"
+msgstr ""
+
+msgid "120 minutes"
+msgstr ""
+
+msgid "180 minutes"
+msgstr ""
+
+msgid "Clear Expired"
+msgstr ""
+
+msgid "APRS Device"
+msgstr ""
+
+msgid "RTL-SDR Blog V3"
+msgstr ""
+
+msgid "V4 R828D"
+msgstr ""
+
+msgid "Nooelec"
+msgstr ""
+
+msgid "Generic RTL-SDR"
+msgstr ""
+
+msgid "NMEA Serial"
+msgstr ""
+
+msgid "APRS NMEA Settings"
+msgstr ""
+
+msgid "Baud Rate"
+msgstr ""
+
+msgid "Parity"
+msgstr ""
+
+msgid "APRS NMEA Baud Rate"
+msgstr ""
+
+msgid "4800"
+msgstr ""
+
+msgid "9600"
+msgstr ""
+
+msgid "19200"
+msgstr ""
+
+msgid "38400"
+msgstr ""
+
+msgid "APRS NMEA Parity"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Even"
+msgstr ""
+
+msgid "Odd"
+msgstr ""
+
 msgid "Fullscreen"
 msgstr "แสดงผลเต็มจอภาพ"
 
@@ -2195,6 +2315,12 @@ msgstr ""
 msgid ""
 "Drop next\n"
 "Waypoint"
+msgstr ""
+
+msgid "Configure Driver Break Intervals"
+msgstr ""
+
+msgid "Configure Overnight Stops"
 msgstr ""
 
 msgid "Satellite Status"
