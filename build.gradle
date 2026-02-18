@@ -21,7 +21,7 @@ allprojects {
 
 android {
     namespace = "org.navitproject.navit"
-    ndkVersion = "25.2.9519653"
+    ndkVersion = "27.3.13750724"
     signingConfigs {
         release {
             // We can leave these in environment variables
