@@ -32,6 +32,8 @@
 
 #include "glib.h"
 #include "galias.h"
+#include "gprimes.h"
+#include "gatomic.h"
 
 
 #define HASH_TABLE_MIN_SIZE 11
