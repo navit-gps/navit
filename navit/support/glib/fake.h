@@ -1,4 +1,7 @@
 #include "config.h"
+#ifndef __GLIB_FAKE_H__
+#define __GLIB_FAKE_H__
+
 #ifndef HAVE_API_WIN32_BASE
 #define USE_POSIX_THREADS 1
 #endif
@@ -17,14 +20,22 @@
 # define g_mutex_lock(lock) ((lock == NULL) ? 0 : pthread_mutex_lock(lock))
 # define g_mutex_unlock(lock) ((lock == NULL) ? 0 : pthread_mutex_unlock(lock))
 # define g_mutex_trylock(lock) (((lock == NULL) ? 0 : pthread_mutex_trylock(lock)) == 0)
-#  define GPrivate pthread_key_t
-#  define g_private_new(xd) g_private_new_navit()
-#  define g_private_get(xd) pthread_getspecific(xd)
-#  define g_private_set(a,b) pthread_setspecific(a, b)
+typedef struct {
+    pthread_key_t key;
+    pthread_once_t once;
+    void (*destructor)(void*);
+} GPrivate;
+GPrivate* g_private_new(GDestroyNotify notify);
+void* g_private_get(GPrivate *priv);
+void g_private_set(GPrivate *priv, void *value);
+
 
 pthread_mutex_t* g_mutex_new_navit(void);
 void g_get_current_time (GTimeVal *result);
-GPrivate g_private_new_navit (void);
+
+// Makro/Funktion zur Initialisierung (ähnlich G_PRIVATE_INIT)
+#define G_PRIVATE_INIT(destructor_func) { .once = PTHREAD_ONCE_INIT, .destructor = destructor_func }
+
 
 #else
 # if HAVE_API_WIN32_BASE
@@ -54,3 +65,5 @@ char* g_convert               (const char  *str,
 #define g_thread_supported() TRUE
 
 #define g_assert(expr) dbg_assert (expr)
+
+#endif // __GLIB_FAKE_H__
