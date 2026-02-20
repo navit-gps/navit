@@ -79,7 +79,6 @@ public class Navit extends Activity {
     private static final int           NavitDownloaderSelectMap_id     = 967;
     private static final int           NavitAddressSearch_id           = 70;
     private static final int           NavitSelectStorage_id           = 43;
-    private static final String        NAVIT_PACKAGE_NAME              = "org.navitproject.navit";
     private static final String        TAG                             = "Navit";
     static String                      sMapFilenamePath;
     boolean                            mIsFullscreen;
@@ -98,7 +97,7 @@ public class Navit extends Activity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name);
             int importance = NotificationManager.IMPORTANCE_LOW;
-            NotificationChannel channel = new NotificationChannel(NAVIT_PACKAGE_NAME, name, importance);
+            NotificationChannel channel = new NotificationChannel(this.getPackageName(), name, importance);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
@@ -127,7 +126,7 @@ public class Navit extends Activity {
             ApplicationInfo appInfo;
             long apkUpdateTime = 0;
             try {
-                appInfo = pm.getApplicationInfo(NAVIT_PACKAGE_NAME, 0);
+                appInfo = pm.getApplicationInfo(this.getPackageName(), 0);
                 apkUpdateTime = new File(appInfo.sourceDir).lastModified();
             } catch (NameNotFoundException e) {
                 Log.e(TAG, "Could not read package infos");
@@ -146,7 +145,7 @@ public class Navit extends Activity {
      */
     private boolean extractRes(String resname, String result) {
         Log.d(TAG, "Res Name " + resname + ", result " + result);
-        int id = NavitAppConfig.sResources.getIdentifier(resname, "raw", NAVIT_PACKAGE_NAME);
+        int id = NavitAppConfig.sResources.getIdentifier(resname, "raw", this.getPackageName());
         Log.d(TAG, "Res ID " + id);
         if (id == 0) {
             return false;
@@ -410,7 +409,7 @@ public class Navit extends Activity {
         Notification navitNotification;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder builder;
-            builder = new Notification.Builder(getApplicationContext(), NAVIT_PACKAGE_NAME);
+            builder = new Notification.Builder(getApplicationContext(), this.getPackageName());
             builder.setContentIntent(appIntent);
             builder.setAutoCancel(false).setOngoing(true);
             builder.setContentTitle(getTstring(R.string.app_name));
