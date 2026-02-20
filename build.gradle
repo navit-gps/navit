@@ -119,18 +119,6 @@ android {
             }
         })
     }
-    android.buildTypes.all { buildType ->
-        def typeName = buildType.name.capitalize()
-        tasks.register("generate${typeName}Javadoc", Javadoc) {
-            source = android.sourceSets.main.java.srcDirs
-            destinationDir = file("navit/android/build/outputs/docs/javadoc/")
-            title = rootProject.name
-            options.memberLevel = JavadocMemberLevel.PACKAGE
-            options.verbose()
-            failOnError = false
-            classpath = files(android.getBootClasspath().join(File.pathSeparator))
-        }
-    }
 }
 
 clean {
