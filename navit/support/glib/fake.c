@@ -47,7 +47,7 @@ CRITICAL_SECTION* g_mutex_new_navit(void)
 #endif
 #endif
 
-GPrivate
+GPrivate*
 g_private_new_navit (void)
 {
 #if HAVE_API_WIN32_BASE
@@ -65,7 +65,7 @@ g_private_new_navit (void)
 	if (pthread_key_create(&key, NULL)) {
 		fprintf(stderr,"pthread_key_create failed\n");
 	}
-	return key;	
+	return &key;
 #endif
 }
 

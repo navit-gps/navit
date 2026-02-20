@@ -19,12 +19,12 @@
 # define g_mutex_trylock(lock) (((lock == NULL) ? 0 : pthread_mutex_trylock(lock)) == 0)
 #  define GPrivate pthread_key_t
 #  define g_private_new(xd) g_private_new_navit()
-#  define g_private_get(xd) pthread_getspecific(xd)
-#  define g_private_set(a,b) pthread_setspecific(a, b)
+#  define g_private_get(xd) pthread_getspecific(*xd)
+#  define g_private_set(a,b) pthread_setspecific(*a, b)
 
 pthread_mutex_t* g_mutex_new_navit(void);
 void g_get_current_time (GTimeVal *result);
-GPrivate g_private_new_navit (void);
+GPrivate* g_private_new_navit (void);
 
 #else
 # if HAVE_API_WIN32_BASE
