@@ -32,6 +32,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
+#ifdef HAVE_UNISTD_H
+#    include <unistd.h>
+#endif /* HAVE_UNISTD_H */
+
 #ifndef _MSC_VER
 #    include <sys/time.h>
 #endif /* _MSC_VER */
@@ -44,7 +48,6 @@
 #    ifndef HAVE_API_ANDROID
 #        include <errno.h>
 #        include <execinfo.h>
-#        include <unistd.h>
 #    endif
 #endif
 
