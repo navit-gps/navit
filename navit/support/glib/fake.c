@@ -47,27 +47,47 @@ CRITICAL_SECTION* g_mutex_new_navit(void)
 #endif
 #endif
 
-GPrivate
-g_private_new_navit (void)
-{
-#if HAVE_API_WIN32_BASE
-	int dwTlsIndex;
 
-#ifndef TLS_OUT_OF_INDEXES
-#define TLS_OUT_OF_INDEXES (-1)
+#ifndef HAVE_API_WIN32_BASE
+static void _g_private_init(GPrivate *priv) {
+    if (pthread_key_create(&priv->key, priv->destructor) != 0) {
+        perror("pthread_key_create failed");
+        exit(EXIT_FAILURE);
+    }
+}
 #endif
+
+GPrivate* g_private_new(GDestroyNotify notify){
+#if HAVE_API_WIN32_BASE
+    int dwTlsIndex;
+#  ifndef TLS_OUT_OF_INDEXES
+#    define TLS_OUT_OF_INDEXES (-1)
+#  endif
 	if ((dwTlsIndex = TlsAlloc()) == TLS_OUT_OF_INDEXES)
 	printf("TlsAlloc failed");
 	printf("return dwTlsIndex = 0x%x\n",dwTlsIndex);
 	return dwTlsIndex;
 #else
-	pthread_key_t key;
-	if (pthread_key_create(&key, NULL)) {
-		fprintf(stderr,"pthread_key_create failed\n");
-	}
-	return key;	
+    GPrivate *ret = malloc(sizeof(GPrivate));
+    ret->once = PTHREAD_ONCE_INIT;
+    ret->destructor = NULL;
+    return ret;
 #endif
 }
+
+#ifndef HAVE_API_WIN32_BASE
+void* g_private_get(GPrivate *priv) {
+    pthread_once(&priv->once, (void (*)(void))_g_private_init); 
+    return pthread_getspecific(priv->key);
+}
+
+
+void g_private_set(GPrivate *priv, void *value) {
+    pthread_once(&priv->once, (void (*)(void))_g_private_init);
+    pthread_setspecific(priv->key, value);
+}
+#endif
+
 
 /**
  * g_get_current_time:
