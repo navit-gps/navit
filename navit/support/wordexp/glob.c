@@ -31,7 +31,7 @@
 /*
  * @brief searches for all the pathnames matching pattern according to the rules
  * which is similar to the rules used by common shells.
- * here: expanding of ´*´ and ´?´ only in filenames
+ * here: expanding of ï¿½*ï¿½ and ï¿½?ï¿½ only in filenames
  * @param pattern: no tilde expansion or parameter substitution is done.
  * @param flags: not supported here
  * @param errfunc: not supported here
@@ -97,6 +97,7 @@ int glob(const char *pattern, int flags,
 #include <dirent.h>
 #include <string.h>
 #include <fnmatch.h>
+#include <stdlib.h>
 #include "debug.h"
 #include "glob.h"
 
