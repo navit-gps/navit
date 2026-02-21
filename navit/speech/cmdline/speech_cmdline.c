@@ -391,7 +391,7 @@ static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr 
         char *name;
         int suffix_len = strlen(this->sample_suffix);
         this->sample_count = 0;
-        while((name = file_readdir(handle))) {
+        while ((name = file_readdir(handle))) {
             int len = strlen(name);
             if (len > suffix_len) {
                 if (!strcmp(name+len - suffix_len, this->sample_suffix)) {
