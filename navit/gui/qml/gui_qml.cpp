@@ -50,7 +50,7 @@ struct gui_priv {
     char *skin;
     char *icon_src;
     int radius;
-    int pitch;
+    double pitch;
     int lazy;  // When TRUE - menu state will not be changed during map/menu switches, FALSE - menu will be always reset
                // to main.qml
 
@@ -338,7 +338,7 @@ static int gui_qml_get_attr(struct gui_priv *this_, enum attr_type type, struct 
         attr->u.str = this_->skin;
         break;
     case attr_pitch:
-        attr->u.num = this_->pitch;
+        attr->u.numd = this_->pitch;
         break;
     case attr_radius:
         attr->u.num = this_->radius;

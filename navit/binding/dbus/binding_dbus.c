@@ -526,8 +526,7 @@ static int decode_attr_from_iter(DBusMessageIter *iter, struct attr *attr) {
     }
     if (attr->type >= attr_type_double_begin && attr->type <= attr_type_double_end) {
         if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_DOUBLE) {
-            attr->u.numd = g_new(typeof(*attr->u.numd), 1);
-            dbus_message_iter_get_basic(&iterattr, attr->u.numd);
+            dbus_message_iter_get_basic(&iterattr, &attr->u.numd);
             return 1;
         }
     }
@@ -611,9 +610,6 @@ static int decode_attr(DBusMessage *message, struct attr *attr) {
 }
 
 static void destroy_attr(struct attr *attr) {
-    if (attr->type > attr_type_double_begin && attr->type < attr_type_double_end) {
-        g_free(attr->u.numd);
-    }
 }
 
 static char *get_iter_name(char *type) {

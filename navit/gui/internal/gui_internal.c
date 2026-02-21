@@ -2209,7 +2209,7 @@ static int gui_internal_get_attr(struct gui_priv *this, enum attr_type type, str
         *attr = *this->position_coord_geo;
         break;
     case attr_pitch:
-        attr->u.num = this->pitch;
+        attr->u.numd = this->pitch;
         break;
     case attr_button:
         attr->u.num = this->mouse_button_clicked_on_map;
