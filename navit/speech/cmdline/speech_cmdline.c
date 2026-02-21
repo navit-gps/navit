@@ -304,14 +304,14 @@ static int speechd_say(struct speech_priv *this, const char *text) {
                   missing = 0;
                   speak_index_start = sample_index + 1;
 
-                  argv = g_new(char *,cmdvttslen+2);
+                  argv = g_new(char *, cmdvttslen+2);
                   for(i = 0; i <= cmdvttslen; i++) {
-                      argv[i] = g_strdup_printf("%s",cmdv_tts[i]);
-                      dbg(lvl_debug, "new_arg tts: %s",argv[i]);
+                      argv[i] = g_strdup_printf("%s", cmdv_tts[i]);
+                      dbg(lvl_debug, "new_arg tts: %s", argv[i]);
                       if (i == cmdvttslen - 1){
-                          text_tts = g_strdup_printf("%s",(char *)g_list_nth_data(samples, sample_index));
+                          text_tts = g_strdup_printf("%s", (char *)g_list_nth_data(samples, sample_index));
                           text_tts = g_strdup(&text_tts[strlen(missing_text)]);
-                          argv[i] = g_strdup_printf("%s",text_tts);
+                          argv[i] = g_strdup_printf("%s", text_tts);
                           g_free(text_tts);
                       }
                    }
