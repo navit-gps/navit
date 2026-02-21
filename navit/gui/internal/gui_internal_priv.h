@@ -109,7 +109,7 @@ struct gui_priv {
     struct attr osd_configuration; /**< The OSD configuration, a set of flags controlling which OSD
                                     *  items will be visible.
                                     */
-    int pitch;                     /**< The pitch for the 3D map view. */
+    double pitch;                  /**< The pitch for the 3D map view. */
     int flags_town, flags_street, flags_house_number;
     int radius;
     int mouse_button_clicked_on_map;

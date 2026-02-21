@@ -474,7 +474,7 @@ void navit_handle_resize(struct navit *this_, int w, int h) {
      */
     if (firstcall) {
         attr.type = attr_pitch;
-        attr.u.num = this_->pitch;
+        attr.u.numd = this_->pitch;
         navit_set_attr(this_, &attr);  // Set pitch again
     }
 
@@ -1066,9 +1066,7 @@ static int navit_cmd_map_item_set_attr(struct navit *this, char *function, struc
             attr_to_set.u.num = atoi(in[3]->u.str);
             attr_to_set.type = attr_from_name(in[2]->u.str);
         } else if (ATTR_IS_DOUBLE(attr_from_name(in[2]->u.str))) {
-            double *val = g_new0(double, 1);
-            *val = atof(in[3]->u.str);
-            attr_to_set.u.numd = val;
+            attr_to_set.u.numd = atof(in[3]->u.str);
             attr_to_set.type = attr_from_name(in[2]->u.str);
         }
 
@@ -2662,7 +2660,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
         this_->osd_configuration = attr->u.num;
         break;
     case attr_pitch:
-        attr_updated = (this_->pitch != attr->u.num);
+        attr_updated = (this_->pitch != attr->u.numd);
         this_->pitch = attr->u.numd;
         transform_set_pitch(this_->trans, this_->pitch * sqrt(240 * 320)
                                               / sqrt(this_->w * this_->h));  // Pitch corrected for window resolution
@@ -3286,8 +3284,8 @@ static void navit_vehicle_update_position(struct navit *this_, struct navit_vehi
         profile(0, "return 2\n");
         return;
     }
-    nv->dir = *attr_dir.u.numd;
-    nv->speed = *attr_speed.u.numd;
+    nv->dir = attr_dir.u.numd;
+    nv->speed = attr_speed.u.numd;
     transform_from_geo(pro, attr_pos.u.coord_geo, &nv->coord);
     if (nv != this_->vehicle) {
         if (this_->ready == 3)
