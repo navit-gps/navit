@@ -213,7 +213,7 @@ static int speechd_say(struct speech_priv *this, const char *text) {
         argl = speech_cmdline_search(this->samples, this->sample_count, this->sample_suffix, text, !!(this->flags & 1));
         samples = g_list_copy(argl);
         listlen = g_list_length(argl);
-        dbg(lvl_debug,"For text: '%s', found %d samples.",text,listlen);
+        dbg(lvl_debug, "For text: '%s', found %d samples.", text,listlen);
         if (!listlen) {
             dbg(lvl_error, "No matching samples found. Cannot speak text: '%s'", text);
         }
@@ -222,7 +222,7 @@ static int speechd_say(struct speech_priv *this, const char *text) {
     }
 
     if(listlen>0) {
-        dbg(lvl_debug, "Speaking text: '%s'",text);
+        dbg(lvl_debug, "Speaking text: '%s'", text);
 
         int argc;
         char **argv;
