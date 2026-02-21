@@ -1,17 +1,11 @@
 #include "qml_poi.h"
 
-PoiObject::PoiObject(QObject *parent)
-    : QObject(parent) {
+PoiObject::PoiObject(QObject *parent) : QObject(parent) {
 }
 
-PoiObject::PoiObject(
-    const QString &name,
-    const QString &type,
-    const int distance,
-    const QString &icon,
-    struct pcoord &coords,
-    QObject *parent)
-    : QObject(parent), m_coords(coords), m_name(name), m_type(type), m_icon(icon)  {
+PoiObject::PoiObject(const QString &name, const QString &type, const int distance, const QString &icon,
+                     struct pcoord &coords, QObject *parent)
+    : QObject(parent), m_coords(coords), m_name(name), m_type(type), m_icon(icon) {
 }
 
 QString PoiObject::name() const {
@@ -37,7 +31,7 @@ void PoiObject::setType(const QString &type) {
 }
 
 float PoiObject::distance() const {
-    return m_distance/1000;
+    return m_distance / 1000;
 }
 
 void PoiObject::setDistance(const int distance) {
