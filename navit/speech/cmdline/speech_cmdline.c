@@ -77,7 +77,7 @@ static GList *speech_cmdline_search(GList *samples, int sample_count, gchar *suf
 
     dbg(lvl_debug, "searching samples for text: '%s'", text);
 
-    sample_missing = g_strconcat(sample_missing, suffix);
+    sample_missing = g_strconcat(sample_missing, suffix, NULL);
 
     loop_samples_sorted = loop_samples;
     loop_samples_sorted = g_list_first(loop_samples_sorted);
@@ -147,7 +147,7 @@ static GList *speech_cmdline_search(GList *samples, int sample_count, gchar *suf
              g_strlcpy(text_first,text,2);
              if (strlen(text_first) == 0)
                 break;
-             text_tts = g_strconcat(text_tts, text_first);
+             text_tts = g_strconcat(text_tts, text_first, NULL);
              text++;
           }
           result = g_list_prepend(result, g_strdup(text_tts));
