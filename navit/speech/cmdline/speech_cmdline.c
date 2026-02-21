@@ -370,7 +370,7 @@ static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr 
     attr = attr_search(attrs, attr_data);
     if (!attr)
         return NULL;
-    this = g_new0(struct speech_priv,1);
+    this = g_new0(struct speech_priv, 1);
     this->cmdline = g_strdup(attr->u.str);
     attr = attr_search(attrs, attr_data_tts);
     if (! attr)
