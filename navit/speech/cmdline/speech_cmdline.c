@@ -213,7 +213,7 @@ static int speechd_say(struct speech_priv *this, const char *text) {
         argl = speech_cmdline_search(this->samples, this->sample_count, this->sample_suffix, text, !!(this->flags & 1));
         samples = g_list_copy(argl);
         listlen = g_list_length(argl);
-        dbg(lvl_debug, "For text: '%s', found %d samples.", text,listlen);
+        dbg(lvl_debug, "For text: '%s', found %d samples.", text, listlen);
         if (!listlen) {
             dbg(lvl_error, "No matching samples found. Cannot speak text: '%s'", text);
         }
@@ -221,7 +221,7 @@ static int speechd_say(struct speech_priv *this, const char *text) {
         listlen = 1;
     }
 
-    if(listlen>0) {
+    if(listlen > 0) {
         dbg(lvl_debug, "Speaking text: '%s'", text);
 
         int argc;
@@ -244,7 +244,7 @@ static int speechd_say(struct speech_priv *this, const char *text) {
                   missing = 1;
                   speak_text = 1;
                }
-               if(sample_index == listlen-1){
+               if(sample_index == listlen - 1){
                   speak_text = 1;
                }
             } else {
@@ -256,16 +256,16 @@ static int speechd_say(struct speech_priv *this, const char *text) {
                speak_text = 0;
                if(samplesmode) {
                   if(missing) {
-                     speak_index_end = sample_index-1;
+                     speak_index_end = sample_index - 1;
                   } else {
                      speak_index_end = sample_index;
                   }
-                  sample_count = speak_index_end-speak_index_start+1;
+                  sample_count = speak_index_end-speak_index_start + 1;
                }
 
                if(sample_count > 0) { 
-                  argc = cmdvlen + sample_count - (variable_arg_no>0?1:0);
-                  argv = g_new(char *,cmdvlen+sample_count+1);
+                  argc = cmdvlen + sample_count - (variable_arg_no > 0?1:0);
+                  argv = g_new(char *, cmdvlen + sample_count + 1);
                   if(variable_arg_no == -1) {
                      argv[cmdvlen] = g_strdup("%s");
                      variable_arg_no = cmdvlen;
@@ -302,14 +302,14 @@ static int speechd_say(struct speech_priv *this, const char *text) {
 
                if(samplesmode && missing) {
                   missing = 0;
-                  speak_index_start = sample_index+1;
+                  speak_index_start = sample_index + 1;
 
                   argv = g_new(char *,cmdvttslen+2);
                   for(i = 0; i <= cmdvttslen; i++) {
                       argv[i] = g_strdup_printf("%s",cmdv_tts[i]);
                       dbg(lvl_debug, "new_arg tts: %s",argv[i]);
                       if (i == cmdvttslen - 1){
-                          text_tts = g_strdup_printf("%s",(char *)g_list_nth_data(samples,sample_index));
+                          text_tts = g_strdup_printf("%s",(char *)g_list_nth_data(samples, sample_index));
                           text_tts = g_strdup(&text_tts[strlen(missing_text)]);
                           argv[i] = g_strdup_printf("%s",text_tts);
                           g_free(text_tts);
