@@ -102,7 +102,7 @@ static GList *speech_cmdline_search(GList *samples, int sample_count, gchar *suf
 
           if (decode)
               sample_name = urldecode(sample_name);
-          sample_name_len = strlen(sample_name)-suffix_len;
+          sample_name_len = strlen(sample_name) - suffix_len;
           // TODO: Here we compare UTF-8 text with a filename.
           // It's unclear how a case-insensitive comparison should work
           // in general, so for now we only do it for ASCII text.
@@ -394,7 +394,7 @@ static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr 
         while((name = file_readdir(handle))) {
             int len = strlen(name);
             if (len > suffix_len) {
-                if (!strcmp(name+len-suffix_len, this->sample_suffix)) {
+                if (!strcmp(name+len - suffix_len, this->sample_suffix)) {
                     dbg(lvl_debug, "found %s", name);
                     this->samples = g_list_prepend(this->samples, g_strdup(name));
                     this->sample_count++;
