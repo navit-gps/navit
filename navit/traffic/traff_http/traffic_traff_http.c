@@ -563,10 +563,10 @@ static int traffic_traff_http_init(struct traffic_priv *this_) {
 
     /* TODO verify event system, accept if thread-safe, warn if functions are missing, else exit
      *
-     * Thread-safe and OK to use: glib, android
+     * Thread-safe and OK to use: glib, android, sdl
      * Functions missing, won’t work: null, opengl
      * Probably not thread-safe: win32, qt (for qt_qpainter), qt5
-     * Not sure: cocoa, sdl
+     * Not sure: cocoa
      */
     if (!strcmp("null", event_system()) || !strcmp("opengl", event_system())) {
         /* null and opengl do not implement functions we require */
