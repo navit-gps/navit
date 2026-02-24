@@ -1,0 +1,1414 @@
+Extracted Navit core-related findings
+Source: /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/results/plateaued-aprs-bugs-20260224-154003.txt
+Generated (UTC): 2026-02-24T17:13:12.160705+00:00
+
+
+=== maptool_osm_xml ===
+Log: /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/logs/nohup_maptool_osm_xml.log
+No sanitizer bug blocks found in this log.
+
+=== coord_parse ===
+Log: /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/logs/nohup_coord_parse.log
+UndefinedBehaviorSanitizer findings:
+-- UBSan #1: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/honggfuzz/harnesses/coord_stubs.c:45:12
+INFO:       39 files found in /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/corpus/coord_parse
+INFO: seed corpus: files: 39 min: 1b max: 65b total: 325b rss: 33Mb
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/honggfuzz/harnesses/coord_stubs.c:45:12: runtime error: 5e+13 is outside the range of representable values of type 'int'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/honggfuzz/harnesses/coord_stubs.c:45:12 
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/honggfuzz/harnesses/coord_stubs.c:46:12: runtime error: 5e+10 is outside the range of representable values of type 'int'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/honggfuzz/harnesses/coord_stubs.c:46:12 
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/coord.c:237:15: runtime error: 3e+09 is outside the range of representable values of type 'int'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/coord.c:237:15 
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/coord.c:238:15: runtime error: 8e+09 is outside the range of representable values of type 'int'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/coord.c:238:15 
+#40	INITED cov: 117 ft: 124 corp: 33/217b exec/s: 0 rss: 34Mb
+#1048576	pulse  cov: 117 ft: 124 corp: 33/217b lim: 4096 exec/s: 524288 rss: 225Mb
+
+=== ezxml ===
+Log: /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/logs/nohup_ezxml.log
+AddressSanitizer findings:
+-- ASan #1: heap-buffer-overflow on address 0x50600003407e at pc 0x61c4c6f66871 bp 0x7ffeafefa5a0 sp 0x7ffeafef9d60
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50600003407e at pc 0x61c4c6f66871 bp 0x7ffeafefa5a0 sp 0x7ffeafef9d60
+READ of size 1 at 0x50600003407e thread T0
+    #0 0x61c4c6f66870 in strspn (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa5870) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c702465a in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:342:21
+    #2 0x61c4c702dcf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x50600003407e is located 0 bytes after 62-byte region [0x506000034040,0x50600003407e)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c703f220 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:21:19
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa5870) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957) in strspn
+Shadow bytes around the buggy address:
+  0x506000033d80: fa fa fa fa fd fd fd fd fd fd fd fd fa fa fa fa
+  0x506000033e00: fd fd fd fd fd fd fd fd fa fa fa fa fd fd fd fd
+  0x506000033e80: fd fd fd fd fa fa fa fa fd fd fd fd fd fd fd fd
+  0x506000033f00: fa fa fa fa fd fd fd fd fd fd fd fd fa fa fa fa
+  0x506000033f80: 00 00 00 00 00 00 00 05 fa fa fa fa 00 00 00 00
+=>0x506000034000: 00 00 00 05 fa fa fa fa 00 00 00 00 00 00 00[06]
+  0x506000034080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034100: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034180: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034200: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034280: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+=================================================================
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50600003407e at pc 0x61c4c7024821 bp 0x7ffeafefa5a0 sp 0x7ffeafefa598
+READ of size 1 at 0x50600003407e thread T0
+    #0 0x61c4c7024820 in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:343:22
+    #1 0x61c4c702dcf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #2 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #3 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #10 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #11 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x50600003407e is located 0 bytes after 62-byte region [0x506000034040,0x50600003407e)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c703f220 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:21:19
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:343:22 in ezxml_internal_dtd
+Shadow bytes around the buggy address:
+  0x506000033d80: fa fa fa fa fd fd fd fd fd fd fd fd fa fa fa fa
+  0x506000033e00: fd fd fd fd fd fd fd fd fa fa fa fa fd fd fd fd
+  0x506000033e80: fd fd fd fd fa fa fa fa fd fd fd fd fd fd fd fd
+  0x506000033f00: fa fa fa fa fd fd fd fd fd fd fd fd fa fa fa fa
+  0x506000033f80: 00 00 00 00 00 00 00 05 fa fa fa fa 00 00 00 00
+=>0x506000034000: 00 00 00 05 fa fa fa fa 00 00 00 00 00 00 00[06]
+  0x506000034080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034100: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034180: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034200: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034280: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+=================================================================
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50600003407e at pc 0x61c4c6f65f4a bp 0x7ffeafefa5a0 sp 0x7ffeafef9d68
+READ of size 2 at 0x50600003407e thread T0
+    #0 0x61c4c6f65f49 in strchr (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa4f49) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c7024716 in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:344:21
+    #2 0x61c4c702dcf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x50600003407e is located 0 bytes after 62-byte region [0x506000034040,0x50600003407e)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c703f220 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:21:19
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa4f49) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957) in strchr
+Shadow bytes around the buggy address:
+  0x506000033d80: fa fa fa fa fd fd fd fd fd fd fd fd fa fa fa fa
+  0x506000033e00: fd fd fd fd fd fd fd fd fa fa fa fa fd fd fd fd
+  0x506000033e80: fd fd fd fd fa fa fa fa fd fd fd fd fd fd fd fd
+  0x506000033f00: fa fa fa fa fd fd fd fd fd fd fd fd fa fa fa fa
+  0x506000033f80: 00 00 00 00 00 00 00 05 fa fa fa fa 00 00 00 00
+=>0x506000034000: 00 00 00 05 fa fa fa fa 00 00 00 00 00 00 00[06]
+  0x506000034080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034100: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034180: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034200: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034280: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+=================================================================
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x5020000ca3df at pc 0x61c4c701f1ee bp 0x7ffeafefa470 sp 0x7ffeafefa468
+READ of size 1 at 0x5020000ca3df thread T0
+    #0 0x61c4c701f1ed in ezxml_decode /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:218:21
+    #1 0x61c4c70264f1 in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:409:46
+    #2 0x61c4c702dcf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x5020000ca3df is located 0 bytes after 15-byte region [0x5020000ca3d0,0x5020000ca3df)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c701e841 in ezxml_decode /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:204:43
+    #2 0x61c4c70264f1 in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:409:46
+    #3 0x61c4c702dcf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #4 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #5 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #11 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #12 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #13 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:218:21 in ezxml_decode
+Shadow bytes around the buggy address:
+  0x5020000ca100: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+  0x5020000ca180: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+  0x5020000ca200: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+  0x5020000ca280: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+  0x5020000ca300: fa fa fd fa fa fa fd fa fa fa fd fa fa fa 00 fa
+=>0x5020000ca380: fa fa 00 00 fa fa fd fd fa fa 00[07]fa fa fa fa
+  0x5020000ca400: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5020000ca480: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5020000ca500: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5020000ca580: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5020000ca600: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+=================================================================
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x513000084026 at pc 0x61c4c6f66cc1 bp 0x7ffeafefa5a0 sp 0x7ffeafef9d60
+READ of size 12 at 0x513000084026 thread T0
+    #0 0x61c4c6f66cc0 in strcspn (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa5cc0) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c70245a4 in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:340:23
+    #2 0x61c4c702dcf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x513000084026 is located 0 bytes after 358-byte region [0x513000083ec0,0x513000084026)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c703f220 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:21:19
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa5cc0) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957) in strcspn
+Shadow bytes around the buggy address:
+  0x513000083d80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x513000083e00: 00 00 00 00 00 00 00 00 00 00 00 00 05 fa fa fa
+  0x513000083e80: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+  0x513000083f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x513000083f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x513000084000: 00 00 00 00[06]fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084100: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084180: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084200: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084280: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+=================================================================
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x513000084026 at pc 0x61c4c7024802 bp 0x7ffeafefa5a0 sp 0x7ffeafefa598
+WRITE of size 1 at 0x513000084026 thread T0
+    #0 0x61c4c7024801 in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:340:45
+    #1 0x61c4c702dcf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #2 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #3 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #10 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #11 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x513000084026 is located 0 bytes after 358-byte region [0x513000083ec0,0x513000084026)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c703f220 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:21:19
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:340:45 in ezxml_internal_dtd
+Shadow bytes around the buggy address:
+  0x513000083d80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x513000083e00: 00 00 00 00 00 00 00 00 00 00 00 00 05 fa fa fa
+  0x513000083e80: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+  0x513000083f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x513000083f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x513000084000: 00 00 00 00[06]fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084100: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084180: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084200: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084280: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+=================================================================
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x5170000efbda at pc 0x61c4c702da42 bp 0x7ffeafefa6d0 sp 0x7ffeafefa6c8
+READ of size 1 at 0x5170000efbda thread T0
+    #0 0x61c4c702da41 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:604:23
+    #1 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x5170000efbda is located 4 bytes after 726-byte region [0x5170000ef900,0x5170000efbd6)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c703f220 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:21:19
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:604:23 in ezxml_parse_str
+Shadow bytes around the buggy address:
+  0x5170000ef900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000ef980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efa00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efa80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efb00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x5170000efb80: 00 00 00 00 00 00 00 00 00 00 06[fa]fa fa fa fa
+  0x5170000efc00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efc80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efd00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efd80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efe00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+=================================================================
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x5170000efbda at pc 0x61c4c702da2b bp 0x7ffeafefa6d0 sp 0x7ffeafefa6c8
+READ of size 1 at 0x5170000efbda thread T0
+    #0 0x61c4c702da2a in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:602:25
+    #1 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x5170000efbda is located 4 bytes after 726-byte region [0x5170000ef900,0x5170000efbd6)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c703f220 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:21:19
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:602:25 in ezxml_parse_str
+Shadow bytes around the buggy address:
+  0x5170000ef900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000ef980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efa00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efa80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efb00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x5170000efb80: 00 00 00 00 00 00 00 00 00 00 06[fa]fa fa fa fa
+  0x5170000efc00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efc80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efd00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efd80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efe00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+=================================================================
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x5170000efbda at pc 0x61c4c702e3f1 bp 0x7ffeafefa6d0 sp 0x7ffeafefa6c8
+READ of size 1 at 0x5170000efbda thread T0
+    #0 0x61c4c702e3f0 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:605:19
+    #1 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x5170000efbda is located 4 bytes after 726-byte region [0x5170000ef900,0x5170000efbd6)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c703f220 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:21:19
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:605:19 in ezxml_parse_str
+Shadow bytes around the buggy address:
+  0x5170000ef900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000ef980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efa00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efa80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efb00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x5170000efb80: 00 00 00 00 00 00 00 00 00 00 06[fa]fa fa fa fa
+  0x5170000efc00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efc80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efd00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efd80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efe00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+#11725	INITED cov: 1119 ft: 7613 corp: 831/250Kb exec/s: 11725 rss: 272Mb
+#11727	REDUCE cov: 1119 ft: 7613 corp: 831/250Kb lim: 3877 exec/s: 11727 rss: 272Mb L: 158/3866 MS: 2 ShuffleBytes-EraseBytes-
+#13804	REDUCE cov: 1119 ft: 7613 corp: 831/250Kb lim: 3888 exec/s: 13804 rss: 285Mb L: 126/3866 MS: 2 ShuffleBytes-EraseBytes-
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:369:49: runtime error: null pointer passed as argument 1, which is declared to never be null
+/usr/include/string.h:157:33: note: nonnull attribute specified here
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:369:49 
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==1811892==ERROR: AddressSanitizer: SEGV on unknown address 0x000000000000 (pc 0x61c4c6f63230 bp 0x7ffeafefa5a0 sp 0x7ffeafef9d40 T0)
+==1811892==The signal is caused by a READ memory access.
+==1811892==Hint: address points to the zero page.
+    #0 0x61c4c6f63230 in strcmp (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa2230) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c7024c6f in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:369:42
+    #2 0x61c4c702dcf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f354a5 in fuzzer::Fuzzer::MutateAndTestOne() (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x744a5) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f35f75 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74f75) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: SEGV (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa2230) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957) in strcmp
+==1811892==ABORTING
+MS: 3 CrossOver-InsertByte-InsertByte-; base unit: 1138b918db04fc28a6376c73cbbf30bf13f7e90f
+artifact_prefix='/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/artifacts/ezxml/'; Test unit written to /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/artifacts/ezxml/crash-038cae99e06125f12792671294f7b06d3110984d
+[ezxml] exited, restarting (rem=21600s)
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 69206197
+INFO: Loaded 1 modules   (3554 inline 8-bit counters): 3554 [0x5a043de03420, 0x5a043de04202), 
+INFO: Loaded 1 PC tables (3554 PCs): 3554 [0x5a043de04208,0x5a043de12028), 
+INFO:    11726 files found in /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/corpus/ezxml
+INFO: seed corpus: files: 11726 min: 1b max: 3881b total: 4687917b rss: 47Mb
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:294:5: runtime error: addition of unsigned offset to 0x502000000472 overflowed to 0x502000000471
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:294:5 
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:190:32: runtime error: shift exponent -5 is negative
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:190:32 
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:190:49: runtime error: shift exponent 72 is too large for 64-bit type 'long'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:190:49 
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:191:47: runtime error: shift exponent 66 is too large for 64-bit type 'long'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:191:47 
+=================================================================
+==1812010==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50600003245e at pc 0x5a043dcdc871 bp 0x7fff4c1719e0 sp 0x7fff4c1711a0
+READ of size 1 at 0x50600003245e thread T0
+    #0 0x5a043dcdc870 in strspn (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa5870) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x5a043dd9a65a in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:342:21
+    #2 0x5a043dda3cf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x5a043ddb5272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x5a043dcaa794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x5a043dca9e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x5a043dcab846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x5a043dcabd57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x5a043dc995ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x5a043dcc2d46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x78a91fc2a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x78a91fc2a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x5a043dc8e9e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+-- ASan #2: heap-buffer-overflow on address 0x50600003407e at pc 0x61c4c7024821 bp 0x7ffeafefa5a0 sp 0x7ffeafefa598
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50600003407e at pc 0x61c4c7024821 bp 0x7ffeafefa5a0 sp 0x7ffeafefa598
+READ of size 1 at 0x50600003407e thread T0
+    #0 0x61c4c7024820 in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:343:22
+    #1 0x61c4c702dcf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #2 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #3 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #10 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #11 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x50600003407e is located 0 bytes after 62-byte region [0x506000034040,0x50600003407e)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c703f220 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:21:19
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:343:22 in ezxml_internal_dtd
+Shadow bytes around the buggy address:
+  0x506000033d80: fa fa fa fa fd fd fd fd fd fd fd fd fa fa fa fa
+  0x506000033e00: fd fd fd fd fd fd fd fd fa fa fa fa fd fd fd fd
+  0x506000033e80: fd fd fd fd fa fa fa fa fd fd fd fd fd fd fd fd
+  0x506000033f00: fa fa fa fa fd fd fd fd fd fd fd fd fa fa fa fa
+  0x506000033f80: 00 00 00 00 00 00 00 05 fa fa fa fa 00 00 00 00
+=>0x506000034000: 00 00 00 05 fa fa fa fa 00 00 00 00 00 00 00[06]
+  0x506000034080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034100: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034180: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034200: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034280: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+=================================================================
+==1812010==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50600003245e at pc 0x5a043dcdc871 bp 0x7fff4c1719e0 sp 0x7fff4c1711a0
+READ of size 1 at 0x50600003245e thread T0
+    #0 0x5a043dcdc870 in strspn (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa5870) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x5a043dd9a65a in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:342:21
+    #2 0x5a043dda3cf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x5a043ddb5272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x5a043dcaa794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x5a043dca9e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x5a043dcab846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x5a043dcabd57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x5a043dc995ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x5a043dcc2d46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x78a91fc2a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x78a91fc2a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x5a043dc8e9e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+-- ASan #3: heap-buffer-overflow on address 0x50600003407e at pc 0x61c4c6f65f4a bp 0x7ffeafefa5a0 sp 0x7ffeafef9d68
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50600003407e at pc 0x61c4c6f65f4a bp 0x7ffeafefa5a0 sp 0x7ffeafef9d68
+READ of size 2 at 0x50600003407e thread T0
+    #0 0x61c4c6f65f49 in strchr (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa4f49) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c7024716 in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:344:21
+    #2 0x61c4c702dcf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x50600003407e is located 0 bytes after 62-byte region [0x506000034040,0x50600003407e)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c703f220 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:21:19
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa4f49) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957) in strchr
+Shadow bytes around the buggy address:
+  0x506000033d80: fa fa fa fa fd fd fd fd fd fd fd fd fa fa fa fa
+  0x506000033e00: fd fd fd fd fd fd fd fd fa fa fa fa fd fd fd fd
+  0x506000033e80: fd fd fd fd fa fa fa fa fd fd fd fd fd fd fd fd
+  0x506000033f00: fa fa fa fa fd fd fd fd fd fd fd fd fa fa fa fa
+  0x506000033f80: 00 00 00 00 00 00 00 05 fa fa fa fa 00 00 00 00
+=>0x506000034000: 00 00 00 05 fa fa fa fa 00 00 00 00 00 00 00[06]
+  0x506000034080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034100: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034180: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034200: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x506000034280: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+=================================================================
+==1812010==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50600003245e at pc 0x5a043dcdc871 bp 0x7fff4c1719e0 sp 0x7fff4c1711a0
+READ of size 1 at 0x50600003245e thread T0
+    #0 0x5a043dcdc870 in strspn (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa5870) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x5a043dd9a65a in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:342:21
+    #2 0x5a043dda3cf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x5a043ddb5272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x5a043dcaa794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x5a043dca9e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x5a043dcab846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x5a043dcabd57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x5a043dc995ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x5a043dcc2d46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x78a91fc2a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x78a91fc2a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x5a043dc8e9e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+-- ASan #4: heap-buffer-overflow on address 0x5020000ca3df at pc 0x61c4c701f1ee bp 0x7ffeafefa470 sp 0x7ffeafefa468
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x5020000ca3df at pc 0x61c4c701f1ee bp 0x7ffeafefa470 sp 0x7ffeafefa468
+READ of size 1 at 0x5020000ca3df thread T0
+    #0 0x61c4c701f1ed in ezxml_decode /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:218:21
+    #1 0x61c4c70264f1 in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:409:46
+    #2 0x61c4c702dcf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x5020000ca3df is located 0 bytes after 15-byte region [0x5020000ca3d0,0x5020000ca3df)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c701e841 in ezxml_decode /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:204:43
+    #2 0x61c4c70264f1 in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:409:46
+    #3 0x61c4c702dcf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #4 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #5 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #11 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #12 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #13 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:218:21 in ezxml_decode
+Shadow bytes around the buggy address:
+  0x5020000ca100: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+  0x5020000ca180: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+  0x5020000ca200: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+  0x5020000ca280: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+  0x5020000ca300: fa fa fd fa fa fa fd fa fa fa fd fa fa fa 00 fa
+=>0x5020000ca380: fa fa 00 00 fa fa fd fd fa fa 00[07]fa fa fa fa
+  0x5020000ca400: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5020000ca480: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5020000ca500: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5020000ca580: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5020000ca600: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+=================================================================
+==1812010==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50600003245e at pc 0x5a043dcdc871 bp 0x7fff4c1719e0 sp 0x7fff4c1711a0
+READ of size 1 at 0x50600003245e thread T0
+    #0 0x5a043dcdc870 in strspn (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa5870) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x5a043dd9a65a in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:342:21
+    #2 0x5a043dda3cf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x5a043ddb5272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x5a043dcaa794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x5a043dca9e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x5a043dcab846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x5a043dcabd57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x5a043dc995ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x5a043dcc2d46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x78a91fc2a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x78a91fc2a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x5a043dc8e9e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+-- ASan #5: heap-buffer-overflow on address 0x513000084026 at pc 0x61c4c6f66cc1 bp 0x7ffeafefa5a0 sp 0x7ffeafef9d60
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x513000084026 at pc 0x61c4c6f66cc1 bp 0x7ffeafefa5a0 sp 0x7ffeafef9d60
+READ of size 12 at 0x513000084026 thread T0
+    #0 0x61c4c6f66cc0 in strcspn (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa5cc0) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c70245a4 in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:340:23
+    #2 0x61c4c702dcf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x513000084026 is located 0 bytes after 358-byte region [0x513000083ec0,0x513000084026)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c703f220 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:21:19
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa5cc0) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957) in strcspn
+Shadow bytes around the buggy address:
+  0x513000083d80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x513000083e00: 00 00 00 00 00 00 00 00 00 00 00 00 05 fa fa fa
+  0x513000083e80: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+  0x513000083f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x513000083f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x513000084000: 00 00 00 00[06]fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084100: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084180: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084200: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084280: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+=================================================================
+==1812010==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50600003245e at pc 0x5a043dcdc871 bp 0x7fff4c1719e0 sp 0x7fff4c1711a0
+READ of size 1 at 0x50600003245e thread T0
+    #0 0x5a043dcdc870 in strspn (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa5870) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x5a043dd9a65a in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:342:21
+    #2 0x5a043dda3cf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x5a043ddb5272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x5a043dcaa794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x5a043dca9e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x5a043dcab846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x5a043dcabd57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x5a043dc995ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x5a043dcc2d46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x78a91fc2a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x78a91fc2a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x5a043dc8e9e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+-- ASan #6: heap-buffer-overflow on address 0x513000084026 at pc 0x61c4c7024802 bp 0x7ffeafefa5a0 sp 0x7ffeafefa598
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x513000084026 at pc 0x61c4c7024802 bp 0x7ffeafefa5a0 sp 0x7ffeafefa598
+WRITE of size 1 at 0x513000084026 thread T0
+    #0 0x61c4c7024801 in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:340:45
+    #1 0x61c4c702dcf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #2 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #3 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #10 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #11 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x513000084026 is located 0 bytes after 358-byte region [0x513000083ec0,0x513000084026)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c703f220 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:21:19
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:340:45 in ezxml_internal_dtd
+Shadow bytes around the buggy address:
+  0x513000083d80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x513000083e00: 00 00 00 00 00 00 00 00 00 00 00 00 05 fa fa fa
+  0x513000083e80: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+  0x513000083f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x513000083f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x513000084000: 00 00 00 00[06]fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084100: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084180: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084200: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x513000084280: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+=================================================================
+==1812010==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50600003245e at pc 0x5a043dcdc871 bp 0x7fff4c1719e0 sp 0x7fff4c1711a0
+READ of size 1 at 0x50600003245e thread T0
+    #0 0x5a043dcdc870 in strspn (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa5870) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x5a043dd9a65a in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:342:21
+    #2 0x5a043dda3cf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x5a043ddb5272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x5a043dcaa794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x5a043dca9e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x5a043dcab846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x5a043dcabd57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x5a043dc995ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x5a043dcc2d46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x78a91fc2a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x78a91fc2a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x5a043dc8e9e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+-- ASan #7: heap-buffer-overflow on address 0x5170000efbda at pc 0x61c4c702da42 bp 0x7ffeafefa6d0 sp 0x7ffeafefa6c8
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x5170000efbda at pc 0x61c4c702da42 bp 0x7ffeafefa6d0 sp 0x7ffeafefa6c8
+READ of size 1 at 0x5170000efbda thread T0
+    #0 0x61c4c702da41 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:604:23
+    #1 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x5170000efbda is located 4 bytes after 726-byte region [0x5170000ef900,0x5170000efbd6)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c703f220 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:21:19
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:604:23 in ezxml_parse_str
+Shadow bytes around the buggy address:
+  0x5170000ef900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000ef980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efa00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efa80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efb00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x5170000efb80: 00 00 00 00 00 00 00 00 00 00 06[fa]fa fa fa fa
+  0x5170000efc00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efc80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efd00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efd80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efe00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+=================================================================
+==1812010==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50600003245e at pc 0x5a043dcdc871 bp 0x7fff4c1719e0 sp 0x7fff4c1711a0
+READ of size 1 at 0x50600003245e thread T0
+    #0 0x5a043dcdc870 in strspn (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa5870) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x5a043dd9a65a in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:342:21
+    #2 0x5a043dda3cf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x5a043ddb5272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x5a043dcaa794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x5a043dca9e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x5a043dcab846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x5a043dcabd57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x5a043dc995ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x5a043dcc2d46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x78a91fc2a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x78a91fc2a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x5a043dc8e9e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+-- ASan #8: heap-buffer-overflow on address 0x5170000efbda at pc 0x61c4c702da2b bp 0x7ffeafefa6d0 sp 0x7ffeafefa6c8
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x5170000efbda at pc 0x61c4c702da2b bp 0x7ffeafefa6d0 sp 0x7ffeafefa6c8
+READ of size 1 at 0x5170000efbda thread T0
+    #0 0x61c4c702da2a in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:602:25
+    #1 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x5170000efbda is located 4 bytes after 726-byte region [0x5170000ef900,0x5170000efbd6)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c703f220 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:21:19
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:602:25 in ezxml_parse_str
+Shadow bytes around the buggy address:
+  0x5170000ef900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000ef980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efa00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efa80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efb00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x5170000efb80: 00 00 00 00 00 00 00 00 00 00 06[fa]fa fa fa fa
+  0x5170000efc00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efc80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efd00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efd80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efe00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+=================================================================
+==1812010==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50600003245e at pc 0x5a043dcdc871 bp 0x7fff4c1719e0 sp 0x7fff4c1711a0
+READ of size 1 at 0x50600003245e thread T0
+    #0 0x5a043dcdc870 in strspn (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa5870) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x5a043dd9a65a in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:342:21
+    #2 0x5a043dda3cf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x5a043ddb5272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x5a043dcaa794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x5a043dca9e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x5a043dcab846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x5a043dcabd57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x5a043dc995ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x5a043dcc2d46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x78a91fc2a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x78a91fc2a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x5a043dc8e9e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+-- ASan #9: heap-buffer-overflow on address 0x5170000efbda at pc 0x61c4c702e3f1 bp 0x7ffeafefa6d0 sp 0x7ffeafefa6c8
+==1811892==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x5170000efbda at pc 0x61c4c702e3f1 bp 0x7ffeafefa6d0 sp 0x7ffeafefa6c8
+READ of size 1 at 0x5170000efbda thread T0
+    #0 0x61c4c702e3f0 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:605:19
+    #1 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+0x5170000efbda is located 4 bytes after 726-byte region [0x5170000ef900,0x5170000efbd6)
+allocated by thread T0 here:
+    #0 0x61c4c6fe5c43 in malloc (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x124c43) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c703f220 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:21:19
+    #2 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #3 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #4 0x61c4c6f35846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f35d57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #9 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #10 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:605:19 in ezxml_parse_str
+Shadow bytes around the buggy address:
+  0x5170000ef900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000ef980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efa00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efa80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x5170000efb00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x5170000efb80: 00 00 00 00 00 00 00 00 00 00 06[fa]fa fa fa fa
+  0x5170000efc00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efc80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efd00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efd80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x5170000efe00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+#11725	INITED cov: 1119 ft: 7613 corp: 831/250Kb exec/s: 11725 rss: 272Mb
+#11727	REDUCE cov: 1119 ft: 7613 corp: 831/250Kb lim: 3877 exec/s: 11727 rss: 272Mb L: 158/3866 MS: 2 ShuffleBytes-EraseBytes-
+#13804	REDUCE cov: 1119 ft: 7613 corp: 831/250Kb lim: 3888 exec/s: 13804 rss: 285Mb L: 126/3866 MS: 2 ShuffleBytes-EraseBytes-
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:369:49: runtime error: null pointer passed as argument 1, which is declared to never be null
+/usr/include/string.h:157:33: note: nonnull attribute specified here
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:369:49 
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==1812010==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50600003245e at pc 0x5a043dcdc871 bp 0x7fff4c1719e0 sp 0x7fff4c1711a0
+READ of size 1 at 0x50600003245e thread T0
+    #0 0x5a043dcdc870 in strspn (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa5870) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x5a043dd9a65a in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:342:21
+    #2 0x5a043dda3cf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x5a043ddb5272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x5a043dcaa794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x5a043dca9e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x5a043dcab846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x5a043dcabd57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x5a043dc995ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x5a043dcc2d46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x78a91fc2a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x78a91fc2a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x5a043dc8e9e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+-- ASan #10: SEGV on unknown address 0x000000000000 (pc 0x61c4c6f63230 bp 0x7ffeafefa5a0 sp 0x7ffeafef9d40 T0)
+==1811892==ERROR: AddressSanitizer: SEGV on unknown address 0x000000000000 (pc 0x61c4c6f63230 bp 0x7ffeafefa5a0 sp 0x7ffeafef9d40 T0)
+==1811892==The signal is caused by a READ memory access.
+==1811892==Hint: address points to the zero page.
+    #0 0x61c4c6f63230 in strcmp (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa2230) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x61c4c7024c6f in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:369:42
+    #2 0x61c4c702dcf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x61c4c703f272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x61c4c6f34794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x61c4c6f33e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x61c4c6f354a5 in fuzzer::Fuzzer::MutateAndTestOne() (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x744a5) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x61c4c6f35f75 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74f75) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x61c4c6f235ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x61c4c6f4cd46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x70d93f82a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x70d93f82a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x61c4c6f189e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: SEGV (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa2230) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957) in strcmp
+==1811892==ABORTING
+MS: 3 CrossOver-InsertByte-InsertByte-; base unit: 1138b918db04fc28a6376c73cbbf30bf13f7e90f
+artifact_prefix='/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/artifacts/ezxml/'; Test unit written to /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/artifacts/ezxml/crash-038cae99e06125f12792671294f7b06d3110984d
+[ezxml] exited, restarting (rem=21600s)
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 69206197
+INFO: Loaded 1 modules   (3554 inline 8-bit counters): 3554 [0x5a043de03420, 0x5a043de04202), 
+INFO: Loaded 1 PC tables (3554 PCs): 3554 [0x5a043de04208,0x5a043de12028), 
+INFO:    11726 files found in /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/corpus/ezxml
+INFO: seed corpus: files: 11726 min: 1b max: 3881b total: 4687917b rss: 47Mb
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:294:5: runtime error: addition of unsigned offset to 0x502000000472 overflowed to 0x502000000471
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:294:5 
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:190:32: runtime error: shift exponent -5 is negative
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:190:32 
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:190:49: runtime error: shift exponent 72 is too large for 64-bit type 'long'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:190:49 
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:191:47: runtime error: shift exponent 66 is too large for 64-bit type 'long'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:191:47 
+=================================================================
+==1812010==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50600003245e at pc 0x5a043dcdc871 bp 0x7fff4c1719e0 sp 0x7fff4c1711a0
+READ of size 1 at 0x50600003245e thread T0
+    #0 0x5a043dcdc870 in strspn (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0xa5870) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #1 0x5a043dd9a65a in ezxml_internal_dtd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:342:21
+    #2 0x5a043dda3cf5 in ezxml_parse_str /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:608:24
+    #3 0x5a043ddb5272 in LLVMFuzzerTestOneInput /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/hf_ezxml_parse.c:27:12
+    #4 0x5a043dcaa794 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x73794) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #5 0x5a043dca9e89 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x72e89) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #6 0x5a043dcab846 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74846) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #7 0x5a043dcabd57 in fuzzer::Fuzzer::Loop(std::vector<fuzzer::SizedFile, std::allocator<fuzzer::SizedFile>>&) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x74d57) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #8 0x5a043dc995ff in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x625ff) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #9 0x5a043dcc2d46 in main (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x8bd46) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+    #10 0x78a91fc2a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #11 0x78a91fc2a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #12 0x5a043dc8e9e4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/bin/hf_ezxml_parse+0x579e4) (BuildId: 0b3afc9e7946f4b7ae6e12ed46b019b149c04957)
+
+UndefinedBehaviorSanitizer findings:
+-- UBSan #1: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:369:49
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:369:49: runtime error: null pointer passed as argument 1, which is declared to never be null
+/usr/include/string.h:157:33: note: nonnull attribute specified here
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:369:49 
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+
+-- UBSan #2: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:294:5
+INFO:    13941 files found in /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/corpus/ezxml
+INFO: seed corpus: files: 13941 min: 1b max: 3881b total: 5747033b rss: 49Mb
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:294:5: runtime error: addition of unsigned offset to 0x502000000692 overflowed to 0x502000000691
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:294:5 
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:190:32: runtime error: shift exponent -5 is negative
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:190:32 
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:190:49: runtime error: shift exponent 72 is too large for 64-bit type 'long'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:190:49 
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:191:47: runtime error: shift exponent 66 is too large for 64-bit type 'long'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:191:47 
+=================================================================
+==1924234==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x50600002ecda at pc 0x58f08f497871 bp 0x7ffcebcc3940 sp 0x7ffcebcc3100
+
+-- UBSan #4: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:208:34
+  Right alloca redzone:    cb
+#32768	pulse  cov: 1119 ft: 7620 corp: 831/233Kb lim: 4031 exec/s: 16384 rss: 438Mb
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:208:34: runtime error: applying non-zero offset 1 to null pointer
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:208:34 
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:208:46: runtime error: null pointer passed as argument 1, which is declared to never be null
+/usr/include/string.h:408:33: note: nonnull attribute specified here
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/support/ezxml/ezxml.c:208:46 
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+
+=== navit_config_parse ===
+Log: /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/logs/nohup_navit_config_parse.log
+No sanitizer bug blocks found in the last 32MB of this log.
+
+
+==============================
+Plateau stop (5 min rule)
+Appended (UTC): 2026-02-24T17:07:15.901838+00:00
+Target: navit_config_parse
+Log: /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/logs/nohup_navit_config_parse.log
+Last marker: it=21843314 cov=327 ft=2530 exec/s=5743
+Prev ft change: it=16622521 cov=327 ft=2529 exec/s=5716
+Estimated minutes ft unchanged: 15.15
+
+UndefinedBehaviorSanitizer findings (tail):
+-- UBSan #1: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/coord_transform_stubs.c:59:16
+#10535122	REDUCE cov: 325 ft: 2519 corp: 404/548Kb lim: 16384 exec/s: 5722 rss: 585Mb L: 8309/16289 MS: 1 EraseBytes-
+#10542951	REDUCE cov: 325 ft: 2519 corp: 404/548Kb lim: 16384 exec/s: 5723 rss: 585Mb L: 258/16289 MS: 2 ChangeASCIIInt-EraseBytes-
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/coord_transform_stubs.c:59:16: runtime error: -nan is outside the range of representable values of type 'int'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/coord_transform_stubs.c:59:16 
+#10548125	RELOAD cov: 326 ft: 2520 corp: 405/556Kb lim: 16384 exec/s: 5723 rss: 585Mb
+
+-- UBSan #3: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/coord_transform_stubs.c:53:16
+#14619446	REDUCE cov: 326 ft: 2525 corp: 410/545Kb lim: 16384 exec/s: 5721 rss: 585Mb L: 1158/16289 MS: 1 EraseBytes-
+#14621368	REDUCE cov: 326 ft: 2525 corp: 410/545Kb lim: 16384 exec/s: 5720 rss: 585Mb L: 1172/16289 MS: 2 ChangeBinInt-EraseBytes-
+/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/coord_transform_stubs.c:53:16: runtime error: -nan is outside the range of representable values of type 'int'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/fuzz/libfuzzer/coord_transform_stubs.c:53:16 
+#14624789	REDUCE cov: 327 ft: 2526 corp: 411/547Kb lim: 16384 exec/s: 5721 rss: 585Mb L: 1911/16289 MS: 1 CopyPart-
+
