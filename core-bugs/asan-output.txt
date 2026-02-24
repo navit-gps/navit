@@ -1,0 +1,68 @@
+
+(navit:60111): dbind-WARNING **: 19:08:07.699: Couldn't register with accessibility bus: Did not receive a reply. Possible causes include: the remote application did not send a reply, the message bus security policy blocked the reply, the reply timeout expired, or the network connection was broken.
+=================================================================
+==60111==ERROR: AddressSanitizer: heap-use-after-free on address 0x5030000998e7 at pc 0x79b2e5ec6f8f bp 0x7ffd34dde050 sp 0x7ffd34ddd7f8
+READ of size 1 at 0x5030000998e7 thread T0
+    #0 0x79b2e5ec6f8e in strcmp ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:470
+    #1 0x79b2e05c8af0 in gps_stream (/lib/x86_64-linux-gnu/libgps.so.30+0x16af0) (BuildId: 0ab19e5af2ca25c02ec8cdff670ee051debe5742)
+    #2 0x79b2e0a9e9d9 in vehicle_gpsd_try_open /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/vehicle/gpsd/vehicle_gpsd.c:254
+    #3 0x79b2e0a9f18c in vehicle_gpsd_open /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/vehicle/gpsd/vehicle_gpsd.c:292
+    #4 0x79b2e0a9f18c in vehicle_gpsd_new_gpsd /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/vehicle/gpsd/vehicle_gpsd.c:483
+    #5 0x79b2e5bb0a65 in vehicle_new /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/vehicle.c:137
+    #6 0x79b2e5bbdf92 in start_element /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/xmlconfig.c:676
+    #7 0x79b2e5bc0574 in xi_start_element /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/xmlconfig.c:951
+    #8 0x79b2e5d18f4b  (/lib/x86_64-linux-gnu/libglib-2.0.so.0+0x61f4b) (BuildId: 116e142b9b52c8a4dfd403e759e71ab8f95d8bb3)
+    #9 0x79b2e5d1c208 in g_markup_parse_context_parse (/lib/x86_64-linux-gnu/libglib-2.0.so.0+0x65208) (BuildId: 116e142b9b52c8a4dfd403e759e71ab8f95d8bb3)
+    #10 0x79b2e5bc19c1 in parse_file /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/xmlconfig.c:1172
+    #11 0x79b2e5bc1fa4 in config_load /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/xmlconfig.c:1250
+    #12 0x79b2e5b64852 in main_real /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/start_real.c:195
+    #13 0x637c9daf81ac in main /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/start.c:23
+    #14 0x79b2e562a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #15 0x79b2e562a28a in __libc_start_main_impl ../csu/libc-start.c:360
+    #16 0x637c9daf80c4 in _start (/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/build-asan/navit/navit+0x10c4) (BuildId: 70c4c633ad3260fc490cc3e98da0a0358daba7a8)
+
+0x5030000998e7 is located 7 bytes inside of 17-byte region [0x5030000998e0,0x5030000998f1)
+freed by thread T0 here:
+    #0 0x79b2e5efc4d8 in free ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:52
+    #1 0x79b2e0a9e7e0 in vehicle_gpsd_try_open /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/vehicle/gpsd/vehicle_gpsd.c:248
+
+previously allocated by thread T0 here:
+    #0 0x79b2e5efd9c7 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x79b2e5d19ac9 in g_malloc (/lib/x86_64-linux-gnu/libglib-2.0.so.0+0x62ac9) (BuildId: 116e142b9b52c8a4dfd403e759e71ab8f95d8bb3)
+    #2 0x79b2e5d2f498 in g_strdup (/lib/x86_64-linux-gnu/libglib-2.0.so.0+0x78498) (BuildId: 116e142b9b52c8a4dfd403e759e71ab8f95d8bb3)
+    #3 0x79b2e0a9e786 in g_strdup_inline /usr/include/glib-2.0/glib/gstrfuncs.h:321
+    #4 0x79b2e0a9e786 in vehicle_gpsd_try_open /mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit/navit/vehicle/gpsd/vehicle_gpsd.c:226
+
+SUMMARY: AddressSanitizer: heap-use-after-free ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:470 in strcmp
+Shadow bytes around the buggy address:
+  0x503000099600: fa fa fd fd fd fa fa fa fd fd fd fa fa fa fd fd
+  0x503000099680: fd fa fa fa fd fd fd fa fa fa 00 00 00 fa fa fa
+  0x503000099700: fd fd fd fd fa fa 00 00 00 fa fa fa fd fd fd fa
+  0x503000099780: fa fa fd fd fd fa fa fa fd fd fd fa fa fa fd fd
+  0x503000099800: fd fa fa fa fd fd fd fa fa fa 00 00 00 fa fa fa
+=>0x503000099880: 00 00 00 fa fa fa 00 00 01 fa fa fa[fd]fd fd fa
+  0x503000099900: fa fa 00 00 00 00 fa fa fa fa fa fa fa fa fa fa
+  0x503000099980: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x503000099a00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x503000099a80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x503000099b00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==60111==ABORTING
