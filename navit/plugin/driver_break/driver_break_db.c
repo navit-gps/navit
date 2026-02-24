@@ -24,6 +24,7 @@
 #include <glib.h>
 #include <sqlite3.h>
 #include <stdlib.h>
+#include <stddef.h>
 #include <string.h>
 #include <time.h>
 
@@ -46,14 +47,15 @@ struct driver_break_db {
 /* Configuration key mapping structure */
 struct config_key_map {
     const char *key;
-    int *field;
+    size_t offset;
     int min_value;
     int max_value;
     int allow_zero;
 };
 
 /* Validate and set a configuration value */
-static int driver_break_db_set_config_value(struct config_key_map *map, int value, int *loaded_count) {
+static int driver_break_db_set_config_value(const struct config_key_map *map, struct driver_break_config *config, int value,
+                                            int *loaded_count) {
     int valid = 0;
 
     if (map->allow_zero) {
@@ -63,7 +65,8 @@ static int driver_break_db_set_config_value(struct config_key_map *map, int valu
     }
 
     if (valid) {
-        *(map->field) = value;
+        int *field = (int *)((char *)config + map->offset);
+        *field = value;
         (*loaded_count)++;
         return 0;
     } else {
@@ -75,48 +78,29 @@ static int driver_break_db_set_config_value(struct config_key_map *map, int valu
 /* Load a single configuration value - returns 0 on success, -1 if key not recognized */
 static int driver_break_db_load_config_value(const char *key, int value, struct driver_break_config *config,
                                              int *loaded_count) {
-    static struct config_key_map maps[] = {
-        {"vehicle_type",                       NULL, 0, MAX_VEHICLE_TYPE,              1},
-        {"car_soft_limit_hours",               NULL, 0, MAX_HOURS_PER_DAY,             0},
-        {"car_max_hours",                      NULL, 0, MAX_HOURS_PER_DAY,             0},
-        {"car_break_interval_hours",           NULL, 0, MAX_HOURS_PER_DAY,             0},
-        {"car_break_duration_min",             NULL, 0, MAX_BREAK_DURATION_MIN,        0},
-        {"truck_mandatory_break_after_hours",  NULL, 0, MAX_HOURS_PER_DAY,             0},
-        {"truck_mandatory_break_duration_min", NULL, 0, MAX_BREAK_DURATION_MIN,        0},
-        {"truck_max_daily_hours",              NULL, 0, MAX_HOURS_PER_DAY,             0},
-        {"min_distance_from_buildings",        NULL, 0, MAX_DISTANCE_METERS,           0},
-        {"poi_search_radius_km",               NULL, 0, MAX_POI_SEARCH_RADIUS_KM,      0},
-        {"poi_water_search_radius_km",         NULL, 0, MAX_POI_WATER_CABIN_RADIUS_KM, 0},
-        {"poi_cabin_search_radius_km",         NULL, 0, MAX_POI_WATER_CABIN_RADIUS_KM, 0},
-        {"min_distance_from_glaciers",         NULL, 0, MAX_DISTANCE_METERS,           0},
-        {"driver_break_interval_min_hours",    NULL, 0, MAX_HOURS_PER_DAY_24,          0},
-        {"driver_break_interval_max_hours",    NULL, 0, MAX_HOURS_PER_DAY_24,          0},
-        {NULL,                                 NULL, 0, 0,                             0}
+    static const struct config_key_map maps[] = {
+        {"vehicle_type", offsetof(struct driver_break_config, vehicle_type), 0, MAX_VEHICLE_TYPE, 1},
+        {"car_soft_limit_hours", offsetof(struct driver_break_config, car_soft_limit_hours), 0, MAX_HOURS_PER_DAY, 0},
+        {"car_max_hours", offsetof(struct driver_break_config, car_max_hours), 0, MAX_HOURS_PER_DAY, 0},
+        {"car_break_interval_hours", offsetof(struct driver_break_config, car_break_interval_hours), 0, MAX_HOURS_PER_DAY, 0},
+        {"car_break_duration_min", offsetof(struct driver_break_config, car_break_duration_min), 0, MAX_BREAK_DURATION_MIN, 0},
+        {"truck_mandatory_break_after_hours", offsetof(struct driver_break_config, truck_mandatory_break_after_hours), 0, MAX_HOURS_PER_DAY, 0},
+        {"truck_mandatory_break_duration_min", offsetof(struct driver_break_config, truck_mandatory_break_duration_min), 0, MAX_BREAK_DURATION_MIN, 0},
+        {"truck_max_daily_hours", offsetof(struct driver_break_config, truck_max_daily_hours), 0, MAX_HOURS_PER_DAY, 0},
+        {"min_distance_from_buildings", offsetof(struct driver_break_config, min_distance_from_buildings), 0, MAX_DISTANCE_METERS, 0},
+        {"poi_search_radius_km", offsetof(struct driver_break_config, poi_search_radius_km), 0, MAX_POI_SEARCH_RADIUS_KM, 0},
+        {"poi_water_search_radius_km", offsetof(struct driver_break_config, poi_water_search_radius_km), 0, MAX_POI_WATER_CABIN_RADIUS_KM, 0},
+        {"poi_cabin_search_radius_km", offsetof(struct driver_break_config, poi_cabin_search_radius_km), 0, MAX_POI_WATER_CABIN_RADIUS_KM, 0},
+        {"min_distance_from_glaciers", offsetof(struct driver_break_config, min_distance_from_glaciers), 0, MAX_DISTANCE_METERS, 0},
+        {"driver_break_interval_min_hours", offsetof(struct driver_break_config, driver_break_interval_min_hours), 0, MAX_HOURS_PER_DAY_24, 0},
+        {"driver_break_interval_max_hours", offsetof(struct driver_break_config, driver_break_interval_max_hours), 0, MAX_HOURS_PER_DAY_24, 0},
+        {NULL, 0, 0, 0, 0},
     };
-
-    /* Initialize field pointers on first call */
-    if (maps[0].field == NULL) {
-        maps[0].field = &config->vehicle_type;
-        maps[1].field = &config->car_soft_limit_hours;
-        maps[2].field = &config->car_max_hours;
-        maps[3].field = &config->car_break_interval_hours;
-        maps[4].field = &config->car_break_duration_min;
-        maps[5].field = &config->truck_mandatory_break_after_hours;
-        maps[6].field = &config->truck_mandatory_break_duration_min;
-        maps[7].field = &config->truck_max_daily_hours;
-        maps[8].field = &config->min_distance_from_buildings;
-        maps[9].field = &config->poi_search_radius_km;
-        maps[10].field = &config->poi_water_search_radius_km;
-        maps[11].field = &config->poi_cabin_search_radius_km;
-        maps[12].field = &config->min_distance_from_glaciers;
-        maps[13].field = &config->driver_break_interval_min_hours;
-        maps[14].field = &config->driver_break_interval_max_hours;
-    }
 
     int i;
     for (i = 0; maps[i].key != NULL; i++) {
         if (!strcmp(key, maps[i].key)) {
-            return driver_break_db_set_config_value(&maps[i], value, loaded_count);
+            return driver_break_db_set_config_value(&maps[i], config, value, loaded_count);
         }
     }
 
