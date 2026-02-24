@@ -21,7 +21,9 @@
 #define NAVIT_APRS_DB_H
 
 #include "coord.h"
+#include <glib.h>
 #include <sqlite3.h>
+#include <time.h>
 
 struct aprs_station {
     char *callsign;

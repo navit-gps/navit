@@ -59,7 +59,9 @@ static int ax25_decode_one_char(const unsigned char *data, int offset, int i, ch
 }
 
 /* Append SSID to callsign if present. */
-static void ax25_append_ssid(const unsigned char *data, int offset, char *callsign, int max_len, int callsign_len) {
+static void ax25_append_ssid(const unsigned char *data, int length, int offset, char *callsign, int max_len, int callsign_len) {
+    if (offset < 0 || offset + 6 >= length)
+        return;
     unsigned char ssid_byte = data[offset + 6];
     dbg(lvl_debug, "  SSID byte (offset+6): 0x%02x", ssid_byte & 0x0E);
     if ((ssid_byte & 0x0E) == 0)
@@ -72,17 +74,19 @@ static void ax25_append_ssid(const unsigned char *data, int offset, char *callsi
     }
 }
 
-static int ax25_decode_callsign(const unsigned char *data, int offset, char *callsign, int max_len) {
+static int ax25_decode_callsign(const unsigned char *data, int length, int offset, char *callsign, int max_len) {
     int i;
     int callsign_len = 0;
     dbg(lvl_debug, "ax25_decode_callsign: offset=%d", offset);
+    if (offset < 0 || offset + 7 > length)
+        return -1;
     for (i = 0; i < 6; i++) {
         if (!ax25_decode_one_char(data, offset, i, callsign, max_len, &callsign_len))
             break;
     }
     callsign[callsign_len] = '\0';
     dbg(lvl_debug, "  Callsign so far: '%s' (len=%d)", callsign, callsign_len);
-    ax25_append_ssid(data, offset, callsign, max_len, callsign_len);
+    ax25_append_ssid(data, length, offset, callsign, max_len, callsign_len);
     return 7;
 }
 
@@ -91,14 +95,21 @@ static int decode_ax25_dest_src(const unsigned char *data, int length, struct ap
                                 size_t callsign_size) {
     int offset;
 
-    offset = ax25_decode_callsign(data, 0, callsign, callsign_size);
+    offset = ax25_decode_callsign(data, length, 0, callsign, callsign_size);
+    if (offset < 0)
+        return -1;
     packet->destination_callsign = g_strdup(callsign);
     dbg(lvl_debug, "Decoded destination: '%s', offset=%d", callsign, offset);
     if (offset == 7 && offset + 1 < length && (data[offset + 1] & 0x40)) {
         offset++;
         dbg(lvl_debug, "Skipped 8th byte of destination, new offset=%d", offset);
     }
-    offset += ax25_decode_callsign(data, offset, callsign, callsign_size);
+    {
+        int consumed = ax25_decode_callsign(data, length, offset, callsign, callsign_size);
+        if (consumed < 0)
+            return -1;
+        offset += consumed;
+    }
     packet->source_callsign = g_strdup(callsign);
     dbg(lvl_debug, "Decoded source: '%s', offset=%d", callsign, offset);
     return offset;
@@ -114,7 +125,16 @@ static int decode_ax25_path(const unsigned char *data, int length, int offset, G
             break;
         if (offset + 7 > length)
             break;
-        offset += ax25_decode_callsign(data, offset, callsign, callsign_size);
+        {
+            int consumed = ax25_decode_callsign(data, length, offset, callsign, callsign_size);
+            if (consumed < 0) {
+                g_list_free_full(*path_list, g_free);
+                *path_list = NULL;
+                *path_count = 0;
+                return -1;
+            }
+            offset += consumed;
+        }
         *path_list = g_list_append(*path_list, g_strdup(callsign));
         (*path_count)++;
         dbg(lvl_debug, "Decoded path: '%s', offset=%d", callsign, offset);
@@ -169,6 +189,10 @@ int aprs_decode_ax25(const unsigned char *data, int length, struct aprs_packet *
     if (offset < 0)
         return 0;
     offset = decode_ax25_path(data, length, offset, &path_list, &packet->path_count, callsign, sizeof(callsign));
+    if (offset < 0) {
+        aprs_packet_free(packet);
+        return 0;
+    }
     ax25_copy_path_to_packet(path_list, packet->path_count, packet);
     info_start = decode_ax25_control_pid(data, length, offset);
     if (info_start < 0) {
@@ -298,7 +322,8 @@ static void parse_position_comment(struct aprs_position *pos, const char *commen
 }
 
 static int aprs_parse_position_valid_header(const char *info_field, int length) {
-    if (!info_field || length < 18)
+    /* Minimum: header + lat/lon + symbol table/code. */
+    if (!info_field || length < 21)
         return 0;
     if (info_field[0] != '!' && info_field[0] != '=' && info_field[0] != '/' && info_field[0] != '@')
         return 0;
@@ -307,11 +332,15 @@ static int aprs_parse_position_valid_header(const char *info_field, int length) 
 
 static int aprs_parse_position_skip_timestamp(const char *info_field, int length, int *offset) {
     char time_str[8];
-    if (info_field[0] != '@')
-        return 1;
-    if (*offset + 7 <= length && sscanf(info_field + *offset, "%6s", time_str) == 1)
-        *offset += 7;
-    return (*offset + 18 <= length);
+    if (info_field[0] == '@') {
+        if (*offset + 7 <= length && sscanf(info_field + *offset, "%6s", time_str) == 1)
+            *offset += 7;
+    }
+    /*
+     * Lat/lon parsing reads 8 bytes (lat) + 1 separator + 9 bytes (lon) and
+     * then reads 2 additional bytes for symbol table/code at offset+18/19.
+     */
+    return (*offset + 20 <= length);
 }
 
 static int aprs_parse_position_parse_lat_lon(const char *info_field, int offset, struct aprs_position *pos) {
@@ -339,7 +368,7 @@ int aprs_parse_position(const char *info_field, int length, struct aprs_position
     }
     memset(pos, 0, sizeof(struct aprs_position));
     if (!aprs_parse_position_skip_timestamp(info_field, length, &offset)) {
-        dbg(lvl_debug, "aprs_parse_position: offset + 18 > length");
+        dbg(lvl_debug, "aprs_parse_position: offset + 20 > length");
         return 0;
     }
     if (!aprs_parse_position_parse_lat_lon(info_field, offset, pos)) {

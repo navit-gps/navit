@@ -24,6 +24,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <glib.h>
+#include <limits.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -61,7 +62,15 @@ static double parse_dm_to_decimal(const char *dm) {
     if (sscanf(dm, "%lf", &degrees) != 1) {
         return 0.0;
     }
-    int deg = (int)(degrees / 100.0);
+    if (!isfinite(degrees)) {
+        return 0.0;
+    }
+    /* Avoid undefined behavior on out-of-range float->int conversion. */
+    double deg_d = degrees / 100.0;
+    if (deg_d > (double)INT_MAX || deg_d < (double)INT_MIN) {
+        return 0.0;
+    }
+    int deg = (int)deg_d;
     double min = degrees - (deg * 100.0);
     return deg + min / 60.0;
 }
