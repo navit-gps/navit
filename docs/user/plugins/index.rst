@@ -47,6 +47,7 @@ The suggested default rest intervals for hiking (11.295 km main, 2.275 km altern
 A "dagsvei" (day's way/journey) was a traditional Scandinavian unit meaning roughly how far you could walk in a day, commonly reckoned at about 40 km.
 
 The plugin's hiking and cycling interval defaults follow from these historical rast-based distances.
+The scaling factor is 2.5×, reflecting that a cyclist travels roughly two to three times faster than a walker over a full day. A cyclist's dagsvei is thus 100 km (40 km × 2.5), with rest stops at 28.24 km (one rast × 2.5) and 5.69 km (one fjerdingvei × 2.5).
 
 **Networks and priorities**
 
