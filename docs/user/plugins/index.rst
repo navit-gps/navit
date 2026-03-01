@@ -12,8 +12,8 @@ The Driver Break plugin provides configurable rest period management for multipl
 
 - **Car** – Configurable soft and maximum driving hours, break interval (e.g. every 4–4.5 hours), and break duration (e.g. 15–45 minutes).
 - **Truck** – Mandatory rest and driving time rules aligned with EU Regulation EC 561/2006 and related rules (e.g. break after 4.5 hours, 45-minute break, max daily driving, daily and weekly rest, and other driving/rest time limits).
-- **Bicycle (cycling)** – Configurable rest intervals by distance (e.g. main/alternative break distances and max daily distance).
-- **Hiking** – Distance-based rest intervals (main and alternative), max daily distance, and optional SRTM elevation and POI support (water, cabins).
+- **Hiking** – Daily segments: 40 km suggested maximum per day. Rest stops at 11.295 km intervals (main) or 2.275 km (alternative). Optional SRTM elevation and POI support (water, cabins).
+- **Bicycle (cycling)** – Daily segments: 100 km suggested maximum per day. Rest stops at 28.24 km intervals (main) or 5.69 km (alternative). Suggested defaults use the same rast/vei concept as hiking, scaled up for cycling (see "Rast and vei" below).
 
 **POIs searched**
 
@@ -40,6 +40,10 @@ Rest parameters are configurable per mode, including:
 - Hiking: main and alternative break distances (km), max daily distance (km).
 - Cycling: main and alternative break distances (km), max daily distance (km).
 - General: rest interval range (min/max hours), POI search radii, minimum distance from buildings (camping / allemannsretten), minimum distance from glaciers for overnight stops.
+
+**Rast and vei (historical basis for hiking and cycling defaults)**
+
+The suggested default rest intervals for hiking (11.295 km main, 2.275 km alternative; 40 km daily max) and for cycling (28.24 km main, 5.69 km alternative; 100 km daily max) are inspired by the old Scandinavian units of length **rast** and **vei**. For cycling, the same rast/vei concept is used with distances scaled up. A "rast" was the distance one traveled on foot before needing a rest ("rast," "pause," or the like); it corresponded to a **mil** and was often tied to the length of the ell. The distance varied by region and over time. In the 900s a rast was about 192 stone throws, divided into four quarters ("fjerdingvei"), and corresponded to roughly 9,100.8 meters; in the 12th century it was expressed as 16,000 ells (four quarters of 8,000 feet) but remained in the same order of magnitude. The plugin's hiking and cycling interval defaults follow from these historical rast-based distances.
 
 **Networks and priorities**
 
