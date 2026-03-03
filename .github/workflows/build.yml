@@ -274,7 +274,7 @@ jobs:
   merge_trunk_in_master:
     runs-on: ubuntu-latest
     needs: [build_android, build_fdroid, build_wince, build_tomtom_minimal, build_linux, build_tomtom_plugin, build_win32]
-    if: github.ref == 'trunk'
+    if: github.ref == 'refs/heads/trunk'
     steps:
       - uses: actions/checkout@v6
       - name: Merge to master branch
@@ -282,5 +282,4 @@ jobs:
         with:
           type: now
           target_branch: 'master'
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          github_token: ${{ github.token }}
