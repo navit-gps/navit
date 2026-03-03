@@ -176,8 +176,8 @@ struct speech_priv {
 };
 
 static int speechd_say(struct speech_priv *this, const char *text) {
-    char **cmdv = g_strsplit(this->cmdline," ", -1);
-    char **cmdv_tts = g_strsplit(this->cmdline_tts," ", -1);
+    char **cmdv = g_strsplit(this->cmdline, " ", -1);
+    char **cmdv_tts = g_strsplit(this->cmdline_tts, " ", -1);
     int variable_arg_no = -1;
     int variable_arg_no_tts = -1;
     GList *argl = NULL;
