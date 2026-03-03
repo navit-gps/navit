@@ -1059,7 +1059,7 @@ int xml_parse_file(char *filename, void *data,
         ret = xml_parse_text(contents, data, start, end, text);
         g_free(contents);
     } else {
-        dbg(lvl_error,"could not open XML file '%s'", filename);
+        dbg(lvl_error, "could not open XML file '%s'", filename);
     }
 #else
     FILE *f;
@@ -1075,7 +1075,7 @@ int xml_parse_file(char *filename, void *data,
             ret = 1;
         }
     } else {
-        dbg(lvl_error,"could not open XML file '%s'", filename);
+        dbg(lvl_error, "could not open XML file '%s'", filename);
     }
 #endif
     return ret;
