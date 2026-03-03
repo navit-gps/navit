@@ -28,23 +28,30 @@
 # quent57 https://launchpad.net/~quent57
 # tuxi https://launchpad.net/~tux-i
 # yannick56 https://launchpad.net/~yleny
-
+# "J. Lavoie" <j.lavoie@net-c.ca>, 2024.
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.5.1\n"
+"Project-Id-Version: navit 0.5.6\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2018-10-13 16:09+0000\n"
-"Last-Translator: lains <Unknown>\n"
-"Language-Team: KaZeR <kazer@altern.org>\n"
+"POT-Creation-Date: 2025-12-16 19:22+0100\n"
+"PO-Revision-Date: 2024-04-13 17:25+0000\n"
+"Last-Translator: \"J. Lavoie\" <j.lavoie@net-c.ca>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/navit/navit-core/"
+"fr/>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"Language: fr\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
 msgstr "Éxecution depuis le dossier d'origine\n"
+
+#. libc of navit returns "dummy"
+msgid "Error getting current path. use ./ \n"
+msgstr ""
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -224,7 +231,7 @@ msgid "Enter the roundabout %s"
 msgstr "%s Entrez dans le rond-point"
 
 msgid "then enter the roundabout"
-msgstr "puis engagez-vous dans le rond-point"
+msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -334,7 +341,7 @@ msgstr "fortement "
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr "puis prenez la %1$s route à %2$s"
+msgstr ""
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -413,7 +420,7 @@ msgid "km"
 msgstr "km"
 
 msgid "feet"
-msgstr "pieds"
+msgstr ""
 
 msgid "m"
 msgstr "m"
@@ -1525,6 +1532,10 @@ msgstr "Wallis et Futuna"
 msgid "Samoa"
 msgstr "Samoa"
 
+#. 412
+msgid "Kosovo"
+msgstr ""
+
 #. 887
 msgid "Yemen"
 msgstr "Yémen"
@@ -1573,25 +1584,22 @@ msgstr ""
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found"
-msgstr "Aucun fichier de configuration (navit.xml, navit.xml.local) trouvé"
+msgstr ""
 
 #, c-format
 msgid "Error parsing config file '%s': %s"
-msgstr "Erreur d'analyse du fichier de configuration '%s': %s"
+msgstr ""
 
 #, c-format
 msgid "Using config file '%s'"
-msgstr "Utilisation du fichier de configuration '%s'"
+msgstr ""
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'"
-msgstr "Erreur: Aucune configuration trouvée dans le fichier '%s'"
-
-msgid ""
-"Internal initialization failed, exiting. Check previous error messages."
 msgstr ""
-"\"Echec de l'initialisation interne , arrêt de l'exécution. Consulter les "
-"messages d'erreur précédents."
+
+msgid "Internal initialization failed, exiting. Check previous error messages."
+msgstr ""
 
 msgid "unknown street"
 msgstr "rue inconnue"
@@ -1805,11 +1813,11 @@ msgstr "Achats"
 
 #. Input is in kilometers
 msgid "Select a search radius from screen center in km"
-msgstr "Choisir un rayon de recherche autour du centre de l'écran (en km)"
+msgstr ""
 
 #. Input is in miles.
 msgid "Select a search radius from screen center in miles"
-msgstr "Choisir un rayon de recherche autour du centre de l'écran (en miles)"
+msgstr ""
 
 #, c-format
 msgid "POI %s. %s"
@@ -1817,15 +1825,15 @@ msgstr "Point d'intérêt %s. %s"
 
 #, c-format
 msgid "Set destination to %ld, %ld "
-msgstr "Définir la destination vers %ld,%ld "
+msgstr ""
 
 #, c-format
 msgid "Set map to %ld, %ld "
-msgstr "Centrer la carte sur  %ld, %ld \\n "
+msgstr ""
 
 #, c-format
 msgid "Set next visit to %ld, %ld "
-msgstr "Définir la prochaine étape à %ld, %ld\\n "
+msgstr ""
 
 msgid "POI search"
 msgstr "recherche de point d'intérêt"
@@ -1846,7 +1854,7 @@ msgid "Direction"
 msgstr "Direction"
 
 msgid "Distance"
-msgstr "Distance"
+msgstr ""
 
 msgid "Name"
 msgstr "Nom"
@@ -2105,10 +2113,9 @@ msgstr "Profil de hauteur"
 
 msgid "please install a map *.heightlines.bin to provide elevationdata"
 msgstr ""
-"Veuillez installer la carte *.heightlines.bin pour afficher le nivellement."
 
 msgid "The route must cross at least 2 heightlines"
-msgstr "La route doit au minimum passer par deux lignes de niveau"
+msgstr ""
 
 msgid "Route Description"
 msgstr "Description de la route"
@@ -2117,7 +2124,7 @@ msgid "Show Locale"
 msgstr "Afficher la locale"
 
 msgid "Network info"
-msgstr "Informations réseau"
+msgstr ""
 
 msgid "Former Destinations"
 msgstr "Destinations précédentes"
@@ -2215,16 +2222,16 @@ msgid "Window Mode"
 msgstr "Mode fenêtré"
 
 msgid "Auto zoom"
-msgstr "Zoom auto"
+msgstr ""
 
 msgid "Manual zoom"
-msgstr "Zoom manuel"
+msgstr ""
 
 msgid "Layers"
-msgstr "Couches"
+msgstr ""
 
 msgid "Zoom to route"
-msgstr "Zoomer sur le parcours"
+msgstr ""
 
 msgid "Description"
 msgstr "Description"
@@ -2232,12 +2239,12 @@ msgstr "Description"
 msgid ""
 "Drop last\n"
 "Waypoint"
-msgstr "Abandonner la\\ndernière étape"
+msgstr ""
 
 msgid ""
 "Drop next\n"
 "Waypoint"
-msgstr "Abandonner la\\nprochaine étape"
+msgstr ""
 
 msgid "Satellite Status"
 msgstr "Etat des satellites"
@@ -2269,6 +2276,10 @@ msgstr "Oui"
 msgid "Cancel"
 msgstr "Annuler"
 
+#. Android resource: @strings/channel_name
+msgid "Navit"
+msgstr ""
+
 #. Android resource: @strings/notification_ticker
 msgid "Navit started"
 msgstr "Navit commencé"
@@ -2286,21 +2297,12 @@ msgid ""
 "Thank you for installing Navit!\n"
 "\n"
 "To start, select \"Download maps\" from the menu to download a map. Note: "
-"The map filesize may be large (>50MB) - a wifi connection is recommended.\n"
+"The map filesize may be large (&gt50MB) - a wifi connection is recommended.\n"
 "\n"
 "Mapdata: (c) OpenStreetMap contributors\n"
 "\n"
 "Enjoy Navit!"
 msgstr ""
-"Nous vous remercions d'avoir installé Navit!\n"
-"\n"
-"Pour commencer, sélectionnez \"Télécharger des cartes\" du menu et "
-"télechargez une carte de votre région. Les cartes sont volumineuses, donc il "
-"est préférable d'avoir une connection internet illimitée!\n"
-"\n"
-"Cartes: (c) OpenStreetMap contributors\n"
-"\n"
-"Amusez-vous avec Navit!"
 
 #. Android resource: @strings/initial_info_box_OK
 msgid "OK"
@@ -2341,6 +2343,14 @@ msgstr "Emplacement des cartes"
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
 msgstr "Conduire ici"
+
+#. Android resource: @strings/position_popup_view
+msgid "View"
+msgstr ""
+
+#. Android resource: @strings/use_position_with
+msgid "Use position with"
+msgstr ""
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
@@ -2435,9 +2445,11 @@ msgstr "Correspondance partielle"
 msgid "Search"
 msgstr "Chercher"
 
-#. Android resource: @strings/address_search_searching
-msgid "Searching..."
-msgstr "Recherche..."
+#. Android resource: @strings/    <string name="address_search_searching">Searching
+#. Android resource: @strings/    <string name="backing_up">Backing up
+#. Android resource: @strings/    <string name="restoring">Restoring
+msgid "    <string name="
+msgstr ""
 
 #. Android resource: @strings/address_search_not_found
 msgid "Address not found"
@@ -2474,14 +2486,6 @@ msgstr "Choisir une action"
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
 msgstr "Veuillez insérer une carte SD"
-
-#. Android resource: @strings/backing_up
-msgid "Backing up..."
-msgstr "Sauvegarde..."
-
-#. Android resource: @strings/restoring
-msgid "Restoring..."
-msgstr "Restauration..."
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
@@ -2551,12 +2555,10 @@ msgid ""
 "Navit needs permission to access GPS and read the map.\n"
 "If you change your mind please restart Navit and grant the permissions"
 msgstr ""
-"Navit doit être autorisé à accéder au GPS et à lire la carte.\n"
-"Si vous changez d'avis, redémarrez Navit et accordez les autorisations"
 
 #. Android resource: @strings/permissions_info_box_title
 msgid "One or more ungranted permissions"
-msgstr "Une ou plusieurs autorisations manquantes"
+msgstr ""
 
 #. Android resource: @strings/whole_planet
 msgid "Whole Planet"
@@ -3042,109 +3044,35 @@ msgstr "Amérique (Centrale et Sud)"
 msgid "Guyane Francaise"
 msgstr "Guyane Française"
 
-#, c-format
-#~ msgid "Route %4.0fkm    %02d:%02d ETA"
-#~ msgstr "Trajet restant %4.0f km    heure d'arrivée estimée %02d:%02d"
-
-#, c-format
-#~ msgid "Using config file '%s'\n"
-#~ msgstr "utilisation du fichier '%s'\n"
-
 #~ msgid ""
-#~ "Internal initialization failed, exiting. Check previous error messages.\n"
+#~ "Thank you for installing Navit!\n"
+#~ "\n"
+#~ "To start, select \"Download maps\" from the menu to download a map. Note: "
+#~ "The map filesize may be large (>50MB) - a wifi connection is "
+#~ "recommended.\n"
+#~ "\n"
+#~ "Mapdata: (c) OpenStreetMap contributors\n"
+#~ "\n"
+#~ "Enjoy Navit!"
 #~ msgstr ""
-#~ "initialisation interne échouée, arrêt de l'exécution. Vérifiez les messages "
-#~ "d'erreurs précédents.\n"
+#~ "Nous vous remercions d'avoir installé Navit!\n"
+#~ "\n"
+#~ "Pour commencer, sélectionnez \"Télécharger des cartes\" du menu et "
+#~ "télechargez une carte de votre région. Les cartes sont volumineuses, donc "
+#~ "il est préférable d'avoir une connection internet illimitée!\n"
+#~ "\n"
+#~ "Cartes: (c) OpenStreetMap contributors\n"
+#~ "\n"
+#~ "Amusez-vous avec Navit!"
 
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "Pas de fichier de configuration navit.xml, navit.xml.local trouvé\n"
+#~ msgid "Searching..."
+#~ msgstr "Recherche..."
 
-#, c-format
-#~ msgid "Error parsing config file '%s': %s\n"
-#~ msgstr "erreur d'analyse du fichier de configuration '%s': %s\n"
+#~ msgid "Backing up..."
+#~ msgstr "Sauvegarde..."
 
-#~ msgid "Downloaded maps"
-#~ msgstr "Cartes téléchargées"
-
-#~ msgid ""
-#~ "Drop last \n"
-#~ "Waypoint"
-#~ msgstr ""
-#~ "Sauter le dernier \n"
-#~ "Point de passage"
-
-#~ msgid ""
-#~ "Drop next \n"
-#~ "Waypoint"
-#~ msgstr ""
-#~ "Sauter le prochain \n"
-#~ "point de passage"
-
-#~ msgid "partial match"
-#~ msgstr "correspondance partielle"
-
-#~ msgid "Map data (c) OpenStreetMap contributors, ODBL"
-#~ msgstr "Données cartographiques (c) OpenStreetMap contributors, ODBL"
-
-#~ msgid "Error downloading map!"
-#~ msgstr "Erreur de téléchargement de carte !"
-
-#~ msgid " (except Alaska and Hawaii)"
-#~ msgstr " (sans Alaska et Hawaï)"
-
-#, c-format
-#~ msgid "Error: No configuration found in config file '%s'\n"
-#~ msgstr "Erreur: Configuration non trouvée dans le fichier '%s'\n"
-
-#, c-format
-#~ msgid "Set destination to %ld, %ld \n"
-#~ msgstr "Définir la destination vers %ld, %ld \n"
-
-#~ msgid "Distance(m)"
-#~ msgstr "Distance (m)"
-
-#, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "puis sortez du rond-point à la %1$s %2$s"
-
-#, c-format
-#~ msgid "Set map to %ld, %ld \n"
-#~ msgstr "sélectionner la carte de  %ld, %ld \n"
-
-#~ msgid ""
-#~ "New location set to %s\n"
-#~ "Restart Navit to apply the changes."
-#~ msgstr "redémarrer Navit pour appliquer les modifications"
-
-#, c-format
-#~ msgid "in %d m"
-#~ msgstr "dans %d m"
-
-#, c-format
-#~ msgid "%d m"
-#~ msgstr "%d m"
-
-#~ msgid "Select a distance to look for (km)"
-#~ msgstr "Sélectionnez une distance à chercher (km)"
-
-#, c-format
-#~ msgid "Set next visit to %ld, %ld \n"
-#~ msgstr "Définir la prochaine visite à %ld, %ld \n"
+#~ msgid "Restoring..."
+#~ msgstr "Restauration..."
 
 #~ msgid "Distance from screen center (km)"
 #~ msgstr "Distance du centre de l'écran (km)"
-
-#~ msgid "filenamePath"
-#~ msgstr "emplacementFichier"
-
-#~ msgid ""
-#~ "Current map location %s is not available\n"
-#~ "Please restart Navit after you attach an SD card or select a different map "
-#~ "location."
-#~ msgstr ""
-#~ "L'emplacement de carte %s n'est pas disponible\n"
-#~ "Veuillez redémarrer Navit après avoir branché une carte SD ou selectionné en "
-#~ "emplacement de carte différent."
-
-#~ msgid "Map download aborted!"
-#~ msgstr "Téléchargement de la carte abandonné!"

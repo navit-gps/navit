@@ -1,4 +1,4 @@
-# Navit [![Build Status](https://img.shields.io/circleci/project/github/navit-gps/navit/trunk.svg)](https://circleci.com/gh/navit-gps/navit) [![CodeFactor](https://www.codefactor.io/repository/github/navit-gps/navit/badge)](https://www.codefactor.io/repository/github/navit-gps/navit) [![Translation](https://hosted.weblate.org/widgets/navit/-/svg-badge.svg)](https://hosted.weblate.org/engage/navit/)
+# Navit [![CircleCI](https://dl.circleci.com/status-badge/img/gh/navit-gps/navit/tree/trunk.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/navit-gps/navit/tree/trunk) [![Build Navit Binaries](https://github.com/navit-gps/navit/actions/workflows/build.yml/badge.svg)](https://github.com/navit-gps/navit/actions/workflows/build.yml) [![CodeFactor](https://www.codefactor.io/repository/github/navit-gps/navit/badge)](https://www.codefactor.io/repository/github/navit-gps/navit) [![Translation](https://hosted.weblate.org/widgets/navit/-/svg-badge.svg)](https://hosted.weblate.org/engage/navit/)
 
 _A copylefted libre software car-navigation system with its own routing engine_.
 
@@ -18,15 +18,15 @@ Current vehicle position from gpsd or directly from NMEA (GPS) sensors. \
 Optimal routes and directions spoken in 70+ languages. \
 Points of interest (POIs) in many formats.
 
-Help and more info available on [the wiki](https://wiki.navit-project.org/index.php/Main_Page). \
-The [Reporting Bugs](http://wiki.navit-project.org/index.php/Reporting_Bugs) document helps you file issues.
+Help and more info can be found in [the docs](https://navit.readthedocs.io/en/latest/). \
+The [Reporting Bugs](https://navit.readthedocs.io/en/latest/user/community/Reporting%20Bugs.html) document helps you file issues.
 
 Maps
 ====
 
-[OpenStreetMap](https://wiki.navit-project.org/index.php/OpenStreetMap) — display, routing, incomplete street-name search. \
-[Grosser Reiseplaner](https://wiki.navit-project.org/index.php/Marco_Polo_Grosser_Reiseplaner) and compliant maps — full support. \
-[Garmin maps](https://wiki.navit-project.org/index.php/Garmin_maps) —display, routing, search is being worked on.
+[OpenStreetMap](https://navit.readthedocs.io/en/latest/user/configuration/maps/OpenStreetMap.html) — display, routing, incomplete street-name search. \
+[Grosser Reiseplaner](https://navit.readthedocs.io/en/latest/user/configuration/maps/Marco%20Polo%20Grosser%20Reiseplaner.html) and compliant maps — full support. \
+[Garmin maps](https://navit.readthedocs.io/en/latest/user/configuration/maps/Garmin%20maps.html) —display, routing, search is being worked on.
 
 GPS Support
 ===========

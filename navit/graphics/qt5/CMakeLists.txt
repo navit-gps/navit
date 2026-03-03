@@ -34,4 +34,6 @@ endif ()
 module_add_library(graphics_qt5 graphics_qt5.cpp event_qt5.cpp ${GRAPHICS_QT5_ADDITIONAL})
 # pass QML and QWIDGET preference to source
 target_compile_definitions(graphics_qt5 PRIVATE USE_QML=${QML} USE_QWIDGET=${QWIDGET} HAVE_FREETYPE=${HAVE_FREETYPE})
-
+if (UBTOUCH)
+    target_compile_definitions(graphics_qt5 PRIVATE UBTOUCH=1)
+endif()

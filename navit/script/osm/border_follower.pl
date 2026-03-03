@@ -19,7 +19,7 @@ $required_admin_level=$ARGV[2];
 $type=$ARGV[3];
 $alt_type=$ARGV[4];
 $revers=0;
-$api=new Geo::OSM::APIClient(api=>'http://www.openstreetmap.org/api/0.5');
+$api=new Geo::OSM::APIClient(api=>'https://api.openstreetmap.org/api/0.5');
 $wayid=$first_wayid;
 $path="$first_wayid";
 sub error
@@ -33,7 +33,7 @@ sub error
 	$lath=$node->{lat}+0.01;
 	$lonl=$node->{lon}-0.01;
 	$lonh=$node->{lon}+0.01;
-	system("firefox 'http://www.informationfreeway.org/?lat=$lat&lon=$lon&zoom=12&layers=B000F000F' ; wget -O error.osm http://www.openstreetmap.org/api/0.5/map?bbox=$lonl,$latl,$lonh,$lath ; josm error.osm --selection=id:$last");
+	system("firefox 'http://www.informationfreeway.org/?lat=$lat&lon=$lon&zoom=12&layers=B000F000F' ; wget -O error.osm https://api.openstreetmap.org/api/0.5/map?bbox=$lonl,$latl,$lonh,$lath ; josm error.osm --selection=id:$last");
 	exit(1);
 }
 

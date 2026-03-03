@@ -27,36 +27,36 @@
  * actual source for traffic messages; useful for injecting messages via DBus.
  */
 
-#include <string.h>
-#include <time.h>
-
-#ifdef _POSIX_C_SOURCE
-#include <sys/types.h>
-#endif
-#include "glib_slice.h"
 #include "config.h"
-#include "coord.h"
-#include "item.h"
-#include "xmlconfig.h"
-#include "traffic.h"
-#include "plugin.h"
 #include "debug.h"
+#include "glib_slice.h"
+#include "plugin.h"
+#include "traffic.h"
+#include "xmlconfig.h"
+#include <string.h>
+#ifdef _POSIX_C_SOURCE
+#    include <sys/types.h>
+#endif
+
+struct attr;
+struct callback_list;
+struct navit;
 
 /**
  * @brief Stores information about the plugin instance.
  */
 struct traffic_priv {
-    struct navit * nav;         /*!< The navit instance */
+    struct navit *nav; /*!< The navit instance */
 };
 
-struct traffic_message ** traffic_null_get_messages(struct traffic_priv * this_);
+struct traffic_message **traffic_null_get_messages(struct traffic_priv *this_);
 
 /**
  * @brief Returns an empty traffic report.
  *
  * @return Always `NULL`
  */
-struct traffic_message ** traffic_null_get_messages(struct traffic_priv * this_) {
+struct traffic_message **traffic_null_get_messages(struct traffic_priv *this_) {
     return NULL;
 }
 
@@ -78,8 +78,8 @@ static struct traffic_methods traffic_null_meth = {
  *
  * @return A pointer to a `traffic_priv` structure for the plugin instance
  */
-static struct traffic_priv * traffic_null_new(struct navit *nav, struct traffic_methods *meth,
-        struct attr **attrs, struct callback_list *cbl) {
+static struct traffic_priv *traffic_null_new(struct navit *nav, struct traffic_methods *meth, struct attr **attrs,
+                                             struct callback_list *cbl) {
     struct traffic_priv *ret;
 
     dbg(lvl_debug, "enter");

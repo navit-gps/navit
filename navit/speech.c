@@ -17,13 +17,13 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <glib.h>
-#include <string.h>
+#include "speech.h"
 #include "debug.h"
 #include "item.h"
-#include "speech.h"
 #include "plugin.h"
 #include "xmlconfig.h"
+#include <glib.h>
+#include <string.h>
 
 struct speech {
     NAVIT_OBJECT;
@@ -31,34 +31,32 @@ struct speech {
     struct speech_methods meth;
 };
 
-
-struct speech *
-speech_new(struct attr *parent, struct attr **attrs) {
+struct speech *speech_new(struct attr *parent, struct attr **attrs) {
     struct speech *this_;
     struct speech_priv *(*speech_new)(struct speech_methods *meth, struct attr **attrs, struct attr *parent);
     struct attr *attr;
 
-    attr=attr_search(attrs, attr_type);
-    if (! attr) {
-        dbg(lvl_error,"type missing");
+    attr = attr_search(attrs, attr_type);
+    if (!attr) {
+        dbg(lvl_error, "type missing");
         return NULL;
     }
-    dbg(lvl_debug,"type='%s'", attr->u.str);
-    speech_new=plugin_get_category_speech(attr->u.str);
-    dbg(lvl_debug,"new=%p", speech_new);
-    if (! speech_new) {
-        dbg(lvl_error,"wrong type '%s'", attr->u.str);
+    dbg(lvl_debug, "type='%s'", attr->u.str);
+    speech_new = plugin_get_category_speech(attr->u.str);
+    dbg(lvl_debug, "new=%p", speech_new);
+    if (!speech_new) {
+        dbg(lvl_error, "wrong type '%s'", attr->u.str);
         return NULL;
     }
-    this_=(struct speech *)navit_object_new(attrs, &speech_func, sizeof(struct speech));
-    this_->priv=speech_new(&this_->meth, this_->attrs, parent);
+    this_ = (struct speech *)navit_object_new(attrs, &speech_func, sizeof(struct speech));
+    this_->priv = speech_new(&this_->meth, this_->attrs, parent);
     dbg(lvl_debug, "say=%p", this_->meth.say);
-    dbg(lvl_debug,"priv=%p", this_->priv);
-    if (! this_->priv) {
+    dbg(lvl_debug, "priv=%p", this_->priv);
+    if (!this_->priv) {
         speech_destroy(this_);
         return NULL;
     }
-    dbg(lvl_debug,"return %p", this_);
+    dbg(lvl_debug, "return %p", this_);
 
     return this_;
 }
@@ -74,8 +72,8 @@ int speech_say(struct speech *this_, const char *text) {
     return (this_->meth.say)(this_->priv, text);
 }
 
-struct attr active=ATTR_INT(active, 1);
-struct attr *speech_default_attrs[]= {
+struct attr active = ATTR_INT(active, 1);
+struct attr *speech_default_attrs[] = {
     &active,
     NULL,
 };
@@ -86,7 +84,8 @@ struct attr *speech_default_attrs[]= {
  * @param this_ The speech plugin the attribute should be read from
  * @param type The type of the attribute to be read
  * @param attr Pointer to an attrib-structure where the attribute should be written to
- * @param iter (NOT IMPLEMENTED) Used to iterate through all attributes of a type. Set this to NULL to get the first attribute, set this to an attr_iter to get the next attribute
+ * @param iter (NOT IMPLEMENTED) Used to iterate through all attributes of a type. Set this to NULL to get the first
+ * attribute, set this to an attr_iter to get the next attribute
  * @return True if the attribute type was found, false if not
  */
 
@@ -109,7 +108,7 @@ int speech_estimate_duration(struct speech *this_, char *str) {
     int count;
     struct attr cps_attr;
 
-    if (!speech_get_attr(this_,attr_cps,&cps_attr,NULL)) {
+    if (!speech_get_attr(this_, attr_cps, &cps_attr, NULL)) {
         return -1;
     }
 
@@ -131,8 +130,8 @@ int speech_estimate_duration(struct speech *this_, char *str) {
  */
 
 int speech_set_attr(struct speech *this_, struct attr *attr) {
-    this_->attrs=attr_generic_set_attr(this_->attrs, attr);
-    //callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
+    this_->attrs = attr_generic_set_attr(this_->attrs, attr);
+    // callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
     return 1;
 }
 
@@ -151,4 +150,3 @@ struct object_func speech_func = {
     (object_func_ref)navit_object_ref,
     (object_func_unref)navit_object_unref,
 };
-

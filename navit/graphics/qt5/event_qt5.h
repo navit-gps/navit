@@ -22,16 +22,17 @@
 
 class qt5_navit_timer : public QObject {
     Q_OBJECT
-public: qt5_navit_timer(QObject* parent = 0);
-    GHashTable* timer_type;
-    GHashTable* timer_callback;
-    GHashTable* watches;
+  public:
+    qt5_navit_timer(QObject *parent = 0);
+    GHashTable *timer_type;
+    GHashTable *timer_callback;
+    GHashTable *watches;
 
-public slots:
+  public slots:
     void watchEvent(int id);
 
-protected:
-    void timerEvent(QTimerEvent* event);
+  protected:
+    void timerEvent(QTimerEvent *event);
 };
 
 void qt5_event_init(void);

@@ -56,8 +56,6 @@ endforeach()
 
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/builtin.c.in ${CMAKE_CURRENT_BINARY_DIR}/builtin.c)
 
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/fib-1.1")
-
 # Add module paths
 foreach (CURRENT_MODULE ${ALL_PLUGINS} ${ALL_MODULE_PLUGINS} ${ALL_MODULES})
 	if (${CURRENT_MODULE})
@@ -65,7 +63,6 @@ foreach (CURRENT_MODULE ${ALL_PLUGINS} ${ALL_MODULE_PLUGINS} ${ALL_MODULES})
 	endif()
 endforeach()
 
-add_subdirectory (fib-1.1)
 
 if(NOT ANDROID)
 	set(NAVIT_START_SRC start.c)
@@ -82,7 +79,7 @@ if(NOT ANDROID)
 		add_custom_command(OUTPUT resources/Default.png COMMAND convert -scale 79x79 -crop 60x60+8+19 ${CMAKE_CURRENT_SOURCE_DIR}/icons/desktop_icons/128x128/navit.png resources/Default.png)
 	endif()
 	add_executable(navit ${NAVIT_START_SRC})
-	target_link_libraries (navit ${NAVIT_LIBNAME})
+	target_link_libraries (navit PUBLIC ${NAVIT_LIBNAME})
 	if(DEFINED NAVIT_BINARY)
 		set_target_properties(navit PROPERTIES OUTPUT_NAME ${NAVIT_BINARY})
 	endif(DEFINED NAVIT_BINARY)
@@ -99,14 +96,18 @@ endif()
 
 if (SHARED_LIBNAVIT)
 	add_library (${NAVIT_LIBNAME} SHARED ${NAVIT_SRC} )
+	install(TARGETS ${NAVIT_LIBNAME}
+		DESTINATION ${LIB_DIR}
+		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
 else(SHARED_LIBNAVIT)
 	add_library (${NAVIT_LIBNAME} STATIC ${NAVIT_SRC} )
 endif(SHARED_LIBNAVIT)
 
-if(NOT MSVC)
+if(NOT MSVC AND NOT WINCE)
 	SET(NAVIT_LIBS ${NAVIT_LIBS} m)
-endif(NOT MSVC)
-target_link_libraries(${NAVIT_LIBNAME} ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} fib ${NAVIT_LIBS} )
+endif(NOT MSVC AND NOT WINCE)
+target_link_libraries(${NAVIT_LIBNAME} ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} ${NAVIT_LIBS} )
 set_target_properties(${NAVIT_LIBNAME} PROPERTIES COMPILE_DEFINITIONS "MODULE=navit;LIBDIR=\"${CMAKE_INSTALL_PREFIX}/${LIB_DIR}\";PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
 if (DEFINED NAVIT_COMPILE_FLAGS)
 	set_target_properties(${NAVIT_LIBNAME} PROPERTIES COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS}")
@@ -222,6 +223,9 @@ add_subdirectory (textures)
 add_subdirectory (maps)
 if(ANDROID)
 	add_subdirectory (android)
+    if(DEFINED GRADLE_BUILD_DIR)
+        add_dependencies(${PROJECT_NAME} copy_to_gradle)
+    endif(DEFINED GRADLE_BUILD_DIR)
 endif()
 
 install(TARGETS navit

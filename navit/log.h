@@ -27,11 +27,11 @@
  */
 
 enum log_flags {
-	log_flag_replace_buffer=1,
-	log_flag_force_flush=2,
-	log_flag_keep_pointer=4,
-	log_flag_keep_buffer=8,
-	log_flag_truncate=16,
+    log_flag_replace_buffer = 1,
+    log_flag_force_flush = 2,
+    log_flag_keep_pointer = 4,
+    log_flag_keep_buffer = 8,
+    log_flag_truncate = 16,
 };
 /* prototypes */
 enum attr_type;

@@ -1,1 +1,1 @@
-char * get_icon(struct navit *nav, struct item *item);
+char *get_icon(struct navit *nav, struct item *item);

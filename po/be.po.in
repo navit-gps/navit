@@ -5,22 +5,28 @@
 # Anatoli Putseyeu https://launchpad.net/~st-shadow-by
 # KaZeR https://launchpad.net/~kazer
 # Michael von Glasow https://launchpad.net/~michael-vonglasow
-
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.5.1\n"
+"Project-Id-Version: navit 0.5.6\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2015-07-19 03:57+0000\n"
-"Last-Translator: Michael von Glasow <Unknown>\n"
-"Language-Team: Belarusian <be@li.org>\n"
+"POT-Creation-Date: 2025-12-16 19:22+0100\n"
+"PO-Revision-Date: 2024-04-13 17:24+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Belarusian <https://hosted.weblate.org/projects/navit/navit-"
+"core/be/>\n"
+"Language: be\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"Language: be\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 msgid "Running from source directory\n"
+msgstr ""
+
+#. libc of navit returns "dummy"
+msgid "Error getting current path. use ./ \n"
 msgstr ""
 
 #, c-format
@@ -92,12 +98,14 @@ msgid "one mile"
 msgid_plural "%d miles"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #, c-format
 msgid "%d meters"
@@ -127,6 +135,7 @@ msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
 #, c-format
@@ -1500,6 +1509,10 @@ msgstr "Астравы Уоліс і Футуна"
 msgid "Samoa"
 msgstr "Самоа"
 
+#. 412
+msgid "Kosovo"
+msgstr ""
+
 #. 887
 msgid "Yemen"
 msgstr "Емен"
@@ -1552,8 +1565,7 @@ msgstr ""
 msgid "Error: No configuration found in config file '%s'"
 msgstr ""
 
-msgid ""
-"Internal initialization failed, exiting. Check previous error messages."
+msgid "Internal initialization failed, exiting. Check previous error messages."
 msgstr ""
 
 msgid "unknown street"
@@ -2225,6 +2237,10 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+#. Android resource: @strings/channel_name
+msgid "Navit"
+msgstr ""
+
 #. Android resource: @strings/notification_ticker
 msgid "Navit started"
 msgstr ""
@@ -2242,7 +2258,7 @@ msgid ""
 "Thank you for installing Navit!\n"
 "\n"
 "To start, select \"Download maps\" from the menu to download a map. Note: "
-"The map filesize may be large (>50MB) - a wifi connection is recommended.\n"
+"The map filesize may be large (&gt50MB) - a wifi connection is recommended.\n"
 "\n"
 "Mapdata: (c) OpenStreetMap contributors\n"
 "\n"
@@ -2287,6 +2303,14 @@ msgstr ""
 
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
+msgstr ""
+
+#. Android resource: @strings/position_popup_view
+msgid "View"
+msgstr ""
+
+#. Android resource: @strings/use_position_with
+msgid "Use position with"
 msgstr ""
 
 #. Android resource: @strings/map_delete
@@ -2379,8 +2403,10 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#. Android resource: @strings/address_search_searching
-msgid "Searching..."
+#. Android resource: @strings/    <string name="address_search_searching">Searching
+#. Android resource: @strings/    <string name="backing_up">Backing up
+#. Android resource: @strings/    <string name="restoring">Restoring
+msgid "    <string name="
 msgstr ""
 
 #. Android resource: @strings/address_search_not_found
@@ -2417,14 +2443,6 @@ msgstr ""
 
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
-msgstr ""
-
-#. Android resource: @strings/backing_up
-msgid "Backing up..."
-msgstr ""
-
-#. Android resource: @strings/restoring
-msgid "Restoring..."
 msgstr ""
 
 #. Android resource: @strings/failed_to_create_backup_directory

@@ -268,14 +268,23 @@ static struct vehicle_priv* vehicle_qt5_new_qt5(struct vehicle_methods* meth,
         struct callback_list* cbl,
         struct attr** attrs) {
     struct vehicle_priv* ret;
+    struct attr* source_attr = NULL;
 
     dbg(lvl_debug, "enter");
     ret = g_new0(struct vehicle_priv, 1);
     ret->cbl = cbl;
     *meth = vehicle_null_methods;
     ret->attrs = attrs;
-    ret->source = QGeoPositionInfoSource::createDefaultSource(NULL);
-    ret->satellites = QGeoSatelliteInfoSource::createDefaultSource(NULL);
+    /* Get qt location source from config if there*/
+    if ((source_attr = attr_search(attrs, attr_src))) {
+        ret->source = QGeoPositionInfoSource::createSource(QString(source_attr->u.str), NULL);
+        ret->satellites = QGeoSatelliteInfoSource::createSource(QString(source_attr->u.str), NULL);
+    } else {
+        /* get the dafult source. unfortunately this is often defunct. E.g. on UBTouch */
+        ret->source = QGeoPositionInfoSource::createDefaultSource(NULL);
+        ret->satellites = QGeoSatelliteInfoSource::createDefaultSource(NULL);
+    }
+    /* create surrounding application */
     if (ret->source == NULL) {
         dbg(lvl_error, "Got NO QGeoPositionInfoSource");
     } else {

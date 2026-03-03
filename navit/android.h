@@ -6,7 +6,7 @@ int android_find_method(jclass class, char *name, char *args, jmethodID *ret);
 int android_find_static_method(jclass class, char *name, char *args, jmethodID *ret);
 
 struct jni_object {
-	JNIEnv* env;
-	jobject jo;
-	jmethodID jm;
+    JNIEnv *env;
+    jobject jo;
+    jmethodID jm;
 };

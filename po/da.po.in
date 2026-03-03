@@ -13,23 +13,29 @@
 # Ole Carlsen https://launchpad.net/~ole-carlsen-web
 # Tomas Groth https://launchpad.net/~tomasgroth
 # Uffe Kjems https://launchpad.net/~uffekjems
-
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.5.1\n"
+"Project-Id-Version: navit 0.5.6\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2016-01-29 16:53+0000\n"
-"Last-Translator: Esben Aaberg <esben_aaberg@yahoo.com>\n"
-"Language-Team: Glenn Sommer <glemsom@gmail.com>\n"
+"POT-Creation-Date: 2025-12-16 19:22+0100\n"
+"PO-Revision-Date: 2024-04-13 17:25+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Danish <https://hosted.weblate.org/projects/navit/navit-core/"
+"da/>\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"Language: da\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
 msgstr "Kører fra kildekode mappen\n"
+
+#. libc of navit returns "dummy"
+msgid "Error getting current path. use ./ \n"
+msgstr ""
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -1507,6 +1513,10 @@ msgstr "Wallis og Futunaøerne"
 msgid "Samoa"
 msgstr "Samoa"
 
+#. 412
+msgid "Kosovo"
+msgstr ""
+
 #. 887
 msgid "Yemen"
 msgstr "Yemen"
@@ -1559,8 +1569,7 @@ msgstr ""
 msgid "Error: No configuration found in config file '%s'"
 msgstr ""
 
-msgid ""
-"Internal initialization failed, exiting. Check previous error messages."
+msgid "Internal initialization failed, exiting. Check previous error messages."
 msgstr ""
 
 msgid "unknown street"
@@ -2236,6 +2245,10 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+#. Android resource: @strings/channel_name
+msgid "Navit"
+msgstr ""
+
 #. Android resource: @strings/notification_ticker
 msgid "Navit started"
 msgstr ""
@@ -2253,7 +2266,7 @@ msgid ""
 "Thank you for installing Navit!\n"
 "\n"
 "To start, select \"Download maps\" from the menu to download a map. Note: "
-"The map filesize may be large (>50MB) - a wifi connection is recommended.\n"
+"The map filesize may be large (&gt50MB) - a wifi connection is recommended.\n"
 "\n"
 "Mapdata: (c) OpenStreetMap contributors\n"
 "\n"
@@ -2298,6 +2311,14 @@ msgstr ""
 
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
+msgstr ""
+
+#. Android resource: @strings/position_popup_view
+msgid "View"
+msgstr ""
+
+#. Android resource: @strings/use_position_with
+msgid "Use position with"
 msgstr ""
 
 #. Android resource: @strings/map_delete
@@ -2390,8 +2411,10 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#. Android resource: @strings/address_search_searching
-msgid "Searching..."
+#. Android resource: @strings/    <string name="address_search_searching">Searching
+#. Android resource: @strings/    <string name="backing_up">Backing up
+#. Android resource: @strings/    <string name="restoring">Restoring
+msgid "    <string name="
 msgstr ""
 
 #. Android resource: @strings/address_search_not_found
@@ -2428,14 +2451,6 @@ msgstr ""
 
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
-msgstr ""
-
-#. Android resource: @strings/backing_up
-msgid "Backing up..."
-msgstr ""
-
-#. Android resource: @strings/restoring
-msgid "Restoring..."
 msgstr ""
 
 #. Android resource: @strings/failed_to_create_backup_directory
@@ -2988,19 +3003,3 @@ msgstr ""
 #. Android resource: @strings/guyane_francaise
 msgid "Guyane Francaise"
 msgstr ""
-
-#, c-format
-#~ msgid "Route %4.0fkm    %02d:%02d ETA"
-#~ msgstr "Rute %4.0fkm    %02d:%02d ETA"
-
-#, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "forlad så rundkørslen ved den %1$s %2$s"
-
-#, c-format
-#~ msgid "in %d m"
-#~ msgstr "om %d m"
-
-#, c-format
-#~ msgid "%d m"
-#~ msgstr "%d m"

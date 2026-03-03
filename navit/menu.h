@@ -21,9 +21,9 @@
 #define NAVIT_MENU_H
 
 enum menu_type {
-	menu_type_submenu,
-	menu_type_menu,
-	menu_type_toggle,
+    menu_type_submenu,
+    menu_type_menu,
+    menu_type_toggle,
 };
 
 struct container;
@@ -31,15 +31,16 @@ struct menu;
 struct callback;
 
 struct menu_methods {
-	struct menu_priv *(*add)(struct menu_priv *menu, struct menu_methods *meth, char *name, enum menu_type type, struct callback *cb);
-	void (*set_toggle)(struct menu_priv *menu, int active);
-	int (*get_toggle)(struct menu_priv *menu);
-	void (*popup)(struct menu_priv *menu);
+    struct menu_priv *(*add)(struct menu_priv *menu, struct menu_methods *meth, char *name, enum menu_type type,
+                             struct callback *cb);
+    void (*set_toggle)(struct menu_priv *menu, int active);
+    int (*get_toggle)(struct menu_priv *menu);
+    void (*popup)(struct menu_priv *menu);
 };
 
 struct menu {
-	struct menu_priv *priv;
-	struct menu_methods meth;
+    struct menu_priv *priv;
+    struct menu_methods meth;
 };
 
 /* prototypes */

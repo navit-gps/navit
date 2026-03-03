@@ -29,14 +29,13 @@ typedef int32_t s32;
 typedef uint32_t u32;
 
 #ifdef HAVE_API_WIN32_BASE
-#define ULONGLONG_FMT "%I64u"
-#define LONGLONG_FMT "%I64d"
-#define LONGLONG_HEX_FMT "%I64x"
+#    define ULONGLONG_FMT "%I64u"
+#    define LONGLONG_FMT "%I64d"
+#    define LONGLONG_HEX_FMT "%I64x"
 #else
-#define ULONGLONG_FMT "%llu"
-#define LONGLONG_FMT "%lld"
-#define LONGLONG_HEX_FMT "%llx"
+#    define ULONGLONG_FMT "%llu"
+#    define LONGLONG_FMT "%lld"
+#    define LONGLONG_HEX_FMT "%llx"
 #endif
-
 
 #endif

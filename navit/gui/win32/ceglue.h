@@ -5,7 +5,7 @@ extern "C" {
 #endif
 
 extern BOOL (*SHFullScreenPtr)(HWND hwnd, DWORD state);
-void InitCeGlue (void);
+void InitCeGlue(void);
 
 int CeEnableBacklight(int enable);
 

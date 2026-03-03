@@ -20,52 +20,56 @@
 #ifndef NAVIT_OSD_H
 #define NAVIT_OSD_H
 
-struct osd_priv;
+#include "attr_type_def.h"  // for attr_type
+#include "color.h"          // for color
+#include "point.h"          // for point
 struct attr;
+struct attr_iter;
+struct navit;
+struct osd;
+struct osd_priv;
+struct vehicle;
 
 #define TRANSPARENT_BG 1
 #define ITEM_HAS_TEXT 2
 #define DISABLE_OVERLAY 4
 
 struct osd_methods {
-	void (*osd_destroy)(struct osd_priv *osd);
-	int (*set_attr)(struct osd_priv *osd, struct attr* attr);
-	void (*destroy)(struct osd_priv *osd);
-	int (*get_attr)(struct osd_priv *osd, enum attr_type type, struct attr* attr);
+    void (*osd_destroy)(struct osd_priv *osd);
+    int (*set_attr)(struct osd_priv *osd, struct attr *attr);
+    void (*destroy)(struct osd_priv *osd);
+    int (*get_attr)(struct osd_priv *osd, enum attr_type type, struct attr *attr);
 };
 
-#define osd_draw_cast(x) (void (*)(struct osd_priv *osd, struct navit *navit, struct vehicle *v))(x)
+#define osd_draw_cast(x) (void (*)(struct osd_priv * osd, struct navit * navit, struct vehicle * v))(x)
 
 struct osd_item_methods {
-	void (*draw)(struct osd_priv *osd, struct navit *navit, struct vehicle *v);
+    void (*draw)(struct osd_priv *osd, struct navit *navit, struct vehicle *v);
 };
 
 struct osd_item {
-	struct point p;
-	struct osd_item_methods meth;
-	int flags, w, h, fg_line_width, font_size, osd_configuration, configured;
-	int rel_w, rel_h, rel_x, rel_y;
-	struct color color_bg, color_fg, text_color;
-	struct navit *navit;
-	struct graphics *gr;
-	struct graphics_gc *graphic_bg, *graphic_fg, *graphic_fg_text;
-	struct graphics_font *font;
-	char *font_name;
-	struct callback *cb;
-	struct callback *resize_cb;
-	struct callback *reconfig_cb;
-	struct callback *keypress_cb;
-	int pressed;
-	char *command;
-	struct command_saved *enable_cs;
-	char *accesskey;
-	int do_draw; /**< Whether the item needs to be redrawn. */
+    struct point p;
+    struct osd_item_methods meth;
+    int flags, w, h, fg_line_width, font_size, osd_configuration, configured;
+    int rel_w, rel_h, rel_x, rel_y;
+    struct color color_bg, color_fg, text_color;
+    struct navit *navit;
+    struct graphics *gr;
+    struct graphics_gc *graphic_bg, *graphic_fg, *graphic_fg_text;
+    struct graphics_font *font;
+    char *font_name;
+    struct callback *cb;
+    struct callback *resize_cb;
+    struct callback *reconfig_cb;
+    struct callback *keypress_cb;
+    int pressed;
+    char *command;
+    struct command_saved *enable_cs;
+    char *accesskey;
+    int do_draw; /**< Whether the item needs to be redrawn. */
 };
 
 /* prototypes */
-struct attr;
-struct navit;
-struct osd;
 struct osd *osd_new(struct attr *parent, struct attr **attrs);
 int osd_set_methods(struct osd_methods *in, int in_size, struct osd_methods *out);
 void osd_wrap_point(struct point *p, struct navit *nav);
@@ -78,9 +82,8 @@ void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_pr
 void osd_std_resize(struct osd_item *item);
 void osd_std_calculate_sizes(struct osd_item *item, int w, int h);
 void osd_fill_with_bgcolor(struct osd_item *item);
-int osd_set_attr(struct osd *osd, struct attr* attr);
+int osd_set_attr(struct osd *osd, struct attr *attr);
 int osd_get_attr(struct osd *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 /* end of prototypes */
 
 #endif
-

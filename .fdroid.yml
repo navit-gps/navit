@@ -42,7 +42,7 @@ Builds:
     prebuild:
       - sed -i -e '/gradlew/d' scripts/build_android.sh
     build: scripts/build_android.sh
-    ndk: r20b
+    ndk: r25c
 
 MaintainerNotes: |-
     Found JAR file at navit/android/libs/TTS_library_stub.jar, removed as of v0.5.3-442-g96d9c41.

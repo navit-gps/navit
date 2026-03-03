@@ -17,21 +17,21 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include "callback.h"
+#include "config.h"
+#include "coord.h"
+#include "corelocation.h"
+#include "debug.h"
+#include "event.h"
+#include "item.h"
+#include "map.h"
+#include "navit.h"
+#include "plugin.h"
+#include "route.h"
+#include "transform.h"
+#include "vehicle.h"
 #include <glib.h>
 #include <string.h>
-#include "config.h"
-#include "debug.h"
-#include "coord.h"
-#include "item.h"
-#include "navit.h"
-#include "map.h"
-#include "route.h"
-#include "callback.h"
-#include "transform.h"
-#include "plugin.h"
-#include "vehicle.h"
-#include "event.h"
-#include "corelocation.h"
 
 /**
  * @defgroup vehicle-iphone Vehicle iPhone
@@ -62,8 +62,7 @@ static void vehicle_iphone_destroy(struct vehicle_priv *priv) {
     g_free(priv);
 }
 
-static int vehicle_iphone_position_attr_get(struct vehicle_priv *priv,
-        enum attr_type type, struct attr *attr) {
+static int vehicle_iphone_position_attr_get(struct vehicle_priv *priv, enum attr_type type, struct attr *attr) {
     switch (type) {
     case attr_position_speed:
         attr->u.numd = &priv->speed;
@@ -103,49 +102,41 @@ struct vehicle_methods vehicle_iphone_methods = {
     vehicle_iphone_set_attr,
 };
 
-void vehicle_iphone_update(void *arg,
-                           double lat,
-                           double lng,
-                           double dir,
-                           double spd,
-                           char * str_time,
-                           double radius
-                          ) {
-    struct vehicle_priv * priv = arg;
+void vehicle_iphone_update(void *arg, double lat, double lng, double dir, double spd, char *str_time, double radius) {
+    struct vehicle_priv *priv = arg;
     priv->geo.lat = lat;
     priv->geo.lng = lng;
-    if(dir > 0) priv->direction = dir;
-    if(spd > 0) priv->speed = spd*3.6;
+    if (dir > 0)
+        priv->direction = dir;
+    if (spd > 0)
+        priv->speed = spd * 3.6;
     strcpy(priv->str_time, str_time);
     priv->radius = radius;
 
-    dbg(lvl_debug,"position_get lat:%f lng:%f (spd:%f dir:%f time:%s)", priv->geo.lat, priv->geo.lng, priv->speed,
+    dbg(lvl_debug, "position_get lat:%f lng:%f (spd:%f dir:%f time:%s)", priv->geo.lat, priv->geo.lng, priv->speed,
         priv->direction, priv->str_time);
     callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 }
 
-
-
-static struct vehicle_priv *vehicle_iphone_new(struct vehicle_methods
-        *meth, struct callback_list
-        *cbl, struct attr **attrs) {
+static struct vehicle_priv *vehicle_iphone_new(struct vehicle_methods *meth, struct callback_list *cbl,
+                                               struct attr **attrs) {
     struct vehicle_priv *ret;
-    struct attr *interval,*speed,*position_coord_geo;
+    struct attr *interval, *speed, *position_coord_geo;
 
     dbg(lvl_debug, "enter");
     ret = g_new0(struct vehicle_priv, 1);
     ret->cbl = cbl;
-    ret->interval=1000;
-    ret->config_speed=40;
-    if ((speed=attr_search(attrs, attr_speed))) {
-        ret->config_speed=speed->u.num;
+    ret->interval = 1000;
+    ret->config_speed = 40;
+    if ((speed = attr_search(attrs, attr_speed))) {
+        ret->config_speed = speed->u.num;
     }
-    if ((interval=attr_search(attrs, attr_interval)))
-        ret->interval=interval->u.num;
-    if ((position_coord_geo=attr_search(attrs, attr_position_coord_geo))) {
-        ret->geo=*(position_coord_geo->u.coord_geo);
-        ret->position_set=1;
-        dbg(lvl_debug,"position_set %f %f", ret->geo.lat, ret->geo.lng);
+    if ((interval = attr_search(attrs, attr_interval)))
+        ret->interval = interval->u.num;
+    if ((position_coord_geo = attr_search(attrs, attr_position_coord_geo))) {
+        ret->geo = *(position_coord_geo->u.coord_geo);
+        ret->position_set = 1;
+        dbg(lvl_debug, "position_set %f %f", ret->geo.lat, ret->geo.lng);
     }
     *meth = vehicle_iphone_methods;
     ret->str_time[0] = '\0';

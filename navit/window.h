@@ -21,7 +21,7 @@
  * Describes the Navit application window or equivalent.
  */
 struct window {
-	void *priv;                                    /**< Private data of the graphics implementation */
-	int (*fullscreen)(struct window *win, int on); /**< Method to toggle fullscreen mode */
-	void (*disable_suspend)(struct window *win);   /**< Method to disable suspend mode or screen savers */
+    void *priv;                                    /**< Private data of the graphics implementation */
+    int (*fullscreen)(struct window *win, int on); /**< Method to toggle fullscreen mode */
+    void (*disable_suspend)(struct window *win);   /**< Method to disable suspend mode or screen savers */
 };

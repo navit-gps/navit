@@ -25,4 +25,3 @@ struct pcoord;
 void gtk_gui_poi(struct navit *nav);
 
 #endif
-

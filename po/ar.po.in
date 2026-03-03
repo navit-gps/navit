@@ -8,24 +8,30 @@
 # dargirov https://launchpad.net/~dargirov
 # drsaudi https://launchpad.net/~mon7b6
 # metehyi https://launchpad.net/~metehyi
-
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.5.1\n"
+"Project-Id-Version: navit 0.5.6\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2018-02-05 13:00+0000\n"
-"Last-Translator: abed alkareem alnatsheh <Unknown>\n"
-"Language-Team: Arabic <ar@li.org>\n"
+"POT-Creation-Date: 2025-12-16 19:22+0100\n"
+"PO-Revision-Date: 2024-04-13 17:24+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Arabic <https://hosted.weblate.org/projects/navit/navit-core/"
+"ar/>\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n % 100 >= "
-"3 && n % 100 <= 10 ? 3 : n % 100 >= 11 && n % 100 <= 99 ? 4 : 5;\n"
-"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
 msgstr "جاري التنفيذ من المجلد المصدر\n"
+
+#. libc of navit returns "dummy"
+msgid "Error getting current path. use ./ \n"
+msgstr ""
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -221,7 +227,7 @@ msgid "Enter the roundabout %s"
 msgstr "ادخل الدائرة بعد  %s"
 
 msgid "then enter the roundabout"
-msgstr "بعدها ادخل الدائرة"
+msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -401,13 +407,13 @@ msgid "Length"
 msgstr "الطول"
 
 msgid "mi"
-msgstr "ميل"
+msgstr ""
 
 msgid "km"
 msgstr "كلم"
 
 msgid "feet"
-msgstr "قدم"
+msgstr ""
 
 msgid "m"
 msgstr "م."
@@ -1519,6 +1525,10 @@ msgstr "واليس و فوتونا"
 msgid "Samoa"
 msgstr "ساموا"
 
+#. 412
+msgid "Kosovo"
+msgstr ""
+
 #. 887
 msgid "Yemen"
 msgstr "اليمن"
@@ -1571,8 +1581,7 @@ msgstr ""
 msgid "Error: No configuration found in config file '%s'"
 msgstr ""
 
-msgid ""
-"Internal initialization failed, exiting. Check previous error messages."
+msgid "Internal initialization failed, exiting. Check previous error messages."
 msgstr ""
 
 msgid "unknown street"
@@ -2248,6 +2257,10 @@ msgstr "نعم"
 msgid "Cancel"
 msgstr "إلغاء"
 
+#. Android resource: @strings/channel_name
+msgid "Navit"
+msgstr ""
+
 #. Android resource: @strings/notification_ticker
 msgid "Navit started"
 msgstr "نافيت بدء التشغيل"
@@ -2265,7 +2278,7 @@ msgid ""
 "Thank you for installing Navit!\n"
 "\n"
 "To start, select \"Download maps\" from the menu to download a map. Note: "
-"The map filesize may be large (>50MB) - a wifi connection is recommended.\n"
+"The map filesize may be large (&gt50MB) - a wifi connection is recommended.\n"
 "\n"
 "Mapdata: (c) OpenStreetMap contributors\n"
 "\n"
@@ -2311,6 +2324,14 @@ msgstr ""
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
 msgstr "الطريق إلى هنا"
+
+#. Android resource: @strings/position_popup_view
+msgid "View"
+msgstr ""
+
+#. Android resource: @strings/use_position_with
+msgid "Use position with"
+msgstr ""
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
@@ -2402,9 +2423,11 @@ msgstr ""
 msgid "Search"
 msgstr "إبحث"
 
-#. Android resource: @strings/address_search_searching
-msgid "Searching..."
-msgstr "جاري البحث..."
+#. Android resource: @strings/    <string name="address_search_searching">Searching
+#. Android resource: @strings/    <string name="backing_up">Backing up
+#. Android resource: @strings/    <string name="restoring">Restoring
+msgid "    <string name="
+msgstr ""
 
 #. Android resource: @strings/address_search_not_found
 msgid "Address not found"
@@ -2441,14 +2464,6 @@ msgstr "اختر فعلاَ"
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
 msgstr "الرجاء إدخال رقيقة أس دي"
-
-#. Android resource: @strings/backing_up
-msgid "Backing up..."
-msgstr "جاري النسخ الإحتياطي"
-
-#. Android resource: @strings/restoring
-msgid "Restoring..."
-msgstr "جاري الإستعادة"
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
@@ -3001,25 +3016,11 @@ msgstr "جنوب و وسط امريكا"
 msgid "Guyane Francaise"
 msgstr "غويانا الفرنسية"
 
-#, c-format
-#~ msgid "Route %4.0fkm    %02d:%02d ETA"
-#~ msgstr "Route %4.0fكلم    %02d:%02d ETA"
+#~ msgid "Searching..."
+#~ msgstr "جاري البحث..."
 
-#~ msgid "Downloaded maps"
-#~ msgstr "الخرائط المنزلة"
+#~ msgid "Backing up..."
+#~ msgstr "جاري النسخ الإحتياطي"
 
-#~ msgid "partial match"
-#~ msgstr "تطابق جزئي"
-
-#~ msgid " (except Alaska and Hawaii)"
-#~ msgstr " (بدون ألاسكا و هاواي)"
-
-#~ msgid "Error downloading map!"
-#~ msgstr "خطأ أثناء تنزيل الخريطة!"
-
-#~ msgid "Map download aborted!"
-#~ msgstr "تم إجهاض عملية التنزيل للخريطة !"
-
-#, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "ثم أخرج من المستديرة عند الــ%1$s %2$s"
+#~ msgid "Restoring..."
+#~ msgstr "جاري الإستعادة"

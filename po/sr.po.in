@@ -8,24 +8,30 @@
 # momcilo https://launchpad.net/~momcilo-majic
 # Мирослав Николић https://launchpad.net/~lipek
 # Саша Петровић https://launchpad.net/~salepetronije
-
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.5.1\n"
+"Project-Id-Version: navit 0.5.6\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2018-05-10 17:33+0000\n"
-"Last-Translator: Саша Петровић <salepetronije@gmail.com>\n"
-"Language-Team: српски <xfce4@xfce4.org>\n"
+"POT-Creation-Date: 2025-12-16 19:22+0100\n"
+"PO-Revision-Date: 2024-04-13 17:26+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Serbian <https://hosted.weblate.org/projects/navit/navit-core/"
+"sr/>\n"
+"Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"Language: \n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.5-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
 msgstr "Покренут из изворне фасцикле\n"
+
+#. libc of navit returns "dummy"
+msgid "Error getting current path. use ./ \n"
+msgstr ""
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -160,7 +166,6 @@ msgstr ""
 msgid "%1$sonto %2$s|neuter form"
 msgstr ""
 
-#. TRANSLATORS: motorway ramp refers to the slip road for entering a motorway.
 msgid "onto the motorway ramp"
 msgstr "на нагибу"
 
@@ -373,7 +378,6 @@ msgstr "потом сте стигли на своје одредиште."
 msgid "You have reached your destination %s"
 msgstr "Стигли сте на одредиште %s"
 
-#. TRANSLATORS: Exit as a noun, as in "Exit 43 Greenmound-East"
 msgid "Interchange"
 msgstr ""
 
@@ -1509,6 +1513,10 @@ msgstr "Валис и Футуна"
 msgid "Samoa"
 msgstr "Самоа"
 
+#. 412
+msgid "Kosovo"
+msgstr ""
+
 #. 887
 msgid "Yemen"
 msgstr "Јемен"
@@ -1547,24 +1555,22 @@ msgstr ""
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found"
-msgstr "Нема датотеке подешавања navit.xml, navit.xml.сопствени је пронађен"
+msgstr ""
 
 #, c-format
 msgid "Error parsing config file '%s': %s"
-msgstr "Десила се грешка приликом рашчлањивања датотеке подешавања „%s“: %s"
+msgstr ""
 
 #, c-format
 msgid "Using config file '%s'"
-msgstr "Користим датотеку подешавања „%s“"
+msgstr ""
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'"
-msgstr "ГРЕШКА: Нису пронађене поставке у датотеци подешавања „%s"
-
-msgid ""
-"Internal initialization failed, exiting. Check previous error messages."
 msgstr ""
-"Није успело унутрашње покретање, излазим. Проверите претходне поруке грешака."
+
+msgid "Internal initialization failed, exiting. Check previous error messages."
+msgstr ""
 
 msgid "unknown street"
 msgstr "непозната улица"
@@ -1776,8 +1782,13 @@ msgstr "Такси"
 msgid "Shopping"
 msgstr "Куповина"
 
-msgid "Select a search radius from screen center"
-msgstr "Растојање од средишта екрана"
+#. Input is in kilometers
+msgid "Select a search radius from screen center in km"
+msgstr ""
+
+#. Input is in miles.
+msgid "Select a search radius from screen center in miles"
+msgstr ""
 
 #, c-format
 msgid "POI %s. %s"
@@ -1785,24 +1796,21 @@ msgstr "Занимљива тачка %s. %s"
 
 #, c-format
 msgid "Set destination to %ld, %ld "
-msgstr "Постави одредиште на %ld, %ld "
+msgstr ""
 
 #, c-format
 msgid "Set map to %ld, %ld "
-msgstr "Постави карту на %ld, %ld "
+msgstr ""
 
 #, c-format
 msgid "Set next visit to %ld, %ld "
-msgstr "Постави следећу посету на %ld, %ld "
+msgstr ""
 
 msgid "POI search"
 msgstr "Претрага занимљивих тачака"
 
 msgid "Select a category"
 msgstr "Изаберите врсту"
-
-msgid "Select a distance to look for (km)"
-msgstr "Изаберите даљину претраге (km)"
 
 msgid "Select a POI"
 msgstr "Изаберите занимљиву тачку"
@@ -1816,8 +1824,8 @@ msgstr "Врста"
 msgid "Direction"
 msgstr "Правац"
 
-msgid "Distance(m)"
-msgstr "Растојање(m)"
+msgid "Distance"
+msgstr ""
 
 msgid "Name"
 msgstr "Име"
@@ -2200,18 +2208,14 @@ msgid "Description"
 msgstr "Опис"
 
 msgid ""
-"Drop last \n"
+"Drop last\n"
 "Waypoint"
 msgstr ""
-"Одбаци последњу\n"
-"пролазну тачку"
 
 msgid ""
-"Drop next \n"
+"Drop next\n"
 "Waypoint"
 msgstr ""
-"Одбаци следећу\n"
-"пролазну тачку"
 
 msgid "Satellite Status"
 msgstr "Стање сателита"
@@ -2243,6 +2247,10 @@ msgstr "Да"
 msgid "Cancel"
 msgstr "Откажи"
 
+#. Android resource: @strings/channel_name
+msgid "Navit"
+msgstr ""
+
 #. Android resource: @strings/notification_ticker
 msgid "Navit started"
 msgstr "Навит је покренут"
@@ -2260,20 +2268,12 @@ msgid ""
 "Thank you for installing Navit!\n"
 "\n"
 "To start, select \"Download maps\" from the menu to download a map. Note: "
-"The map filesize may be large (>50MB) - a wifi connection is recommended.\n"
+"The map filesize may be large (&gt50MB) - a wifi connection is recommended.\n"
 "\n"
 "Mapdata: (c) OpenStreetMap contributors\n"
 "\n"
 "Enjoy Navit!"
 msgstr ""
-"Хвала што уградисте Навит!\n"
-"\n"
-"За почетак, изаберите „Преузмите карте“ из изборника ради преузимања карте. "
-"Примедба: Карта може бити велика (>50MB) - бежична веза је препоручена.\n"
-"\n"
-"Подаци о картама: доприносиоци (c) OpenStreetMap-а\n"
-"\n"
-"Уживајте у Навиту!"
 
 #. Android resource: @strings/initial_info_box_OK
 msgid "OK"
@@ -2314,6 +2314,14 @@ msgstr ""
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
 msgstr "Путања довде"
+
+#. Android resource: @strings/position_popup_view
+msgid "View"
+msgstr ""
+
+#. Android resource: @strings/use_position_with
+msgid "Use position with"
+msgstr ""
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
@@ -2405,9 +2413,11 @@ msgstr "Упореди непотпуну адресу"
 msgid "Search"
 msgstr "Претражи"
 
-#. Android resource: @strings/address_search_searching
-msgid "Searching..."
-msgstr "Претрага..."
+#. Android resource: @strings/    <string name="address_search_searching">Searching
+#. Android resource: @strings/    <string name="backing_up">Backing up
+#. Android resource: @strings/    <string name="restoring">Restoring
+msgid "    <string name="
+msgstr ""
 
 #. Android resource: @strings/address_search_not_found
 msgid "Address not found"
@@ -2444,14 +2454,6 @@ msgstr "Изаберите радњу"
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
 msgstr "Молим, утакните СД картицу"
-
-#. Android resource: @strings/backing_up
-msgid "Backing up..."
-msgstr "Чувам у оставу..."
-
-#. Android resource: @strings/restoring
-msgid "Restoring..."
-msgstr "Враћам из оставе..."
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
@@ -3006,63 +3008,58 @@ msgstr ""
 msgid "Guyane Francaise"
 msgstr ""
 
-#, c-format
-#~ msgid "Route %4.0fkm    %02d:%02d ETA"
-#~ msgstr "Рута %4.0fкм %02d:%02d ПВД"
+#~ msgid "Select a search radius from screen center"
+#~ msgstr "Растојање од средишта екрана"
 
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr ""
-#~ "Нема датотеке подешавања navit.xml, navit.xml.сопствени је пронађен\n"
+#~ msgid "Select a distance to look for (km)"
+#~ msgstr "Изаберите даљину претраге (km)"
 
-#, c-format
-#~ msgid "Error parsing config file '%s': %s\n"
-#~ msgstr ""
-#~ "Десила се грешка приликом рашчлањивања датотеке подешавања „%s“: %s\n"
-
-#, c-format
-#~ msgid "Using config file '%s'\n"
-#~ msgstr "Користим датотеку подешавања „%s“\n"
-
-#, c-format
-#~ msgid "Error: No configuration found in config file '%s'\n"
-#~ msgstr "ГРЕШКА: Нису пронађене поставке у датотеци подешавања „%s“\n"
+#~ msgid "Distance(m)"
+#~ msgstr "Растојање(m)"
 
 #~ msgid ""
-#~ "Internal initialization failed, exiting. Check previous error messages.\n"
+#~ "Drop last \n"
+#~ "Waypoint"
 #~ msgstr ""
-#~ "Није успело унутрашње покретање, излазим. Проверите претходне поруке "
-#~ "грешака.\n"
+#~ "Одбаци последњу\n"
+#~ "пролазну тачку"
+
+#~ msgid ""
+#~ "Drop next \n"
+#~ "Waypoint"
+#~ msgstr ""
+#~ "Одбаци следећу\n"
+#~ "пролазну тачку"
+
+#~ msgid ""
+#~ "Thank you for installing Navit!\n"
+#~ "\n"
+#~ "To start, select \"Download maps\" from the menu to download a map. Note: "
+#~ "The map filesize may be large (>50MB) - a wifi connection is "
+#~ "recommended.\n"
+#~ "\n"
+#~ "Mapdata: (c) OpenStreetMap contributors\n"
+#~ "\n"
+#~ "Enjoy Navit!"
+#~ msgstr ""
+#~ "Хвала што уградисте Навит!\n"
+#~ "\n"
+#~ "За почетак, изаберите „Преузмите карте“ из изборника ради преузимања "
+#~ "карте. Примедба: Карта може бити велика (>50MB) - бежична веза је "
+#~ "препоручена.\n"
+#~ "\n"
+#~ "Подаци о картама: доприносиоци (c) OpenStreetMap-а\n"
+#~ "\n"
+#~ "Уживајте у Навиту!"
+
+#~ msgid "Searching..."
+#~ msgstr "Претрага..."
+
+#~ msgid "Backing up..."
+#~ msgstr "Чувам у оставу..."
+
+#~ msgid "Restoring..."
+#~ msgstr "Враћам из оставе..."
 
 #~ msgid "Distance from screen center (km)"
 #~ msgstr "Растојање од средишта екрана (km)"
-
-#, c-format
-#~ msgid "Set destination to %ld, %ld \n"
-#~ msgstr "Постави одредиште на %ld, %ld \n"
-
-#, c-format
-#~ msgid "Set map to %ld, %ld \n"
-#~ msgstr "Постави карту на %ld, %ld \n"
-
-#, c-format
-#~ msgid "Set next visit to %ld, %ld \n"
-#~ msgstr "Постави следећу посету на %ld, %ld \n"
-
-#~ msgid "partial match"
-#~ msgstr "делимично поклапање"
-
-#~ msgid "Map data (c) OpenStreetMap contributors, ODBL"
-#~ msgstr "Подаци карте (c) доприносиоци Отворене карте улица, ОДБЛ"
-
-#~ msgid "Downloaded maps"
-#~ msgstr "Преузете карте"
-
-#~ msgid "Error downloading map!"
-#~ msgstr "Десила се грешка приликом преузимања карте!"
-
-#~ msgid "Map download aborted!"
-#~ msgstr "Преузимање карте је прекинуто!"
-
-#, c-format
-#~ msgid "then leave the roundabout at the %1$s %2$s"
-#~ msgstr "потом напутстите обилазницу на %1$s %2$s"

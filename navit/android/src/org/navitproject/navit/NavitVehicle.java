@@ -25,12 +25,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
-import android.location.GpsSatellite;
-import android.location.GpsStatus;
+import android.location.GnssStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
@@ -59,7 +61,8 @@ public class NavitVehicle {
 
     public native void vehicleCallback(long id, int enabled);
 
-    private class NavitLocationListener extends BroadcastReceiver implements GpsStatus.Listener, LocationListener {
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private class NavitLocationListener extends BroadcastReceiver implements LocationListener {
         boolean mPrecise = false;
 
         public void onLocationChanged(Location location) {
@@ -88,19 +91,19 @@ public class NavitVehicle {
         /**
          * Called when the status of the GPS changes.
          */
-        public void onGpsStatusChanged(int event) {
+        //@Override
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        public void onSatelliteStatusChanged(GnssStatus status) {
             if (ContextCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 // Permission is not granted
                 return;
             }
-            GpsStatus status = sLocationManager.getGpsStatus(null);
-            int satsInView = 0;
+            int satsInView = status.getSatelliteCount();
             int satsUsed = 0;
-            Iterable<GpsSatellite> sats = status.getSatellites();
-            for (GpsSatellite sat : sats) {
+            for (int i = 0; i < satsInView; i++) {
                 satsInView++;
-                if (sat.usedInFix()) {
+                if (status.usedInFix(i)) {
                     satsUsed++;
                 }
             }
@@ -130,6 +133,7 @@ public class NavitVehicle {
      * @param fcbid The address of the fix callback function called when a
      * {@code android.location.GPS_FIX_CHANGE} is received, indicating a change in GPS fix status
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     NavitVehicle(Context context, long pcbid, long scbid, long fcbid) {
         if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -242,7 +246,7 @@ public class NavitVehicle {
 
         context.registerReceiver(sPreciseLocationListener, new IntentFilter(GPS_FIX_CHANGE));
         sLocationManager.requestLocationUpdates(mPreciseProvider, 0, 0, sPreciseLocationListener);
-        sLocationManager.addGpsStatusListener(sPreciseLocationListener);
+        //sLocationManager.registerGnssStatusCallback(sPreciseLocationListener);
 
         /*
          * Since Android criteria have no way to specify "fast fix", lowCriteria may return the same
@@ -269,7 +273,9 @@ public class NavitVehicle {
         if (sLocationManager != null) {
             if (sPreciseLocationListener != null) {
                 sLocationManager.removeUpdates(sPreciseLocationListener);
-                sLocationManager.removeGpsStatusListener(sPreciseLocationListener);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    //sLocationManager.unregisterGnssStatusCallback(sPreciseLocationListener);
+                }
                 navit.unregisterReceiver(sPreciseLocationListener);
             }
             if (sFastLocationListener != null) {

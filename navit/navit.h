@@ -20,15 +20,17 @@
 #ifndef NAVIT_NAVIT_H
 #define NAVIT_NAVIT_H
 
+#define NAVIT_OBJECT                                                                                                   \
+    struct object_func *func;                                                                                          \
+    int refcount;                                                                                                      \
+    struct attr **attrs;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 extern struct gui *main_loop_gui;
-// defined in glib.h.
-#ifndef __G_LIST_H__
-struct _GList;
-typedef struct _GList GList;
-#endif
+
+#include <glib.h>
 
 /* prototypes */
 enum attr_type;
@@ -85,12 +87,12 @@ void navit_set_destinations(struct navit *this_, struct pcoord *c, int count, co
 void navit_add_destination_description(struct navit *this_, struct pcoord *c, const char *description);
 int navit_get_destinations(struct navit *this_, struct pcoord *pc, int count);
 int navit_get_destination_count(struct navit *this_);
-char* navit_get_destination_description(struct navit *this_, int n);
+char *navit_get_destination_description(struct navit *this_, int n);
 void navit_remove_nth_waypoint(struct navit *this_, int n);
 void navit_remove_waypoint(struct navit *this_);
-char* navit_get_coord_description(struct navit *this_, struct pcoord *c);
+char *navit_get_coord_description(struct navit *this_, struct pcoord *c);
 int navit_check_route(struct navit *this_);
-struct map* read_former_destinations_from_file(void);
+struct map *read_former_destinations_from_file(void);
 void navit_textfile_debug_log(struct navit *this_, const char *fmt, ...);
 void navit_textfile_debug_log_at(struct navit *this_, struct pcoord *pc, const char *fmt, ...);
 int navit_speech_estimate(struct navit *this_, char *str);
@@ -104,13 +106,15 @@ void navit_zoom_to_route(struct navit *this_, int orientation);
 void navit_set_center(struct navit *this_, struct pcoord *center, int set_timeout);
 void navit_set_center_cursor(struct navit *this_, int autozoom, int keep_orientation);
 void navit_set_center_screen(struct navit *this_, struct point *p, int set_timeout);
+void navit_drag_map(struct navit *this_, struct point *origin, struct point *destination);
+void navit_set_center_cursor_draw(struct navit *this_);
 int navit_set_attr(struct navit *this_, struct attr *attr);
 int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 struct layout *navit_get_layout_by_name(struct navit *this_, const char *layout_name);
 void navit_update_current_layout(struct navit *this_, struct layout *layout);
 int navit_add_attr(struct navit *this_, struct attr *attr);
 int navit_remove_attr(struct navit *this_, struct attr *attr);
-struct attr_iter *navit_attr_iter_new(void * unused);
+struct attr_iter *navit_attr_iter_new(void *unused);
 void navit_attr_iter_destroy(struct attr_iter *iter);
 void navit_add_callback(struct navit *this_, struct callback *cb);
 void navit_remove_callback(struct navit *this_, struct callback *cb);
@@ -128,8 +132,8 @@ void navit_disable_suspend(void);
 int navit_block(struct navit *this_, int block);
 int navit_get_blocked(struct navit *this_);
 void navit_destroy(struct navit *this_);
-void navit_command_add_table(struct navit*this_, struct command_table *commands, int count);
-struct navit * navit_ref(struct navit *this_);
+void navit_command_add_table(struct navit *this_, struct command_table *commands, int count);
+struct navit *navit_ref(struct navit *this_);
 void navit_unref(struct navit *this_);
 /* end of prototypes */
 #ifdef __cplusplus
@@ -137,4 +141,3 @@ void navit_unref(struct navit *this_);
 #endif
 
 #endif
-

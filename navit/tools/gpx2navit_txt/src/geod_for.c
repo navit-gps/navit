@@ -18,16 +18,15 @@
  */
 
 #ifndef lint
-static const char SCCSID[] =
-    "@(#)geod_for.c	4.6	95/09/23	GIE	REL";
+static const char SCCSID[] = "@(#)geod_for.c	4.6	95/09/23	GIE	REL";
 #endif
-# include "projects.h"
-# include "geodesic.h"
-# define MERI_TOL 1e-9
+#include "geodesic.h"
+#include "projects.h"
+#define MERI_TOL 1e-9
 static double th1, costh1, sinth1, sina12, cosa12, M, N, c1, c2, D, P, s1;
 static int merid, signS;
 void geod_pre(void) {
-    al12 = adjlon(al12);	/* reduce to +- 0-PI */
+    al12 = adjlon(al12); /* reduce to +- 0-PI */
     signS = fabs(al12) > HALFPI ? 1 : 0;
     th1 = ellipse ? atan(onef * tan(phi1)) : phi1;
     costh1 = cos(th1);
@@ -110,10 +109,8 @@ void geod_for(void) {
         if (al12 < 0.)
             al21 -= PI;
         al21 = adjlon(al21);
-        phi2 = atan(-(sinth1 * cosds + N * sinds) * sin(al21) /
-                    (ellipse ? onef * M : M));
-        de = atan2(sinds * sina12,
-                   (costh1 * cosds - sinth1 * sinds * cosa12));
+        phi2 = atan(-(sinth1 * cosds + N * sinds) * sin(al21) / (ellipse ? onef * M : M));
+        de = atan2(sinds * sina12, (costh1 * cosds - sinth1 * sinds * cosa12));
         if (ellipse) {
             if (signS)
                 de += c1 * ((1. - c2) * ds + c2 * sinds * cos(ss));

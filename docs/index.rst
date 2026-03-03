@@ -2,8 +2,8 @@
 Navit's User Manual
 ###################
 
-This document is the official User Manual for `Navit`__,
-the OpenSource vector based navigation software.
+What is Navit?
+##############
 
 Navit is a open source (GPL) car navigation system with routing engine.
 
@@ -19,6 +19,9 @@ Navit currently speaks over 70 languages!
 
 Navit is highly customizable, from map layouts and on-screen display to the details of the routing engine.
 
+Main Features
+-------------
+
 .. image:: navit.png
 
 .. toctree::
@@ -26,11 +29,80 @@ Navit is highly customizable, from map layouts and on-screen display to the deta
    :glob:
    :numbered:
    :maxdepth: 2
-   :caption: Navit's user manual
+   :caption: Navit User Manual
 
-   basic_configuration
-   maps
-   configuration/index
+   user/getting_started
+   user/platforms/index
+   user/configuration/basic
+   user/configuration/advanced
+   user/community/index
+   user/faq/index
+
+.. __: https://github.com/navit-gps/navit/
+
+.. toctree::
+   :hidden:
+   :maxdepth: 2
+   :glob:
+   :caption: Navit Developer Documentation
+
+   development/index
+   development/targets
+   development/concepts
+   development/guides
+   development/programming_guidelines
+   development/commit_guidelines
+   development/changelog_wrapper
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+   :glob:
+   :caption: Other Documents
+
+   team
+   privacy
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+   :glob:
+   :caption: Old Wiki
+
+   user/community/Main_Page_support_box
+   user/configuration/Configuration_(old)
+   user/configuration/Configuration_Display_Options
+   user/configuration/Configuration_Full_list_of_options
+   user/configuration/Configuration_General_Options
+   user/configuration/Configuration_Layout_Options
+   user/configuration/Configuration_Maps_Options
+   user/configuration/Configuration_Vehicle_Options
+   user/configuration/Coordinate_format
+   user/configuration/Gui_internal
+   user/configuration/Icons
+   user/configuration/Internal_GUI
+   user/configuration/Internal_GUI_Menu_configurations
+   user/configuration/Layout
+   user/configuration/Menu
+   user/configuration/NavitConfigurator
+   user/configuration/OSD
+   user/configuration/OSD_Layouts
+   user/configuration/QML_GUI
+   user/configuration/QML2_GUI
+   user/configuration/QML2_GUI_WIP
+   user/configuration/Skinning_the_SDL_GUI
+   user/configuration/Speech
+   user/configuration/Vehicle_profile_flags
+   user/configuration/Vehicleprofile
+   user/configuration/vehicleprofile/vehicleprofile_bike_cycleway
+   user/configuration/vehicleprofile/vehicleprofile_bike_on_asphalt
+   user/configuration/vehicleprofile/vehicleprofile_car_no_highway
+   user/configuration/vehicleprofile/vehicleprofile_hike_bike_hard
+   user/configuration/vehicleprofile/vehicleprofile_hike_bike_on_ground_gravel
+   user/configuration/maps/binfile
+   user/faq/Failed_to_connect_graphics_to_gui
+   user/faq/Gpsd_Troubleshooting
+   user/faq/Troubleshooting
 
 
 .. Indices and tables
@@ -39,26 +111,3 @@ Navit is highly customizable, from map layouts and on-screen display to the deta
 .. * :ref:`genindex`
 .. * :ref:`modindex`
 .. * :ref:`search`
-
-.. __: https://github.com/navit-gps/navit/
-
-.. toctree::
-   :maxdepth: 2
-   :glob:
-   :caption: Navit's developer documentation
-
-   development/changelog_wrapper
-   development/programming_guidelines
-   development/commit_guidelines
-   development/linux_development
-   development/android_development
-   development/macos_development
-   development/wince_development
-   development/windows_development
-
-.. toctree::
-   :maxdepth: 1
-   :glob:
-   :caption: Other Documents
-
-   privacy

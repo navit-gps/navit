@@ -1,6 +1,6 @@
 if(BUILD_MAPTOOL)
 
-	find_package(Protobuf-c REQUIRED)
+	find_package(PROTOBUF_C REQUIRED)
 	include_directories(${PROTOBUF-C_INCLUDE_DIR})
 	include_directories(${CMAKE_CURRENT_BINARY_DIR})
 	#PROTOBUF_C_GENERATE_C(PROTO_SRCS PROTO_HDRS zfs.proto)
