@@ -52,7 +52,6 @@
 #include "traffic.h"
 #include "transform.h"
 #include "util.h"
-#include "speech.h"
 #include "vehicle.h"
 #include "vehicleprofile.h"
 #include "xmlconfig.h"
@@ -1566,14 +1565,6 @@ GList *navit_get_voiceprofiles(struct navit *this_) {
     return this_->voiceprofiles;
 }
 
-struct speech *navit_get_voiceprofile(struct navit *this_) {
-    return this_->speech;
-}
-    
-GList *navit_get_voiceprofiles(struct navit *this_) {
-    return this_->voiceprofiles;
-}
-
 struct vehicleprofile *navit_get_vehicleprofile(struct navit *this_) {
     return this_->vehicleprofile;
 }
@@ -2743,7 +2734,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
         }
         break;
     case attr_vehicleprofile:
-        attr_updated=navit_set_vehicleprofile(this_, attr->u.vehicleprofile);
+        attr_updated = navit_set_vehicleprofile(this_, attr->u.vehicleprofile);
         break;
     case attr_zoom:
         zoom = transform_get_scale(this_->trans);
@@ -3722,28 +3713,6 @@ static int navit_cmd_switch_layout_day_night(struct navit *this_, char *function
     }
 
     dbg(lvl_debug, "auto = %i", this_->auto_switch);
-    return 0;
-}
-
-int navit_set_voice_by_name(struct navit *n, const char *name) {
-    struct voice *v;
-    struct attr_iter *iter;
-    struct attr voice_attr, name_attr;
- 
-    iter = navit_attr_iter_new(NULL); 
- 
-    while (navit_get_attr(n, attr_voice,&voice_attr, iter)) {
-        v = voice_attr.u.voice;
-        vehicle_get_attr(v,attr_name,&name_attr, NULL);
-        if (name_attr.type == attr_name) {
-            if (!strcmp(name, name_attr.u.str)) {
-                navit_set_attr(n, &voice_attr);
-                navit_attr_iter_destroy(iter);
-                return 1;
-            }
-        }
-    }
-    navit_attr_iter_destroy(iter);
     return 0;
 }
 
