@@ -394,7 +394,7 @@ static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr 
         while ((name = file_readdir(handle))) {
             int len = strlen(name);
             if (len > suffix_len) {
-                if (!strcmp(name+len - suffix_len, this->sample_suffix)) {
+                if (!strcmp(name + len - suffix_len, this->sample_suffix)) {
                     dbg(lvl_debug, "found %s", name);
                     this->samples = g_list_prepend(this->samples, g_strdup(name));
                     this->sample_count++;
