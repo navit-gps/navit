@@ -1919,8 +1919,14 @@ static void save_vehicle_xml(struct vehicle *v) {
 static void gui_internal_cmd_set_active_voice_profile(struct gui_priv *this, struct widget *wm, void *data) {
     struct voice_and_profilename *vapn = data;
     struct attr speech_attr;
+    struct attr active_attr;
+
     speech_attr.type = attr_speech;
     speech_attr.u.speech = vapn->speech;
+
+    speech_get_attr(speech_attr.u.speech, attr_active, &active_attr, NULL);
+    active_attr.u.num = 1;
+
     navit_set_attr(this->nav, &speech_attr);
     dbg(lvl_debug, "Changed voice to '%s'", vapn->profilename);
 
