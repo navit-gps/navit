@@ -167,7 +167,7 @@ void thread_sleep(long msec) {
 
 void thread_exit(int result) {
 #ifdef HAVE_POSIX_THREADS
-    pthread_exit((void *)result);
+    pthread_exit((void *)&result);
 #elif HAVE_API_WIN32
     ExitThread((DWORD)result);
 #else
@@ -177,13 +177,13 @@ void thread_exit(int result) {
 
 int thread_join(thread *this_) {
 #ifdef HAVE_POSIX_THREADS
-    void *ret;
-    int err = pthread_join(*this_, &ret);
+    int *ret;
+    int err = pthread_join(*this_, (void **)&ret);
     if (err) {
         dbg(lvl_error, "error %d %s, thread=%p", err, thread_format_error(err), this_);
         return -1;
     }
-    return (int)ret;
+    return (int)*ret;
 #elif HAVE_API_WIN32
     DWORD res;
     DWORD err;
