@@ -1923,11 +1923,14 @@ static void gui_internal_cmd_set_active_voice_profile(struct gui_priv *this, str
 
     speech_attr.type = attr_speech;
     speech_attr.u.speech = vapn->speech;
+    navit_set_attr(this->nav, &speech_attr);
 
+    navit_get_attr(this->nav, &speech_attr);
     speech_get_attr(speech_attr.u.speech, attr_active, &active_attr, NULL);
     active_attr.u.num = 1;
 
-    navit_set_attr(this->nav, &speech_attr);
+    // announce that the speech attribute has changed
+    callback_list_call_attr_1(this->nav->attr_cbl, attr_speech, this->nav);
     dbg(lvl_debug, "Changed voice to '%s'", vapn->profilename);
 
     gui_internal_prune_menu_count(this, 1, 0);

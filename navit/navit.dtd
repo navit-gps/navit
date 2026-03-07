@@ -92,6 +92,7 @@
 <!ATTLIST announcement distance_metric CDATA #REQUIRED>
 <!ELEMENT speech EMPTY>
 <!ATTLIST speech name CDATA #REQUIRED>
+<!ATTLIST speech active CDATA #REQUIRED>
 <!ATTLIST speech type CDATA #REQUIRED>
 <!ATTLIST speech data CDATA #REQUIRED>
 <!ATTLIST speech cps CDATA #IMPLIED>
