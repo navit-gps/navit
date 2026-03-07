@@ -3151,8 +3151,8 @@ int navit_add_attr(struct navit *this_, struct attr *attr) {
             if (activeattr.u.num == 1) {
                 this_->speech = attr->u.speech;
             }
-		}
-	    break;
+        }
+	break;
     case attr_trackingo:
         this_->tracking = attr->u.tracking;
         break;
