@@ -16,6 +16,11 @@ if(CURL_FOUND)
     endif()
 endif()
 
+if(LIBTIFF_FOUND)
+    list(APPEND plugin_driver_break_LIBS ${LIBTIFF_LIBRARIES})
+    list(APPEND plugin_driver_break_INCLUDES ${LIBTIFF_INCLUDE_DIRS})
+endif()
+
 # Note: gui_internal is a MODULE library and cannot be linked directly.
 # The functions will be resolved at runtime when the plugin is loaded by Navit,
 # as long as gui_internal is loaded before this plugin.
@@ -46,6 +51,10 @@ set_target_properties(plugin_driver_break PROPERTIES
     OUTPUT_NAME "osd_driver_break"
     PREFIX "lib"
 )
+
+if(LIBTIFF_FOUND)
+    target_compile_definitions(plugin_driver_break PRIVATE HAVE_GEOTIFF)
+endif()
 
 # Add unit tests if enabled
 option(BUILD_DRIVER_BREAK_TESTS "Build Driver Break plugin unit tests" ON)

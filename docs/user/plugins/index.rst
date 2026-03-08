@@ -108,8 +108,12 @@ Optional energy-based routing uses a physical model (total weight, rolling and a
 
 **SRTM elevation**
 
-For hiking, elevation data from SRTM HGT files can be used. The plugin supports listing available SRTM regions, downloading a region by name, and querying elevation at a coordinate. Elevation is used where applicable for routing and display.
+For hiking, elevation data can be read from GeoTIFF (Copernicus DEM GLO-30) or SRTM HGT 1 arc-second tiles. When built with libtiff, the plugin uses Copernicus DEM GLO-30 as the primary source (Cloud Optimized GeoTIFF from AWS); if a tile is not available from Copernicus, it falls back to Viewfinder Panoramas (void-filled HGT, `viewfinderpanoramas.org/data/SRTM1v3.0/SRTM1/`), then NASA SRTMGL1. Without libtiff, only HGT is supported (Viewfinder primary, NASA fallback). The plugin supports listing available regions, downloading a region by name (fetching either GeoTIFF or HGT tiles as configured), and querying elevation at a coordinate. Elevation is used where applicable for routing and display. Tile borders are handled by per-point lookup: each coordinate is mapped to one 1x1 degree tile via the tile index (floor of longitude and latitude), so there is no single-file traversal; when a route or path crosses a tile boundary, each point is looked up in the correct tile for that point.
 
 **User interface and configuration**
 
 The plugin registers as an OSD (type ``rest``). With the internal GUI, menu actions are available: suggest rest stop (along current route), rest stop history, start break, end break, configure intervals (per profile: car, truck, hiking, cycling), and configure overnight (min distance from buildings/glaciers, POI radii). Session state (driving time, break in progress, mandatory break required) is tracked. Configuration and rest stop history are stored in a SQLite database (path configurable via OSD ``data`` attribute; default in user data directory). Vehicle type can be set via OSD attribute ``type`` (e.g. car, truck).
+
+**Testing**
+
+The Driver Break plugin has a dedicated test suite (configuration, database, finder, routing, SRTM/HGT and GeoTIFF download-and-read, integration). For test executables, how to run them, and expected results, see :doc:`tests`.

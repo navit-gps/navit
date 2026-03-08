@@ -36,12 +36,20 @@
 #    include <curl/curl.h>
 #endif
 
+#ifdef HAVE_GEOTIFF
+#    include <tiffio.h>
+#endif
+
 /* SRTM data directory */
 static char *srtm_data_dir = NULL;
 
-/* Viewfinder Panoramas base URL (void-filled 1 arc-second) */
+/* Copernicus DEM GLO-30 (primary when HAVE_GEOTIFF); 1x1 degree tiles, Cloud Optimized GeoTIFF */
+#ifdef HAVE_GEOTIFF
+#    define SRTM_URL_COPERNICUS "https://copernicus-dem-30m.s3.amazonaws.com/"
+#endif
+/* Viewfinder Panoramas (void-filled 1 arc-second HGT), primary without GeoTIFF or fallback */
 #define SRTM_URL_VIEWFINDER "https://viewfinderpanoramas.org/data/SRTM1v3.0/SRTM1/"
-/* NASA SRTMGL1 fallback URL */
+/* NASA SRTMGL1 fallback when Viewfinder is unavailable */
 #define SRTM_URL_NASA "https://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL1.003/2000.02.11/"
 
 /* HGT file size: 1 arc-second = 3601x3601 pixels = 25,934,402 bytes */
@@ -98,7 +106,7 @@ char *srtm_get_data_directory(void) {
     return g_strdup(srtm_data_dir);
 }
 
-/* Get tile filename from lon/lat indices */
+/* Get tile filename from lon/lat indices (HGT) */
 char *srtm_get_tile_filename(int lon, int lat) {
     char *filename;
     char lon_dir = (lon >= 0) ? 'E' : 'W';
@@ -110,15 +118,36 @@ char *srtm_get_tile_filename(int lon, int lat) {
     return filename;
 }
 
-/* Check if tile file exists */
-int srtm_tile_exists(int lon, int lat) {
-    char *filename = srtm_get_tile_filename(lon, lat);
-    char *filepath = g_build_filename(srtm_data_dir, filename, NULL);
-    int exists = g_file_test(filepath, G_FILE_TEST_EXISTS);
+#ifdef HAVE_GEOTIFF
+/* Copernicus DEM GLO-30 tile name: Copernicus_DSM_COG_10_N60_00_E007_00_DEM.tif */
+static char *srtm_get_geotiff_tile_filename(int lon, int lat) {
+    char lon_dir = (lon >= 0) ? 'E' : 'W';
+    char lat_dir = (lat >= 0) ? 'N' : 'S';
+    int lon_abs = abs(lon);
+    int lat_abs = abs(lat);
+    return g_strdup_printf("Copernicus_DSM_COG_10_%c%02d_00_%c%03d_00_DEM.tif", lat_dir, lat_abs, lon_dir, lon_abs);
+}
+#endif
 
-    g_free(filename);
-    g_free(filepath);
-    return exists;
+/* Check if tile file exists (GeoTIFF or HGT) */
+int srtm_tile_exists(int lon, int lat) {
+#ifdef HAVE_GEOTIFF
+    char *geotiff_name = srtm_get_geotiff_tile_filename(lon, lat);
+    char *geotiff_path = g_build_filename(srtm_data_dir, geotiff_name, NULL);
+    int exists_gt = g_file_test(geotiff_path, G_FILE_TEST_EXISTS);
+    g_free(geotiff_name);
+    g_free(geotiff_path);
+    if (exists_gt)
+        return 1;
+#endif
+    {
+        char *filename = srtm_get_tile_filename(lon, lat);
+        char *filepath = g_build_filename(srtm_data_dir, filename, NULL);
+        int exists = g_file_test(filepath, G_FILE_TEST_EXISTS);
+        g_free(filename);
+        g_free(filepath);
+        return exists;
+    }
 }
 
 /* Calculate tiles needed for bounding box */
@@ -156,21 +185,28 @@ GList *srtm_calculate_tiles(double min_lon, double min_lat, double max_lon, doub
                 tile->lat = lat;
                 tile->filename = srtm_get_tile_filename(lon, lat);
 
-                /* Build URLs */
                 char lon_dir = (lon >= 0) ? 'E' : 'W';
                 char lat_dir = (lat >= 0) ? 'N' : 'S';
                 int lon_abs = abs(lon);
                 int lat_abs = abs(lat);
 
-                /* Viewfinder Panoramas URL */
+#ifdef HAVE_GEOTIFF
+                /* Primary: Copernicus DEM GLO-30 GeoTIFF (direct .tif) */
+                tile->filename_geotiff = srtm_get_geotiff_tile_filename(lon, lat);
+                tile->url_primary = g_strdup_printf("%s%s", SRTM_URL_COPERNICUS, tile->filename_geotiff);
+                tile->url_fallback =
+                    g_strdup_printf("%s%c%02d%c%03d.hgt.zip", SRTM_URL_VIEWFINDER, lat_dir, lat_abs, lon_dir, lon_abs);
+                tile->url_fallback2 = g_strdup_printf("%s%c%02d%c%03d.SRTMGL1.hgt.zip", SRTM_URL_NASA, lat_dir, lat_abs,
+                                                      lon_dir, lon_abs);
+                tile->size_bytes = 8000000; /* Copernicus COG tile typically ~5-8 MB */
+#else
                 tile->url_primary =
                     g_strdup_printf("%s%c%02d%c%03d.hgt.zip", SRTM_URL_VIEWFINDER, lat_dir, lat_abs, lon_dir, lon_abs);
-
-                /* NASA fallback URL (different format) */
                 tile->url_fallback = g_strdup_printf("%s%c%02d%c%03d.SRTMGL1.hgt.zip", SRTM_URL_NASA, lat_dir, lat_abs,
                                                      lon_dir, lon_abs);
-
                 tile->size_bytes = SRTM_TILE_SIZE_BYTES;
+#endif
+
                 tile->downloaded = srtm_tile_exists(lon, lat);
 
                 tiles = g_list_append(tiles, tile);
@@ -250,31 +286,131 @@ static int read_hgt_elevation(const char *filepath, int lon_idx, int lat_idx, do
     return (int)elevation;
 }
 
-/* Get elevation for coordinate */
+#ifdef HAVE_GEOTIFF
+/* Get elevation from Copernicus GLO-30 GeoTIFF (1x1 degree, Float32 or Int16) */
+static int read_geotiff_elevation(const char *filepath, int lon_idx, int lat_idx, double lon, double lat) {
+    TIFF *tif = TIFFOpen(filepath, "r");
+    if (!tif)
+        return -32768;
+
+    uint32_t width = 0, height = 0;
+    uint16_t sample_format = 0, bits_per_sample = 0;
+    TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &width);
+    TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &height);
+    TIFFGetField(tif, TIFFTAG_SAMPLEFORMAT, &sample_format);
+    TIFFGetField(tif, TIFFTAG_BITSPERSAMPLE, &bits_per_sample);
+
+    if (width == 0 || height == 0) {
+        TIFFClose(tif);
+        return -32768;
+    }
+
+    /* Pixel coords: x = (lon - tile_min_lon) * width, y = (tile_max_lat - lat) * height */
+    double tile_min_lon = (double)lon_idx;
+    double tile_max_lat = (double)(lat_idx + 1);
+    double xd = (lon - tile_min_lon) * (double)width;
+    double yd = (tile_max_lat - lat) * (double)height;
+    uint32_t x = (uint32_t)xd;
+    uint32_t y = (uint32_t)yd;
+    if (x >= width)
+        x = width - 1;
+    if (y >= height)
+        y = height - 1;
+
+    int elevation_val = -32768;
+
+    if (TIFFIsTiled(tif)) {
+        uint32_t tile_width = 0, tile_height = 0;
+        TIFFGetField(tif, TIFFTAG_TILEWIDTH, &tile_width);
+        TIFFGetField(tif, TIFFTAG_TILELENGTH, &tile_height);
+        if (tile_width == 0)
+            tile_width = width;
+        if (tile_height == 0)
+            tile_height = height;
+
+        ttile_t tile_index = TIFFComputeTile(tif, x, y, 0, 0);
+        tsize_t tile_size = TIFFTileSize(tif);
+        unsigned char *buf = (unsigned char *)g_malloc(tile_size);
+        if (buf && TIFFReadEncodedTile(tif, tile_index, buf) >= 0) {
+            uint32_t tx = x % tile_width;
+            uint32_t ty = y % tile_height;
+            uint32_t pixels_per_row = tile_width;
+            if (sample_format == SAMPLEFORMAT_INT && bits_per_sample == 16) {
+                int16_t *s = (int16_t *)buf;
+                int16_t v = s[ty * pixels_per_row + tx];
+                if (v != -32768)
+                    elevation_val = (int)v;
+            } else if (sample_format == SAMPLEFORMAT_IEEEFP && bits_per_sample == 32) {
+                float *f = (float *)buf;
+                float v = f[ty * pixels_per_row + tx];
+                if (v >= -500.0f && v <= 9000.0f)
+                    elevation_val = (int)(v + 0.5f);
+            }
+        }
+        g_free(buf);
+    } else {
+        tsize_t row_size = TIFFScanlineSize(tif);
+        unsigned char *row_buf = (unsigned char *)g_malloc(row_size);
+        if (row_buf && TIFFReadScanline(tif, row_buf, y, 0) >= 0) {
+            if (sample_format == SAMPLEFORMAT_INT && bits_per_sample == 16) {
+                int16_t *s = (int16_t *)row_buf;
+                int16_t v = s[x];
+                if (v != -32768)
+                    elevation_val = (int)v;
+            } else if (sample_format == SAMPLEFORMAT_IEEEFP && bits_per_sample == 32) {
+                float *f = (float *)row_buf;
+                float v = f[x];
+                if (v >= -500.0f && v <= 9000.0f)
+                    elevation_val = (int)(v + 0.5f);
+            }
+        }
+        g_free(row_buf);
+    }
+
+    TIFFClose(tif);
+    return elevation_val;
+}
+#endif
+
+/* Get elevation for coordinate (tries GeoTIFF then HGT).
+ * Tile borders: each (lng, lat) maps to exactly one 1x1 degree tile via floor(lng), floor(lat).
+ * There is no single-file traversal; callers (e.g. route iteration) invoke this per point, so
+ * crossing a tile boundary is handled by the next call using the adjacent tile. */
 int srtm_get_elevation(struct coord_geo *coord) {
     if (!coord || !srtm_data_dir) {
         return -32768;
     }
 
-    /* Calculate tile indices (use floor to match srtm_calculate_tiles) */
     int lon_idx = (int)floor(coord->lng);
     int lat_idx = (int)floor(coord->lat);
 
-    /* Check if tile exists */
     if (!srtm_tile_exists(lon_idx, lat_idx)) {
-        return -32768; /* Tile not downloaded */
+        return -32768;
     }
 
-    /* Build file path */
-    char *filename = srtm_get_tile_filename(lon_idx, lat_idx);
-    char *filepath = g_build_filename(srtm_data_dir, filename, NULL);
-    g_free(filename);
+#ifdef HAVE_GEOTIFF
+    {
+        char *geotiff_name = srtm_get_geotiff_tile_filename(lon_idx, lat_idx);
+        char *geotiff_path = g_build_filename(srtm_data_dir, geotiff_name, NULL);
+        if (g_file_test(geotiff_path, G_FILE_TEST_EXISTS)) {
+            int elevation = read_geotiff_elevation(geotiff_path, lon_idx, lat_idx, coord->lng, coord->lat);
+            g_free(geotiff_name);
+            g_free(geotiff_path);
+            return elevation;
+        }
+        g_free(geotiff_name);
+        g_free(geotiff_path);
+    }
+#endif
 
-    /* Read elevation from HGT file */
-    int elevation = read_hgt_elevation(filepath, lon_idx, lat_idx, coord->lng, coord->lat);
-
-    g_free(filepath);
-    return elevation;
+    {
+        char *filename = srtm_get_tile_filename(lon_idx, lat_idx);
+        char *filepath = g_build_filename(srtm_data_dir, filename, NULL);
+        g_free(filename);
+        int elevation = read_hgt_elevation(filepath, lon_idx, lat_idx, coord->lng, coord->lat);
+        g_free(filepath);
+        return elevation;
+    }
 }
 
 /* Define regions matching Navit's map regions */
@@ -311,7 +447,15 @@ GList *srtm_get_regions(void) {
         GList *tiles = srtm_calculate_tiles(region->bbox_min_lon, region->bbox_min_lat, region->bbox_max_lon,
                                             region->bbox_max_lat);
         region->tile_count = g_list_length(tiles);
-        region->size_bytes = (long long)region->tile_count * SRTM_TILE_SIZE_COMPRESSED;
+        region->size_bytes = 0;
+        {
+            GList *t = tiles;
+            while (t) {
+                struct srtm_tile *tl = (struct srtm_tile *)t->data;
+                region->size_bytes += tl->size_bytes;
+                t = g_list_next(t);
+            }
+        }
 
         /* Check download status */
         int downloaded_count = 0;
@@ -376,6 +520,37 @@ static int srtm_download_tile(struct srtm_tile *tile, struct srtm_download_conte
         return 0;
     }
 
+#ifdef HAVE_GEOTIFF
+    /* Try primary: Copernicus GeoTIFF (direct .tif download) */
+    if (tile->filename_geotiff) {
+        char *geotiff_path = g_build_filename(srtm_data_dir, tile->filename_geotiff, NULL);
+        FILE *fp_gt = fopen(geotiff_path, "wb");
+        if (fp_gt) {
+            curl_easy_setopt(curl, CURLOPT_URL, tile->url_primary);
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, srtm_write_callback);
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp_gt);
+            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+            CURLcode res = curl_easy_perform(curl);
+            fclose(fp_gt);
+            if (res == CURLE_OK && g_file_test(geotiff_path, G_FILE_TEST_EXISTS)) {
+                GStatBuf st;
+                if (g_stat(geotiff_path, &st) == 0 && st.st_size > 100000) {
+                    tile->downloaded = 1;
+                    curl_easy_cleanup(curl);
+                    g_free(geotiff_path);
+                    g_free(zip_path);
+                    g_free(filepath);
+                    return 1;
+                }
+            }
+            g_unlink(geotiff_path);
+            g_free(geotiff_path);
+        }
+    }
+    /* Fall through to Viewfinder/NASA HGT zip */
+#endif
+
     FILE *fp = fopen(zip_path, "wb");
     if (!fp) {
         curl_easy_cleanup(curl);
@@ -384,8 +559,11 @@ static int srtm_download_tile(struct srtm_tile *tile, struct srtm_download_conte
         return 0;
     }
 
-    /* Try primary URL first */
-    curl_easy_setopt(curl, CURLOPT_URL, tile->url_primary);
+    /* First HGT zip: Viewfinder. (With GeoTIFF, primary is Copernicus so use url_fallback; else url_primary.) */
+    {
+        const char *first_zip = (tile->filename_geotiff && tile->url_fallback) ? tile->url_fallback : tile->url_primary;
+        curl_easy_setopt(curl, CURLOPT_URL, first_zip);
+    }
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, srtm_write_callback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
@@ -393,8 +571,14 @@ static int srtm_download_tile(struct srtm_tile *tile, struct srtm_download_conte
 
     CURLcode res = curl_easy_perform(curl);
 
-    if (res != CURLE_OK && tile->url_fallback) {
-        /* Try fallback URL */
+    if (res != CURLE_OK && tile->url_fallback2) {
+        fseek(fp, 0, SEEK_SET);
+        ftruncate(fileno(fp), 0);
+        curl_easy_setopt(curl, CURLOPT_URL, tile->url_fallback2);
+        res = curl_easy_perform(curl);
+    }
+    /* When primary is Copernicus we already used url_fallback as first_zip; only try url_fallback here when it is NASA */
+    if (res != CURLE_OK && tile->url_fallback && !tile->filename_geotiff) {
         fseek(fp, 0, SEEK_SET);
         ftruncate(fileno(fp), 0);
         curl_easy_setopt(curl, CURLOPT_URL, tile->url_fallback);
@@ -404,40 +588,26 @@ static int srtm_download_tile(struct srtm_tile *tile, struct srtm_download_conte
     fclose(fp);
     curl_easy_cleanup(curl);
 
-    if (res == CURLE_OK) {
-        if (g_file_test(zip_path, G_FILE_TEST_EXISTS)) {
-            /* Extract HGT from ZIP using system unzip command */
-            char *extract_cmd = g_strdup_printf("cd '%s' && unzip -o -q '%s' '%s' 2>/dev/null", srtm_data_dir, zip_path,
-                                                tile->filename);
+    if (res == CURLE_OK && g_file_test(zip_path, G_FILE_TEST_EXISTS)) {
+        char *extract_cmd = g_strdup_printf("cd '%s' && unzip -o -q '%s' '%s' 2>/dev/null", srtm_data_dir, zip_path,
+                                            tile->filename);
+        int extract_result = system(extract_cmd);
+        g_free(extract_cmd);
 
-            int extract_result = system(extract_cmd);
-            g_free(extract_cmd);
-
-            if (extract_result == 0) {
-                /* Verify extracted file exists and has correct size */
-                if (g_file_test(filepath, G_FILE_TEST_EXISTS)) {
-                    GStatBuf stat_buf;
-                    if (g_stat(filepath, &stat_buf) == 0) {
-                        /* HGT file should be ~25.9 MB */
-                        if (stat_buf.st_size > 20000000 && stat_buf.st_size < 30000000) {
-                            tile->downloaded = 1;
-                            g_unlink(zip_path);
-                            g_free(zip_path);
-                            g_free(filepath);
-                            return 1;
-                        } else {
-                            dbg(lvl_warning, "SRTM: Extracted file has unexpected size: %ld bytes",
-                                (long)stat_buf.st_size);
-                            g_unlink(filepath);
-                        }
-                    }
-                }
-            } else {
-                dbg(lvl_warning, "SRTM: Failed to extract ZIP file");
+        if (extract_result == 0 && g_file_test(filepath, G_FILE_TEST_EXISTS)) {
+            GStatBuf stat_buf;
+            if (g_stat(filepath, &stat_buf) == 0 &&
+                stat_buf.st_size > 20000000 && stat_buf.st_size < 30000000) {
+                tile->downloaded = 1;
+                g_unlink(zip_path);
+                g_free(zip_path);
+                g_free(filepath);
+                return 1;
             }
-
-            g_unlink(zip_path);
+            if (g_file_test(filepath, G_FILE_TEST_EXISTS))
+                g_unlink(filepath);
         }
+        g_unlink(zip_path);
     }
 
     g_unlink(zip_path);
@@ -470,7 +640,7 @@ static void srtm_download_progress_callback(void *data) {
     /* Download current tile */
     if (!tile->downloaded) {
         if (srtm_download_tile(tile, ctx)) {
-            ctx->downloaded_bytes += SRTM_TILE_SIZE_COMPRESSED;
+            ctx->downloaded_bytes += tile->size_bytes;
             ctx->current_tile_index++;
 
             /* Update progress */
@@ -516,9 +686,16 @@ struct srtm_download_context *srtm_download_region(struct srtm_region *region,
     ctx->progress_callback = progress_callback;
     ctx->user_data = user_data;
 
-    /* Calculate total size */
-    ctx->total_bytes = (long long)g_list_length(ctx->tiles) * SRTM_TILE_SIZE_COMPRESSED;
+    ctx->total_bytes = 0;
     ctx->downloaded_bytes = 0;
+    {
+        GList *t = ctx->tiles;
+        while (t) {
+            struct srtm_tile *tl = (struct srtm_tile *)t->data;
+            ctx->total_bytes += tl->size_bytes;
+            t = g_list_next(t);
+        }
+    }
 
     /* Start async download using idle callback */
     struct callback *cb = callback_new_1(callback_cast(srtm_download_progress_callback), ctx);
@@ -579,8 +756,10 @@ void srtm_free_tiles(GList *tiles) {
         struct srtm_tile *tile = (struct srtm_tile *)l->data;
         if (tile) {
             g_free(tile->filename);
+            g_free(tile->filename_geotiff);
             g_free(tile->url_primary);
             g_free(tile->url_fallback);
+            g_free(tile->url_fallback2);
             g_free(tile->checksum_md5);
             g_free(tile);
         }

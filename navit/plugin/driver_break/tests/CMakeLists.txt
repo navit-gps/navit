@@ -53,17 +53,28 @@ target_include_directories(test_driver_break_finder PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
-# Test executable for SRTM HGT file handling
+# Test executable for SRTM HGT file handling (and Copernicus GLO-30 when libtiff/curl available)
 add_executable(test_driver_break_srtm
     test_driver_break_srtm.c
     ../driver_break_srtm.c
 )
 
-target_link_libraries(test_driver_break_srtm
+target_link_libraries(test_driver_break_srtm PRIVATE
     glib-2.0
     m
     navit_core
 )
+
+if(LIBTIFF_FOUND AND LIBTIFF_LIBRARIES)
+    target_compile_definitions(test_driver_break_srtm PRIVATE HAVE_GEOTIFF)
+    target_link_libraries(test_driver_break_srtm PRIVATE ${LIBTIFF_LIBRARIES})
+    target_include_directories(test_driver_break_srtm PRIVATE ${LIBTIFF_INCLUDE_DIRS})
+endif()
+if(CURL_FOUND AND CURL_LIBRARIES)
+    target_compile_definitions(test_driver_break_srtm PRIVATE HAVE_CURL)
+    target_link_libraries(test_driver_break_srtm PRIVATE ${CURL_LIBRARIES})
+    target_include_directories(test_driver_break_srtm PRIVATE ${CURL_INCLUDE_DIRS})
+endif()
 
 target_include_directories(test_driver_break_srtm PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../..

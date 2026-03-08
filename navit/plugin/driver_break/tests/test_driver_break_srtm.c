@@ -17,6 +17,40 @@
 #include <string.h>
 #include <unistd.h>
 
+#ifdef HAVE_CURL
+#    include <curl/curl.h>
+
+static size_t curl_write_file_cb(void *ptr, size_t size, size_t nmemb, void *user) {
+    return fwrite(ptr, size, nmemb, (FILE *)user);
+}
+
+/* Download URL to filepath. Returns 1 on success. */
+static int download_file_to(const char *url, const char *filepath) {
+    FILE *fp = fopen(filepath, "wb");
+    if (!fp)
+        return 0;
+    CURL *curl = curl_easy_init();
+    if (!curl) {
+        fclose(fp);
+        g_unlink(filepath);
+        return 0;
+    }
+    curl_easy_setopt(curl, CURLOPT_URL, url);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_file_cb);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+    CURLcode res = curl_easy_perform(curl);
+    fclose(fp);
+    curl_easy_cleanup(curl);
+    if (res != CURLE_OK) {
+        g_unlink(filepath);
+        return 0;
+    }
+    return 1;
+}
+#endif
+
 /* Stub for debug_printf and max_debug_level for unit tests */
 dbg_level max_debug_level = lvl_error;
 
@@ -293,6 +327,73 @@ static int test_hgt_tile_filename(void) {
     return 0;
 }
 
+/* Create HGT file filled with constant elevation (for tile-border tests) */
+static int create_constant_hgt_file(const char *filepath, int16_t elevation_value) {
+    FILE *f = fopen(filepath, "wb");
+    if (!f)
+        return 0;
+    const int size = 3601 * 3601;
+    for (int i = 0; i < size; i++) {
+        unsigned char bytes[2];
+        int16_t v = elevation_value;
+        bytes[0] = (v >> 8) & 0xFF;
+        bytes[1] = v & 0xFF;
+        if (fwrite(bytes, 1, 2, f) != 2) {
+            fclose(f);
+            return 0;
+        }
+    }
+    fclose(f);
+    return 1;
+}
+
+/* Test that elevation lookup at tile borders uses the correct tile per coordinate.
+ * Each point is resolved to one tile via floor(lon), floor(lat); no single-file traversal. */
+static int test_hgt_tile_borders(void) {
+    char *test_dir = g_strdup("/tmp/test_hgt_borders");
+    g_mkdir_with_parents(test_dir, 0755);
+    srtm_init(test_dir);
+
+    /* Two adjacent tiles with distinct constant elevations so we can verify which tile is read */
+    char *path7 = g_build_filename(test_dir, "N60E007.hgt", NULL);
+    char *path8 = g_build_filename(test_dir, "N60E008.hgt", NULL);
+    TEST_ASSERT(create_constant_hgt_file(path7, 100), "Create tile E007 failed");
+    TEST_ASSERT(create_constant_hgt_file(path8, 200), "Create tile E008 failed");
+    g_free(path7);
+    g_free(path8);
+
+    /* Point clearly in tile (7, 60): lon 7.5 -> floor 7 */
+    struct coord_geo in_tile7;
+    in_tile7.lng = 7.5;
+    in_tile7.lat = 60.5;
+    int e7 = srtm_get_elevation(&in_tile7);
+    TEST_ASSERT(e7 == 100, "Point in tile E007 should return elevation 100");
+
+    /* Point clearly in tile (8, 60): lon 8.5 -> floor 8 */
+    struct coord_geo in_tile8;
+    in_tile8.lng = 8.5;
+    in_tile8.lat = 60.5;
+    int e8 = srtm_get_elevation(&in_tile8);
+    TEST_ASSERT(e8 == 200, "Point in tile E008 should return elevation 200");
+
+    /* Exactly on longitude boundary 8.0: floor(8.0)=8 -> tile (8, 60) */
+    struct coord_geo on_border;
+    on_border.lng = 8.0;
+    on_border.lat = 60.5;
+    int e_border = srtm_get_elevation(&on_border);
+    TEST_ASSERT(e_border == 200, "Point on lon border 8.0 should use tile E008");
+
+    /* Just west of border: 7.999 -> floor 7 -> tile (7, 60) */
+    struct coord_geo west_of_border;
+    west_of_border.lng = 7.999;
+    west_of_border.lat = 60.5;
+    int e_west = srtm_get_elevation(&west_of_border);
+    TEST_ASSERT(e_west == 100, "Point just west of 8.0 should use tile E007");
+
+    g_free(test_dir);
+    return 0;
+}
+
 static int test_hgt_cache_memory(void) {
     char *test_dir = g_strdup("/tmp/test_hgt_cache");
     g_mkdir_with_parents(test_dir, 0755);
@@ -337,6 +438,178 @@ static int test_hgt_cache_memory(void) {
     return 0;
 }
 
+#ifdef HAVE_CURL
+#define SRTM_URL_VIEWFINDER "https://viewfinderpanoramas.org/data/SRTM1v3.0/SRTM1/"
+#define SRTM_URL_NASA "https://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL1.003/2000.02.11/"
+
+/* Download one SRTM HGT tile (zip from Viewfinder or NASA), extract .hgt into test_dir. Returns 1 on success. */
+static int download_hgt_tile(int lon, int lat, const char *test_dir) {
+    char lat_dir = (lat >= 0) ? 'N' : 'S';
+    char lon_dir = (lon >= 0) ? 'E' : 'W';
+    int lat_abs = abs(lat);
+    int lon_abs = abs(lon);
+    char *filename = g_strdup_printf("%c%02d%c%03d.hgt", lat_dir, lat_abs, lon_dir, lon_abs);
+    char *zipname = g_strdup_printf("%s.zip", filename);
+    char *zip_path = g_build_filename(test_dir, zipname, NULL);
+    char *url_vf = g_strdup_printf("%s%s", SRTM_URL_VIEWFINDER, zipname);
+    char *url_nasa = g_strdup_printf("%s%c%02d%c%03d.SRTMGL1.hgt.zip", SRTM_URL_NASA, lat_dir, lat_abs, lon_dir, lon_abs);
+
+    int ok = 0;
+    if (download_file_to(url_vf, zip_path))
+        ok = 1;
+    if (!ok && download_file_to(url_nasa, zip_path))
+        ok = 1;
+
+    g_free(url_vf);
+    g_free(url_nasa);
+
+    if (!ok) {
+        g_unlink(zip_path);
+        g_free(zip_path);
+        g_free(zipname);
+        g_free(filename);
+        return 0;
+    }
+
+    char *extract_cmd = g_strdup_printf("cd '%s' && unzip -o -q '%s' '%s' 2>/dev/null", test_dir, zip_path, filename);
+    int unzip_ret = system(extract_cmd);
+    g_free(extract_cmd);
+    g_unlink(zip_path);
+    g_free(zip_path);
+    g_free(zipname);
+    g_free(filename);
+    return (unzip_ret == 0);
+}
+
+/* Download SRTM HGT tiles for the same three OSM locations as the GeoTIFF test; verify read. */
+static int test_srtm_hgt_download_and_read(void) {
+    char *test_dir = g_strdup("/tmp/test_srtm_hgt_download");
+    g_mkdir_with_parents(test_dir, 0755);
+
+    /* Tiles for (62.0937,7.1433), (61.5919,9.7018), (61.36012,9.66941): N62E007, N61E009 */
+    int got_62_7 = download_hgt_tile(7, 62, test_dir);
+    int got_61_9 = download_hgt_tile(9, 61, test_dir);
+
+    if (!got_62_7 || !got_61_9) {
+        printf("SRTM HGT: tile download failed or unzip failed (network/unavailable). Skip read test.\n");
+        g_free(test_dir);
+        return 0;
+    }
+
+    srtm_init(test_dir);
+
+    struct coord_geo point1;
+    point1.lat = 62.0937;
+    point1.lng = 7.1433;
+    struct coord_geo point2;
+    point2.lat = 61.5919;
+    point2.lng = 9.7018;
+    struct coord_geo point3;
+    point3.lat = 61.36012;
+    point3.lng = 9.66941;
+
+    int e1 = srtm_get_elevation(&point1);
+    int e2 = srtm_get_elevation(&point2);
+    int e3 = srtm_get_elevation(&point3);
+
+    TEST_ASSERT(e1 != -32768, "SRTM HGT read at 62.0937,7.1433 should be valid");
+    TEST_ASSERT(e1 >= -50 && e1 <= 3000, "SRTM HGT elevation at point1 out of expected range");
+    TEST_ASSERT(e2 != -32768, "SRTM HGT read at 61.5919,9.7018 should be valid");
+    TEST_ASSERT(e2 >= -50 && e2 <= 3000, "SRTM HGT elevation at point2 out of expected range");
+    TEST_ASSERT(e3 != -32768, "SRTM HGT read at 61.36012,9.66941 should be valid");
+    TEST_ASSERT(e3 >= -50 && e3 <= 3000, "SRTM HGT elevation at point3 out of expected range");
+
+    printf("SRTM HGT: tiles downloaded and read correctly at 3 OSM locations (62.09,7.14 / 61.59,9.70 / 61.36,9.67).\n");
+    g_free(test_dir);
+    return 0;
+}
+#endif
+
+#ifdef HAVE_GEOTIFF
+#    ifdef HAVE_CURL
+static int download_copernicus_tile(const char *url, const char *filepath) {
+    return download_file_to(url, filepath);
+}
+#    endif
+
+/* Test Copernicus GLO-30: download tiles for three OSM map locations (Norway) and verify read.
+ * Locations: map=12/62.0937/7.1433, map=12/61.5919/9.7018, map=15/61.36012/9.66941
+ * Tiles: N62E007, N61E009. */
+static int test_copernicus_glo30_download_and_read(void) {
+    char *test_dir = g_strdup("/tmp/test_copernicus_glo30");
+    g_mkdir_with_parents(test_dir, 0755);
+
+#    ifdef HAVE_CURL
+    /* Download tiles needed for the three test points */
+    const char *base = "https://copernicus-dem-30m.s3.amazonaws.com/";
+    char *url_62_7 = g_strdup_printf("%sCopernicus_DSM_COG_10_N62_00_E007_00_DEM.tif", base);
+    char *url_61_9 = g_strdup_printf("%sCopernicus_DSM_COG_10_N61_00_E009_00_DEM.tif", base);
+    char *path_62_7 = g_build_filename(test_dir, "Copernicus_DSM_COG_10_N62_00_E007_00_DEM.tif", NULL);
+    char *path_61_9 = g_build_filename(test_dir, "Copernicus_DSM_COG_10_N61_00_E009_00_DEM.tif", NULL);
+
+    int got_62_7 = download_copernicus_tile(url_62_7, path_62_7);
+    int got_61_9 = download_copernicus_tile(url_61_9, path_61_9);
+
+    g_free(url_62_7);
+    g_free(url_61_9);
+    g_free(path_62_7);
+    g_free(path_61_9);
+
+    if (!got_62_7 || !got_61_9) {
+        printf("Copernicus GLO-30: tile download failed or skipped (network/unavailable). Skip read test.\n");
+        g_free(test_dir);
+        return 0;
+    }
+#    else
+    /* Without CURL we only run if tiles are already present (e.g. from a previous run) */
+    char *path_62_7 = g_build_filename(test_dir, "Copernicus_DSM_COG_10_N62_00_E007_00_DEM.tif", NULL);
+    char *path_61_9 = g_build_filename(test_dir, "Copernicus_DSM_COG_10_N61_00_E009_00_DEM.tif", NULL);
+    int got_62_7 = g_file_test(path_62_7, G_FILE_TEST_EXISTS);
+    int got_61_9 = g_file_test(path_61_9, G_FILE_TEST_EXISTS);
+    g_free(path_62_7);
+    g_free(path_61_9);
+    if (!got_62_7 || !got_61_9) {
+        printf("Copernicus GLO-30: tiles not present and no CURL. Skip test.\n");
+        g_free(test_dir);
+        return 0;
+    }
+#    endif
+
+    srtm_init(test_dir);
+
+    /* Three coordinates from OpenStreetMap map links (lat, lon) */
+    struct coord_geo point1; /* map=12/62.0937/7.1433 */
+    point1.lat = 62.0937;
+    point1.lng = 7.1433;
+
+    struct coord_geo point2; /* map=12/61.5919/9.7018 */
+    point2.lat = 61.5919;
+    point2.lng = 9.7018;
+
+    struct coord_geo point3; /* map=15/61.36012/9.66941 */
+    point3.lat = 61.36012;
+    point3.lng = 9.66941;
+
+    int e1 = srtm_get_elevation(&point1);
+    int e2 = srtm_get_elevation(&point2);
+    int e3 = srtm_get_elevation(&point3);
+
+    /* Norway: expect valid elevation (not void), roughly 0-2500 m */
+    TEST_ASSERT(e1 != -32768, "Copernicus read at 62.0937,7.1433 should be valid");
+    TEST_ASSERT(e1 >= -50 && e1 <= 3000, "Copernicus elevation at point1 out of expected range");
+
+    TEST_ASSERT(e2 != -32768, "Copernicus read at 61.5919,9.7018 should be valid");
+    TEST_ASSERT(e2 >= -50 && e2 <= 3000, "Copernicus elevation at point2 out of expected range");
+
+    TEST_ASSERT(e3 != -32768, "Copernicus read at 61.36012,9.66941 should be valid");
+    TEST_ASSERT(e3 >= -50 && e3 <= 3000, "Copernicus elevation at point3 out of expected range");
+
+    printf("Copernicus GLO-30: tiles read correctly at 3 OSM locations (62.09,7.14 / 61.59,9.70 / 61.36,9.67).\n");
+    g_free(test_dir);
+    return 0;
+}
+#endif
+
 int main(void) {
     int failures = 0;
 
@@ -349,7 +622,14 @@ int main(void) {
     failures += test_hgt_corrupt_truncated();
     failures += test_hgt_missing_file();
     failures += test_hgt_tile_filename();
+    failures += test_hgt_tile_borders();
     failures += test_hgt_cache_memory();
+#ifdef HAVE_CURL
+    failures += test_srtm_hgt_download_and_read();
+#endif
+#ifdef HAVE_GEOTIFF
+    failures += test_copernicus_glo30_download_and_read();
+#endif
 
     if (failures == 0) {
         printf("All SRTM HGT file handling tests passed!\n");
