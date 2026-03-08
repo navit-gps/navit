@@ -18,7 +18,7 @@
 /* Versions */
 #cmakedefine GIT_VERSION "@GIT_VERSION@"
 #ifndef GIT_VERSION
-#define GIT_VERSION "xdevxgitxnotxfound"
+#define GIT_VERSION "not_built_from_git"
 #endif
 
 #define NAVIT_VARIANT "-"
