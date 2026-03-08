@@ -1930,7 +1930,8 @@ static void gui_internal_cmd_set_active_voice_profile(struct gui_priv *this, str
     active_attr.u.num = 1;
 
     // announce that the speech attribute has changed
-    callback_list_call_attr_1(this->nav->attr_cbl, attr_speech, this->nav);
+    // TODO: Callback speech
+    // callback_list_call_attr_1(this->nav->attr_cbl, attr_speech, this->nav);
     dbg(lvl_debug, "Changed voice to '%s'", vapn->profilename);
 
     gui_internal_prune_menu_count(this, 1, 0);
