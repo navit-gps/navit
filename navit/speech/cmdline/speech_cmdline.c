@@ -312,6 +312,7 @@ static int speechd_say(struct speech_priv *this, const char *text) {
                           text_tts = g_strdup_printf("%s", (char *)g_list_nth_data(samples, sample_index));
                           text_tts = g_strdup(&text_tts[strlen(missing_text)]);
                           argv[i] = g_strdup_printf("%s", text_tts);
+                          dbg(lvl_debug, "Spoken by TTS: %s", text_tts);
                           g_free(text_tts);
                       }
                    }
