@@ -253,9 +253,12 @@ GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const 
             return NULL;
         }
 
-        /* Build Overpass API query for general POIs */
-        const char *general_categories[] = {"amenity=cafe", "amenity=restaurant", "tourism=museum",
-                                            "tourism=viewpoint"};
+        /* Build Overpass API query for general POIs (including convenience, stores, malls, bike) */
+        const char *general_categories[] = {
+            "amenity=cafe", "amenity=restaurant", "tourism=museum", "tourism=viewpoint",
+            "shop=convenience", "shop=farm", "shop=supermarket", "shop=mall",
+            "shop=bicycle", "amenity=bicycle_repair_station"
+        };
         overpass_query = build_overpass_query(center, radius_km, general_categories,
                                               sizeof(general_categories) / sizeof(general_categories[0]));
 

@@ -365,10 +365,18 @@ GList *driver_break_poi_map_search_cabins(struct coord_geo *center, double radiu
     return pois;
 }
 
-/* Search for car POIs in maps */
+/* Search for car POIs in maps (including convenience, stores, malls, bike shops/repair) */
 GList *driver_break_poi_map_search_car_pois(struct coord_geo *center, double radius_km, struct mapset *ms) {
-    enum item_type car_poi_types[] = {type_poi_cafe, type_poi_restaurant, type_poi_museum_history, type_poi_viewpoint,
-                                      type_poi_zoo,  type_poi_picnic,     type_poi_attraction,     type_none};
+    enum item_type car_poi_types[] = {
+        type_poi_cafe, type_poi_restaurant, type_poi_museum_history, type_poi_viewpoint,
+        type_poi_zoo,  type_poi_picnic,     type_poi_attraction,
+        type_poi_shop_grocery,  /* convenience store, grocery */
+        type_poi_shopping,      /* supermarket, general store */
+        type_poi_mall,
+        type_poi_shop_bicycle,  /* bike shop, parts, repairs */
+        type_poi_repair_service,
+        type_none
+    };
 
-    return driver_break_poi_map_search(center, radius_km, car_poi_types, 7, ms);
+    return driver_break_poi_map_search(center, radius_km, car_poi_types, 12, ms);
 }

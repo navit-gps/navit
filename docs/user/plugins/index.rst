@@ -21,7 +21,21 @@ The plugin discovers nearby Points of Interest depending on travel mode. Search 
 
 - **Water** – Drinking water, fountain, spring (for hiking/cycling rest stops).
 - **Cabins and huts** – Wilderness hut, alpine hut, hostel, camping; with optional DNT/network detection for prioritization.
-- **Car** – Cafe, restaurant, museum, viewpoint, zoo, picnic, attraction (and similar amenities along driving routes).
+- **Car** – Cafe, restaurant, museum, viewpoint, zoo, picnic, attraction; convenience stores, general stores, farm shops, malls; places that offer bike repairs and bike parts (bicycle shop, repair service). See "All searched POIs" for exact tags.
+
+**All searched POIs (reference)**
+
+Below are the exact POI tags and types the plugin uses (OpenStreetMap/Overpass API or map item types). Data may come from map tiles or, when configured, from Overpass.
+
+- **Rest stop candidate locations** (where to suggest a stop along a route): ``highway=unclassified``, ``highway=service``, ``highway=track``, ``highway=driver_break_area``, ``highway=tertiary``.
+
+- **Water** (hiking/cycling): ``amenity=drinking_water``, ``amenity=fountain``, ``natural=spring``. Map types: potable water, fountain.
+
+- **Cabins and huts** (hiking/cycling, network detection): ``tourism=wilderness_hut``, ``tourism=alpine_hut``, ``tourism=hostel``, ``tourism=camp_site``. Map types: hostel, camping.
+
+- **Car** (along driving routes): map types cafe, restaurant, museum (history), viewpoint, zoo, picnic, attraction; shop_grocery (convenience store), shopping (supermarket/general store), mall; shop_bicycle (bike shop, parts, repairs), repair_service. OSM: ``amenity=cafe``, ``amenity=restaurant``, ``tourism=museum``, ``tourism=viewpoint``, ``tourism=zoo``, picnic, attraction; ``shop=convenience`` (map: shop_grocery), ``shop=supermarket`` (map: shopping), ``shop=mall``, ``shop=bicycle``, ``amenity=bicycle_repair_station``, general repair (map: repair_service).
+
+- **General POI fallback** (when enriching a rest stop with no specific categories): ``amenity=cafe``, ``amenity=restaurant``, ``tourism=museum``, ``tourism=viewpoint``; ``shop=convenience``, ``shop=farm``, ``shop=supermarket``, ``shop=mall``, ``shop=bicycle``, ``amenity=bicycle_repair_station``.
 
 **Distance from buildings (camping, allemannsretten)**
 
