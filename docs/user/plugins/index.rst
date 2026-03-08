@@ -21,7 +21,7 @@ The plugin discovers nearby Points of Interest depending on travel mode. Search 
 
 - **Water** – Drinking water, fountain, spring (for hiking/cycling rest stops).
 - **Cabins and huts** – Wilderness hut, alpine hut, hostel, camping; with optional DNT/network detection for prioritization.
-- **Car** – Cafe, restaurant, museum, viewpoint, picnic, attraction (and similar amenities along driving routes).
+- **Car** – Cafe, restaurant, museum, viewpoint, zoo, picnic, attraction (and similar amenities along driving routes).
 
 **Distance from buildings (camping, allemannsretten)**
 
@@ -59,8 +59,30 @@ The scaling factor is 2.5×, reflecting that a cyclist travels roughly two to th
 
 **Networks and priorities**
 
-- **DNT/network priority** – Optional priority for network huts (e.g. Norwegian Trekking Association, DNT) with configurable hut search radius.
-- **Hiking/pilgrimage priority** – Optional preference for official hiking and pilgrimage routes when validating or suggesting stops.
+- **DNT/network priority** – Optional priority for network huts (e.g. Norwegian Trekking Association, DNT) with configurable hut search radius. Set the network hut search radius according to typical spacing (see below); in remote areas consider raising it toward the upper range to include the next cabin.
+
+  **Networked cabin spacing (nearest-neighbor distances), for setting search radius:**
+
+  - **Norway (DNT)** – OpenStreetMap relation 1110420 (DNT cabins): 449 huts; average 10.56 km, median 8.83 km, max 100.45 km.
+  - **Sweden** – Overpass API (``tourism=wilderness_hut``, ``tourism=alpine_hut`` in Sweden): 439 huts total; average 12.31 km, median 8.24 km, max 83.85 km. STF (Svenska Turistföreningen) network only (42 huts): average 14.47 km, median 11.50 km, max 83.85 km.
+  - **Finland** – Overpass API (``tourism=wilderness_hut``, ``tourism=alpine_hut`` in Finland): 324 huts total; average 11.72 km, median 6.68 km, max 64.32 km. Metsähallitus network only (108 huts): average 16.05 km, median 5.31 km, max 247 km (remote areas).
+  - **Germany** – Overpass API (``tourism=wilderness_hut``, ``tourism=alpine_hut`` in Germany): 261 huts total; average 12.98 km, median 9.72 km, max 119.76 km. DAV (Deutscher Alpenverein) network: 22 huts in sample.
+  - **Switzerland** – Overpass API (``tourism=wilderness_hut``, ``tourism=alpine_hut`` in Switzerland): 328 huts total; average 4.40 km, median 3.82 km, max 23.70 km. SAC/CAS (Schweizer Alpen-Club) and similar: 66 huts in sample; denser spacing in the Alps.
+  - **Austria** – Overpass API (``tourism=wilderness_hut``, ``tourism=alpine_hut`` in Austria): 330 huts total; average 5.30 km, median 3.56 km, max 102.51 km. OeAV (Österreichischer Alpenverein) and similar: 22 huts in sample; denser spacing in the Alps.
+
+  **Open / non-networked huts** (no ``network`` tag, not operated by DNT/STF/DAV/SAC/OeAV/Metsähallitus etc.) can also show somewhat regular spacing in the same countries. Use the same Overpass tag set and exclude networked operators; nearest-neighbor distances (for setting cabin search radius) in the samples:
+
+  - **Germany** – 235 huts; average 14.29 km, median 10.22 km, max 119.76 km.
+  - **Switzerland** – 261 huts; average 4.93 km, median 4.03 km, max 23.70 km.
+  - **Austria** – 287 huts; average 5.71 km, median 3.65 km, max 102.51 km.
+  - **Sweden** – 395 huts; average 12.45 km, median 7.85 km, max 64.86 km.
+  - **Finland** – 206 huts; average 17.00 km, median 12.33 km, max 75.75 km.
+
+  Set cabin search radius in the typical-to-max range for the region (e.g. 5–15 km in the Alps, 10–20 km in Scandinavia/Germany/Finland for open huts).
+
+  Use at least the typical spacing (e.g. 10–12 km) so nearby huts are found; in remote areas consider raising the radius toward the max values.
+
+- **Hiking/pilgrimage priority** – Optional preference for official hiking and pilgrimage routes when validating or suggesting stops. The plugin treats segments tagged ``pilgrimage=yes`` or ``route=hiking`` as priority (e.g. Camino de Santiago and similar routes in OpenStreetMap). Facilities along pilgrimage routes (huts, hostels, water) are discovered with the same POI search (cabins, water); set the POI and cabin search radii in the same range as for national networks (e.g. 10–25 km) so stops along the route are found.
 
 **Hiking route validation**
 
