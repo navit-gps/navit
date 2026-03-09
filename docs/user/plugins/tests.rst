@@ -26,14 +26,16 @@ All executables are built under the Navit build directory as
 +-----------------------------------+------------------------------------------------------------------+
 | test_driver_break_integration     | End-to-end plugin functions (POI, SRTM, no map required)         |
 +-----------------------------------+------------------------------------------------------------------+
-| test_driver_break_route_integration| Rest intervals, POI discovery along routes, SRTM along route     |
+| test_driver_break_route_integration| Rest intervals, POI discovery, SRTM. Route: **Rondanestien** (rel. 1572954). |
 +-----------------------------------+------------------------------------------------------------------+
 
 SRTM and elevation tests (test_driver_break_srtm)
 ------------------------------------------------
 
-The SRTM test executable covers HGT file handling, tile borders, and optional
-download-and-read tests for both SRTM HGT and Copernicus GLO-30 GeoTIFF.
+The SRTM test executable covers HGT and GeoTIFF file handling, tile borders, and
+optional download-and-read tests. The plugin uses **Copernicus DEM GLO-30** (AWS S3)
+as the primary elevation source and **Viewfinder Panoramas dem3** (zone folders, e.g.
+``dem3/M32/N61E009.zip``) as fallback, then NASA SRTMGL1.
 
 **Always run (no network):**
 
@@ -46,18 +48,17 @@ download-and-read tests for both SRTM HGT and Copernicus GLO-30 GeoTIFF.
 **When built with CURL** (optional dependency):
 
 - **SRTM HGT download and read**  
-  Downloads HGT tiles (Viewfinder Panoramas primary, NASA SRTMGL1 fallback) for
-  two 1x1 degree tiles (N62E007, N61E009), extracts the ``.hgt`` files, then
-  verifies elevation read at three coordinates (Norway, from OpenStreetMap map
-  locations). If download or unzip fails (e.g. network unavailable), the test is
-  skipped with a message; no failure.
+  Downloads HGT tiles from Viewfinder Panoramas dem3 (fallback; zone M32 for Norway;
+  tile index at ``dem3list.txt``; a browser User-Agent is sent to avoid block) or
+  NASA SRTMGL1 for tiles N62E007, N61E009, extracts the ``.hgt`` files, then verifies
+  elevation read. If download or unzip fails, the test is skipped; no failure.
 
 **When built with libtiff and CURL** (optional):
 
 - **Copernicus GLO-30 download and read**  
-  Downloads Copernicus DEM GLO-30 GeoTIFF tiles from AWS S3 for the same two
-  tiles, then verifies elevation read at the same three coordinates. If
-  download fails, the test is skipped; no failure.
+  Downloads Copernicus DEM GLO-30 GeoTIFF tiles from the public AWS S3 bucket (no auth).
+  URL pattern: ``{base}/{tilename}/{tilename}.tif``. Verifies elevation read. If
+  download fails or returns non-TIFF (e.g. error page), the test is skipped; no failure.
 
 **Test coordinates (same for HGT and GeoTIFF):**
 
@@ -92,17 +93,51 @@ Or run all driver_break tests in one go:
      ./navit/plugin/driver_break/tests/test_driver_break_$t || exit 1
    done
 
+Or use CTest from the build directory:
+
+.. code-block:: bash
+
+   ctest -R driver_break --output-on-failure
+
 The CTest names (if registered from the plugin subdirectory) are:
 ``driver_break_config_test``, ``driver_break_db_test``, ``driver_break_finder_test``,
 ``driver_break_routing_test``, ``driver_break_srtm_test``, ``driver_break_integration_test``,
 ``driver_break_route_integration_test``.
 
+**Downloading map data for tests**
+
+To get map data so that Test 2 and Test 3 (POI discovery along Rondanestien
+and car route) find POIs, run (requires network and optionally ``osmium`` or
+``osmosis`` for PBF extract)::
+
+   ./navit/plugin/driver_break/tests/download_test_map_data.sh
+
+This downloads OSM data for bbox 9.5-11.35 E, 60.95-62.25 N (Rondanestien and
+Moelv-Aukrust car route), converts to Navit binary format, and writes
+``map_data/osm_bbox_9.5,60.95,11.35,62.25.bin``. The route integration test
+loads this file when present.
+
+**Downloading elevation data for tests**
+
+To get elevation data so that Test 4 (route integration) and the SRTM test can
+report real elevations along Rondanestien, run the helper script before the
+tests (requires network and ``curl``)::
+
+   ./navit/plugin/driver_break/tests/download_test_srtm_data.sh
+
+This tries **Copernicus DEM GLO-30** (AWS S3) first for each tile, then
+**Viewfinder Panoramas dem3** (e.g. M32/N61E009.zip), then NASA SRTMGL1, and
+writes into ``/tmp/test_srtm_hgt_download``. Then run ``test_driver_break_srtm``
+and ``test_driver_break_route_integration``; they will use that directory when
+tiles are present.
+
 Network and dependencies
 ------------------------
 
-- **Download tests** (SRTM HGT and Copernicus GLO-30) need network access and,
-  for Copernicus, libtiff. They are skipped if the build has no CURL or if
-  download/unzip fails.
+- **Download tests**: SRTM HGT (Viewfinder/NASA) needs network and CURL; it is
+  the primary elevation source used by the plugin. Copernicus GLO-30 download
+  test is optional (libtiff + CURL) and skipped if download fails or returns
+  non-TIFF.
 - **Route integration test** may report 0 POIs and elevation -32768 if no map
   or HGT data is present; that is expected. The test still verifies that the
   plugin code runs correctly.
@@ -117,8 +152,8 @@ All seven test executables exit with code 0 when all tests pass. Typical output:
 - **test_driver_break_finder:** ``All finder tests passed!``
 - **test_driver_break_routing:** ``All routing tests passed!``
 - **test_driver_break_srtm:** ``All SRTM HGT file handling tests passed!``  
-  If HGT download ran: ``SRTM HGT: tiles downloaded and read correctly at 3 OSM locations ...``  
-  If Copernicus download ran: ``Copernicus GLO-30: tiles read correctly at 3 OSM locations ...``
+  If Copernicus download ran: ``Copernicus GLO-30: tiles read correctly at 3 OSM locations (62.09,7.14 / 61.59,9.70 / 61.36,9.67).``  
+  If HGT download ran: ``SRTM HGT: tiles downloaded and read correctly at 3 OSM locations ...``
 - **test_driver_break_integration:** ``All integration tests passed!``
 - **test_driver_break_route_integration:** ``All integration tests passed!`` with
   rest interval and POI counts (may be 0 without map data).
@@ -129,39 +164,33 @@ with a non-zero code.
 Test results
 ------------
 
-Sample output from a full run of all seven test executables (build without map
-or HGT data; SRTM/Copernicus download tests may be skipped if CURL or network
-is unavailable). All tests passed (exit code 0).
+Sample output from a full run of all seven test executables with map data and
+elevation tiles present (after running ``download_test_map_data.sh`` and
+``download_test_srtm_data.sh``). All tests passed (exit code 0).
 
 .. code-block:: text
 
-   === test_driver_break_config ===
    Running Driver Break plugin configuration tests...
    All configuration tests passed!
 
-   === test_driver_break_db ===
    Running Driver Break plugin database tests...
    All database tests passed!
 
-   === test_driver_break_finder ===
    Running Driver Break plugin finder tests...
    All finder tests passed!
 
-   === test_driver_break_routing ===
    Running Driver Break plugin routing tests...
    All routing tests passed!
 
-   === test_driver_break_srtm ===
    Running SRTM HGT file handling tests...
+   Copernicus GLO-30: tiles read correctly at 3 OSM locations (62.09,7.14 / 61.59,9.70 / 61.36,9.67).
    All SRTM HGT file handling tests passed!
 
-   === test_driver_break_integration ===
    Running Driver Break plugin integration tests (using actual Navit/plugin functions)...
    All integration tests passed!
    Note: Some tests may return empty results if map/HGT data not available.
    This is expected - tests verify functions execute correctly.
 
-   === test_driver_break_route_integration ===
    Running Driver Break plugin integration tests (using actual Navit/plugin functions)...
    Testing rest interval creation and POI discovery along routes...
 
@@ -171,19 +200,34 @@ is unavailable). All tests passed (exit code 0).
    Test 2: POI discovery along hiking route
      Loading binfile map driver from: .../libmap_binfile.so
      binfile map driver loaded and initialized
-     Map data not found, skipping map-based POI search
-     Note: To test map-based POI discovery, run download_test_map_data.sh first
-     Total POIs found along hiking route: 0
+     Loading map data from: .../map_data/osm_bbox_9.5,60.95,11.35,62.25.bin
+     binfile map driver is registered
+     Calling map_new with type=binfile
+     map_new succeeded, map=...
+     Map loaded successfully (Rondanestien bbox)
+     Using map-based POI search (Rondanestien, map data loaded)
+     Found 11 cabins near Rondanestien mid (map data)
+     Found 65 water points near Rondanestien mid (map data)
+     Found 8 cabins near Rondanestien north / Hjerkinn (map data)
+     Total POIs found along hiking route: 84
 
    Test 3: POI discovery along car route
-     Map data not found, skipping map-based POI search
-     Note: To test map-based POI discovery, run download_test_map_data.sh first
-     Total POIs found along car route: 0
+     Loading map data from: .../map_data/osm_bbox_9.5,60.95,11.35,62.25.bin
+     binfile map driver is registered
+     Calling map_new with type=binfile
+     map_new succeeded, map=...
+     Map loaded successfully (Rondanestien bbox)
+     Using map-based POI search (map data loaded)
+     Found 375 POIs near Moelv (map data)
+     Found 401 POIs near Aukrustsenteret (map data)
+     Total POIs found along car route: 776
 
    Test 4: SRTM elevation along hiking route
-     Elevation at Bjøberg: -32768 m
-     Elevation at Bjordalsbu: -32768 m
-     Elevation at Aurlandsdalen: -32768 m
+     Using elevation data from: /tmp/test_srtm_hgt_download
+     Elevation at Rondanestien south (61.16,10.92): 667 m
+     Elevation at Rondanestien mid (61.59,10.35): 1136 m
+     Elevation at Rondanestien north / Hjerkinn (62.09,9.64): 997 m
+     Elevation gain (south to mid): 469 m
 
    Test 5: Cycling rest intervals creation
      Created 3 rest intervals for 100 km cycling route
@@ -196,8 +240,50 @@ is unavailable). All tests passed (exit code 0).
    This is expected - tests verify functions execute correctly.
    For full testing, ensure map data and HGT files are available.
 
-With map data and HGT/GeoTIFF tiles present (or with network for the download
-tests), the SRTM test may additionally print ``SRTM HGT: tiles downloaded and
-read correctly at 3 OSM locations ...`` and/or ``Copernicus GLO-30: tiles read
-correctly at 3 OSM locations ...``, and route integration may report non-zero
-POI counts and valid elevations.
+Without map data or elevation tiles, Test 2 and Test 3 report 0 POIs and Test 4
+reports ``no data (elevation tiles not present)``; the tests still pass. The
+route integration test uses **Rondanestien** (OSM relation 1572954, Målia–Hjerkinn)
+as the hiking route. When Copernicus or HGT tiles N61E009, N61E010, N62E009 are
+present in the elevation data directory, Test 4 reports elevations at south/mid/north
+waypoints (typically in the range 200–1800 m for the Rondane/Hjerkinn area).
+
+GeoTIFF and SRTM HGT download test results
+------------------------------------------
+
+When the SRTM test is built with CURL and has network access, it runs the
+**SRTM HGT download and read** test: it downloads tiles N62E007 and N61E009
+from Viewfinder (or NASA fallback), extracts the ``.hgt`` files, and verifies
+elevation at three Norway coordinates. When built with libtiff and CURL, it
+also runs the **Copernicus GLO-30 download and read** test: it downloads
+GeoTIFF tiles from AWS S3 and verifies elevation. The route integration test
+uses Rondanestien waypoints and tiles N61E009, N61E010, N62E009 when
+``download_test_srtm_data.sh`` has been run.
+
+**Example: SRTM test output when Copernicus GLO-30 download/read runs successfully**
+
+.. code-block:: text
+
+   Running SRTM HGT file handling tests...
+   Copernicus GLO-30: tiles read correctly at 3 OSM locations (62.09,7.14 / 61.59,9.70 / 61.36,9.67).
+   All SRTM HGT file handling tests passed!
+
+**Example: SRTM test output when download is skipped (no network or CURL)**
+
+.. code-block:: text
+
+   Running SRTM HGT file handling tests...
+   All SRTM HGT file handling tests passed!
+
+If only one download test runs (e.g. CURL but no libtiff), you may see only
+the SRTM HGT line or only the Copernicus line. If a download fails (e.g. 404 or
+timeout), the test prints a skip message and still exits 0:
+
+.. code-block:: text
+
+   SRTM HGT: tile download failed or unzip failed (network/unavailable). Skip read test.
+
+or
+
+.. code-block:: text
+
+   Copernicus GLO-30: tile download failed or skipped (network/unavailable). Skip read test.

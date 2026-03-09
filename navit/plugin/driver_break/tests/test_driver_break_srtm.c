@@ -24,6 +24,9 @@ static size_t curl_write_file_cb(void *ptr, size_t size, size_t nmemb, void *use
     return fwrite(ptr, size, nmemb, (FILE *)user);
 }
 
+/* Browser User-Agent required by Viewfinder (blocks scripted downloads without it). */
+#define CURL_USERAGENT_VIEWFINDER "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+
 /* Download URL to filepath. Returns 1 on success. */
 static int download_file_to(const char *url, const char *filepath) {
     FILE *fp = fopen(filepath, "wb");
@@ -36,10 +39,14 @@ static int download_file_to(const char *url, const char *filepath) {
         return 0;
     }
     curl_easy_setopt(curl, CURLOPT_URL, url);
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, CURL_USERAGENT_VIEWFINDER);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_file_cb);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+    curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
+    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 30L);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 300L);
     CURLcode res = curl_easy_perform(curl);
     fclose(fp);
     curl_easy_cleanup(curl);
@@ -439,34 +446,43 @@ static int test_hgt_cache_memory(void) {
 }
 
 #ifdef HAVE_CURL
-#define SRTM_URL_VIEWFINDER "https://viewfinderpanoramas.org/data/SRTM1v3.0/SRTM1/"
+#define SRTM_URL_VIEWFINDER_DEM3 "http://www.viewfinderpanoramas.org/dem3/"
 #define SRTM_URL_NASA "https://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL1.003/2000.02.11/"
 
-/* Download one SRTM HGT tile (zip from Viewfinder or NASA), extract .hgt into test_dir. Returns 1 on success. */
+/* Viewfinder dem3 zone for Norway/Scandinavia (same as plugin). */
+static const char *viewfinder_zone(int lat, int lon) {
+    if (lat >= 60 && lat <= 63 && lon >= 6 && lon <= 12)
+        return "M32";
+    return NULL;
+}
+
+/* Download one SRTM HGT tile (zip from Viewfinder dem3 or NASA), extract .hgt into test_dir. Returns 1 on success. */
 static int download_hgt_tile(int lon, int lat, const char *test_dir) {
     char lat_dir = (lat >= 0) ? 'N' : 'S';
     char lon_dir = (lon >= 0) ? 'E' : 'W';
     int lat_abs = abs(lat);
     int lon_abs = abs(lon);
     char *filename = g_strdup_printf("%c%02d%c%03d.hgt", lat_dir, lat_abs, lon_dir, lon_abs);
-    char *zipname = g_strdup_printf("%s.zip", filename);
-    char *zip_path = g_build_filename(test_dir, zipname, NULL);
-    char *url_vf = g_strdup_printf("%s%s", SRTM_URL_VIEWFINDER, zipname);
+    char *tilename_zip = g_strdup_printf("%c%02d%c%03d.zip", lat_dir, lat_abs, lon_dir, lon_abs);
+    char *zip_path = g_build_filename(test_dir, tilename_zip, NULL);
+    const char *zone = viewfinder_zone(lat, lon);
+    char *url_vf = zone ? g_strdup_printf("%s%s%s", SRTM_URL_VIEWFINDER_DEM3, zone, tilename_zip) : NULL;
     char *url_nasa = g_strdup_printf("%s%c%02d%c%03d.SRTMGL1.hgt.zip", SRTM_URL_NASA, lat_dir, lat_abs, lon_dir, lon_abs);
 
     int ok = 0;
-    if (download_file_to(url_vf, zip_path))
+    if (url_vf && download_file_to(url_vf, zip_path))
         ok = 1;
     if (!ok && download_file_to(url_nasa, zip_path))
         ok = 1;
 
-    g_free(url_vf);
+    if (url_vf)
+        g_free(url_vf);
     g_free(url_nasa);
 
     if (!ok) {
         g_unlink(zip_path);
         g_free(zip_path);
-        g_free(zipname);
+        g_free(tilename_zip);
         g_free(filename);
         return 0;
     }
@@ -474,11 +490,28 @@ static int download_hgt_tile(int lon, int lat, const char *test_dir) {
     char *extract_cmd = g_strdup_printf("cd '%s' && unzip -o -q '%s' '%s' 2>/dev/null", test_dir, zip_path, filename);
     int unzip_ret = system(extract_cmd);
     g_free(extract_cmd);
+    char *hgt_path = g_build_filename(test_dir, filename, NULL);
+    if (unzip_ret != 0 || !g_file_test(hgt_path, G_FILE_TEST_EXISTS)) {
+        /* NASA zips often contain NxxEyy.SRTMGL1.hgt instead of NxxEyy.hgt; extract and rename */
+        char *nasa_name = g_strdup_printf("%c%02d%c%03d.SRTMGL1.hgt", lat_dir, lat_abs, lon_dir, lon_abs);
+        extract_cmd = g_strdup_printf("cd '%s' && unzip -o -q '%s' '%s' 2>/dev/null", test_dir, zip_path, nasa_name);
+        unzip_ret = system(extract_cmd);
+        g_free(extract_cmd);
+        if (unzip_ret == 0) {
+            char *nasa_path = g_build_filename(test_dir, nasa_name, NULL);
+            if (g_file_test(nasa_path, G_FILE_TEST_EXISTS))
+                g_rename(nasa_path, hgt_path);
+            g_free(nasa_path);
+        }
+        g_free(nasa_name);
+    }
+    int result = g_file_test(hgt_path, G_FILE_TEST_EXISTS) ? 1 : 0;
+    g_free(hgt_path);
     g_unlink(zip_path);
     g_free(zip_path);
-    g_free(zipname);
+    g_free(tilename_zip);
     g_free(filename);
-    return (unzip_ret == 0);
+    return result;
 }
 
 /* Download SRTM HGT tiles for the same three OSM locations as the GeoTIFF test; verify read. */
@@ -486,6 +519,7 @@ static int test_srtm_hgt_download_and_read(void) {
     char *test_dir = g_strdup("/tmp/test_srtm_hgt_download");
     g_mkdir_with_parents(test_dir, 0755);
 
+    printf("  Downloading HGT tiles (Viewfinder Panoramas / NASA SRTM)...\n");
     /* Tiles for (62.0937,7.1433), (61.5919,9.7018), (61.36012,9.66941): N62E007, N61E009 */
     int got_62_7 = download_hgt_tile(7, 62, test_dir);
     int got_61_9 = download_hgt_tile(9, 61, test_dir);
@@ -526,9 +560,34 @@ static int test_srtm_hgt_download_and_read(void) {
 #endif
 
 #ifdef HAVE_GEOTIFF
+/* Check file has TIFF magic (II or MM in first 2 bytes). Returns 1 if valid TIFF, 0 otherwise. */
+static int file_is_valid_tiff(const char *filepath) {
+    FILE *f = fopen(filepath, "rb");
+    if (!f)
+        return 0;
+    unsigned char magic[4];
+    size_t n = fread(magic, 1, 4, f);
+    fclose(f);
+    if (n < 2)
+        return 0;
+    /* Little-endian TIFF: 0x49 0x49 (II); big-endian: 0x4D 0x4D (MM). Reject HTML/XML (e.g. 0x3C 0x3F = "<?"). */
+    if (magic[0] == 0x49 && magic[1] == 0x49)
+        return 1;
+    if (magic[0] == 0x4D && magic[1] == 0x4D)
+        return 1;
+    return 0;
+}
+
 #    ifdef HAVE_CURL
+/* Download Copernicus GeoTIFF; if response is not a valid TIFF (e.g. S3 XML/HTML error), treat as failure. */
 static int download_copernicus_tile(const char *url, const char *filepath) {
-    return download_file_to(url, filepath);
+    if (!download_file_to(url, filepath))
+        return 0;
+    if (!file_is_valid_tiff(filepath)) {
+        g_unlink(filepath);
+        return 0;
+    }
+    return 1;
 }
 #    endif
 
@@ -540,10 +599,13 @@ static int test_copernicus_glo30_download_and_read(void) {
     g_mkdir_with_parents(test_dir, 0755);
 
 #    ifdef HAVE_CURL
-    /* Download tiles needed for the three test points */
+    /* Download tiles from public AWS S3; tiles are in subdirs: {base}/{tilename}/{tilename}.tif */
+    printf("  Downloading Copernicus GLO-30 GeoTIFF from AWS S3...\n");
     const char *base = "https://copernicus-dem-30m.s3.amazonaws.com/";
-    char *url_62_7 = g_strdup_printf("%sCopernicus_DSM_COG_10_N62_00_E007_00_DEM.tif", base);
-    char *url_61_9 = g_strdup_printf("%sCopernicus_DSM_COG_10_N61_00_E009_00_DEM.tif", base);
+    const char *tile_62_7 = "Copernicus_DSM_COG_10_N62_00_E007_00_DEM";
+    const char *tile_61_9 = "Copernicus_DSM_COG_10_N61_00_E009_00_DEM";
+    char *url_62_7 = g_strdup_printf("%s%s/%s.tif", base, tile_62_7, tile_62_7);
+    char *url_61_9 = g_strdup_printf("%s%s/%s.tif", base, tile_61_9, tile_61_9);
     char *path_62_7 = g_build_filename(test_dir, "Copernicus_DSM_COG_10_N62_00_E007_00_DEM.tif", NULL);
     char *path_61_9 = g_build_filename(test_dir, "Copernicus_DSM_COG_10_N61_00_E009_00_DEM.tif", NULL);
 
@@ -561,15 +623,15 @@ static int test_copernicus_glo30_download_and_read(void) {
         return 0;
     }
 #    else
-    /* Without CURL we only run if tiles are already present (e.g. from a previous run) */
+    /* Without CURL we only run if tiles are already present and valid (e.g. from a previous run) */
     char *path_62_7 = g_build_filename(test_dir, "Copernicus_DSM_COG_10_N62_00_E007_00_DEM.tif", NULL);
     char *path_61_9 = g_build_filename(test_dir, "Copernicus_DSM_COG_10_N61_00_E009_00_DEM.tif", NULL);
-    int got_62_7 = g_file_test(path_62_7, G_FILE_TEST_EXISTS);
-    int got_61_9 = g_file_test(path_61_9, G_FILE_TEST_EXISTS);
+    int got_62_7 = g_file_test(path_62_7, G_FILE_TEST_EXISTS) && file_is_valid_tiff(path_62_7);
+    int got_61_9 = g_file_test(path_61_9, G_FILE_TEST_EXISTS) && file_is_valid_tiff(path_61_9);
     g_free(path_62_7);
     g_free(path_61_9);
     if (!got_62_7 || !got_61_9) {
-        printf("Copernicus GLO-30: tiles not present and no CURL. Skip test.\n");
+        printf("Copernicus GLO-30: tiles not present or invalid (no CURL). Skip test.\n");
         g_free(test_dir);
         return 0;
     }

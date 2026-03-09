@@ -1,6 +1,7 @@
 #!/bin/bash
 # Download OSM map data for test routes
-# Test routes cover Norway: 60.8-61.3°N, 7.2-11.0°E
+# Primary test route: Rondanestien (OSM relation 1572954), Målia–Hjerkinn, Norway
+# Bbox covers Rondanestien and car route (Moelv–Aukrust): 9.5-11.35°E, 60.95-62.25°N
 # Uses reliable sources: osmtoday.com (primary) and Geofabrik (fallback)
 # NOTE: Overpass API is NOT used (unreliable, frequent timeouts)
 
@@ -8,10 +9,10 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MAP_DATA_DIR="${SCRIPT_DIR}/map_data"
-MAP_NAME="osm_bbox_7.2,60.8,11.0,61.3"
+MAP_NAME="osm_bbox_9.5,60.95,11.35,62.25"
 
-echo "Downloading OSM map data for test routes..."
-echo "Bounding box: 7.2°E, 60.8°N to 11.0°E, 61.3°N (Norway)"
+echo "Downloading OSM map data for test routes (Rondanestien + car route)..."
+echo "Bounding box: 9.5°E, 60.95°N to 11.35°E, 62.25°N (Norway)"
 echo "Using reliable sources: osmtoday.com (primary) and Geofabrik (fallback)"
 echo "NOTE: Overpass API is NOT used (unreliable, frequent timeouts)"
 
@@ -25,7 +26,7 @@ BIN_FILE="${MAP_DATA_DIR}/${MAP_NAME}.bin"
 # Method 1: Try osmtoday.com for small bounding box extract (fastest, most reliable for test routes)
 echo ""
 echo "Method 1: Downloading from osmtoday.com (reliable source for small extracts)..."
-OSM_TODAY_URL="https://osmtoday.com/api/download?bbox=7.2,60.8,11.0,61.3"
+OSM_TODAY_URL="https://osmtoday.com/api/download?bbox=9.5,60.95,11.35,62.25"
 
 OSM_INPUT=""
 if command -v curl &> /dev/null; then
@@ -33,7 +34,7 @@ if command -v curl &> /dev/null; then
     if curl -L -f -o "${OSM_FILE}" "${OSM_TODAY_URL}" 2>&1 | tail -3; then
         if [ -f "${OSM_FILE}" ] && [ -s "${OSM_FILE}" ]; then
             # Check if it's PBF or XML
-            if file "${OSM_FILE}" | grep -q "Protocol Buffer"; then
+            if file "${OSM_FILE}" | grep -qE "Protocol Buffer|Protocolbuffer"; then
                 echo "Downloaded PBF from osmtoday.com: $(du -h "${OSM_FILE}" | cut -f1)"
                 OSM_INPUT="${OSM_FILE}"
             elif head -1 "${OSM_FILE}" | grep -q "<?xml" && grep -q "<osm" "${OSM_FILE}"; then
@@ -55,7 +56,7 @@ elif command -v wget &> /dev/null; then
     echo "Downloading from osmtoday.com..."
     if wget -O "${OSM_FILE}" "${OSM_TODAY_URL}" 2>&1 | tail -3; then
         if [ -f "${OSM_FILE}" ] && [ -s "${OSM_FILE}" ]; then
-            if file "${OSM_FILE}" | grep -q "Protocol Buffer"; then
+            if file "${OSM_FILE}" | grep -qE "Protocol Buffer|Protocolbuffer"; then
                 echo "Downloaded PBF from osmtoday.com: $(du -h "${OSM_FILE}" | cut -f1)"
                 OSM_INPUT="${OSM_FILE}"
             elif head -1 "${OSM_FILE}" | grep -q "<?xml" && grep -q "<osm" "${OSM_FILE}"; then
@@ -88,7 +89,7 @@ if [ -z "${OSM_INPUT}" ]; then
         if curl -L -f -o "${OSM_PBF}" "${GEOFABRIK_URL}" 2>&1 | tail -3; then
             if [ -f "${OSM_PBF}" ] && [ -s "${OSM_PBF}" ]; then
                 echo "Downloaded Norway extract: $(du -h "${OSM_PBF}" | cut -f1)"
-                echo "Extracting test region (7.2°E, 60.8°N to 11.0°E, 61.3°N)..."
+                echo "Extracting test region (9.5°E, 60.95°N to 11.35°E, 62.25°N)..."
                 EXTRACT_NEEDED=1
                 OSM_INPUT="${OSM_PBF}"
             else
@@ -122,12 +123,12 @@ fi
 
 # Extract bounding box from PBF file if we downloaded full Norway extract
 if [ "${EXTRACT_NEEDED}" = "1" ] && [ -f "${OSM_PBF}" ]; then
-    echo "Extracting bounding box (7.2°E, 60.8°N to 11.0°E, 61.3°N) from Norway extract..."
+    echo "Extracting bounding box (9.5°E, 60.95°N to 11.35°E, 62.25°N) from Norway extract..."
 
     # Check if osmium-tool is available (best tool for PBF extraction)
     if command -v osmium &> /dev/null; then
         echo "Using osmium-tool to extract bounding box..."
-        osmium extract -b 7.2,60.8,11.0,61.3 "${OSM_PBF}" -o "${OSM_FILE}.pbf" 2>&1 | tail -5
+        osmium extract -b 9.5,60.95,11.35,62.25 "${OSM_PBF}" -o "${OSM_FILE}.pbf" 2>&1 | tail -5
         if [ -f "${OSM_FILE}.pbf" ] && [ -s "${OSM_FILE}.pbf" ]; then
             echo "Extracted region: $(du -h "${OSM_FILE}.pbf" | cut -f1)"
             OSM_INPUT="${OSM_FILE}.pbf"
@@ -137,7 +138,7 @@ if [ "${EXTRACT_NEEDED}" = "1" ] && [ -f "${OSM_PBF}" ]; then
         fi
     elif command -v osmosis &> /dev/null; then
         echo "Using Osmosis to extract bounding box..."
-        osmosis --read-pbf "${OSM_PBF}" --bounding-box left=7.2 bottom=60.8 right=11.0 top=61.3 --write-xml "${OSM_FILE}" 2>&1 | tail -5
+        osmosis --read-pbf "${OSM_PBF}" --bounding-box left=9.5 bottom=60.95 right=11.35 top=62.25 --write-xml "${OSM_FILE}" 2>&1 | tail -5
         if [ -f "${OSM_FILE}" ] && [ -s "${OSM_FILE}" ]; then
             echo "Extracted region: $(du -h "${OSM_FILE}" | cut -f1)"
             OSM_INPUT="${OSM_FILE}"
@@ -157,7 +158,7 @@ fi
 # Verify we have valid OSM data
 if [ -n "${OSM_INPUT}" ] && [ -f "${OSM_INPUT}" ] && [ -s "${OSM_INPUT}" ]; then
     # Check if it's PBF or XML
-    if file "${OSM_INPUT}" | grep -q "Protocol Buffer"; then
+    if file "${OSM_INPUT}" | grep -qE "Protocol Buffer|Protocolbuffer"; then
         echo "PBF file detected: ${OSM_INPUT}"
         FINAL_OSM="${OSM_INPUT}"
     elif head -1 "${OSM_INPUT}" | grep -q "<?xml" && grep -q "<osm" "${OSM_INPUT}"; then
@@ -183,13 +184,15 @@ echo "Converting OSM data to Navit binary format..."
 MAPTOOL=""
 if [ -f "${SCRIPT_DIR}/../../../../build/maptool/maptool" ]; then
     MAPTOOL="${SCRIPT_DIR}/../../../../build/maptool/maptool"
+elif [ -f "${SCRIPT_DIR}/../../../../build/navit/maptool/maptool" ]; then
+    MAPTOOL="${SCRIPT_DIR}/../../../../build/navit/maptool/maptool"
 elif command -v maptool &> /dev/null; then
     MAPTOOL="maptool"
 else
     echo "Warning: maptool not found. OSM data downloaded but not converted to Navit format."
     echo "To convert, run:"
-    if file "${FINAL_OSM}" | grep -q "Protocol Buffer"; then
-        echo "  ${MAPTOOL} -i ${FINAL_OSM} ${BIN_FILE}"
+    if file "${FINAL_OSM}" | grep -qE "Protocol Buffer|Protocolbuffer"; then
+        echo "  ${MAPTOOL} -P -i ${FINAL_OSM} ${BIN_FILE}"
     else
         echo "  grep -v '^[[:space:]]*$' ${FINAL_OSM} | ${MAPTOOL} ${BIN_FILE}"
     fi
@@ -198,10 +201,10 @@ fi
 
 # Convert using maptool
 echo "Running maptool conversion..."
-if file "${FINAL_OSM}" | grep -q "Protocol Buffer"; then
-    # PBF file - use -i flag
+if file "${FINAL_OSM}" | grep -qE "Protocol Buffer|Protocolbuffer"; then
+    # PBF file - use -P (protobuf) and -i (input file)
     echo "Converting PBF file to Navit binary format..."
-    "${MAPTOOL}" -i "${FINAL_OSM}" "${BIN_FILE}" 2>&1 | tail -10
+    "${MAPTOOL}" -P -i "${FINAL_OSM}" "${BIN_FILE}" 2>&1 | tail -10
 else
     # OSM XML file - pipe through maptool
     echo "Converting OSM XML to Navit binary format..."

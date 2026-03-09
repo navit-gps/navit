@@ -134,11 +134,17 @@ add_executable(test_driver_break_route_integration
     ../driver_break_srtm.c
 )
 
-target_link_libraries(test_driver_break_route_integration
+target_link_libraries(test_driver_break_route_integration PRIVATE
     glib-2.0
     m
     navit_core
 )
+
+if(LIBTIFF_FOUND AND LIBTIFF_LIBRARIES)
+    target_compile_definitions(test_driver_break_route_integration PRIVATE HAVE_GEOTIFF)
+    target_link_libraries(test_driver_break_route_integration PRIVATE ${LIBTIFF_LIBRARIES})
+    target_include_directories(test_driver_break_route_integration PRIVATE ${LIBTIFF_INCLUDE_DIRS})
+endif()
 
 target_include_directories(test_driver_break_route_integration PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../..
