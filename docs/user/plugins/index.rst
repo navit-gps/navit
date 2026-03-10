@@ -117,7 +117,7 @@ the plugin searches for nearby fuel stations (``amenity=fuel``) and surfaces sug
 rest stop information. Fuel stops are recorded in a dedicated history table, and additional tables
 exist for adaptive fuel consumption learning (``driver_break_fuel_samples``) and trip summaries
 (``driver_break_trip_summaries``). These tables are populated from manual fuel data and from live
-backends (OBD-II, J1939, and future aftermarket ECU integrations) so that Navit can refine range
+backends (OBD-II, J1939, and aftermarket ECU integrations) so that Navit can refine range
 estimates over time without schema changes.
 
 **Supported vehicle fuel types**
