@@ -25,7 +25,8 @@ static size_t curl_write_file_cb(void *ptr, size_t size, size_t nmemb, void *use
 }
 
 /* Browser User-Agent required by Viewfinder (blocks scripted downloads without it). */
-#define CURL_USERAGENT_VIEWFINDER "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+#    define CURL_USERAGENT_VIEWFINDER                                                                                  \
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
 
 /* Download URL to filepath. Returns 1 on success. */
 static int download_file_to(const char *url, const char *filepath) {
