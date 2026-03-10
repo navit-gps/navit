@@ -1866,11 +1866,35 @@ struct vehicle_and_profilename {
  * @return true if the voice is active, false otherwise. 
  */ 
 static int gui_internal_is_active_voice(struct gui_priv *this, struct speech *profile) {
-    struct attr active_voice;
+    struct attr active_voice_attr;
+    struct attr active_voice_name_attr;
+    struct attr active_voice_active_attr;
+    struct attr profile_name_attr;
+    struct attr profile_active_attr;
     int active = 0;
+        
+    active_voice_attr.type = attr_speech;
+    active_voice_name_attr.type = attr_name;
+    active_voice_active_attr.type = attr_active;
+                                                         
+    profile_name_attr.type = attr_name;
+    profile_active_attr.type = attr_active;
 
-    navit_get_attr(this->nav, attr_speech, &active_voice, NULL);
-    active = active_voice.u.speech == profile;
+    // Voice profile 
+    speech_get_attr(profile, attr_name, &profile_name_attr, NULL);
+    speech_get_attr(profile, attr_active, &profile_active_attr, NULL);
+    dbg(lvl_debug, "Voice name: %s", profile_name_attr.u.str);
+    dbg(lvl_debug, "Voice active: %i", profile_active_attr.u.num);                                
+                                   
+    // Active voice profile
+    navit_get_attr(this->nav, attr_speech, &active_voice_attr, NULL);
+    speech_get_attr(active_voice_attr.u.speech, attr_name, &active_voice_name_attr, NULL);
+    speech_get_attr(active_voice_attr.u.speech, attr_active, &active_voice_active_attr, NULL);
+    dbg(lvl_debug, "Active voice name: %s", active_voice_name_attr.u.str);
+    dbg(lvl_debug, "Active voice active: %i", active_voice_active_attr.u.num);
+
+    active = active_voice_name_attr.u.str == profile_name_attr.u.str;
+    dbg(lvl_debug, "Profile is active: %i", active);
 
     return active;
 }
@@ -1918,20 +1942,19 @@ static void save_vehicle_xml(struct vehicle *v) {
  */
 static void gui_internal_cmd_set_active_voice_profile(struct gui_priv *this, struct widget *wm, void *data) {
     struct voice_and_profilename *vapn = data;
+    struct attr active_speech_attr;
+    struct attr active_active_attr;
     struct attr speech_attr;
     struct attr active_attr;
 
     speech_attr.type = attr_speech;
     speech_attr.u.speech = vapn->speech;
-    navit_set_attr(this->nav, &speech_attr);
-
-    navit_get_attr(this->nav, &speech_attr);
-    speech_get_attr(speech_attr.u.speech, attr_active, &active_attr, NULL);
+    active_attr.type = attr_active;
     active_attr.u.num = 1;
 
-    // announce that the speech attribute has changed
-    // TODO: Callback speech
-    // callback_list_call_attr_1(this->nav->attr_cbl, attr_speech, this->nav);
+    navit_get_attr(this->nav, attr_speech, &active_speech_attr, NULL);
+    navit_set_attr(this->nav, &speech_attr);
+    speech_set_attr(active_speech_attr.u.speech, &active_attr);
     dbg(lvl_debug, "Changed voice to '%s'", vapn->profilename);
 
     gui_internal_prune_menu_count(this, 1, 0);
