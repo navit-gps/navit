@@ -106,6 +106,17 @@ For hiking routes, the plugin can validate that the route avoids forbidden road 
 
 Optional energy-based routing uses a physical model (total weight, rolling and air resistance, recuperation on downhill) to compute segment cost, inspired by BRouter's kinematic model. Configurable via total weight and use_energy_routing.
 
+**Fuel tracking and gas stations**
+
+The plugin stores a basic per-vehicle fuel profile in its SQLite database (fuel type, tank capacity,
+average consumption, OBD-II/J1939 availability flags, manual ethanol % for flex-fuel). Users can set
+the current fuel level and log fuel stops; from this and the configured average consumption, the plugin
+computes an estimated remaining range. When an active route is present (car/truck) and remaining range
+falls below the distance to destination plus a configurable buffer (and below a low-range threshold),
+the plugin searches for nearby fuel stations (``amenity=fuel``) and surfaces suggestions alongside
+rest stop information. Future versions can use OBD-II (ELM327) and J1939 to fill in live fuel rate and
+level, and adaptive logging will refine consumption estimates over time.
+
 **SRTM elevation**
 
 The plugin uses **Copernicus DEM GLO-30** as the primary elevation source for download: GeoTIFF tiles from the public AWS S3 bucket (no authentication). URL pattern: ``https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_{LAT}_{LON}_DEM/Copernicus_DSM_COG_10_{LAT}_{LON}_DEM.tif``. When built with libtiff, the plugin downloads these tiles and reads elevation from them. If Copernicus download fails or libtiff is not available, the plugin falls back to **Viewfinder Panoramas** dem3: HGT 1 arc-second tiles in zone folders, ``http://www.viewfinderpanoramas.org/dem3/{ZONE}/{TILENAME}.zip`` (e.g. ``dem3/M32/N61E009.zip`` for Norway). The exact path for each tile is listed in ``viewfinderpanoramas.org/dem3list.txt``. Viewfinder blocks scripted downloads without a browser User-Agent; the plugin sends a browser-like User-Agent when downloading. A second fallback is NASA SRTMGL1. The plugin supports listing available regions, downloading a region by name (Copernicus GeoTIFF, then Viewfinder HGT zip, then NASA zip), and querying elevation at a coordinate. Elevation is used where applicable for routing and display. Tile borders are handled by per-point lookup: each coordinate is mapped to one 1x1 degree tile via the tile index (floor of longitude and latitude).
@@ -116,4 +127,4 @@ The plugin registers as an OSD (type ``rest``). With the internal GUI, menu acti
 
 **Testing**
 
-The Driver Break plugin has a dedicated test suite (configuration, database, finder, routing, SRTM/HGT and GeoTIFF download-and-read, integration). The route integration tests use **Rondanestien** (OpenStreetMap relation 1572954, Målia–Hjerkinn) as the hiking route so that POI discovery can find DNT huts, water, and other POIs along the trail. For test executables, how to run them, and expected results, see :doc:`tests`.
+The Driver Break plugin has a dedicated test suite (configuration, database, finder, routing, SRTM/HGT and GeoTIFF download-and-read, integration). The route integration tests use **Rondanestien** (OpenStreetMap relation 1572954, Målia–Hjerkinn) as the hiking route so that POI discovery can find DNT huts, water, and other POIs along the trail. Additional hiking test routes (Mogen–Myrdal, Gjendesheim–Vetledalseter) are available as GPX in ``tests/route_gpx/``; waypoints are DNT huts with name and elevation for use with the height profile and energy-based routing. For test executables, how to run them, and expected results, see :doc:`tests`.

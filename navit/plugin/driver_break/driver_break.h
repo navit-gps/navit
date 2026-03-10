@@ -45,10 +45,25 @@ enum driver_break_vehicle_type {
 };
 
 /**
- * @brief Rest period configuration structure
+ * @brief Fuel type enumeration for vehicle profile
+ */
+enum driver_break_fuel_type {
+    DRIVER_BREAK_FUEL_PETROL = 0,
+    DRIVER_BREAK_FUEL_DIESEL = 1,
+    DRIVER_BREAK_FUEL_FLEX = 2,
+    DRIVER_BREAK_FUEL_CNG = 3,
+    DRIVER_BREAK_FUEL_LNG = 4,
+    DRIVER_BREAK_FUEL_LPG = 5,
+    DRIVER_BREAK_FUEL_HYDROGEN = 6,
+    DRIVER_BREAK_FUEL_ETHANOL = 7
+};
+
+/**
+ * @brief Rest period and fuel configuration structure
  *
  * Contains all configurable parameters for rest stop management,
- * including vehicle-specific limits, POI search radii, and routing options.
+ * including vehicle-specific limits, POI search radii, routing options,
+ * and basic fuel profile / range estimation settings.
  */
 struct driver_break_config {
     int vehicle_type; /* 0=car, 1=truck, 2=hiking, 3=cycling */
@@ -93,6 +108,17 @@ struct driver_break_config {
     /* Energy-based routing */
     int use_energy_routing; /* 1 to enable energy-based routing */
     double total_weight;    /* Total weight for energy calculations (kg) */
+
+    /* Fuel profile and range estimation (per-vehicle) */
+    int fuel_type;                 /* enum driver_break_fuel_type */
+    int fuel_tank_capacity_l;      /* Tank capacity in liters (or equivalent unit for gas fuels) */
+    int fuel_avg_consumption_x10;  /* Average consumption in 0.1 L/100km units */
+    int fuel_obd_available;        /* 1 if OBD-II adapter available (auto-detected or user-set) */
+    int fuel_j1939_available;      /* 1 if J1939 available (truck mode) */
+    int fuel_ethanol_manual_pct;   /* Manual ethanol % for flex-fuel when PID 0x52 unavailable (0-100) */
+    int fuel_low_warning_km;       /* Low fuel warning threshold (km of range remaining) */
+    int fuel_search_buffer_km;     /* Extra km buffer for gas station search (beyond destination distance) */
+    int fuel_high_load_threshold;  /* High-load detection threshold (% above baseline, e.g. 25) */
 };
 
 /**
@@ -155,6 +181,21 @@ struct driver_break_stop_history {
     int was_mandatory;
 };
 
+/**
+ * @brief Fuel stop history entry
+ *
+ * Represents a fuel stop event stored in the database.
+ */
+struct driver_break_fuel_stop {
+    time_t timestamp;
+    struct coord_geo coord;
+    double fuel_added;        /* Amount of fuel added (liters / kg / m³) */
+    double fuel_level_after;  /* Fuel level after fill (same unit) */
+    double cost;              /* Total cost (optional, 0 if unknown) */
+    char *currency;           /* Optional currency code, e.g. \"EUR\" */
+    int ethanol_pct;          /* Ethanol % for flex-fuel (0-100, or -1 if unknown) */
+};
+
 /* Forward declarations */
 struct navit;
 struct route;
@@ -176,6 +217,11 @@ struct driver_break_priv {
     time_t current_break_start_time;         /* 0 if no break in progress */
     struct coord_geo current_break_location; /* Location where break started */
     int active;
+
+    /* Fuel state (runtime) */
+    double fuel_current;          /* Current fuel amount (liters / kg / m³) */
+    double fuel_rate_l_h;         /* Current fuel rate estimate (L/h or equivalent) */
+    double fuel_remaining_range;  /* Remaining range estimate (km) */
 };
 
 #endif /* NAVIT_PLUGIN_DRIVER_BREAK_H */

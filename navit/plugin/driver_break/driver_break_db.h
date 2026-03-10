@@ -91,4 +91,12 @@ int driver_break_db_load_config(struct driver_break_db *db, struct driver_break_
  */
 void driver_break_free_history_entry(struct driver_break_stop_history *entry);
 
+/**
+ * @brief Add a fuel stop entry to history
+ * @param db Database handle
+ * @param stop Fuel stop entry to add
+ * @return 1 on success, 0 on failure
+ */
+int driver_break_db_add_fuel_stop(struct driver_break_db *db, struct driver_break_fuel_stop *stop);
+
 #endif /* NAVIT_PLUGIN_DRIVER_BREAK_DB_H */

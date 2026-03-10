@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Navit Driver Break plugin - generate_hiking_route_gpx.sh"
+     xmlns="http://www.topografix.com/GPX/1/1"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Hiking route: Gjendesheim - Vetledalseter</name>
+    <desc>DNT huts with elevation for height profile. Start node 791106132, end node 1356403887.</desc>
+  </metadata>
+  <rte>
+    <name>Gjendesheim to Vetledalseter</name>
+    <rtept lat="61.4943459" lon="8.8126376">
+      <ele>994</ele>
+      <name>Gjendesheim</name>
+    </rtept>
+    <rtept lat="61.8450712" lon="7.1861445">
+      <ele>515</ele>
+      <name>Vetledalseter</name>
+    </rtept>
+  </rte>
+  <trk>
+    <name>Gjendesheim to Vetledalseter (track)</name>
+    <trkseg>
+      <trkpt lat="61.4943459" lon="8.8126376"><ele>994</ele></trkpt>
+      <trkpt lat="61.8450712" lon="7.1861445"><ele>515</ele></trkpt>
+    </trkseg>
+  </trk>
+  <wpt lat="61.4943459" lon="8.8126376"><ele>994</ele><name>Gjendesheim</name></wpt>
+  <wpt lat="61.8450712" lon="7.1861445"><ele>515</ele><name>Vetledalseter</name></wpt>
+</gpx>

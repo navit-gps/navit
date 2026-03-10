@@ -94,6 +94,16 @@ static int driver_break_db_load_config_value(const char *key, int value, struct 
         {"min_distance_from_glaciers", offsetof(struct driver_break_config, min_distance_from_glaciers), 0, MAX_DISTANCE_METERS, 0},
         {"driver_break_interval_min_hours", offsetof(struct driver_break_config, driver_break_interval_min_hours), 0, MAX_HOURS_PER_DAY_24, 0},
         {"driver_break_interval_max_hours", offsetof(struct driver_break_config, driver_break_interval_max_hours), 0, MAX_HOURS_PER_DAY_24, 0},
+        /* Fuel and range configuration (stored as integers/scaled values) */
+        {"fuel_type", offsetof(struct driver_break_config, fuel_type), 0, 7, 1},
+        {"fuel_tank_capacity_l", offsetof(struct driver_break_config, fuel_tank_capacity_l), 0, MAX_CONFIG_VALUE, 0},
+        {"fuel_avg_consumption_x10", offsetof(struct driver_break_config, fuel_avg_consumption_x10), 0, MAX_CONFIG_VALUE, 0},
+        {"fuel_obd_available", offsetof(struct driver_break_config, fuel_obd_available), 0, 1, 1},
+        {"fuel_j1939_available", offsetof(struct driver_break_config, fuel_j1939_available), 0, 1, 1},
+        {"fuel_ethanol_manual_pct", offsetof(struct driver_break_config, fuel_ethanol_manual_pct), 0, 100, 1},
+        {"fuel_low_warning_km", offsetof(struct driver_break_config, fuel_low_warning_km), 0, MAX_CONFIG_VALUE, 0},
+        {"fuel_search_buffer_km", offsetof(struct driver_break_config, fuel_search_buffer_km), 0, MAX_CONFIG_VALUE, 0},
+        {"fuel_high_load_threshold", offsetof(struct driver_break_config, fuel_high_load_threshold), 0, 100, 0},
         {NULL, 0, 0, 0, 0},
     };
 
@@ -189,6 +199,25 @@ struct driver_break_db *driver_break_db_new(const char *db_path) {
     rc = sqlite3_exec(db->db, sql, NULL, 0, &err_msg);
     if (rc != SQLITE_OK) {
         dbg(lvl_error, "Driver Break plugin: SQL error creating config table: %s", err_msg);
+        sqlite3_free(err_msg);
+    }
+
+    /* Create fuel stop history table */
+    sql = "CREATE TABLE IF NOT EXISTS driver_break_fuel_stops ("
+          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+          "timestamp INTEGER NOT NULL,"
+          "latitude REAL NOT NULL,"
+          "longitude REAL NOT NULL,"
+          "fuel_added REAL,"
+          "fuel_level_after REAL,"
+          "cost REAL,"
+          "currency TEXT,"
+          "ethanol_pct INTEGER"
+          ");";
+
+    rc = sqlite3_exec(db->db, sql, NULL, 0, &err_msg);
+    if (rc != SQLITE_OK) {
+        dbg(lvl_error, "Driver Break plugin: SQL error creating fuel stop table: %s", err_msg);
         sqlite3_free(err_msg);
     }
 
@@ -324,7 +353,17 @@ int driver_break_db_save_config(struct driver_break_db *db, struct driver_break_
                           "min_distance_from_buildings",
                           "poi_search_radius_km",
                           "driver_break_interval_min_hours",
-                          "driver_break_interval_max_hours"};
+                          "driver_break_interval_max_hours",
+                          /* Fuel configuration keys */
+                          "fuel_type",
+                          "fuel_tank_capacity_l",
+                          "fuel_avg_consumption_x10",
+                          "fuel_obd_available",
+                          "fuel_j1939_available",
+                          "fuel_ethanol_manual_pct",
+                          "fuel_low_warning_km",
+                          "fuel_search_buffer_km",
+                          "fuel_high_load_threshold"};
 
     int values[] = {config->vehicle_type,
                     config->car_soft_limit_hours,
@@ -337,7 +376,17 @@ int driver_break_db_save_config(struct driver_break_db *db, struct driver_break_
                     config->min_distance_from_buildings,
                     config->poi_search_radius_km,
                     config->driver_break_interval_min_hours,
-                    config->driver_break_interval_max_hours};
+                    config->driver_break_interval_max_hours,
+                    /* Fuel configuration values */
+                    config->fuel_type,
+                    config->fuel_tank_capacity_l,
+                    config->fuel_avg_consumption_x10,
+                    config->fuel_obd_available,
+                    config->fuel_j1939_available,
+                    config->fuel_ethanol_manual_pct,
+                    config->fuel_low_warning_km,
+                    config->fuel_search_buffer_km,
+                    config->fuel_high_load_threshold};
 
     int i;
     for (i = 0; i < G_N_ELEMENTS(keys); i++) {
@@ -428,4 +477,32 @@ void driver_break_free_history_entry(struct driver_break_stop_history *entry) {
     }
 
     g_free(entry);
+}
+
+int driver_break_db_add_fuel_stop(struct driver_break_db *db, struct driver_break_fuel_stop *stop) {
+    char *sql;
+    char *err_msg = NULL;
+    int rc;
+
+    if (!db || !stop) {
+        return 0;
+    }
+
+    sql = sqlite3_mprintf(
+        "INSERT INTO driver_break_fuel_stops "
+        "(timestamp, latitude, longitude, fuel_added, fuel_level_after, cost, currency, ethanol_pct) "
+        "VALUES (%ld, %f, %f, %f, %f, %f, %Q, %d);",
+        (long)stop->timestamp, stop->coord.lat, stop->coord.lng, stop->fuel_added, stop->fuel_level_after,
+        stop->cost, stop->currency ? stop->currency : "", stop->ethanol_pct);
+
+    rc = sqlite3_exec(db->db, sql, NULL, 0, &err_msg);
+    sqlite3_free(sql);
+
+    if (rc != SQLITE_OK) {
+        dbg(lvl_error, "Driver Break plugin: SQL error adding fuel stop: %s", err_msg);
+        sqlite3_free(err_msg);
+        return 0;
+    }
+
+    return 1;
 }

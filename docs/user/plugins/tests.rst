@@ -16,7 +16,7 @@ All executables are built under the Navit build directory as
 +===================================+==================================================================+
 | test_driver_break_config          | Configuration parsing and defaults                               |
 +-----------------------------------+------------------------------------------------------------------+
-| test_driver_break_db              | SQLite database operations (history, config storage)             |
+| test_driver_break_db              | SQLite database operations (history, config, fuel stops)         |
 +-----------------------------------+------------------------------------------------------------------+
 | test_driver_break_finder          | Rest stop finder and location validation                         |
 +-----------------------------------+------------------------------------------------------------------+
@@ -131,6 +131,27 @@ writes into ``/tmp/test_srtm_hgt_download``. Then run ``test_driver_break_srtm``
 and ``test_driver_break_route_integration``; they will use that directory when
 tiles are present.
 
+**Hiking test routes (GPX output)**
+
+The plugin provides GPX files for two hiking routes (DNT huts) so that hut names
+and elevations are visible in height profile data. Use with energy-based routing
+in Navit (e.g. cycling or hiking profile with ``use_energy_routing``). Generate
+the GPX files::
+
+   ./navit/plugin/driver_break/tests/generate_hiking_route_gpx.sh
+
+Output is written to ``navit/plugin/driver_break/tests/route_gpx/``:
+
+- **Main route** (``hiking_route_mogen_myrdal.gpx``): Mogen (start, node 1356402304)
+  -> Tråastølen (via, 872147024) -> Finsehytta (via, 444092409) -> Myrdal Fjellstove
+  (end, way 1012805346). Waypoints have name and elevation (950 m, 1240 m, 1223 m, 867 m).
+
+- **Alternative route** (``hiking_route_gjendesheim_vetledalseter.gpx``): Gjendesheim
+  (start, node 791106132) -> Vetledalseter (end, node 1356403887). Elevations 994 m, 515 m.
+
+Each GPX contains ``<rte>``, ``<trk>``, and ``<wpt>`` with ``<ele>`` and ``<name>`` so
+the height profile and POI names are available when the route is loaded in Navit.
+
 Network and dependencies
 ------------------------
 
@@ -148,7 +169,10 @@ Expected results
 All seven test executables exit with code 0 when all tests pass. Typical output:
 
 - **test_driver_break_config:** ``All configuration tests passed!``
-- **test_driver_break_db:** ``All database tests passed!``
+- **test_driver_break_db:** ``All database tests passed!``  
+  Verifies creation of the database, rest stop history insert/retrieve/clear, configuration save/load
+  (including fuel profile fields such as tank capacity and average consumption), and fuel stop logging
+  into the ``driver_break_fuel_stops`` table.
 - **test_driver_break_finder:** ``All finder tests passed!``
 - **test_driver_break_routing:** ``All routing tests passed!``
 - **test_driver_break_srtm:** ``All SRTM HGT file handling tests passed!``  

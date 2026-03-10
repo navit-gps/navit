@@ -213,6 +213,8 @@ int driver_break_cmd_start_break(struct navit *nav, char *function, struct attr 
 int driver_break_cmd_end_break(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_configure_intervals(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_configure_overnight(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+int driver_break_cmd_set_fuel_level(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+int driver_break_cmd_log_fuel_stop(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 
 static struct command_table driver_break_commands[] = {
     {"driver_break_suggest_stop",        command_cast(driver_break_cmd_suggest_stop)       },
@@ -222,6 +224,8 @@ static struct command_table driver_break_commands[] = {
     {"driver_break_end_break",           command_cast(driver_break_cmd_end_break)          },
     {"driver_break_configure_intervals", command_cast(driver_break_cmd_configure_intervals)},
     {"driver_break_configure_overnight", command_cast(driver_break_cmd_configure_overnight)},
+    {"driver_break_set_fuel_level",      command_cast(driver_break_cmd_set_fuel_level)    },
+    {"driver_break_log_fuel_stop",       command_cast(driver_break_cmd_log_fuel_stop)     },
     /* Backward compatibility aliases */
     {"rest_suggest_stop",                command_cast(driver_break_cmd_suggest_stop)       },
     {"rest_show_history",                command_cast(driver_break_cmd_show_history)       },
@@ -521,7 +525,146 @@ int driver_break_cmd_show_history(struct navit *nav, char *function, struct attr
 /* Configure command */
 int driver_break_cmd_configure(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
     dbg(lvl_info, "Driver Break plugin: Configure command");
-    /* This would open configuration menu */
+    /* Placeholder for future global configuration menu (rest + fuel). */
+    return 1;
+}
+
+/* Set current fuel level command (manual entry, universal) */
+int driver_break_cmd_set_fuel_level(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+    char *endptr = NULL;
+    double value;
+
+    (void)in;
+    (void)out;
+
+    dbg(lvl_info, "Driver Break plugin: Set fuel level command (function='%s')", function ? function : "");
+
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        dbg(lvl_error, "Driver Break plugin: Plugin not found");
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
+    }
+
+    priv = (struct driver_break_priv *)plugin;
+
+    if (!function || *function == '\0') {
+        navit_add_message(nav, "Driver Break plugin: Set fuel level requires a numeric argument (e.g. 25.0)");
+        return 0;
+    }
+
+    value = g_ascii_strtod(function, &endptr);
+    if (endptr == function || !g_ascii_isspace(*endptr) && *endptr != '\0') {
+        navit_add_message(nav, "Driver Break plugin: Invalid fuel level value");
+        return 0;
+    }
+
+    if (value < 0.0) {
+        navit_add_message(nav, "Driver Break plugin: Fuel level cannot be negative");
+        return 0;
+    }
+
+    priv->fuel_current = value;
+
+    /* Recompute remaining range based on configured average consumption (L/100km, scaled x10) */
+    if (priv->config.fuel_avg_consumption_x10 > 0) {
+        double avg_l_per_100 = priv->config.fuel_avg_consumption_x10 / 10.0;
+        priv->fuel_remaining_range = (priv->fuel_current / avg_l_per_100) * 100.0;
+    } else {
+        priv->fuel_remaining_range = 0.0;
+    }
+
+    dbg(lvl_info,
+        "Driver Break plugin: Fuel level set to %.2f (tank capacity=%d L, avg=%.1f L/100km, remaining range=%.1f km)",
+        priv->fuel_current, priv->config.fuel_tank_capacity_l,
+        priv->config.fuel_avg_consumption_x10 / 10.0, priv->fuel_remaining_range);
+
+    navit_add_message(nav, "Driver Break plugin: Fuel level updated");
+    return 1;
+}
+
+/* Log a fuel stop (manual, all vehicles) */
+int driver_break_cmd_log_fuel_stop(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+    struct driver_break_fuel_stop stop;
+    struct attr position_attr;
+    char *endptr = NULL;
+    double added = 0.0;
+
+    (void)in;
+    (void)out;
+
+    dbg(lvl_info, "Driver Break plugin: Log fuel stop command (function='%s')", function ? function : "");
+
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        dbg(lvl_error, "Driver Break plugin: Plugin not found");
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
+    }
+
+    priv = (struct driver_break_priv *)plugin;
+    if (!priv->db) {
+        navit_add_message(nav, "Driver Break plugin: Database not available");
+        return 0;
+    }
+
+    if (function && *function) {
+        added = g_ascii_strtod(function, &endptr);
+        if (endptr == function || (!g_ascii_isspace(*endptr) && *endptr != '\0')) {
+            navit_add_message(nav, "Driver Break plugin: Invalid fuel added value");
+            return 0;
+        }
+        if (added < 0.0) {
+            navit_add_message(nav, "Driver Break plugin: Fuel added cannot be negative");
+            return 0;
+        }
+    }
+
+    /* Update current fuel level with added amount (if any) */
+    priv->fuel_current += added;
+    if (priv->config.fuel_tank_capacity_l > 0 && priv->fuel_current > priv->config.fuel_tank_capacity_l) {
+        priv->fuel_current = priv->config.fuel_tank_capacity_l;
+    }
+
+    /* Fill stop structure */
+    memset(&stop, 0, sizeof(stop));
+    stop.timestamp = time(NULL);
+    stop.fuel_added = added;
+    stop.fuel_level_after = priv->fuel_current;
+    stop.cost = 0.0;
+    stop.currency = NULL;
+    stop.ethanol_pct = priv->config.fuel_ethanol_manual_pct;
+
+    /* Get current position */
+    if (navit_get_attr(nav, attr_position_coord_geo, &position_attr, NULL) && position_attr.u.coord_geo) {
+        stop.coord = *position_attr.u.coord_geo;
+    } else {
+        stop.coord.lat = 0.0;
+        stop.coord.lng = 0.0;
+    }
+
+    if (!driver_break_db_add_fuel_stop(priv->db, &stop)) {
+        navit_add_message(nav, "Driver Break plugin: Failed to log fuel stop");
+        return 0;
+    }
+
+    /* Recompute remaining range */
+    if (priv->config.fuel_avg_consumption_x10 > 0) {
+        double avg_l_per_100 = priv->config.fuel_avg_consumption_x10 / 10.0;
+        priv->fuel_remaining_range = (priv->fuel_current / avg_l_per_100) * 100.0;
+    } else {
+        priv->fuel_remaining_range = 0.0;
+    }
+
+    navit_add_message(nav, "Driver Break plugin: Fuel stop logged");
+    dbg(lvl_info,
+        "Driver Break plugin: Fuel stop logged (added=%.2f, level_after=%.2f, remaining_range=%.1f km, ethanol=%d%%)",
+        added, priv->fuel_current, priv->fuel_remaining_range, priv->config.fuel_ethanol_manual_pct);
+
     return 1;
 }
 

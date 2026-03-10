@@ -9,6 +9,7 @@
 #include "../driver_break.h"
 #include "../driver_break_db.h"
 #include <glib.h>
+#include <sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -188,13 +189,24 @@ static int test_db_save_load_config(void) {
 
     struct driver_break_config config;
     memset(&config, 0, sizeof(config));
-    config.vehicle_type = 1; /* Truck */
+    config.vehicle_type = DRIVER_BREAK_VEHICLE_TRUCK;
     config.car_soft_limit_hours = 7;
     config.car_max_hours = 10;
     config.truck_mandatory_break_after_hours = 4;
     config.truck_mandatory_break_duration_min = 45;
     config.min_distance_from_buildings = 150;
     config.poi_search_radius_km = 15;
+
+    /* Fuel-related configuration fields */
+    config.fuel_type = DRIVER_BREAK_FUEL_DIESEL;
+    config.fuel_tank_capacity_l = 70;
+    config.fuel_avg_consumption_x10 = 85; /* 8.5 L/100km */
+    config.fuel_obd_available = 1;
+    config.fuel_j1939_available = 0;
+    config.fuel_ethanol_manual_pct = 10;
+    config.fuel_low_warning_km = 100;
+    config.fuel_search_buffer_km = 25;
+    config.fuel_high_load_threshold = 30;
 
     int result = driver_break_db_save_config(db, &config);
     TEST_ASSERT(result == 1, "Config save failed");
@@ -203,11 +215,76 @@ static int test_db_save_load_config(void) {
     memset(&loaded_config, 0, sizeof(loaded_config));
     result = driver_break_db_load_config(db, &loaded_config);
     TEST_ASSERT(result == 1, "Config load failed");
-    TEST_ASSERT(loaded_config.vehicle_type == 1, "Vehicle type mismatch");
+    TEST_ASSERT(loaded_config.vehicle_type == DRIVER_BREAK_VEHICLE_TRUCK, "Vehicle type mismatch");
     TEST_ASSERT(loaded_config.car_soft_limit_hours == 7, "Car soft limit mismatch");
     TEST_ASSERT(loaded_config.truck_mandatory_break_after_hours == 4, "Truck break hours mismatch");
     TEST_ASSERT(loaded_config.min_distance_from_buildings == 150, "Min distance mismatch");
 
+    /* Verify fuel configuration persisted correctly */
+    TEST_ASSERT(loaded_config.fuel_type == DRIVER_BREAK_FUEL_DIESEL, "Fuel type mismatch");
+    TEST_ASSERT(loaded_config.fuel_tank_capacity_l == 70, "Fuel tank capacity mismatch");
+    TEST_ASSERT(loaded_config.fuel_avg_consumption_x10 == 85, "Fuel avg consumption mismatch");
+    TEST_ASSERT(loaded_config.fuel_obd_available == 1, "Fuel OBD flag mismatch");
+    TEST_ASSERT(loaded_config.fuel_j1939_available == 0, "Fuel J1939 flag mismatch");
+    TEST_ASSERT(loaded_config.fuel_ethanol_manual_pct == 10, "Fuel ethanol manual pct mismatch");
+    TEST_ASSERT(loaded_config.fuel_low_warning_km == 100, "Fuel low warning km mismatch");
+    TEST_ASSERT(loaded_config.fuel_search_buffer_km == 25, "Fuel search buffer km mismatch");
+    TEST_ASSERT(loaded_config.fuel_high_load_threshold == 30, "Fuel high load threshold mismatch");
+
+    driver_break_db_destroy(db);
+    unlink(db_path);
+    g_free(db_path);
+    return 0;
+}
+
+static int test_db_add_fuel_stop(void) {
+    char *db_path = create_temp_db();
+    struct driver_break_db *db = driver_break_db_new(db_path);
+    TEST_ASSERT(db != NULL, "Database creation failed");
+
+    struct driver_break_fuel_stop stop;
+    memset(&stop, 0, sizeof(stop));
+    stop.timestamp = time(NULL);
+    stop.coord.lat = 59.9111;
+    stop.coord.lng = 10.7528;
+    stop.fuel_added = 40.0;
+    stop.fuel_level_after = 55.0;
+    stop.cost = 800.0;
+    stop.currency = g_strdup("NOK");
+    stop.ethanol_pct = 5;
+
+    int result = driver_break_db_add_fuel_stop(db, &stop);
+    TEST_ASSERT(result == 1, "Fuel stop insert failed");
+
+    /* Verify via direct SQLite query */
+    sqlite3 *raw = NULL;
+    sqlite3_stmt *stmt = NULL;
+    int rc = sqlite3_open(db_path, &raw);
+    TEST_ASSERT(rc == SQLITE_OK, "Failed to open raw SQLite database");
+
+    rc = sqlite3_prepare_v2(raw,
+                            "SELECT COUNT(*), SUM(fuel_added), SUM(fuel_level_after), MAX(ethanol_pct) "
+                            "FROM driver_break_fuel_stops;",
+                            -1, &stmt, NULL);
+    TEST_ASSERT(rc == SQLITE_OK, "Failed to prepare fuel stop count query");
+
+    rc = sqlite3_step(stmt);
+    TEST_ASSERT(rc == SQLITE_ROW, "No row returned from fuel stop table");
+
+    int count = sqlite3_column_int(stmt, 0);
+    double sum_added = sqlite3_column_double(stmt, 1);
+    double sum_level = sqlite3_column_double(stmt, 2);
+    int max_ethanol = sqlite3_column_int(stmt, 3);
+
+    TEST_ASSERT(count == 1, "Fuel stop count mismatch");
+    TEST_ASSERT(sum_added == 40.0, "Fuel added sum mismatch");
+    TEST_ASSERT(sum_level == 55.0, "Fuel level sum mismatch");
+    TEST_ASSERT(max_ethanol == 5, "Ethanol pct mismatch");
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(raw);
+
+    g_free(stop.currency);
     driver_break_db_destroy(db);
     unlink(db_path);
     g_free(db_path);
@@ -224,6 +301,7 @@ int main(void) {
     failures += test_db_get_history();
     failures += test_db_clear_history();
     failures += test_db_save_load_config();
+    failures += test_db_add_fuel_stop();
 
     if (failures == 0) {
         printf("All database tests passed!\n");

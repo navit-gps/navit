@@ -138,6 +138,17 @@ static void driver_break_config_default(struct driver_break_config *config) {
     config->use_energy_routing = 0; /* Disabled by default */
     config->total_weight = 80.0;    /* 80 kg default (person + gear) */
 
+    /* Fuel profile defaults */
+    config->fuel_type = DRIVER_BREAK_FUEL_PETROL;
+    config->fuel_tank_capacity_l = 50;    /* 50 L tank */
+    config->fuel_avg_consumption_x10 = 75; /* 7.5 L/100km */
+    config->fuel_obd_available = 0;
+    config->fuel_j1939_available = 0;
+    config->fuel_ethanol_manual_pct = 0;
+    config->fuel_low_warning_km = 80;     /* warn when <80 km remaining */
+    config->fuel_search_buffer_km = 20;   /* default buffer for fuel search */
+    config->fuel_high_load_threshold = 25; /* 25% above baseline */
+
     config->vehicle_type = DRIVER_BREAK_VEHICLE_CAR; /* Default to car */
 
     dbg(lvl_debug,
@@ -411,6 +422,75 @@ static void driver_break_check_timeout(struct event_timeout *ev, void *data) {
     if (priv->session.mandatory_break_required && priv->current_route) {
         /* Trigger rest stop search */
         dbg(lvl_debug, "Driver Break plugin: Checking for rest stops");
+    }
+
+    /* Fuel/range check for cars and trucks: trigger fuel station search when range is low. */
+    if ((priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_CAR
+         || priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_TRUCK)
+        && priv->current_route) {
+        struct attr dist_attr;
+        double distance_km = 0.0;
+        double buffer_km = priv->config.fuel_search_buffer_km > 0 ? priv->config.fuel_search_buffer_km : 20.0;
+
+        if (route_get_attr(priv->current_route, attr_destination_length, &dist_attr, NULL)) {
+            distance_km = (double)dist_attr.u.num / 1000.0;
+        }
+
+        if (distance_km > 0.0 && priv->fuel_remaining_range > 0.0) {
+            double threshold = distance_km + buffer_km;
+            if (priv->fuel_remaining_range < threshold
+                && priv->fuel_remaining_range < (double)priv->config.fuel_low_warning_km) {
+                struct mapset *ms = navit_get_mapset(priv->nav);
+                struct attr pos_attr;
+                struct coord_geo center;
+                GList *fuel_pois = NULL;
+
+                if (ms && navit_get_attr(priv->nav, attr_position_coord_geo, &pos_attr, NULL)
+                    && pos_attr.u.coord_geo) {
+                    center = *pos_attr.u.coord_geo;
+                    /* Search within reachable range plus a small buffer (km). */
+                    double search_radius_km = priv->fuel_remaining_range;
+                    if (search_radius_km < buffer_km)
+                        search_radius_km = buffer_km;
+
+                    fuel_pois = driver_break_poi_map_search_fuel(&center, search_radius_km, ms,
+                                                                 priv->config.vehicle_type, priv->config.fuel_type);
+                }
+
+                if (fuel_pois) {
+                    int count = g_list_length(fuel_pois);
+                    char msg[128];
+                    snprintf(msg, sizeof(msg),
+                             "Driver Break plugin: Low range (%.0f km). Found %d fuel stations within %.0f km.",
+                             priv->fuel_remaining_range, count, priv->fuel_remaining_range);
+                    navit_add_message(priv->nav, msg);
+                    dbg(lvl_info, "%s", msg);
+
+                    /* Free temporary list; driver_break_poi instances are owned by this list. */
+                    GList *l = fuel_pois;
+                    while (l) {
+                        struct driver_break_poi *poi = (struct driver_break_poi *)l->data;
+                        if (poi) {
+                            g_free(poi->name);
+                            g_free(poi->type);
+                            g_free(poi->category);
+                            g_free(poi->opening_hours);
+                            g_free(poi);
+                        }
+                        l = g_list_next(l);
+                    }
+                    g_list_free(fuel_pois);
+                } else {
+                    if (priv->fuel_remaining_range < threshold) {
+                        navit_add_message(priv->nav,
+                                          "Driver Break plugin: Low range and no fuel stations found within range");
+                        dbg(lvl_info,
+                            "Driver Break plugin: Low range (%.0f km) and no fuel stations found within threshold",
+                            priv->fuel_remaining_range);
+                    }
+                }
+            }
+        }
     }
 }
 
