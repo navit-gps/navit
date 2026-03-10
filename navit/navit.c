@@ -139,7 +139,7 @@ struct navit {
     struct map *former_destination;
     struct point pressed, last, current;
     int button_pressed, moved, popped, zoomed;
-    int center_timeout;
+    long center_timeout;
     int autozoom_secs;
     int autozoom_min;
     int autozoom_max;
