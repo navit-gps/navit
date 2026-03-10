@@ -13,13 +13,13 @@
  * as published by the Free Software Foundation.
  */
 
+#include "navit_safety.h"
 #include "attr.h"
 #include "config.h"
 #include "debug.h"
 #include "navit.h"
 #include "osd.h"
 #include "plugin.h"
-#include "navit_safety.h"
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
@@ -87,8 +87,7 @@ static struct osd_methods navit_safety_osd_meth = {
  * @param attrs Attributes from XML (e.g. type="navit_safety")
  * @return OSD private data or NULL
  */
-static struct osd_priv *navit_safety_osd_new(struct navit *nav, struct osd_methods *meth,
-                                              struct attr **attrs) {
+static struct osd_priv *navit_safety_osd_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
     struct navit_safety_priv *priv;
     (void)attrs;
 

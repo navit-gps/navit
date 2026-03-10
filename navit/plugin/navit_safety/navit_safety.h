@@ -27,8 +27,8 @@ enum navit_safety_remote_mode {
 
 /** @brief Plugin configuration (defaults per spec) */
 struct navit_safety_config {
-    int remote_mode;                 /**< Off / Auto / Always; default Auto */
-    int poi_density_threshold_km;    /**< Inter-POI spacing above which remote activates; default 80 */
+    int remote_mode;                /**< Off / Auto / Always; default Auto */
+    int poi_density_threshold_km;   /**< Inter-POI spacing above which remote activates; default 80 */
     int koppen_trigger;             /**< Use Köppen climate zone; default 1 */
     int fuel_buffer_standard_km;    /**< Standard fuel buffer; default 25 */
     int fuel_buffer_remote_km;      /**< Remote fuel buffer; default 85 */
@@ -49,4 +49,3 @@ struct navit_safety_config {
 void navit_safety_config_default(struct navit_safety_config *config);
 
 #endif /* NAVIT_PLUGIN_NAVIT_SAFETY_H */
-

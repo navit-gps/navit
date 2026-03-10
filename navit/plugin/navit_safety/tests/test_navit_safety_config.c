@@ -24,12 +24,12 @@ void debug_printf(dbg_level level, const char *module, const int mlen, const cha
     (void)fmt;
 }
 
-#define TEST_ASSERT(cond, message)                                                                                       \
-    do {                                                                                                                 \
-        if (!(cond)) {                                                                                                  \
+#define TEST_ASSERT(cond, message)                                                                                     \
+    do {                                                                                                               \
+        if (!(cond)) {                                                                                                 \
             fprintf(stderr, "FAIL: %s:%d: %s\n", __FILE__, __LINE__, message);                                         \
-            return 1;                                                                                                   \
-        }                                                                                                               \
+            return 1;                                                                                                  \
+        }                                                                                                              \
     } while (0)
 
 static int test_config_defaults(void) {
