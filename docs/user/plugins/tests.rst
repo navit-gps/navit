@@ -28,6 +28,7 @@ All executables are built under the Navit build directory as
 +-----------------------------------+------------------------------------------------------------------+
 | test_driver_break_route_integration| Rest intervals, POI discovery, SRTM. Route: **Rondanestien** (rel. 1572954). |
 +-----------------------------------+------------------------------------------------------------------+
+| test_driver_break_obd_j1939       | OBD-II/J1939 backend logic: MAF-based fuel rate, J1939 scaling.  |
 
 SRTM and elevation tests (test_driver_break_srtm)
 ------------------------------------------------
@@ -181,6 +182,21 @@ All seven test executables exit with code 0 when all tests pass. Typical output:
 - **test_driver_break_integration:** ``All integration tests passed!``
 - **test_driver_break_route_integration:** ``All integration tests passed!`` with
   rest interval and POI counts (may be 0 without map data).
+- **test_driver_break_obd_j1939:** ``All OBD-II/J1939 backend tests passed!`` exercising:
+
+  - MAF-based fuel rate estimation for:
+
+    - Petrol engines at cruise (typical 10–20 g/s MAF, 2–4 L/h).
+    - Diesel engines under load (30+ g/s MAF, higher L/h than petrol).
+    - Flex-fuel vehicles at different ethanol contents (E10 vs E85), verifying
+      that E85 requires a higher volume fuel rate than E10 for the same MAF.
+
+  - J1939 PGN scaling:
+
+    - PGN 65266 (FEEA) fuel rate scaling (0.05 L/h per bit) tested with realistic
+      raw values (e.g. raw=1000 -> 50 L/h).
+    - PGN 65276 (FEF4) fuel level scaling (0.4 % per bit) tested with representative
+      levels for heavy trucks (e.g. raw=50 -> 20 % of a 400 L tank).
 
 Any failure is reported to stderr with file and line; the executable then exits
 with a non-zero code.

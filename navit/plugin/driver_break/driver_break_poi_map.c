@@ -45,6 +45,20 @@ static double coord_distance_geo(struct coord_geo *c1, struct coord_geo *c2) {
     return 6371000.0 * c; /* Earth radius in meters */
 }
 
+/* Sort helper for fuel POIs by distance */
+static gint driver_break_poi_compare_distance(gconstpointer a, gconstpointer b) {
+    const struct driver_break_poi *pa = (const struct driver_break_poi *)a;
+    const struct driver_break_poi *pb = (const struct driver_break_poi *)b;
+
+    if (!pa || !pb)
+        return 0;
+    if (pa->distance_from_driver_break_stop < pb->distance_from_driver_break_stop)
+        return -1;
+    if (pa->distance_from_driver_break_stop > pb->distance_from_driver_break_stop)
+        return 1;
+    return 0;
+}
+
 /* Extract OSM tag value from item */
 static char *get_osm_tag_value(struct item *item, const char *key) {
     struct attr attr;
@@ -478,7 +492,9 @@ GList *driver_break_poi_map_search_car_pois(struct coord_geo *center, double rad
     return driver_break_poi_map_search(center, radius_km, car_poi_types, 12, ms);
 }
 
-/* Search for fuel stations matching vehicle fuel type */
+/* Search for fuel stations matching vehicle fuel type.
+ * This implementation iterates maps directly so we can inspect full OSM tag sets
+ * and apply fuel:* matching logic per vehicle profile. */
 GList *driver_break_poi_map_search_fuel(struct coord_geo *center, double radius_km, struct mapset *ms,
                                         enum driver_break_vehicle_type vehicle_type, int fuel_type) {
     GList *result = NULL;
@@ -487,25 +503,69 @@ GList *driver_break_poi_map_search_fuel(struct coord_geo *center, double radius_
         return NULL;
     }
 
-    /* First, find all fuel POIs by type. */
-    enum item_type fuel_types[] = {type_poi_fuel, type_none};
-    GList *all = driver_break_poi_map_search(center, radius_km, fuel_types, 1, ms);
-    GList *l = all;
+    double radius_m = radius_km * 1000.0;
+    struct coord c;
+    transform_from_geo(projection_mg, center, &c);
 
-    while (l) {
-        struct driver_break_poi *poi = (struct driver_break_poi *)l->data;
-        /* We need the original map item to inspect fuel:* tags; since driver_break_poi_map_search
-         * creates POIs from items and does not retain item pointers, we approximate by accepting all
-         * fuel POIs here (fuel_station_matches_profile will only be able to refine when item tags
-         * are available through map attributes in future extensions). */
-        /* For now, we treat all fuel POIs as candidates, but the helper is kept to align with the
-         * fuel:* tag matching logic from the specification. */
-        (void)vehicle_type;
-        (void)fuel_type;
-        result = g_list_append(result, poi);
-        l = g_list_next(l);
+    int radius_internal = (int)(radius_m * 9.0);
+    struct coord_rect rect;
+    rect.lu = c;
+    rect.rl = c;
+    rect.lu.x -= radius_internal;
+    rect.lu.y += radius_internal;
+    rect.rl.x += radius_internal;
+    rect.rl.y -= radius_internal;
+
+    struct map_selection *sel = g_new0(struct map_selection, 1);
+    sel->u.c_rect = rect;
+    sel->order = 18;
+    sel->range = item_range_all;
+
+    struct map *map;
+    struct attr map_attr;
+    struct attr_iter *iter = mapset_attr_iter_new(NULL);
+
+    while (mapset_get_attr(ms, attr_map, &map_attr, iter)) {
+        map = map_attr.u.map;
+        struct map_rect *mr = map_rect_new(map, sel);
+        if (!mr) {
+            continue;
+        }
+
+        struct item *item;
+        while ((item = map_rect_get_item(mr))) {
+            if (item->type != type_poi_fuel) {
+                continue;
+            }
+
+            struct coord item_coord;
+            if (!item_coord_get(item, &item_coord, 1)) {
+                continue;
+            }
+
+            struct coord_geo item_geo;
+            transform_to_geo(projection_mg, &item_coord, &item_geo);
+            double distance = coord_distance_geo(center, &item_geo);
+            if (distance > radius_m) {
+                continue;
+            }
+
+            if (!fuel_station_matches_profile(item, vehicle_type, fuel_type)) {
+                continue;
+            }
+
+            struct driver_break_poi *poi = poi_from_map_item(item, &item_geo, distance);
+            result = g_list_append(result, poi);
+        }
+
+        map_rect_destroy(mr);
     }
 
-    g_list_free(all);
+    mapset_attr_iter_destroy(iter);
+    g_free(sel);
+
+    /* Sort by distance (ascending) so callers can treat list as ranked by detour distance. */
+    result = g_list_sort(result, driver_break_poi_compare_distance);
+
     return result;
 }

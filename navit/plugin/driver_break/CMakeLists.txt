@@ -40,6 +40,8 @@ module_add_library(plugin_driver_break
     driver_break_srtm.c
     driver_break_srtm_osd.c
     driver_break_poi_map.c
+    driver_break_obd.c
+    driver_break_j1939.c
 )
 
 # Export symbols for inter-plugin communication

@@ -121,6 +121,9 @@ struct driver_break_config {
     int fuel_high_load_threshold;  /* High-load detection threshold (% above baseline, e.g. 25) */
 };
 
+/* Initialize configuration structure with safe defaults. */
+void driver_break_config_default(struct driver_break_config *config);
+
 /**
  * @brief Rest stop location structure
  *
@@ -222,6 +225,23 @@ struct driver_break_priv {
     double fuel_current;          /* Current fuel amount (liters / kg / m³) */
     double fuel_rate_l_h;         /* Current fuel rate estimate (L/h or equivalent) */
     double fuel_remaining_range;  /* Remaining range estimate (km) */
+
+    /* Adaptive fuel learning (runtime only, persisted data in SQLite) */
+    struct coord_geo last_sample_coord;
+    time_t last_sample_time;
+    double rolling_short_distance_m;
+    double rolling_short_fuel;
+    double rolling_long_distance_m;
+    double rolling_long_fuel;
+    double peak_consumption_l_per_100km;
+    int high_load_active;
+    time_t trip_start_time;
+    double trip_total_distance_m;
+    double trip_total_fuel;
+
+    /* Optional live backends */
+    void *obd_backend;
+    void *j1939_backend;
 };
 
 #endif /* NAVIT_PLUGIN_DRIVER_BREAK_H */

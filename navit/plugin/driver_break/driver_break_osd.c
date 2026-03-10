@@ -215,6 +215,10 @@ int driver_break_cmd_configure_intervals(struct navit *nav, char *function, stru
 int driver_break_cmd_configure_overnight(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_set_fuel_level(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_log_fuel_stop(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+int driver_break_cmd_configure_fuel(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+
+/* Forward declaration for config save callback used by multiple dialogs. */
+static void driver_break_save_config_callback(struct gui_priv *gui_priv, struct widget *widget, void *data);
 
 static struct command_table driver_break_commands[] = {
     {"driver_break_suggest_stop",        command_cast(driver_break_cmd_suggest_stop)       },
@@ -226,6 +230,7 @@ static struct command_table driver_break_commands[] = {
     {"driver_break_configure_overnight", command_cast(driver_break_cmd_configure_overnight)},
     {"driver_break_set_fuel_level",      command_cast(driver_break_cmd_set_fuel_level)    },
     {"driver_break_log_fuel_stop",       command_cast(driver_break_cmd_log_fuel_stop)     },
+    {"driver_break_configure_fuel",      command_cast(driver_break_cmd_configure_fuel)    },
     /* Backward compatibility aliases */
     {"rest_suggest_stop",                command_cast(driver_break_cmd_suggest_stop)       },
     {"rest_show_history",                command_cast(driver_break_cmd_show_history)       },
@@ -526,6 +531,101 @@ int driver_break_cmd_show_history(struct navit *nav, char *function, struct attr
 int driver_break_cmd_configure(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
     dbg(lvl_info, "Driver Break plugin: Configure command");
     /* Placeholder for future global configuration menu (rest + fuel). */
+    return 1;
+}
+
+/* Show fuel configuration summary dialog */
+static void driver_break_show_fuel_config_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv) {
+    struct widget *menu, *box, *label, *button;
+    char buffer[256];
+
+    if (!priv) {
+        dbg(lvl_error, "Driver Break plugin: driver_break_show_fuel_config_dialog called with NULL priv");
+        return;
+    }
+
+    graphics_draw_mode(gui_priv->gra, draw_mode_begin);
+    gui_internal_enter(gui_priv, 1);
+    gui_internal_set_click_coord(gui_priv, NULL);
+    gui_internal_enter_setup(gui_priv);
+
+    menu = gui_internal_menu(gui_priv, "Fuel and Range Configuration");
+    box = gui_internal_box_new(gui_priv, gravity_left_top | orientation_vertical | flags_expand | flags_fill);
+    gui_internal_widget_append(menu, box);
+
+    snprintf(buffer, sizeof(buffer), "Fuel type: %d", priv->config.fuel_type);
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "Tank capacity: %d", priv->config.fuel_tank_capacity_l);
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "Average consumption: %.1f L/100km",
+             priv->config.fuel_avg_consumption_x10 / 10.0);
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "Low fuel warning: %d km", priv->config.fuel_low_warning_km);
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "Fuel search buffer: %d km", priv->config.fuel_search_buffer_km);
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "High-load threshold: %d%%", priv->config.fuel_high_load_threshold);
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "OBD-II available: %s", priv->config.fuel_obd_available ? "yes" : "no");
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "J1939 available: %s", priv->config.fuel_j1939_available ? "yes" : "no");
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    label = gui_internal_label_new(gui_priv,
+                                   "Note: Advanced editing of fuel parameters and adapters will be added in a later version.");
+    gui_internal_widget_append(box, label);
+
+    button = gui_internal_button_new_with_callback(gui_priv, "OK", NULL, gravity_center | flags_fill,
+                                                   driver_break_save_config_callback, priv);
+    gui_internal_widget_append(box, button);
+
+    gui_internal_menu_render(gui_priv);
+    gui_internal_leave(gui_priv);
+    graphics_draw_mode(gui_priv->gra, draw_mode_end);
+}
+
+int driver_break_cmd_configure_fuel(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+    struct gui_priv *gui_priv;
+
+    (void)function;
+    (void)in;
+    (void)out;
+
+    dbg(lvl_info, "Driver Break plugin: Configure fuel command");
+
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        dbg(lvl_error, "Driver Break plugin: Plugin not found");
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
+    }
+
+    priv = (struct driver_break_priv *)plugin;
+
+    gui_priv = driver_break_get_internal_gui_priv(nav);
+    if (!gui_priv) {
+        navit_add_message(nav, "Driver Break plugin: Fuel configuration dialog requires internal GUI");
+        return 0;
+    }
+
+    driver_break_show_fuel_config_dialog(gui_priv, priv);
     return 1;
 }
 

@@ -50,6 +50,11 @@ set(PACKAGE_STRING "${PACKAGE} ${PACKAGE_VERSION}")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 include("${PROJECT_SOURCE_DIR}/cmake/navit_macros.cmake")
 
+# Enable CTest integration so that tests added from subdirectories (including
+# the Driver Break plugin tests) are visible when running `ctest` from the
+# build root.
+enable_testing()
+
 IF(NOT CMAKE_BUILD_TYPE)
 	SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
 ENDIF(NOT CMAKE_BUILD_TYPE)

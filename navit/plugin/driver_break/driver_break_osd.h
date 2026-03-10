@@ -32,6 +32,7 @@ int driver_break_cmd_start_break(struct navit *nav, char *function, struct attr 
 int driver_break_cmd_end_break(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_configure_intervals(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_configure_overnight(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+int driver_break_cmd_configure_fuel(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 
 /* Register commands */
 void driver_break_register_commands(struct navit *nav);

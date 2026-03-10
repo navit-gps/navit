@@ -35,6 +35,8 @@
 #include "driver_break_route_validator.h"
 #include "driver_break_srtm.h"
 #include "driver_break_srtm_osd.h"
+#include "driver_break_obd.h"
+#include "driver_break_j1939.h"
 #include "event.h"
 #include "file.h"
 #include "item.h"
@@ -93,7 +95,7 @@ static char *driver_break_get_database_path(struct attr **attrs) {
 }
 
 /* Default configuration */
-static void driver_break_config_default(struct driver_break_config *config) {
+void driver_break_config_default(struct driver_break_config *config) {
     /* Zero-initialize entire structure first */
     memset(config, 0, sizeof(*config));
 
@@ -197,6 +199,138 @@ static void driver_break_check_driving_time(struct driver_break_priv *priv) {
     }
 }
 
+/* Calculate distance between two coordinates in meters (Haversine) */
+static double driver_break_coord_distance_geo(struct coord_geo *c1, struct coord_geo *c2) {
+    double lat1 = c1->lat * M_PI / 180.0;
+    double lat2 = c2->lat * M_PI / 180.0;
+    double dlat = (c2->lat - c1->lat) * M_PI / 180.0;
+    double dlng = (c2->lng - c1->lng) * M_PI / 180.0;
+
+    double a = sin(dlat / 2) * sin(dlat / 2) + cos(lat1) * cos(lat2) * sin(dlng / 2) * sin(dlng / 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    return 6371000.0 * c;
+}
+
+/* Update adaptive fuel learning based on current position and fuel rate */
+static void driver_break_update_fuel_learning(struct driver_break_priv *priv, struct coord_geo *pos, time_t now) {
+    if (!priv || !pos) {
+        return;
+    }
+
+    /* Require a valid fuel rate to log adaptive samples. This will be populated by
+     * OBD-II/J1939 or other backends in future versions. */
+    if (priv->fuel_rate_l_h <= 0.0) {
+        return;
+    }
+
+    if (priv->last_sample_time == 0) {
+        priv->last_sample_coord = *pos;
+        priv->last_sample_time = now;
+        if (priv->trip_start_time == 0) {
+            priv->trip_start_time = now;
+        }
+        return;
+    }
+
+    double dt_s = difftime(now, priv->last_sample_time);
+    if (dt_s <= 0.0) {
+        return;
+    }
+
+    double distance_m = driver_break_coord_distance_geo(&priv->last_sample_coord, pos);
+    if (distance_m <= 1.0) {
+        /* Ignore noise when essentially stationary */
+        return;
+    }
+
+    double dt_h = dt_s / 3600.0;
+    double fuel_used = priv->fuel_rate_l_h * dt_h;
+    if (fuel_used <= 0.0) {
+        return;
+    }
+
+    double distance_km = distance_m / 1000.0;
+    double speed_kmh = distance_km / dt_h;
+    double inst_l_per_100 = (distance_km > 0.0) ? (fuel_used / distance_km) * 100.0 : 0.0;
+
+    /* Persist sample if database is available */
+    if (priv->db) {
+        driver_break_db_add_fuel_sample(priv->db, now, distance_m, fuel_used, inst_l_per_100, speed_kmh, -1);
+    }
+
+    /* Update rolling windows: short term ~20 km, long term ~500 km */
+    priv->rolling_short_distance_m += distance_m;
+    priv->rolling_short_fuel += fuel_used;
+    priv->rolling_long_distance_m += distance_m;
+    priv->rolling_long_fuel += fuel_used;
+
+    if (priv->rolling_short_distance_m > 20000.0) {
+        double scale = 20000.0 / priv->rolling_short_distance_m;
+        priv->rolling_short_distance_m *= scale;
+        priv->rolling_short_fuel *= scale;
+    }
+
+    if (priv->rolling_long_distance_m > 500000.0) {
+        double scale = 500000.0 / priv->rolling_long_distance_m;
+        priv->rolling_long_distance_m *= scale;
+        priv->rolling_long_fuel *= scale;
+    }
+
+    if (inst_l_per_100 > priv->peak_consumption_l_per_100km) {
+        priv->peak_consumption_l_per_100km = inst_l_per_100;
+    }
+
+    priv->trip_total_distance_m += distance_m;
+    priv->trip_total_fuel += fuel_used;
+
+    /* Compute short-term and long-term averages if we have enough distance */
+    double short_avg = 0.0;
+    double long_avg = 0.0;
+    if (priv->rolling_short_distance_m > 1000.0 && priv->rolling_short_fuel > 0.0) {
+        double short_km = priv->rolling_short_distance_m / 1000.0;
+        short_avg = (priv->rolling_short_fuel / short_km) * 100.0;
+    }
+    if (priv->rolling_long_distance_m > 10000.0 && priv->rolling_long_fuel > 0.0) {
+        double long_km = priv->rolling_long_distance_m / 1000.0;
+        long_avg = (priv->rolling_long_fuel / long_km) * 100.0;
+    }
+
+    /* Use short-term average for range estimation when available */
+    if (short_avg > 0.0 && priv->fuel_current > 0.0) {
+        priv->fuel_remaining_range = (priv->fuel_current / short_avg) * 100.0;
+    }
+
+    /* High-load detection: compare short-term vs baseline (config or long-term) */
+    double baseline = 0.0;
+    if (long_avg > 0.0) {
+        baseline = long_avg;
+    } else if (priv->config.fuel_avg_consumption_x10 > 0) {
+        baseline = priv->config.fuel_avg_consumption_x10 / 10.0;
+    }
+
+    if (baseline > 0.0 && short_avg > 0.0) {
+        double threshold = (double)priv->config.fuel_high_load_threshold;
+        double limit = baseline * (1.0 + threshold / 100.0);
+        if (!priv->high_load_active && short_avg > limit) {
+            priv->high_load_active = 1;
+            if (priv->nav) {
+                char msg[128];
+                double delta_pct = ((short_avg / baseline) - 1.0) * 100.0;
+                snprintf(msg, sizeof(msg),
+                         "Driver Break plugin: Fuel consumption is %.0f%% above baseline – range adjusted",
+                         delta_pct);
+                navit_add_message(priv->nav, msg);
+            }
+        } else if (priv->high_load_active && short_avg <= baseline) {
+            priv->high_load_active = 0;
+        }
+    }
+
+    priv->last_sample_coord = *pos;
+    priv->last_sample_time = now;
+}
+
 /* Vehicle callback wrapper */
 static void driver_break_vehicle_callback_wrapper(void *priv_data) {
     struct driver_break_priv *priv = (struct driver_break_priv *)priv_data;
@@ -209,6 +343,9 @@ static void driver_break_vehicle_callback_wrapper(void *priv_data) {
         if (attr.u.coord_geo) {
             /* Vehicle is moving, update driving time */
             driver_break_check_driving_time(priv);
+
+            /* Update adaptive fuel learning using GPS distance and current fuel rate */
+            driver_break_update_fuel_learning(priv, attr.u.coord_geo, time(NULL));
         }
     }
 }
@@ -513,7 +650,30 @@ static void driver_break_osd_destroy(struct osd_priv *osd) {
     if (priv->check_timeout) {
         event_remove_timeout(priv->check_timeout);
     }
+
+    /* Stop live backends if running */
+    if (priv->obd_backend) {
+        driver_break_obd_stop((struct driver_break_obd *)priv->obd_backend);
+        priv->obd_backend = NULL;
+    }
+    if (priv->j1939_backend) {
+        driver_break_j1939_stop((struct driver_break_j1939 *)priv->j1939_backend);
+        priv->j1939_backend = NULL;
+    }
+
     if (priv->db) {
+        /* Write a simple trip summary if we have collected any distance and fuel samples */
+        if (priv->trip_start_time > 0 && priv->trip_total_distance_m > 0.0 && priv->trip_total_fuel > 0.0) {
+            time_t now = time(NULL);
+            double distance_km = priv->trip_total_distance_m / 1000.0;
+            double avg_l_per_100 = (priv->trip_total_fuel / distance_km) * 100.0;
+            double peak_l_per_100 = priv->peak_consumption_l_per_100km;
+            int high_load_flag = priv->high_load_active ? 1 : 0;
+
+            driver_break_db_add_trip_summary(priv->db, priv->trip_start_time, now, priv->trip_total_distance_m,
+                                             priv->trip_total_fuel, avg_l_per_100, peak_l_per_100, high_load_flag);
+        }
+
         driver_break_db_destroy(priv->db);
     }
 
@@ -597,6 +757,10 @@ static struct osd_priv *driver_break_osd_new(struct navit *nav, struct osd_metho
 
     /* Set up periodic check (every minute) */
     priv->check_timeout = event_add_timeout(60000, 1, callback_new_1(callback_cast(driver_break_check_timeout), priv));
+
+    /* Start optional live backends if enabled by configuration */
+    priv->obd_backend = driver_break_obd_start(priv);
+    priv->j1939_backend = driver_break_j1939_start(priv);
 
     /* Register menu commands */
     driver_break_register_commands(nav);

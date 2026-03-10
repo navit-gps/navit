@@ -108,14 +108,70 @@ Optional energy-based routing uses a physical model (total weight, rolling and a
 
 **Fuel tracking and gas stations**
 
-The plugin stores a basic per-vehicle fuel profile in its SQLite database (fuel type, tank capacity,
+The plugin stores a per-vehicle fuel profile in its SQLite database (fuel type, tank capacity,
 average consumption, OBD-II/J1939 availability flags, manual ethanol % for flex-fuel). Users can set
 the current fuel level and log fuel stops; from this and the configured average consumption, the plugin
 computes an estimated remaining range. When an active route is present (car/truck) and remaining range
 falls below the distance to destination plus a configurable buffer (and below a low-range threshold),
 the plugin searches for nearby fuel stations (``amenity=fuel``) and surfaces suggestions alongside
-rest stop information. Future versions can use OBD-II (ELM327) and J1939 to fill in live fuel rate and
-level, and adaptive logging will refine consumption estimates over time.
+rest stop information. Fuel stops are recorded in a dedicated history table, and additional tables
+exist for adaptive fuel consumption learning (``driver_break_fuel_samples``) and trip summaries
+(``driver_break_trip_summaries``). These tables are populated from manual fuel data and from live
+backends (OBD-II, J1939, and future aftermarket ECU integrations) so that Navit can refine range
+estimates over time without schema changes.
+
+**Live fuel data (OBD-II and J1939)**
+
+- **OBD-II (cars, light vehicles)** – Optional backend using an ELM327-compatible adapter on a serial
+  port (default ``/dev/ttyUSB0``). It performs:
+
+  - Adapter init: ``ATZ``, ``ATE0``, ``ATL0``, ``ATH0``, ``ATS0``, ``ATSP0``.
+  - PID discovery via ``0100``, ``0120``, ``0140`` (bitmasks).
+  - Periodic polling (when enabled via ``fuel_obd_available`` in config):
+
+    - ``012F`` Fuel tank level % (PID 0x2F)
+    - ``015E`` Engine fuel rate (PID 0x5E, L/h)
+    - ``0110`` MAF air flow (PID 0x10, g/s)
+    - ``0152`` Ethanol fuel % (PID 0x52, optional)
+
+  - If 0x5E (fuel rate) is missing, the backend computes fuel rate from MAF using:
+
+    .. math::
+
+       \text{Fuel rate (L/h)} = \frac{\text{MAF (g/s)} \times 3600}{\text{AFR} \times \text{density} \times 1000}
+
+    with AFR and density chosen according to fuel type and ethanol percentage (for example:
+    petrol 14.7/0.745, diesel 14.5/0.832, flex-fuel blends interpolated between petrol and E85).
+
+  - Results are written into ``driver_break_priv``:
+
+    - ``fuel_rate_l_h`` – current engine fuel rate estimate.
+    - ``fuel_current`` – current tank content (via tank % and configured capacity).
+    - ``config.fuel_ethanol_manual_pct`` – overridden when PID 0x52 is available (0–100 %).
+
+- **J1939 (trucks, heavy vehicles)** – Optional backend using SocketCAN (default interface ``can0``).
+  It listens for:
+
+  - PGN **65266** (FEEA) Engine fuel rate (SPN 183, 0.05 L/h per bit, 0 = N/A).
+  - PGN **65276** (FEF4) Fuel level (SPN 96, 0.4 % per bit, 0–250 %).
+
+  When enabled via ``fuel_j1939_available`` in config, the backend converts these into:
+
+  - ``fuel_rate_l_h`` – current fuel rate (L/h).
+  - ``fuel_current`` – tank content based on fuel level % and tank capacity.
+
+- **Adaptive range and high-load detection** – The live fuel rate (from OBD-II or J1939) is combined
+  with GPS distance between vehicle callbacks to:
+
+  - Log per-segment samples into ``driver_break_fuel_samples`` (distance, fuel used, instantaneous
+    L/100km, speed, optional engine load).
+  - Maintain short-term and long-term rolling averages (e.g. 20 km vs 500 km) of consumption.
+  - Use the short-term average for range estimation.
+  - Detect high-load conditions when short-term consumption exceeds a baseline (long-term average or
+    configured ``fuel_avg_consumption_x10``) by more than ``fuel_high_load_threshold`` percent; the
+    user is notified via OSD and the internal range estimate is reduced.
+  - At plugin shutdown, a trip summary is written to ``driver_break_trip_summaries`` with total
+    distance, fuel, average and peak consumption, and whether high-load was detected.
 
 **SRTM elevation**
 

@@ -151,6 +151,21 @@ target_include_directories(test_driver_break_route_integration PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
+# OBD-II and J1939 backend tests (pure logic, no hardware required)
+add_executable(test_driver_break_obd_j1939
+    test_driver_break_obd_j1939.c
+)
+
+target_link_libraries(test_driver_break_obd_j1939
+    glib-2.0
+    m
+)
+
+target_include_directories(test_driver_break_obd_j1939 PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../..
+    ${CMAKE_CURRENT_SOURCE_DIR}/..
+)
+
 # Add test targets
 enable_testing()
 
@@ -161,3 +176,4 @@ add_test(NAME driver_break_srtm_test COMMAND test_driver_break_srtm)
 add_test(NAME driver_break_routing_test COMMAND test_driver_break_routing)
 add_test(NAME driver_break_integration_test COMMAND test_driver_break_integration)
 add_test(NAME driver_break_route_integration_test COMMAND test_driver_break_route_integration)
+add_test(NAME driver_break_obd_j1939_test COMMAND test_driver_break_obd_j1939)

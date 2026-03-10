@@ -237,6 +237,49 @@ static int test_db_save_load_config(void) {
     return 0;
 }
 
+/* Simulate malformed or corrupted config entries (e.g. due to power loss) and
+ * verify that driver_break_db_clean_corrupted_config()/load_config discards them
+ * and falls back to defaults rather than propagating invalid values. */
+static int test_db_malformed_config_entries(void) {
+    char *db_path = create_temp_db();
+    struct driver_break_db *db = driver_break_db_new(db_path);
+    TEST_ASSERT(db != NULL, "Database creation failed");
+
+    sqlite3 *raw = NULL;
+    int rc = sqlite3_open(db_path, &raw);
+    TEST_ASSERT(rc == SQLITE_OK, "Failed to open raw SQLite database");
+
+    /* Inject malformed and out-of-range entries into config table. */
+    rc = sqlite3_exec(raw,
+                      "INSERT INTO driver_break_config (key, value) VALUES "
+                      "('car_soft_limit_hours', '-5'),"           /* negative */
+                      "('truck_max_daily_hours', '9999'),"        /* too large */
+                      "('fuel_avg_consumption_x10', 'not_a_num')",/* non-numeric */
+                      NULL, NULL, NULL);
+    TEST_ASSERT(rc == SQLITE_OK, "Failed to insert malformed config rows");
+
+    sqlite3_close(raw);
+
+    /* Load configuration; malformed entries should be cleaned and skipped. */
+    struct driver_break_config loaded_config;
+    memset(&loaded_config, 0, sizeof(loaded_config));
+    int result = driver_break_db_load_config(db, &loaded_config);
+
+    /* We only wrote malformed entries, all of which should be discarded by the
+     * cleaner. load_config may therefore return 0, and the struct must remain
+     * at its zero-initialized defaults. */
+    TEST_ASSERT(result == 0, "Malformed-only config should not be reported as successfully loaded");
+    TEST_ASSERT(loaded_config.car_soft_limit_hours == 0, "Malformed car_soft_limit_hours should be ignored");
+    TEST_ASSERT(loaded_config.truck_max_daily_hours == 0, "Malformed truck_max_daily_hours should be ignored");
+    TEST_ASSERT(loaded_config.fuel_avg_consumption_x10 == 0, "Malformed fuel_avg_consumption_x10 should be ignored");
+
+    driver_break_db_destroy(db);
+    unlink(db_path);
+    g_free(db_path);
+    (void)result; /* result may be 0 if all entries were skipped; this is acceptable. */
+    return 0;
+}
+
 static int test_db_add_fuel_stop(void) {
     char *db_path = create_temp_db();
     struct driver_break_db *db = driver_break_db_new(db_path);
@@ -291,6 +334,78 @@ static int test_db_add_fuel_stop(void) {
     return 0;
 }
 
+static int test_db_add_fuel_sample_and_trip_summary(void) {
+    char *db_path = create_temp_db();
+    struct driver_break_db *db = driver_break_db_new(db_path);
+    TEST_ASSERT(db != NULL, "Database creation failed");
+
+    time_t now = time(NULL);
+
+    /* Add a few fuel samples */
+    int result = driver_break_db_add_fuel_sample(db, now - 60, 500.0, 0.4, 8.0, 60.0, 50);
+    TEST_ASSERT(result == 1, "Fuel sample 1 insert failed");
+    result = driver_break_db_add_fuel_sample(db, now, 600.0, 0.5, 8.3, 65.0, -1);
+    TEST_ASSERT(result == 1, "Fuel sample 2 insert failed");
+
+    /* Add a trip summary */
+    result = driver_break_db_add_trip_summary(db, now - 600, now, 20000.0, 12.0, 7.0, 10.5, 1);
+    TEST_ASSERT(result == 1, "Trip summary insert failed");
+
+    /* Verify via direct SQLite query */
+    sqlite3 *raw = NULL;
+    sqlite3_stmt *stmt = NULL;
+    int rc = sqlite3_open(db_path, &raw);
+    TEST_ASSERT(rc == SQLITE_OK, "Failed to open raw SQLite database");
+
+    /* Check fuel_samples row count */
+    rc = sqlite3_prepare_v2(raw,
+                            "SELECT COUNT(*), SUM(distance_m), SUM(fuel_used) "
+                            "FROM driver_break_fuel_samples;",
+                            -1, &stmt, NULL);
+    TEST_ASSERT(rc == SQLITE_OK, "Failed to prepare fuel_samples query");
+
+    rc = sqlite3_step(stmt);
+    TEST_ASSERT(rc == SQLITE_ROW, "No row returned from fuel_samples table");
+
+    int count = sqlite3_column_int(stmt, 0);
+    double sum_distance = sqlite3_column_double(stmt, 1);
+    double sum_fuel = sqlite3_column_double(stmt, 2);
+
+    TEST_ASSERT(count == 2, "Fuel samples count mismatch");
+    TEST_ASSERT(sum_distance > 1000.0 && sum_distance < 2000.0, "Fuel samples distance sum unexpected");
+    TEST_ASSERT(sum_fuel > 0.8 && sum_fuel < 1.0, "Fuel samples fuel sum unexpected");
+
+    sqlite3_finalize(stmt);
+
+    /* Check trip summaries row count */
+    rc = sqlite3_prepare_v2(raw,
+                            "SELECT COUNT(*), SUM(total_distance_m), SUM(total_fuel), MAX(high_load_flag) "
+                            "FROM driver_break_trip_summaries;",
+                            -1, &stmt, NULL);
+    TEST_ASSERT(rc == SQLITE_OK, "Failed to prepare trip summary query");
+
+    rc = sqlite3_step(stmt);
+    TEST_ASSERT(rc == SQLITE_ROW, "No row returned from trip summary table");
+
+    count = sqlite3_column_int(stmt, 0);
+    double sum_trip_distance = sqlite3_column_double(stmt, 1);
+    double sum_trip_fuel = sqlite3_column_double(stmt, 2);
+    int max_high_load = sqlite3_column_int(stmt, 3);
+
+    TEST_ASSERT(count == 1, "Trip summary count mismatch");
+    TEST_ASSERT(sum_trip_distance == 20000.0, "Trip summary distance mismatch");
+    TEST_ASSERT(sum_trip_fuel == 12.0, "Trip summary fuel mismatch");
+    TEST_ASSERT(max_high_load == 1, "Trip summary high_load_flag mismatch");
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(raw);
+
+    driver_break_db_destroy(db);
+    unlink(db_path);
+    g_free(db_path);
+    return 0;
+}
+
 int main(void) {
     int failures = 0;
 
@@ -301,7 +416,9 @@ int main(void) {
     failures += test_db_get_history();
     failures += test_db_clear_history();
     failures += test_db_save_load_config();
+    failures += test_db_malformed_config_entries();
     failures += test_db_add_fuel_stop();
+    failures += test_db_add_fuel_sample_and_trip_summary();
 
     if (failures == 0) {
         printf("All database tests passed!\n");

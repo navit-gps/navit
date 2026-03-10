@@ -99,4 +99,34 @@ void driver_break_free_history_entry(struct driver_break_stop_history *entry);
  */
 int driver_break_db_add_fuel_stop(struct driver_break_db *db, struct driver_break_fuel_stop *stop);
 
+/**
+ * @brief Add a fuel consumption sample for adaptive learning
+ * @param db Database handle
+ * @param timestamp Sample timestamp
+ * @param distance_m GPS-derived distance since last sample (meters)
+ * @param fuel_used Fuel consumed since last sample (liters / kg / m³)
+ * @param inst_consumption Instantaneous consumption for this segment (L/100km equivalent)
+ * @param speed_kmh GPS speed during this segment
+ * @param engine_load Optional engine load (0-100), or -1 if unknown
+ * @return 1 on success, 0 on failure
+ */
+int driver_break_db_add_fuel_sample(struct driver_break_db *db, time_t timestamp, double distance_m, double fuel_used,
+                                    double inst_consumption, double speed_kmh, int engine_load);
+
+/**
+ * @brief Add a trip summary entry
+ * @param db Database handle
+ * @param start_time Trip start timestamp
+ * @param end_time Trip end timestamp
+ * @param total_distance_m Total GPS distance (meters)
+ * @param total_fuel Total fuel used (liters / kg / m³)
+ * @param avg_consumption Average consumption for trip (L/100km equivalent)
+ * @param peak_consumption Peak segment consumption during trip (L/100km equivalent)
+ * @param high_load_flag 1 if high-load condition was detected during trip, 0 otherwise
+ * @return 1 on success, 0 on failure
+ */
+int driver_break_db_add_trip_summary(struct driver_break_db *db, time_t start_time, time_t end_time,
+                                     double total_distance_m, double total_fuel, double avg_consumption,
+                                     double peak_consumption, int high_load_flag);
+
 #endif /* NAVIT_PLUGIN_DRIVER_BREAK_DB_H */
