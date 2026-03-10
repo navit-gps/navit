@@ -212,120 +212,99 @@ static double driver_break_coord_distance_geo(struct coord_geo *c1, struct coord
     return 6371000.0 * c;
 }
 
-/* Update adaptive fuel learning based on current position and fuel rate */
-static void driver_break_update_fuel_learning(struct driver_break_priv *priv, struct coord_geo *pos, time_t now) {
-    if (!priv || !pos) {
-        return;
-    }
-
-    /* Require a valid fuel rate to log adaptive samples. This will be populated by
-     * OBD-II/J1939 or other backends in future versions. */
-    if (priv->fuel_rate_l_h <= 0.0) {
-        return;
-    }
-
-    if (priv->last_sample_time == 0) {
-        priv->last_sample_coord = *pos;
-        priv->last_sample_time = now;
-        if (priv->trip_start_time == 0) {
-            priv->trip_start_time = now;
-        }
-        return;
-    }
-
-    double dt_s = difftime(now, priv->last_sample_time);
-    if (dt_s <= 0.0) {
-        return;
-    }
-
-    double distance_m = driver_break_coord_distance_geo(&priv->last_sample_coord, pos);
-    if (distance_m <= 1.0) {
-        /* Ignore noise when essentially stationary */
-        return;
-    }
-
-    double dt_h = dt_s / 3600.0;
-    double fuel_used = priv->fuel_rate_l_h * dt_h;
-    if (fuel_used <= 0.0) {
-        return;
-    }
-
-    double distance_km = distance_m / 1000.0;
-    double speed_kmh = distance_km / dt_h;
-    double inst_l_per_100 = (distance_km > 0.0) ? (fuel_used / distance_km) * 100.0 : 0.0;
-
-    /* Persist sample if database is available */
-    if (priv->db) {
-        driver_break_db_add_fuel_sample(priv->db, now, distance_m, fuel_used, inst_l_per_100, speed_kmh, -1);
-    }
-
-    /* Update rolling windows: short term ~20 km, long term ~500 km */
+/* Update rolling windows and trip totals from a single sample. */
+static void driver_break_rolling_update(struct driver_break_priv *priv, double distance_m, double fuel_used,
+                                       double inst_l_per_100) {
     priv->rolling_short_distance_m += distance_m;
     priv->rolling_short_fuel += fuel_used;
     priv->rolling_long_distance_m += distance_m;
     priv->rolling_long_fuel += fuel_used;
-
     if (priv->rolling_short_distance_m > 20000.0) {
         double scale = 20000.0 / priv->rolling_short_distance_m;
         priv->rolling_short_distance_m *= scale;
         priv->rolling_short_fuel *= scale;
     }
-
     if (priv->rolling_long_distance_m > 500000.0) {
         double scale = 500000.0 / priv->rolling_long_distance_m;
         priv->rolling_long_distance_m *= scale;
         priv->rolling_long_fuel *= scale;
     }
-
-    if (inst_l_per_100 > priv->peak_consumption_l_per_100km) {
+    if (inst_l_per_100 > priv->peak_consumption_l_per_100km)
         priv->peak_consumption_l_per_100km = inst_l_per_100;
-    }
-
     priv->trip_total_distance_m += distance_m;
     priv->trip_total_fuel += fuel_used;
+}
 
-    /* Compute short-term and long-term averages if we have enough distance */
+/* Compute range from short_avg and run high-load detection vs baseline. */
+static void driver_break_apply_baseline_and_high_load(struct driver_break_priv *priv, double short_avg,
+                                                      double long_avg) {
+    if (short_avg > 0.0 && priv->fuel_current > 0.0)
+        priv->fuel_remaining_range = (priv->fuel_current / short_avg) * 100.0;
+
+    double baseline = long_avg > 0.0 ? long_avg
+                                    : (priv->config.fuel_avg_consumption_x10 > 0
+                                           ? priv->config.fuel_avg_consumption_x10 / 10.0
+                                           : 0.0);
+    if (baseline <= 0.0 || short_avg <= 0.0)
+        return;
+    double threshold = (double)priv->config.fuel_high_load_threshold;
+    double limit = baseline * (1.0 + threshold / 100.0);
+    if (!priv->high_load_active && short_avg > limit) {
+        priv->high_load_active = 1;
+        if (priv->nav) {
+            char msg[128];
+            double delta_pct = ((short_avg / baseline) - 1.0) * 100.0;
+            snprintf(msg, sizeof(msg),
+                     "Driver Break plugin: Fuel consumption is %.0f%% above baseline – range adjusted", delta_pct);
+            navit_add_message(priv->nav, msg);
+        }
+    } else if (priv->high_load_active && short_avg <= baseline) {
+        priv->high_load_active = 0;
+    }
+}
+
+/* Update adaptive fuel learning based on current position and fuel rate */
+static void driver_break_update_fuel_learning(struct driver_break_priv *priv, struct coord_geo *pos, time_t now) {
+    if (!priv || !pos || priv->fuel_rate_l_h <= 0.0)
+        return;
+
+    if (priv->last_sample_time == 0) {
+        priv->last_sample_coord = *pos;
+        priv->last_sample_time = now;
+        if (priv->trip_start_time == 0)
+            priv->trip_start_time = now;
+        return;
+    }
+
+    double dt_s = difftime(now, priv->last_sample_time);
+    if (dt_s <= 0.0)
+        return;
+    double distance_m = driver_break_coord_distance_geo(&priv->last_sample_coord, pos);
+    if (distance_m <= 1.0)
+        return;
+
+    double dt_h = dt_s / 3600.0;
+    double fuel_used = priv->fuel_rate_l_h * dt_h;
+    if (fuel_used <= 0.0)
+        return;
+
+    double distance_km = distance_m / 1000.0;
+    double speed_kmh = distance_km / dt_h;
+    double inst_l_per_100 = (distance_km > 0.0) ? (fuel_used / distance_km) * 100.0 : 0.0;
+
+    if (priv->db)
+        driver_break_db_add_fuel_sample(priv->db, now, distance_m, fuel_used, inst_l_per_100, speed_kmh, -1);
+
+    driver_break_rolling_update(priv, distance_m, fuel_used, inst_l_per_100);
+
     double short_avg = 0.0;
     double long_avg = 0.0;
-    if (priv->rolling_short_distance_m > 1000.0 && priv->rolling_short_fuel > 0.0) {
-        double short_km = priv->rolling_short_distance_m / 1000.0;
-        short_avg = (priv->rolling_short_fuel / short_km) * 100.0;
-    }
-    if (priv->rolling_long_distance_m > 10000.0 && priv->rolling_long_fuel > 0.0) {
-        double long_km = priv->rolling_long_distance_m / 1000.0;
-        long_avg = (priv->rolling_long_fuel / long_km) * 100.0;
-    }
+    if (priv->rolling_short_distance_m > 1000.0 && priv->rolling_short_fuel > 0.0)
+        short_avg = (priv->rolling_short_fuel / (priv->rolling_short_distance_m / 1000.0)) * 100.0;
+    if (priv->rolling_long_distance_m > 10000.0 && priv->rolling_long_fuel > 0.0)
+        long_avg = (priv->rolling_long_fuel / (priv->rolling_long_distance_m / 1000.0)) * 100.0;
 
-    /* Use short-term average for range estimation when available */
-    if (short_avg > 0.0 && priv->fuel_current > 0.0) {
-        priv->fuel_remaining_range = (priv->fuel_current / short_avg) * 100.0;
-    }
-
-    /* High-load detection: compare short-term vs baseline (config or long-term) */
-    double baseline = 0.0;
-    if (long_avg > 0.0) {
-        baseline = long_avg;
-    } else if (priv->config.fuel_avg_consumption_x10 > 0) {
-        baseline = priv->config.fuel_avg_consumption_x10 / 10.0;
-    }
-
-    if (baseline > 0.0 && short_avg > 0.0) {
-        double threshold = (double)priv->config.fuel_high_load_threshold;
-        double limit = baseline * (1.0 + threshold / 100.0);
-        if (!priv->high_load_active && short_avg > limit) {
-            priv->high_load_active = 1;
-            if (priv->nav) {
-                char msg[128];
-                double delta_pct = ((short_avg / baseline) - 1.0) * 100.0;
-                snprintf(msg, sizeof(msg),
-                         "Driver Break plugin: Fuel consumption is %.0f%% above baseline – range adjusted",
-                         delta_pct);
-                navit_add_message(priv->nav, msg);
-            }
-        } else if (priv->high_load_active && short_avg <= baseline) {
-            priv->high_load_active = 0;
-        }
-    }
+    driver_break_apply_baseline_and_high_load(priv, short_avg, long_avg);
 
     priv->last_sample_coord = *pos;
     priv->last_sample_time = now;
@@ -578,86 +557,67 @@ static void driver_break_route_callback_wrapper(void *priv_data) {
     }
 }
 
+/* Run fuel low-range check: search for fuel stations and notify user. Caller ensures vehicle is car/truck and route set. */
+static void driver_break_check_fuel_low_range(struct driver_break_priv *priv) {
+    if (!priv->current_route)
+        return;
+    struct attr dist_attr;
+    double distance_km = 0.0;
+    double buffer_km = priv->config.fuel_search_buffer_km > 0 ? priv->config.fuel_search_buffer_km : 20.0;
+
+    if (route_get_attr(priv->current_route, attr_destination_length, &dist_attr, NULL))
+        distance_km = (double)dist_attr.u.num / 1000.0;
+
+    if (distance_km <= 0.0 || priv->fuel_remaining_range <= 0.0)
+        return;
+    double threshold = distance_km + buffer_km;
+    if (priv->fuel_remaining_range >= threshold
+        || priv->fuel_remaining_range >= (double)priv->config.fuel_low_warning_km)
+        return;
+
+    struct mapset *ms = navit_get_mapset(priv->nav);
+    struct attr pos_attr;
+    struct coord_geo center;
+    GList *fuel_pois = NULL;
+    if (ms && navit_get_attr(priv->nav, attr_position_coord_geo, &pos_attr, NULL) && pos_attr.u.coord_geo) {
+        center = *pos_attr.u.coord_geo;
+        double search_radius_km = priv->fuel_remaining_range;
+        if (search_radius_km < buffer_km)
+            search_radius_km = buffer_km;
+        fuel_pois = driver_break_poi_map_search_fuel(&center, search_radius_km, ms,
+                                                     priv->config.vehicle_type, priv->config.fuel_type);
+    }
+
+    if (fuel_pois) {
+        int count = g_list_length(fuel_pois);
+        char msg[128];
+        snprintf(msg, sizeof(msg),
+                 "Driver Break plugin: Low range (%.0f km). Found %d fuel stations within %.0f km.",
+                 priv->fuel_remaining_range, count, priv->fuel_remaining_range);
+        navit_add_message(priv->nav, msg);
+        dbg(lvl_info, "%s", msg);
+        driver_break_poi_free_list(fuel_pois);
+    } else if (priv->fuel_remaining_range < threshold) {
+        navit_add_message(priv->nav,
+                          "Driver Break plugin: Low range and no fuel stations found within range");
+        dbg(lvl_info,
+            "Driver Break plugin: Low range (%.0f km) and no fuel stations found within threshold",
+            priv->fuel_remaining_range);
+    }
+}
+
 /* Periodic check for rest stop suggestions */
 static void driver_break_check_timeout(struct event_timeout *ev, void *data) {
     struct driver_break_priv *priv = (struct driver_break_priv *)data;
 
     driver_break_check_driving_time(priv);
 
-    /* If mandatory break required and we have a route, find rest stops */
-    if (priv->session.mandatory_break_required && priv->current_route) {
-        /* Trigger rest stop search */
+    if (priv->session.mandatory_break_required && priv->current_route)
         dbg(lvl_debug, "Driver Break plugin: Checking for rest stops");
-    }
 
-    /* Fuel/range check for cars and trucks: trigger fuel station search when range is low. */
-    if ((priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_CAR
-         || priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_TRUCK)
-        && priv->current_route) {
-        struct attr dist_attr;
-        double distance_km = 0.0;
-        double buffer_km = priv->config.fuel_search_buffer_km > 0 ? priv->config.fuel_search_buffer_km : 20.0;
-
-        if (route_get_attr(priv->current_route, attr_destination_length, &dist_attr, NULL)) {
-            distance_km = (double)dist_attr.u.num / 1000.0;
-        }
-
-        if (distance_km > 0.0 && priv->fuel_remaining_range > 0.0) {
-            double threshold = distance_km + buffer_km;
-            if (priv->fuel_remaining_range < threshold
-                && priv->fuel_remaining_range < (double)priv->config.fuel_low_warning_km) {
-                struct mapset *ms = navit_get_mapset(priv->nav);
-                struct attr pos_attr;
-                struct coord_geo center;
-                GList *fuel_pois = NULL;
-
-                if (ms && navit_get_attr(priv->nav, attr_position_coord_geo, &pos_attr, NULL)
-                    && pos_attr.u.coord_geo) {
-                    center = *pos_attr.u.coord_geo;
-                    /* Search within reachable range plus a small buffer (km). */
-                    double search_radius_km = priv->fuel_remaining_range;
-                    if (search_radius_km < buffer_km)
-                        search_radius_km = buffer_km;
-
-                    fuel_pois = driver_break_poi_map_search_fuel(&center, search_radius_km, ms,
-                                                                 priv->config.vehicle_type, priv->config.fuel_type);
-                }
-
-                if (fuel_pois) {
-                    int count = g_list_length(fuel_pois);
-                    char msg[128];
-                    snprintf(msg, sizeof(msg),
-                             "Driver Break plugin: Low range (%.0f km). Found %d fuel stations within %.0f km.",
-                             priv->fuel_remaining_range, count, priv->fuel_remaining_range);
-                    navit_add_message(priv->nav, msg);
-                    dbg(lvl_info, "%s", msg);
-
-                    /* Free temporary list; driver_break_poi instances are owned by this list. */
-                    GList *l = fuel_pois;
-                    while (l) {
-                        struct driver_break_poi *poi = (struct driver_break_poi *)l->data;
-                        if (poi) {
-                            g_free(poi->name);
-                            g_free(poi->type);
-                            g_free(poi->category);
-                            g_free(poi->opening_hours);
-                            g_free(poi);
-                        }
-                        l = g_list_next(l);
-                    }
-                    g_list_free(fuel_pois);
-                } else {
-                    if (priv->fuel_remaining_range < threshold) {
-                        navit_add_message(priv->nav,
-                                          "Driver Break plugin: Low range and no fuel stations found within range");
-                        dbg(lvl_info,
-                            "Driver Break plugin: Low range (%.0f km) and no fuel stations found within threshold",
-                            priv->fuel_remaining_range);
-                    }
-                }
-            }
-        }
-    }
+    if (priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_CAR
+        || priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_TRUCK)
+        driver_break_check_fuel_low_range(priv);
 }
 
 /* OSD methods */

@@ -198,18 +198,41 @@ static struct driver_break_poi *poi_from_map_item(struct item *item, struct coor
  * fuel_type is enum driver_break_fuel_type. vehicle_type distinguishes car vs truck. */
 static int fuel_station_matches_profile(struct item *item, enum driver_break_vehicle_type vehicle_type, int fuel_type);
 
+/* Collect POIs from one map that match types and are within radius_m of center. Caller owns sel. */
+static GList *collect_pois_from_map(struct map *map, struct map_selection *sel, struct coord_geo *center,
+                                    double radius_m, enum item_type *poi_types, int num_types) {
+    GList *pois = NULL;
+    struct map_rect *mr = map_rect_new(map, sel);
+    if (!mr)
+        return NULL;
+
+    struct item *item;
+    while ((item = map_rect_get_item(mr))) {
+        if (!item_type_matches(item, poi_types, num_types))
+            continue;
+        struct coord item_coord;
+        if (!item_coord_get(item, &item_coord, 1))
+            continue;
+        struct coord_geo item_geo;
+        transform_to_geo(projection_mg, &item_coord, &item_geo);
+        double distance = coord_distance_geo(center, &item_geo);
+        if (distance > radius_m)
+            continue;
+        struct driver_break_poi *poi = poi_from_map_item(item, &item_geo, distance);
+        pois = g_list_append(pois, poi);
+    }
+    map_rect_destroy(mr);
+    return pois;
+}
+
 /* Search for POIs in maps near a coordinate */
 GList *driver_break_poi_map_search(struct coord_geo *center, double radius_km, enum item_type *poi_types, int num_types,
                                    struct mapset *ms) {
-    GList *pois = NULL;
-
-    if (!center || !ms || radius_km <= 0 || !poi_types || num_types == 0) {
+    if (!center || !ms || radius_km <= 0 || !poi_types || num_types == 0)
         return NULL;
-    }
 
     struct coord c;
     transform_from_geo(projection_mg, center, &c);
-
     double radius_m = radius_km * 1000.0;
     int radius_internal = (int)(radius_m * 9.0);
 
@@ -226,42 +249,20 @@ GList *driver_break_poi_map_search(struct coord_geo *center, double radius_km, e
     sel->order = 18;
     sel->range = item_range_all;
 
+    GList *pois = NULL;
     struct map *map;
     struct attr map_attr;
     struct attr_iter *iter = mapset_attr_iter_new(NULL);
-
     while (mapset_get_attr(ms, attr_map, &map_attr, iter)) {
         map = map_attr.u.map;
-        struct map_rect *mr = map_rect_new(map, sel);
-        if (!mr) {
-            continue;
+        GList *from_map = collect_pois_from_map(map, sel, center, radius_m, poi_types, num_types);
+        GList *node = from_map;
+        while (node) {
+            pois = g_list_append(pois, node->data);
+            node = g_list_next(node);
         }
-
-        struct item *item;
-        while ((item = map_rect_get_item(mr))) {
-            if (!item_type_matches(item, poi_types, num_types)) {
-                continue;
-            }
-
-            struct coord item_coord;
-            if (!item_coord_get(item, &item_coord, 1)) {
-                continue;
-            }
-
-            struct coord_geo item_geo;
-            transform_to_geo(projection_mg, &item_coord, &item_geo);
-            double distance = coord_distance_geo(center, &item_geo);
-            if (distance > radius_m) {
-                continue;
-            }
-
-            struct driver_break_poi *poi = poi_from_map_item(item, &item_geo, distance);
-            pois = g_list_append(pois, poi);
-        }
-
-        map_rect_destroy(mr);
+        g_list_free(from_map);
     }
-
     mapset_attr_iter_destroy(iter);
     g_free(sel);
     return pois;

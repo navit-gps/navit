@@ -315,6 +315,59 @@ static int read_hgt_elevation(const char *filepath, int lon_idx, int lat_idx, do
 }
 
 #ifdef HAVE_GEOTIFF
+/* Parse elevation from Int16 or Float32 buffer at given pixel index. Returns -32768 if invalid. */
+static int geotiff_elev_from_pixel(uint16_t sample_format, uint16_t bits_per_sample, const void *buf,
+                                   uint32_t pixel_index) {
+    if (sample_format == SAMPLEFORMAT_INT && bits_per_sample == 16) {
+        const int16_t *s = (const int16_t *)buf;
+        int16_t v = s[pixel_index];
+        return (v != -32768) ? (int)v : -32768;
+    }
+    if (sample_format == SAMPLEFORMAT_IEEEFP && bits_per_sample == 32) {
+        const float *f = (const float *)buf;
+        float v = f[pixel_index];
+        return (v >= -500.0f && v <= 9000.0f) ? (int)(v + 0.5f) : -32768;
+    }
+    return -32768;
+}
+
+/* Read elevation from a tiled GeoTIFF at pixel (x, y). */
+static int read_geotiff_tiled_at(TIFF *tif, uint32_t x, uint32_t y, uint32_t width, uint32_t height,
+                                 uint16_t sample_format, uint16_t bits_per_sample) {
+    uint32_t tile_width = 0, tile_height = 0;
+    TIFFGetField(tif, TIFFTAG_TILEWIDTH, &tile_width);
+    TIFFGetField(tif, TIFFTAG_TILELENGTH, &tile_height);
+    if (tile_width == 0)
+        tile_width = width;
+    if (tile_height == 0)
+        tile_height = height;
+
+    ttile_t tile_index = TIFFComputeTile(tif, x, y, 0, 0);
+    tsize_t tile_size = TIFFTileSize(tif);
+    unsigned char *buf = (unsigned char *)g_malloc(tile_size);
+    int elevation_val = -32768;
+    if (buf && TIFFReadEncodedTile(tif, tile_index, buf, tile_size) >= 0) {
+        uint32_t tx = x % tile_width;
+        uint32_t ty = y % tile_height;
+        uint32_t pixel_index = ty * tile_width + tx;
+        elevation_val = geotiff_elev_from_pixel(sample_format, bits_per_sample, buf, pixel_index);
+    }
+    g_free(buf);
+    return elevation_val;
+}
+
+/* Read elevation from a scanline GeoTIFF at pixel (x, y). */
+static int read_geotiff_scanline_at(TIFF *tif, uint32_t x, uint32_t y, uint16_t sample_format,
+                                    uint16_t bits_per_sample) {
+    tsize_t row_size = TIFFScanlineSize(tif);
+    unsigned char *row_buf = (unsigned char *)g_malloc(row_size);
+    int elevation_val = -32768;
+    if (row_buf && TIFFReadScanline(tif, row_buf, y, 0) >= 0)
+        elevation_val = geotiff_elev_from_pixel(sample_format, bits_per_sample, row_buf, x);
+    g_free(row_buf);
+    return elevation_val;
+}
+
 /* Get elevation from Copernicus GLO-30 GeoTIFF (1x1 degree, Float32 or Int16) */
 static int read_geotiff_elevation(const char *filepath, int lon_idx, int lat_idx, double lon, double lat) {
     TIFF *tif = TIFFOpen(filepath, "r");
@@ -333,7 +386,6 @@ static int read_geotiff_elevation(const char *filepath, int lon_idx, int lat_idx
         return -32768;
     }
 
-    /* Pixel coords: x = (lon - tile_min_lon) * width, y = (tile_max_lat - lat) * height */
     double tile_min_lon = (double)lon_idx;
     double tile_max_lat = (double)(lat_idx + 1);
     double xd = (lon - tile_min_lon) * (double)width;
@@ -345,55 +397,9 @@ static int read_geotiff_elevation(const char *filepath, int lon_idx, int lat_idx
     if (y >= height)
         y = height - 1;
 
-    int elevation_val = -32768;
-
-    if (TIFFIsTiled(tif)) {
-        uint32_t tile_width = 0, tile_height = 0;
-        TIFFGetField(tif, TIFFTAG_TILEWIDTH, &tile_width);
-        TIFFGetField(tif, TIFFTAG_TILELENGTH, &tile_height);
-        if (tile_width == 0)
-            tile_width = width;
-        if (tile_height == 0)
-            tile_height = height;
-
-        ttile_t tile_index = TIFFComputeTile(tif, x, y, 0, 0);
-        tsize_t tile_size = TIFFTileSize(tif);
-        unsigned char *buf = (unsigned char *)g_malloc(tile_size);
-        if (buf && TIFFReadEncodedTile(tif, tile_index, buf, tile_size) >= 0) {
-            uint32_t tx = x % tile_width;
-            uint32_t ty = y % tile_height;
-            uint32_t pixels_per_row = tile_width;
-            if (sample_format == SAMPLEFORMAT_INT && bits_per_sample == 16) {
-                int16_t *s = (int16_t *)buf;
-                int16_t v = s[ty * pixels_per_row + tx];
-                if (v != -32768)
-                    elevation_val = (int)v;
-            } else if (sample_format == SAMPLEFORMAT_IEEEFP && bits_per_sample == 32) {
-                float *f = (float *)buf;
-                float v = f[ty * pixels_per_row + tx];
-                if (v >= -500.0f && v <= 9000.0f)
-                    elevation_val = (int)(v + 0.5f);
-            }
-        }
-        g_free(buf);
-    } else {
-        tsize_t row_size = TIFFScanlineSize(tif);
-        unsigned char *row_buf = (unsigned char *)g_malloc(row_size);
-        if (row_buf && TIFFReadScanline(tif, row_buf, y, 0) >= 0) {
-            if (sample_format == SAMPLEFORMAT_INT && bits_per_sample == 16) {
-                int16_t *s = (int16_t *)row_buf;
-                int16_t v = s[x];
-                if (v != -32768)
-                    elevation_val = (int)v;
-            } else if (sample_format == SAMPLEFORMAT_IEEEFP && bits_per_sample == 32) {
-                float *f = (float *)row_buf;
-                float v = f[x];
-                if (v >= -500.0f && v <= 9000.0f)
-                    elevation_val = (int)(v + 0.5f);
-            }
-        }
-        g_free(row_buf);
-    }
+    int elevation_val = TIFFIsTiled(tif)
+                            ? read_geotiff_tiled_at(tif, x, y, width, height, sample_format, bits_per_sample)
+                            : read_geotiff_scanline_at(tif, x, y, sample_format, bits_per_sample);
 
     TIFFClose(tif);
     return elevation_val;

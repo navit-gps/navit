@@ -382,10 +382,8 @@ static int test_poi_discovery_car_route(void) {
 #define ELEV_RONDANE_MIN 200
 #define ELEV_RONDANE_MAX 1800
 
-/* Test SRTM elevation along Rondanestien. Uses dir from download_test_srtm_data.sh if present:
- * HGT (N61E009, N61E010, N62E009) or Copernicus GeoTIFF (same tiles).
- * Set SRTM_TEST_DIR to override (e.g. if tiles are not in /tmp/test_srtm_hgt_download). */
-static int test_srtm_elevation_hiking_route(void) {
+/* Setup SRTM test dir from SRTM_TEST_DIR or /tmp paths; inits srtm. Returns test_dir (caller frees). */
+static char *srtm_test_setup_dir(void) {
     char *test_dir = g_strdup("/tmp/test_srtm_route");
     const char *env_dir = g_getenv("SRTM_TEST_DIR");
     char *download_dir = env_dir ? g_strdup(env_dir) : g_strdup("/tmp/test_srtm_hgt_download");
@@ -395,9 +393,10 @@ static int test_srtm_elevation_hiking_route(void) {
     char *tile_n61_10_tif = g_build_filename(download_dir, "Copernicus_DSM_COG_10_N61_00_E010_00_DEM.tif", NULL);
     char *tile_n62_9_tif = g_build_filename(download_dir, "Copernicus_DSM_COG_10_N62_00_E009_00_DEM.tif", NULL);
 
-    int has_data = g_file_test(tile_n61_10_hgt, G_FILE_TEST_EXISTS) || g_file_test(tile_n62_9_hgt, G_FILE_TEST_EXISTS) ||
-                   g_file_test(tile_n61_9_hgt, G_FILE_TEST_EXISTS) ||
-                   g_file_test(tile_n61_10_tif, G_FILE_TEST_EXISTS) || g_file_test(tile_n62_9_tif, G_FILE_TEST_EXISTS);
+    int has_data = g_file_test(tile_n61_10_hgt, G_FILE_TEST_EXISTS) || g_file_test(tile_n62_9_hgt, G_FILE_TEST_EXISTS)
+                  || g_file_test(tile_n61_9_hgt, G_FILE_TEST_EXISTS)
+                  || g_file_test(tile_n61_10_tif, G_FILE_TEST_EXISTS)
+                  || g_file_test(tile_n62_9_tif, G_FILE_TEST_EXISTS);
 
     if (has_data) {
         g_free(test_dir);
@@ -413,12 +412,11 @@ static int test_srtm_elevation_hiking_route(void) {
     g_free(tile_n61_10_tif);
     g_free(tile_n62_9_tif);
     srtm_init(test_dir);
+    return test_dir;
+}
 
-    /* Always use Rondanestien waypoints (south, mid, north) */
-    int elev1 = srtm_get_elevation(&osm_node_rondane_south);
-    int elev2 = srtm_get_elevation(&osm_node_rondane_mid);
-    int elev3 = srtm_get_elevation(&osm_node_rondane_north);
-
+/* Assert Rondanestien elevations in valid range and optional Rondane band / elevation gain. */
+static void srtm_test_assert_rondane(int elev1, int elev2, int elev3) {
     if (elev1 != SRTM_VOID)
         printf("  Elevation at Rondanestien south (61.16,10.92): %d m\n", elev1);
     else
@@ -436,20 +434,28 @@ static int test_srtm_elevation_hiking_route(void) {
     TEST_ASSERT(elev2 >= SRTM_VOID && elev2 <= 9000, "Elevation 2 in valid range");
     TEST_ASSERT(elev3 >= SRTM_VOID && elev3 <= 9000, "Elevation 3 in valid range");
 
-    if (elev1 != SRTM_VOID || elev2 != SRTM_VOID || elev3 != SRTM_VOID) {
-        if (elev1 != SRTM_VOID)
-            TEST_ASSERT(elev1 >= ELEV_RONDANE_MIN && elev1 <= ELEV_RONDANE_MAX, "Rondanestien south elevation in range");
-        if (elev2 != SRTM_VOID)
-            TEST_ASSERT(elev2 >= ELEV_RONDANE_MIN && elev2 <= ELEV_RONDANE_MAX, "Rondanestien mid elevation in range");
-        if (elev3 != SRTM_VOID)
-            TEST_ASSERT(elev3 >= ELEV_RONDANE_MIN && elev3 <= ELEV_RONDANE_MAX, "Rondanestien north elevation in range");
-        if (elev1 != SRTM_VOID && elev2 != SRTM_VOID) {
-            int elevation_gain = elev2 - elev1;
-            printf("  Elevation gain (south to mid): %d m\n", elevation_gain);
-            TEST_ASSERT(elevation_gain >= -500 && elevation_gain <= 2000, "Elevation gain reasonable");
-        }
+    if (elev1 != SRTM_VOID)
+        TEST_ASSERT(elev1 >= ELEV_RONDANE_MIN && elev1 <= ELEV_RONDANE_MAX, "Rondanestien south elevation in range");
+    if (elev2 != SRTM_VOID)
+        TEST_ASSERT(elev2 >= ELEV_RONDANE_MIN && elev2 <= ELEV_RONDANE_MAX, "Rondanestien mid elevation in range");
+    if (elev3 != SRTM_VOID)
+        TEST_ASSERT(elev3 >= ELEV_RONDANE_MIN && elev3 <= ELEV_RONDANE_MAX, "Rondanestien north elevation in range");
+    if (elev1 != SRTM_VOID && elev2 != SRTM_VOID) {
+        int elevation_gain = elev2 - elev1;
+        printf("  Elevation gain (south to mid): %d m\n", elevation_gain);
+        TEST_ASSERT(elevation_gain >= -500 && elevation_gain <= 2000, "Elevation gain reasonable");
     }
+}
 
+/* Test SRTM elevation along Rondanestien. Uses dir from download_test_srtm_data.sh if present:
+ * HGT (N61E009, N61E010, N62E009) or Copernicus GeoTIFF (same tiles).
+ * Set SRTM_TEST_DIR to override (e.g. if tiles are not in /tmp/test_srtm_hgt_download). */
+static int test_srtm_elevation_hiking_route(void) {
+    char *test_dir = srtm_test_setup_dir();
+    int elev1 = srtm_get_elevation(&osm_node_rondane_south);
+    int elev2 = srtm_get_elevation(&osm_node_rondane_mid);
+    int elev3 = srtm_get_elevation(&osm_node_rondane_north);
+    srtm_test_assert_rondane(elev1, elev2, elev3);
     g_free(test_dir);
     return 0;
 }
