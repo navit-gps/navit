@@ -23,8 +23,8 @@
 #include "file.h"
 #include <glib.h>
 #include <sqlite3.h>
-#include <stdlib.h>
 #include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
@@ -54,8 +54,8 @@ struct config_key_map {
 };
 
 /* Validate and set a configuration value */
-static int driver_break_db_set_config_value(const struct config_key_map *map, struct driver_break_config *config, int value,
-                                            int *loaded_count) {
+static int driver_break_db_set_config_value(const struct config_key_map *map, struct driver_break_config *config,
+                                            int value, int *loaded_count) {
     int valid = 0;
 
     if (map->allow_zero) {
@@ -82,22 +82,34 @@ static int driver_break_db_load_config_value(const char *key, int value, struct 
         {"vehicle_type", offsetof(struct driver_break_config, vehicle_type), 0, MAX_VEHICLE_TYPE, 1},
         {"car_soft_limit_hours", offsetof(struct driver_break_config, car_soft_limit_hours), 0, MAX_HOURS_PER_DAY, 0},
         {"car_max_hours", offsetof(struct driver_break_config, car_max_hours), 0, MAX_HOURS_PER_DAY, 0},
-        {"car_break_interval_hours", offsetof(struct driver_break_config, car_break_interval_hours), 0, MAX_HOURS_PER_DAY, 0},
-        {"car_break_duration_min", offsetof(struct driver_break_config, car_break_duration_min), 0, MAX_BREAK_DURATION_MIN, 0},
-        {"truck_mandatory_break_after_hours", offsetof(struct driver_break_config, truck_mandatory_break_after_hours), 0, MAX_HOURS_PER_DAY, 0},
-        {"truck_mandatory_break_duration_min", offsetof(struct driver_break_config, truck_mandatory_break_duration_min), 0, MAX_BREAK_DURATION_MIN, 0},
+        {"car_break_interval_hours", offsetof(struct driver_break_config, car_break_interval_hours), 0,
+         MAX_HOURS_PER_DAY, 0},
+        {"car_break_duration_min", offsetof(struct driver_break_config, car_break_duration_min), 0,
+         MAX_BREAK_DURATION_MIN, 0},
+        {"truck_mandatory_break_after_hours", offsetof(struct driver_break_config, truck_mandatory_break_after_hours),
+         0, MAX_HOURS_PER_DAY, 0},
+        {"truck_mandatory_break_duration_min", offsetof(struct driver_break_config, truck_mandatory_break_duration_min),
+         0, MAX_BREAK_DURATION_MIN, 0},
         {"truck_max_daily_hours", offsetof(struct driver_break_config, truck_max_daily_hours), 0, MAX_HOURS_PER_DAY, 0},
-        {"min_distance_from_buildings", offsetof(struct driver_break_config, min_distance_from_buildings), 0, MAX_DISTANCE_METERS, 0},
-        {"poi_search_radius_km", offsetof(struct driver_break_config, poi_search_radius_km), 0, MAX_POI_SEARCH_RADIUS_KM, 0},
-        {"poi_water_search_radius_km", offsetof(struct driver_break_config, poi_water_search_radius_km), 0, MAX_POI_WATER_CABIN_RADIUS_KM, 0},
-        {"poi_cabin_search_radius_km", offsetof(struct driver_break_config, poi_cabin_search_radius_km), 0, MAX_POI_WATER_CABIN_RADIUS_KM, 0},
-        {"min_distance_from_glaciers", offsetof(struct driver_break_config, min_distance_from_glaciers), 0, MAX_DISTANCE_METERS, 0},
-        {"driver_break_interval_min_hours", offsetof(struct driver_break_config, driver_break_interval_min_hours), 0, MAX_HOURS_PER_DAY_24, 0},
-        {"driver_break_interval_max_hours", offsetof(struct driver_break_config, driver_break_interval_max_hours), 0, MAX_HOURS_PER_DAY_24, 0},
+        {"min_distance_from_buildings", offsetof(struct driver_break_config, min_distance_from_buildings), 0,
+         MAX_DISTANCE_METERS, 0},
+        {"poi_search_radius_km", offsetof(struct driver_break_config, poi_search_radius_km), 0,
+         MAX_POI_SEARCH_RADIUS_KM, 0},
+        {"poi_water_search_radius_km", offsetof(struct driver_break_config, poi_water_search_radius_km), 0,
+         MAX_POI_WATER_CABIN_RADIUS_KM, 0},
+        {"poi_cabin_search_radius_km", offsetof(struct driver_break_config, poi_cabin_search_radius_km), 0,
+         MAX_POI_WATER_CABIN_RADIUS_KM, 0},
+        {"min_distance_from_glaciers", offsetof(struct driver_break_config, min_distance_from_glaciers), 0,
+         MAX_DISTANCE_METERS, 0},
+        {"driver_break_interval_min_hours", offsetof(struct driver_break_config, driver_break_interval_min_hours), 0,
+         MAX_HOURS_PER_DAY_24, 0},
+        {"driver_break_interval_max_hours", offsetof(struct driver_break_config, driver_break_interval_max_hours), 0,
+         MAX_HOURS_PER_DAY_24, 0},
         /* Fuel and range configuration (stored as integers/scaled values) */
         {"fuel_type", offsetof(struct driver_break_config, fuel_type), 0, 7, 1},
         {"fuel_tank_capacity_l", offsetof(struct driver_break_config, fuel_tank_capacity_l), 0, MAX_CONFIG_VALUE, 0},
-        {"fuel_avg_consumption_x10", offsetof(struct driver_break_config, fuel_avg_consumption_x10), 0, MAX_CONFIG_VALUE, 0},
+        {"fuel_avg_consumption_x10", offsetof(struct driver_break_config, fuel_avg_consumption_x10), 0,
+         MAX_CONFIG_VALUE, 0},
         {"fuel_obd_available", offsetof(struct driver_break_config, fuel_obd_available), 0, 1, 1},
         {"fuel_j1939_available", offsetof(struct driver_break_config, fuel_j1939_available), 0, 1, 1},
         {"fuel_ethanol_manual_pct", offsetof(struct driver_break_config, fuel_ethanol_manual_pct), 0, 100, 1},
@@ -377,51 +389,24 @@ int driver_break_db_save_config(struct driver_break_db *db, struct driver_break_
     }
 
     /* Save configuration as key-value pairs */
-    const char *keys[] = {"vehicle_type",
-                          "car_soft_limit_hours",
-                          "car_max_hours",
-                          "car_break_interval_hours",
-                          "car_break_duration_min",
-                          "truck_mandatory_break_after_hours",
-                          "truck_mandatory_break_duration_min",
-                          "truck_max_daily_hours",
-                          "min_distance_from_buildings",
-                          "poi_search_radius_km",
-                          "driver_break_interval_min_hours",
-                          "driver_break_interval_max_hours",
+    const char *keys[] = {"vehicle_type", "car_soft_limit_hours", "car_max_hours", "car_break_interval_hours",
+                          "car_break_duration_min", "truck_mandatory_break_after_hours",
+                          "truck_mandatory_break_duration_min", "truck_max_daily_hours", "min_distance_from_buildings",
+                          "poi_search_radius_km", "driver_break_interval_min_hours", "driver_break_interval_max_hours",
                           /* Fuel configuration keys */
-                          "fuel_type",
-                          "fuel_tank_capacity_l",
-                          "fuel_avg_consumption_x10",
-                          "fuel_obd_available",
-                          "fuel_j1939_available",
-                          "fuel_ethanol_manual_pct",
-                          "fuel_low_warning_km",
-                          "fuel_search_buffer_km",
-                          "fuel_high_load_threshold"};
+                          "fuel_type", "fuel_tank_capacity_l", "fuel_avg_consumption_x10", "fuel_obd_available",
+                          "fuel_j1939_available", "fuel_ethanol_manual_pct", "fuel_low_warning_km",
+                          "fuel_search_buffer_km", "fuel_high_load_threshold"};
 
-    int values[] = {config->vehicle_type,
-                    config->car_soft_limit_hours,
-                    config->car_max_hours,
-                    config->car_break_interval_hours,
-                    config->car_break_duration_min,
-                    config->truck_mandatory_break_after_hours,
-                    config->truck_mandatory_break_duration_min,
-                    config->truck_max_daily_hours,
-                    config->min_distance_from_buildings,
-                    config->poi_search_radius_km,
-                    config->driver_break_interval_min_hours,
-                    config->driver_break_interval_max_hours,
+    int values[] = {config->vehicle_type, config->car_soft_limit_hours, config->car_max_hours,
+                    config->car_break_interval_hours, config->car_break_duration_min,
+                    config->truck_mandatory_break_after_hours, config->truck_mandatory_break_duration_min,
+                    config->truck_max_daily_hours, config->min_distance_from_buildings, config->poi_search_radius_km,
+                    config->driver_break_interval_min_hours, config->driver_break_interval_max_hours,
                     /* Fuel configuration values */
-                    config->fuel_type,
-                    config->fuel_tank_capacity_l,
-                    config->fuel_avg_consumption_x10,
-                    config->fuel_obd_available,
-                    config->fuel_j1939_available,
-                    config->fuel_ethanol_manual_pct,
-                    config->fuel_low_warning_km,
-                    config->fuel_search_buffer_km,
-                    config->fuel_high_load_threshold};
+                    config->fuel_type, config->fuel_tank_capacity_l, config->fuel_avg_consumption_x10,
+                    config->fuel_obd_available, config->fuel_j1939_available, config->fuel_ethanol_manual_pct,
+                    config->fuel_low_warning_km, config->fuel_search_buffer_km, config->fuel_high_load_threshold};
 
     int i;
     for (i = 0; i < G_N_ELEMENTS(keys); i++) {
@@ -523,12 +508,11 @@ int driver_break_db_add_fuel_stop(struct driver_break_db *db, struct driver_brea
         return 0;
     }
 
-    sql = sqlite3_mprintf(
-        "INSERT INTO driver_break_fuel_stops "
-        "(timestamp, latitude, longitude, fuel_added, fuel_level_after, cost, currency, ethanol_pct) "
-        "VALUES (%ld, %f, %f, %f, %f, %f, %Q, %d);",
-        (long)stop->timestamp, stop->coord.lat, stop->coord.lng, stop->fuel_added, stop->fuel_level_after,
-        stop->cost, stop->currency ? stop->currency : "", stop->ethanol_pct);
+    sql = sqlite3_mprintf("INSERT INTO driver_break_fuel_stops "
+                          "(timestamp, latitude, longitude, fuel_added, fuel_level_after, cost, currency, ethanol_pct) "
+                          "VALUES (%ld, %f, %f, %f, %f, %f, %Q, %d);",
+                          (long)stop->timestamp, stop->coord.lat, stop->coord.lng, stop->fuel_added,
+                          stop->fuel_level_after, stop->cost, stop->currency ? stop->currency : "", stop->ethanol_pct);
 
     rc = sqlite3_exec(db->db, sql, NULL, 0, &err_msg);
     sqlite3_free(sql);
@@ -552,11 +536,10 @@ int driver_break_db_add_fuel_sample(struct driver_break_db *db, time_t timestamp
         return 0;
     }
 
-    sql = sqlite3_mprintf(
-        "INSERT INTO driver_break_fuel_samples "
-        "(timestamp, distance_m, fuel_used, inst_consumption, speed_kmh, engine_load) "
-        "VALUES (%ld, %f, %f, %f, %f, %d);",
-        (long)timestamp, distance_m, fuel_used, inst_consumption, speed_kmh, engine_load);
+    sql = sqlite3_mprintf("INSERT INTO driver_break_fuel_samples "
+                          "(timestamp, distance_m, fuel_used, inst_consumption, speed_kmh, engine_load) "
+                          "VALUES (%ld, %f, %f, %f, %f, %d);",
+                          (long)timestamp, distance_m, fuel_used, inst_consumption, speed_kmh, engine_load);
 
     rc = sqlite3_exec(db->db, sql, NULL, 0, &err_msg);
     sqlite3_free(sql);

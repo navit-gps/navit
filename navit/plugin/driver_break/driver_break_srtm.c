@@ -38,8 +38,8 @@
 #endif
 
 #ifdef HAVE_GEOTIFF
-#    include <tiffio.h>
 #    include <stdarg.h>
+#    include <tiffio.h>
 /* No-op warning handler to suppress "Unknown field" for GeoTIFF tags (33550, 33922, 34735, etc.) */
 static void srtm_tiff_warning_suppress(const char *module, const char *fmt, va_list ap) {
     (void)module;
@@ -56,7 +56,8 @@ static char *srtm_data_dir = NULL;
 /* Fallback: Viewfinder Panoramas dem3 (tiles in zone folders). URL: {base}/{ZONE}/{TILENAME}.zip.
  * Viewfinder blocks scripted downloads without a browser User-Agent; tile index: dem3list.txt */
 #define SRTM_URL_VIEWFINDER_DEM3 "http://www.viewfinderpanoramas.org/dem3/"
-#define SRTM_CURL_USERAGENT "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+#define SRTM_CURL_USERAGENT                                                                                            \
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
 /* Second fallback: NASA SRTMGL1 (flat URL) */
 #define SRTM_URL_NASA "https://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL1.003/2000.02.11/"
 
@@ -103,7 +104,8 @@ int srtm_init(const char *srtm_dir) {
 
     srtm_data_dir = new_dir;
 #ifdef HAVE_GEOTIFF
-    /* Suppress libtiff "Unknown field" warnings for GeoTIFF tags (33550, 33922, 34735, etc.); elevation read is unaffected */
+    /* Suppress libtiff "Unknown field" warnings for GeoTIFF tags (33550, 33922, 34735, etc.); elevation read is
+     * unaffected */
     TIFFSetWarningHandler(srtm_tiff_warning_suppress);
 #endif
     dbg(lvl_info, "SRTM: Initialized with directory %s", srtm_data_dir);
@@ -210,10 +212,9 @@ GList *srtm_calculate_tiles(double min_lon, double min_lat, double max_lon, doub
                 int lon_abs = abs(lon);
                 int lat_abs = abs(lat);
                 const char *vf_zone = srtm_viewfinder_zone(lat, lon);
-                char *vf_zip_url = vf_zone
-                    ? g_strdup_printf("%s%s/%c%02d%c%03d.zip", SRTM_URL_VIEWFINDER_DEM3, vf_zone, lat_dir, lat_abs,
-                                     lon_dir, lon_abs)
-                    : NULL;
+                char *vf_zip_url = vf_zone ? g_strdup_printf("%s%s/%c%02d%c%03d.zip", SRTM_URL_VIEWFINDER_DEM3, vf_zone,
+                                                             lat_dir, lat_abs, lon_dir, lon_abs)
+                                           : NULL;
 
                 tile->size_bytes = SRTM_TILE_SIZE_BYTES;
 #ifdef HAVE_GEOTIFF
@@ -222,16 +223,17 @@ GList *srtm_calculate_tiles(double min_lon, double min_lat, double max_lon, doub
                 tile->url_primary = g_strdup_printf(
                     "%sCopernicus_DSM_COG_10_%c%02d_00_%c%03d_00_DEM/Copernicus_DSM_COG_10_%c%02d_00_%c%03d_00_DEM.tif",
                     SRTM_URL_COPERNICUS, lat_dir, lat_abs, lon_dir, lon_abs, lat_dir, lat_abs, lon_dir, lon_abs);
-                tile->url_fallback = vf_zip_url;  /* Viewfinder dem3 */
-                tile->url_fallback2 = g_strdup_printf("%s%c%02d%c%03d.SRTMGL1.hgt.zip", SRTM_URL_NASA, lat_dir,
-                                                      lat_abs, lon_dir, lon_abs);
+                tile->url_fallback = vf_zip_url; /* Viewfinder dem3 */
+                tile->url_fallback2 = g_strdup_printf("%s%c%02d%c%03d.SRTMGL1.hgt.zip", SRTM_URL_NASA, lat_dir, lat_abs,
+                                                      lon_dir, lon_abs);
 #else
                 /* No GeoTIFF: primary Viewfinder dem3, fallback NASA */
-                tile->url_primary = vf_zip_url ? vf_zip_url : g_strdup_printf("%s%c%02d%c%03d.SRTMGL1.hgt.zip",
-                                                                              SRTM_URL_NASA, lat_dir, lat_abs,
-                                                                              lon_dir, lon_abs);
+                tile->url_primary = vf_zip_url ? vf_zip_url
+                                               : g_strdup_printf("%s%c%02d%c%03d.SRTMGL1.hgt.zip", SRTM_URL_NASA,
+                                                                 lat_dir, lat_abs, lon_dir, lon_abs);
                 tile->url_fallback = vf_zip_url ? g_strdup_printf("%s%c%02d%c%03d.SRTMGL1.hgt.zip", SRTM_URL_NASA,
-                                                                   lat_dir, lat_abs, lon_dir, lon_abs) : NULL;
+                                                                  lat_dir, lat_abs, lon_dir, lon_abs)
+                                                : NULL;
                 tile->url_fallback2 = NULL;
 #endif
 
@@ -544,7 +546,7 @@ static size_t srtm_write_callback(void *contents, size_t size, size_t nmemb, voi
 }
 
 static int srtm_try_download_copernicus(CURL *curl, struct srtm_tile *tile, char *filepath, char *zip_path) {
-#ifdef HAVE_GEOTIFF
+#    ifdef HAVE_GEOTIFF
     if (tile->filename_geotiff && tile->url_primary && strstr(tile->url_primary, ".tif")) {
         char *geotiff_path = g_build_filename(srtm_data_dir, tile->filename_geotiff, NULL);
         FILE *fp_gt = fopen(geotiff_path, "wb");
@@ -564,8 +566,9 @@ static int srtm_try_download_copernicus(CURL *curl, struct srtm_tile *tile, char
                     FILE *f = fopen(geotiff_path, "rb");
                     if (f) {
                         unsigned char magic[2];
-                        int ok = (fread(magic, 1, 2, f) == 2 &&
-                                  ((magic[0] == 0x49 && magic[1] == 0x49) || (magic[0] == 0x4D && magic[1] == 0x4D)));
+                        int ok =
+                            (fread(magic, 1, 2, f) == 2
+                             && ((magic[0] == 0x49 && magic[1] == 0x49) || (magic[0] == 0x4D && magic[1] == 0x4D)));
                         fclose(f);
                         if (ok) {
                             tile->downloaded = 1;
@@ -582,12 +585,12 @@ static int srtm_try_download_copernicus(CURL *curl, struct srtm_tile *tile, char
             g_free(geotiff_path);
         }
     }
-#else
+#    else
     (void)curl;
     (void)tile;
     (void)filepath;
     (void)zip_path;
-#endif
+#    endif
     return 0;
 }
 
@@ -618,15 +621,14 @@ static CURLcode srtm_download_zip_with_fallbacks(CURL *curl, struct srtm_tile *t
 }
 
 static int srtm_extract_primary_hgt(const char *zip_path, char *filepath, struct srtm_tile *tile) {
-    char *extract_cmd = g_strdup_printf("cd '%s' && unzip -o -q '%s' '%s' 2>/dev/null", srtm_data_dir, zip_path,
-                                        tile->filename);
+    char *extract_cmd =
+        g_strdup_printf("cd '%s' && unzip -o -q '%s' '%s' 2>/dev/null", srtm_data_dir, zip_path, tile->filename);
     int extract_result = system(extract_cmd);
     g_free(extract_cmd);
 
     if (extract_result == 0 && g_file_test(filepath, G_FILE_TEST_EXISTS)) {
         GStatBuf stat_buf;
-        if (g_stat(filepath, &stat_buf) == 0 &&
-            stat_buf.st_size > 20000000 && stat_buf.st_size < 30000000) {
+        if (g_stat(filepath, &stat_buf) == 0 && stat_buf.st_size > 20000000 && stat_buf.st_size < 30000000) {
             tile->downloaded = 1;
             g_unlink(zip_path);
             g_free(zip_path);
@@ -645,16 +647,15 @@ static int srtm_extract_nasa_hgt(const char *zip_path, char *filepath, struct sr
     int lat_abs = abs(tile->lat);
     int lon_abs = abs(tile->lon);
     char *nasa_name = g_strdup_printf("%c%02d%c%03d.SRTMGL1.hgt", lat_dir, lat_abs, lon_dir, lon_abs);
-    char *extract_cmd = g_strdup_printf("cd '%s' && unzip -o -q '%s' '%s' 2>/dev/null", srtm_data_dir, zip_path,
-                                        nasa_name);
+    char *extract_cmd =
+        g_strdup_printf("cd '%s' && unzip -o -q '%s' '%s' 2>/dev/null", srtm_data_dir, zip_path, nasa_name);
     int extract_result = system(extract_cmd);
     g_free(extract_cmd);
     if (extract_result == 0) {
         char *nasa_path = g_build_filename(srtm_data_dir, nasa_name, NULL);
         if (g_file_test(nasa_path, G_FILE_TEST_EXISTS) && g_rename(nasa_path, filepath) == 0) {
             GStatBuf stat_buf;
-            if (g_stat(filepath, &stat_buf) == 0 &&
-                stat_buf.st_size > 20000000 && stat_buf.st_size < 30000000) {
+            if (g_stat(filepath, &stat_buf) == 0 && stat_buf.st_size > 20000000 && stat_buf.st_size < 30000000) {
                 tile->downloaded = 1;
                 g_unlink(zip_path);
                 g_free(zip_path);

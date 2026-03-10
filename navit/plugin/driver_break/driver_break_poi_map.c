@@ -386,16 +386,19 @@ GList *driver_break_poi_map_search_cabins(struct coord_geo *center, double radiu
 
 /* Search for car POIs in maps (including convenience, stores, malls, bike shops/repair) */
 GList *driver_break_poi_map_search_car_pois(struct coord_geo *center, double radius_km, struct mapset *ms) {
-    enum item_type car_poi_types[] = {
-        type_poi_cafe, type_poi_restaurant, type_poi_museum_history, type_poi_viewpoint,
-        type_poi_zoo,  type_poi_picnic,     type_poi_attraction,
-        type_poi_shop_grocery,  /* convenience store, grocery */
-        type_poi_shopping,      /* supermarket, general store */
-        type_poi_mall,
-        type_poi_shop_bicycle,  /* bike shop, parts, repairs */
-        type_poi_repair_service,
-        type_none
-    };
+    enum item_type car_poi_types[] = {type_poi_cafe,
+                                      type_poi_restaurant,
+                                      type_poi_museum_history,
+                                      type_poi_viewpoint,
+                                      type_poi_zoo,
+                                      type_poi_picnic,
+                                      type_poi_attraction,
+                                      type_poi_shop_grocery, /* convenience store, grocery */
+                                      type_poi_shopping,     /* supermarket, general store */
+                                      type_poi_mall,
+                                      type_poi_shop_bicycle, /* bike shop, parts, repairs */
+                                      type_poi_repair_service,
+                                      type_none};
 
     return driver_break_poi_map_search(center, radius_km, car_poi_types, 12, ms);
 }
@@ -415,14 +418,17 @@ static int fuel_has_any_tag(struct item *it, const char **keys) {
 
 /* Tag sets for fuel-type matching (OSM fuel:* keys). -1 = any vehicle. */
 #define FUEL_ANY_VEHICLE (-1)
-static const char *diesel_tags_car[] = {"fuel:diesel", "fuel:diesel_b7", "fuel:diesel_b10", "fuel:biodiesel",
-                                        "fuel:diesel:class2", "fuel:taxfree_diesel", "fuel:b7", NULL};
-static const char *diesel_tags_truck[] = {"fuel:HGV_diesel", "fuel:diesel", "fuel:diesel_b7", "fuel:diesel_b10",
-                                          "fuel:biodiesel", "fuel:diesel:class2", "fuel:taxfree_diesel", NULL};
-static const char *petrol_eu_tags[] = {"fuel:octane_95", "fuel:octane_98", "fuel:octane_100", "fuel:regular",
-                                       "fuel:premium", "fuel:ethanol_free", "fuel:e5", "fuel:e10", NULL};
-static const char *petrol_us_tags[] = {"fuel:octane_87", "fuel:octane_89", "fuel:octane_91", "fuel:octane_93",
-                                       "fuel:regular", "fuel:premium", NULL};
+static const char *diesel_tags_car[] = {
+    "fuel:diesel",        "fuel:diesel_b7",      "fuel:diesel_b10", "fuel:biodiesel",
+    "fuel:diesel:class2", "fuel:taxfree_diesel", "fuel:b7",         NULL};
+static const char *diesel_tags_truck[] = {
+    "fuel:HGV_diesel", "fuel:diesel",        "fuel:diesel_b7",      "fuel:diesel_b10",
+    "fuel:biodiesel",  "fuel:diesel:class2", "fuel:taxfree_diesel", NULL};
+static const char *petrol_eu_tags[] = {"fuel:octane_95", "fuel:octane_98", "fuel:octane_100",
+                                       "fuel:regular",   "fuel:premium",   "fuel:ethanol_free",
+                                       "fuel:e5",        "fuel:e10",       NULL};
+static const char *petrol_us_tags[] = {
+    "fuel:octane_87", "fuel:octane_89", "fuel:octane_91", "fuel:octane_93", "fuel:regular", "fuel:premium", NULL};
 static const char *flex_tags[] = {"fuel:e85", "fuel:e100", "fuel:ethanol", "fuel:ethanol_free", "fuel:e5",
                                   "fuel:e10", NULL};
 static const char *cng_tags[] = {"fuel:cng", "fuel:GNV", "fuel:biogas", NULL};
@@ -438,15 +444,15 @@ struct fuel_profile_row {
     int n_sets;
 };
 static const struct fuel_profile_row fuel_profile_table[] = {
-    {DRIVER_BREAK_FUEL_DIESEL, DRIVER_BREAK_VEHICLE_TRUCK, {diesel_tags_truck, NULL, NULL}, 1},
-    {DRIVER_BREAK_FUEL_DIESEL, FUEL_ANY_VEHICLE, {diesel_tags_car, NULL, NULL}, 1},
-    {DRIVER_BREAK_FUEL_PETROL, FUEL_ANY_VEHICLE, {petrol_eu_tags, petrol_us_tags, NULL}, 2},
-    {DRIVER_BREAK_FUEL_FLEX, FUEL_ANY_VEHICLE, {flex_tags, petrol_eu_tags, petrol_us_tags}, 3},
-    {DRIVER_BREAK_FUEL_CNG, FUEL_ANY_VEHICLE, {cng_tags, NULL, NULL}, 1},
-    {DRIVER_BREAK_FUEL_LNG, FUEL_ANY_VEHICLE, {lng_tags, NULL, NULL}, 1},
-    {DRIVER_BREAK_FUEL_LPG, FUEL_ANY_VEHICLE, {lpg_tags, NULL, NULL}, 1},
-    {DRIVER_BREAK_FUEL_HYDROGEN, FUEL_ANY_VEHICLE, {hydrogen_tags, NULL, NULL}, 1},
-    {DRIVER_BREAK_FUEL_ETHANOL, FUEL_ANY_VEHICLE, {flex_tags, NULL, NULL}, 1},
+    {DRIVER_BREAK_FUEL_DIESEL,   DRIVER_BREAK_VEHICLE_TRUCK, {diesel_tags_truck, NULL, NULL},             1},
+    {DRIVER_BREAK_FUEL_DIESEL,   FUEL_ANY_VEHICLE,           {diesel_tags_car, NULL, NULL},               1},
+    {DRIVER_BREAK_FUEL_PETROL,   FUEL_ANY_VEHICLE,           {petrol_eu_tags, petrol_us_tags, NULL},      2},
+    {DRIVER_BREAK_FUEL_FLEX,     FUEL_ANY_VEHICLE,           {flex_tags, petrol_eu_tags, petrol_us_tags}, 3},
+    {DRIVER_BREAK_FUEL_CNG,      FUEL_ANY_VEHICLE,           {cng_tags, NULL, NULL},                      1},
+    {DRIVER_BREAK_FUEL_LNG,      FUEL_ANY_VEHICLE,           {lng_tags, NULL, NULL},                      1},
+    {DRIVER_BREAK_FUEL_LPG,      FUEL_ANY_VEHICLE,           {lpg_tags, NULL, NULL},                      1},
+    {DRIVER_BREAK_FUEL_HYDROGEN, FUEL_ANY_VEHICLE,           {hydrogen_tags, NULL, NULL},                 1},
+    {DRIVER_BREAK_FUEL_ETHANOL,  FUEL_ANY_VEHICLE,           {flex_tags, NULL, NULL},                     1},
 };
 #define NUM_FUEL_PROFILE_ROWS (sizeof(fuel_profile_table) / sizeof(fuel_profile_table[0]))
 

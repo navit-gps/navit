@@ -162,9 +162,9 @@ static void init_navit_system(void) {
  * https://www.openstreetmap.org/relation/1572954 - route has huts, water, POIs tests should find */
 /* struct coord_geo is { lng, lat }; initializers below are (lng, lat). */
 /* Hiking route: Rondanestien – three points along the trail (south, middle, north) */
-static struct coord_geo osm_node_rondane_south = {10.9174631, 61.1553669};  /* Node 845742926 */
-static struct coord_geo osm_node_rondane_mid   = {10.3536473, 61.5857799};  /* Node 845742951 */
-static struct coord_geo osm_node_rondane_north = {9.6421663, 62.0910527};   /* Node 339607873, near Hjerkinn */
+static struct coord_geo osm_node_rondane_south = {10.9174631, 61.1553669}; /* Node 845742926 */
+static struct coord_geo osm_node_rondane_mid = {10.3536473, 61.5857799};   /* Node 845742951 */
+static struct coord_geo osm_node_rondane_north = {9.6421663, 62.0910527};  /* Node 339607873, near Hjerkinn */
 
 /* Car route: St1 Moelv -> Spidsbergseterkrysset -> Enden -> Aukrustsenteret */
 static struct coord_geo osm_node_moelv = {10.700000, 60.933333};     /* Node 8233820034 */
@@ -394,9 +394,9 @@ static char *srtm_test_setup_dir(void) {
     char *tile_n62_9_tif = g_build_filename(download_dir, "Copernicus_DSM_COG_10_N62_00_E009_00_DEM.tif", NULL);
 
     int has_data = g_file_test(tile_n61_10_hgt, G_FILE_TEST_EXISTS) || g_file_test(tile_n62_9_hgt, G_FILE_TEST_EXISTS)
-                  || g_file_test(tile_n61_9_hgt, G_FILE_TEST_EXISTS)
-                  || g_file_test(tile_n61_10_tif, G_FILE_TEST_EXISTS)
-                  || g_file_test(tile_n62_9_tif, G_FILE_TEST_EXISTS);
+                   || g_file_test(tile_n61_9_hgt, G_FILE_TEST_EXISTS)
+                   || g_file_test(tile_n61_10_tif, G_FILE_TEST_EXISTS)
+                   || g_file_test(tile_n62_9_tif, G_FILE_TEST_EXISTS);
 
     if (has_data) {
         g_free(test_dir);

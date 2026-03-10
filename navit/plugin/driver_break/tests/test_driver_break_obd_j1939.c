@@ -13,15 +13,15 @@
 #include "../../debug.h"
 #include "../driver_break.h"
 #include "../driver_break_db.h"
-#include "../driver_break_obd.h"
 #include "../driver_break_j1939.h"
+#include "../driver_break_obd.h"
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
-#define TEST_ASSERT(cond, msg)                                                                                          \
+#define TEST_ASSERT(cond, msg)                                                                                         \
     do {                                                                                                               \
         if (!(cond)) {                                                                                                 \
             fprintf(stderr, "FAIL: %s:%d: %s\n", __FILE__, __LINE__, msg);                                             \
@@ -105,4 +105,3 @@ int main(void) {
     printf("%d test(s) failed\n", failures);
     return 1;
 }
-

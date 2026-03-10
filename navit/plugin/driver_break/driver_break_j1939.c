@@ -137,4 +137,3 @@ void driver_break_j1939_stop(struct driver_break_j1939 *ctx) {
     }
     g_free(ctx);
 }
-

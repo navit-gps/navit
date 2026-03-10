@@ -252,9 +252,9 @@ static int test_db_malformed_config_entries(void) {
     /* Inject malformed and out-of-range entries into config table. */
     rc = sqlite3_exec(raw,
                       "INSERT INTO driver_break_config (key, value) VALUES "
-                      "('car_soft_limit_hours', '-5'),"           /* negative */
-                      "('truck_max_daily_hours', '9999'),"        /* too large */
-                      "('fuel_avg_consumption_x10', 'not_a_num')",/* non-numeric */
+                      "('car_soft_limit_hours', '-5'),"            /* negative */
+                      "('truck_max_daily_hours', '9999'),"         /* too large */
+                      "('fuel_avg_consumption_x10', 'not_a_num')", /* non-numeric */
                       NULL, NULL, NULL);
     TEST_ASSERT(rc == SQLITE_OK, "Failed to insert malformed config rows");
 

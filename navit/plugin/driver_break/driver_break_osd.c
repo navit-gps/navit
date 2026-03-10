@@ -228,9 +228,9 @@ static struct command_table driver_break_commands[] = {
     {"driver_break_end_break",           command_cast(driver_break_cmd_end_break)          },
     {"driver_break_configure_intervals", command_cast(driver_break_cmd_configure_intervals)},
     {"driver_break_configure_overnight", command_cast(driver_break_cmd_configure_overnight)},
-    {"driver_break_set_fuel_level",      command_cast(driver_break_cmd_set_fuel_level)    },
-    {"driver_break_log_fuel_stop",       command_cast(driver_break_cmd_log_fuel_stop)     },
-    {"driver_break_configure_fuel",      command_cast(driver_break_cmd_configure_fuel)    },
+    {"driver_break_set_fuel_level",      command_cast(driver_break_cmd_set_fuel_level)     },
+    {"driver_break_log_fuel_stop",       command_cast(driver_break_cmd_log_fuel_stop)      },
+    {"driver_break_configure_fuel",      command_cast(driver_break_cmd_configure_fuel)     },
     /* Backward compatibility aliases */
     {"rest_suggest_stop",                command_cast(driver_break_cmd_suggest_stop)       },
     {"rest_show_history",                command_cast(driver_break_cmd_show_history)       },
@@ -561,8 +561,7 @@ static void driver_break_show_fuel_config_dialog(struct gui_priv *gui_priv, stru
     label = gui_internal_label_new(gui_priv, buffer);
     gui_internal_widget_append(box, label);
 
-    snprintf(buffer, sizeof(buffer), "Average consumption: %.1f L/100km",
-             priv->config.fuel_avg_consumption_x10 / 10.0);
+    snprintf(buffer, sizeof(buffer), "Average consumption: %.1f L/100km", priv->config.fuel_avg_consumption_x10 / 10.0);
     label = gui_internal_label_new(gui_priv, buffer);
     gui_internal_widget_append(box, label);
 
@@ -586,8 +585,8 @@ static void driver_break_show_fuel_config_dialog(struct gui_priv *gui_priv, stru
     label = gui_internal_label_new(gui_priv, buffer);
     gui_internal_widget_append(box, label);
 
-    label = gui_internal_label_new(gui_priv,
-                                   "Note: Advanced editing of fuel parameters and adapters will be added in a later version.");
+    label = gui_internal_label_new(
+        gui_priv, "Note: Advanced editing of fuel parameters and adapters will be added in a later version.");
     gui_internal_widget_append(box, label);
 
     button = gui_internal_button_new_with_callback(gui_priv, "OK", NULL, gravity_center | flags_fill,
@@ -634,8 +633,7 @@ static int driver_break_parse_fuel_value(const char *function, double *value_out
     double value;
 
     if (!function || *function == '\0') {
-        navit_add_message(NULL,
-                          "Driver Break plugin: Missing numeric argument for fuel operation");
+        navit_add_message(NULL, "Driver Break plugin: Missing numeric argument for fuel operation");
         return 0;
     }
 
@@ -683,8 +681,7 @@ int driver_break_cmd_set_fuel_level(struct navit *nav, char *function, struct at
 
     priv = (struct driver_break_priv *)plugin;
 
-    if (!driver_break_parse_fuel_value(function, &value,
-                                       "Driver Break plugin: Invalid fuel level value")) {
+    if (!driver_break_parse_fuel_value(function, &value, "Driver Break plugin: Invalid fuel level value")) {
         return 0;
     }
 
@@ -693,8 +690,8 @@ int driver_break_cmd_set_fuel_level(struct navit *nav, char *function, struct at
 
     dbg(lvl_info,
         "Driver Break plugin: Fuel level set to %.2f (tank capacity=%d L, avg=%.1f L/100km, remaining range=%.1f km)",
-        priv->fuel_current, priv->config.fuel_tank_capacity_l,
-        priv->config.fuel_avg_consumption_x10 / 10.0, priv->fuel_remaining_range);
+        priv->fuel_current, priv->config.fuel_tank_capacity_l, priv->config.fuel_avg_consumption_x10 / 10.0,
+        priv->fuel_remaining_range);
 
     navit_add_message(nav, "Driver Break plugin: Fuel level updated");
     return 1;
@@ -727,8 +724,7 @@ int driver_break_cmd_log_fuel_stop(struct navit *nav, char *function, struct att
     }
 
     if (function && *function) {
-        if (!driver_break_parse_fuel_value(function, &added,
-                                           "Driver Break plugin: Invalid fuel added value")) {
+        if (!driver_break_parse_fuel_value(function, &added, "Driver Break plugin: Invalid fuel added value")) {
             return 0;
         }
     }

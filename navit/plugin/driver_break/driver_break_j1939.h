@@ -25,4 +25,3 @@ struct driver_break_j1939 *driver_break_j1939_start(struct driver_break_priv *pr
 void driver_break_j1939_stop(struct driver_break_j1939 *ctx);
 
 #endif /* NAVIT_PLUGIN_DRIVER_BREAK_J1939_H */
-

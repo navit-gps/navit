@@ -110,15 +110,15 @@ struct driver_break_config {
     double total_weight;    /* Total weight for energy calculations (kg) */
 
     /* Fuel profile and range estimation (per-vehicle) */
-    int fuel_type;                 /* enum driver_break_fuel_type */
-    int fuel_tank_capacity_l;      /* Tank capacity in liters (or equivalent unit for gas fuels) */
-    int fuel_avg_consumption_x10;  /* Average consumption in 0.1 L/100km units */
-    int fuel_obd_available;        /* 1 if OBD-II adapter available (auto-detected or user-set) */
-    int fuel_j1939_available;      /* 1 if J1939 available (truck mode) */
-    int fuel_ethanol_manual_pct;   /* Manual ethanol % for flex-fuel when PID 0x52 unavailable (0-100) */
-    int fuel_low_warning_km;       /* Low fuel warning threshold (km of range remaining) */
-    int fuel_search_buffer_km;     /* Extra km buffer for gas station search (beyond destination distance) */
-    int fuel_high_load_threshold;  /* High-load detection threshold (% above baseline, e.g. 25) */
+    int fuel_type;                /* enum driver_break_fuel_type */
+    int fuel_tank_capacity_l;     /* Tank capacity in liters (or equivalent unit for gas fuels) */
+    int fuel_avg_consumption_x10; /* Average consumption in 0.1 L/100km units */
+    int fuel_obd_available;       /* 1 if OBD-II adapter available (auto-detected or user-set) */
+    int fuel_j1939_available;     /* 1 if J1939 available (truck mode) */
+    int fuel_ethanol_manual_pct;  /* Manual ethanol % for flex-fuel when PID 0x52 unavailable (0-100) */
+    int fuel_low_warning_km;      /* Low fuel warning threshold (km of range remaining) */
+    int fuel_search_buffer_km;    /* Extra km buffer for gas station search (beyond destination distance) */
+    int fuel_high_load_threshold; /* High-load detection threshold (% above baseline, e.g. 25) */
 };
 
 /* Initialize configuration structure with safe defaults. */
@@ -192,11 +192,11 @@ struct driver_break_stop_history {
 struct driver_break_fuel_stop {
     time_t timestamp;
     struct coord_geo coord;
-    double fuel_added;        /* Amount of fuel added (liters / kg / m³) */
-    double fuel_level_after;  /* Fuel level after fill (same unit) */
-    double cost;              /* Total cost (optional, 0 if unknown) */
-    char *currency;           /* Optional currency code, e.g. \"EUR\" */
-    int ethanol_pct;          /* Ethanol % for flex-fuel (0-100, or -1 if unknown) */
+    double fuel_added;       /* Amount of fuel added (liters / kg / m³) */
+    double fuel_level_after; /* Fuel level after fill (same unit) */
+    double cost;             /* Total cost (optional, 0 if unknown) */
+    char *currency;          /* Optional currency code, e.g. \"EUR\" */
+    int ethanol_pct;         /* Ethanol % for flex-fuel (0-100, or -1 if unknown) */
 };
 
 /* Forward declarations */
@@ -222,9 +222,9 @@ struct driver_break_priv {
     int active;
 
     /* Fuel state (runtime) */
-    double fuel_current;          /* Current fuel amount (liters / kg / m³) */
-    double fuel_rate_l_h;         /* Current fuel rate estimate (L/h or equivalent) */
-    double fuel_remaining_range;  /* Remaining range estimate (km) */
+    double fuel_current;         /* Current fuel amount (liters / kg / m³) */
+    double fuel_rate_l_h;        /* Current fuel rate estimate (L/h or equivalent) */
+    double fuel_remaining_range; /* Remaining range estimate (km) */
 
     /* Adaptive fuel learning (runtime only, persisted data in SQLite) */
     struct coord_geo last_sample_coord;

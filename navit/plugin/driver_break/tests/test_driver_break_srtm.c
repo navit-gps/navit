@@ -446,8 +446,8 @@ static int test_hgt_cache_memory(void) {
 }
 
 #ifdef HAVE_CURL
-#define SRTM_URL_VIEWFINDER_DEM3 "http://www.viewfinderpanoramas.org/dem3/"
-#define SRTM_URL_NASA "https://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL1.003/2000.02.11/"
+#    define SRTM_URL_VIEWFINDER_DEM3 "http://www.viewfinderpanoramas.org/dem3/"
+#    define SRTM_URL_NASA "https://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL1.003/2000.02.11/"
 
 /* Viewfinder dem3 zone for Norway/Scandinavia (same as plugin). */
 static const char *viewfinder_zone(int lat, int lon) {
@@ -467,7 +467,8 @@ static int download_hgt_tile(int lon, int lat, const char *test_dir) {
     char *zip_path = g_build_filename(test_dir, tilename_zip, NULL);
     const char *zone = viewfinder_zone(lat, lon);
     char *url_vf = zone ? g_strdup_printf("%s%s%s", SRTM_URL_VIEWFINDER_DEM3, zone, tilename_zip) : NULL;
-    char *url_nasa = g_strdup_printf("%s%c%02d%c%03d.SRTMGL1.hgt.zip", SRTM_URL_NASA, lat_dir, lat_abs, lon_dir, lon_abs);
+    char *url_nasa =
+        g_strdup_printf("%s%c%02d%c%03d.SRTMGL1.hgt.zip", SRTM_URL_NASA, lat_dir, lat_abs, lon_dir, lon_abs);
 
     int ok = 0;
     if (url_vf && download_file_to(url_vf, zip_path))
@@ -553,7 +554,8 @@ static int test_srtm_hgt_download_and_read(void) {
     TEST_ASSERT(e3 != -32768, "SRTM HGT read at 61.36012,9.66941 should be valid");
     TEST_ASSERT(e3 >= -50 && e3 <= 3000, "SRTM HGT elevation at point3 out of expected range");
 
-    printf("SRTM HGT: tiles downloaded and read correctly at 3 OSM locations (62.09,7.14 / 61.59,9.70 / 61.36,9.67).\n");
+    printf(
+        "SRTM HGT: tiles downloaded and read correctly at 3 OSM locations (62.09,7.14 / 61.59,9.70 / 61.36,9.67).\n");
     g_free(test_dir);
     return 0;
 }

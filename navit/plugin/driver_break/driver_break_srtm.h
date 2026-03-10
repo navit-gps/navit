@@ -40,16 +40,16 @@ struct srtm_region {
 
 /* SRTM tile information */
 struct srtm_tile {
-    int lon;              /* Longitude index (e.g., 6 for E006) */
-    int lat;              /* Latitude index (e.g., 45 for N45) */
-    char *filename;       /* HGT tile filename (e.g., "N45E006.hgt") */
+    int lon;                /* Longitude index (e.g., 6 for E006) */
+    int lat;                /* Latitude index (e.g., 45 for N45) */
+    char *filename;         /* HGT tile filename (e.g., "N45E006.hgt") */
     char *filename_geotiff; /* GeoTIFF filename when using Copernicus (optional) */
-    char *url_primary;    /* Primary download URL (Copernicus GeoTIFF or Viewfinder HGT) */
-    char *url_fallback;   /* Fallback URL (e.g. Viewfinder HGT zip) */
-    char *url_fallback2;  /* Second fallback (e.g. NASA SRTMGL1 zip) */
-    int downloaded;       /* 1 if downloaded, 0 otherwise */
-    long long size_bytes; /* File size in bytes */
-    char *checksum_md5;   /* MD5 checksum (if available) */
+    char *url_primary;      /* Primary download URL (Copernicus GeoTIFF or Viewfinder HGT) */
+    char *url_fallback;     /* Fallback URL (e.g. Viewfinder HGT zip) */
+    char *url_fallback2;    /* Second fallback (e.g. NASA SRTMGL1 zip) */
+    int downloaded;         /* 1 if downloaded, 0 otherwise */
+    long long size_bytes;   /* File size in bytes */
+    char *checksum_md5;     /* MD5 checksum (if available) */
 };
 
 /* SRTM download status */

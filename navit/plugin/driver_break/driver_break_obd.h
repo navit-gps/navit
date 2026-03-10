@@ -39,4 +39,3 @@ struct driver_break_obd *driver_break_obd_start(struct driver_break_priv *priv);
 void driver_break_obd_stop(struct driver_break_obd *obd);
 
 #endif /* NAVIT_PLUGIN_DRIVER_BREAK_OBD_H */
-
