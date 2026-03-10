@@ -120,7 +120,58 @@ exist for adaptive fuel consumption learning (``driver_break_fuel_samples``) and
 backends (OBD-II, J1939, and future aftermarket ECU integrations) so that Navit can refine range
 estimates over time without schema changes.
 
-**Live fuel data (OBD-II and J1939)**
+**Supported vehicle fuel types**
+
+The Driver Break plugin currently supports the following fuel types in its vehicle profile and POI
+matching logic. These values are stored in ``driver_break_config.fuel_type`` and are used to filter
+and rank ``amenity=fuel`` POIs based on their ``fuel:*`` tags:
+
+- **Petrol / gasoline** – Regular and premium petrol grades, including:
+
+  - EU-style octane tags: ``fuel:octane_95``, ``fuel:octane_98``, ``fuel:octane_100``.
+  - North American tags: ``fuel:octane_87``, ``fuel:octane_89``, ``fuel:octane_91``, ``fuel:octane_93``.
+  - Generic petrol tags: ``fuel:regular``, ``fuel:premium``, ``fuel:ethanol_free`` / ``fuel:e0``.
+
+- **Diesel (cars and light commercial)** – Standard on-road diesel and common blends:
+
+  - ``fuel:diesel``, ``fuel:diesel_b7``, ``fuel:diesel_b10``, ``fuel:biodiesel``,
+    ``fuel:diesel:class2`` (cold-weather/Arctic diesel), ``fuel:taxfree_diesel`` and the overloaded
+    ``fuel:b7`` tag which is treated as ``fuel:diesel_b7``.
+
+- **Diesel (trucks / HGV)** – Heavy-vehicle diesel stations suitable for trucks:
+
+  - All of the above diesel tags, plus ``fuel:HGV_diesel`` and (optionally) ``fuel:adblue`` for
+    urea/DEF availability. These are preferred when the vehicle profile is set to truck.
+
+- **Flex-fuel (E0–E100)** – Vehicles that can run on petrol/ethanol blends:
+
+  - ``fuel:e5``, ``fuel:e10``, ``fuel:e15``, ``fuel:e20``, ``fuel:e85``, ``fuel:e100`` /
+    ``fuel:ethanol``.
+  - Flex-fuel profiles also accept petrol-only stations matching the petrol tags above, with a
+    preference for stations that explicitly advertise E85 or E100.
+
+- **Ethanol-only** – Vehicles configured for pure ethanol (E100):
+
+  - ``fuel:e100``, ``fuel:ethanol`` and related tags.
+
+- **Natural gas** – Compressed and liquefied natural gas:
+
+  - **CNG**: ``fuel:cng``, ``fuel:GNV``, ``fuel:biogas``.
+  - **LNG**: ``fuel:lng``.
+
+- **LPG / autogas** – Liquefied petroleum gas:
+
+  - ``fuel:lpg`` and the overloaded ``fuel:GPL`` tag.
+
+- **Hydrogen** – Gaseous and liquid hydrogen for fuel cell vehicles:
+
+  - ``fuel:h35`` (350 bar), ``fuel:h70`` (700 bar), ``fuel:LH2`` (liquid hydrogen).
+
+Stations whose tags do not explicitly match the selected fuel type are generally filtered out; only
+when no specific tags are present does the plugin fall back to treating generic ``amenity=fuel`` POIs
+as candidates. This ensures that suggested fuel stops are appropriate for the configured vehicle.
+
+**Live fuel data (OBD-II, J1939 and aftermarket ECUs)**
 
 - **OBD-II (cars, light vehicles)** – Optional backend using an ELM327-compatible adapter on a serial
   port (default ``/dev/ttyUSB0``). It performs:
@@ -172,6 +223,38 @@ estimates over time without schema changes.
     user is notified via OSD and the internal range estimate is reduced.
   - At plugin shutdown, a trip summary is written to ``driver_break_trip_summaries`` with total
     distance, fuel, average and peak consumption, and whether high-load was detected.
+
+- **Aftermarket ECUs (non-OBD-native)** – The fuel logging and range estimation pipeline is designed
+  so that it can consume fuel rate and fuel level signals from aftermarket engine management systems
+  as well as factory ECUs. In practice this means:
+
+  - **MegaSquirt family** (MS1, MS2, MS3, MS3‑Pro, MicroSquirt) using:
+
+    - A third-party OBD-II bridge module connected to the MegaSquirt CAN bus, which exposes standard
+      SAE J1979 PIDs; the existing OBD-II backend then works unchanged.
+    - Or the native MS serial protocol (RS‑232 / USB‑serial) which provides realtime channels such as
+      injector duty cycle, pulse width, RPM and ethanol %. A thin adapter can translate these into a
+      fuel rate in L/h and an ethanol percentage and write them into the same internal fields that
+      OBD-II/J1939 use (``fuel_rate_l_h``, ``fuel_ethanol_manual_pct``).
+
+  - **Haltech Elite and Nexus series** via the published Haltech CAN protocol (over SocketCAN) where
+    broadcast frames carry fuel-related SPNs; these can be mapped into ``fuel_rate_l_h`` and
+    ``fuel_current`` in the same way as J1939.
+
+  - **Link ECU G4+/G4X/G5 series** using Link’s documented CAN broadcast (RPM, load, injector pulse
+    width etc.) to derive fuel rate, again feeding the same generic fields.
+
+  - **AEM Infinity / Series 2 EMS** using the AEMnet CAN protocol (over SocketCAN) to read lambda,
+    fuel pressure and injector duty cycle and convert them into a fuel rate and consumption samples.
+
+  - **ECUMaster EMU / EMU Black / EMU Pro** using their documented CAN output to obtain fuel
+    consumption signals.
+
+  In all of these cases the Driver Break plugin does not need a separate DB schema: it only requires
+  that an integration layer for a specific brand translates the ECU’s realtime channels into the
+  generic fields already used by OBD-II and J1939 (fuel rate in L/h, tank level or fuel added, and
+  ethanol percentage). The adaptive logging and trip summary code then works identically for stock
+  and aftermarket ECUs.
 
 **SRTM elevation**
 
