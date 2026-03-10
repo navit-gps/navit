@@ -5,6 +5,7 @@
  * Unit tests for Driver Break plugin configuration and driving time calculations
  */
 
+#define DRIVER_BREAK_SKIP_CONFIG_DEFAULT 1
 #include "../../debug.h"
 #include "../driver_break.h"
 #include <glib.h>

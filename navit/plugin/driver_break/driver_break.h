@@ -122,7 +122,9 @@ struct driver_break_config {
 };
 
 /* Initialize configuration structure with safe defaults. */
+#ifndef DRIVER_BREAK_SKIP_CONFIG_DEFAULT
 void driver_break_config_default(struct driver_break_config *config);
+#endif
 
 /**
  * @brief Rest stop location structure
