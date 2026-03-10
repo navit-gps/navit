@@ -86,10 +86,10 @@ for f in $(git --no-pager diff --name-only refs/remotes/origin/trunk | sort -u);
             fi
         fi
 
-        # Formats any *.h *.c and *.cpp files
+        # Formats any *.h *.c and *.cpp files (per navit programming guidelines: astyle)
         if [[ "${f: -2}" == ".h" ]] || [[ "${f: -2}" == ".c" ]] || [[ "${f: -4}" == ".cpp" ]]; then
             echo "[INFO] Checking for indentation and style compliance on ${f}..."
-            clang-format -i "${f}"
+            astyle --indent=spaces=4 --style=attach -n --max-code-length=120 -xf -xh "${f}"
         fi
 
        fi
