@@ -48,7 +48,7 @@ as the primary elevation source and **Viewfinder Panoramas dem3** (zone folders,
 
 **When built with CURL** (optional dependency):
 
-- **SRTM HGT download and read**  
+- **SRTM HGT download and read**
   Downloads HGT tiles from Viewfinder Panoramas dem3 (fallback; zone M32 for Norway;
   tile index at ``dem3list.txt``; a browser User-Agent is sent to avoid block) or
   NASA SRTMGL1 for tiles N62E007, N61E009, extracts the ``.hgt`` files, then verifies
@@ -56,7 +56,7 @@ as the primary elevation source and **Viewfinder Panoramas dem3** (zone folders,
 
 **When built with libtiff and CURL** (optional):
 
-- **Copernicus GLO-30 download and read**  
+- **Copernicus GLO-30 download and read**
   Downloads Copernicus DEM GLO-30 GeoTIFF tiles from the public AWS S3 bucket (no auth).
   URL pattern: ``{base}/{tilename}/{tilename}.tif``. Verifies elevation read. If
   download fails or returns non-TIFF (e.g. error page), the test is skipped; no failure.
@@ -170,14 +170,14 @@ Expected results
 All seven test executables exit with code 0 when all tests pass. Typical output:
 
 - **test_driver_break_config:** ``All configuration tests passed!``
-- **test_driver_break_db:** ``All database tests passed!``  
+- **test_driver_break_db:** ``All database tests passed!``
   Verifies creation of the database, rest stop history insert/retrieve/clear, configuration save/load
   (including fuel profile fields such as tank capacity and average consumption), and fuel stop logging
   into the ``driver_break_fuel_stops`` table.
 - **test_driver_break_finder:** ``All finder tests passed!``
 - **test_driver_break_routing:** ``All routing tests passed!``
-- **test_driver_break_srtm:** ``All SRTM HGT file handling tests passed!``  
-  If Copernicus download ran: ``Copernicus GLO-30: tiles read correctly at 3 OSM locations (62.09,7.14 / 61.59,9.70 / 61.36,9.67).``  
+- **test_driver_break_srtm:** ``All SRTM HGT file handling tests passed!``
+  If Copernicus download ran: ``Copernicus GLO-30: tiles read correctly at 3 OSM locations (62.09,7.14 / 61.59,9.70 / 61.36,9.67).``
   If HGT download ran: ``SRTM HGT: tiles downloaded and read correctly at 3 OSM locations ...``
 - **test_driver_break_integration:** ``All integration tests passed!``
 - **test_driver_break_route_integration:** ``All integration tests passed!`` with
