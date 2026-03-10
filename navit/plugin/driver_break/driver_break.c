@@ -485,6 +485,63 @@ static void process_cycling_stops(struct driver_break_priv *priv, GList *cycling
     }
 }
 
+static void driver_break_handle_hiking_route(struct driver_break_priv *priv) {
+    struct attr dist_attr;
+    double total_distance = 0.0;
+
+    if (!priv->current_route) {
+        return;
+    }
+
+    if (route_get_attr(priv->current_route, attr_destination_length, &dist_attr, NULL)) {
+        total_distance = (double)dist_attr.u.num;
+    }
+
+    /* Adjust max daily distance if DNT priority enabled (matches BRouter) */
+    if (total_distance > 0) {
+        double max_daily = priv->config.hiking_max_daily_distance;
+        if (priv->config.enable_dnt_priority) {
+            max_daily = 46400.0; /* 46.4 km (90th percentile of DNT hut spacing) */
+        }
+
+        GList *hiking_stops = hiking_calculate_driver_break_stops_with_max(total_distance, 0, max_daily);
+        if (hiking_stops) {
+            process_hiking_stops(priv, hiking_stops);
+            hiking_free_driver_break_stops(hiking_stops);
+        }
+    }
+}
+
+static void driver_break_handle_cycling_route(struct driver_break_priv *priv) {
+    struct attr dist_attr;
+    double total_distance = 0.0;
+
+    if (!priv->current_route) {
+        return;
+    }
+
+    if (route_get_attr(priv->current_route, attr_destination_length, &dist_attr, NULL)) {
+        total_distance = (double)dist_attr.u.num;
+    }
+
+    if (total_distance > 0) {
+        GList *cycling_stops = cycling_calculate_driver_break_stops(total_distance, 0);
+        if (cycling_stops) {
+            process_cycling_stops(priv, cycling_stops);
+            cycling_free_driver_break_stops(cycling_stops);
+        }
+    }
+}
+
+static void driver_break_handle_motor_route(struct driver_break_priv *priv) {
+    if (!priv->current_route || !priv->session.mandatory_break_required) {
+        return;
+    }
+
+    priv->suggested_stops = driver_break_finder_find_along_route(priv->current_route, &priv->config,
+                                                                 priv->session.mandatory_break_required);
+}
+
 static void driver_break_route_callback_wrapper(void *priv_data) {
     struct driver_break_priv *priv = (struct driver_break_priv *)priv_data;
     if (!priv) {
@@ -493,59 +550,31 @@ static void driver_break_route_callback_wrapper(void *priv_data) {
 
     /* Get route from navit */
     struct attr attr;
-    if (navit_get_attr(priv->nav, attr_route, &attr, NULL)) {
-        priv->current_route = attr.u.route;
+    if (!navit_get_attr(priv->nav, attr_route, &attr, NULL)) {
+        return;
+    }
 
-        /* Find rest stops along the route based on vehicle type */
-        if (priv->current_route) {
-            dbg(lvl_info, "Driver Break plugin: Finding rest stops along route (vehicle_type=%d)",
-                priv->config.vehicle_type);
+    priv->current_route = attr.u.route;
+    if (!priv->current_route) {
+        return;
+    }
 
-            /* For hiking/cycling, calculate rest stops based on distance */
-            if (priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_HIKING) {
-                /* Get route distance */
-                struct attr dist_attr;
-                double total_distance = 0.0;
-                if (route_get_attr(priv->current_route, attr_destination_length, &dist_attr, NULL)) {
-                    total_distance = (double)dist_attr.u.num; /* Distance in meters */
-                }
+    dbg(lvl_info, "Driver Break plugin: Finding rest stops along route (vehicle_type=%d)", priv->config.vehicle_type);
 
-                /* Adjust max daily distance if DNT priority enabled (matches BRouter) */
-                double max_daily = priv->config.hiking_max_daily_distance;
-                if (priv->config.enable_dnt_priority) {
-                    max_daily = 46400.0; /* 46.4 km (90th percentile of DNT hut spacing) */
-                }
-
-                if (total_distance > 0) {
-                    /* Calculate hiking rest stops with adjusted max daily distance */
-                    GList *hiking_stops = hiking_calculate_driver_break_stops_with_max(total_distance, 0, max_daily);
-                    if (hiking_stops) {
-                        process_hiking_stops(priv, hiking_stops);
-                        hiking_free_driver_break_stops(hiking_stops);
-                    }
-                }
-            } else if (priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_CYCLING) {
-                /* Get route distance */
-                struct attr dist_attr;
-                double total_distance = 0.0;
-                if (route_get_attr(priv->current_route, attr_destination_length, &dist_attr, NULL)) {
-                    total_distance = (double)dist_attr.u.num; /* Distance in meters */
-                }
-
-                if (total_distance > 0) {
-                    /* Calculate cycling rest stops */
-                    GList *cycling_stops = cycling_calculate_driver_break_stops(total_distance, 0);
-                    if (cycling_stops) {
-                        process_cycling_stops(priv, cycling_stops);
-                        cycling_free_driver_break_stops(cycling_stops);
-                    }
-                }
-            } else if (priv->session.mandatory_break_required) {
-                /* For cars/trucks, find rest stops when mandatory break required */
-                priv->suggested_stops = driver_break_finder_find_along_route(priv->current_route, &priv->config,
-                                                                             priv->session.mandatory_break_required);
-            }
-        }
+    /* For hiking/cycling, calculate rest stops based on distance; for cars/trucks follow mandatory breaks. */
+    switch (priv->config.vehicle_type) {
+    case DRIVER_BREAK_VEHICLE_HIKING:
+        driver_break_handle_hiking_route(priv);
+        break;
+    case DRIVER_BREAK_VEHICLE_CYCLING:
+        driver_break_handle_cycling_route(priv);
+        break;
+    case DRIVER_BREAK_VEHICLE_CAR:
+    case DRIVER_BREAK_VEHICLE_TRUCK:
+        driver_break_handle_motor_route(priv);
+        break;
+    default:
+        break;
     }
 }
 

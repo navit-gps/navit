@@ -233,6 +233,91 @@ static void obd_poll_timeout(struct event_timeout *to, void *data) {
     obd_poll(obd);
 }
 
+/* Read fuel rate directly from PID 0x5E when supported. Returns updated rate
+ * or the incoming value when no valid response was received. */
+static double obd_read_fuel_rate_pid(struct driver_break_obd *obd, double current_rate) {
+    if (!obd_pid_supported(obd, 0x5E)) {
+        return current_rate;
+    }
+
+    char resp[128];
+    unsigned char bytes[8];
+    int n;
+
+    if (!obd_send_query(obd->fd, "015E", resp, sizeof(resp))) {
+        return current_rate;
+    }
+
+    n = obd_parse_hex_bytes(resp, bytes, 8);
+    if (n >= 5 && bytes[0] == 0x41 && bytes[1] == 0x5E) {
+        unsigned int v = (bytes[2] << 8) | bytes[3];
+        return (double)v * 0.05;
+    }
+
+    return current_rate;
+}
+
+/* Read MAF and (optionally) ethanol %; returns 1 if MAF is valid. Updates
+ * maf_g_s and ethanol_pct in-place. */
+static int obd_read_maf_and_ethanol(struct driver_break_obd *obd, double *maf_g_s, int *ethanol_pct) {
+    char resp[128];
+    unsigned char bytes[8];
+    int n;
+    int have_maf = 0;
+
+    if (obd_pid_supported(obd, 0x10)) {
+        if (obd_send_query(obd->fd, "0110", resp, sizeof(resp))) {
+            n = obd_parse_hex_bytes(resp, bytes, 8);
+            if (n >= 5 && bytes[0] == 0x41 && bytes[1] == 0x10) {
+                unsigned int v = (bytes[2] << 8) | bytes[3];
+                *maf_g_s = (double)v / 100.0;
+                have_maf = 1;
+            }
+        }
+    }
+
+    if (obd_pid_supported(obd, 0x52)) {
+        if (obd_send_query(obd->fd, "0152", resp, sizeof(resp))) {
+            n = obd_parse_hex_bytes(resp, bytes, 8);
+            if (n >= 4 && bytes[0] == 0x41 && bytes[1] == 0x52) {
+                int epct = (int)(((double)bytes[2] * 100.0) / 255.0 + 0.5);
+                if (epct < 0)
+                    epct = 0;
+                if (epct > 100)
+                    epct = 100;
+                *ethanol_pct = epct;
+            }
+        }
+    }
+
+    return have_maf;
+}
+
+/* Update tank level from PID 0x2F (fuel level %). */
+static void obd_update_tank_level(struct driver_break_obd *obd) {
+    if (!obd_pid_supported(obd, 0x2F)) {
+        return;
+    }
+
+    char resp[128];
+    unsigned char bytes[8];
+    int n;
+
+    if (!obd_send_query(obd->fd, "012F", resp, sizeof(resp))) {
+        return;
+    }
+
+    n = obd_parse_hex_bytes(resp, bytes, 8);
+    if (n >= 4 && bytes[0] == 0x41 && bytes[1] == 0x2F) {
+        struct driver_break_priv *priv = obd->priv;
+        double pct = ((double)bytes[2] * 100.0) / 255.0;
+        if (priv->config.fuel_tank_capacity_l > 0) {
+            double capacity = (double)priv->config.fuel_tank_capacity_l;
+            priv->fuel_current = (pct / 100.0) * capacity;
+        }
+    }
+}
+
 static void obd_poll(struct driver_break_obd *obd) {
     if (!obd || obd->fd < 0 || !obd->priv) {
         return;
@@ -249,42 +334,11 @@ static void obd_poll(struct driver_break_obd *obd) {
     int ethanol_pct = priv->config.fuel_ethanol_manual_pct;
 
     /* Fuel rate PID 0x5E */
-    if (obd_pid_supported(obd, 0x5E)) {
-        if (obd_send_query(obd->fd, "015E", resp, sizeof(resp))) {
-            n = obd_parse_hex_bytes(resp, bytes, 8);
-            if (n >= 5 && bytes[0] == 0x41 && bytes[1] == 0x5E) {
-                unsigned int v = (bytes[2] << 8) | bytes[3];
-                fuel_rate_l_h = (double)v * 0.05;
-            }
-        }
-    }
+    fuel_rate_l_h = obd_read_fuel_rate_pid(obd, fuel_rate_l_h);
 
-    /* MAF PID 0x10 */
-    if (obd_pid_supported(obd, 0x10)) {
-        if (obd_send_query(obd->fd, "0110", resp, sizeof(resp))) {
-            n = obd_parse_hex_bytes(resp, bytes, 8);
-            if (n >= 5 && bytes[0] == 0x41 && bytes[1] == 0x10) {
-                unsigned int v = (bytes[2] << 8) | bytes[3];
-                maf_g_s = (double)v / 100.0;
-                maf_valid = 1;
-            }
-        }
-    }
-
-    /* Ethanol % PID 0x52 (optional) */
-    if (obd_pid_supported(obd, 0x52)) {
-        if (obd_send_query(obd->fd, "0152", resp, sizeof(resp))) {
-            n = obd_parse_hex_bytes(resp, bytes, 8);
-            if (n >= 4 && bytes[0] == 0x41 && bytes[1] == 0x52) {
-                ethanol_pct = (int)(((double)bytes[2] * 100.0) / 255.0 + 0.5);
-                if (ethanol_pct < 0)
-                    ethanol_pct = 0;
-                if (ethanol_pct > 100)
-                    ethanol_pct = 100;
-                priv->config.fuel_ethanol_manual_pct = ethanol_pct;
-            }
-        }
-    }
+    /* MAF + ethanol % (fallback for fuel rate and flex-fuel adjustments) */
+    maf_valid = obd_read_maf_and_ethanol(obd, &maf_g_s, &ethanol_pct);
+    priv->config.fuel_ethanol_manual_pct = ethanol_pct;
 
     /* If fuel rate PID not supported, fall back to MAF-based estimate */
     if (fuel_rate_l_h <= 0.0 && maf_valid) {
@@ -292,18 +346,7 @@ static void obd_poll(struct driver_break_obd *obd) {
     }
 
     /* Tank level PID 0x2F */
-    if (obd_pid_supported(obd, 0x2F)) {
-        if (obd_send_query(obd->fd, "012F", resp, sizeof(resp))) {
-            n = obd_parse_hex_bytes(resp, bytes, 8);
-            if (n >= 4 && bytes[0] == 0x41 && bytes[1] == 0x2F) {
-                double pct = ((double)bytes[2] * 100.0) / 255.0;
-                if (priv->config.fuel_tank_capacity_l > 0) {
-                    double capacity = (double)priv->config.fuel_tank_capacity_l;
-                    priv->fuel_current = (pct / 100.0) * capacity;
-                }
-            }
-        }
-    }
+    obd_update_tank_level(obd);
 
     /* Update fuel rate if we have a reasonable value */
     if (fuel_rate_l_h > 0.0 && fuel_rate_l_h < 1000.0) {

@@ -537,20 +537,7 @@ static size_t srtm_write_callback(void *contents, size_t size, size_t nmemb, voi
     return fwrite(contents, size, nmemb, fp);
 }
 
-static int srtm_download_tile(struct srtm_tile *tile, struct srtm_download_context *ctx) {
-    char *filepath = g_build_filename(srtm_data_dir, tile->filename, NULL);
-    char *zip_path = g_strdup_printf("%s.zip", filepath);
-
-    CURL *curl = curl_easy_init();
-    if (!curl) {
-        g_free(filepath);
-        g_free(zip_path);
-        return 0;
-    }
-    /* Browser User-Agent required by Viewfinder to avoid "permission denied" on scripted downloads */
-    curl_easy_setopt(curl, CURLOPT_USERAGENT, SRTM_CURL_USERAGENT);
-
-    /* Primary: Copernicus GeoTIFF (when built with HAVE_GEOTIFF) */
+static int srtm_try_download_copernicus(CURL *curl, struct srtm_tile *tile, char *filepath, char *zip_path) {
 #ifdef HAVE_GEOTIFF
     if (tile->filename_geotiff && tile->url_primary && strstr(tile->url_primary, ".tif")) {
         char *geotiff_path = g_build_filename(srtm_data_dir, tile->filename_geotiff, NULL);
@@ -568,7 +555,6 @@ static int srtm_download_tile(struct srtm_tile *tile, struct srtm_download_conte
             if (res == CURLE_OK) {
                 GStatBuf st;
                 if (g_stat(geotiff_path, &st) == 0 && st.st_size > 1000) {
-                    /* Basic sanity: not an HTML/XML error page. Optional: check TIFF magic. */
                     FILE *f = fopen(geotiff_path, "rb");
                     if (f) {
                         unsigned char magic[2];
@@ -589,11 +575,116 @@ static int srtm_download_tile(struct srtm_tile *tile, struct srtm_download_conte
             }
             g_free(geotiff_path);
         }
-        /* Copernicus failed; try fallback zip(s) below */
     }
+#else
+    (void)curl;
+    (void)tile;
+    (void)filepath;
+    (void)zip_path;
 #endif
+    return 0;
+}
 
-    /* Fallback: Viewfinder dem3 zip or NASA zip */
+static CURLcode srtm_download_zip_with_fallbacks(CURL *curl, struct srtm_tile *tile, FILE *fp) {
+    const char *url_to_try = tile->url_primary;
+
+    if (url_to_try && strstr(url_to_try, ".tif"))
+        url_to_try = tile->url_fallback;
+
+    if (url_to_try)
+        curl_easy_setopt(curl, CURLOPT_URL, url_to_try);
+
+    CURLcode res = curl_easy_perform(curl);
+    if (res != CURLE_OK && tile->url_fallback && url_to_try != tile->url_fallback) {
+        fseek(fp, 0, SEEK_SET);
+        (void)ftruncate(fileno(fp), 0);
+        curl_easy_setopt(curl, CURLOPT_URL, tile->url_fallback);
+        res = curl_easy_perform(curl);
+    }
+    if (res != CURLE_OK && tile->url_fallback2) {
+        fseek(fp, 0, SEEK_SET);
+        (void)ftruncate(fileno(fp), 0);
+        curl_easy_setopt(curl, CURLOPT_URL, tile->url_fallback2);
+        res = curl_easy_perform(curl);
+    }
+
+    return res;
+}
+
+static int srtm_extract_primary_hgt(const char *zip_path, char *filepath, struct srtm_tile *tile) {
+    char *extract_cmd = g_strdup_printf("cd '%s' && unzip -o -q '%s' '%s' 2>/dev/null", srtm_data_dir, zip_path,
+                                        tile->filename);
+    int extract_result = system(extract_cmd);
+    g_free(extract_cmd);
+
+    if (extract_result == 0 && g_file_test(filepath, G_FILE_TEST_EXISTS)) {
+        GStatBuf stat_buf;
+        if (g_stat(filepath, &stat_buf) == 0 &&
+            stat_buf.st_size > 20000000 && stat_buf.st_size < 30000000) {
+            tile->downloaded = 1;
+            g_unlink(zip_path);
+            g_free(zip_path);
+            g_free(filepath);
+            return 1;
+        }
+        if (g_file_test(filepath, G_FILE_TEST_EXISTS))
+            g_unlink(filepath);
+    }
+    return 0;
+}
+
+static int srtm_extract_nasa_hgt(const char *zip_path, char *filepath, struct srtm_tile *tile) {
+    char lat_dir = (tile->lat >= 0) ? 'N' : 'S';
+    char lon_dir = (tile->lon >= 0) ? 'E' : 'W';
+    int lat_abs = abs(tile->lat);
+    int lon_abs = abs(tile->lon);
+    char *nasa_name = g_strdup_printf("%c%02d%c%03d.SRTMGL1.hgt", lat_dir, lat_abs, lon_dir, lon_abs);
+    char *extract_cmd = g_strdup_printf("cd '%s' && unzip -o -q '%s' '%s' 2>/dev/null", srtm_data_dir, zip_path,
+                                        nasa_name);
+    int extract_result = system(extract_cmd);
+    g_free(extract_cmd);
+    if (extract_result == 0) {
+        char *nasa_path = g_build_filename(srtm_data_dir, nasa_name, NULL);
+        if (g_file_test(nasa_path, G_FILE_TEST_EXISTS) && g_rename(nasa_path, filepath) == 0) {
+            GStatBuf stat_buf;
+            if (g_stat(filepath, &stat_buf) == 0 &&
+                stat_buf.st_size > 20000000 && stat_buf.st_size < 30000000) {
+                tile->downloaded = 1;
+                g_unlink(zip_path);
+                g_free(zip_path);
+                g_free(filepath);
+                g_free(nasa_path);
+                g_free(nasa_name);
+                return 1;
+            }
+        }
+        if (g_file_test(nasa_path, G_FILE_TEST_EXISTS))
+            g_unlink(nasa_path);
+        g_free(nasa_path);
+    }
+    g_free(nasa_name);
+    return 0;
+}
+
+static int srtm_download_tile(struct srtm_tile *tile, struct srtm_download_context *ctx) {
+    char *filepath = g_build_filename(srtm_data_dir, tile->filename, NULL);
+    char *zip_path = g_strdup_printf("%s.zip", filepath);
+
+    CURL *curl = curl_easy_init();
+    if (!curl) {
+        g_free(filepath);
+        g_free(zip_path);
+        return 0;
+    }
+
+    (void)ctx;
+
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, SRTM_CURL_USERAGENT);
+
+    if (srtm_try_download_copernicus(curl, tile, filepath, zip_path)) {
+        return 1;
+    }
+
     FILE *fp = fopen(zip_path, "wb");
     if (!fp) {
         curl_easy_cleanup(curl);
@@ -609,78 +700,19 @@ static int srtm_download_tile(struct srtm_tile *tile, struct srtm_download_conte
     curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 30L);
     curl_easy_setopt(curl, CURLOPT_TIMEOUT, 300L);
 
-    const char *url_to_try = tile->url_primary;
-    if (url_to_try && strstr(url_to_try, ".tif"))
-        url_to_try = tile->url_fallback;
-    if (url_to_try)
-        curl_easy_setopt(curl, CURLOPT_URL, url_to_try);
-    CURLcode res = curl_easy_perform(curl);
-    if (res != CURLE_OK && tile->url_fallback && url_to_try != tile->url_fallback) {
-        fseek(fp, 0, SEEK_SET);
-        (void)ftruncate(fileno(fp), 0);
-        curl_easy_setopt(curl, CURLOPT_URL, tile->url_fallback);
-        res = curl_easy_perform(curl);
-    }
-    if (res != CURLE_OK && tile->url_fallback2) {
-        fseek(fp, 0, SEEK_SET);
-        (void)ftruncate(fileno(fp), 0);
-        curl_easy_setopt(curl, CURLOPT_URL, tile->url_fallback2);
-        res = curl_easy_perform(curl);
-    }
+    CURLcode res = srtm_download_zip_with_fallbacks(curl, tile, fp);
 
     fclose(fp);
     curl_easy_cleanup(curl);
 
     if (res == CURLE_OK && g_file_test(zip_path, G_FILE_TEST_EXISTS)) {
-        char *extract_cmd = g_strdup_printf("cd '%s' && unzip -o -q '%s' '%s' 2>/dev/null", srtm_data_dir, zip_path,
-                                            tile->filename);
-        int extract_result = system(extract_cmd);
-        g_free(extract_cmd);
-
-        if (extract_result == 0 && g_file_test(filepath, G_FILE_TEST_EXISTS)) {
-            GStatBuf stat_buf;
-            if (g_stat(filepath, &stat_buf) == 0 &&
-                stat_buf.st_size > 20000000 && stat_buf.st_size < 30000000) {
-                tile->downloaded = 1;
-                g_unlink(zip_path);
-                g_free(zip_path);
-                g_free(filepath);
+        if (srtm_extract_primary_hgt(zip_path, filepath, tile)) {
+            return 1;
+        }
+        if (!g_file_test(filepath, G_FILE_TEST_EXISTS)) {
+            if (srtm_extract_nasa_hgt(zip_path, filepath, tile)) {
                 return 1;
             }
-            if (g_file_test(filepath, G_FILE_TEST_EXISTS))
-                g_unlink(filepath);
-        }
-        /* NASA zips often contain NxxEyy.SRTMGL1.hgt; extract and rename to NxxEyy.hgt */
-        if (!g_file_test(filepath, G_FILE_TEST_EXISTS)) {
-            char lat_dir = (tile->lat >= 0) ? 'N' : 'S';
-            char lon_dir = (tile->lon >= 0) ? 'E' : 'W';
-            int lat_abs = abs(tile->lat);
-            int lon_abs = abs(tile->lon);
-            char *nasa_name = g_strdup_printf("%c%02d%c%03d.SRTMGL1.hgt", lat_dir, lat_abs, lon_dir, lon_abs);
-            extract_cmd = g_strdup_printf("cd '%s' && unzip -o -q '%s' '%s' 2>/dev/null", srtm_data_dir, zip_path,
-                                          nasa_name);
-            extract_result = system(extract_cmd);
-            g_free(extract_cmd);
-            if (extract_result == 0) {
-                char *nasa_path = g_build_filename(srtm_data_dir, nasa_name, NULL);
-                if (g_file_test(nasa_path, G_FILE_TEST_EXISTS) && g_rename(nasa_path, filepath) == 0) {
-                    GStatBuf stat_buf;
-                    if (g_stat(filepath, &stat_buf) == 0 &&
-                        stat_buf.st_size > 20000000 && stat_buf.st_size < 30000000) {
-                        tile->downloaded = 1;
-                        g_unlink(zip_path);
-                        g_free(zip_path);
-                        g_free(filepath);
-                        g_free(nasa_path);
-                        g_free(nasa_name);
-                        return 1;
-                    }
-                }
-                if (g_file_test(nasa_path, G_FILE_TEST_EXISTS))
-                    g_unlink(nasa_path);
-                g_free(nasa_path);
-            }
-            g_free(nasa_name);
         }
         g_unlink(zip_path);
     }

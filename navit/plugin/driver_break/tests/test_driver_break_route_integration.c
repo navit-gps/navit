@@ -274,16 +274,12 @@ static struct mapset *load_test_map_data(void) {
 
 /* Test hiking rest interval creation */
 static int test_hiking_driver_break_intervals_created(void) {
-    /* Test with 25 km route (longer than 22 km to ensure rest stops are created) */
     double route_distance = 25000.0; /* 25 km in meters */
-
-    /* Use actual plugin function */
     GList *hiking_stops = hiking_calculate_driver_break_stops_with_max(route_distance, 0, 40000.0);
 
     TEST_ASSERT(hiking_stops != NULL, "Hiking rest stops should be created");
     TEST_ASSERT(g_list_length(hiking_stops) >= 1, "Should have at least 1 rest stop for 25 km route");
 
-    /* Verify rest intervals are created */
     GList *l = hiking_stops;
     int interval_count = 0;
     double prev_position = 0.0;
@@ -294,7 +290,6 @@ static int test_hiking_driver_break_intervals_created(void) {
             interval_count++;
             if (prev_position > 0) {
                 double interval = stop->position - prev_position;
-                /* Should be approximately 11.295 km */
                 TEST_ASSERT(interval > 11000.0 && interval < 12000.0, "Rest interval should be ~11.3 km");
             }
             prev_position = stop->position;
@@ -313,10 +308,9 @@ static int test_poi_discovery_hiking_route(void) {
     int pois_found = 0;
     struct mapset *ms = load_test_map_data();
 
-    /* Test POI discovery along Rondanestien (relation 1572954; DNT huts, water, etc.) */
     if (ms) {
         printf("  Using map-based POI search (Rondanestien, map data loaded)\n");
-        /* Use map-based search if map data available; radius 100 km so POIs are found */
+
         GList *cabins = poi_search_cabins_map(&osm_node_rondane_mid, 100.0, ms, 0);
         if (cabins) {
             pois_found += g_list_length(cabins);
@@ -342,7 +336,6 @@ static int test_poi_discovery_hiking_route(void) {
     } else {
         printf("  Map data not found, skipping map-based POI search\n");
         printf("  Note: To test map-based POI discovery, run download_test_map_data.sh first\n");
-        /* Don't use Overpass API in tests (unreliable) */
     }
 
     printf("  Total POIs found along hiking route: %d\n", pois_found);
@@ -357,8 +350,7 @@ static int test_poi_discovery_car_route(void) {
 
     if (ms) {
         printf("  Using map-based POI search (map data loaded)\n");
-        /* Use map-based search if map data available */
-        /* Use large radius (100 km) so POIs are found without distance filtering */
+
         GList *pois = driver_break_poi_map_search_car_pois(&osm_node_moelv, 100.0, ms);
         if (pois) {
             pois_found += g_list_length(pois);
@@ -377,7 +369,6 @@ static int test_poi_discovery_car_route(void) {
     } else {
         printf("  Map data not found, skipping map-based POI search\n");
         printf("  Note: To test map-based POI discovery, run download_test_map_data.sh first\n");
-        /* Don't use Overpass API in tests (unreliable) */
     }
 
     printf("  Total POIs found along car route: %d\n", pois_found);
@@ -431,7 +422,7 @@ static int test_srtm_elevation_hiking_route(void) {
     if (elev1 != SRTM_VOID)
         printf("  Elevation at Rondanestien south (61.16,10.92): %d m\n", elev1);
     else
-            printf("  Elevation at Rondanestien south: no data (elevation tiles not present)\n");
+        printf("  Elevation at Rondanestien south: no data (elevation tiles not present)\n");
     if (elev2 != SRTM_VOID)
         printf("  Elevation at Rondanestien mid (61.59,10.35): %d m\n", elev2);
     else

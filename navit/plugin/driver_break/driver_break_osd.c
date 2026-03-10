@@ -629,11 +629,44 @@ int driver_break_cmd_configure_fuel(struct navit *nav, char *function, struct at
     return 1;
 }
 
+static int driver_break_parse_fuel_value(const char *function, double *value_out, const char *what) {
+    char *endptr = NULL;
+    double value;
+
+    if (!function || *function == '\0') {
+        navit_add_message(NULL,
+                          "Driver Break plugin: Missing numeric argument for fuel operation");
+        return 0;
+    }
+
+    value = g_ascii_strtod(function, &endptr);
+    if (endptr == function || (!g_ascii_isspace(*endptr) && *endptr != '\0')) {
+        navit_add_message(NULL, what);
+        return 0;
+    }
+
+    if (value < 0.0) {
+        navit_add_message(NULL, "Driver Break plugin: Fuel value cannot be negative");
+        return 0;
+    }
+
+    *value_out = value;
+    return 1;
+}
+
+static void driver_break_update_remaining_range(struct driver_break_priv *priv) {
+    if (priv->config.fuel_avg_consumption_x10 > 0) {
+        double avg_l_per_100 = priv->config.fuel_avg_consumption_x10 / 10.0;
+        priv->fuel_remaining_range = (priv->fuel_current / avg_l_per_100) * 100.0;
+    } else {
+        priv->fuel_remaining_range = 0.0;
+    }
+}
+
 /* Set current fuel level command (manual entry, universal) */
 int driver_break_cmd_set_fuel_level(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
     struct driver_break_priv *priv;
     void *plugin;
-    char *endptr = NULL;
     double value;
 
     (void)in;
@@ -650,31 +683,13 @@ int driver_break_cmd_set_fuel_level(struct navit *nav, char *function, struct at
 
     priv = (struct driver_break_priv *)plugin;
 
-    if (!function || *function == '\0') {
-        navit_add_message(nav, "Driver Break plugin: Set fuel level requires a numeric argument (e.g. 25.0)");
-        return 0;
-    }
-
-    value = g_ascii_strtod(function, &endptr);
-    if (endptr == function || !g_ascii_isspace(*endptr) && *endptr != '\0') {
-        navit_add_message(nav, "Driver Break plugin: Invalid fuel level value");
-        return 0;
-    }
-
-    if (value < 0.0) {
-        navit_add_message(nav, "Driver Break plugin: Fuel level cannot be negative");
+    if (!driver_break_parse_fuel_value(function, &value,
+                                       "Driver Break plugin: Invalid fuel level value")) {
         return 0;
     }
 
     priv->fuel_current = value;
-
-    /* Recompute remaining range based on configured average consumption (L/100km, scaled x10) */
-    if (priv->config.fuel_avg_consumption_x10 > 0) {
-        double avg_l_per_100 = priv->config.fuel_avg_consumption_x10 / 10.0;
-        priv->fuel_remaining_range = (priv->fuel_current / avg_l_per_100) * 100.0;
-    } else {
-        priv->fuel_remaining_range = 0.0;
-    }
+    driver_break_update_remaining_range(priv);
 
     dbg(lvl_info,
         "Driver Break plugin: Fuel level set to %.2f (tank capacity=%d L, avg=%.1f L/100km, remaining range=%.1f km)",
@@ -691,7 +706,6 @@ int driver_break_cmd_log_fuel_stop(struct navit *nav, char *function, struct att
     void *plugin;
     struct driver_break_fuel_stop stop;
     struct attr position_attr;
-    char *endptr = NULL;
     double added = 0.0;
 
     (void)in;
@@ -713,13 +727,8 @@ int driver_break_cmd_log_fuel_stop(struct navit *nav, char *function, struct att
     }
 
     if (function && *function) {
-        added = g_ascii_strtod(function, &endptr);
-        if (endptr == function || (!g_ascii_isspace(*endptr) && *endptr != '\0')) {
-            navit_add_message(nav, "Driver Break plugin: Invalid fuel added value");
-            return 0;
-        }
-        if (added < 0.0) {
-            navit_add_message(nav, "Driver Break plugin: Fuel added cannot be negative");
+        if (!driver_break_parse_fuel_value(function, &added,
+                                           "Driver Break plugin: Invalid fuel added value")) {
             return 0;
         }
     }
@@ -752,13 +761,7 @@ int driver_break_cmd_log_fuel_stop(struct navit *nav, char *function, struct att
         return 0;
     }
 
-    /* Recompute remaining range */
-    if (priv->config.fuel_avg_consumption_x10 > 0) {
-        double avg_l_per_100 = priv->config.fuel_avg_consumption_x10 / 10.0;
-        priv->fuel_remaining_range = (priv->fuel_current / avg_l_per_100) * 100.0;
-    } else {
-        priv->fuel_remaining_range = 0.0;
-    }
+    driver_break_update_remaining_range(priv);
 
     navit_add_message(nav, "Driver Break plugin: Fuel stop logged");
     dbg(lvl_info,
