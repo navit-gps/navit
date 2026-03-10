@@ -400,100 +400,86 @@ GList *driver_break_poi_map_search_car_pois(struct coord_geo *center, double rad
     return driver_break_poi_map_search(center, radius_km, car_poi_types, 12, ms);
 }
 
-/* Internal helper to evaluate fuel tag presence for car vs truck and various fuel types. */
-static int fuel_station_matches_profile(struct item *item, enum driver_break_vehicle_type vehicle_type, int fuel_type) {
-    char *v = NULL;
-    int match = 0;
-
-    if (!item) {
-        return 0;
+/* Check if item has any of the given OSM fuel:* tag keys (presence only). */
+static int fuel_has_any_tag(struct item *it, const char **keys) {
+    int i;
+    for (i = 0; keys[i]; i++) {
+        char *val = get_osm_tag_value(it, keys[i]);
+        if (val) {
+            g_free(val);
+            return 1;
+        }
     }
+    return 0;
+}
 
-    /* Basic amenity=fuel check */
-    v = get_osm_tag_value(item, "amenity");
-    if (!v || g_ascii_strcasecmp(v, "fuel") != 0) {
+/* Tag sets for fuel-type matching (OSM fuel:* keys). -1 = any vehicle. */
+#define FUEL_ANY_VEHICLE (-1)
+static const char *diesel_tags_car[] = {"fuel:diesel", "fuel:diesel_b7", "fuel:diesel_b10", "fuel:biodiesel",
+                                        "fuel:diesel:class2", "fuel:taxfree_diesel", "fuel:b7", NULL};
+static const char *diesel_tags_truck[] = {"fuel:HGV_diesel", "fuel:diesel", "fuel:diesel_b7", "fuel:diesel_b10",
+                                          "fuel:biodiesel", "fuel:diesel:class2", "fuel:taxfree_diesel", NULL};
+static const char *petrol_eu_tags[] = {"fuel:octane_95", "fuel:octane_98", "fuel:octane_100", "fuel:regular",
+                                       "fuel:premium", "fuel:ethanol_free", "fuel:e5", "fuel:e10", NULL};
+static const char *petrol_us_tags[] = {"fuel:octane_87", "fuel:octane_89", "fuel:octane_91", "fuel:octane_93",
+                                       "fuel:regular", "fuel:premium", NULL};
+static const char *flex_tags[] = {"fuel:e85", "fuel:e100", "fuel:ethanol", "fuel:ethanol_free", "fuel:e5",
+                                  "fuel:e10", NULL};
+static const char *cng_tags[] = {"fuel:cng", "fuel:GNV", "fuel:biogas", NULL};
+static const char *lng_tags[] = {"fuel:lng", NULL};
+static const char *lpg_tags[] = {"fuel:lpg", "fuel:GPL", NULL};
+static const char *hydrogen_tags[] = {"fuel:h70", "fuel:h35", "fuel:LH2", NULL};
+
+/* One or more tag sets per profile; n_sets is 1..3. */
+struct fuel_profile_row {
+    int fuel_type;
+    int vehicle_type;
+    const char **sets[3];
+    int n_sets;
+};
+static const struct fuel_profile_row fuel_profile_table[] = {
+    {DRIVER_BREAK_FUEL_DIESEL, DRIVER_BREAK_VEHICLE_TRUCK, {diesel_tags_truck, NULL, NULL}, 1},
+    {DRIVER_BREAK_FUEL_DIESEL, FUEL_ANY_VEHICLE, {diesel_tags_car, NULL, NULL}, 1},
+    {DRIVER_BREAK_FUEL_PETROL, FUEL_ANY_VEHICLE, {petrol_eu_tags, petrol_us_tags, NULL}, 2},
+    {DRIVER_BREAK_FUEL_FLEX, FUEL_ANY_VEHICLE, {flex_tags, petrol_eu_tags, petrol_us_tags}, 3},
+    {DRIVER_BREAK_FUEL_CNG, FUEL_ANY_VEHICLE, {cng_tags, NULL, NULL}, 1},
+    {DRIVER_BREAK_FUEL_LNG, FUEL_ANY_VEHICLE, {lng_tags, NULL, NULL}, 1},
+    {DRIVER_BREAK_FUEL_LPG, FUEL_ANY_VEHICLE, {lpg_tags, NULL, NULL}, 1},
+    {DRIVER_BREAK_FUEL_HYDROGEN, FUEL_ANY_VEHICLE, {hydrogen_tags, NULL, NULL}, 1},
+    {DRIVER_BREAK_FUEL_ETHANOL, FUEL_ANY_VEHICLE, {flex_tags, NULL, NULL}, 1},
+};
+#define NUM_FUEL_PROFILE_ROWS (sizeof(fuel_profile_table) / sizeof(fuel_profile_table[0]))
+
+static int fuel_station_matches_profile(struct item *item, enum driver_break_vehicle_type vehicle_type, int fuel_type) {
+    if (!item)
+        return 0;
+
+    /* Optional amenity=fuel check; some maps still map as fuel POI without it. */
+    {
+        char *v = get_osm_tag_value(item, "amenity");
         if (v)
             g_free(v);
-        /* Some maps may still map as fuel POI even if amenity tag not visible here. Continue anyway. */
-    } else {
-        g_free(v);
     }
 
-    /* Helper to check a list of fuel:* tags, including overloaded aliases. */
-    auto int has_any_tag(struct item *it, const char **keys) {
-        int i;
-        for (i = 0; keys[i]; i++) {
-            char *val = get_osm_tag_value(it, keys[i]);
-            if (val) {
-                g_free(val);
-                return 1;
+    {
+        size_t r;
+        for (r = 0; r < NUM_FUEL_PROFILE_ROWS; r++) {
+            const struct fuel_profile_row *row = &fuel_profile_table[r];
+            if (row->fuel_type != fuel_type)
+                continue;
+            if (row->vehicle_type != FUEL_ANY_VEHICLE && row->vehicle_type != (int)vehicle_type)
+                continue;
+            for (int i = 0; i < row->n_sets && row->sets[i]; i++) {
+                if (fuel_has_any_tag(item, row->sets[i]))
+                    return 1;
             }
+            /* Row matched but no tag set matched; accept generic. */
+            return 1;
         }
-        return 0;
     }
 
-    /* Normalise some overloaded tags into canonical fuel:* keys by treating them as presence. */
-    const char *diesel_tags_car[] = {
-        "fuel:diesel", "fuel:diesel_b7", "fuel:diesel_b10", "fuel:biodiesel",
-        "fuel:diesel:class2", "fuel:taxfree_diesel", "fuel:b7", NULL};
-    const char *diesel_tags_truck[] = {
-        "fuel:HGV_diesel", "fuel:diesel", "fuel:diesel_b7", "fuel:diesel_b10",
-        "fuel:biodiesel", "fuel:diesel:class2", "fuel:taxfree_diesel", NULL};
-    const char *petrol_eu_tags[] = {
-        "fuel:octane_95", "fuel:octane_98", "fuel:octane_100",
-        "fuel:regular", "fuel:premium", "fuel:ethanol_free", "fuel:e5", "fuel:e10", NULL};
-    const char *petrol_us_tags[] = {
-        "fuel:octane_87", "fuel:octane_89", "fuel:octane_91", "fuel:octane_93",
-        "fuel:regular", "fuel:premium", NULL};
-    const char *flex_tags[] = {
-        "fuel:e85", "fuel:e100", "fuel:ethanol", "fuel:ethanol_free",
-        "fuel:e5", "fuel:e10", NULL};
-    const char *cng_tags[] = {"fuel:cng", "fuel:GNV", "fuel:biogas", NULL};
-    const char *lng_tags[] = {"fuel:lng", NULL};
-    const char *lpg_tags[] = {"fuel:lpg", "fuel:GPL", NULL};
-    const char *hydrogen_tags[] = {"fuel:h70", "fuel:h35", "fuel:LH2", NULL};
-
-    switch (fuel_type) {
-    case DRIVER_BREAK_FUEL_DIESEL:
-        if (vehicle_type == DRIVER_BREAK_VEHICLE_TRUCK)
-            match = has_any_tag(item, diesel_tags_truck);
-        else
-            match = has_any_tag(item, diesel_tags_car);
-        /* Truck diesel may also require AdBlue, but we accept stations without it. */
-        break;
-    case DRIVER_BREAK_FUEL_PETROL:
-        /* Accept both EU and US/CA petrol tag sets. */
-        match = has_any_tag(item, petrol_eu_tags) || has_any_tag(item, petrol_us_tags);
-        break;
-    case DRIVER_BREAK_FUEL_FLEX:
-        /* Prefer explicit E85/E100/ethanol, but accept petrol-only sites as fallback. */
-        match = has_any_tag(item, flex_tags) || has_any_tag(item, petrol_eu_tags) || has_any_tag(item, petrol_us_tags);
-        break;
-    case DRIVER_BREAK_FUEL_CNG:
-        match = has_any_tag(item, cng_tags);
-        break;
-    case DRIVER_BREAK_FUEL_LNG:
-        match = has_any_tag(item, lng_tags);
-        break;
-    case DRIVER_BREAK_FUEL_LPG:
-        match = has_any_tag(item, lpg_tags);
-        break;
-    case DRIVER_BREAK_FUEL_HYDROGEN:
-        match = has_any_tag(item, hydrogen_tags);
-        break;
-    case DRIVER_BREAK_FUEL_ETHANOL:
-        match = has_any_tag(item, flex_tags);
-        break;
-    default:
-        break;
-    }
-
-    /* If we did not find any specific tag, accept generic fuel station as a last resort. */
-    if (!match) {
-        match = 1;
-    }
-
-    return match;
+    /* Unknown fuel_type: accept generic fuel station. */
+    return 1;
 }
 
 /* Search for fuel stations matching vehicle fuel type.
