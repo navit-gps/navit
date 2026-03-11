@@ -871,7 +871,6 @@ CHECK_FUNCTION_EXISTS (_atoi64 HAVE__ATOI64)
 
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in"
 			   "${CMAKE_CURRENT_BINARY_DIR}/config.h" )
-
 # Compile with -Wall -Wextra. We need all the help we can get from the compiler :-).
 # Disabled warnings:
 # -Wno-missing-field-initializers: Used a lot, does not seem problematic.
@@ -879,19 +878,21 @@ CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in"
 #                        functions implementing the interface of a plugin.
 # -Wno-sign-compare: We currently just use int almost everywhere.
 #                    Unclear if it's really worth correcting.
-add_compiler_flag_if_available("-Wall")
-add_compiler_flag_if_available("-Wno-unused-parameter")
-add_compiler_flag_if_available("-Wno-sign-compare")
-add_compiler_flag_if_available("-Wno-missing-field-initializers")
-add_compiler_flag_if_available("-Wundef")
-add_compiler_flag_if_available("-Wcast-align")
-add_compiler_flag_if_available("-Wpointer-arith")
-add_compiler_flag_if_available("-Wextra")
-add_compiler_flag_if_available("-Wdate-time")
-add_compiler_flag_if_available("-Wmissing-prototypes")
-add_compiler_flag_if_available("-Wstrict-prototypes")
-add_compiler_flag_if_available("-Wformat-security")
+add_debug_compiler_flag_if_available("-Wall")
+add_debug_compiler_flag_if_available("-Wno-unused-parameter")
+add_debug_compiler_flag_if_available("-Wno-sign-compare")
+add_debug_compiler_flag_if_available("-Wno-missing-field-initializers")
+add_debug_compiler_flag_if_available("-Wundef")
+add_debug_compiler_flag_if_available("-Wcast-align")
+add_debug_compiler_flag_if_available("-Wpedantic")
+add_debug_compiler_flag_if_available("-Wpointer-arith")
+add_debug_compiler_flag_if_available("-Wextra")
+add_debug_compiler_flag_if_available("-Wdate-time")
+add_debug_compiler_flag_if_available("-Wmissing-prototypes")
+add_debug_compiler_flag_if_available("-Wstrict-prototypes")
+add_debug_compiler_flag_if_available("-Wformat-security")
 add_compiler_flag_if_available("-Werror=format-security")
+add_debug_compiler_flag_if_available("-fanalyzer")
 
 if (ASAN)
 	message(STATUS "Activating AddressSanitizer. To prevent libasan breaking the build, export ASAN_OPTIONS=detect_leaks=0")
