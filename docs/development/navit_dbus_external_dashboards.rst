@@ -456,6 +456,61 @@ In your implementation, always handle **unknown codes** gracefully, for example 
 showing a generic arrow or question mark icon.
 
 
+6.1 Icon Sources for Dashboards and Clusters
+--------------------------------------------
+
+You can use either your own icon set (keyed to the maneuver codes above) or reuse
+Navit's built-in assets.
+
+**Navit's built-in XPM/SVG set**
+
+Navit ships with an existing set of XPM and SVG icons that are already mapped to
+its internal POI type names and to navigation maneuver types. Layout XML (e.g.
+``navit.xml`` or platform-specific layouts) references these by filename; the
+same names can be used by an external cluster to keep visuals consistent with
+Navit's own UI.
+
+**Official SVG icons in the Navit source tree**
+
+The **official** SVG (and XPM) icons for POIs and navigation are located in the
+Navit source tree under:
+
+- **Directory:** ``navit/icons/``
+
+There you will find both POI icons (e.g. ``airport.svg``, ``fuel.svg``, ``cafe.svg``,
+``hospital.svg``, ``parking.svg``) and navigation maneuver icons (e.g.
+``nav_left_1_bk.svg``, ``nav_roundabout_r2_bk.svg``, ``nav_straight_wh.svg``,
+``nav_destination_wh.svg``). POI types in Navit use internal names like
+``poi_airport``, ``poi_fuel``, etc.; the corresponding icon files typically drop
+the ``poi_`` prefix (e.g. ``airport.svg``). You can browse this directory in any
+Navit checkout or on the official repository (e.g. under ``navit-gps/navit`` or
+your fork) to see the full set.
+
+**Example SVG icons for external dashboards**
+
+Example SVG icons suitable for use in external dashboards and instrument clusters
+(including maneuver types referenced in this document) are available in the
+``feature/navit-dash`` branch of the Navit repository:
+
+- **URL:** https://github.com/Supermagnum/navit/tree/feature/navit-dash/docs/development/svg-examples
+
+That folder contains sample SVGs (e.g. ``turn-right_1.svg``, ``roundabout-right_1.svg``,
+``eco-mode.svg``) that you can copy, adapt, or use as a reference for naming and
+style when building your own cluster assets.
+
+**Eco routing symbol (eco-mode.svg)**
+
+The ``eco-mode.svg`` icon is intended for use with Navit's energy-based or eco
+routing features. It is compatible with the **Driver Break** plugin, which
+provides configurable rest periods, fuel tracking, and optional energy-based
+routing (e.g. for cycling and cars). To understand eco routing mode, rest-stop
+suggestions, and how the plugin uses routing and POI data, see the Driver Break
+plugin documentation:
+
+- **Compatible branch:** https://github.com/Supermagnum/navit/tree/feature/driver-break
+- **Plugin docs (eco routing, travel modes, POIs):** https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/index.rst
+
+
 7. Startup Subscription Example (Python)
 ========================================
 
