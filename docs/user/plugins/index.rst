@@ -250,6 +250,20 @@ as candidates. This ensures that suggested fuel stops are appropriate for the co
   - **ECUMaster EMU / EMU Black / EMU Pro** using their documented CAN output to obtain fuel
     consumption signals.
 
+  **Protocol documentation (aftermarket ECUs):**
+
+  - **MegaSquirt** – Serial protocol and firmware .ini reference: `MSExtra documentation
+    <http://www.msextra.com/doc/>`_.
+  - **Haltech** – CAN broadcast protocol (PDF, versions 2.x): see `Haltech support
+    <https://www.haltech.com/>`_; technical protocol docs are available to product owners.
+  - **Link ECU** – G4+/G4X/G5 manuals and CAN stream setup: `Link ECU software support and manuals
+    <https://linkecu.com/software-support/manuals/>`_.
+  - **AEM** – AEMnet CAN and Infinity instruction manuals: `AEM Electronics
+    <https://www.aemelectronics.com/>`_ (tech library and product support).
+  - **ECUMaster** – EMU/EMU Black/EMU Pro CAN and software guide: `ECUMaster EMU
+    <https://www.ecumaster.com/products/emu/>`_; EMU PRO Software Guide (CAN receive/transmit
+    frames) from ECUMaster support/downloads.
+
   In all of these cases the Driver Break plugin does not need a separate DB schema: it only requires
   that an integration layer for a specific brand translates the ECU’s realtime channels into the
   generic fields already used by OBD-II and J1939 (fuel rate in L/h, tank level or fuel added, and
