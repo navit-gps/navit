@@ -102,7 +102,7 @@ The scaling factor is 2.5×, reflecting that a cyclist travels roughly two to th
 
 For hiking routes, the plugin can validate that the route avoids forbidden road types (e.g. motorway, trunk, primary) and reports how much of the route uses priority paths (footway, path, track, steps, bridleway). With pilgrimage/hiking priority enabled, segments tagged as pilgrimage or hiking routes are counted as priority. Warnings are produced for high forbidden percentage or low priority path percentage.
 
-**Energy-based routing (cycling)**
+**Energy-based routing (cycling,walking,cars,trucks)**
 
 Optional energy-based routing uses a physical model (total weight, rolling and air resistance, recuperation on downhill) to compute segment cost, inspired by BRouter's kinematic model. Configurable via total weight and use_energy_routing.
 
@@ -117,7 +117,7 @@ the plugin searches for nearby fuel stations (``amenity=fuel``) and surfaces sug
 rest stop information. Fuel stops are recorded in a dedicated history table, and additional tables
 exist for adaptive fuel consumption learning (``driver_break_fuel_samples``) and trip summaries
 (``driver_break_trip_summaries``). These tables are populated from manual fuel data and from live
-backends (OBD-II, J1939, and future aftermarket ECU integrations) so that Navit can refine range
+backends (OBD-II, J1939, and aftermarket ECU integrations) so that Navit can refine range
 estimates over time without schema changes.
 
 **Supported vehicle fuel types**
