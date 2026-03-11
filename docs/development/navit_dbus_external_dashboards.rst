@@ -961,3 +961,78 @@ By sharing reference implementations, the Navit community can build a consistent
 open standard for Navit-based external dashboards, instrument clusters, and
 head units.
 
+
+11. OBD-II Mileage Data and CAN Module Identification
+======================================================
+
+External dashboards or data loggers that display vehicle mileage often read it
+via an OBD-II adapter. This section clarifies where mileage data comes from on
+the vehicle network and how to determine which module a diagnostic tool is
+actually querying.
+
+**OBD-II as a communication interface**
+
+OBD-II (On-Board Diagnostics II) is a **communication interface** and
+electrical standard (e.g. SAE J1962 connector, ISO 15765-4/CAN). It provides
+access to the vehicle’s CAN (or other) bus. Mileage (odometer) data is **not**
+stored by the OBD-II port itself; it is stored in **modules** on the network,
+such as:
+
+- **ECU (Engine Control Unit)** – Often holds a copy of odometer value used for
+  service and emissions logic.
+- **BCM (Body Control Module)** – On many vehicles, the BCM stores or
+  forwards odometer data.
+- **Instrument cluster** – The cluster usually displays the odometer and may
+  hold the “authoritative” value that the driver sees, or it may receive it
+  from the ECU/BCM.
+
+Which module actually stores or sources the value is **vehicle-specific** and
+depends on the manufacturer’s architecture.
+
+**Mileage and the OBD-II standard**
+
+Odometer/mileage is **not** part of the mandatory OBD-II standard PIDs (e.g.
+SAE J1979). Standard PIDs cover items such as engine speed, vehicle speed,
+coolant temperature, and trouble codes, but there is no mandated PID for
+mileage. Many diagnostic tools and dash apps that show mileage therefore use
+**undocumented or reverse-engineered** CAN messages or manufacturer-specific
+(PID) definitions. As a result:
+
+- Two different tools can return **different mileage values** for the same
+  vehicle if they query different modules (e.g. one reads from the ECU, another
+  from the cluster or BCM).
+- Values can diverge if one module has been replaced or not yet synchronized
+  with the rest of the network.
+
+**Identifying which module the tool queries: the cluster disconnect test**
+
+If you need to determine which CAN bus module is actually supplying the
+mileage value to your diagnostic tool, you can use a **cluster disconnect test**.
+The idea is to remove one potential source (the instrument cluster) from the
+bus and see whether the tool still receives a mileage value.
+
+.. warning::
+   Disconnecting the instrument cluster, even momentarily, may prevent the
+   car from starting. This risk is higher if the cluster is not synchronized
+   with the ECU (e.g. after a replacement or battery disconnect). Only perform
+   this test if you understand and accept the risk; do not do it on a vehicle
+   you rely on for daily use without proper preparation.
+
+**Procedure (conceptual)**
+
+1. With the vehicle off (or as per your workshop manual for safe cluster
+   removal), disconnect the instrument cluster from the vehicle network (e.g.
+   unplug its connector).
+2. Power the vehicle and connect your OBD-II diagnostic tool (or your
+   dashboard app) and read the mileage/odometer value.
+3. Interpret the result:
+
+   - **If the tool still returns a mileage value** – The value is coming from
+     another module (e.g. ECU or BCM), not from the instrument cluster.
+   - **If the tool no longer returns a value (or returns an error)** – The
+     tool is likely querying the instrument cluster, or a gateway that depends on
+     the cluster being present.
+
+This helps you identify which module your tool is using and why its value may
+differ from another tool or from the value displayed on the cluster.
+
