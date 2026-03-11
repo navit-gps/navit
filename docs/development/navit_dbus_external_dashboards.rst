@@ -157,7 +157,7 @@ terminal:
        --object-path /org/navit_project/navit/default_navit
 
 This shows the exact interfaces, methods, and signals exported by your Navit
-build. Names like ``callback_attr_new`` and ``add_attr`` may appear there.  
+build. Names like ``callback_attr_new`` and ``add_attr`` may appear there.
 You should confirm them against your installation if you plan to ship a product.
 
 
