@@ -102,7 +102,7 @@ The scaling factor is 2.5×, reflecting that a cyclist travels roughly two to th
 
 For hiking routes, the plugin can validate that the route avoids forbidden road types (e.g. motorway, trunk, primary) and reports how much of the route uses priority paths (footway, path, track, steps, bridleway). With pilgrimage/hiking priority enabled, segments tagged as pilgrimage or hiking routes are counted as priority. Warnings are produced for high forbidden percentage or low priority path percentage.
 
-**Energy-based routing (cycling)**
+**Energy-based routing (cycling,walking,cars,trucks)**
 
 Optional energy-based routing uses a physical model (total weight, rolling and air resistance, recuperation on downhill) to compute segment cost, inspired by BRouter's kinematic model. Configurable via total weight and use_energy_routing.
 
