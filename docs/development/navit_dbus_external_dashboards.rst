@@ -196,6 +196,9 @@ The exact names may vary slightly by Navit version, but the common pattern is:
 
   - Example (signature style): ``callback_attr_update(string attr_name, variant value)``
 
+  The signal name is the most critical piece for the listener to work; verify it
+  on your build using ``gdbus introspect`` (see section 3.3).
+
 In the Python example later, we will use these names as **concrete working
 placeholders**. If your build uses different names, you can adjust them by
 checking via ``gdbus introspect`` or a D-Bus GUI tool such as ``d-feet``.
