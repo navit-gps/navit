@@ -166,6 +166,21 @@ target_include_directories(test_driver_break_obd_j1939 PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
+# MegaSquirt backend tests (formula, parsing, malformed data; no hardware)
+add_executable(test_driver_break_megasquirt
+    test_driver_break_megasquirt.c
+)
+
+target_link_libraries(test_driver_break_megasquirt
+    glib-2.0
+    m
+)
+
+target_include_directories(test_driver_break_megasquirt PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../..
+    ${CMAKE_CURRENT_SOURCE_DIR}/..
+)
+
 # Add test targets
 enable_testing()
 
@@ -177,3 +192,4 @@ add_test(NAME driver_break_routing_test COMMAND test_driver_break_routing)
 add_test(NAME driver_break_integration_test COMMAND test_driver_break_integration)
 add_test(NAME driver_break_route_integration_test COMMAND test_driver_break_route_integration)
 add_test(NAME driver_break_obd_j1939_test COMMAND test_driver_break_obd_j1939)
+add_test(NAME driver_break_megasquirt_test COMMAND test_driver_break_megasquirt)

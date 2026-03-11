@@ -29,6 +29,7 @@
 #include "driver_break_glacier.h"
 #include "driver_break_hiking.h"
 #include "driver_break_j1939.h"
+#include "driver_break_megasquirt.h"
 #include "driver_break_obd.h"
 #include "driver_break_osd.h"
 #include "driver_break_poi.h"
@@ -146,6 +147,8 @@ void driver_break_config_default(struct driver_break_config *config) {
     config->fuel_avg_consumption_x10 = 75; /* 7.5 L/100km */
     config->fuel_obd_available = 0;
     config->fuel_j1939_available = 0;
+    config->fuel_megasquirt_available = 0;
+    config->fuel_injector_flow_cc_min = 0;
     config->fuel_ethanol_manual_pct = 0;
     config->fuel_low_warning_km = 80;      /* warn when <80 km remaining */
     config->fuel_search_buffer_km = 20;    /* default buffer for fuel search */
@@ -647,6 +650,10 @@ static void driver_break_osd_destroy(struct osd_priv *osd) {
         driver_break_j1939_stop((struct driver_break_j1939 *)priv->j1939_backend);
         priv->j1939_backend = NULL;
     }
+    if (priv->megasquirt_backend) {
+        driver_break_megasquirt_stop((struct driver_break_megasquirt *)priv->megasquirt_backend);
+        priv->megasquirt_backend = NULL;
+    }
 
     if (priv->db) {
         /* Write a simple trip summary if we have collected any distance and fuel samples */
@@ -745,8 +752,15 @@ static struct osd_priv *driver_break_osd_new(struct navit *nav, struct osd_metho
     /* Set up periodic check (every minute) */
     priv->check_timeout = event_add_timeout(60000, 1, callback_new_1(callback_cast(driver_break_check_timeout), priv));
 
-    /* Start optional live backends if enabled by configuration */
+    /* Start optional live backends if enabled by configuration.
+     * OBD-II and MegaSquirt both use a serial adapter, so we treat them as
+     * mutually exclusive: prefer OBD-II if available, otherwise try
+     * MegaSquirt. J1939 uses SocketCAN and can always be started separately.
+     */
     priv->obd_backend = driver_break_obd_start(priv);
+    if (!priv->obd_backend) {
+        priv->megasquirt_backend = driver_break_megasquirt_start(priv);
+    }
     priv->j1939_backend = driver_break_j1939_start(priv);
 
     /* Register menu commands */

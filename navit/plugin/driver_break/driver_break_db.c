@@ -112,6 +112,9 @@ static int driver_break_db_load_config_value(const char *key, int value, struct 
          MAX_CONFIG_VALUE, 0},
         {"fuel_obd_available", offsetof(struct driver_break_config, fuel_obd_available), 0, 1, 1},
         {"fuel_j1939_available", offsetof(struct driver_break_config, fuel_j1939_available), 0, 1, 1},
+        {"fuel_megasquirt_available", offsetof(struct driver_break_config, fuel_megasquirt_available), 0, 1, 1},
+        {"fuel_injector_flow_cc_min", offsetof(struct driver_break_config, fuel_injector_flow_cc_min), 0,
+         MAX_CONFIG_VALUE, 1},
         {"fuel_ethanol_manual_pct", offsetof(struct driver_break_config, fuel_ethanol_manual_pct), 0, 100, 1},
         {"fuel_low_warning_km", offsetof(struct driver_break_config, fuel_low_warning_km), 0, MAX_CONFIG_VALUE, 0},
         {"fuel_search_buffer_km", offsetof(struct driver_break_config, fuel_search_buffer_km), 0, MAX_CONFIG_VALUE, 0},
@@ -395,8 +398,9 @@ int driver_break_db_save_config(struct driver_break_db *db, struct driver_break_
                           "poi_search_radius_km", "driver_break_interval_min_hours", "driver_break_interval_max_hours",
                           /* Fuel configuration keys */
                           "fuel_type", "fuel_tank_capacity_l", "fuel_avg_consumption_x10", "fuel_obd_available",
-                          "fuel_j1939_available", "fuel_ethanol_manual_pct", "fuel_low_warning_km",
-                          "fuel_search_buffer_km", "fuel_high_load_threshold"};
+                          "fuel_j1939_available", "fuel_megasquirt_available", "fuel_injector_flow_cc_min",
+                          "fuel_ethanol_manual_pct", "fuel_low_warning_km", "fuel_search_buffer_km",
+                          "fuel_high_load_threshold"};
 
     int values[] = {config->vehicle_type, config->car_soft_limit_hours, config->car_max_hours,
                     config->car_break_interval_hours, config->car_break_duration_min,
@@ -405,8 +409,9 @@ int driver_break_db_save_config(struct driver_break_db *db, struct driver_break_
                     config->driver_break_interval_min_hours, config->driver_break_interval_max_hours,
                     /* Fuel configuration values */
                     config->fuel_type, config->fuel_tank_capacity_l, config->fuel_avg_consumption_x10,
-                    config->fuel_obd_available, config->fuel_j1939_available, config->fuel_ethanol_manual_pct,
-                    config->fuel_low_warning_km, config->fuel_search_buffer_km, config->fuel_high_load_threshold};
+                    config->fuel_obd_available, config->fuel_j1939_available, config->fuel_megasquirt_available,
+                    config->fuel_injector_flow_cc_min, config->fuel_ethanol_manual_pct, config->fuel_low_warning_km,
+                    config->fuel_search_buffer_km, config->fuel_high_load_threshold};
 
     int i;
     for (i = 0; i < G_N_ELEMENTS(keys); i++) {

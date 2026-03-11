@@ -585,6 +585,17 @@ static void driver_break_show_fuel_config_dialog(struct gui_priv *gui_priv, stru
     label = gui_internal_label_new(gui_priv, buffer);
     gui_internal_widget_append(box, label);
 
+    snprintf(buffer, sizeof(buffer), "MegaSquirt available: %s",
+             priv->config.fuel_megasquirt_available ? "yes" : "no");
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    if (priv->config.fuel_injector_flow_cc_min > 0) {
+        snprintf(buffer, sizeof(buffer), "Injector flow: %d cc/min", priv->config.fuel_injector_flow_cc_min);
+        label = gui_internal_label_new(gui_priv, buffer);
+        gui_internal_widget_append(box, label);
+    }
+
     label = gui_internal_label_new(
         gui_priv, "Note: Advanced editing of fuel parameters and adapters will be added in a later version.");
     gui_internal_widget_append(box, label);

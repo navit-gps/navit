@@ -42,6 +42,7 @@ module_add_library(plugin_driver_break
     driver_break_poi_map.c
     driver_break_obd.c
     driver_break_j1939.c
+    driver_break_megasquirt.c
 )
 
 # Export symbols for inter-plugin communication

@@ -6,6 +6,10 @@ Navit includes several plugins that extend its functionality:
 Driver Break Plugin
 ------------------
 
+.. contents:: Driver Break plugin contents
+   :local:
+   :depth: 2
+
 The Driver Break plugin provides configurable rest period management for multiple travel modes. It tracks activity time, suggests rest stops using OpenStreetMap data, discovers nearby Points of Interest (POIs), and supports route validation and energy-based routing where applicable.
 
 **Travel modes**
@@ -116,9 +120,9 @@ falls below the distance to destination plus a configurable buffer (and below a 
 the plugin searches for nearby fuel stations (``amenity=fuel``) and surfaces suggestions alongside
 rest stop information. Fuel stops are recorded in a dedicated history table, and additional tables
 exist for adaptive fuel consumption learning (``driver_break_fuel_samples``) and trip summaries
-(``driver_break_trip_summaries``). These tables are populated from manual fuel data and from live
-backends (OBD-II, J1939, and aftermarket ECU integrations) so that Navit can refine range
-estimates over time without schema changes.
+(``driver_break_trip_summaries``). These tables are populated from manual fuel data and from the
+built-in live backends (OBD-II, J1939). Additional backends (e.g. for aftermarket ECUs) can feed
+the same fields to refine range estimates without schema changes.
 
 **Supported vehicle fuel types**
 
@@ -171,104 +175,79 @@ Stations whose tags do not explicitly match the selected fuel type are generally
 when no specific tags are present does the plugin fall back to treating generic ``amenity=fuel`` POIs
 as candidates. This ensures that suggested fuel stops are appropriate for the configured vehicle.
 
-**Live fuel data (OBD-II, J1939 and aftermarket ECUs)**
+**Live fuel data**
 
-- **OBD-II (cars, light vehicles)** – Optional backend using an ELM327-compatible adapter on a serial
-  port (default ``/dev/ttyUSB0``). It performs:
+The plugin supports three built-in live fuel backends. All write into the same internal state
+(``driver_break_priv.fuel_rate_l_h``, ``fuel_current``, and optionally ethanol %); adaptive
+consumption, range estimation, and trip summaries then work identically.
+
+**Supported live fuel backends (implemented)**
+
+- **OBD-II (cars, light vehicles)** – Implemented in the plugin. Uses an ELM327-compatible adapter
+  on a serial port (default ``/dev/ttyUSB0``). Enable via config ``fuel_obd_available``.
 
   - Adapter init: ``ATZ``, ``ATE0``, ``ATL0``, ``ATH0``, ``ATS0``, ``ATSP0``.
   - PID discovery via ``0100``, ``0120``, ``0140`` (bitmasks).
-  - Periodic polling (when enabled via ``fuel_obd_available`` in config):
+  - Periodic polling: ``012F`` (fuel tank level %, PID 0x2F), ``015E`` (engine fuel rate L/h, PID
+    0x5E), ``0110`` (MAF g/s, PID 0x10), ``0152`` (ethanol %, PID 0x52, optional).
 
-    - ``012F`` Fuel tank level % (PID 0x2F)
-    - ``015E`` Engine fuel rate (PID 0x5E, L/h)
-    - ``0110`` MAF air flow (PID 0x10, g/s)
-    - ``0152`` Ethanol fuel % (PID 0x52, optional)
-
-  - If 0x5E (fuel rate) is missing, the backend computes fuel rate from MAF using:
+  - If PID 0x5E is not supported, fuel rate is derived from MAF using:
 
     .. math::
 
        \text{Fuel rate (L/h)} = \frac{\text{MAF (g/s)} \times 3600}{\text{AFR} \times \text{density} \times 1000}
 
-    with AFR and density chosen according to fuel type and ethanol percentage (for example:
-    petrol 14.7/0.745, diesel 14.5/0.832, flex-fuel blends interpolated between petrol and E85).
+    (AFR and density depend on fuel type and ethanol %; e.g. petrol 14.7/0.745, diesel 14.5/0.832.)
+  - Outputs: ``fuel_rate_l_h``, ``fuel_current`` (from tank % and configured capacity),
+    ``config.fuel_ethanol_manual_pct`` when PID 0x52 is available.
 
-  - Results are written into ``driver_break_priv``:
+- **J1939 (trucks, heavy vehicles)** – Implemented in the plugin. Uses SocketCAN (default interface
+  ``can0``). Enable via config ``fuel_j1939_available``. Listens for PGN **65266** (FEEA) Engine
+  fuel rate (SPN 183, 0.05 L/h per bit) and PGN **65276** (FEF4) Fuel level (SPN 96, 0.4 % per bit,
+  0–250 %). Outputs: ``fuel_rate_l_h``, ``fuel_current`` (from fuel level % and tank capacity).
 
-    - ``fuel_rate_l_h`` – current engine fuel rate estimate.
-    - ``fuel_current`` – current tank content (via tank % and configured capacity).
-    - ``config.fuel_ethanol_manual_pct`` – overridden when PID 0x52 is available (0–100 %).
+- **MegaSquirt (aftermarket ECU, experimental)** – Implemented in the plugin. Uses a direct serial
+  connection to MegaSquirt family ECUs (MS1, MS2, MS3, MS3-Pro, MicroSquirt) on ``/dev/ttyUSB0`` at
+  115200 8N1. Enable via config ``fuel_megasquirt_available`` and set
+  ``fuel_injector_flow_cc_min`` (injector flow at rated pressure, cc/min). The backend sends the
+  MegaSquirt realtime command (``A``) and converts injector pulse width and RPM into a fuel rate
+  in L/h using the configured injector flow and a default cylinder count. When both OBD-II and
+  MegaSquirt are configured, OBD-II takes precedence to avoid sharing the same serial adapter.
 
-- **J1939 (trucks, heavy vehicles)** – Optional backend using SocketCAN (default interface ``can0``).
-  It listens for:
+**Adaptive range and high-load detection**
 
-  - PGN **65266** (FEEA) Engine fuel rate (SPN 183, 0.05 L/h per bit, 0 = N/A).
-  - PGN **65276** (FEF4) Fuel level (SPN 96, 0.4 % per bit, 0–250 %).
+The live fuel rate from either backend is combined with GPS distance between vehicle callbacks to:
+log per-segment samples into ``driver_break_fuel_samples``; maintain short-term and long-term
+rolling consumption averages; use the short-term average for range estimation; detect high-load
+when short-term exceeds baseline by ``fuel_high_load_threshold`` (user notified via OSD); and write
+a trip summary to ``driver_break_trip_summaries`` at plugin shutdown.
 
-  When enabled via ``fuel_j1939_available`` in config, the backend converts these into:
+**Adding support for other aftermarket ECUs**
 
-  - ``fuel_rate_l_h`` – current fuel rate (L/h).
-  - ``fuel_current`` – tank content based on fuel level % and tank capacity.
+Apart from the built-in MegaSquirt backend, the plugin does not include native drivers for other
+aftermarket ECUs. You can add support by implementing a small backend that talks to the ECU
+(serial, CAN, or via an OBD-II bridge) and writes the same fields the built-in backends use:
 
-- **Adaptive range and high-load detection** – The live fuel rate (from OBD-II or J1939) is combined
-  with GPS distance between vehicle callbacks to:
+- **Required:** ``driver_break_priv.fuel_rate_l_h`` (L/h) and, if available,
+  ``fuel_current`` (litres, from level % and tank capacity).
+- **Optional:** ``config.fuel_ethanol_manual_pct`` (0–100) for flex-fuel.
 
-  - Log per-segment samples into ``driver_break_fuel_samples`` (distance, fuel used, instantaneous
-    L/100km, speed, optional engine load).
-  - Maintain short-term and long-term rolling averages (e.g. 20 km vs 500 km) of consumption.
-  - Use the short-term average for range estimation.
-  - Detect high-load conditions when short-term consumption exceeds a baseline (long-term average or
-    configured ``fuel_avg_consumption_x10``) by more than ``fuel_high_load_threshold`` percent; the
-    user is notified via OSD and the internal range estimate is reduced.
-  - At plugin shutdown, a trip summary is written to ``driver_break_trip_summaries`` with total
-    distance, fuel, average and peak consumption, and whether high-load was detected.
+No schema changes are needed; the existing adaptive logging, range logic, and trip summaries will
+apply as soon as these fields are updated. Backends are started from the plugin init path
+(see ``driver_break_obd_start`` / ``driver_break_j1939_start``) and must be mutually exclusive
+with any use of the same hardware (e.g. one serial port for OBD-II or one CAN interface).
 
-- **Aftermarket ECUs (non-OBD-native)** – The fuel logging and range estimation pipeline is designed
-  so that it can consume fuel rate and fuel level signals from aftermarket engine management systems
-  as well as factory ECUs. In practice this means:
+Candidates for such an integration (protocol documentation only; no code in this repo for these
+brands):
 
-  - **MegaSquirt family** (MS1, MS2, MS3, MS3‑Pro, MicroSquirt) using:
+- **Haltech** (Elite, Nexus): CAN broadcast – `Haltech <https://www.haltech.com/>`_ (protocol docs
+  for product owners).
+- **Link ECU** (G4+, G4X, G5): CAN stream – `Link ECU manuals
+  <https://linkecu.com/software-support/manuals/>`_.
+- **AEM** (Infinity, Series 2): AEMnet CAN – `AEM Electronics <https://www.aemelectronics.com/>`_.
+- **ECUMaster** (EMU, EMU Black, EMU Pro): CAN output – `ECUMaster EMU
+  <https://www.ecumaster.com/products/emu/>`_.
 
-    - A third-party OBD-II bridge module connected to the MegaSquirt CAN bus, which exposes standard
-      SAE J1979 PIDs; the existing OBD-II backend then works unchanged.
-    - Or the native MS serial protocol (RS‑232 / USB‑serial) which provides realtime channels such as
-      injector duty cycle, pulse width, RPM and ethanol %. A thin adapter can translate these into a
-      fuel rate in L/h and an ethanol percentage and write them into the same internal fields that
-      OBD-II/J1939 use (``fuel_rate_l_h``, ``fuel_ethanol_manual_pct``).
-
-  - **Haltech Elite and Nexus series** via the published Haltech CAN protocol (over SocketCAN) where
-    broadcast frames carry fuel-related SPNs; these can be mapped into ``fuel_rate_l_h`` and
-    ``fuel_current`` in the same way as J1939.
-
-  - **Link ECU G4+/G4X/G5 series** using Link’s documented CAN broadcast (RPM, load, injector pulse
-    width etc.) to derive fuel rate, again feeding the same generic fields.
-
-  - **AEM Infinity / Series 2 EMS** using the AEMnet CAN protocol (over SocketCAN) to read lambda,
-    fuel pressure and injector duty cycle and convert them into a fuel rate and consumption samples.
-
-  - **ECUMaster EMU / EMU Black / EMU Pro** using their documented CAN output to obtain fuel
-    consumption signals.
-
-  **Protocol documentation (aftermarket ECUs):**
-
-  - **MegaSquirt** – Serial protocol and firmware .ini reference: `MSExtra documentation
-    <http://www.msextra.com/doc/>`_.
-  - **Haltech** – CAN broadcast protocol (PDF, versions 2.x): see `Haltech support
-    <https://www.haltech.com/>`_; technical protocol docs are available to product owners.
-  - **Link ECU** – G4+/G4X/G5 manuals and CAN stream setup: `Link ECU software support and manuals
-    <https://linkecu.com/software-support/manuals/>`_.
-  - **AEM** – AEMnet CAN and Infinity instruction manuals: `AEM Electronics
-    <https://www.aemelectronics.com/>`_ (tech library and product support).
-  - **ECUMaster** – EMU/EMU Black/EMU Pro CAN and software guide: `ECUMaster EMU
-    <https://www.ecumaster.com/products/emu/>`_; EMU PRO Software Guide (CAN receive/transmit
-    frames) from ECUMaster support/downloads.
-
-  In all of these cases the Driver Break plugin does not need a separate DB schema: it only requires
-  that an integration layer for a specific brand translates the ECU’s realtime channels into the
-  generic fields already used by OBD-II and J1939 (fuel rate in L/h, tank level or fuel added, and
-  ethanol percentage). The adaptive logging and trip summary code then works identically for stock
-  and aftermarket ECUs.
 
 **SRTM elevation**
 
