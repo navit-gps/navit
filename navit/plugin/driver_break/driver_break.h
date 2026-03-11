@@ -110,17 +110,17 @@ struct driver_break_config {
     double total_weight;    /* Total weight for energy calculations (kg) */
 
     /* Fuel profile and range estimation (per-vehicle) */
-    int fuel_type;                   /* enum driver_break_fuel_type */
-    int fuel_tank_capacity_l;        /* Tank capacity in liters (or equivalent unit for gas fuels) */
-    int fuel_avg_consumption_x10;    /* Average consumption in 0.1 L/100km units */
-    int fuel_obd_available;          /* 1 if OBD-II adapter available (auto-detected or user-set) */
-    int fuel_j1939_available;        /* 1 if J1939 available (truck mode) */
-    int fuel_megasquirt_available;   /* 1 if MegaSquirt serial backend should be used */
-    int fuel_injector_flow_cc_min;   /* Injector flow rate (cc/min at rated pressure) for MegaSquirt */
-    int fuel_ethanol_manual_pct;     /* Manual ethanol % for flex-fuel when PID 0x52 unavailable (0-100) */
-    int fuel_low_warning_km;         /* Low fuel warning threshold (km of range remaining) */
-    int fuel_search_buffer_km;       /* Extra km buffer for gas station search (beyond destination distance) */
-    int fuel_high_load_threshold;    /* High-load detection threshold (% above baseline, e.g. 25) */
+    int fuel_type;                 /* enum driver_break_fuel_type */
+    int fuel_tank_capacity_l;      /* Tank capacity in liters (or equivalent unit for gas fuels) */
+    int fuel_avg_consumption_x10;  /* Average consumption in 0.1 L/100km units */
+    int fuel_obd_available;        /* 1 if OBD-II adapter available (auto-detected or user-set) */
+    int fuel_j1939_available;      /* 1 if J1939 available (truck mode) */
+    int fuel_megasquirt_available; /* 1 if MegaSquirt serial backend should be used */
+    int fuel_injector_flow_cc_min; /* Injector flow rate (cc/min at rated pressure) for MegaSquirt */
+    int fuel_ethanol_manual_pct;   /* Manual ethanol % for flex-fuel when PID 0x52 unavailable (0-100) */
+    int fuel_low_warning_km;       /* Low fuel warning threshold (km of range remaining) */
+    int fuel_search_buffer_km;     /* Extra km buffer for gas station search (beyond destination distance) */
+    int fuel_high_load_threshold;  /* High-load detection threshold (% above baseline, e.g. 25) */
 };
 
 /* Initialize configuration structure with safe defaults. */

@@ -6,11 +6,28 @@ Navit includes several plugins that extend its functionality:
 Driver Break Plugin
 ------------------
 
-.. contents:: Driver Break plugin contents
-   :local:
-   :depth: 2
+**Contents**
+
+- :ref:`Travel modes <driver-break-travel-modes>`
+- :ref:`POIs searched <driver-break-pois-searched>`
+- :ref:`All searched POIs (reference) <driver-break-all-searched-pois>`
+- :ref:`Distance from buildings (camping, allemannsretten) <driver-break-distance-from-buildings>`
+- :ref:`Distance from glaciers (overnight) <driver-break-distance-from-glaciers>`
+- :ref:`Configurable rest stop periods <driver-break-configurable-rest-stop-periods>`
+- :ref:`Rast and vei (historical basis for hiking and cycling defaults) <driver-break-rast-and-vei>`
+- :ref:`Networks and priorities <driver-break-networks-and-priorities>`
+- :ref:`Hiking route validation <driver-break-hiking-route-validation>`
+- :ref:`Energy-based routing (cycling,walking,cars,trucks) <driver-break-energy-based-routing>`
+- :ref:`Fuel tracking and gas stations <driver-break-fuel-tracking-and-gas-stations>`
+- :ref:`Supported vehicle fuel types <driver-break-supported-vehicle-fuel-types>`
+- :ref:`Live fuel data <driver-break-live-fuel-data>`
+- :ref:`SRTM elevation <driver-break-srtm-elevation>`
+- :ref:`User interface and configuration <driver-break-user-interface-and-configuration>`
+- :ref:`Testing <driver-break-testing>`
 
 The Driver Break plugin provides configurable rest period management for multiple travel modes. It tracks activity time, suggests rest stops using OpenStreetMap data, discovers nearby Points of Interest (POIs), and supports route validation and energy-based routing where applicable.
+
+.. _driver-break-travel-modes:
 
 **Travel modes**
 
@@ -19,6 +36,8 @@ The Driver Break plugin provides configurable rest period management for multipl
 - **Hiking** – Daily segments: 40 km suggested maximum per day. Rest stops at 11.295 km intervals (main) or 2.275 km (alternative). Optional SRTM elevation and POI support (water, cabins).
 - **Bicycle (cycling)** – Daily segments: 100 km suggested maximum per day. Rest stops at 28.24 km intervals (main) or 5.69 km (alternative). Suggested defaults use the same rast/vei concept as hiking, scaled up for cycling (see "Rast and vei" below).
 
+.. _driver-break-pois-searched:
+
 **POIs searched**
 
 The plugin discovers nearby Points of Interest depending on travel mode. Search radii are configurable (e.g. water 2 km, cabins 5 km, general POI 15 km, network huts 25 km). Searched POI types include:
@@ -26,6 +45,8 @@ The plugin discovers nearby Points of Interest depending on travel mode. Search 
 - **Water** – Drinking water, fountain, spring (for hiking/cycling rest stops).
 - **Cabins and huts** – Wilderness hut, alpine hut, hostel, camping; with optional DNT/network detection for prioritization.
 - **Car** – Cafe, restaurant, museum, viewpoint, zoo, picnic, attraction; convenience stores, general stores, farm shops, malls; places that offer bike repairs and bike parts (bicycle shop, repair service). See "All searched POIs" for exact tags.
+
+.. _driver-break-all-searched-pois:
 
 **All searched POIs (reference)**
 
@@ -41,13 +62,19 @@ Below are the exact POI tags and types the plugin uses (OpenStreetMap/Overpass A
 
 - **General POI fallback** (when enriching a rest stop with no specific categories): ``amenity=cafe``, ``amenity=restaurant``, ``tourism=museum``, ``tourism=viewpoint``; ``shop=convenience``, ``shop=farm``, ``shop=supermarket``, ``shop=mall``, ``shop=bicycle``, ``amenity=bicycle_repair_station``.
 
+.. _driver-break-distance-from-buildings:
+
 **Distance from buildings (camping, allemannsretten)**
 
 For overnight or camping stops (e.g. when using right-to-roam rules such as Norwegian allemannsretten), the plugin enforces a configurable minimum distance from buildings or dwellings. Rest stop candidates too close to buildings are filtered out so suggested sites respect local camping rules (default e.g. 150 m; configurable).
 
+.. _driver-break-distance-from-glaciers:
+
 **Distance from glaciers (overnight)**
 
 Nightly camping positions too close to glaciers are rejected. A configurable minimum distance (e.g. 300 m) applies; the check can be relaxed when the location has a camping building.
+
+.. _driver-break-configurable-rest-stop-periods:
 
 **Configurable rest stop periods**
 
@@ -58,6 +85,8 @@ Rest parameters are configurable per mode, including:
 - Hiking: main and alternative break distances (km), max daily distance (km).
 - Cycling: main and alternative break distances (km), max daily distance (km).
 - General: rest interval range (min/max hours), POI search radii, minimum distance from buildings (camping / allemannsretten), minimum distance from glaciers for overnight stops.
+
+.. _driver-break-rast-and-vei:
 
 **Rast and vei (historical basis for hiking and cycling defaults)**
 
@@ -74,6 +103,8 @@ institutionalized or planned, built into the unit of distance itself.
 The plugin's hiking and cycling interval defaults follow from these historical rast-based distances.
 
 The scaling factor is 2.5×, reflecting that a cyclist travels roughly two to three times faster than a walker over a full day. A cyclist's dagsvei is thus 100 km (40 km × 2.5), with rest stops at 28.24 km (one rast × 2.5) and 5.69 km (one fjerdingvei × 2.5).
+
+.. _driver-break-networks-and-priorities:
 
 **Networks and priorities**
 
@@ -102,13 +133,19 @@ The scaling factor is 2.5×, reflecting that a cyclist travels roughly two to th
 
 - **Hiking/pilgrimage priority** – Optional preference for official hiking and pilgrimage routes when validating or suggesting stops. The plugin treats segments tagged ``pilgrimage=yes`` or ``route=hiking`` as priority (e.g. Camino de Santiago and similar routes in OpenStreetMap). Facilities along pilgrimage routes (huts, hostels, water) are discovered with the same POI search (cabins, water); set the POI and cabin search radii in the same range as for national networks (e.g. 10–25 km) so stops along the route are found.
 
+.. _driver-break-hiking-route-validation:
+
 **Hiking route validation**
 
 For hiking routes, the plugin can validate that the route avoids forbidden road types (e.g. motorway, trunk, primary) and reports how much of the route uses priority paths (footway, path, track, steps, bridleway). With pilgrimage/hiking priority enabled, segments tagged as pilgrimage or hiking routes are counted as priority. Warnings are produced for high forbidden percentage or low priority path percentage.
 
+.. _driver-break-energy-based-routing:
+
 **Energy-based routing (cycling,walking,cars,trucks)**
 
 Optional energy-based routing uses a physical model (total weight, rolling and air resistance, recuperation on downhill) to compute segment cost, inspired by BRouter's kinematic model. Configurable via total weight and use_energy_routing.
+
+.. _driver-break-fuel-tracking-and-gas-stations:
 
 **Fuel tracking and gas stations**
 
@@ -175,6 +212,8 @@ Stations whose tags do not explicitly match the selected fuel type are generally
 when no specific tags are present does the plugin fall back to treating generic ``amenity=fuel`` POIs
 as candidates. This ensures that suggested fuel stops are appropriate for the configured vehicle.
 
+.. _driver-break-live-fuel-data:
+
 **Live fuel data**
 
 The plugin supports three built-in live fuel backends. All write into the same internal state
@@ -214,6 +253,8 @@ consumption, range estimation, and trip summaries then work identically.
   in L/h using the configured injector flow and a default cylinder count. When both OBD-II and
   MegaSquirt are configured, OBD-II takes precedence to avoid sharing the same serial adapter.
 
+.. _driver-break-adaptive-range-and-high-load-detection:
+
 **Adaptive range and high-load detection**
 
 The live fuel rate from either backend is combined with GPS distance between vehicle callbacks to:
@@ -221,6 +262,8 @@ log per-segment samples into ``driver_break_fuel_samples``; maintain short-term 
 rolling consumption averages; use the short-term average for range estimation; detect high-load
 when short-term exceeds baseline by ``fuel_high_load_threshold`` (user notified via OSD); and write
 a trip summary to ``driver_break_trip_summaries`` at plugin shutdown.
+
+.. _driver-break-adding-support-aftermarket-ecus:
 
 **Adding support for other aftermarket ECUs**
 
@@ -248,14 +291,19 @@ brands):
 - **ECUMaster** (EMU, EMU Black, EMU Pro): CAN output – `ECUMaster EMU
   <https://www.ecumaster.com/products/emu/>`_.
 
+.. _driver-break-srtm-elevation:
 
 **SRTM elevation**
 
 The plugin uses **Copernicus DEM GLO-30** as the primary elevation source for download: GeoTIFF tiles from the public AWS S3 bucket (no authentication). URL pattern: ``https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_{LAT}_{LON}_DEM/Copernicus_DSM_COG_10_{LAT}_{LON}_DEM.tif``. When built with libtiff, the plugin downloads these tiles and reads elevation from them. If Copernicus download fails or libtiff is not available, the plugin falls back to **Viewfinder Panoramas** dem3: HGT 1 arc-second tiles in zone folders, ``http://www.viewfinderpanoramas.org/dem3/{ZONE}/{TILENAME}.zip`` (e.g. ``dem3/M32/N61E009.zip`` for Norway). The exact path for each tile is listed in ``viewfinderpanoramas.org/dem3list.txt``. Viewfinder blocks scripted downloads without a browser User-Agent; the plugin sends a browser-like User-Agent when downloading. A second fallback is NASA SRTMGL1. The plugin supports listing available regions, downloading a region by name (Copernicus GeoTIFF, then Viewfinder HGT zip, then NASA zip), and querying elevation at a coordinate. Elevation is used where applicable for routing and display. Tile borders are handled by per-point lookup: each coordinate is mapped to one 1x1 degree tile via the tile index (floor of longitude and latitude).
 
+.. _driver-break-user-interface-and-configuration:
+
 **User interface and configuration**
 
 The plugin registers as an OSD (type ``rest``). With the internal GUI, menu actions are available: suggest rest stop (along current route), rest stop history, start break, end break, configure intervals (per profile: car, truck, hiking, cycling), and configure overnight (min distance from buildings/glaciers, POI radii). Session state (driving time, break in progress, mandatory break required) is tracked. Configuration and rest stop history are stored in a SQLite database (path configurable via OSD ``data`` attribute; default in user data directory). Vehicle type can be set via OSD attribute ``type`` (e.g. car, truck).
+
+.. _driver-break-testing:
 
 **Testing**
 

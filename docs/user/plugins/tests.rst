@@ -29,6 +29,9 @@ All executables are built under the Navit build directory as
 | test_driver_break_route_integration| Rest intervals, POI discovery, SRTM. Route: **Rondanestien** (rel. 1572954). |
 +-----------------------------------+------------------------------------------------------------------+
 | test_driver_break_obd_j1939       | OBD-II/J1939 backend logic: MAF-based fuel rate, J1939 scaling.  |
++-----------------------------------+------------------------------------------------------------------+
+| test_driver_break_megasquirt      | MegaSquirt backend logic: injector-based fuel rate, malformed data handling. |
++-----------------------------------+------------------------------------------------------------------+
 
 SRTM and elevation tests (test_driver_break_srtm)
 ------------------------------------------------
@@ -85,12 +88,14 @@ From the Navit build directory:
    ./navit/plugin/driver_break/tests/test_driver_break_srtm
    ./navit/plugin/driver_break/tests/test_driver_break_integration
    ./navit/plugin/driver_break/tests/test_driver_break_route_integration
+   ./navit/plugin/driver_break/tests/test_driver_break_obd_j1939
+   ./navit/plugin/driver_break/tests/test_driver_break_megasquirt
 
 Or run all driver_break tests in one go:
 
 .. code-block:: bash
 
-   for t in config db finder routing srtm integration route_integration; do
+   for t in config db finder routing srtm integration route_integration obd_j1939 megasquirt; do
      ./navit/plugin/driver_break/tests/test_driver_break_$t || exit 1
    done
 
@@ -103,7 +108,7 @@ Or use CTest from the build directory:
 The CTest names (if registered from the plugin subdirectory) are:
 ``driver_break_config_test``, ``driver_break_db_test``, ``driver_break_finder_test``,
 ``driver_break_routing_test``, ``driver_break_srtm_test``, ``driver_break_integration_test``,
-``driver_break_route_integration_test``.
+``driver_break_route_integration_test``, ``driver_break_obd_j1939_test``, ``driver_break_megasquirt_test``.
 
 **Downloading map data for tests**
 
@@ -167,7 +172,7 @@ Network and dependencies
 Expected results
 ----------------
 
-All seven test executables exit with code 0 when all tests pass. Typical output:
+All test executables exit with code 0 when all tests pass. Typical output:
 
 - **test_driver_break_config:** ``All configuration tests passed!``
 - **test_driver_break_db:** ``All database tests passed!``
@@ -197,6 +202,13 @@ All seven test executables exit with code 0 when all tests pass. Typical output:
       raw values (e.g. raw=1000 -> 50 L/h).
     - PGN 65276 (FEF4) fuel level scaling (0.4 % per bit) tested with representative
       levels for heavy trucks (e.g. raw=50 -> 20 % of a 400 L tank).
+
+- **test_driver_break_megasquirt:** ``All MegaSquirt backend tests passed!`` covering:
+
+  - Injector-based fuel rate formula from pulse width, RPM and injector flow.
+  - Parsing of the MegaSquirt realtime block (RPM and injector PW fields).
+  - Bounds checks for RPM and pulse width (exclusive lower/upper limits).
+  - Handling of malformed, short and overflow buffers without corrupting fuel statistics.
 
 Any failure is reported to stderr with file and line; the executable then exits
 with a non-zero code.

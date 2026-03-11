@@ -585,8 +585,7 @@ static void driver_break_show_fuel_config_dialog(struct gui_priv *gui_priv, stru
     label = gui_internal_label_new(gui_priv, buffer);
     gui_internal_widget_append(box, label);
 
-    snprintf(buffer, sizeof(buffer), "MegaSquirt available: %s",
-             priv->config.fuel_megasquirt_available ? "yes" : "no");
+    snprintf(buffer, sizeof(buffer), "MegaSquirt available: %s", priv->config.fuel_megasquirt_available ? "yes" : "no");
     label = gui_internal_label_new(gui_priv, buffer);
     gui_internal_widget_append(box, label);
 

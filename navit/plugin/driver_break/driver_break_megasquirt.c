@@ -15,9 +15,9 @@
  */
 
 #include "driver_break_megasquirt.h"
+#include "callback.h"
 #include "debug.h"
 #include "driver_break.h"
-#include "callback.h"
 #include "event.h"
 #include <errno.h>
 #include <fcntl.h>
@@ -205,9 +205,8 @@ static void ms_poll(struct driver_break_megasquirt *ctx) {
         double rate_l_h = ms_injector_to_fuel_rate(pw_ms, rpm, ctx->n_cyl, flow_cc);
         if (rate_l_h > 0.0) {
             ctx->priv->fuel_rate_l_h = rate_l_h;
-            dbg(lvl_debug,
-                "Driver Break MegaSquirt: rpm=%u pw=%.3f ms n_cyl=%d flow=%d cc/min -> fuel_rate=%.2f L/h", rpm, pw_ms,
-                MS_N_CYL_DEFAULT, flow_cc, rate_l_h);
+            dbg(lvl_debug, "Driver Break MegaSquirt: rpm=%u pw=%.3f ms n_cyl=%d flow=%d cc/min -> fuel_rate=%.2f L/h",
+                rpm, pw_ms, MS_N_CYL_DEFAULT, flow_cc, rate_l_h);
         }
     }
 

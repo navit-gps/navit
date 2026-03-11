@@ -81,7 +81,7 @@ static int test_fuel_rate_formula(void) {
 
 static int test_parse_valid_block(void) {
     /* RPM=3000 (0x0BB8), PW_raw=2000 (0.002 s = 2 ms) -> big-endian */
-    unsigned char buf[] = { 0x00, 0x00, 0x0B, 0xB8, 0x07, 0xD0 };
+    unsigned char buf[] = {0x00, 0x00, 0x0B, 0xB8, 0x07, 0xD0};
     double rate;
     int ok = megasquirt_would_accept(buf, sizeof(buf), 250, &rate);
     TEST_ASSERT(ok == 1, "Valid 6-byte block should be accepted");
@@ -107,7 +107,7 @@ static int test_malformed_short_buffer(void) {
 }
 
 static int test_malformed_zero_flow(void) {
-    unsigned char buf[] = { 0x00, 0x00, 0x0B, 0xB8, 0x07, 0xD0 };
+    unsigned char buf[] = {0x00, 0x00, 0x0B, 0xB8, 0x07, 0xD0};
     TEST_ASSERT(megasquirt_would_accept(buf, 6, 0, NULL) == 0, "Zero flow must reject");
     TEST_ASSERT(megasquirt_would_accept(buf, 6, -1, NULL) == 0, "Negative flow must reject");
 
@@ -179,14 +179,14 @@ static int test_malformed_pw_bounds(void) {
 
 static int test_overflow_produces_zero_rate(void) {
     /* Malformed: all 0xFF. RPM=65535, PW=65535 -> formula would give huge rate; backend clamps to 0. */
-    unsigned char all_ff[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+    unsigned char all_ff[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
     double rate;
     int ok = megasquirt_would_accept(all_ff, 6, 250, &rate);
     TEST_ASSERT(ok == 0, "All 0xFF buffer not accepted (rpm/pw out of range)");
     TEST_ASSERT(rate == 0.0, "Rate remains 0 for overflow bytes");
 
     /* Even if we had a buffer in range for acceptance, rate > 600 is clamped in formula */
-    unsigned char high_rate[] = { 0x00, 0x00, 0x2E, 0xE0, 0xC3, 0x50 };
+    unsigned char high_rate[] = {0x00, 0x00, 0x2E, 0xE0, 0xC3, 0x50};
     /* RPM=12000 excluded; use 10000 rpm, 49 ms PW -> 49*10000*4*250/2e6 = 245 L/h, ok */
     high_rate[2] = 0x27;
     high_rate[3] = 0x10;
@@ -200,11 +200,11 @@ static int test_overflow_produces_zero_rate(void) {
 
 static int test_uninitialized_garbage_bytes(void) {
     /* Short buffer: bytes beyond length are not read; only length matters. */
-    unsigned char short_buf[3] = { 0xAB, 0xCD, 0xEF };
+    unsigned char short_buf[3] = {0xAB, 0xCD, 0xEF};
     TEST_ASSERT(megasquirt_would_accept(short_buf, 3, 250, NULL) == 0, "Short buffer with garbage rejected");
 
     /* 6 bytes of garbage that decode to in-range rpm/pw but formula might still reject (e.g. rate 0) */
-    unsigned char garbage[6] = { 0x11, 0x22, 0x01, 0x00, 0x00, 0x01 };
+    unsigned char garbage[6] = {0x11, 0x22, 0x01, 0x00, 0x00, 0x01};
     int ok = megasquirt_would_accept(garbage, 6, 250, NULL);
     /* rpm=256, pw=0.001: in range; rate = 0.001*256*4*250/2e6 = 0.128 L/h, valid */
     (void)ok;
