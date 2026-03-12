@@ -89,7 +89,6 @@
 #  include <direct.h>
 #endif /* NOT_NEEDED_FOR_NAVIT */
 #  include <windows.h>
-#include <shlobj.h>
 #include <shlwapi.h>
 #include <objbase.h>
 #  include <shlobj.h>
