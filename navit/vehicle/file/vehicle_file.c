@@ -22,7 +22,6 @@
 
 #include "attr.h"
 #include "attr_type_def.h"
-#include "config.h"
 #include "callback.h"
 #include "config.h"
 #include "coord.h"
