@@ -1872,20 +1872,20 @@ static int gui_internal_is_active_voice(struct gui_priv *this, struct speech *pr
     struct attr profile_name_attr;
     struct attr profile_active_attr;
     int active = 0;
-        
+
     active_voice_attr.type = attr_speech;
     active_voice_name_attr.type = attr_name;
     active_voice_active_attr.type = attr_active;
-                                                         
+
     profile_name_attr.type = attr_name;
     profile_active_attr.type = attr_active;
 
-    // Voice profile 
+    // Voice profile
     speech_get_attr(profile, attr_name, &profile_name_attr, NULL);
     speech_get_attr(profile, attr_active, &profile_active_attr, NULL);
     dbg(lvl_debug, "Voice name: %s", profile_name_attr.u.str);
-    dbg(lvl_debug, "Voice active: %i", profile_active_attr.u.num);                                
-                                   
+    dbg(lvl_debug, "Voice active: %i", profile_active_attr.u.num);
+
     // Active voice profile
     navit_get_attr(this->nav, attr_speech, &active_voice_attr, NULL);
     speech_get_attr(active_voice_attr.u.speech, attr_name, &active_voice_name_attr, NULL);
@@ -1954,7 +1954,7 @@ static void gui_internal_cmd_set_active_voice_profile(struct gui_priv *this, str
 
     navit_get_attr(this->nav, attr_speech, &active_speech_attr, NULL);
     navit_set_attr(this->nav, &speech_attr);
-    speech_set_attr(active_speech_attr.u.speech, &active_attr);
+    navit_active_voice_toggle(this->nav, 1);
     dbg(lvl_debug, "Changed voice to '%s'", vapn->profilename);
 
     gui_internal_prune_menu_count(this, 1, 0);
@@ -2028,7 +2028,7 @@ static void gui_internal_add_voice_profile(struct gui_priv *this, struct widget 
        name = "<none>";
 
     active = gui_internal_is_active_voice(this, profile);
-    dbg(lvl_debug, "Adding voice profile '%s' active=/%i", name, active);
+    dbg(lvl_debug, "Adding voice profile '%s' active=%i", name, active);
 
     // Build a translatable label.
     if(active) {

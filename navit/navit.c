@@ -68,7 +68,6 @@ struct log;
 struct vehicle;
 #ifdef HAVE_API_WIN32_BASE
 #    include <windows.h>
-
 #    include "util.h"
 #endif
 #ifdef HAVE_API_WIN32_CE
@@ -1911,6 +1910,45 @@ void navit_say(struct navit *this_, const char *text) {
 }
 
 /**
+ * @brief Toggles the active voice
+ */
+static int navit_active_voice_toggle(struct navit *this_, int active) {
+    struct attr attr, speechattr;
+
+    // Set active attribute value
+    if (!navit_get_attr(this_, attr_speech, &speechattr, NULL)) {
+        if (speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL)) {
+            if (active == 2) {
+                active = !attr.u.num;
+            }
+        } else {
+            attr.type = attr_active;
+        }
+        attr.u.num = active;
+
+    } else {
+      return 1;
+    }
+    dbg(lvl_error, "Active voice active attribute value: '%i'", active);
+
+    // Set active attribute in active voice
+    if (!speech_set_attr(speechattr.u.speech, &attr))
+        return 2;
+
+
+    // Debug
+    navit_get_attr(this_, attr_speech, &speechattr, NULL);
+    speech_get_attr(speechattr.u.speech, attr_name, &attr, NULL);
+    dbg(lvl_error, "Active voice name: '%s'", attr.u.str);
+    speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL);
+    dbg(lvl_error, "Active voice active attribute value: '%i'", attr.u.num);
+
+
+    callback_list_call_attr_1(this_->attr_cbl, attr_speech, this_);
+    return 0;
+}
+
+/**
  * @brief Toggles the navigation announcer for navit
  * @param this_ The navit object
  */
@@ -2117,6 +2155,7 @@ int navit_init(struct navit *this_) {
             "for explanations and solutions\n");
         exit(1);
     }
+    dbg(lvl_debug, "Setting Voice");
     if (this_->speech && this_->navigation) {
         struct attr speech;
         speech.type = attr_speech;
@@ -2220,6 +2259,7 @@ int navit_init(struct navit *this_) {
     }
     if (this_->navigation) {
         if (this_->speech) {
+            dbg(lvl_debug, "navit_init: Set speech callback of navigation to: ...");
             this_->nav_speech_cb = callback_new_1(callback_cast(navit_speak), this_);
             navigation_register_callback(this_->navigation, attr_navigation_speech, this_->nav_speech_cb);
         }
@@ -2557,6 +2597,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
     GList *l;
     struct navit_vehicle *nv;
     struct layout *lay;
+    struct attr name;
     struct attr active;
     active.type = attr_active;
     active.u.num = 0;
@@ -2692,6 +2733,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
         if (this_->speech && this_->speech != attr->u.speech) {
             attr_updated = 1;
             this_->speech = attr->u.speech;
+            dbg(lvl_debug, "navit_set_attr_do: Set speech attribute to: ...");
         }
         break;
     case attr_timeout:
@@ -3114,6 +3156,7 @@ int navit_add_attr(struct navit *this_, struct attr *attr) {
     int ret = 1;
     struct attr speechattr;
     struct attr activeattr;
+    struct attr nameattr;
     
     switch (attr->type) {
     case attr_callback:
@@ -3147,9 +3190,11 @@ int navit_add_attr(struct navit *this_, struct attr *attr) {
         break;
     case attr_speech:
         this_->voiceprofiles = g_list_append(this_->voiceprofiles, attr->u.speech);
+        speech_get_attr(attr->u.speech, attr_name, &nameattr, NULL);
         if (speech_get_attr(attr->u.speech, attr_active, &activeattr, NULL)) {
             if (activeattr.u.num == 1) {
                 this_->speech = attr->u.speech;
+                dbg(lvl_debug, "navit_add_attr: Add speech attribute to: %s", nameattr.u.str);
             }
         }
 	break;
