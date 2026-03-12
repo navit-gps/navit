@@ -99,13 +99,13 @@ msgstr "%d. %d மைல்கள்"
 msgid "one mile"
 msgid_plural "%d miles"
 msgstr[0] "ஒரு மைல்"
-msgstr[1] "பல மைல்கள்"
+msgstr[1] "%d மைல்கள்"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
 msgstr[0] "ஒரு மைல்"
-msgstr[1] "பல மைல்கள்"
+msgstr[1] "%d மைல்களில்"
 
 #, c-format
 msgid "%d meters"
