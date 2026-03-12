@@ -43,7 +43,7 @@ msgstr "Gestart vanuit de bronmap\n"
 
 #. libc of navit returns "dummy"
 msgid "Error getting current path. use ./ \n"
-msgstr "libc van Navit geeft \"dummy\" terug"
+msgstr ""
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
