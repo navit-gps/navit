@@ -3,10 +3,11 @@ How the Driver Break plugin works
 
 This document describes how the Driver Break plugin implements its main
 behaviours: how it uses the current route to suggest rest stops, how it
-calculates energy-based (eco) routing costs, how it uses SRTM elevation data,
-and how it discovers Points of Interest (POIs). It is intended for users and
-developers who want to understand the plugin's internals without reading the
-source code.
+reads live fuel data (OBD-II, J1939, MegaSquirt), how it calculates
+energy-based (eco) routing costs, how it uses SRTM elevation data, and how
+it discovers Points of Interest (POIs). It is intended for users and
+developers who want to understand the plugin's internals or debug behaviour;
+each section names the main C functions and source files to search for.
 
 
 Overview
@@ -20,6 +21,10 @@ hiking, cycling), it:
   mandatory break is required.
 - **Enriches each stop** with nearby POIs (water, cabins, cafes, fuel stations,
   etc.) and optionally with elevation from SRTM.
+- **Reads live fuel data** from the vehicle when an ECU is connected: **OBD-II**
+  (ELM327, cars/light vehicles), **J1939** (SocketCAN, trucks), or **MegaSquirt**
+  (serial, aftermarket ECUs). Fuel rate and level feed range estimation and
+  adaptive learning.
 - **Optionally influences routing** via an energy-based cost model (eco-mode)
   when enabled.
 
@@ -30,6 +35,8 @@ costs on top of it.
 
 How rest stops are calculated
 -----------------------------
+
+**Code to look at:** ``driver_break_route_callback_wrapper``, ``driver_break_handle_hiking_route``, ``driver_break_handle_cycling_route``, ``driver_break_handle_motor_route`` (``driver_break.c``); ``hiking_calculate_driver_break_stops_with_max``, ``cycling_calculate_driver_break_stops`` (``driver_break_hiking.c``, ``driver_break_cycling.c``); ``driver_break_finder_find_along_route``, ``driver_break_finder_find_near``, ``driver_break_finder_is_valid_location`` (``driver_break_finder.c``).
 
 **Hiking and cycling (distance-based)**
 
@@ -68,6 +75,8 @@ use a walk over the route geometry with highway and location checks.
 How energy-based (eco) routing works
 ------------------------------------
 
+**Code to look at:** ``energy_model_init``, ``energy_calculate_segment``, ``energy_calculate_gradient``, ``energy_get_effective_speed`` (``driver_break_energy.c``). The model is used when the router requests segment costs; search for ``energy_calculate_segment`` or ``use_energy_routing`` in the plugin and routing code.
+
 When ``use_energy_routing`` is enabled, the plugin uses a **kinematic
 energy model** (inspired by BRouter) to assign a cost to each route segment.
 Navit's router can then prefer routes with lower total cost (i.e. lower
@@ -93,8 +102,50 @@ Elevation for this model comes from SRTM (or similar) when available; see
 "How SRTM is used" below. The mathematical details are in :doc:`formulas`.
 
 
+How live fuel data is read (OBD-II, J1939, MegaSquirt)
+-----------------------------------------------------
+
+The plugin can read instantaneous fuel rate and (where supported) fuel level
+from the vehicle. Only one serial-based backend runs at a time: **OBD-II** or
+**MegaSquirt** (they share the same serial port). **J1939** is separate (SocketCAN)
+and is used in truck mode.
+
+**OBD-II (ELM327)**
+
+- Opens a serial device (e.g. ``/dev/ttyUSB0``), sends init commands (ATZ, ATE0,
+  etc.), then periodically queries PIDs: 0x2F (tank level), 0x5E (fuel rate),
+  0x10 (MAF), 0x52 (ethanol). If PID 0x5E is not supported, fuel rate is derived
+  from MAF (``obd_maf_to_fuel_rate``). The result is written to
+  ``priv->fuel_rate_l_h`` and (from tank level) ``fuel_current``.
+
+**J1939 (SocketCAN)**
+
+- Subscribes to the CAN bus (e.g. ``can0``) and listens for PGN 65266 (engine
+  fuel rate) and PGN 65276 (fuel level). Raw values are scaled (0.05 L/h per
+  bit, 0.4 % per bit) and written to the same ``priv`` fields.
+
+**MegaSquirt**
+
+- Opens serial at 115200 8N1, sends the realtime command ``A``, reads the binary
+  block, and extracts RPM and injector pulse width. Fuel rate is computed with
+  ``ms_injector_to_fuel_rate`` from pulse width, RPM, cylinder count, and
+  configured injector flow (cc/min). Out-of-range or malformed data is skipped.
+
+**Code to look at:** ``driver_break_obd_start``, ``driver_break_obd_stop``,
+``obd_poll``, ``obd_read_fuel_rate_pid``, ``obd_read_maf_and_ethanol``,
+``obd_maf_to_fuel_rate``, ``obd_update_tank_level``, ``obd_open_serial``,
+``obd_detect_supported_pids`` (``driver_break_obd.c``). ``driver_break_j1939_start``,
+``driver_break_j1939_stop``, ``j1939_idle`` (``driver_break_j1939.c``).
+``driver_break_megasquirt_start``, ``driver_break_megasquirt_stop``, ``ms_poll``,
+``ms_injector_to_fuel_rate``, ``ms_read_realtime_block``, ``ms_open_serial``
+(``driver_break_megasquirt.c``). Backend selection in ``driver_break_osd_new``
+(``driver_break.c``): OBD-II tried first; if not started, MegaSquirt; then J1939.
+
+
 How SRTM files are used
 -----------------------
+
+**Code to look at:** ``srtm_init``, ``srtm_get_elevation``, ``srtm_tile_exists``, ``srtm_get_tile_filename``, ``srtm_get_geotiff_tile_filename`` (``driver_break_srtm.c``); internal readers: ``read_hgt_elevation``, ``read_geotiff_elevation`` (same file). Download: ``srtm_download_region``, ``srtm_calculate_tiles``, ``srtm_get_regions``.
 
 The plugin uses elevation data only when the SRTM subsystem is initialised
 (with a data directory, e.g. the default ``~/.navit/srtm/`` or a user-chosen
@@ -149,6 +200,8 @@ path).
 
 How POIs are found
 ------------------
+
+**Code to look at:** ``driver_break_poi_discover`` (``driver_break_poi.c``) – entry point; uses ``build_overpass_query`` and ``parse_overpass_response`` for Overpass. Map-based: ``driver_break_poi_map_search``, ``driver_break_poi_map_search_water``, ``driver_break_poi_map_search_cabins``, ``driver_break_poi_map_search_car_pois``, ``driver_break_poi_map_search_fuel`` (``driver_break_poi_map.c``). Hiking water/cabins: ``poi_search_water_points``, ``poi_search_water_points_map``, ``poi_search_cabins``, ``poi_search_cabins_map`` (``driver_break_poi_hiking.c``). Validation: ``driver_break_finder_is_valid_location``, ``driver_break_finder_is_valid_nightly_location``, ``check_distance_from_buildings`` (``driver_break_finder.c``); ``glacier_is_too_close_for_camping`` (``driver_break_glacier.c``). Ranking: ``driver_break_poi_rank`` (``driver_break_poi.c``).
 
 The plugin discovers POIs in two ways: **map-based search** (preferred) and
 **Overpass API** (fallback when no suitable map is available).
@@ -220,6 +273,84 @@ Summary
 - **POIs**: Prefer map-based search (mapset + item types + radius); fallback
   to Overpass; validate rest stop locations for distance from buildings and
   glaciers; attach POI lists to each suggested stop.
+- **Live fuel**: OBD-II (ELM327), J1939 (SocketCAN), or MegaSquirt (serial)
+  write ``fuel_rate_l_h`` and optionally ``fuel_current``; at most one
+  serial backend (OBD-II or MegaSquirt) runs. See :doc:`ecu_ports` for
+  configuration.
+
+
+Code reference (for debugging)
+------------------------------
+
+All paths below are relative to ``navit/plugin/driver_break/``. Use these
+function and file names when setting breakpoints or searching the codebase.
+
+**Route and rest stop flow**
+
+- ``driver_break.c``: ``driver_break_route_callback_wrapper`` (route change
+  entry); ``driver_break_handle_hiking_route``, ``driver_break_handle_cycling_route``,
+  ``driver_break_handle_motor_route``; ``process_hiking_stops``, ``process_cycling_stops``.
+- ``driver_break_finder.c``: ``driver_break_finder_find_along_route`` (car/truck
+  along route); ``driver_break_finder_find_near`` (near a point); ``driver_break_finder_is_valid_location``,
+  ``driver_break_finder_is_valid_nightly_location``; ``create_rest_stop_at``,
+  ``is_suitable_highway_for_stop``.
+- ``driver_break_hiking.c``: ``hiking_calculate_driver_break_stops``,
+  ``hiking_calculate_driver_break_stops_with_max``, ``hiking_calculate_daily_segments``.
+- ``driver_break_cycling.c``: ``cycling_calculate_driver_break_stops``,
+  ``cycling_calculate_daily_segments``.
+
+**Energy (eco) routing**
+
+- ``driver_break_energy.c``: ``energy_model_init``, ``energy_calculate_segment``,
+  ``energy_calculate_gradient``, ``energy_get_effective_speed``.
+
+**Live fuel (OBD-II, J1939, MegaSquirt)**
+
+- ``driver_break.c``: ``driver_break_osd_new`` (starts OBD-II, then MegaSquirt
+  if OBD not used, then J1939); ``driver_break_osd_destroy`` (calls
+  ``driver_break_obd_stop``, ``driver_break_megasquirt_stop``, ``driver_break_j1939_stop``).
+- ``driver_break_obd.c``: ``driver_break_obd_start``, ``driver_break_obd_stop``;
+  ``obd_poll``, ``obd_poll_timeout``; ``obd_read_fuel_rate_pid``,
+  ``obd_read_maf_and_ethanol``, ``obd_maf_to_fuel_rate``, ``obd_update_tank_level``;
+  ``obd_open_serial``, ``obd_detect_supported_pids``, ``obd_pid_supported``.
+- ``driver_break_j1939.c``: ``driver_break_j1939_start``, ``driver_break_j1939_stop``;
+  ``j1939_idle`` (CAN frame handling).
+- ``driver_break_megasquirt.c``: ``driver_break_megasquirt_start``,
+  ``driver_break_megasquirt_stop``; ``ms_poll``, ``ms_poll_timeout``;
+  ``ms_injector_to_fuel_rate``, ``ms_read_realtime_block``, ``ms_open_serial``,
+  ``ms_detect_version``.
+
+**SRTM / elevation**
+
+- ``driver_break_srtm.c``: ``srtm_init``, ``srtm_get_elevation``, ``srtm_tile_exists``,
+  ``srtm_get_tile_filename``, ``srtm_get_geotiff_tile_filename``; ``read_hgt_elevation``,
+  ``read_geotiff_elevation`` (GeoTIFF path); ``srtm_calculate_tiles``, ``srtm_get_regions``,
+  ``srtm_download_region`` (download flow).
+
+**POI discovery**
+
+- ``driver_break_poi.c``: ``driver_break_poi_discover`` (main entry); ``build_overpass_query``,
+  ``parse_overpass_response`` (Overpass); ``driver_break_poi_rank``.
+- ``driver_break_poi_map.c``: ``driver_break_poi_map_search``, ``driver_break_poi_map_search_water``,
+  ``driver_break_poi_map_search_cabins``, ``driver_break_poi_map_search_car_pois``,
+  ``driver_break_poi_map_search_fuel``; ``driver_break_poi_is_network_cabin``,
+  ``fuel_station_matches_profile``.
+- ``driver_break_poi_hiking.c``: ``poi_search_water_points``, ``poi_search_water_points_map``,
+  ``poi_search_cabins``, ``poi_search_cabins_map``.
+- ``driver_break_finder.c``: ``check_distance_from_buildings``, ``is_excluded_landuse``.
+- ``driver_break_glacier.c``: ``glacier_is_too_close_for_camping``, ``glacier_find_nearby``.
+
+**OSD and commands**
+
+- ``driver_break_osd.c``: ``driver_break_cmd_suggest_stop``, ``driver_break_cmd_show_history``,
+  ``driver_break_cmd_configure_fuel``, ``driver_break_cmd_log_fuel_stop``,
+  ``driver_break_cmd_configure_intervals``, ``driver_break_cmd_configure_overnight``;
+  ``driver_break_show_suggestions_dialog``, ``driver_break_show_fuel_config_dialog``.
+
+**Config and persistence**
+
+- ``driver_break_db.c``: ``driver_break_db_new``, ``driver_break_db_save_config``,
+  ``driver_break_db_load_config``, ``driver_break_db_add_history``, ``driver_break_db_add_fuel_stop``.
 
 For formulas and configuration details, see :doc:`formulas`, :doc:`ecu_ports`,
 and the main :doc:`index`.
