@@ -167,3 +167,14 @@ User interface and configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The plugin registers as an OSD element in Navit's display. With the internal GUI, menu actions are available: suggest rest stop (along current route), rest stop history, start break, end break, configure intervals (per profile: car, truck, hiking, cycling), and configure overnight settings (minimum distance from buildings and glaciers, POI search radii). Session state — including driving time, whether a break is in progress, and whether a mandatory break is required — is tracked continuously. Vehicle type is selected via the OSD configuration.
+
+Further reading
+~~~~~~~~~~~~~~~
+
+For details on specific aspects of the Driver Break plugin, see:
+
+- :doc:`ECU ports and live fuel configuration <ecu_ports>`
+- :doc:`Test suite and expected results <tests>`
+- :doc:`Adding support for other aftermarket ECUs <aftermarket_ecus>`
+- :doc:`Formulas used by the plugin <formulas>`
+- :doc:`Integrating Navit-daemon with eco-mode and learning <navit_daemon_integration>`
