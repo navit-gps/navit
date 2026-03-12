@@ -720,7 +720,7 @@ static struct event_watch *event_qt_add_watch(int fd, enum event_watch_cond cond
 
 static void event_qt_remove_watch(struct event_watch *ev) {
     g_hash_table_remove(event_gr->widget->watches, GINT_TO_POINTER(ev->fd));
-    delete (ev->sn);
+    delete ev->sn;
     g_free(ev);
 }
 
