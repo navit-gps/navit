@@ -202,6 +202,7 @@ static int navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_o
 static void navit_set_cursors(struct navit *this_);
 static int navit_cmd_zoom_to_route(struct navit *this, char *function, struct attr **in, struct attr ***out);
 static int navit_cmd_set_center_cursor(struct navit *this_, char *function, struct attr **in, struct attr ***out);
+static int navit_active_voice_toggle(struct navit *this_, int active);
 static int navit_cmd_announcer_toggle(struct navit *this_, char *function, struct attr **in, struct attr ***out);
 static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv);
 static int navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp);
