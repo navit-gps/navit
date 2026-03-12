@@ -96,7 +96,7 @@ For hiking routes, the plugin can validate that the route avoids forbidden road 
 
 .. _energy-based-routing:
 
-Energy-based routing (cycling)
+Energy-based routing (cycling,car,trucks and walking)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Optional energy-based routing uses a physical model (total weight, rolling and air resistance, recuperation on downhill) to compute segment cost, inspired by BRouter's kinematic model. The model parameters are:
