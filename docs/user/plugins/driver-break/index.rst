@@ -8,6 +8,7 @@ Navit includes several plugins that extend its functionality:
    :caption: Contents
 
    Driver Break Plugin <self>
+   How the plugin works <how_it_works>
    Driver Break ECU ports <ecu_ports>
    Driver Break Tests <tests>
    Driver Break aftermarket ECUs <aftermarket_ecus>
@@ -173,6 +174,7 @@ Further reading
 
 For details on specific aspects of the Driver Break plugin, see:
 
+* How the plugin works: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/how_it_works.rst
 * ECU ports: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/ecu_ports.rst
 * Tests: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/tests.rst
 * Aftermarket ECUs: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/aftermarket_ecus.rst
