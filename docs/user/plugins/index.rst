@@ -19,7 +19,7 @@ Navit includes several plugins that extend its functionality:
 Driver Break Plugin
 -------------------
 
-The Driver Break plugin provides configurable rest period management for multiple travel modes. It tracks activity time, suggests rest stops using OpenStreetMap data, discovers nearby Points of Interest (POIs), and supports route validation and energy-based routing where applicable.
+The Driver Break plugin provides configurable rest period management for multiple travel modes. It tracks activity time, suggests rest stops using OpenStreetMap data, discovers nearby Points of Interest (POIs), and supports route validation and energy-based routing where applicable. It also supports live fuel monitoring via OBD-II (ELM327), J1939 (SocketCAN), and MegaSquirt ECU backends.
 
 .. _travel-modes:
 
@@ -96,17 +96,127 @@ For hiking routes, the plugin can validate that the route avoids forbidden road 
 
 .. _energy-based-routing:
 
-Energy-based routing (cycling,cars,trucks,walking)
+Energy-based routing (cycling)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Optional energy-based routing uses a physical model (total weight, rolling and air resistance, recuperation on downhill) to compute segment cost, inspired by BRouter's kinematic model. Configurable via total weight and use_energy_routing.
+Optional energy-based routing uses a physical model (total weight, rolling and air resistance, recuperation on downhill) to compute segment cost, inspired by BRouter's kinematic model. The model parameters are:
+
+- **totalweight** – Total weight in kg (vehicle + cargo + person).
+- **f_roll** – Rolling resistance coefficient.
+- **f_air** – Air resistance coefficient.
+- **f_recup** – Recuperation coefficient for downhill segments.
+- **p_standby** – Standby power in watts.
+- **recup_efficiency** – Recuperation efficiency (0.0–1.0).
+- **outside_temp** – Outside temperature in Celsius (affects resistance).
+- **vmax** – Maximum speed in m/s.
+
+For each route segment, the model calculates energy consumed (Joules), time taken (seconds), and a normalized routing cost based on distance, elevation change, and speed limit. Gradient is derived from elevation delta and segment distance. Configurable via OSD attributes ``totalweight`` and ``use_energy_routing``.
 
 .. _srtm-elevation:
 
 SRTM elevation
 ~~~~~~~~~~~~~~
 
-For hiking, elevation data from SRTM HGT files can be used. The plugin supports listing available SRTM regions, downloading a region by name, and querying elevation at a coordinate. Elevation is used where applicable for routing and display.
+For hiking, elevation data from SRTM HGT files can be used. The plugin supports three elevation data sources, tried in order:
+
+1. **Copernicus DEM GLO-30** (primary) – GeoTIFF tiles downloaded from the public AWS S3 bucket. Requires libcurl and libtiff.
+2. **Viewfinder Panoramas dem3** (fallback) – HGT zip files organised in zone folders (e.g. ``dem3/M32/N61E009.zip``); a browser User-Agent is sent to avoid blocking.
+3. **NASA SRTMGL1** (second fallback) – Standard 1-arcsecond HGT zip files.
+
+The SRTM module provides the following capabilities:
+
+- Query elevation at any coordinate (returns -32768 if data is unavailable).
+- Calculate the set of tiles required to cover a bounding box.
+- List, download, pause, resume, and cancel downloads per named region (e.g. "Norway", "Europe").
+- Track per-tile and per-region download progress (0–100 %).
+- Cache multiple tiles; handle tile borders transparently.
+- Each tile carries primary, fallback, and second-fallback download URLs, plus an optional MD5 checksum.
+
+.. _obd2-support:
+
+OBD-II (ELM327) fuel monitoring
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The OBD-II backend connects to an ELM327-compatible adapter over a serial port (default ``/dev/ttyUSB0``) and feeds live fuel data into the plugin. It is intentionally conservative: if the adapter or ECU does not respond as expected the backend disables itself and the plugin falls back to manual and adaptive estimation.
+
+**PID discovery and polling**
+
+On startup the backend discovers which PIDs the ECU supports by requesting bitmask responses for PID ranges 0x00, 0x20, and 0x40. It then polls only the supported subset at reasonable intervals:
+
++--------+---------------------------------------------+
+| PID    | Data                                        |
++========+=============================================+
+| 0x2F   | Fuel tank level (%)                         |
++--------+---------------------------------------------+
+| 0x5E   | Engine fuel rate (L/h)                      |
++--------+---------------------------------------------+
+| 0x10   | Mass Air Flow (MAF) rate – used to estimate |
+|        | fuel rate when 0x5E is unsupported          |
++--------+---------------------------------------------+
+| 0x0D   | Vehicle speed (km/h)                        |
++--------+---------------------------------------------+
+| 0x51   | Fuel type                                   |
++--------+---------------------------------------------+
+| 0x52   | Ethanol fuel percentage                     |
++--------+---------------------------------------------+
+
+**MAF-based fuel rate estimation**
+
+When PID 0x5E (direct fuel rate) is not supported, the backend estimates fuel consumption from the MAF sensor reading using the stoichiometric ratio for the detected fuel type. Petrol engines at cruise typically report 10–20 g/s MAF (2–4 L/h); diesel engines under load report 30+ g/s with higher volumetric rates. Flex-fuel vehicles report ethanol content via PID 0x52: E85 requires a higher volume fuel rate than E10 for the same MAF value.
+
+**Fields updated in the plugin**
+
+- ``fuel_rate_l_h`` – Current fuel consumption in litres per hour.
+- ``fuel_current`` – Current fuel level derived from tank level % and configured tank capacity.
+- Ethanol percentage (for flex-fuel vehicles).
+
+.. _j1939-support:
+
+J1939 (SocketCAN) fuel monitoring
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The J1939 backend listens on a SocketCAN interface (default ``can0``) for two Parameter Group Numbers (PGNs) broadcast by heavy-vehicle ECUs:
+
++------------------+------------------+------------------------------------------+
+| PGN              | Acronym          | Signal                                   |
++==================+==================+==========================================+
+| 65266 (0xFEEA)   | Engine Fuel Rate | Fuel rate, 0.05 L/h per bit              |
++------------------+------------------+------------------------------------------+
+| 65276 (0xFEF4)   | Fuel Level       | Tank level %, 0.4 % per bit              |
++------------------+------------------+------------------------------------------+
+
+The backend translates these CAN signals into the same ``fuel_rate_l_h`` and ``fuel_current`` fields used by the OBD-II backend, so the rest of the plugin is source-agnostic. Example scaling: a raw PGN 65266 value of 1000 yields 50 L/h; a raw PGN 65276 value of 50 yields 20 % of a 400 L tank. This backend is primarily intended for truck mode.
+
+.. _megasquirt-support:
+
+MegaSquirt ECU fuel monitoring
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The MegaSquirt backend supports the following ECUs from the MegaSquirt family:
+
+- MS1 (MegaSquirt-I)
+- MS2 (MegaSquirt-II)
+- MS3 / MS3-Pro (MegaSquirt-III)
+- MicroSquirt
+
+**Connection**
+
+The backend communicates over a serial RS-232 or USB-serial connection at **115200 baud, 8N1** (default device ``/dev/ttyUSB0``). On startup it optionally sends a version command to detect the firmware variant (MS2/MS3/MicroSquirt), then begins periodic polling.
+
+**Protocol**
+
+The legacy ``A`` (realtime data) command from the MSExtra documentation is used to request the realtime data block. RPM and injector pulse-width fields are parsed from this block to compute fuel rate.
+
+**Fuel rate calculation**
+
+Fuel rate is derived from injector pulse width, engine RPM, and the configured injector flow rate:
+
+.. code-block:: text
+
+   fuel_rate_l_h = (pulse_width_ms / 1000) * (RPM / 60)
+                   * injector_flow_cc_per_min * num_cylinders / 1000
+
+The backend only starts if the configuration flag ``fuel_megasquirt_available`` is set and a valid injector flow rate has been configured via ``fuel_injector_flow_cc_min``. It applies strict bounds checks on RPM and pulse-width values and handles malformed, short, and overflow input buffers without corrupting fuel statistics. Like the OBD-II and J1939 backends, results are written into ``fuel_rate_l_h`` and ``fuel_current``. If the serial port cannot be opened or no plausible realtime data is received, the backend fails quietly and the plugin falls back to manual/adaptive estimation.
 
 .. _ui-and-configuration:
 
@@ -114,3 +224,5 @@ User interface and configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The plugin registers as an OSD (type ``rest``). With the internal GUI, menu actions are available: suggest rest stop (along current route), rest stop history, start break, end break, configure intervals (per profile: car, truck, hiking, cycling), and configure overnight (min distance from buildings/glaciers, POI radii). Session state (driving time, break in progress, mandatory break required) is tracked. Configuration and rest stop history are stored in a SQLite database (path configurable via OSD ``data`` attribute; default in user data directory). Vehicle type can be set via OSD attribute ``type`` (e.g. car, truck).
+
+Fuel backend selection is automatic: J1939 is tried first for truck mode (requires SocketCAN), then OBD-II (requires a serial ELM327 adapter), then MegaSquirt (requires serial connection to the ECU). If none are available, the plugin falls back to manual and adaptive fuel estimation.
