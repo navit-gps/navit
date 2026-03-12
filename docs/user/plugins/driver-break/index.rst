@@ -173,8 +173,8 @@ Further reading
 
 For details on specific aspects of the Driver Break plugin, see:
 
-- :doc:`ECU ports and live fuel configuration <driver-break/ecu_ports>`
-- :doc:`Test suite and expected results <driver-break/tests>`
-- :doc:`Adding support for other aftermarket ECUs <driver-break/aftermarket_ecus>`
-- :doc:`Formulas used by the plugin <driver-break/formulas>`
-- :doc:`Integrating Navit-daemon with eco-mode and learning <driver-break/navit_daemon_integration>`
+- :doc:`ECU ports and live fuel configuration <ecu_ports>`
+- :doc:`Test suite and expected results <tests>`
+- :doc:`Adding support for other aftermarket ECUs <aftermarket_ecus>`
+- :doc:`Formulas used by the plugin <formulas>`
+- :doc:`Integrating Navit-daemon with eco-mode and learning <navit_daemon_integration>`
