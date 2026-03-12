@@ -8,7 +8,11 @@ Navit includes several plugins that extend its functionality:
    :caption: Contents
 
    Driver Break Plugin <self>
-   tests
+   Driver Break ECU ports <ecu_ports>
+   Driver Break Tests <tests>
+   Driver Break aftermarket ECUs <aftermarket_ecus>
+   Driver Break formulas <formulas>
+   Driver Break Navit-daemon integration <navit_daemon_integration>
 
 .. contents:: On this page
    :local:
