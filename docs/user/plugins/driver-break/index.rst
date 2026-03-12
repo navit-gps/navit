@@ -7,12 +7,8 @@ Navit includes several plugins that extend its functionality:
    :maxdepth: 2
    :caption: Contents
 
-   Driver Break Plugin <driver-break/index>
-   Driver Break ECU ports <driver-break/ecu_ports>
-   Driver Break Tests <driver-break/tests>
-   Driver Break aftermarket ECUs <driver-break/aftermarket_ecus>
-   Driver Break formulas <driver-break/formulas>
-   Driver Break Navit-daemon integration <driver-break/navit_daemon_integration>
+   Driver Break Plugin <self>
+   tests
 
 .. contents:: On this page
    :local:
@@ -87,17 +83,9 @@ The plugin's hiking and cycling interval defaults follow from these historical r
 
 Networks and priorities
 ~~~~~~~~~~~~~~~~~~~~~~~
-<<<<<<< HEAD
 
-- **DNT/network priority** – Optional priority for network huts (e.g. Norwegian Trekking Association, DNT) with configurable hut search radius.
-- **Hiking/pilgrimage priority** – Optional preference for official hiking and pilgrimage routes when validating or suggesting stops.
-=======
->>>>>>> 2b8c9f7c (documentation fixed and moved to correct folder)
+- **DNT/network priority** – Optional priority for network huts (e.g. Norwegian Trekking Association, DNT) with configurable hut search radius. Set the network hut search radius according to typical spacing (see below); in remote areas consider raising it toward the upper range to include the next cabin.
 
-.. _hiking-route-validation:
-
-<<<<<<< HEAD
-=======
   **Networked cabin spacing (nearest-neighbor distances, for setting search radius):**
 
   - **Norway (DNT)** – OpenStreetMap relation 1110420 (DNT cabins): 449 huts; average 10.56 km, median 8.83 km, max 100.45 km.
@@ -123,7 +111,6 @@ Networks and priorities
 
 .. _hiking-route-validation:
 
->>>>>>> 2b8c9f7c (documentation fixed and moved to correct folder)
 Hiking route validation
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -134,7 +121,7 @@ For hiking routes, the plugin can validate that the route avoids forbidden road 
 Energy-based routing (cycling,car,trucks,walking)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Optional energy-based routing models the physical effort required for each segment of a cycling route, taking into account rider and vehicle weight, rolling and air resistance, elevation changes, and recuperation on downhill sections. When a compatible ECU is connected (see :ref:`fuel-monitoring`), live fuel consumption data from the vehicle is incorporated into the route cost calculations, giving a more accurate picture of the energy demands of the planned route. This allows Navit to prefer flatter or more energy-efficient paths where alternatives exist.
+Optional energy-based routing is also an **eco-mode**: it models the physical effort and energy use required for each segment of a route, taking into account total weight, rolling and air resistance, elevation changes, and recuperation on downhill sections. When a compatible ECU is connected (see :ref:`fuel-monitoring`), live fuel consumption data from the vehicle is incorporated into the route cost calculations, giving a more accurate picture of the energy demands of the planned route. This allows Navit to prefer flatter or more energy-efficient (fuel-saving) paths where alternatives exist.
 
 .. _srtm-elevation:
 
