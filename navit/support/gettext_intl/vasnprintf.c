@@ -37,7 +37,6 @@
 # include "vasnprintf.h"
 #endif
 
-#include <stdio.h>	/* snprintf(), sprintf() */
 #include <stdlib.h>	/* abort(), malloc(), realloc(), free() */
 #include <string.h>	/* memcpy(), strlen() */
 #include <errno.h>	/* errno */
@@ -114,14 +113,14 @@ VASNPRINTF (CHAR_T *resultbuf, size_t *lengthp, const CHAR_T *format, va_list ar
 #ifdef _MSC_VER
 #ifndef _WIN32_WCE
   static int notFirstTime=0;
-  if(!notFirstTime) 
+  if(!notFirstTime)
     {
       _set_printf_count_output( 1 );
       notFirstTime = 1;
     }
 #endif
 #endif
-        
+
   if (PRINTF_PARSE (format, &d, &a) < 0)
     {
       errno = EINVAL;
