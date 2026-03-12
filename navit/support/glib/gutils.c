@@ -89,7 +89,7 @@
 #  include <direct.h>
 #endif /* NOT_NEEDED_FOR_NAVIT */
 #  include <windows.h>
-#  include <winbase.h>
+#  include <shellapi.h>
 #  include <shlobj.h>
    /* older SDK (e.g. msvc 5.0) does not have these*/
 #  ifndef CSIDL_MYMUSIC
