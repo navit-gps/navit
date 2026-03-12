@@ -96,7 +96,7 @@ For hiking routes, the plugin can validate that the route avoids forbidden road 
 
 .. _energy-based-routing:
 
-Energy-based routing (cycling)
+Energy-based routing (cycling,car,trucks,walking)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Optional energy-based routing models the physical effort required for each segment of a cycling route, taking into account rider and vehicle weight, rolling and air resistance, elevation changes, and recuperation on downhill sections. When a compatible ECU is connected (see :ref:`fuel-monitoring`), live fuel consumption data from the vehicle is incorporated into the route cost calculations, giving a more accurate picture of the energy demands of the planned route. This allows Navit to prefer flatter or more energy-efficient paths where alternatives exist.
