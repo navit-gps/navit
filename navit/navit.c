@@ -202,7 +202,6 @@ static int navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_o
 static void navit_set_cursors(struct navit *this_);
 static int navit_cmd_zoom_to_route(struct navit *this, char *function, struct attr **in, struct attr ***out);
 static int navit_cmd_set_center_cursor(struct navit *this_, char *function, struct attr **in, struct attr ***out);
-static int navit_active_voice_toggle(struct navit *this_, int active);
 static int navit_cmd_announcer_toggle(struct navit *this_, char *function, struct attr **in, struct attr ***out);
 static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv);
 static int navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp);
@@ -1908,45 +1907,6 @@ void navit_say(struct navit *this_, const char *text) {
         if (attr.u.num)
             speech_say(this_->speech, text);
     }
-}
-
-/**
- * @brief Toggles the active voice
- */
-static int navit_active_voice_toggle(struct navit *this_, int active) {
-    struct attr attr, speechattr;
-
-    // Set active attribute value
-    if (!navit_get_attr(this_, attr_speech, &speechattr, NULL)) {
-        if (speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL)) {
-            if (active == 2) {
-                active = !attr.u.num;
-            }
-        } else {
-            attr.type = attr_active;
-        }
-        attr.u.num = active;
-
-    } else {
-      return 1;
-    }
-    dbg(lvl_error, "Active voice active attribute value: '%i'", active);
-
-    // Set active attribute in active voice
-    if (!speech_set_attr(speechattr.u.speech, &attr))
-        return 2;
-
-
-    // Debug
-    navit_get_attr(this_, attr_speech, &speechattr, NULL);
-    speech_get_attr(speechattr.u.speech, attr_name, &attr, NULL);
-    dbg(lvl_error, "Active voice name: '%s'", attr.u.str);
-    speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL);
-    dbg(lvl_error, "Active voice active attribute value: '%i'", attr.u.num);
-
-
-    callback_list_call_attr_1(this_->attr_cbl, attr_speech, this_);
-    return 0;
 }
 
 /**
