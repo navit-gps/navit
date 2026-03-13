@@ -2105,11 +2105,8 @@ int navit_init(struct navit *this_) {
         struct attr attr_type_gui, attr_type_graphics;
         gui_get_attr(this_->gui, attr_type, &attr_type_gui, NULL);
         graphics_get_attr(this_->gra, attr_type, &attr_type_graphics, NULL);
-        dbg(lvl_error, "FATAL: Failed to connect graphics '%s' to gui '%s'", attr_type_graphics.u.str,
-            attr_type_gui.u.str);
-        dbg(lvl_error,
-            "Please see https://navit.readthedocs.io/en/trunk/user/faq/Failed_to_connect_graphics_to_gui.html "
-            "for explanations and solutions\n");
+        dbg(lvl_error, "FATAL: Failed to connect graphics '%s' to gui '%s'", attr_type_graphics.u.str, attr_type_gui.u.str);
+        dbg(lvl_error, "Please see https://navit.readthedocs.io/en/trunk/user/faq/Failed_to_connect_graphics_to_gui.html for explanations and solutions\n");
         exit(1);
     }
     if (this_->speech && this_->navigation) {
