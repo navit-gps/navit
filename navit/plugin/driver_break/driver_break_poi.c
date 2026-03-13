@@ -224,6 +224,73 @@ static GList *parse_overpass_response(const char *json_response, struct coord_ge
 
 #endif /* HAVE_CURL */
 
+#ifdef HAVE_CURL
+#ifdef HAVE_CURL
+/* Shared helper for Overpass queries (general and specific). */
+static GList *driver_break_poi_overpass_search(struct coord_geo *center, int radius_km, const char **categories,
+                                               int num_categories, int is_general) {
+    CURL *curl;
+    CURLcode res;
+    struct overpass_query query_data;
+    char *overpass_query;
+    char *url;
+    GList *pois = NULL;
+
+    curl = curl_easy_init();
+    if (!curl) {
+        dbg(lvl_error, "Driver Break plugin: Failed to initialize libcurl");
+        return NULL;
+    }
+
+    overpass_query = build_overpass_query(center, radius_km, categories, num_categories);
+
+    /* URL encode the query */
+    char *encoded_query = curl_easy_escape(curl, overpass_query, 0);
+    if (!encoded_query) {
+        dbg(lvl_error, "Driver Break plugin: Failed to encode Overpass query");
+        curl_easy_cleanup(curl);
+        g_free(overpass_query);
+        return NULL;
+    }
+
+    url = g_strdup_printf("https://overpass-api.de/api/interpreter?data=%s", encoded_query);
+
+    query_data.response = malloc(1);
+    query_data.size = 0;
+
+    curl_easy_setopt(curl, CURLOPT_URL, url);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, overpass_write_callback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&query_data);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30L);
+
+    res = curl_easy_perform(curl);
+
+    if (res != CURLE_OK) {
+        dbg(lvl_warning, "Driver Break plugin: Overpass API request failed: %s",
+            curl_easy_strerror(res));
+    } else {
+        /* Parse response */
+        pois = parse_overpass_response(query_data.response, center);
+        if (!pois) {
+            dbg(lvl_warning,
+                "Driver Break plugin: Overpass API returned 0 POIs at lat=%.5f lon=%.5f (%s categories)", center->lat,
+                center->lng, is_general ? "general" : "specific");
+        } else {
+            dbg(lvl_info, "Driver Break plugin: Overpass API returned POIs for %s search",
+                is_general ? "general" : "specific");
+        }
+    }
+
+    free(query_data.response);
+    curl_free(encoded_query);
+    curl_easy_cleanup(curl);
+    g_free(url);
+    g_free(overpass_query);
+
+    return pois;
+}
+#endif /* HAVE_CURL */
+
 /* Discover POIs using map data (preferred) or Overpass API (fallback) */
 GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const char **poi_categories,
                                  int num_categories) {
@@ -242,131 +309,22 @@ GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const 
 
     /* If poi_categories is NULL, search for general POIs */
     if (!poi_categories || num_categories == 0) {
-        /* Use Overpass API as fallback */
 #ifdef HAVE_CURL
-        CURL *curl;
-        CURLcode res;
-        struct overpass_query query_data;
-        char *overpass_query;
-        char *url;
-
-        curl = curl_easy_init();
-        if (!curl) {
-            dbg(lvl_error, "Driver Break plugin: Failed to initialize libcurl");
-            return NULL;
-        }
-
-        /* Build Overpass API query for general POIs (including convenience, stores, malls, bike) */
+        /* General POIs: cafes, shops, bike, etc. */
         const char *general_categories[] = {"amenity=cafe",     "amenity=restaurant",
                                             "tourism=museum",   "tourism=viewpoint",
                                             "shop=convenience", "shop=farm",
                                             "shop=supermarket", "shop=mall",
                                             "shop=bicycle",     "amenity=bicycle_repair_station"};
-        overpass_query = build_overpass_query(center, radius_km, general_categories,
-                                              sizeof(general_categories) / sizeof(general_categories[0]));
-
-        /* URL encode the query */
-        char *encoded_query = curl_easy_escape(curl, overpass_query, 0);
-        if (!encoded_query) {
-            dbg(lvl_error, "Driver Break plugin: Failed to encode Overpass query");
-            curl_easy_cleanup(curl);
-            g_free(overpass_query);
-            return NULL;
-        }
-
-        url = g_strdup_printf("https://overpass-api.de/api/interpreter?data=%s", encoded_query);
-
-        query_data.response = malloc(1);
-        query_data.size = 0;
-
-        curl_easy_setopt(curl, CURLOPT_URL, url);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, overpass_write_callback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&query_data);
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30L);
-
-        res = curl_easy_perform(curl);
-
-        if (res != CURLE_OK) {
-            dbg(lvl_warning, "Driver Break plugin: Overpass API request failed: %s (using map data instead)",
-                curl_easy_strerror(res));
-        } else {
-            /* Parse response */
-            pois = parse_overpass_response(query_data.response, center);
-            if (!pois) {
-                dbg(lvl_warning,
-                    "Driver Break plugin: Overpass API returned 0 POIs at lat=%.5f lon=%.5f (general categories)",
-                    center->lat, center->lng);
-            } else {
-                dbg(lvl_info, "Driver Break plugin: Overpass API returned POIs for general search");
-            }
-        }
-
-        free(query_data.response);
-        curl_free(encoded_query);
-        curl_easy_cleanup(curl);
-        g_free(url);
-        g_free(overpass_query);
+        pois = driver_break_poi_overpass_search(center, radius_km, general_categories,
+                                                sizeof(general_categories) / sizeof(general_categories[0]), 1);
 #else
         dbg(lvl_warning, "Driver Break plugin: libcurl not available, POI discovery disabled");
 #endif
     } else {
         /* Use Overpass API for specific categories */
 #ifdef HAVE_CURL
-        CURL *curl;
-        CURLcode res;
-        struct overpass_query query_data;
-        char *overpass_query;
-        char *url;
-
-        curl = curl_easy_init();
-        if (!curl) {
-            dbg(lvl_error, "Driver Break plugin: Failed to initialize libcurl");
-            return NULL;
-        }
-
-        /* Build Overpass API query */
-        overpass_query = build_overpass_query(center, radius_km, poi_categories, num_categories);
-
-        /* URL encode the query */
-        char *encoded_query = curl_easy_escape(curl, overpass_query, 0);
-        if (!encoded_query) {
-            dbg(lvl_error, "Driver Break plugin: Failed to encode Overpass query");
-            curl_easy_cleanup(curl);
-            g_free(overpass_query);
-            return NULL;
-        }
-
-        url = g_strdup_printf("https://overpass-api.de/api/interpreter?data=%s", encoded_query);
-
-        query_data.response = malloc(1);
-        query_data.size = 0;
-
-        curl_easy_setopt(curl, CURLOPT_URL, url);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, overpass_write_callback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&query_data);
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30L);
-
-        res = curl_easy_perform(curl);
-
-        if (res != CURLE_OK) {
-            dbg(lvl_warning, "Driver Break plugin: Overpass API request failed: %s", curl_easy_strerror(res));
-        } else {
-            /* Parse response */
-            pois = parse_overpass_response(query_data.response, center);
-            if (!pois) {
-                dbg(lvl_warning,
-                    "Driver Break plugin: Overpass API returned 0 POIs at lat=%.5f lon=%.5f (specific categories)",
-                    center->lat, center->lng);
-            } else {
-                dbg(lvl_info, "Driver Break plugin: Overpass API returned POIs for specific categories search");
-            }
-        }
-
-        free(query_data.response);
-        curl_free(encoded_query);
-        curl_easy_cleanup(curl);
-        g_free(url);
-        g_free(overpass_query);
+        pois = driver_break_poi_overpass_search(center, radius_km, poi_categories, num_categories, 0);
 #else
         dbg(lvl_warning, "Driver Break plugin: libcurl not available, POI discovery disabled");
 #endif

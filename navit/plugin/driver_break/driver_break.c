@@ -488,9 +488,8 @@ static void driver_break_handle_hiking_route(struct driver_break_priv *priv) {
             max_daily = 46400.0; /* 46.4 km (90th percentile of DNT hut spacing) */
         }
 
-        dbg(lvl_info,
-            "Driver Break plugin: Hiking route length=%.0f m max_daily=%.0f m (DNT priority=%d)", total_distance,
-            max_daily, priv->config.enable_dnt_priority);
+        dbg(lvl_info, "Driver Break plugin: Hiking route length=%.0f m max_daily=%.0f m (DNT priority=%d)",
+            total_distance, max_daily, priv->config.enable_dnt_priority);
 
         GList *hiking_stops = hiking_calculate_driver_break_stops_with_max(total_distance, 0, max_daily);
         if (hiking_stops) {
