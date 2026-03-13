@@ -43,6 +43,11 @@ void energy_model_init(struct energy_model *model, double totalweight, double f_
     /* Calculate minimum cost per meter */
     model->cost0 = (model->pw + model->p_standby) / model->vmax + model->f_roll
                    + model->f_air * model->vmax * model->vmax;
+
+    dbg(lvl_info,
+        "Driver Break plugin: Energy model init totalweight=%.1f kg f_roll=%.4f f_air=%.4f p_standby=%.1f W "
+        "vmax=%.1f m/s",
+        model->totalweight, model->f_roll, model->f_air, model->p_standby, model->vmax);
 }
 
 /* Calculate gradient percentage */
@@ -117,6 +122,17 @@ struct energy_result energy_calculate_segment(struct energy_model *model, double
     /* Cost = (power * time + energy) / cost0 */
     double power_cost = model->pw * time;
     result.cost = (power_cost + result.energy) / model->cost0;
+
+    dbg(lvl_info,
+        "Driver Break plugin: Energy segment dist=%.1f m delta_h=%.1f m elev=%.1f m speed=%.1f m/s "
+        "f_roll=%.4f f_air=%.4f fh=%.4f f_recup=%.4f work=%.1f J standby=%.1f J cost=%.4f",
+        distance, delta_h, elevation, v, f_roll_force, f_air_force, fh, f_recup_force, work, standby_energy,
+        result.cost);
+
+    if (result.cost < 0.0) {
+        dbg(lvl_warning, "Driver Break plugin: Energy segment cost negative (%.4f), check recuperation parameters",
+            result.cost);
+    }
 
     return result;
 }

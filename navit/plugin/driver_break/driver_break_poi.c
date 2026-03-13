@@ -233,6 +233,9 @@ GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const 
         return NULL;
     }
 
+    dbg(lvl_info, "Driver Break plugin: POI discovery at lat=%.5f lon=%.5f radius=%d km categories=%d", center->lat,
+        center->lng, radius_km, num_categories);
+
     /* Try to get mapset from navit (if available) */
     /* For now, use Overpass API as fallback if mapset not available */
     /* This function signature is kept for compatibility */
@@ -289,6 +292,13 @@ GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const 
         } else {
             /* Parse response */
             pois = parse_overpass_response(query_data.response, center);
+            if (!pois) {
+                dbg(lvl_warning,
+                    "Driver Break plugin: Overpass API returned 0 POIs at lat=%.5f lon=%.5f (general categories)",
+                    center->lat, center->lng);
+            } else {
+                dbg(lvl_info, "Driver Break plugin: Overpass API returned POIs for general search");
+            }
         }
 
         free(query_data.response);
@@ -343,6 +353,13 @@ GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const 
         } else {
             /* Parse response */
             pois = parse_overpass_response(query_data.response, center);
+            if (!pois) {
+                dbg(lvl_warning,
+                    "Driver Break plugin: Overpass API returned 0 POIs at lat=%.5f lon=%.5f (specific categories)",
+                    center->lat, center->lng);
+            } else {
+                dbg(lvl_info, "Driver Break plugin: Overpass API returned POIs for specific categories search");
+            }
         }
 
         free(query_data.response);

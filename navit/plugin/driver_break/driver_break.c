@@ -477,6 +477,8 @@ static void driver_break_handle_hiking_route(struct driver_break_priv *priv) {
 
     if (route_get_attr(priv->current_route, attr_destination_length, &dist_attr, NULL)) {
         total_distance = (double)dist_attr.u.num;
+    } else {
+        dbg(lvl_error, "Driver Break plugin: Hiking route handler failed to get attr_destination_length");
     }
 
     /* Adjust max daily distance if DNT priority enabled (matches BRouter) */
@@ -486,10 +488,16 @@ static void driver_break_handle_hiking_route(struct driver_break_priv *priv) {
             max_daily = 46400.0; /* 46.4 km (90th percentile of DNT hut spacing) */
         }
 
+        dbg(lvl_info,
+            "Driver Break plugin: Hiking route length=%.0f m max_daily=%.0f m (DNT priority=%d)", total_distance,
+            max_daily, priv->config.enable_dnt_priority);
+
         GList *hiking_stops = hiking_calculate_driver_break_stops_with_max(total_distance, 0, max_daily);
         if (hiking_stops) {
             process_hiking_stops(priv, hiking_stops);
             hiking_free_driver_break_stops(hiking_stops);
+        } else {
+            dbg(lvl_error, "Driver Break plugin: Hiking route handler did not place any rest stops");
         }
     }
 }
@@ -504,13 +512,18 @@ static void driver_break_handle_cycling_route(struct driver_break_priv *priv) {
 
     if (route_get_attr(priv->current_route, attr_destination_length, &dist_attr, NULL)) {
         total_distance = (double)dist_attr.u.num;
+    } else {
+        dbg(lvl_error, "Driver Break plugin: Cycling route handler failed to get attr_destination_length");
     }
 
     if (total_distance > 0) {
+        dbg(lvl_info, "Driver Break plugin: Cycling route length=%.0f m", total_distance);
         GList *cycling_stops = cycling_calculate_driver_break_stops(total_distance, 0);
         if (cycling_stops) {
             process_cycling_stops(priv, cycling_stops);
             cycling_free_driver_break_stops(cycling_stops);
+        } else {
+            dbg(lvl_error, "Driver Break plugin: Cycling route handler did not place any rest stops");
         }
     }
 }

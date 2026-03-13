@@ -169,15 +169,22 @@ static int check_distance_from_buildings(struct coord_geo *coord, int min_distan
 }
 
 int driver_break_finder_is_valid_location(struct coord_geo *coord, struct driver_break_config *config) {
-    if (!coord || !config)
+    if (!coord || !config) {
+        dbg(lvl_warning, "Driver Break plugin: Invalid location check (coord/config missing)");
         return 0;
+    }
 
     /* Basic coordinate validation */
-    if (coord->lat < -90 || coord->lat > 90)
+    if (coord->lat < -90 || coord->lat > 90) {
+        dbg(lvl_warning, "Driver Break plugin: Location rejected (invalid latitude %.5f)", coord->lat);
         return 0;
-    if (coord->lng < -180 || coord->lng > 180)
+    }
+    if (coord->lng < -180 || coord->lng > 180) {
+        dbg(lvl_warning, "Driver Break plugin: Location rejected (invalid longitude %.5f)", coord->lng);
         return 0;
+    }
 
+    dbg(lvl_info, "Driver Break plugin: Basic location validation passed (lat=%.5f lon=%.5f)", coord->lat, coord->lng);
     return 1;
 }
 
@@ -185,21 +192,30 @@ int driver_break_finder_is_valid_location(struct coord_geo *coord, struct driver
 int driver_break_finder_is_valid_nightly_location(struct coord_geo *coord, struct driver_break_config *config,
                                                   struct mapset *ms, int has_camping_building) {
     if (!driver_break_finder_is_valid_location(coord, config)) {
+        dbg(lvl_warning, "Driver Break plugin: Nightly location rejected by basic validation");
         return 0;
     }
 
     /* Check distance from buildings (150m minimum) */
     if (ms) {
         if (!check_distance_from_buildings(coord, config->min_distance_from_buildings, ms)) {
+            dbg(lvl_warning,
+                "Driver Break plugin: Nightly location rejected (too close to buildings, min=%d m, lat=%.5f lon=%.5f)",
+                config->min_distance_from_buildings, coord->lat, coord->lng);
             return 0; /* Too close to buildings */
         }
     }
 
     /* Check distance from glaciers (300m minimum for nightly) */
     if (glacier_is_too_close_for_camping(coord, ms, has_camping_building)) {
+        dbg(lvl_warning,
+            "Driver Break plugin: Nightly location rejected (too close to glacier, has_camping_building=%d, "
+            "lat=%.5f lon=%.5f)",
+            has_camping_building, coord->lat, coord->lng);
         return 0; /* Too close to glacier */
     }
 
+    dbg(lvl_info, "Driver Break plugin: Nightly location accepted (lat=%.5f lon=%.5f)", coord->lat, coord->lng);
     return 1;
 }
 
@@ -239,6 +255,8 @@ static struct driver_break_stop *create_rest_stop_at(struct coord_geo *coord_geo
     stop->name = g_strdup_printf("Rest stop at %.1f km", accumulated_km);
     stop->highway_type = highway_type_name_from_item(street_item);
     stop->pois = driver_break_poi_discover(coord_geo, config->poi_search_radius_km, NULL, 0);
+    dbg(lvl_info, "Driver Break plugin: Rest stop created at lat=%.5f lon=%.5f distance=%.1f km", coord_geo->lat,
+        coord_geo->lng, accumulated_km);
     return stop;
 }
 
