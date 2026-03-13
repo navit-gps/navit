@@ -622,7 +622,9 @@ static struct route_info *route_next_destination(struct route *this) {
  * @brief Checks if a route has reached its destination
  *
  * @param this The route to be checked
- * @return True if the destination is "reached", false otherwise.
+ * @return 0 if the destination is not "reached"
+ *         1 if waypoint is "reached"
+ *         2 if destination is "reached"
  */
 int route_destination_reached(struct route *this) {
     struct street_data *sd = NULL;
@@ -1102,7 +1104,6 @@ static void route_clear_destinations(struct route *this_) {
  * @param count Number of items in {@code dst}, 0 to clear all destinations
  * @param async If set, do routing asynchronously
  */
-
 void route_set_destinations(struct route *this, struct pcoord *dst, int count, int async) {
     struct attr route_status;
     struct route_info *dsti;
