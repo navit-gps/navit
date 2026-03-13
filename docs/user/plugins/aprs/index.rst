@@ -76,3 +76,13 @@ where to find functions and values relevant for debugging, see:
   https://github.com/Supermagnum/navit/blob/feature/aprs-clean/docs/user/plugins/aprs/how-to-log.rst
   (recommended ``dbg(lvl_info/lvl_debug, ...)`` locations and messages to add
   when diagnosing APRS and APRS SDR problems)
+
+* Hamlib and radio control integration:
+  https://github.com/Supermagnum/navit/blob/feature/aprs-clean/docs/user/plugins/aprs/aprs.rst
+  (explains how APRS comments are exposed via the database and map items so
+  that future integrations using `hamlib`_ can tune radios based on QRV messages.
+  QRV is an amateur radio Q-code meaning "I am ready to receive" or more
+  casually "I am listening / active on this frequency." Weather information
+  from APRS comments can be consumed by other plugins.)
+
+.. _hamlib: https://hamlib.github.io/
