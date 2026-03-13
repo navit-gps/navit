@@ -239,8 +239,7 @@ struct aprs_sdr_dsp *aprs_sdr_dsp_new(const struct aprs_sdr_dsp_config *config) 
     /* Derive decimation factor between RF and audio domains. Require integer factor for now. */
     if (dsp->config.rf_sample_rate <= 0 || dsp->config.audio_sample_rate <= 0
         || dsp->config.rf_sample_rate < dsp->config.audio_sample_rate) {
-        dbg(lvl_error,
-            "Invalid RF/audio sample rates (rf=%d, audio=%d) - using audio == RF and disabling decimation",
+        dbg(lvl_error, "Invalid RF/audio sample rates (rf=%d, audio=%d) - using audio == RF and disabling decimation",
             dsp->config.rf_sample_rate, dsp->config.audio_sample_rate);
         dsp->config.audio_sample_rate = dsp->config.rf_sample_rate;
     }
@@ -273,8 +272,7 @@ struct aprs_sdr_dsp *aprs_sdr_dsp_new(const struct aprs_sdr_dsp_config *config) 
     /* RF -> audio conversion state */
     dsp->mixer_phase = 0.0;
     if (dsp->config.rf_sample_rate > 0) {
-        dsp->mixer_phase_inc =
-            2.0 * M_PI * dsp->config.if_offset_hz / (double)dsp->config.rf_sample_rate;
+        dsp->mixer_phase_inc = 2.0 * M_PI * dsp->config.if_offset_hz / (double)dsp->config.rf_sample_rate;
     } else {
         dsp->mixer_phase_inc = 0.0;
     }
@@ -286,7 +284,8 @@ struct aprs_sdr_dsp *aprs_sdr_dsp_new(const struct aprs_sdr_dsp_config *config) 
     dsp->decimation_index = 0;
 
     dbg(lvl_info,
-        "Bell 202 DSP initialized: RF %d Hz, audio %d Hz, IF offset %.0f Hz, %.0f Hz mark, %.0f Hz space, %d samples/bit",
+        "Bell 202 DSP initialized: RF %d Hz, audio %d Hz, IF offset %.0f Hz, %.0f Hz mark, %.0f Hz space, %d "
+        "samples/bit",
         dsp->config.rf_sample_rate, dsp->config.audio_sample_rate, dsp->config.if_offset_hz, dsp->config.mark_freq,
         dsp->config.space_freq, dsp->goertzel_block_size);
 

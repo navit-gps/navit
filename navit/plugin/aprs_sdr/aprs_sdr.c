@@ -52,7 +52,7 @@ struct aprs_sdr_priv {
 #define APRS_SDR_IF_OFFSET_HZ 100000.0
 
 /* Default RF and audio sample rates */
-#define APRS_SDR_DEFAULT_RF_SAMPLE_RATE    192000
+#define APRS_SDR_DEFAULT_RF_SAMPLE_RATE 192000
 #define APRS_SDR_DEFAULT_AUDIO_SAMPLE_RATE 48000
 
 /* Forward declarations */
@@ -311,8 +311,7 @@ static int aprs_sdr_set_attr_frequency(struct aprs_sdr_priv *sdr_priv, const str
     freq_mhz = *attr->u.numd + (APRS_SDR_IF_OFFSET_HZ / 1000000.0);
     if (!aprs_sdr_hw_set_frequency(sdr_priv->hw, freq_mhz))
         return 0;
-    dbg(lvl_info, "SDR APRS frequency set to %.3f MHz (RTL-SDR center %.3f MHz)",
-        *attr->u.numd, freq_mhz);
+    dbg(lvl_info, "SDR APRS frequency set to %.3f MHz (RTL-SDR center %.3f MHz)", *attr->u.numd, freq_mhz);
     return 1;
 }
 
