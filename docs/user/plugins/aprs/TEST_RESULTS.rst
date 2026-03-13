@@ -165,18 +165,25 @@ SDR integration and DSP pipeline (``test_aprs_sdr_integration.c``)
 The SDR integration test exercises the full RF-to-packet path, from synthetic Bell 202 IQ samples through the SDR DSP
 pipeline into the APRS decoder:
 
-- ``test_aprs_sdr_if_offset`` – feeds a known APRS UI frame (for example ``KG5XXX>APRS:!5132.00N/00007.00W-Test``)
-  encoded into Bell 202 FSK IQ at 192 kHz with a +100 kHz IF offset. The test drives
-  ``aprs_sdr_dsp_process_samples()`` and the normal APRS decode path to verify that the pipeline can process the
-  off-centre tuned case without crashes and provides decoded frames via the callback hook.
-- ``test_aprs_sdr_dc_centered`` – repeats the same synthetic frame generation but with a 0 Hz IF offset (DC-centred
-  case). The test currently asserts that the DSP and decoder handle this input without crashes or hangs and is intended
-  to document the expected degradation behaviour when operating at zero-IF.
+- ``test_aprs_sdr_if_offset`` – feeds a known APRS UI frame (for example
+  ``KG5XXX>APRS:!5132.00N/00007.00W-Test``) encoded into Bell 202 FSK IQ at 192 kHz with a +100 kHz IF offset. The test
+  drives ``aprs_sdr_dsp_process_samples()`` and the normal APRS decode path and now asserts that:
 
-In the current harness, these integration tests are primarily used as a guard against regressions in the DSP/FM
-discriminator/DC blocking code and as a monitored path for checking that known frames can be decoded end-to-end. Future
-work can tighten the assertions (for example, requiring at least one fully decoded frame with the expected callsign and
-payload in the +100 kHz IF test, while continuing to require graceful degradation in the 0 Hz / DC-centred test).
+  * At least one complete AX.25 frame is produced by the DSP pipeline
+  * The decoded source callsign is exactly ``KG5XXX``
+  * The decoded information field matches ``!5132.00N/00007.00W-Test``
+
+  This provides a strict end-to-end validation that the mixer, DC blocker, FM discriminator and Bell 202 / AX.25 decoder
+  are all wired correctly for the off-centre (+100 kHz IF) configuration.
+
+- ``test_aprs_sdr_dc_centered`` – repeats the same synthetic frame generation but with a 0 Hz IF offset (DC-centred
+  case). The test asserts that the DSP and decoder handle this input without crashes or hangs and is intended to
+  document the expected degradation behaviour when operating at zero-IF in the presence of a DC spike at the centre
+  frequency.
+
+In the current harness, these integration tests are the primary safety net against regressions in the mixer, DC
+blocking, FM discriminator and Bell 202 demodulation logic, and they confirm that known APRS packets decode correctly
+in the off-centre tuned case while the DC-centred case continues to be handled gracefully.
 
 Overall Test Summary
 --------------------

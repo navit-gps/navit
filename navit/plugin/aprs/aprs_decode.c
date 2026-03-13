@@ -46,7 +46,8 @@ static int ax25_decode_one_char(const unsigned char *data, int offset, int i, ch
         byte = ' ';
         dbg(lvl_debug, "  Decoded as space");
     } else {
-        byte = (byte & 0xBF) >> 1;
+        /* Decode AX.25 address byte: right shift by 1 and mask to 7 bits. */
+        byte = (byte >> 1) & 0x7F;
         dbg(lvl_debug, "  Decoded as: '%c' (0x%02x)", byte, byte);
     }
     if (byte == ' ') {

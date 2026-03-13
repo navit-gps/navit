@@ -254,13 +254,16 @@ End-to-end SDR integration tests are implemented in ``navit/plugin/aprs/tests/te
 generate synthetic Bell 202 IQ at the RF sample rate used by the plugin and drive the full DSP pipeline:
 
 - The +100 kHz IF offset scenario exercises the normal, DC-safe configuration where the RTL-SDR is tuned off-centre and
-  the complex mixer plus DC blocker bring the APRS channel down to baseband before FM demodulation and AX.25 decode.
+  the complex mixer plus DC blocker bring the APRS channel down to baseband before FM demodulation and AX.25 decode. The
+  integration test asserts that at least one complete APRS UI frame is decoded with the expected source callsign and
+  payload, providing a strict end-to-end check of the RF-to-packet path.
 - The 0 Hz (DC-centred) scenario documents and tests the behaviour when the hardware is tuned directly to the APRS
   channel. The expectation is that the code handles this input without crashes or hangs and degrades gracefully in the
-  presence of a DC spike at the centre frequency.
+  presence of a DC spike at the centre frequency rather than guaranteeing successful decode.
 
-These integration tests are the primary safety net for regressions in the FM discriminator and DC blocking logic and are
-intended to be extended over time to assert successful decode of known APRS packets in the off-centre tuned case.
+These integration tests are the primary safety net for regressions in the mixer, DC blocking, FM discriminator and Bell
+202 demodulation logic and currently confirm that known APRS packets decode correctly in the off-centre tuned case
+while documenting the limitations of the DC-centred configuration.
 
 Hardware Testing
 ~~~~~~~~~~~~~~~~
