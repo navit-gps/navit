@@ -159,11 +159,30 @@ DSP Tests (``test_aprs_dsp.c``)
 
 Total: 4/4 tests passed (100%)
 
+SDR integration and DSP pipeline (``test_aprs_sdr_integration.c``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The SDR integration test exercises the full RF-to-packet path, from synthetic Bell 202 IQ samples through the SDR DSP
+pipeline into the APRS decoder:
+
+- ``test_aprs_sdr_if_offset`` – feeds a known APRS UI frame (for example ``KG5XXX>APRS:!5132.00N/00007.00W-Test``)
+  encoded into Bell 202 FSK IQ at 192 kHz with a +100 kHz IF offset. The test drives
+  ``aprs_sdr_dsp_process_samples()`` and the normal APRS decode path to verify that the pipeline can process the
+  off-centre tuned case without crashes and provides decoded frames via the callback hook.
+- ``test_aprs_sdr_dc_centered`` – repeats the same synthetic frame generation but with a 0 Hz IF offset (DC-centred
+  case). The test currently asserts that the DSP and decoder handle this input without crashes or hangs and is intended
+  to document the expected degradation behaviour when operating at zero-IF.
+
+In the current harness, these integration tests are primarily used as a guard against regressions in the DSP/FM
+discriminator/DC blocking code and as a monitored path for checking that known frames can be decoded end-to-end. Future
+work can tighten the assertions (for example, requiring at least one fully decoded frame with the expected callsign and
+payload in the +100 kHz IF test, while continuing to require graceful degradation in the 0 Hz / DC-centred test).
+
 Overall Test Summary
 --------------------
 
-- Total test cases: 15
-- Tests passed: 15
+- Total test cases: 17
+- Tests passed: 17
 - Tests failed: 0
 - Success rate: 100%
 - Memory leaks: None detected
@@ -196,13 +215,27 @@ DSP Module
 - Callback system: Registration and invocation
 - Error handling: Null pointer checks
 
+SDR integration
+~~~~~~~~~~~~~~~
+
+- RF-to-packet pipeline: synthetic Bell 202 IQ at 192 kHz RF sample rate passed through mixer, DC blocker, FM
+  discriminator and AX.25 decoder.
+- +100 kHz IF offset case: documents and tests the DC-safe configuration where the SDR is tuned off-centre and the DSP
+  must handle the offset correctly.
+- 0 Hz (DC-centred) case: documents and tests the failure mode when tuned directly to the APRS channel, asserting
+  graceful handling without crashes or hangs rather than successful decode.
+
 Known Limitations
 -----------------
 
 1. **Standalone Compilation**: Tests require full Navit build context for complete compilation due to Navit-specific headers and types.
-2. **Hardware Tests**: RTL-SDR hardware tests require actual hardware and are not included in unit tests (integration tests needed).
-3. **Real-time Processing**: DSP tests use synthetic data – real-world performance testing requires integration tests with actual RF signals.
-4. **Inter-Plugin Communication**: Tests focus on individual components – full plugin interaction requires integration testing.
+2. **Hardware Tests**: RTL-SDR hardware tests require actual hardware and are not included in unit tests. The SDR
+   integration tests use synthetic IQ only; validating real-world RF behaviour (strong local carriers, multipath, noise)
+   still requires hardware-based integration testing.
+3. **Real-time Processing**: Both DSP unit tests and SDR integration tests use synthetic data – real-time performance and
+   robustness under varying RF conditions must be validated with live signals.
+4. **Inter-Plugin Communication**: SDR integration tests cover the ``aprs_sdr`` → APRS core path, but full plugin
+   interaction (GUI, OSD, hamlib-style integrations) still requires higher-level integration testing.
 
 Integration Testing
 -------------------

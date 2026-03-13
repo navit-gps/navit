@@ -362,7 +362,7 @@ static void popup_item_dump(struct item *item) {
     map_rect_destroy(mr);
 }
 
-static void popup_show_traffic_distortion_menu(void *menu, struct displayitem *diitem) {
+static void popup_show_traffic_distortion_menu(void *menu, struct item *diitem) {
     void *menu_item;
     void *menu_dist;
     int speeds[] = {5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
@@ -390,8 +390,8 @@ static void popup_show_traffic_distortion_menu(void *menu, struct displayitem *d
     }
 }
 
-static void popup_add_position_and_routing(struct navit *nav, void *menu_item, struct displayitem *diitem,
-                                           struct item *item, char *label) {
+static void popup_add_position_and_routing(struct navit *nav, void *menu_item, struct item *diitem, struct item *item,
+                                           char *label) {
     struct coord co;
     struct pcoord *c;
     int allow_destination = 1;

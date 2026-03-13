@@ -247,6 +247,21 @@ DSP (Digital Signal Processing) tests are available in ``navit/plugin/aprs/tests
 
 **Status:** All DSP tests pass with synthetic data. No hardware required.
 
+SDR integration tests
+~~~~~~~~~~~~~~~~~~~~~
+
+End-to-end SDR integration tests are implemented in ``navit/plugin/aprs/tests/test_aprs_sdr_integration.c``. They
+generate synthetic Bell 202 IQ at the RF sample rate used by the plugin and drive the full DSP pipeline:
+
+- The +100 kHz IF offset scenario exercises the normal, DC-safe configuration where the RTL-SDR is tuned off-centre and
+  the complex mixer plus DC blocker bring the APRS channel down to baseband before FM demodulation and AX.25 decode.
+- The 0 Hz (DC-centred) scenario documents and tests the behaviour when the hardware is tuned directly to the APRS
+  channel. The expectation is that the code handles this input without crashes or hangs and degrades gracefully in the
+  presence of a DC spike at the centre frequency.
+
+These integration tests are the primary safety net for regressions in the FM discriminator and DC blocking logic and are
+intended to be extended over time to assert successful decode of known APRS packets in the off-centre tuned case.
+
 Hardware Testing
 ~~~~~~~~~~~~~~~~
 

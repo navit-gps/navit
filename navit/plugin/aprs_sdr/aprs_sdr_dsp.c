@@ -8,13 +8,13 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Library General Public License for more details.
  *
  * You should have received a copy of the GNU Library General Public
  * License along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- * Boston, MA  02110-1301, USA.
+ * Boston, MA 02110-1301, USA.
  */
 
 #include "aprs_sdr_dsp.h"
@@ -22,6 +22,7 @@
 #include "debug.h"
 #include <glib.h>
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -93,6 +94,14 @@ struct aprs_sdr_dsp {
     double dc_alpha;
     int decimation_factor;
     int decimation_index;
+
+    /* Diagnostics */
+    long long diag_rf_samples;
+    long long diag_audio_samples;
+    long long diag_goertzel_blocks;
+    long long diag_raw_bits;
+    long long diag_decoded_bits;
+    long long diag_flags_found;
 };
 
 static void goertzel_init(struct aprs_sdr_dsp *dsp) {
@@ -156,6 +165,7 @@ static void process_ax25_flag_search(struct aprs_sdr_dsp *dsp, int bit) {
             dsp->in_frame = 1;
             dsp->frame_buffer_pos = 0;
             dsp->bit_stuff_count = 0;
+            dsp->diag_flags_found++;
             flag_pos = 0;
         }
     } else {
@@ -283,6 +293,13 @@ struct aprs_sdr_dsp *aprs_sdr_dsp_new(const struct aprs_sdr_dsp_config *config) 
     dsp->dc_alpha = 0.001; /* Slow DC removal */
     dsp->decimation_index = 0;
 
+    dsp->diag_rf_samples = 0;
+    dsp->diag_audio_samples = 0;
+    dsp->diag_goertzel_blocks = 0;
+    dsp->diag_raw_bits = 0;
+    dsp->diag_decoded_bits = 0;
+    dsp->diag_flags_found = 0;
+
     dbg(lvl_info,
         "Bell 202 DSP initialized: RF %d Hz, audio %d Hz, IF offset %.0f Hz, %.0f Hz mark, %.0f Hz space, %d "
         "samples/bit",
@@ -312,6 +329,7 @@ int aprs_sdr_dsp_process_samples(struct aprs_sdr_dsp *dsp, const unsigned char *
         /* Convert to signed and normalize */
         double i_sample = (double)((int)samples[i] - 128) / 128.0;
         double q_sample = (double)((int)samples[i + 1] - 128) / 128.0;
+        dsp->diag_rf_samples++;
 
         /* Mix down from RF center (APRS + offset) to baseband APRS channel */
         double cos_phase = cos(dsp->mixer_phase);
@@ -354,6 +372,7 @@ int aprs_sdr_dsp_process_samples(struct aprs_sdr_dsp *dsp, const unsigned char *
         }
 
         /* Accumulate audio samples for bit timing */
+        dsp->diag_audio_samples++;
         dsp->bit_accumulator += audio_sample;
         dsp->bit_phase++;
 
@@ -368,6 +387,9 @@ int aprs_sdr_dsp_process_samples(struct aprs_sdr_dsp *dsp, const unsigned char *
             if (dsp->goertzel_sample_count >= dsp->goertzel_block_size) {
                 int raw_bit = goertzel_get_bit(dsp);
                 int decoded_bit = nrzi_decode(raw_bit, &dsp->last_bit);
+                 dsp->diag_goertzel_blocks++;
+                 dsp->diag_raw_bits++;
+                 dsp->diag_decoded_bits++;
                 process_ax25_bit(dsp, decoded_bit);
             }
 
@@ -376,7 +398,22 @@ int aprs_sdr_dsp_process_samples(struct aprs_sdr_dsp *dsp, const unsigned char *
         }
     }
 
-    return dsp->frames_decoded - frames_before;
+    {
+        int frames = dsp->frames_decoded - frames_before;
+        dbg(lvl_info,
+            "APRS SDR DSP stats: rf_samples=%lld audio_samples=%lld decim_factor=%d samples_per_bit=%.0f "
+            "goertzel_block=%d goertzel_blocks=%lld raw_bits=%lld decoded_bits=%lld flags_found=%lld frames=%d",
+            dsp->diag_rf_samples, dsp->diag_audio_samples, dsp->decimation_factor, dsp->samples_per_bit,
+            dsp->goertzel_block_size, dsp->diag_goertzel_blocks, dsp->diag_raw_bits, dsp->diag_decoded_bits,
+            dsp->diag_flags_found, dsp->frames_decoded);
+        fprintf(stderr,
+                "APRS SDR DSP stats: rf_samples=%lld audio_samples=%lld decim_factor=%d samples_per_bit=%.0f "
+                "goertzel_block=%d goertzel_blocks=%lld raw_bits=%lld decoded_bits=%lld flags_found=%lld frames=%d\n",
+                dsp->diag_rf_samples, dsp->diag_audio_samples, dsp->decimation_factor, dsp->samples_per_bit,
+                dsp->goertzel_block_size, dsp->diag_goertzel_blocks, dsp->diag_raw_bits, dsp->diag_decoded_bits,
+                dsp->diag_flags_found, dsp->frames_decoded);
+        return frames;
+    }
 }
 
 int aprs_sdr_dsp_set_frame_callback(struct aprs_sdr_dsp *dsp, aprs_sdr_dsp_frame_callback callback, void *user_data) {
@@ -386,3 +423,4 @@ int aprs_sdr_dsp_set_frame_callback(struct aprs_sdr_dsp *dsp, aprs_sdr_dsp_frame
     dsp->frame_callback_user_data = user_data;
     return 1;
 }
+

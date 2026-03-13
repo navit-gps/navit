@@ -433,22 +433,30 @@ The plugin integrates with the hessu/aprs-symbols symbol set for high-quality AP
 
 APRS stations use the ``type_poi_communication`` POI type and will display with the default communication POI icon defined in your Navit layout.
 
-Unit Tests
+Unit tests
 ----------
 
-Comprehensive unit tests are available in the ``tests/`` directory:
+Comprehensive unit tests are available in the ``navit/plugin/aprs/tests`` directory:
 
-- ``test_aprs_db.c`` - Database operation tests
-- ``test_aprs_decode.c`` - Packet decoding tests
-- ``test_aprs_dsp.c`` - DSP operation tests (SDR plugin)
+- ``test_aprs_db.c`` – database operation tests
+- ``test_aprs_decode.c`` – packet decoding tests
+- ``test_aprs_dsp.c`` – DSP operation tests (SDR plugin)
+- ``test_aprs_sdr_integration.c`` – end-to-end SDR integration tests which synthesise Bell 202 IQ and
+  verify that the DSP pipeline and APRS decoder handle both off-centre tuned and DC-centred scenarios.
 
-Build and run tests:
+Build and run the APRS tests locally:
 
 .. code-block:: bash
 
+   mkdir -p build
+   cd build
    cmake .. -DBUILD_APRS_TESTS=ON
-  make test_aprs_db test_aprs_decode test_aprs_dsp
-  ./build/navit/plugin/aprs/tests/test_aprs_db
+   make test_aprs_db test_aprs_decode test_aprs_dsp test_aprs_sdr_integration
+
+   ./navit/plugin/aprs/tests/test_aprs_db
+   ./navit/plugin/aprs/tests/test_aprs_decode
+   ./navit/plugin/aprs/tests/test_aprs_dsp
+   ./navit/plugin/aprs/tests/test_aprs_sdr_integration
 
 Weather and APRS messages for other plugins
 -------------------------------------------
@@ -518,12 +526,17 @@ References
 - IARU Region 1 VHF Manager's Handbook
 - Direwolf APRS software: https://github.com/wb2osz/direwolf
 
-Possible Future Enhancements
------------------------------
+Possible future enhancements
+----------------------------
 
-- Compatibility with NA7Q-APRSdroid (https://github.com/9M2PJU/NA7Q-APRSdroid) for enhanced Android APRS integration and position sharing
-- Display APRS messages, some APRS users sends out the message QRV 144.625 MHz as a example. That means that they are listening on that frequency. If a radio is attached to the device running NAVIT, use hamlib to tune the radios VFO to the frequency displayed in the received message.
+- Compatibility with NA7Q-APRSdroid (https://github.com/9M2PJU/NA7Q-APRSdroid) for enhanced Android APRS integration
+  and position sharing.
+- Deeper hamlib integration, such as automatic VFO control and repeater offset/CTCSS configuration based on APRS
+  messages and associated POIs.
 - Compatibility with https://repeatermap.de/, a database over radio amateur repeaters.
-- Compatibility with POI's like members of this network: https://www.openstreetmap.org/relation/18780801#map=18/61.897568/9.283834, a repeater like this one typically has a 50 kilometers range: https://www.openstreetmap.org/node/2641537344#map=19/60.808619/9.615892
-  One could potentially display a pop up when entering the cover area, with the possibility to tune one of the vfo's to the correct frequency and subtone by using libham.
+- Compatibility with POIs like members of this network:
+  https://www.openstreetmap.org/relation/18780801#map=18/61.897568/9.283834 (a repeater like
+  https://www.openstreetmap.org/node/2641537344#map=19/60.808619/9.615892 typically has a ~50 km range). One could
+  potentially display a pop up when entering the coverage area, with the possibility to tune one of the VFOs to the
+  correct frequency and subtone by using hamlib.
 
