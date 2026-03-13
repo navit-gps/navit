@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-31 07:33+0100\n"
+"POT-Creation-Date: 2026-03-13 09:49+0100\n"
 "PO-Revision-Date: 2024-04-13 17:26+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Slovenian <https://hosted.weblate.org/projects/navit/navit-"
@@ -143,7 +143,8 @@ msgstr[1] "Čez %d kilometer"
 msgstr[2] "Čez %d kilometra"
 msgstr[3] "Čez %d kilometre"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if
+#. * required), 4: Street Name
 #, c-format
 msgid "%1$sonto the %2$s%3$s%4$s"
 msgstr ""
@@ -153,17 +154,20 @@ msgstr ""
 msgid "%1$sonto %2$s"
 msgstr ""
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after
+#. * | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|masculine form"
 msgstr ""
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after
+#. * | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|feminine form"
 msgstr ""
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after |
+#. * doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|neuter form"
 msgstr ""
@@ -171,22 +175,26 @@ msgstr ""
 msgid "onto the motorway ramp"
 msgstr ""
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
 msgstr "%sna %s%s%s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
 msgstr "%sna %s%s%s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
 msgstr "%sna %s%s%s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
 msgstr "%sna %s%s%s"
@@ -233,22 +241,26 @@ msgstr "sedaj"
 msgid "then"
 msgstr "nato"
 
-#. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have
+#. * to be included.
 #, c-format
 msgid "then merge%1$s|right"
 msgstr ""
 
-#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge,
+#. * the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
 msgstr ""
 
-#. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to
+#. * be included.
 #, c-format
 msgid "then merge%1$s|left"
 msgstr ""
 
-#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the
+#. * stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
 msgstr ""
@@ -259,17 +271,18 @@ msgstr ""
 msgid "on your right"
 msgstr ""
 
-#. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
+#. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the
+#. * third is distance
 #, c-format
 msgid "Take exit %1$s %2$s %3$s"
 msgstr ""
 
-#. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
+#. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is
+#. * destination
 #, c-format
 msgid "Take the exit %1$s %2$s%3$s"
 msgstr ""
 
-#. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
 msgstr ""
 
@@ -281,7 +294,8 @@ msgstr ""
 msgid "then continue straight%1$s"
 msgstr ""
 
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is
+#. * destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
 msgstr ""
@@ -291,7 +305,8 @@ msgstr ""
 msgid "then keep right%1$s"
 msgstr ""
 
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is
+#. * destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
 msgstr ""
@@ -301,7 +316,8 @@ msgstr ""
 msgid "then keep left%1$s"
 msgstr ""
 
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is
+#. * destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
 msgstr ""
@@ -334,7 +350,8 @@ msgstr "Zavijte na %2$s v %1$so cesto"
 msgid "after %i roads"
 msgstr "čez %i cest"
 
-#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
+#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the
+#. * fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "%3$s zavijte %1$s%2$s %4$s"
@@ -353,6 +370,7 @@ msgid "then make a U-turn|right"
 msgstr "nato obrnite čim"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
+#.
 #, c-format
 msgid "Make a U-turn %1$s|right"
 msgstr "Obrnite čim %1$s"
@@ -432,6 +450,11 @@ msgstr "Nastavi kot položaj"
 
 msgid "Set as destination"
 msgstr "Nastavi kot cilj"
+
+#, c-format
+msgid ""
+"Routing disabled: APRS station must be stationary for at least %d minutes"
+msgstr ""
 
 msgid "Add as bookmark"
 msgstr "Dodaj zaznamek"
@@ -1636,7 +1659,9 @@ msgstr "Zaznamek"
 msgid "Destination"
 msgstr "Cilj"
 
-#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character)
+#. for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic
+#. key is desired).
 msgid "_Display"
 msgstr "Prikaz"
 

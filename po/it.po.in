@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-31 07:33+0100\n"
+"POT-Creation-Date: 2026-03-13 09:49+0100\n"
 "PO-Revision-Date: 2025-01-20 17:20+0000\n"
 "Last-Translator: bovirus <roberto.boriotti@canon.it>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/navit/navit-core/"
@@ -149,7 +149,8 @@ msgid_plural "in %d kilometers"
 msgstr[0] "tra un chilometro"
 msgstr[1] "tra %d chilometri"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if
+#. * required), 4: Street Name
 #, c-format
 msgid "%1$sonto the %2$s%3$s%4$s"
 msgstr "%1$ssulla %2$s%3$s%4$s"
@@ -159,17 +160,20 @@ msgstr "%1$ssulla %2$s%3$s%4$s"
 msgid "%1$sonto %2$s"
 msgstr "%1$ssulla strada %2$s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after
+#. * | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|masculine form"
 msgstr "%1$ssul %2$s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after
+#. * | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|feminine form"
 msgstr "%1$ssulla %2$s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after |
+#. * doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|neuter form"
 msgstr "%1$ssulla strada %2$s"
@@ -177,22 +181,26 @@ msgstr "%1$ssulla strada %2$s"
 msgid "onto the motorway ramp"
 msgstr "nella rampa"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
 msgstr "%sin %s%s%s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
 msgstr "%sin %s%s%s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
 msgstr "%sin %s%s%s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
 msgstr "%sin %s%s%s"
@@ -239,22 +247,26 @@ msgstr "adesso"
 msgid "then"
 msgstr "quindi"
 
-#. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have
+#. * to be included.
 #, c-format
 msgid "then merge%1$s|right"
 msgstr "poi entra%1$s|destra"
 
-#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge,
+#. * the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
 msgstr "Entra %1$s%2$s|destra"
 
-#. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to
+#. * be included.
 #, c-format
 msgid "then merge%1$s|left"
 msgstr "poi entra%1$s|sinistra"
 
-#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the
+#. * stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
 msgstr "Entrare %1$s%2$s|sinistra"
@@ -265,17 +277,18 @@ msgstr "a sinistra"
 msgid "on your right"
 msgstr "a destra"
 
-#. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
+#. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the
+#. * third is distance
 #, c-format
 msgid "Take exit %1$s %2$s %3$s"
 msgstr "Prendi l'uscita %1$s %2$s %3$s"
 
-#. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
+#. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is
+#. * destination
 #, c-format
 msgid "Take the exit %1$s %2$s%3$s"
 msgstr "Prendi l'uscita %1$s %2$s%3$s"
 
-#. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
 msgstr "all'intersezione"
 
@@ -287,7 +300,8 @@ msgstr "all'uscita"
 msgid "then continue straight%1$s"
 msgstr "poi procedi dritto%1$s"
 
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is
+#. * destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
 msgstr "Procedi dritto %1$s%2$s%3$s"
@@ -297,7 +311,8 @@ msgstr "Procedi dritto %1$s%2$s%3$s"
 msgid "then keep right%1$s"
 msgstr "poi tieni la destra%1$s"
 
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is
+#. * destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
 msgstr "Tieni la destra %1$s%2$s%3$s"
@@ -307,7 +322,8 @@ msgstr "Tieni la destra %1$s%2$s%3$s"
 msgid "then keep left%1$s"
 msgstr "poi tieni la sinistra%1$s"
 
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is
+#. * destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
 msgstr "Tieni la sinistra %1$s%2$s%3$s"
@@ -340,7 +356,8 @@ msgstr "Prendi la %1$s strada a %2$s"
 msgid "after %i roads"
 msgstr "tra %i strade"
 
-#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
+#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the
+#. * fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "Svolta %1$s %2$s %3$s %4$s"
@@ -359,6 +376,7 @@ msgid "then make a U-turn|right"
 msgstr "poi inverti il senso di marcia"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
+#.
 #, c-format
 msgid "Make a U-turn %1$s|right"
 msgstr "Inverti il senso di marcia %1$s"
@@ -438,6 +456,11 @@ msgstr "Imposta come posizione"
 
 msgid "Set as destination"
 msgstr "Imposta come destinazione"
+
+#, c-format
+msgid ""
+"Routing disabled: APRS station must be stationary for at least %d minutes"
+msgstr ""
 
 msgid "Add as bookmark"
 msgstr "Aggiungi come segnalibro"
@@ -1652,7 +1675,9 @@ msgstr "Preferito"
 msgid "Destination"
 msgstr "Destinazione"
 
-#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character)
+#. for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic
+#. key is desired).
 msgid "_Display"
 msgstr "_Visualizza"
 

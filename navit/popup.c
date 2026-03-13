@@ -363,9 +363,79 @@ static void popup_item_dump(struct item *item) {
     map_rect_destroy(mr);
 }
 
+static void popup_show_traffic_distortion_menu(void *menu, struct displayitem *diitem) {
+    void *menu_item;
+    void *menu_dist;
+    int speeds[] = {5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    int delays[] = {1, 2, 3, 5, 10, 15, 20, 30, 45, 60, 75, 90, 120, 150, 180, 240, 300};
+    int i;
+
+    if (!item_get_default_flags(diitem->type)) {
+        return;
+    }
+
+    menu_dist = popup_printf(menu, menu_type_submenu, "Traffic distortion");
+    popup_printf_cb(menu_dist, menu_type_menu, callback_new_1(callback_cast(popup_traffic_distortion_blocked), diitem),
+                    "Blocked");
+    menu_item = popup_printf(menu_dist, menu_type_submenu, "Max speed");
+    for (i = 0; i < (int)(sizeof(speeds) / sizeof(int)); i++) {
+        popup_printf_cb(menu_item, menu_type_menu,
+                        callback_new_2(callback_cast(popup_traffic_distortion_speed), diitem, speeds[i]), "%d km/h",
+                        speeds[i]);
+    }
+    menu_item = popup_printf(menu_dist, menu_type_submenu, "Delay");
+    for (i = 0; i < (int)(sizeof(delays) / sizeof(int)); i++) {
+        popup_printf_cb(menu_item, menu_type_menu,
+                        callback_new_2(callback_cast(popup_traffic_distortion_delay), diitem, delays[i] * 600),
+                        "%d min", delays[i]);
+    }
+}
+
+static void popup_add_position_and_routing(struct navit *nav, void *menu_item, struct displayitem *diitem,
+                                           struct item *item, char *label) {
+    struct coord co;
+    struct pcoord *c;
+    int allow_destination = 1;
+    int min_stationary_seconds = aprs_get_min_stationary_seconds();
+    int min_stationary_minutes = (min_stationary_seconds + 59) / 60;
+    struct attr map_type;
+
+    if (item->type >= type_line) {
+        return;
+    }
+    if (!item_coord_get(item, &co, 1)) {
+        return;
+    }
+
+    c = g_new(struct pcoord, 1);
+    c->pro = transform_get_projection(navit_get_trans(nav));
+    c->x = co.x;
+    c->y = co.y;
+
+    popup_printf_cb(menu_item, menu_type_menu, callback_new_2(callback_cast(popup_set_position), nav, c),
+                    _("Set as position"));
+
+    if (diitem->map && map_get_attr(diitem->map, attr_type, &map_type, NULL) && map_type.u.str
+        && !strcmp(map_type.u.str, "aprs")) {
+        allow_destination = popup_aprs_allow_destination(item, label);
+    }
+
+    if (allow_destination) {
+        popup_printf_cb(menu_item, menu_type_menu, callback_new_2(callback_cast(popup_set_destination), nav, c),
+                        _("Set as destination"));
+    } else {
+        popup_printf(menu_item, menu_type_menu,
+                     _("Routing disabled: APRS station must be stationary for at least %d minutes"),
+                     min_stationary_minutes);
+    }
+
+    popup_printf_cb(menu_item, menu_type_menu, callback_new_2(callback_cast(popup_set_bookmark), nav, c),
+                    _("Add as bookmark"));
+}
+
 static void popup_show_item(struct navit *nav, void *popup, struct displayitem *di) {
     struct map_rect *mr;
-    void *menu, *menu_item, *menu_dist;
+    void *menu, *menu_item;
     char *label;
     struct item *item, *diitem;
     int count;
@@ -398,68 +468,13 @@ static void popup_show_item(struct navit *nav, void *popup, struct displayitem *
         if (item) {
             popup_show_attrs(item->map, menu_item, item);
             popup_printf_cb(menu_item, menu_type_menu, callback_new_1(callback_cast(popup_item_dump), diitem), "Dump");
-            if (item->type < type_line) {
-                struct coord co;
-                struct pcoord *c;
-                if (item_coord_get(item, &co, 1)) {
-                    int allow_destination = 1;
-                    int min_stationary_seconds = aprs_get_min_stationary_seconds();
-                    int min_stationary_minutes = (min_stationary_seconds + 59) / 60;
-                    struct attr map_type;
-
-                    c = g_new(struct pcoord, 1);
-                    c->pro = transform_get_projection(navit_get_trans(nav));
-                    c->x = co.x;
-                    c->y = co.y;
-
-                    popup_printf_cb(menu_item, menu_type_menu,
-                                    callback_new_2(callback_cast(popup_set_position), nav, c), _("Set as position"));
-
-                    if (diitem->map &&
-                        map_get_attr(diitem->map, attr_type, &map_type, NULL) && map_type.u.str &&
-                        !strcmp(map_type.u.str, "aprs")) {
-                        allow_destination = popup_aprs_allow_destination(item, label);
-                    }
-
-                    if (allow_destination) {
-                        popup_printf_cb(menu_item, menu_type_menu,
-                                        callback_new_2(callback_cast(popup_set_destination), nav, c),
-                                        _("Set as destination"));
-                    } else {
-                        popup_printf(menu_item, menu_type_menu,
-                                     _("Routing disabled: APRS station must be stationary for at least %d minutes"),
-                                     min_stationary_minutes);
-                    }
-
-                    popup_printf_cb(menu_item, menu_type_menu,
-                                    callback_new_2(callback_cast(popup_set_bookmark), nav, c), _("Add as bookmark"));
-                }
-            }
+            popup_add_position_and_routing(nav, menu_item, diitem, item, label);
         }
         map_rect_destroy(mr);
     } else {
         popup_printf(menu, menu_type_menu, "(No map)");
     }
-    if (item_get_default_flags(diitem->type)) {
-        int speeds[] = {5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
-        int delays[] = {1, 2, 3, 5, 10, 15, 20, 30, 45, 60, 75, 90, 120, 150, 180, 240, 300};
-        int i;
-        menu_dist = popup_printf(menu, menu_type_submenu, "Traffic distortion");
-        popup_printf_cb(menu_dist, menu_type_menu,
-                        callback_new_1(callback_cast(popup_traffic_distortion_blocked), diitem), "Blocked");
-        menu_item = popup_printf(menu_dist, menu_type_submenu, "Max speed");
-        for (i = 0; i < sizeof(speeds) / sizeof(int); i++) {
-            popup_printf_cb(menu_item, menu_type_menu,
-                            callback_new_2(callback_cast(popup_traffic_distortion_speed), diitem, speeds[i]), "%d km/h",
-                            speeds[i]);
-        }
-        menu_item = popup_printf(menu_dist, menu_type_submenu, "Delay");
-        for (i = 0; i < sizeof(delays) / sizeof(int); i++) {
-            popup_printf_cb(menu_item, menu_type_menu,
-                            callback_new_2(callback_cast(popup_traffic_distortion_delay), diitem, delays[i] * 600),
-                            "%d min", delays[i]);
-        }
-    }
+    popup_show_traffic_distortion_menu(menu, diitem);
 }
 
 static void popup_display(struct navit *nav, void *popup, struct point *p) {
