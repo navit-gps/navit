@@ -225,7 +225,7 @@ static GList *parse_overpass_response(const char *json_response, struct coord_ge
 #endif /* HAVE_CURL */
 
 #ifdef HAVE_CURL
-#ifdef HAVE_CURL
+#    ifdef HAVE_CURL
 /* Shared helper for Overpass queries (general and specific). */
 static GList *driver_break_poi_overpass_search(struct coord_geo *center, int radius_km, const char **categories,
                                                int num_categories, int is_general) {
@@ -266,15 +266,13 @@ static GList *driver_break_poi_overpass_search(struct coord_geo *center, int rad
     res = curl_easy_perform(curl);
 
     if (res != CURLE_OK) {
-        dbg(lvl_warning, "Driver Break plugin: Overpass API request failed: %s",
-            curl_easy_strerror(res));
+        dbg(lvl_warning, "Driver Break plugin: Overpass API request failed: %s", curl_easy_strerror(res));
     } else {
         /* Parse response */
         pois = parse_overpass_response(query_data.response, center);
         if (!pois) {
-            dbg(lvl_warning,
-                "Driver Break plugin: Overpass API returned 0 POIs at lat=%.5f lon=%.5f (%s categories)", center->lat,
-                center->lng, is_general ? "general" : "specific");
+            dbg(lvl_warning, "Driver Break plugin: Overpass API returned 0 POIs at lat=%.5f lon=%.5f (%s categories)",
+                center->lat, center->lng, is_general ? "general" : "specific");
         } else {
             dbg(lvl_info, "Driver Break plugin: Overpass API returned POIs for %s search",
                 is_general ? "general" : "specific");
@@ -289,7 +287,7 @@ static GList *driver_break_poi_overpass_search(struct coord_geo *center, int rad
 
     return pois;
 }
-#endif /* HAVE_CURL */
+#    endif /* HAVE_CURL */
 
 /* Discover POIs using map data (preferred) or Overpass API (fallback) */
 GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const char **poi_categories,
@@ -309,7 +307,7 @@ GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const 
 
     /* If poi_categories is NULL, search for general POIs */
     if (!poi_categories || num_categories == 0) {
-#ifdef HAVE_CURL
+#    ifdef HAVE_CURL
         /* General POIs: cafes, shops, bike, etc. */
         const char *general_categories[] = {"amenity=cafe",     "amenity=restaurant",
                                             "tourism=museum",   "tourism=viewpoint",
@@ -318,16 +316,16 @@ GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const 
                                             "shop=bicycle",     "amenity=bicycle_repair_station"};
         pois = driver_break_poi_overpass_search(center, radius_km, general_categories,
                                                 sizeof(general_categories) / sizeof(general_categories[0]), 1);
-#else
+#    else
         dbg(lvl_warning, "Driver Break plugin: libcurl not available, POI discovery disabled");
-#endif
+#    endif
     } else {
         /* Use Overpass API for specific categories */
-#ifdef HAVE_CURL
+#    ifdef HAVE_CURL
         pois = driver_break_poi_overpass_search(center, radius_km, poi_categories, num_categories, 0);
-#else
+#    else
         dbg(lvl_warning, "Driver Break plugin: libcurl not available, POI discovery disabled");
-#endif
+#    endif
     }
 
     return pois;
