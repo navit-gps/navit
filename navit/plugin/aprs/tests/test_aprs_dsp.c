@@ -38,7 +38,12 @@ void debug_printf(dbg_level level, const char *module, const int mlen, const cha
 
 static int test_dsp_create_destroy(void) {
     struct aprs_sdr_dsp_config config = {
-        .sample_rate = 48000, .mark_freq = 1200.0, .space_freq = 2200.0, .baud_rate = 1200.0};
+        .rf_sample_rate = 192000,
+        .audio_sample_rate = 48000,
+        .if_offset_hz = 100000.0,
+        .mark_freq = 1200.0,
+        .space_freq = 2200.0,
+        .baud_rate = 1200.0};
 
     struct aprs_sdr_dsp *dsp = aprs_sdr_dsp_new(&config);
     TEST_ASSERT(dsp != NULL, "DSP creation failed");
@@ -48,7 +53,9 @@ static int test_dsp_create_destroy(void) {
 
 static int test_dsp_config_defaults(void) {
     struct aprs_sdr_dsp_config config = {
-        .sample_rate = 48000,
+        .rf_sample_rate = 192000,
+        .audio_sample_rate = 48000,
+        .if_offset_hz = 100000.0,
         .mark_freq = 0.0,  /* Should use default */
         .space_freq = 0.0, /* Should use default */
         .baud_rate = 0.0   /* Should use default */
@@ -62,7 +69,12 @@ static int test_dsp_config_defaults(void) {
 
 static int test_dsp_process_samples(void) {
     struct aprs_sdr_dsp_config config = {
-        .sample_rate = 48000, .mark_freq = 1200.0, .space_freq = 2200.0, .baud_rate = 1200.0};
+        .rf_sample_rate = 192000,
+        .audio_sample_rate = 48000,
+        .if_offset_hz = 100000.0,
+        .mark_freq = 1200.0,
+        .space_freq = 2200.0,
+        .baud_rate = 1200.0};
 
     struct aprs_sdr_dsp *dsp = aprs_sdr_dsp_new(&config);
     TEST_ASSERT(dsp != NULL, "DSP creation failed");
@@ -96,7 +108,12 @@ static void test_callback(const unsigned char *frame, int length, void *user_dat
 
 static int test_dsp_callback(void) {
     struct aprs_sdr_dsp_config config = {
-        .sample_rate = 48000, .mark_freq = 1200.0, .space_freq = 2200.0, .baud_rate = 1200.0};
+        .rf_sample_rate = 192000,
+        .audio_sample_rate = 48000,
+        .if_offset_hz = 100000.0,
+        .mark_freq = 1200.0,
+        .space_freq = 2200.0,
+        .baud_rate = 1200.0};
 
     struct aprs_sdr_dsp *dsp = aprs_sdr_dsp_new(&config);
     TEST_ASSERT(dsp != NULL, "DSP creation failed");

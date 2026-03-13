@@ -37,8 +37,8 @@ enum aprs_sdr_device_type {
 };
 
 struct aprs_sdr_hw_config {
-    double frequency_mhz; /* Center frequency in MHz */
-    int sample_rate;      /* Sample rate (48000 recommended) */
+    double frequency_mhz; /* RTL-SDR center frequency in MHz */
+    int sample_rate;      /* RF sample rate (e.g. 192000 Hz for APRS SDR) */
     int gain;             /* Tuner gain (0-49, or -1 for auto) */
     int ppm_correction;   /* Frequency correction in PPM */
     enum aprs_sdr_device_type device_type;

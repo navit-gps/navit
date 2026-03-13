@@ -59,7 +59,8 @@ static int ax25_decode_one_char(const unsigned char *data, int offset, int i, ch
 }
 
 /* Append SSID to callsign if present. */
-static void ax25_append_ssid(const unsigned char *data, int length, int offset, char *callsign, int max_len, int callsign_len) {
+static void ax25_append_ssid(const unsigned char *data, int length, int offset, char *callsign, int max_len,
+                             int callsign_len) {
     if (offset < 0 || offset + 6 >= length)
         return;
     unsigned char ssid_byte = data[offset + 6];
@@ -188,6 +189,7 @@ int aprs_decode_ax25(const unsigned char *data, int length, struct aprs_packet *
     offset = decode_ax25_dest_src(data, length, packet, callsign, sizeof(callsign));
     if (offset < 0)
         return 0;
+    dbg(lvl_info, "APRS AX.25 frame from '%s' decoded to header and addresses", packet->source_callsign);
     offset = decode_ax25_path(data, length, offset, &path_list, &packet->path_count, callsign, sizeof(callsign));
     if (offset < 0) {
         aprs_packet_free(packet);

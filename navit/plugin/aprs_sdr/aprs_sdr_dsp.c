@@ -54,7 +54,7 @@ struct aprs_sdr_dsp {
     aprs_sdr_dsp_frame_callback frame_callback;
     void *frame_callback_user_data;
 
-    /* Goertzel filters for mark/space detection */
+    /* Goertzel filters for mark/space detection (operating on audio samples) */
     double mark_coeff;
     double space_coeff;
     int goertzel_block_size;
@@ -82,12 +82,23 @@ struct aprs_sdr_dsp {
     /* Statistics */
     int frames_decoded;
     int bit_errors;
+
+    /* RF -> audio downconversion / FM discriminator state */
+    double mixer_phase;
+    double mixer_phase_inc;
+    double prev_i;
+    double prev_q;
+    double dc_i;
+    double dc_q;
+    double dc_alpha;
+    int decimation_factor;
+    int decimation_index;
 };
 
 static void goertzel_init(struct aprs_sdr_dsp *dsp) {
     double n = dsp->goertzel_block_size;
-    double mark_k = (n * dsp->config.mark_freq) / dsp->config.sample_rate;
-    double space_k = (n * dsp->config.space_freq) / dsp->config.sample_rate;
+    double mark_k = (n * dsp->config.mark_freq) / dsp->config.audio_sample_rate;
+    double space_k = (n * dsp->config.space_freq) / dsp->config.audio_sample_rate;
 
     dsp->mark_coeff = 2.0 * cos(2.0 * M_PI * mark_k / n);
     dsp->space_coeff = 2.0 * cos(2.0 * M_PI * space_k / n);
@@ -225,8 +236,22 @@ struct aprs_sdr_dsp *aprs_sdr_dsp_new(const struct aprs_sdr_dsp_config *config) 
         dsp->config.baud_rate = BELL202_BAUD_RATE;
     }
 
-    /* Calculate Goertzel block size (samples per bit) */
-    dsp->samples_per_bit = dsp->config.sample_rate / dsp->config.baud_rate;
+    /* Derive decimation factor between RF and audio domains. Require integer factor for now. */
+    if (dsp->config.rf_sample_rate <= 0 || dsp->config.audio_sample_rate <= 0
+        || dsp->config.rf_sample_rate < dsp->config.audio_sample_rate) {
+        dbg(lvl_error,
+            "Invalid RF/audio sample rates (rf=%d, audio=%d) - using audio == RF and disabling decimation",
+            dsp->config.rf_sample_rate, dsp->config.audio_sample_rate);
+        dsp->config.audio_sample_rate = dsp->config.rf_sample_rate;
+    }
+
+    dsp->decimation_factor = dsp->config.rf_sample_rate / dsp->config.audio_sample_rate;
+    if (dsp->decimation_factor <= 0) {
+        dsp->decimation_factor = 1;
+    }
+
+    /* Calculate Goertzel block size (samples per bit) in audio domain */
+    dsp->samples_per_bit = dsp->config.audio_sample_rate / dsp->config.baud_rate;
     dsp->goertzel_block_size = (int)(dsp->samples_per_bit + 0.5);
 
     /* Initialize Goertzel filters */
@@ -245,7 +270,24 @@ struct aprs_sdr_dsp *aprs_sdr_dsp_new(const struct aprs_sdr_dsp_config *config) 
     dsp->frames_decoded = 0;
     dsp->bit_errors = 0;
 
-    dbg(lvl_info, "Bell 202 DSP initialized: %.0f Hz mark, %.0f Hz space, %d samples/bit", dsp->config.mark_freq,
+    /* RF -> audio conversion state */
+    dsp->mixer_phase = 0.0;
+    if (dsp->config.rf_sample_rate > 0) {
+        dsp->mixer_phase_inc =
+            2.0 * M_PI * dsp->config.if_offset_hz / (double)dsp->config.rf_sample_rate;
+    } else {
+        dsp->mixer_phase_inc = 0.0;
+    }
+    dsp->prev_i = 0.0;
+    dsp->prev_q = 0.0;
+    dsp->dc_i = 0.0;
+    dsp->dc_q = 0.0;
+    dsp->dc_alpha = 0.001; /* Slow DC removal */
+    dsp->decimation_index = 0;
+
+    dbg(lvl_info,
+        "Bell 202 DSP initialized: RF %d Hz, audio %d Hz, IF offset %.0f Hz, %.0f Hz mark, %.0f Hz space, %d samples/bit",
+        dsp->config.rf_sample_rate, dsp->config.audio_sample_rate, dsp->config.if_offset_hz, dsp->config.mark_freq,
         dsp->config.space_freq, dsp->goertzel_block_size);
 
     return dsp;
@@ -266,19 +308,54 @@ int aprs_sdr_dsp_process_samples(struct aprs_sdr_dsp *dsp, const unsigned char *
     if (!dsp || !samples || length < 2)
         return 0;
 
-    /* Process I/Q samples (interleaved, 8-bit unsigned) */
+    /* Process RF I/Q samples (interleaved, 8-bit unsigned) */
     for (i = 0; i < length - 1; i += 2) {
-        /* Convert to signed and compute magnitude/phase */
-        /* Simplified: use I component for now (can be enhanced with proper downconversion) */
+        /* Convert to signed and normalize */
         double i_sample = (double)((int)samples[i] - 128) / 128.0;
         double q_sample = (double)((int)samples[i + 1] - 128) / 128.0;
 
-        /* Downconvert to baseband (simplified - assumes center frequency is correct) */
-        /* In a full implementation, this would include proper mixing and filtering */
-        double magnitude = sqrt(i_sample * i_sample + q_sample * q_sample);
+        /* Mix down from RF center (APRS + offset) to baseband APRS channel */
+        double cos_phase = cos(dsp->mixer_phase);
+        double sin_phase = sin(dsp->mixer_phase);
+        double base_i = i_sample * cos_phase + q_sample * sin_phase;
+        double base_q = -i_sample * sin_phase + q_sample * cos_phase;
+        dsp->mixer_phase += dsp->mixer_phase_inc;
+        if (dsp->mixer_phase > M_PI) {
+            dsp->mixer_phase -= 2.0 * M_PI;
+        } else if (dsp->mixer_phase < -M_PI) {
+            dsp->mixer_phase += 2.0 * M_PI;
+        }
 
-        /* Accumulate samples for bit timing */
-        dsp->bit_accumulator += magnitude;
+        /* Simple complex DC blocker */
+        dsp->dc_i += dsp->dc_alpha * (base_i - dsp->dc_i);
+        dsp->dc_q += dsp->dc_alpha * (base_q - dsp->dc_q);
+        base_i -= dsp->dc_i;
+        base_q -= dsp->dc_q;
+
+        /* FM discriminator using phase difference between successive complex samples */
+        if (dsp->prev_i == 0.0 && dsp->prev_q == 0.0) {
+            dsp->prev_i = base_i;
+            dsp->prev_q = base_q;
+            continue;
+        }
+        /* c * conj(prev) */
+        double re = base_i * dsp->prev_i + base_q * dsp->prev_q;
+        double im = base_q * dsp->prev_i - base_i * dsp->prev_q;
+        dsp->prev_i = base_i;
+        dsp->prev_q = base_q;
+
+        /* Phase difference is proportional to instantaneous frequency deviation (audio sample) */
+        double audio_sample = atan2(im, re);
+
+        /* Decimate RF-rate audio down to configured audio_sample_rate */
+        if (dsp->decimation_factor > 1) {
+            if (dsp->decimation_index++ % dsp->decimation_factor != 0) {
+                continue;
+            }
+        }
+
+        /* Accumulate audio samples for bit timing */
+        dsp->bit_accumulator += audio_sample;
         dsp->bit_phase++;
 
         /* Process when we have enough samples for one bit */

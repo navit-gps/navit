@@ -41,10 +41,12 @@
 struct aprs_sdr_dsp;
 
 struct aprs_sdr_dsp_config {
-    int sample_rate;   /* Input sample rate (typically 48000 Hz) */
-    double mark_freq;  /* Mark frequency (1200 Hz) */
-    double space_freq; /* Space frequency (2200 Hz) */
-    double baud_rate;  /* Symbol rate (1200 bps) */
+    int rf_sample_rate;    /* RF I/Q sample rate from RTL-SDR (e.g. 192000 Hz) */
+    int audio_sample_rate; /* Audio sample rate for Bell 202 demod (e.g. 48000 Hz) */
+    double if_offset_hz;   /* Frequency offset between RF center and APRS channel (e.g. 100000 Hz) */
+    double mark_freq;      /* Mark frequency (1200 Hz) */
+    double space_freq;     /* Space frequency (2200 Hz) */
+    double baud_rate;      /* Symbol rate (1200 bps) */
 };
 
 struct aprs_sdr_dsp *aprs_sdr_dsp_new(const struct aprs_sdr_dsp_config *config);

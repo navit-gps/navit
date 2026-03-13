@@ -6,6 +6,16 @@ Overview
 
 The APRS SDR plugin provides direct RTL-SDR hardware access with built-in Bell 202 demodulation for APRS packet reception. It works as a companion to the core APRS plugin, automatically discovering and delivering decoded AX.25 frames.
 
+Internally, the plugin:
+
+* Tunes the RTL-SDR slightly **off** the APRS channel (non-zero IF) to avoid the
+  center-frequency DC spike of zero-IF hardware.
+* Applies a complex DC blocker, then digitally mixes the APRS channel down to
+  true baseband.
+* Runs an FM discriminator to recover the Bell 202 audio stream.
+* Demodulates Bell 202 (1200/2200 Hz) and extracts AX.25 frames which are passed
+  to the APRS core.
+
 Features
 --------
 
@@ -22,13 +32,13 @@ Architecture
 
 The SDR plugin is a separate, optional component that handles all RF-related operations::
 
-   RTL-SDR Hardware
+   RTL-SDR Hardware (center tuned above APRS channel)
        |
        v
-   aprs_sdr_hw.c (Hardware Interface)
+   aprs_sdr_hw.c (Hardware Interface, RF sample rate)
        |
        v
-   aprs_sdr_dsp.c (Bell 202 Demodulation)
+   aprs_sdr_dsp.c (IF downconversion, DC block, FM discriminator, Bell 202 DSP)
        |
        v
    AX.25 Frames
@@ -54,7 +64,7 @@ Device type can be auto-detected from USB device strings or manually selected vi
 Bell 202 Demodulation
 ---------------------
 
-The plugin implements Bell 202 demodulation internally:
+The plugin implements Bell 202 demodulation internally, driven by a true FM-demodulated audio stream:
 
 - **Modulation**: 2FSK (Binary Frequency Shift Keying)
 - **Mark frequency**: 1200 Hz (binary 1)
@@ -63,7 +73,15 @@ The plugin implements Bell 202 demodulation internally:
 - **Encoding**: NRZI (Non-Return-to-Zero Inverted)
 - **Frame format**: AX.25 UI-frames
 
-The demodulation uses Goertzel filters for frequency detection, bit synchronization, and AX.25 frame extraction with bit stuffing handling.
+The demodulation uses:
+
+* A complex mixer and DC blocker to move the APRS channel away from the RTL-SDR
+  DC spike and remove residual offsets.
+* An FM discriminator (phase-difference based) to produce an audio stream at a
+  configurable audio sample rate (typically 48 kHz).
+* Goertzel filters at 1200 Hz and 2200 Hz for mark/space detection.
+* Bit synchronization, NRZI decoding and AX.25 frame extraction with
+  bit-stuffing handling.
 
 Inter-Plugin Communication
 ---------------------------
@@ -195,10 +213,11 @@ Performance
 
 Typical performance characteristics:
 
-- Sample rate: 48 kHz (configurable)
-- Processing latency: < 100 ms from RF to decoded frame
-- CPU usage: Moderate (DSP processing in dedicated thread)
-- Memory: ~10-20 MB for buffers and state
+- RF sample rate: around 192 kHz by default (configurable).
+- Audio sample rate: 48 kHz for Bell 202 demodulation.
+- Processing latency: < 100 ms from RF to decoded frame.
+- CPU usage: Moderate (DSP processing in dedicated thread).
+- Memory: ~10–20 MB for buffers and state.
 
 For optimal performance:
 - Use RTL-SDR Blog V3 or V4 R828D (better sensitivity)

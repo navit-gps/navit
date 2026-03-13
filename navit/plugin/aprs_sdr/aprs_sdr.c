@@ -48,6 +48,13 @@ struct aprs_sdr_priv {
     int running;
 };
 
+/* Fixed IF offset to keep APRS away from RTL-SDR DC spike (in Hz) */
+#define APRS_SDR_IF_OFFSET_HZ 100000.0
+
+/* Default RF and audio sample rates */
+#define APRS_SDR_DEFAULT_RF_SAMPLE_RATE    192000
+#define APRS_SDR_DEFAULT_AUDIO_SAMPLE_RATE 48000
+
 /* Forward declarations */
 static void aprs_sdr_hw_data_callback(const unsigned char *samples, int length, void *user_data);
 static void aprs_sdr_map_destroy(void *priv);
@@ -143,6 +150,8 @@ static void aprs_sdr_frame_delivery_callback(const unsigned char *frame, int fra
     if (!priv || !frame || frame_length <= 0)
         return;
 
+    dbg(lvl_info, "APRS SDR decoded AX.25 frame of length %d bytes", frame_length);
+
     /* Deliver frame to APRS plugin via direct function call */
     if (priv->aprs_user_data) {
         aprs_process_packet((struct map_priv *)priv->aprs_user_data, frame, frame_length);
@@ -166,17 +175,22 @@ static enum aprs_sdr_device_type device_str_to_type(const char *str) {
 static void aprs_sdr_fill_config_from_attrs(struct attr **attrs, struct aprs_sdr_hw_config *hw_config,
                                             struct aprs_sdr_dsp_config *dsp_config) {
     struct attr *a;
+    double aprs_freq_mhz;
 
     memset(hw_config, 0, sizeof(*hw_config));
-    hw_config->frequency_mhz = 144.390;
-    hw_config->sample_rate = 48000;
+    /* APRS channel frequency from configuration (not the RTL-SDR center) */
+    aprs_freq_mhz = 144.390;
+    a = attr_search(attrs, attr_frequency);
+    if (a && a->u.numd)
+        aprs_freq_mhz = *a->u.numd;
+
+    /* Tune RTL-SDR above the APRS channel to avoid DC, then mix down in DSP */
+    hw_config->frequency_mhz = aprs_freq_mhz + (APRS_SDR_IF_OFFSET_HZ / 1000000.0);
+    hw_config->sample_rate = APRS_SDR_DEFAULT_RF_SAMPLE_RATE;
     hw_config->gain = 49;
     hw_config->ppm_correction = 0;
     hw_config->device_type = APRS_SDR_UNKNOWN;
     hw_config->device_index = 0;
-    a = attr_search(attrs, attr_frequency);
-    if (a && a->u.numd)
-        hw_config->frequency_mhz = *a->u.numd;
     a = attr_search(attrs, attr_gain);
     if (a)
         hw_config->gain = a->u.num;
@@ -188,7 +202,9 @@ static void aprs_sdr_fill_config_from_attrs(struct attr **attrs, struct aprs_sdr
         hw_config->device_type = device_str_to_type(a->u.str);
 
     memset(dsp_config, 0, sizeof(*dsp_config));
-    dsp_config->sample_rate = 48000;
+    dsp_config->rf_sample_rate = hw_config->sample_rate;
+    dsp_config->audio_sample_rate = APRS_SDR_DEFAULT_AUDIO_SAMPLE_RATE;
+    dsp_config->if_offset_hz = APRS_SDR_IF_OFFSET_HZ;
     dsp_config->mark_freq = 1200.0;
     dsp_config->space_freq = 2200.0;
     dsp_config->baud_rate = 1200.0;
@@ -237,7 +253,8 @@ static void *aprs_sdr_map_new(struct map_methods *meth, struct attr **attrs, str
     }
     priv->running = 1;
     priv->initialized = 1;
-    dbg(lvl_info, "APRS SDR plugin started: %.3f MHz", hw_config.frequency_mhz);
+    dbg(lvl_info, "APRS SDR plugin started: APRS %.3f MHz, RTL-SDR center %.3f MHz, RF sample rate %d Hz",
+        aprs_freq_mhz, hw_config.frequency_mhz, hw_config.sample_rate);
     return priv;
 }
 
@@ -290,10 +307,12 @@ static int aprs_sdr_set_attr_frequency(struct aprs_sdr_priv *sdr_priv, const str
     double freq_mhz;
     if (!attr->u.numd || !sdr_priv->hw)
         return 0;
-    freq_mhz = *attr->u.numd;
+    /* Treat requested frequency as APRS channel; tune RTL-SDR above it to avoid DC. */
+    freq_mhz = *attr->u.numd + (APRS_SDR_IF_OFFSET_HZ / 1000000.0);
     if (!aprs_sdr_hw_set_frequency(sdr_priv->hw, freq_mhz))
         return 0;
-    dbg(lvl_info, "SDR frequency set to %.3f MHz", freq_mhz);
+    dbg(lvl_info, "SDR APRS frequency set to %.3f MHz (RTL-SDR center %.3f MHz)",
+        *attr->u.numd, freq_mhz);
     return 1;
 }
 
