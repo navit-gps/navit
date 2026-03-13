@@ -116,6 +116,33 @@ static int test_db_update_station(void) {
     return 0;
 }
 
+static int test_db_comment_roundtrip(void) {
+    struct aprs_db *db = aprs_db_new(NULL);
+    struct aprs_station *station = aprs_station_new();
+    struct aprs_station *retrieved = aprs_station_new();
+    const char *comment = "WX: 12C 1013hPa QRV 144.625 MHz";
+    int result;
+
+    station->callsign = g_strdup("WX1");
+    station->position.lat = 60.0;
+    station->position.lng = 10.0;
+    station->timestamp = time(NULL);
+    station->comment = g_strdup(comment);
+
+    result = aprs_db_update_station(db, station);
+    TEST_ASSERT(result == 1, "Station with comment insert failed");
+
+    result = aprs_db_get_station(db, "WX1", retrieved);
+    TEST_ASSERT(result == 1, "Station with comment retrieval failed");
+    TEST_ASSERT(retrieved->comment != NULL, "Retrieved comment is NULL");
+    TEST_ASSERT(strcmp(retrieved->comment, comment) == 0, "Retrieved comment mismatch");
+
+    aprs_station_free(station);
+    aprs_station_free(retrieved);
+    aprs_db_destroy(db);
+    return 0;
+}
+
 static int test_db_delete_expired(void) {
     struct aprs_db *db = aprs_db_new(NULL);
     struct aprs_station *station = aprs_station_new();
@@ -193,6 +220,7 @@ int main(void) {
     failures += test_db_insert_station();
     failures += test_db_get_station();
     failures += test_db_update_station();
+    failures += test_db_comment_roundtrip();
     failures += test_db_delete_expired();
     failures += test_db_range_filtering();
 

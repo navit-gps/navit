@@ -166,14 +166,17 @@ APRS decoder and database
 
 * ``aprs_db_update_station()`` (``aprs_db.c``)
 
-  * Writes/updates a single station row in SQLite, including path and symbol
-    information; important when you need to verify that stations are actually
-    persisted.
+  * Writes/updates a single station row in SQLite, including path, symbol and
+    the raw APRS ``comment`` field. The comment is where weather summaries and
+    free-text messages (for example ``WX:`` or ``QRV 144.625 MHz``) are stored.
 
-* ``aprs_db_get_stations_in_range()`` / ``aprs_db_get_all_stations()`` (``aprs_db.c``)
+* ``aprs_db_get_station()`` / ``aprs_db_get_stations_in_range()`` /
+  ``aprs_db_get_all_stations()`` (``aprs_db.c``)
 
   * Read side of the database, including distance filtering and station
-    reconstruction, used by ``aprs_update_items()``.
+    reconstruction, used by ``aprs_update_items()``. Other plugins can call
+    these functions directly and inspect ``station->comment`` to consume
+    weather/messages without going through the map layer.
 
 
 NMEA input backend

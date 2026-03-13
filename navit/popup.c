@@ -39,6 +39,8 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+#include <stdlib.h>
 #ifdef HAVE_UNISTD_H
 #    include <unistd.h>
 #endif
@@ -222,6 +224,89 @@ static void popup_show_visitbefore(struct navit *nav, struct pcoord *pc, void *m
     }
 }
 
+static int aprs_get_min_stationary_seconds(void) {
+    const char *env = getenv("NAVIT_APRS_MIN_STATIONARY_SECONDS");
+    long value;
+    char *endptr;
+
+    if (!env || !*env) {
+        return 300;
+    }
+
+    value = strtol(env, &endptr, 10);
+    if (endptr == env || value <= 0 || value > 604800) {
+        return 300;
+    }
+
+    return (int)value;
+}
+
+static int aprs_messages_enabled(void) {
+    const char *env = getenv("NAVIT_APRS_SHOW_MESSAGES");
+
+    if (!env || !*env) {
+        return 1;
+    }
+
+    if (env[0] == '0') {
+        return 0;
+    }
+
+    return 1;
+}
+
+static int popup_aprs_allow_destination(struct item *item, const char *label) {
+    struct attr speed_attr;
+    struct attr data_attr;
+    int speed_valid = 0;
+    int speed = 0;
+    int timestamp_valid = 0;
+    time_t timestamp_time = 0;
+    time_t now = time(NULL);
+    int min_stationary_seconds = aprs_get_min_stationary_seconds();
+    long age = -1;
+
+    memset(&speed_attr, 0, sizeof(speed_attr));
+    if (item_attr_get(item, attr_speed, &speed_attr)) {
+        speed = speed_attr.u.num;
+        speed_valid = 1;
+    }
+
+    memset(&data_attr, 0, sizeof(data_attr));
+    if (item_attr_get(item, attr_data, &data_attr) && data_attr.u.str) {
+        int year, month, day, hour, min, sec;
+        char tz[4] = {0};
+        if (sscanf(data_attr.u.str, "%d-%d-%d %d:%d:%d %3s", &year, &month, &day, &hour, &min, &sec, tz) == 7) {
+            struct tm tm_time;
+            memset(&tm_time, 0, sizeof(tm_time));
+            tm_time.tm_year = year - 1900;
+            tm_time.tm_mon = month - 1;
+            tm_time.tm_mday = day;
+            tm_time.tm_hour = hour;
+            tm_time.tm_min = min;
+            tm_time.tm_sec = sec;
+            timestamp_time = timegm(&tm_time);
+            if (timestamp_time != (time_t)-1) {
+                timestamp_valid = 1;
+                age = (long)(now - timestamp_time);
+            }
+        }
+    }
+
+    if (speed_valid && timestamp_valid && speed <= 1 && age >= min_stationary_seconds) {
+        dbg(lvl_debug,
+            "APRS popup routing for '%s': allowed (speed=%d age=%ld min_stationary_seconds=%d)",
+            label ? label : "", speed, age, min_stationary_seconds);
+        return 1;
+    }
+
+    dbg(lvl_debug,
+        "APRS popup routing for '%s': denied (speed_valid=%d speed=%d timestamp_valid=%d age=%ld "
+        "min_stationary_seconds=%d)",
+        label ? label : "", speed_valid, speed, timestamp_valid, age, min_stationary_seconds);
+    return 0;
+}
+
 static void popup_show_attr_val(struct map *map, void *menu, struct attr *attr) {
     char *attr_name = attr_to_name(attr->type);
     char *str;
@@ -253,9 +338,16 @@ static void popup_show_attrs(struct map *map, void *menu, struct item *item) {
     struct attr attr;
     for (;;) {
         memset(&attr, 0, sizeof(attr));
-        if (item_attr_get(item, attr_any, &attr))
+        if (item_attr_get(item, attr_any, &attr)) {
+            if (attr.type == attr_comment && map && !aprs_messages_enabled()) {
+                struct attr map_type;
+                if (map_get_attr(map, attr_type, &map_type, NULL) && map_type.u.str
+                    && !strcmp(map_type.u.str, "aprs")) {
+                    continue;
+                }
+            }
             popup_show_attr_val(map, menu, &attr);
-        else
+        } else
             break;
     }
 
@@ -310,15 +402,35 @@ static void popup_show_item(struct navit *nav, void *popup, struct displayitem *
                 struct coord co;
                 struct pcoord *c;
                 if (item_coord_get(item, &co, 1)) {
+                    int allow_destination = 1;
+                    int min_stationary_seconds = aprs_get_min_stationary_seconds();
+                    int min_stationary_minutes = (min_stationary_seconds + 59) / 60;
+                    struct attr map_type;
+
                     c = g_new(struct pcoord, 1);
                     c->pro = transform_get_projection(navit_get_trans(nav));
                     c->x = co.x;
                     c->y = co.y;
+
                     popup_printf_cb(menu_item, menu_type_menu,
                                     callback_new_2(callback_cast(popup_set_position), nav, c), _("Set as position"));
-                    popup_printf_cb(menu_item, menu_type_menu,
-                                    callback_new_2(callback_cast(popup_set_destination), nav, c),
-                                    _("Set as destination"));
+
+                    if (diitem->map &&
+                        map_get_attr(diitem->map, attr_type, &map_type, NULL) && map_type.u.str &&
+                        !strcmp(map_type.u.str, "aprs")) {
+                        allow_destination = popup_aprs_allow_destination(item, label);
+                    }
+
+                    if (allow_destination) {
+                        popup_printf_cb(menu_item, menu_type_menu,
+                                        callback_new_2(callback_cast(popup_set_destination), nav, c),
+                                        _("Set as destination"));
+                    } else {
+                        popup_printf(menu_item, menu_type_menu,
+                                     _("Routing disabled: APRS station must be stationary for at least %d minutes"),
+                                     min_stationary_minutes);
+                    }
+
                     popup_printf_cb(menu_item, menu_type_menu,
                                     callback_new_2(callback_cast(popup_set_bookmark), nav, c), _("Add as bookmark"));
                 }

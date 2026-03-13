@@ -429,6 +429,13 @@ static void aprs_update_items(struct map_priv *priv) {
             attr_idx++;
         }
 
+        if (station->comment && *station->comment) {
+            attrs[attr_idx] = g_new0(struct attr, 1);
+            attrs[attr_idx]->type = attr_comment;
+            attrs[attr_idx]->u.str = g_strdup(station->comment);
+            attr_idx++;
+        }
+
         /* Set APRS symbol icon if available */
         if (station->symbol_table && station->symbol_code) {
             char *icon_path = aprs_symbol_get_icon(station->symbol_table, station->symbol_code);

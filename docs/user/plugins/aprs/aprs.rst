@@ -447,8 +447,67 @@ Build and run tests:
 .. code-block:: bash
 
    cmake .. -DBUILD_APRS_TESTS=ON
-   make test_aprs_db test_aprs_decode test_aprs_dsp
-   ./build/navit/plugin/aprs/tests/test_aprs_db
+  make test_aprs_db test_aprs_decode test_aprs_dsp
+  ./build/navit/plugin/aprs/tests/test_aprs_db
+
+Weather and APRS messages for other plugins
+-------------------------------------------
+
+The APRS decoder stores the raw APRS ``comment`` field for each station in the
+SQLite database via ``aprs_db_update_station()``. This field typically carries
+weather summaries (for example ``WX: 12C 1013hPa``) and free-text operator
+messages such as ``QRV 144.625 MHz``.
+
+When ``aprs_update_items()`` rebuilds the APRS map, it exposes this text as an
+``attr_comment`` on each APRS station item. This means that other Navit
+components or plugins can consume the same information in two ways:
+
+- By calling the APRS DB API (``aprs_db_get_station()``, ``aprs_db_get_all_stations()``)
+  and reading ``station->comment``.
+- By inspecting APRS map items and reading their ``attr_comment`` attribute.
+
+The environment variable ``NAVIT_APRS_SHOW_MESSAGES`` only controls whether
+``attr_comment`` is rendered in the on-screen popup for APRS items. It does
+not affect the stored comment in the database or the attribute itself, so
+future integrations (for example hamlib-based radio control driven by QRV
+messages) can always read the full text.
+
+Example: using QRV messages with hamlib (pseudo-code)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A future hamlib integration could, for example, be implemented roughly as:
+
+.. code-block:: c
+
+   /* Called when user activates "Tune radio to APRS station" on a popup */
+   void aprs_hamlib_tune_from_item(struct item *it) {
+       struct attr comment_attr;
+
+       if (!item_attr_get(it, attr_comment, &comment_attr) || !comment_attr.u.str) {
+           return;
+       }
+
+       /* Very simple pattern match; real code should be more robust */
+       /* Example comment: "WX: 12C 1013hPa QRV 144.625 MHz" */
+       const char *qrv = strstr(comment_attr.u.str, "QRV");
+       if (!qrv) {
+           return;
+       }
+
+       double mhz = 0.0;
+       if (sscanf(qrv, "QRV %lf MHz", &mhz) != 1) {
+           return;
+       }
+
+       /* Convert MHz to Hz and call hamlib (pseudo-call) */
+       long long freq_hz = (long long)(mhz * 1000000.0);
+       hamlib_set_vfo_frequency(freq_hz);
+   }
+
+Alternatively, a background task could walk the APRS database using
+``aprs_db_get_all_stations()``, inspect ``station->comment`` for QRV/weather
+tags, and decide when to tune or annotate repeaters and simplex calling
+frequencies.
 
 References
 ----------
@@ -464,9 +523,7 @@ Possible Future Enhancements
 
 - Compatibility with NA7Q-APRSdroid (https://github.com/9M2PJU/NA7Q-APRSdroid) for enhanced Android APRS integration and position sharing
 - Display APRS messages, some APRS users sends out the message QRV 144.625 MHz as a example. That means that they are listening on that frequency. If a radio is attached to the device running NAVIT, use hamlib to tune the radios VFO to the frequency displayed in the received message.
-- Route to the APRS station, clicking on the APRS stations icon creates a route to it.
 - Compatibility with https://repeatermap.de/, a database over radio amateur repeaters.
 - Compatibility with POI's like members of this network: https://www.openstreetmap.org/relation/18780801#map=18/61.897568/9.283834, a repeater like this one typically has a 50 kilometers range: https://www.openstreetmap.org/node/2641537344#map=19/60.808619/9.615892
-One could potentially display a pop up when entering the cover area, with the possibility to tune one of the vfo's to the correct frequency and subtone by using libham.
-
+  One could potentially display a pop up when entering the cover area, with the possibility to tune one of the vfo's to the correct frequency and subtone by using libham.
 
