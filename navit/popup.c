@@ -38,9 +38,9 @@
 #include <glib.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <stdlib.h>
 #ifdef HAVE_UNISTD_H
 #    include <unistd.h>
 #endif
@@ -294,8 +294,7 @@ static int popup_aprs_allow_destination(struct item *item, const char *label) {
     }
 
     if (speed_valid && timestamp_valid && speed <= 1 && age >= min_stationary_seconds) {
-        dbg(lvl_debug,
-            "APRS popup routing for '%s': allowed (speed=%d age=%ld min_stationary_seconds=%d)",
+        dbg(lvl_debug, "APRS popup routing for '%s': allowed (speed=%d age=%ld min_stationary_seconds=%d)",
             label ? label : "", speed, age, min_stationary_seconds);
         return 1;
     }
