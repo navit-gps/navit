@@ -23,7 +23,12 @@ Note that Navit internally handles all text in UTF-8 encoding. If you use a file
 
 ''data'' is the program that can be used to play the sample files. You should specify the program name along with any necessary parameters. The placeholder "%s" will be replaced with the file(s) to be played. All files required for a text will be passed in one go, so the program will need to support playing multiple files. Note that the %s should ''not'' be quoted; the text is not passed through a shell.
 
-Note that if any file that is needed to compose the complete phrase is missing then Navit will be silent. In that case a warning will be printed. Unfortunately, there is no complete list of the samples required. However, all the navigation text is contained in the translation files (.po files), so you can get a rough list.
+Note that if any file that is needed to compose the complete phrase is missing then Navit will be silent. In that case a warning will be printed. There is a list of the samples required for the Dutch language. Lists for other languages can be created by reading the log file. Look for lines containing "Cannot speak text" and create the missing audio files. The list for Dutch can be used as a starting point (the list for the numbers is the same in every language). Other texts are probably different because of the order of words in a sentence.
+
+If you have created lists for other languages please add them here.
+
+WARNING: THERE ARE ANNOUNCEMENTS THAT CONTAIN GEOGRAPHICAL NAMES. SO THERE IS NO PRACTICAL USE FOR THIS FEATURE AT THIS MOMENT SINCE IT IS IMPOSSIBLE TO CREATE AUDIO FILES FOR ALL THE NAMES.
+A SOLUTION TO USE TEXT TO SPEECH FOR MISSING AUDIO FILES IS BEING TESTED.
 
 By default Navit is trying to announce street names. To disable this feature you can set ''vocabulary_name'' and ''vocabulary_name_systematic'' to 0 in the speech tag which will specify that the speech synthesizer isn't capable of speaking names. Also there is ''vocabulary_distances'' which you can set to 0 so only the minimum set of 1,2,3,4,5,10,25,50,75,100,150,200,250,300,400,500,750 as numbers is used.
 
