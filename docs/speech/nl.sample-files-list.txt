@@ -1,0 +1,169 @@
+# Turn-by-turn texts
+
+"ga"
+"rij"
+"neem"
+"verlaat"
+"oprijden"
+"rijden"
+
+"nu"
+"straks"
+"dan"
+"daarna"
+"volgende"
+
+"links"
+"naar links"
+"rechts"
+"naar rechts"
+"rechtdoor"
+
+"na"
+"naar"
+"richting"
+"andere richtingen"
+"volg de weg gedurende"
+
+"de"
+"het"
+
+"op"
+"af"
+"bij"
+"tot"
+
+"route"
+"routepunt"
+"weg"
+"straat"
+"afslag"
+"oprit"
+"bij knooppunt"
+"rotonde"
+"op de rotonde"
+"de rotonde op"
+
+"kilometer"
+"meter"
+
+"over"
+"dag"
+"dagen"
+"uur"
+"minuten"
+"minuut"
+"afstand"
+
+"invoegen"
+"uitvoegen"
+"aanhouden"
+
+"flauw"
+"scherp"
+
+"indien mogelijk omkeren"
+"geschatte reistijd"
+"geschatte aankomsttijd"
+"bestemming"
+"bereikt"
+"daarna heeft u uw bestemming bereikt"
+"ga terug naar de route"
+"verminder snelheid"
+
+
+# Texts used for roads
+"A"
+"B"
+"C"
+"D"
+"E"
+"I"
+"L"
+"M"
+"N"
+"P"
+"R"
+"S"
+"U"
+"V"
+"X"
+
+"Ring"
+"Noord"
+"Oost"
+"Zuid"
+"West"
+"Centrum"
+
+
+# Numbers
+
+"nulde"
+"eerste"
+"tweede"
+"derde"
+"vierde"
+"vijfde"
+"zesde"
+
+"punt"
+"komma"
+"puntkomma"
+
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+10
+20
+25
+30
+40
+50
+60
+70
+75
+80
+90
+100
+150
+175
+200
+250
+300
+400
+500
+600
+700
+750
+800
+900
+
+
+# Note:
+# '12 kilometer' is spoken as 'one two kilometer' because there is no audio file for '12'.
+# It is clear what is meant but you can create as many audio files with numbers as you like or need.
+
+11 - 19
+21 - 24
+26 - 29
+31 - 39
+41 - 49
+51 - 59
+61 - 69
+71 - 79
+81 - 89
+91 - 99
+
+100 - 199
+200 - 299
+300 - 399
+
