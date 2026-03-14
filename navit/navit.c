@@ -1618,8 +1618,7 @@ void navit_set_destination(struct navit *this_, struct pcoord *c, const char *de
                                       description, this_->recentdest_count);
     } else {
         this_->destination_valid = 0;
-        bookmarks_append_destinations(this_->former_destination, destination_file, NULL, 0, type_former_destination,
-                                      NULL, this_->recentdest_count);
+        bookmarks_append_destinations(this_->former_destination, destination_file, NULL, 0, type_former_destination, NULL, this_->recentdest_count);
         navit_mark_navigation_stopped(destination_file);
     }
     g_free(destination_file);
@@ -1875,8 +1874,7 @@ void navit_textfile_debug_log(struct navit *this_, const char *fmt, ...) {
     va_start(ap, fmt);
     if (this_->textfile_debug_log && this_->vehicle) {
         str1 = g_strdup_vprintf(fmt, ap);
-        str2 = g_strdup_printf("0x%x 0x%x%s%s\n", this_->vehicle->coord.x, this_->vehicle->coord.y,
-                               strlen(str1) ? " " : "", str1);
+        str2 = g_strdup_printf("0x%x 0x%x%s%s\n", this_->vehicle->coord.x, this_->vehicle->coord.y, strlen(str1) ? " " : "", str1);
         log_write(this_->textfile_debug_log, str2, strlen(str2), 0);
         g_free(str2);
         g_free(str1);
@@ -1899,13 +1897,25 @@ void navit_textfile_debug_log_at(struct navit *this_, struct pcoord *pc, const c
 }
 
 void navit_say(struct navit *this_, const char *text) {
-    struct attr attr;
+    struct attr name_attr;
+    struct attr active_attr;
+
+    name_attr.type = attr_name;
+    active_attr.type = attr_active;
+
     if (this_->speech) {
-        if (!speech_get_attr(this_->speech, attr_active, &attr, NULL))
-            attr.u.num = 1;
-        dbg(lvl_debug, "this_.speech->active %ld", attr.u.num);
-        if (attr.u.num)
+        if (!speech_get_attr(this_->speech, attr_active, &active_attr, NULL))
+            name_attr.u.str = "No voice name";
+        if (!speech_get_attr(this_->speech, attr_active, &active_attr, NULL))
+            active_attr.u.num = 1;
+
+        dbg(lvl_debug, "this_.speech->name %s", name_attr.u.str);
+        dbg(lvl_debug, "this_.speech->active %ld", active_attr.u.num);
+        if (active_attr.u.num == 1)
             speech_say(this_->speech, text);
+
+    } else {
+        dbg(lvl_warning, "No voice configured. No text will be spoken.");
     }
 }
 
@@ -1960,7 +1970,7 @@ void navit_speak(struct navit *this_) {
             ;
         if (item && item_attr_get(item, attr_navigation_speech, &attr)) {
             if (*attr.u.str != '\0') {
-                speech_say(this_->speech, attr.u.str);
+                navit_say(this_, attr.u.str);
                 navit_add_message(this_, attr.u.str);
             }
             navit_textfile_debug_log(this_, "type=announcement label=\"%s\"", attr.u.str);

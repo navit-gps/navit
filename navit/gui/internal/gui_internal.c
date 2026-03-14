@@ -1938,39 +1938,36 @@ static void save_vehicle_xml(struct vehicle *v) {
 /**
  * @brief Toggles the active voice
  */                                                                                                                                                                                                                                           
-static int navit_active_voice_toggle(struct navit *this_, int active) {                                                                                                                                                                       
-    struct attr attr, speechattr;                                                                                                                                                                                                             
-                                                                                                                                                                                                                                              
-    // Set active attribute value                                                                                                                                                                                                             
-    if (!navit_get_attr(this_, attr_speech, &speechattr, NULL)) {                                                                                                                                                                             
-        if (speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL)) {                                                                                                                                                                 
-            if (active == 2) {                                                                                                                                                                                                                
-                active = !attr.u.num;                                                                                                                                                                                                         
-            }                                                                                                                                                                                                                                 
-        } else {                                                                                                                                                                                                                              
-            attr.type = attr_active;                                                                                                                                                                                                          
-        }                                                                                                                                                                                                                                     
-        attr.u.num = active;                                                                                                                                                                                                                  
-                                                                                                                                                                                                                                              
-    } else {                                                                                                                                                                                                                                  
-      return 1;                                                                                                                                                                                                                               
-    }                                                                                                                                                                                                                                         
-    dbg(lvl_debug, "Active voice active attribute value: '%i'", active);                                                                                                                                                                      
-                                                                                                                                                                                                                                              
-    // Set active attribute in active voice                                                                                                                                                                                                   
-    if (!speech_set_attr(speechattr.u.speech, &attr))                                                                                                                                                                                         
-        return 2;                                                                                                                                                                                                                             
-                                                                                                                                                                                                                                              
-                                                                                                                                                                                                                                              
-    // Debug                                                                                                                                                                                                                                  
-    navit_get_attr(this_, attr_speech, &speechattr, NULL);                                                                                                                                                                                    
+static int navit_active_voice_toggle(struct navit *this_, int active) { 
+    struct navigation *nav;
+    struct attr attr, speechattr, navigationattr;
+
+    // Set active attribute value
+    if (navit_get_attr(this_, attr_speech, &speechattr, NULL)) {
+        if (speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL)) {
+            if (active == 2) {
+                active = !attr.u.num;
+            }
+        } else {
+            attr.type = attr_active;
+        }
+        attr.u.num = active;
+    } else {
+        return 1;
+    }
+    dbg(lvl_info, "Active voice active attribute value: '%i'", active);
+
+    // Set active attribute in active voice
+    if (!speech_set_attr(speechattr.u.speech, &attr))
+        return 2;
+
+    // Debug
+    navit_get_attr(this_, attr_speech, &speechattr, NULL);
     speech_get_attr(speechattr.u.speech, attr_name, &attr, NULL);
     dbg(lvl_debug, "Active voice name: '%s'", attr.u.str);
     speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL);
     dbg(lvl_debug, "Active voice active attribute value: '%i'", attr.u.num);
 
-
-    //callback_list_call_attr_1(this_->attr_cbl, attr_speech, this_);
     return 0;
 }
 
@@ -1986,6 +1983,7 @@ static void gui_internal_cmd_set_active_voice_profile(struct gui_priv *this, str
     struct attr speech_attr;
     struct attr active_attr;
 
+    dbg(lvl_info, "Selected voice: '%s'", vapn->profilename);
     speech_attr.type = attr_speech;
     speech_attr.u.speech = vapn->speech;
     active_attr.type = attr_active;
