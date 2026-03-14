@@ -7,13 +7,14 @@
 # Manuel Hohmann https://launchpad.net/~mhohmann
 # lyyser https://launchpad.net/~lyyser
 # thucar https://launchpad.net/~rait
+# Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-11 01:49+0100\n"
-"PO-Revision-Date: 2024-04-13 17:25+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2025-12-16 19:22+0100\n"
+"PO-Revision-Date: 2026-02-18 17:39+0000\n"
+"Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/navit/navit-"
 "core/et/>\n"
 "Language: et\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.16.1-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -446,7 +447,7 @@ msgstr "Araabia Ühendemiraadid"
 
 #. 004
 msgid "Afghanistan"
-msgstr "Afganistaan"
+msgstr "Afganistan"
 
 #. 028
 msgid "Antigua and Barbuda"
@@ -472,7 +473,7 @@ msgstr "Hollandi Antillid"
 #. 024
 #. Android resource: @strings/angola
 msgid "Angola"
-msgstr "Angoola"
+msgstr "Angola"
 
 #. 010
 msgid "Antarctica"
@@ -481,7 +482,7 @@ msgstr "Antarktika"
 #. 032
 #. Android resource: @strings/argentina
 msgid "Argentina"
-msgstr "Argentiina"
+msgstr "Argentina"
 
 #. 016
 msgid "American Samoa"
@@ -503,7 +504,7 @@ msgstr "Aruba"
 
 #. 248
 msgid "Aland Islands"
-msgstr "Alandi saared"
+msgstr "Ahvenamaa"
 
 #. 031
 #. Android resource: @strings/azerbaijan
@@ -548,11 +549,11 @@ msgstr "Burundi"
 
 #. 204
 msgid "Benin"
-msgstr "Benini"
+msgstr "Benin"
 
 #. 652
 msgid "Saint Barthelemy"
-msgstr "Saint Barthelemy"
+msgstr "Saint-Barthélemy"
 
 #. 060
 msgid "Bermuda"
@@ -560,7 +561,7 @@ msgstr "Bermuda"
 
 #. 096
 msgid "Brunei Darussalam"
-msgstr "Brunei Darussalam"
+msgstr "Brunei"
 
 #. 068
 #. Android resource: @strings/bolivia
@@ -578,7 +579,7 @@ msgstr "Brasiilia"
 
 #. 044
 msgid "Bahamas"
-msgstr "Bahama saared"
+msgstr "Bahama"
 
 #. 064
 msgid "Bhutan"
@@ -586,7 +587,7 @@ msgstr "Bhutan"
 
 #. 074
 msgid "Bouvet Island"
-msgstr "Bouveti saar"
+msgstr "Bouvet’ saar"
 
 #. 072
 #. Android resource: @strings/botswana
@@ -609,12 +610,12 @@ msgstr "Kanada"
 
 #. 166
 msgid "Cocos (Keeling) Islands"
-msgstr "Kookosesaared"
+msgstr "Kookossaared"
 
 #. 180
 #. Android resource: @strings/congo
 msgid "Congo, Democratic Republic of the"
-msgstr "Kongo Demokraatlik Vabariik"
+msgstr "Kongo DV"
 
 #. 140
 msgid "Central African Republic"
@@ -622,7 +623,7 @@ msgstr "Kesk-Aafrika Vabariik"
 
 #. 178
 msgid "Congo"
-msgstr "Kongo"
+msgstr "Kongo Vabariik"
 
 #. 756
 #. Android resource: @strings/switzerland
@@ -632,7 +633,7 @@ msgstr "Šveits"
 #. 384
 #. Android resource: @strings/cotedivoire
 msgid "Cote d'Ivoire"
-msgstr "Elevandiluu rannik"
+msgstr "Elevandiluurannik"
 
 #. 184
 msgid "Cook Islands"
@@ -655,7 +656,7 @@ msgstr "Hiina"
 #. 170
 #. Android resource: @strings/colombia
 msgid "Colombia"
-msgstr "Kolumbia"
+msgstr "Colombia"
 
 #. 188
 msgid "Costa Rica"
@@ -668,11 +669,11 @@ msgstr "Kuuba"
 
 #. 132
 msgid "Cape Verde"
-msgstr "Roheneeme saared"
+msgstr "Roheneemesaared"
 
 #. 531
 msgid "Curacao"
-msgstr "Curacao"
+msgstr "Curaçao"
 
 #. 162
 msgid "Christmas Island"
@@ -762,7 +763,7 @@ msgstr "Falklandi (Malviini) saared"
 
 #. 583
 msgid "Micronesia, Federated States of"
-msgstr "Mikroneesia Liiduriigid"
+msgstr "Mikroneesia"
 
 #. 234
 #. Android resource: @strings/faroe_islands
@@ -789,7 +790,7 @@ msgstr "Grenada"
 
 #. 268
 msgid "Georgia"
-msgstr "Georgia"
+msgstr "Gruusia"
 
 #. 254
 msgid "French Guiana"
@@ -856,11 +857,11 @@ msgstr "Guajaana"
 
 #. 344
 msgid "Hong Kong"
-msgstr "Hong Kong"
+msgstr "Hongkong"
 
 #. 334
 msgid "Heard Island and McDonald Islands"
-msgstr "Heardi ja McDonaldi saarte ala"
+msgstr "Heard ja McDonald"
 
 #. 340
 msgid "Honduras"
@@ -898,7 +899,7 @@ msgstr "Iisrael"
 
 #. 833
 msgid "Isle of Man"
-msgstr "Man'i saar"
+msgstr "Mani saar"
 
 #. 356
 #. Android resource: @strings/india
@@ -907,7 +908,7 @@ msgstr "India"
 
 #. 086
 msgid "British Indian Ocean Territory"
-msgstr "Briti India ookeani territoorium"
+msgstr "Briti India ookeani ala"
 
 #. 368
 #. Android resource: @strings/iraq
@@ -917,7 +918,7 @@ msgstr "Iraak"
 #. 364
 #. Android resource: @strings/iran
 msgid "Iran, Islamic Republic of"
-msgstr "Iraani Islamivabariik"
+msgstr "Iraan"
 
 #. 352
 #. Android resource: @strings/iceland
@@ -971,15 +972,15 @@ msgstr "Komoorid"
 
 #. 659
 msgid "Saint Kitts and Nevis"
-msgstr "St. Kitts ja Nevis"
+msgstr "Saint Kitts ja Nevis"
 
 #. 408
 msgid "Korea, Democratic People's Republic of"
-msgstr "Korea Rahvademokraatlik Vabariik"
+msgstr "Põhja-Korea"
 
 #. 410
 msgid "Korea, Republic of"
-msgstr "Korea Vabariik"
+msgstr "Lõuna-Korea"
 
 #. 414
 msgid "Kuwait"
@@ -996,7 +997,7 @@ msgstr "Kasashtan"
 
 #. 418
 msgid "Lao People's Democratic Republic"
-msgstr "Laose Demokraatlik Rahvavabariik"
+msgstr "Laos"
 
 #. 422
 msgid "Lebanon"
@@ -1004,7 +1005,7 @@ msgstr "Liibanon"
 
 #. 662
 msgid "Saint Lucia"
-msgstr "Santa Lucía"
+msgstr "Santa Lucia"
 
 #. 438
 msgid "Liechtenstein"
@@ -1054,7 +1055,7 @@ msgstr "Monaco"
 
 #. 498
 msgid "Moldova, Republic of"
-msgstr "Moldova Vabariik"
+msgstr "Moldova"
 
 #. 499
 msgid "Montenegro"
@@ -1062,7 +1063,7 @@ msgstr "Montenegro"
 
 #. 663
 msgid "Saint Martin (French part)"
-msgstr "St. Martin (Prantsuse osa)"
+msgstr "Saint-Martin"
 
 #. 450
 #. Android resource: @strings/madagascar
@@ -1075,7 +1076,7 @@ msgstr "Marshalli saared"
 
 #. 807
 msgid "Macedonia, the former Yugoslav Republic of"
-msgstr "Makedoonia, endine Jugoslaavia vabariik"
+msgstr "Põhja-Makedoonia"
 
 #. 466
 msgid "Mali"
@@ -1096,7 +1097,7 @@ msgstr "Macao"
 
 #. 580
 msgid "Northern Mariana Islands"
-msgstr "Põhja-Mariaani saared"
+msgstr "Põhja-Mariaanid"
 
 #. 474
 msgid "Martinique"
@@ -1148,7 +1149,7 @@ msgstr "Namiibia"
 #. 540
 #. Android resource: @strings/new_caledonia
 msgid "New Caledonia"
-msgstr "Uus Kaledoonia"
+msgstr "Uus-Kaledoonia"
 
 #. 562
 msgid "Niger"
@@ -1156,7 +1157,7 @@ msgstr "Niger"
 
 #. 574
 msgid "Norfolk Island"
-msgstr "Norfolki saar"
+msgstr "Norfolk"
 
 #. 566
 msgid "Nigeria"
@@ -1178,7 +1179,7 @@ msgstr "Norra"
 #. 524
 #. Android resource: @strings/nepal
 msgid "Nepal"
-msgstr "Nepaal"
+msgstr "Nepal"
 
 #. 520
 msgid "Nauru"
@@ -1231,7 +1232,7 @@ msgstr "Poola"
 
 #. 666
 msgid "Saint Pierre and Miquelon"
-msgstr "St. Pierre and Miquelon"
+msgstr "Saint-Pierre ja Miquelon"
 
 #. 612
 msgid "Pitcairn"
@@ -1243,7 +1244,7 @@ msgstr "Puerto Rico"
 
 #. 275
 msgid "Palestinian Territory, Occupied"
-msgstr "Palestiina okupeeritud ala"
+msgstr "Palestiina"
 
 #. 620
 #. Android resource: @strings/portugal
@@ -1252,12 +1253,12 @@ msgstr "Portugal"
 
 #. 585
 msgid "Palau"
-msgstr "Palau"
+msgstr "Belau"
 
 #. 600
 #. Android resource: @strings/paraguay
 msgid "Paraguay"
-msgstr "Paraguai"
+msgstr "Paraguay"
 
 #. 634
 msgid "Qatar"
@@ -1266,7 +1267,7 @@ msgstr "Katar"
 #. 638
 #. Android resource: @strings/reunion
 msgid "Reunion"
-msgstr "Reunion"
+msgstr "Réunion"
 
 #. 642
 #. Android resource: @strings/romania
@@ -1315,7 +1316,7 @@ msgstr "Singapur"
 
 #. 654
 msgid "Saint Helena"
-msgstr "St. Helena"
+msgstr "Saint Helena"
 
 #. 705
 msgid "Slovenia"
@@ -1357,7 +1358,7 @@ msgstr "Lõuna-Sudaan"
 
 #. 678
 msgid "Sao Tome and Principe"
-msgstr "Sao Tome ja Principe"
+msgstr "São Tomé ja Príncipe"
 
 #. 222
 msgid "El Salvador"
@@ -1365,11 +1366,11 @@ msgstr "El Salvador"
 
 #. 534
 msgid "Sint Maarten (Dutch part)"
-msgstr "Sint Maarten (Hollandi osa)"
+msgstr "Sint Maarten"
 
 #. 760
 msgid "Syrian Arab Republic"
-msgstr "Süüria Araabia Vabariik"
+msgstr "Süüria"
 
 #. 748
 msgid "Swaziland"
@@ -1377,7 +1378,7 @@ msgstr "Svaasimaa"
 
 #. 796
 msgid "Turks and Caicos Islands"
-msgstr "Turks ja Caicose saared"
+msgstr "Turks ja Caicos"
 
 #. 148
 msgid "Chad"
@@ -1411,7 +1412,7 @@ msgstr "Ida-Timor"
 #. 795
 #. Android resource: @strings/turkmenistan
 msgid "Turkmenistan"
-msgstr "Turkmenistan"
+msgstr "Türkmenistan"
 
 #. 788
 msgid "Tunisia"
@@ -1441,7 +1442,7 @@ msgstr "Taiwan"
 #. 834
 #. Android resource: @strings/tanzania
 msgid "Tanzania, United Republic of"
-msgstr "Tansaania Ühendvabariik"
+msgstr "Tansaania"
 
 #. 804
 #. Android resource: @strings/ukraine
@@ -1459,12 +1460,12 @@ msgstr "Ühendriikide hajasaared"
 
 #. 840
 msgid "United States"
-msgstr "USA"
+msgstr "Ameerika Ühendriigid"
 
 #. 858
 #. Android resource: @strings/uruguay
 msgid "Uruguay"
-msgstr "Uruguai"
+msgstr "Uruguay"
 
 #. 860
 msgid "Uzbekistan"
@@ -1472,24 +1473,24 @@ msgstr "Usbekistan"
 
 #. 336
 msgid "Holy See (Vatican City State)"
-msgstr "Püha Tool (Vatikan)"
+msgstr "Vatikan"
 
 #. 670
 msgid "Saint Vincent and the Grenadines"
-msgstr "St. Vincent ja Grenadines"
+msgstr "Saint Vincent ja Grenadiinid"
 
 #. 862
 #. Android resource: @strings/venezuela
 msgid "Venezuela"
-msgstr "Venetsueela"
+msgstr "Venezuela"
 
 #. 092
 msgid "Virgin Islands, British"
-msgstr "Neitsisaared, Briti"
+msgstr "Briti Neitsisaared"
 
 #. 850
 msgid "Virgin Islands, U.S."
-msgstr "Neitsisaared, USA"
+msgstr "USA Neitsisaared"
 
 #. 704
 msgid "Viet Nam"
@@ -1509,7 +1510,7 @@ msgstr "Samoa"
 
 #. 412
 msgid "Kosovo"
-msgstr ""
+msgstr "Kosovo"
 
 #. 887
 msgid "Yemen"
@@ -1636,7 +1637,7 @@ msgid "_Route"
 msgstr "_Teekond"
 
 msgid "_Former Destinations"
-msgstr "_Eelmine sihtkoht"
+msgstr "_Eelmised sihtkohad"
 
 msgid "_Bookmarks"
 msgstr "_Järjehoidjad"
@@ -1681,10 +1682,10 @@ msgid "Opens address search dialog"
 msgstr "Ava aadressiotsingu aken"
 
 msgid "_POI search"
-msgstr ""
+msgstr "_Huvipunkti otsing"
 
 msgid "Opens POI search dialog"
-msgstr ""
+msgstr "Avab huvipunkti otsinguvaate"
 
 msgid "_Stop Navigation"
 msgstr "_Peata navigeerimine"
@@ -1717,7 +1718,7 @@ msgid "_Roadbook"
 msgstr "_Teekonna raamat"
 
 msgid "Show/hide route description"
-msgstr "Näita/peida teekonna kirjeldust"
+msgstr "Näita teekonna kirjeldust või peida see"
 
 msgid "_Autozoom"
 msgstr "_Automaatne suurendus"
@@ -1768,7 +1769,7 @@ msgid "Police"
 msgstr "Politsei"
 
 msgid "Justice"
-msgstr ""
+msgstr "Kohus"
 
 msgid "Taxi"
 msgstr "Takso"
@@ -1778,11 +1779,11 @@ msgstr "kauplus"
 
 #. Input is in kilometers
 msgid "Select a search radius from screen center in km"
-msgstr ""
+msgstr "Sisesta otsinguraadius kilomeetrites kaardi keskpunktist"
 
 #. Input is in miles.
 msgid "Select a search radius from screen center in miles"
-msgstr ""
+msgstr "Sisesta otsinguraadius miilides kaardi keskpunktist"
 
 #, c-format
 msgid "POI %s. %s"
@@ -1801,13 +1802,13 @@ msgid "Set next visit to %ld, %ld "
 msgstr ""
 
 msgid "POI search"
-msgstr "POI otsing"
+msgstr "Huvipunkti otsing"
 
 msgid "Select a category"
 msgstr "Vali kategooria"
 
 msgid "Select a POI"
-msgstr "Vali POI"
+msgstr "Vali huvipunkt"
 
 msgid " "
 msgstr " "
@@ -1819,7 +1820,7 @@ msgid "Direction"
 msgstr "Suund"
 
 msgid "Distance"
-msgstr ""
+msgstr "Vahemaa"
 
 msgid "Name"
 msgstr "Nimi"
@@ -1892,7 +1893,7 @@ msgid "Streets"
 msgstr "Tänavad"
 
 msgid "House numbers"
-msgstr "Maja numbrid"
+msgstr "Majade numbrid"
 
 msgid "View Attributes"
 msgstr "Näita omadusi"
@@ -1977,10 +1978,10 @@ msgid "Show Satellite Status"
 msgstr "Näita satelliidi andmeid"
 
 msgid " Elevation "
-msgstr " Kõrgus "
+msgstr "Kõrgus"
 
 msgid " Azimuth "
-msgstr " Asimuut "
+msgstr "Asimuut"
 
 msgid "Show NMEA Data"
 msgstr "Näita NMEA andmeid"
@@ -2086,10 +2087,10 @@ msgid "Route Description"
 msgstr "Teekonna kirjeldus"
 
 msgid "Show Locale"
-msgstr "Lokaadi näitamine"
+msgstr "Näita lokaati"
 
 msgid "Network info"
-msgstr ""
+msgstr "Võrguteave"
 
 msgid "Former Destinations"
 msgstr "Eelmised sihtpunktid"
@@ -2187,16 +2188,16 @@ msgid "Window Mode"
 msgstr "Aknarežiim"
 
 msgid "Auto zoom"
-msgstr ""
+msgstr "Automaatne suum"
 
 msgid "Manual zoom"
-msgstr ""
+msgstr "Käsitsi suum"
 
 msgid "Layers"
-msgstr ""
+msgstr "Kaardikihid"
 
 msgid "Zoom to route"
-msgstr ""
+msgstr "Suumi teekonnale"
 
 msgid "Description"
 msgstr "Kirjeldus"
@@ -2204,12 +2205,12 @@ msgstr "Kirjeldus"
 msgid ""
 "Drop last\n"
 "Waypoint"
-msgstr ""
+msgstr "Loobu eelmisest teekonnapunktist"
 
 msgid ""
 "Drop next\n"
 "Waypoint"
-msgstr ""
+msgstr "Loobu järgmisest teekonnapunktist"
 
 msgid "Configure Driver Break Intervals"
 msgstr ""
@@ -2309,7 +2310,7 @@ msgstr "Loo varukoopia/taasta"
 
 #. Android resource: @strings/optionsmenu_set_map_location
 msgid "Set map location"
-msgstr ""
+msgstr "Seadista kaardi asukoht"
 
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
@@ -2317,7 +2318,7 @@ msgstr "Teekond siia"
 
 #. Android resource: @strings/position_popup_view
 msgid "View"
-msgstr ""
+msgstr "Vaata"
 
 #. Android resource: @strings/use_position_with
 msgid "Use position with"
@@ -2453,7 +2454,7 @@ msgstr "Vali tegevus"
 
 #. Android resource: @strings/please_insert_an_sd_card
 msgid "Please insert an SD Card"
-msgstr "Palun sisesta SD kaart"
+msgstr "Palun sisesta SD-kaart"
 
 #. Android resource: @strings/failed_to_create_backup_directory
 msgid "Failed to create backup directory"
@@ -2882,7 +2883,7 @@ msgstr "USA"
 
 #. Android resource: @strings/except_alaska_and_hawaii
 msgid "(except Alaska and Hawaii)"
-msgstr ""
+msgstr "(välja arvatud Alaska ja Havai)"
 
 #. Android resource: @strings/midwest
 msgid "Midwest"

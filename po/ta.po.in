@@ -6,13 +6,14 @@
 # Rajiv Subrahmanyam https://launchpad.net/~rajiv-public
 # தமிழ்நேரம் <anishprabu.t@gmail.com>, 2025.
 # jkoan <jkoan@gmx.de>, 2025.
+# தமிழ்நேரம் <tamilneram247@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-11 01:49+0100\n"
-"PO-Revision-Date: 2025-12-15 09:21+0000\n"
-"Last-Translator: jkoan <jkoan@gmx.de>\n"
+"POT-Creation-Date: 2025-12-16 19:22+0100\n"
+"PO-Revision-Date: 2026-03-02 06:09+0000\n"
+"Last-Translator: தமிழ்நேரம் <tamilneram247@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/navit/navit-core/"
 "ta/>\n"
 "Language: ta\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.16.1-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -28,7 +29,7 @@ msgstr "மூல கோப்பகத்திலிருந்து இய�
 
 #. libc of navit returns "dummy"
 msgid "Error getting current path. use ./ \n"
-msgstr ""
+msgstr "தற்போதைய பாதையைப் பெறுவதில் பிழை. பயன்படுத்த./\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -208,7 +209,7 @@ msgid "Enter the roundabout %s"
 msgstr "ரவுண்டானா %s ஐ உள்ளிடவும்"
 
 msgid "then enter the roundabout"
-msgstr ""
+msgstr "பின்னர் சுற்று வட்டத்திற்குள் நுழையவும்"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -315,7 +316,7 @@ msgstr "வலுவாக "
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr ""
+msgstr "பிறகு %2$s க்கு %1$s சாலையில் செல்க"
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -388,13 +389,13 @@ msgid "Length"
 msgstr "நீளம்"
 
 msgid "mi"
-msgstr ""
+msgstr "மை"
 
 msgid "km"
 msgstr "கி.மீ."
 
 msgid "feet"
-msgstr ""
+msgstr "அடி"
 
 msgid "m"
 msgstr "மீ"
@@ -1508,7 +1509,7 @@ msgstr "சமோவா"
 
 #. 412
 msgid "Kosovo"
-msgstr ""
+msgstr "கொசோவோ"
 
 #. 887
 msgid "Yemen"
@@ -1532,7 +1533,7 @@ msgid "Zimbabwe"
 msgstr "சிம்பாப்வே"
 
 msgid "* Unknown, add is_in tags to those cities"
-msgstr "* தெரியவில்லை, அந்த நகரங்களுக்கு IS_IN குறிச்சொற்களைச் சேர்க்கவும்"
+msgstr "*தெரியவில்லை, அந்த நகரங்களுக்கு இதில்_உள்ள குறிச்சொற்களைச் சேர்"
 
 msgid ""
 "navit usage:\n"
@@ -1558,22 +1559,23 @@ msgstr ""
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found"
-msgstr ""
+msgstr "navit.xml, navit.xml.local என்ற கட்டமைப்பு கோப்பு எதுவும் இல்லை"
 
 #, c-format
 msgid "Error parsing config file '%s': %s"
-msgstr ""
+msgstr "'%s' கட்டமைப்புக் கோப்பைப் பாகுபடுத்துவதில் பிழை: %s"
 
 #, c-format
 msgid "Using config file '%s'"
-msgstr ""
+msgstr "'%s' என்ற கட்டமைப்பு கோப்பைப் பயன்படுத்துதல்"
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'"
-msgstr ""
+msgstr "பிழை: '%s' என்ற கட்டமைப்பு கோப்பில் உள்ளமைவு எதுவும் இல்லை"
 
 msgid "Internal initialization failed, exiting. Check previous error messages."
 msgstr ""
+"உள் துவக்கம் தோல்வியடைந்தது, வெளியேறுகிறது. முந்தைய பிழை செய்திகளைச் சரிபார்க்கவும்."
 
 msgid "unknown street"
 msgstr "தெரியாத தெரு"
@@ -1593,10 +1595,10 @@ msgid "Car"
 msgstr "கார்"
 
 msgid "Iso2"
-msgstr "ISO2"
+msgstr "ஐஎச்ஓ2"
 
 msgid "Iso3"
-msgstr "ISO3"
+msgstr "ஐஎச்ஒ3"
 
 msgid "Country"
 msgstr "நாடு"
@@ -1684,16 +1686,16 @@ msgid "_Info"
 msgstr "_Info"
 
 msgid "Set _destination"
-msgstr "_DESTINATION ஐ அமைக்கவும்"
+msgstr "இலக்கை அமை"
 
 msgid "Opens address search dialog"
 msgstr "முகவரி தேடல் உரையாடலைத் திறக்கிறது"
 
 msgid "_POI search"
-msgstr "_POI தேடல்"
+msgstr "விபுள்ளி தேடல்"
 
 msgid "Opens POI search dialog"
-msgstr "POI தேடல் உரையாடலைத் திறக்கிறது"
+msgstr "விபுள்ளி தேடல் உரையாடலைத் திறக்கிறது"
 
 msgid "_Stop Navigation"
 msgstr "_ச்டாப் வழிசெலுத்தல்"
@@ -1714,7 +1716,7 @@ msgid "_Lock on Road"
 msgstr "_ சாலையில் செல்லுங்கள்"
 
 msgid "_Follow Vehicle"
-msgstr ""
+msgstr "_வாகனத்தைப் பின்தொடரவும்"
 
 msgid "_Keep orientation to the North"
 msgstr "_ வடக்கே நோக்குநிலை"
@@ -1729,7 +1731,7 @@ msgid "Show/hide route description"
 msgstr "பாதை விளக்கத்தைக் காட்டவும்/மறைக்கவும்"
 
 msgid "_Autozoom"
-msgstr "_AUTOSOOM"
+msgstr "தானிபெரிதாக்கி"
 
 msgid "Enable/disable automatic zoom level changing"
 msgstr "தானியங்கி சூம் நிலை மாற்றத்தை இயக்கவும்/முடக்கவும்"
@@ -1787,11 +1789,11 @@ msgstr "சாப்பிங்"
 
 #. Input is in kilometers
 msgid "Select a search radius from screen center in km"
-msgstr ""
+msgstr "கிமீ உள்ள திரை மையத்தில் இருந்து ஒரு தேடல் ஆரம் தேர்ந்தெடுக்கவும்"
 
 #. Input is in miles.
 msgid "Select a search radius from screen center in miles"
-msgstr ""
+msgstr "மைல்களில் திரை மையத்தில் இருந்து ஒரு தேடல் ஆரத்தைத் தேர்ந்தெடுக்கவும்"
 
 #, c-format
 msgid "POI %s. %s"
@@ -1799,15 +1801,15 @@ msgstr "பின்னர் %s. %s"
 
 #, c-format
 msgid "Set destination to %ld, %ld "
-msgstr ""
+msgstr "இலக்கை %ld, %ld என அமைக்கவும்"
 
 #, c-format
 msgid "Set map to %ld, %ld "
-msgstr ""
+msgstr "வரைபடத்தை %ld, %ld என அமைக்கவும்"
 
 #, c-format
 msgid "Set next visit to %ld, %ld "
-msgstr ""
+msgstr "அடுத்த வருகையை %ld, %ld என அமைக்கவும்"
 
 msgid "POI search"
 msgstr "பின்னர் தேடுங்கள்"
@@ -1816,7 +1818,7 @@ msgid "Select a category"
 msgstr "ஒரு வகையைத் தேர்ந்தெடுக்கவும்"
 
 msgid "Select a POI"
-msgstr "ஒரு POI ஐத் தேர்ந்தெடுக்கவும்"
+msgstr "ஒரு விருப்பபுள்ளியைத் தேர்ந்தெடு"
 
 msgid " "
 msgstr " "
@@ -1828,7 +1830,7 @@ msgid "Direction"
 msgstr "திசை"
 
 msgid "Distance"
-msgstr ""
+msgstr "தூரம்"
 
 msgid "Name"
 msgstr "பெயர்"
@@ -1852,13 +1854,13 @@ msgid "S"
 msgstr "கள்"
 
 msgid "SW"
-msgstr "SW"
+msgstr "தெமே"
 
 msgid "W"
 msgstr "W"
 
 msgid "NW"
-msgstr "NW"
+msgstr "வமே"
 
 #. Android resource: @strings/no
 msgid "No"
@@ -1868,17 +1870,17 @@ msgid "2D"
 msgstr "மே"
 
 msgid "3D"
-msgstr "ZD"
+msgstr "3ப"
 
 msgid "OT"
 msgstr "Ot"
 
 #, c-format
 msgid "Route %4.1f%s    %02d:%02d ETA"
-msgstr ""
+msgstr "பாதை %4.1f%s %02d:%02d எவநே"
 
 msgid "Route 0000km  0+00:00 ETA"
-msgstr "Rute 0000 கிமீ 0+00: 00 ETA"
+msgstr "வழி 0000 கிமீ 0+00: 00 எவநே"
 
 msgid "Help"
 msgstr "உதவி"
@@ -1992,7 +1994,7 @@ msgid " Azimuth "
 msgstr "அசிமுத்"
 
 msgid "Show NMEA Data"
-msgstr "NMEA தரவைக் காட்டு"
+msgstr "என்எம்இஎ தரவைக் காட்டு"
 
 msgid "car"
 msgstr "கார்"
@@ -2018,7 +2020,7 @@ msgid "Show Satellite status"
 msgstr "செயற்கைக்கோள் நிலையைக் காட்டு"
 
 msgid "Show NMEA data"
-msgstr "NMEA தரவைக் காட்டு"
+msgstr "என்எம்இஎ தரவைக் காட்டு"
 
 msgid "Add Bookmark"
 msgstr "புக்மார்க்கைச் சேர்க்கவும்"
@@ -2086,10 +2088,10 @@ msgid "Height Profile"
 msgstr "உயர சுயவிவரம்"
 
 msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
+msgstr "எலிவேதியோண்டாட்டாவை வழங்க வரைபடத்தை *.heightlines.bin ஐ நிறுவவும்"
 
 msgid "The route must cross at least 2 heightlines"
-msgstr ""
+msgstr "பாதை குறைந்தது 2 உயரங்களைக் கடக்க வேண்டும்"
 
 msgid "Route Description"
 msgstr "பாதை விளக்கம்"
@@ -2098,7 +2100,7 @@ msgid "Show Locale"
 msgstr "இருப்பிடத்தைக் காட்டு"
 
 msgid "Network info"
-msgstr ""
+msgstr "பிணையம் செய்தி"
 
 msgid "Former Destinations"
 msgstr "முன்னாள் இலக்குகள்"
@@ -2196,16 +2198,16 @@ msgid "Window Mode"
 msgstr "சாளரம் பயன்முறை"
 
 msgid "Auto zoom"
-msgstr ""
+msgstr "ஆட்டோ சூம்"
 
 msgid "Manual zoom"
-msgstr ""
+msgstr "கைமுறையாக பெரிதாக்குதல்"
 
 msgid "Layers"
-msgstr ""
+msgstr "அடுக்குகள்"
 
 msgid "Zoom to route"
-msgstr ""
+msgstr "பாதைக்கு பெரிதாக்கவும்"
 
 msgid "Description"
 msgstr "விவரம்"
@@ -2214,11 +2216,15 @@ msgid ""
 "Drop last\n"
 "Waypoint"
 msgstr ""
+"கடைசியாக கைவிடவும் \n"
+"வழிப்பாதை"
 
 msgid ""
 "Drop next\n"
 "Waypoint"
 msgstr ""
+"அடுத்து கைவிடவும் \n"
+"வழிப்பாதை"
 
 msgid "Configure Driver Break Intervals"
 msgstr ""
@@ -2230,13 +2236,13 @@ msgid "Satellite Status"
 msgstr "செயற்கைக்கோள் நிலை"
 
 msgid "NMEA Data"
-msgstr "NMEA தரவு"
+msgstr "என்எம்இஎ தரவு"
 
 msgid "car_shortest"
-msgstr "CAR_SHORTEST"
+msgstr "சிற்றுந்து_சிறிய"
 
 msgid "car_avoid_tolls"
-msgstr "CAR_AVOID_TOLLS"
+msgstr "சிற்றுந்து_வழிபறி_தவிர்"
 
 msgid "car_pedantic"
 msgstr "கார்_பெடிக்"
@@ -2258,7 +2264,7 @@ msgstr "ரத்துசெய்"
 
 #. Android resource: @strings/channel_name
 msgid "Navit"
-msgstr ""
+msgstr "நவித்"
 
 #. Android resource: @strings/notification_ticker
 msgid "Navit started"
@@ -2283,6 +2289,15 @@ msgid ""
 "\n"
 "Enjoy Navit!"
 msgstr ""
+"நேவ்விட்டை நிறுவியதற்கு நன்றி! \n"
+"\n"
+"தொடங்க, வரைபடத்தைப் பதிவிறக்க மெனுவிலிருந்து \"வரைபடங்களைப் பதிவிறக்கு\" என்பதைத் "
+"தேர்ந்தெடுக்கவும். குறிப்பு: வரைபடக் கோப்பு அளவு பெரியதாக இருக்கலாம் (&gt50எம்பி) - "
+"வைஃபை இணைப்பு பரிந்துரைக்கப்படுகிறது. \n"
+"\n"
+"வரைபடதரவு: (c) திறதெருவரைபடம் பங்களிப்பாளர்கள் \n"
+"\n"
+"நேவ்வித்து மகிழுங்கள்!"
 
 #. Android resource: @strings/initial_info_box_OK
 msgid "OK"
@@ -2326,11 +2341,11 @@ msgstr "இங்கே செல்லும் பாதை"
 
 #. Android resource: @strings/position_popup_view
 msgid "View"
-msgstr ""
+msgstr "காண்க"
 
 #. Android resource: @strings/use_position_with
 msgid "Use position with"
-msgstr ""
+msgstr "உடன் நிலையைப் பயன்படுத்தவும்"
 
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
@@ -2382,7 +2397,7 @@ msgstr "தற்போதைய இருப்பிடத்தைக் க�
 
 #. Android resource: @strings/maps_installed
 msgid "Installed maps"
-msgstr ""
+msgstr "நிறுவப்பட்ட வரைபடங்கள்"
 
 #. Android resource: @strings/map_downloading
 msgid "downloading"
@@ -2399,7 +2414,7 @@ msgstr "வரைபடத்தை எழுதுவதில் பிழை!
 #. Android resource: @strings/map_location_changed
 #, c-format
 msgid "New location set to %s Restart Navit to apply the changes."
-msgstr ""
+msgstr "மாற்றங்களைப் பயன்படுத்த, %s க்கு புதிய இடம் அமைக்கப்பட்டது."
 
 #. Android resource: @strings/map_location_unavailable
 #, c-format
@@ -2407,6 +2422,8 @@ msgid ""
 "Current map location %s is not available Please restart Navit after you "
 "attach an SD card or select a different map location."
 msgstr ""
+"தற்போதைய வரைபட இருப்பிடம் %s கிடைக்கவில்லை, எச்டி கார்டை இணைத்தபிறகு அல்லது வேறு வரைபட "
+"இருப்பிடத்தைத் தேர்ந்தெடுத்த பிறகு நேவ்த்தை மீண்டும் தொடங்கு."
 
 #. Android resource: @strings/address_search_title
 msgid "Address search"
@@ -2428,7 +2445,7 @@ msgstr "தேடல்"
 #. Android resource: @strings/    <string name="backing_up">Backing up
 #. Android resource: @strings/    <string name="restoring">Restoring
 msgid "    <string name="
-msgstr ""
+msgstr "<சரம் பெயர்="
 
 #. Android resource: @strings/address_search_not_found
 msgid "Address not found"
@@ -2533,10 +2550,13 @@ msgid ""
 "Navit needs permission to access GPS and read the map.\n"
 "If you change your mind please restart Navit and grant the permissions"
 msgstr ""
+"உலக இடம் காட்டும் அமைப்பு (இடம் காட்டி) ஐ அணுகவும் வரைபடத்தைப் படிக்கவும் Navitக்கு இசைவு "
+"தேவை. \n"
+"நீங்கள் உங்கள் எண்ணத்தை மாற்றினால், Navit ஐ மறுதொடக்கம் செய்து அனுமதிகளை வழங்கவும்"
 
 #. Android resource: @strings/permissions_info_box_title
 msgid "One or more ungranted permissions"
-msgstr ""
+msgstr "ஒன்று அல்லது அதற்கு மேற்பட்ட அங்கீகரிக்கப்படாத அனுமதிகள்"
 
 #. Android resource: @strings/whole_planet
 msgid "Whole Planet"
@@ -2664,7 +2684,7 @@ msgstr "மிடி-பைரினீச்"
 
 #. Android resource: @strings/nord_pas_de_calais
 msgid "Nord-pas-de-Calais"
-msgstr "NORD-PAS-DE-CALAIS"
+msgstr "நார்-பாசு-டி-காலாயிசு"
 
 #. Android resource: @strings/pays_de_la_loire
 msgid "Pays-de-la-Loire"
@@ -2896,7 +2916,7 @@ msgstr "அமெரிக்கா"
 
 #. Android resource: @strings/except_alaska_and_hawaii
 msgid "(except Alaska and Hawaii)"
-msgstr ""
+msgstr "(அலாச்கா மற்றும் அவாய் தவிர)"
 
 #. Android resource: @strings/midwest
 msgid "Midwest"
