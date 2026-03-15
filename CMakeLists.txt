@@ -610,7 +610,7 @@ IF(NOT svg2png_scaling_textures)
 	ENDIF()
 ENDIF()
 
-add_feature(DBUS_USE_SYSTEM_BUS "default" FALSE)
+add_feature(DBUS_USE_SYSTEM_BUS "default" TRUE)
 add_feature(BUILD_MAPTOOL "default" TRUE)
 add_feature(XSL_PROCESSING "default" TRUE)
 
