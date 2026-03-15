@@ -59,6 +59,7 @@
 "scherp"
 
 "indien mogelijk omkeren"
+"geschatte aankomsttijd"
 "bestemming"
 "bereikt"
 "daarna heeft u uw bestemming bereikt"
