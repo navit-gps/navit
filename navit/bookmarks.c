@@ -679,8 +679,7 @@ static GList *read_former_destination_map_as_list(struct map *map) {
     return g_list_reverse(list);
 }
 
-static int destination_equal(struct former_destination *dest1, struct former_destination *dest2,
-                             int ignore_descriptions) {
+static int destination_equal(struct former_destination *dest1, struct former_destination *dest2, int ignore_descriptions) {
     if ((dest1->type == dest2->type) && (ignore_descriptions || !strcmp(dest1->description, dest2->description))
         && (coord_equal((struct coord *)g_list_last(dest1->c)->data, (struct coord *)g_list_last(dest2->c)->data))) {
         return TRUE;
