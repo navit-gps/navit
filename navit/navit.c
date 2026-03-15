@@ -1686,8 +1686,7 @@ void navit_set_destinations(struct navit *this_, struct pcoord *c, int count, co
         this_->destination_valid = 1;
 
         destination_file = bookmarks_get_destination_file(TRUE);
-        bookmarks_append_destinations(this_->former_destination, destination_file, c, count, type_former_itinerary,
-                                      description, this_->recentdest_count);
+        bookmarks_append_destinations(this_->former_destination, destination_file, c, count, type_former_itinerary, description, this_->recentdest_count);
         g_free(destination_file);
     } else
         this_->destination_valid = 0;
