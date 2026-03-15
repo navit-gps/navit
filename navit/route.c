@@ -624,7 +624,9 @@ static struct route_info *route_next_destination(struct route *this) {
  * @brief Checks if a route has reached its destination
  *
  * @param this The route to be checked
- * @return True if the destination is "reached", false otherwise.
+ * @return 0 if the destination is not "reached"
+ *         1 if waypoint is "reached"
+ *         2 if destination is "reached"
  */
 int route_destination_reached(struct route *this) {
     struct street_data *sd = NULL;

@@ -3338,8 +3338,7 @@ static void navit_vehicle_update_position(struct navit *this_, struct navit_vehi
             break;
         case 2:
             destination_file = bookmarks_get_destination_file(TRUE);
-            bookmarks_append_destinations(this_->former_destination, destination_file, NULL, 0,
-                                          type_former_itinerary_part, NULL, this_->recentdest_count);
+            bookmarks_append_destinations(this_->former_destination, destination_file, NULL, 0, type_former_itinerary_part, NULL, this_->recentdest_count);
             navit_set_destination(this_, NULL, NULL, 0);
             g_free(destination_file);
             break;
