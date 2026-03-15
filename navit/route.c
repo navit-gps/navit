@@ -1106,7 +1106,6 @@ static void route_clear_destinations(struct route *this_) {
  * @param count Number of items in {@code dst}, 0 to clear all destinations
  * @param async If set, do routing asynchronously
  */
-
 void route_set_destinations(struct route *this, struct pcoord *dst, int count, int async) {
     struct attr route_status;
     struct route_info *dsti;
