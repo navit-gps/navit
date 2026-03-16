@@ -16,21 +16,15 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
+
+#define _POSIX_C_SOURCE 200112L
+
 #ifdef _MSC_VER
 #    define strcasecmp _stricmp
 #    define snprintf _snprintf
 #else
 #    include <unistd.h>
 #endif
-#include <ctype.h>
-#include <fcntl.h>
-#include <limits.h>
-#include <math.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <strings.h>
 
 #include "attr.h"
 #include "attr_type_def.h"
@@ -45,6 +39,16 @@
 #include "maptool.h"
 #include "projection.h"
 #include "transform.h"
+#include <ctype.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <math.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+#include <time.h>
 
 struct relations;
 struct relations_func;
@@ -3307,6 +3311,7 @@ static GList **process_multipolygons_setup(FILE *in, int thread_count, struct re
             g_thread_new("process_multipolygons_setup_worker", process_multipolygons_setup_worker, &(sthread[i]));
     }
 
+    const struct timespec t = {0, 200000000L};
     while ((ib = read_item(in))) {
         /* get a duplicate of the returned item, as the one returned shares buffer */
         struct item_bin *dup = item_bin_dup(ib);
@@ -3319,7 +3324,7 @@ static GList **process_multipolygons_setup(FILE *in, int thread_count, struct re
          * push to block when the queue reached a decent size, I help myself
          * with this ugly hack */
         while (g_async_queue_length(ib_queue) > 1000)
-            usleep(200);
+            nanosleep(&t, NULL);
     }
 
     /* stop iand join all remaining threads */
@@ -3663,6 +3668,7 @@ static GList **process_turn_restrictions_setup(FILE *in, int thread_count, struc
                                          process_turn_restrictions_setup_worker, &(sthread[i]));
     }
 
+    const struct timespec t = {0, 200000000L};
     while ((ib = read_item(in))) {
         /* get a duplicate of the returned item, as the one returned shares buffer */
         struct item_bin *dup = item_bin_dup(ib);
@@ -3675,7 +3681,7 @@ static GList **process_turn_restrictions_setup(FILE *in, int thread_count, struc
          * push to block when the queue reached a decent size, I help myself
          * with this ugly hack */
         while (g_async_queue_length(ib_queue) > 1000)
-            usleep(200);
+            nanosleep(&t, NULL);
     }
 
     /* stop iand join all remaining threads */

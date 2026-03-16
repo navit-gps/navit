@@ -17,6 +17,7 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#define _DEFAULT_SOURCE  // for sbrk()
 #include "maptool.h"
 #include "config.h"
 #include "debug.h"

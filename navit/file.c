@@ -17,6 +17,8 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#define _POSIX_C_SOURCE 200112L
+
 #include "navit_lfs.h"
 
 #include "atom.h"

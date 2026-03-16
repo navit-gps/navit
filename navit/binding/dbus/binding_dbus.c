@@ -526,7 +526,7 @@ static int decode_attr_from_iter(DBusMessageIter *iter, struct attr *attr) {
     }
     if (attr->type >= attr_type_double_begin && attr->type <= attr_type_double_end) {
         if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_DOUBLE) {
-            attr->u.numd = g_new(typeof(*attr->u.numd), 1);
+            attr->u.numd = g_new(__typeof__(*attr->u.numd), 1);
             dbus_message_iter_get_basic(&iterattr, attr->u.numd);
             return 1;
         }
@@ -544,7 +544,7 @@ static int decode_attr_from_iter(DBusMessageIter *iter, struct attr *attr) {
     }
     if (attr->type >= attr_type_coord_geo_begin && attr->type <= attr_type_coord_geo_end) {
         if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_STRUCT) {
-            attr->u.coord_geo = g_new(typeof(*attr->u.coord_geo), 1);
+            attr->u.coord_geo = g_new(__typeof__(*attr->u.coord_geo), 1);
             dbus_message_iter_recurse(&iterattr, &iterstruct);
             if (dbus_message_iter_get_arg_type(&iterstruct) == DBUS_TYPE_DOUBLE) {
                 dbus_message_iter_get_basic(&iterstruct, &d);
@@ -567,7 +567,7 @@ static int decode_attr_from_iter(DBusMessageIter *iter, struct attr *attr) {
     if (attr->type >= attr_type_pcoord_begin && attr->type <= attr_type_pcoord_end) {
         int i;
         if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_STRUCT) {
-            attr->u.pcoord = g_new(typeof(*attr->u.pcoord), 1);
+            attr->u.pcoord = g_new(__typeof__(*attr->u.pcoord), 1);
             dbus_message_iter_recurse(&iterattr, &iterstruct);
             if (dbus_message_iter_get_arg_type(&iterstruct) == DBUS_TYPE_INT32) {
                 dbus_message_iter_get_basic(&iterstruct, &i);

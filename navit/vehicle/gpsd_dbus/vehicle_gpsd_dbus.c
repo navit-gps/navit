@@ -17,6 +17,8 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#define _POSIX_C_SOURCE 200112L  // gmtime_r
+
 #define DBUS_API_SUBJECT_TO_CHANGE
 
 #include "callback.h"

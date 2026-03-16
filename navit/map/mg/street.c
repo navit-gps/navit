@@ -17,6 +17,7 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#define _DEFAULT_SOURCE  // strcasecmp()
 #include "debug.h"
 #include "mg.h"
 #include <math.h>

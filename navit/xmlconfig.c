@@ -20,6 +20,7 @@
 /* see http://library.gnome.org/devel/glib/stable/glib-Simple-XML-Subset-Parser.html
  * for details on how the xml file parser works.
  */
+#define _POSIX_C_SOURCE 200112L  // for setenv()
 
 #include "xmlconfig.h"
 #include "announcement.h"

@@ -216,7 +216,6 @@ if (USE_LIBGNUINTL AND NOT HAVE_GLIB)
 	ADD_DEPENDENCIES(support_glib support_gettext_intl)
 endif()
 
-
 add_subdirectory (maptool)
 add_subdirectory (icons)
 add_subdirectory (textures)

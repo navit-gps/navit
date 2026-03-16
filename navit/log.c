@@ -25,6 +25,7 @@
  * @author Navit Team
  * @date 2005-2014
  */
+#define _POSIX_C_SOURCE 200112L
 
 #include "log.h"
 #include "callback.h"

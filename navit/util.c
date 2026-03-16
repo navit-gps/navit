@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <time.h>
 #if defined(_WIN32) || defined(__CEGCC__)
 #    include <sys/types.h>

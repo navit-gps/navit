@@ -17,6 +17,8 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#define _POSIX_C_SOURCE 200809L  // strdup
+
 #include "destination.h"
 #include "bookmarks.h"
 #include "coord.h"
