@@ -679,8 +679,7 @@ static GList *read_former_destination_map_as_list(struct map *map) {
     return g_list_reverse(list);
 }
 
-static int destination_equal(struct former_destination *dest1, struct former_destination *dest2,
-                             int ignore_descriptions) {
+static int destination_equal(struct former_destination *dest1, struct former_destination *dest2, int ignore_descriptions) {
     if ((dest1->type == dest2->type) && (ignore_descriptions || !strcmp(dest1->description, dest2->description))
         && (coord_equal((struct coord *)g_list_last(dest1->c)->data, (struct coord *)g_list_last(dest2->c)->data))) {
         return TRUE;
@@ -726,8 +725,7 @@ static GList *find_destination_in_list(struct former_destination *dest_to_remove
  * @param[in] former_destination_file The name of the output text file
  * @param proj The projection used to represent coordinates in former_destinations' list elements
  */
-static void write_former_destinations(const GList *former_destinations, const char *former_destination_file,
-                                      enum projection proj) {
+static void write_former_destinations(const GList *former_destinations, const char *former_destination_file, enum projection proj) {
     FILE *f;
     const GList *currdest = NULL;
     GList *c_list = NULL;
@@ -771,8 +769,7 @@ static void write_former_destinations(const GList *former_destinations, const ch
  * coordinates will be used to get description.
  * @param limit Limits the number of entries in the "backlog". Set to 0 for "infinite"
  */
-void bookmarks_append_destinations(struct map *former_destination_map, char *former_destination_file, struct pcoord *c,
-                                   int count, enum item_type type, const char *description, int limit) {
+void bookmarks_append_destinations(struct map *former_destination_map, char *former_destination_file, struct pcoord *c, int count, enum item_type type, const char *description, int limit) {
     struct former_destination *new_dest = NULL;
     GList *former_destinations = NULL;
     GList *former_destinations_shortened = NULL;

@@ -886,8 +886,7 @@ struct vehicle_methods vehicle_wince_methods = {
  *
  * @return vehicle_priv
  */
-static struct vehicle_priv *vehicle_wince_new(struct vehicle_methods *meth, struct callback_list *cbl,
-                                              struct attr **attrs) {
+static struct vehicle_priv *vehicle_wince_new(struct vehicle_methods *meth, struct callback_list *cbl, struct attr **attrs) {
     struct vehicle_priv *ret;
     struct attr *source;
     struct attr *time;

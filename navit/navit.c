@@ -1686,8 +1686,7 @@ void navit_set_destinations(struct navit *this_, struct pcoord *c, int count, co
         this_->destination_valid = 1;
 
         destination_file = bookmarks_get_destination_file(TRUE);
-        bookmarks_append_destinations(this_->former_destination, destination_file, c, count, type_former_itinerary,
-                                      description, this_->recentdest_count);
+        bookmarks_append_destinations(this_->former_destination, destination_file, c, count, type_former_itinerary, description, this_->recentdest_count);
         g_free(destination_file);
     } else
         this_->destination_valid = 0;
@@ -2105,11 +2104,8 @@ int navit_init(struct navit *this_) {
         struct attr attr_type_gui, attr_type_graphics;
         gui_get_attr(this_->gui, attr_type, &attr_type_gui, NULL);
         graphics_get_attr(this_->gra, attr_type, &attr_type_graphics, NULL);
-        dbg(lvl_error, "FATAL: Failed to connect graphics '%s' to gui '%s'", attr_type_graphics.u.str,
-            attr_type_gui.u.str);
-        dbg(lvl_error,
-            "Please see https://navit.readthedocs.io/en/trunk/user/faq/Failed_to_connect_graphics_to_gui.html "
-            "for explanations and solutions\n");
+        dbg(lvl_error, "FATAL: Failed to connect graphics '%s' to gui '%s'", attr_type_graphics.u.str, attr_type_gui.u.str);
+        dbg(lvl_error, "Please see https://navit.readthedocs.io/en/trunk/user/faq/Failed_to_connect_graphics_to_gui.html for explanations and solutions\n");
         exit(1);
     }
     if (this_->speech && this_->navigation) {
@@ -3341,8 +3337,7 @@ static void navit_vehicle_update_position(struct navit *this_, struct navit_vehi
             break;
         case 2:
             destination_file = bookmarks_get_destination_file(TRUE);
-            bookmarks_append_destinations(this_->former_destination, destination_file, NULL, 0,
-                                          type_former_itinerary_part, NULL, this_->recentdest_count);
+            bookmarks_append_destinations(this_->former_destination, destination_file, NULL, 0, type_former_itinerary_part, NULL, this_->recentdest_count);
             navit_set_destination(this_, NULL, NULL, 0);
             g_free(destination_file);
             break;
