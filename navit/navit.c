@@ -68,7 +68,6 @@ struct log;
 struct vehicle;
 #ifdef HAVE_API_WIN32_BASE
 #    include <windows.h>
-
 #    include "util.h"
 #endif
 #ifdef HAVE_API_WIN32_CE
@@ -162,6 +161,7 @@ struct navit {
     int use_mousewheel;
     struct messagelist *messages;
     struct callback *resize_callback, *button_callback, *motion_callback, *predraw_callback;
+    GList *voiceprofiles;
     struct vehicleprofile *vehicleprofile;
     GList *vehicleprofiles;
     int pitch;
@@ -1561,6 +1561,10 @@ struct graphics *navit_get_graphics(struct navit *this_) {
     return this_->gra;
 }
 
+GList *navit_get_voiceprofiles(struct navit *this_) {
+    return this_->voiceprofiles;
+}
+
 struct vehicleprofile *navit_get_vehicleprofile(struct navit *this_) {
     return this_->vehicleprofile;
 }
@@ -1614,8 +1618,7 @@ void navit_set_destination(struct navit *this_, struct pcoord *c, const char *de
                                       description, this_->recentdest_count);
     } else {
         this_->destination_valid = 0;
-        bookmarks_append_destinations(this_->former_destination, destination_file, NULL, 0, type_former_destination,
-                                      NULL, this_->recentdest_count);
+        bookmarks_append_destinations(this_->former_destination, destination_file, NULL, 0, type_former_destination, NULL, this_->recentdest_count);
         navit_mark_navigation_stopped(destination_file);
     }
     g_free(destination_file);
@@ -1871,8 +1874,7 @@ void navit_textfile_debug_log(struct navit *this_, const char *fmt, ...) {
     va_start(ap, fmt);
     if (this_->textfile_debug_log && this_->vehicle) {
         str1 = g_strdup_vprintf(fmt, ap);
-        str2 = g_strdup_printf("0x%x 0x%x%s%s\n", this_->vehicle->coord.x, this_->vehicle->coord.y,
-                               strlen(str1) ? " " : "", str1);
+        str2 = g_strdup_printf("0x%x 0x%x%s%s\n", this_->vehicle->coord.x, this_->vehicle->coord.y, strlen(str1) ? " " : "", str1);
         log_write(this_->textfile_debug_log, str2, strlen(str2), 0);
         g_free(str2);
         g_free(str1);
@@ -1895,13 +1897,25 @@ void navit_textfile_debug_log_at(struct navit *this_, struct pcoord *pc, const c
 }
 
 void navit_say(struct navit *this_, const char *text) {
-    struct attr attr;
+    struct attr name_attr;
+    struct attr active_attr;
+
+    name_attr.type = attr_name;
+    active_attr.type = attr_active;
+
     if (this_->speech) {
-        if (!speech_get_attr(this_->speech, attr_active, &attr, NULL))
-            attr.u.num = 1;
-        dbg(lvl_debug, "this_.speech->active %ld", attr.u.num);
-        if (attr.u.num)
+        if (!speech_get_attr(this_->speech, attr_active, &active_attr, NULL))
+            name_attr.u.str = "No voice name";
+        if (!speech_get_attr(this_->speech, attr_active, &active_attr, NULL))
+            active_attr.u.num = 1;
+
+        dbg(lvl_debug, "this_.speech->name %s", name_attr.u.str);
+        dbg(lvl_debug, "this_.speech->active %ld", active_attr.u.num);
+        if (active_attr.u.num == 1)
             speech_say(this_->speech, text);
+
+    } else {
+        dbg(lvl_warning, "No voice configured. No text will be spoken.");
     }
 }
 
@@ -1956,7 +1970,7 @@ void navit_speak(struct navit *this_) {
             ;
         if (item && item_attr_get(item, attr_navigation_speech, &attr)) {
             if (*attr.u.str != '\0') {
-                speech_say(this_->speech, attr.u.str);
+                navit_say(this_, attr.u.str);
                 navit_add_message(this_, attr.u.str);
             }
             navit_textfile_debug_log(this_, "type=announcement label=\"%s\"", attr.u.str);
@@ -2112,6 +2126,7 @@ int navit_init(struct navit *this_) {
             "for explanations and solutions\n");
         exit(1);
     }
+    dbg(lvl_debug, "Setting Voice");
     if (this_->speech && this_->navigation) {
         struct attr speech;
         speech.type = attr_speech;
@@ -2215,6 +2230,7 @@ int navit_init(struct navit *this_) {
     }
     if (this_->navigation) {
         if (this_->speech) {
+            dbg(lvl_debug, "navit_init: Set speech callback of navigation to: ...");
             this_->nav_speech_cb = callback_new_1(callback_cast(navit_speak), this_);
             navigation_register_callback(this_->navigation, attr_navigation_speech, this_->nav_speech_cb);
         }
@@ -2552,6 +2568,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
     GList *l;
     struct navit_vehicle *nv;
     struct layout *lay;
+    struct attr name;
     struct attr active;
     active.type = attr_active;
     active.u.num = 0;
@@ -2687,6 +2704,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
         if (this_->speech && this_->speech != attr->u.speech) {
             attr_updated = 1;
             this_->speech = attr->u.speech;
+            dbg(lvl_debug, "navit_set_attr_do: Set speech attribute to: ...");
         }
         break;
     case attr_timeout:
@@ -3107,6 +3125,10 @@ static int navit_add_layout(struct navit *this_, struct layout *layout) {
 
 int navit_add_attr(struct navit *this_, struct attr *attr) {
     int ret = 1;
+    struct attr speechattr;
+    struct attr activeattr;
+    struct attr nameattr;
+    
     switch (attr->type) {
     case attr_callback:
         navit_add_callback(this_, attr->u.callback);
@@ -3138,8 +3160,15 @@ int navit_add_attr(struct navit *this_, struct attr *attr) {
         this_->recentdest_count = attr->u.num;
         break;
     case attr_speech:
-        this_->speech = attr->u.speech;
-        break;
+        this_->voiceprofiles = g_list_append(this_->voiceprofiles, attr->u.speech);
+        speech_get_attr(attr->u.speech, attr_name, &nameattr, NULL);
+        if (speech_get_attr(attr->u.speech, attr_active, &activeattr, NULL)) {
+            if (activeattr.u.num == 1) {
+                this_->speech = attr->u.speech;
+                dbg(lvl_debug, "navit_add_attr: Add speech attribute to: %s", nameattr.u.str);
+            }
+        }
+	break;
     case attr_trackingo:
         this_->tracking = attr->u.tracking;
         break;
