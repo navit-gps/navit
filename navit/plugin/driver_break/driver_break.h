@@ -135,7 +135,7 @@ struct driver_break_config {
     int fuel_injector_flow_cc_min;      /* Injector flow rate (cc/min at rated pressure) for MegaSquirt */
     int fuel_ethanol_manual_pct;        /* Manual ethanol % for flex-fuel when PID 0x52 unavailable (0-100) */
     int fuel_low_warning_km;            /* Low fuel warning threshold (km of range remaining) */
-    int fuel_search_buffer_km;         /* Extra km buffer for gas station search (beyond destination distance) */
+    int fuel_search_buffer_km;          /* Extra km buffer for gas station search (beyond destination distance) */
     int fuel_high_load_threshold;       /* High-load detection threshold (% above baseline, e.g. 25) */
     int fuel_adaptive_learning_enabled; /* 1 = enable adaptive fuel learning (samples, trip summaries) */
 };
