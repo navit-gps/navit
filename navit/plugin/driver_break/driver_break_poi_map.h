@@ -38,7 +38,8 @@ GList *driver_break_poi_map_search_cabins(struct coord_geo *center, double radiu
 /* Search for car POIs in maps (cafes, restaurants, museums, etc.) */
 GList *driver_break_poi_map_search_car_pois(struct coord_geo *center, double radius_km, struct mapset *ms);
 
-/* Search for motorcycle POIs (same as car: cafe, restaurant, viewpoint, petrol, picnic, repair; plus motorcycle repair/shop when mapped) */
+/* Search for motorcycle POIs (same as car: cafe, restaurant, viewpoint, petrol, picnic, repair; plus motorcycle
+ * repair/shop when mapped) */
 GList *driver_break_poi_map_search_motorcycle_pois(struct coord_geo *center, double radius_km, struct mapset *ms);
 
 /* Search for fuel stations in maps matching vehicle fuel type */

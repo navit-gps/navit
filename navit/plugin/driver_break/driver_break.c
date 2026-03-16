@@ -150,9 +150,9 @@ void driver_break_config_default(struct driver_break_config *config) {
     config->fuel_megasquirt_available = 0;
     config->fuel_injector_flow_cc_min = 0;
     config->fuel_ethanol_manual_pct = 0;
-    config->fuel_low_warning_km = 80;      /* warn when <80 km remaining */
-    config->fuel_search_buffer_km = 20;    /* default buffer for fuel search */
-    config->fuel_high_load_threshold = 25; /* 25% above baseline */
+    config->fuel_low_warning_km = 80;           /* warn when <80 km remaining */
+    config->fuel_search_buffer_km = 20;         /* default buffer for fuel search */
+    config->fuel_high_load_threshold = 25;      /* 25% above baseline */
     config->fuel_adaptive_learning_enabled = 1; /* Adaptive fuel learning enabled by default */
 
     /* Motorcycle defaults: soft 2 h, mandatory 3.5 h, duration 20 min, road terrain, weight 250 kg */
@@ -160,8 +160,8 @@ void driver_break_config_default(struct driver_break_config *config) {
     config->motorcycle_mandatory_break_after_minutes = 210; /* 3.5 h */
     config->motorcycle_break_duration_min = 20;
     config->motorcycle_terrain_subtype = DRIVER_BREAK_MC_TERRAIN_ROAD;
-    config->motorcycle_adventure_max_smoothness = 3;   /* bad */
-    config->motorcycle_adventure_max_tracktype = 3;    /* grade3 */
+    config->motorcycle_adventure_max_smoothness = 3; /* bad */
+    config->motorcycle_adventure_max_tracktype = 3;  /* grade3 */
     config->motorcycle_default_weight_kg = 250;
 
     config->vehicle_type = DRIVER_BREAK_VEHICLE_CAR; /* Default to car */
@@ -644,8 +644,7 @@ static void driver_break_check_timeout(struct event_timeout *ev, void *data) {
     if (priv->session.mandatory_break_required && priv->current_route)
         dbg(lvl_debug, "Driver Break plugin: Checking for rest stops");
 
-    if (priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_CAR
-        || priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_TRUCK
+    if (priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_CAR || priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_TRUCK
         || priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_MOTORCYCLE)
         driver_break_check_fuel_low_range(priv);
 }
@@ -714,8 +713,7 @@ static int driver_break_osd_get_attr(struct osd_priv *osd, enum attr_type type, 
     struct driver_break_priv *priv = (struct driver_break_priv *)osd;
     if (!priv || type != attr_eco_mode_fuel_enabled)
         return 0;
-    int ecu_available =
-        (priv->obd_backend != NULL || priv->j1939_backend != NULL || priv->megasquirt_backend != NULL);
+    int ecu_available = (priv->obd_backend != NULL || priv->j1939_backend != NULL || priv->megasquirt_backend != NULL);
     int enabled = ecu_available || priv->config.fuel_adaptive_learning_enabled;
     attr->type = attr_eco_mode_fuel_enabled;
     attr->u.num = enabled ? 1 : 0;

@@ -403,12 +403,20 @@ GList *driver_break_poi_map_search_car_pois(struct coord_geo *center, double rad
     return driver_break_poi_map_search(center, radius_km, car_poi_types, 12, ms);
 }
 
-/* Search for motorcycle POIs: same as car (cafe, restaurant, viewpoint, picnic, repair, shops); motorcycle_repair and shop=motorcycle when mapped to repair/shop types */
+/* Search for motorcycle POIs: same as car (cafe, restaurant, viewpoint, picnic, repair, shops); motorcycle_repair and
+ * shop=motorcycle when mapped to repair/shop types */
 GList *driver_break_poi_map_search_motorcycle_pois(struct coord_geo *center, double radius_km, struct mapset *ms) {
-    enum item_type mc_poi_types[] = {type_poi_cafe,    type_poi_restaurant, type_poi_museum_history,
-                                     type_poi_viewpoint, type_poi_picnic,   type_poi_attraction,
-                                     type_poi_shop_grocery, type_poi_shopping, type_poi_mall,
-                                     type_poi_repair_service, type_none};
+    enum item_type mc_poi_types[] = {type_poi_cafe,
+                                     type_poi_restaurant,
+                                     type_poi_museum_history,
+                                     type_poi_viewpoint,
+                                     type_poi_picnic,
+                                     type_poi_attraction,
+                                     type_poi_shop_grocery,
+                                     type_poi_shopping,
+                                     type_poi_mall,
+                                     type_poi_repair_service,
+                                     type_none};
     return driver_break_poi_map_search(center, radius_km, mc_poi_types, 10, ms);
 }
 

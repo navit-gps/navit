@@ -590,7 +590,7 @@ static void driver_break_show_fuel_config_dialog(struct gui_priv *gui_priv, stru
     label = gui_internal_label_new(gui_priv, buffer);
     gui_internal_widget_append(box, label);
     button = gui_internal_button_new_with_callback(gui_priv, "Toggle live ECU", NULL, gravity_center | flags_fill,
-                                                  driver_break_toggle_live_ecu_callback, priv);
+                                                   driver_break_toggle_live_ecu_callback, priv);
     gui_internal_widget_append(box, button);
 
     snprintf(buffer, sizeof(buffer), "Adaptive fuel learning: %s",
@@ -924,7 +924,8 @@ static void driver_break_toggle_live_ecu_callback(struct gui_priv *gui_priv, str
     driver_break_show_fuel_config_dialog(gui_priv, priv);
 }
 
-static void driver_break_toggle_adaptive_learning_callback(struct gui_priv *gui_priv, struct widget *widget, void *data) {
+static void driver_break_toggle_adaptive_learning_callback(struct gui_priv *gui_priv, struct widget *widget,
+                                                           void *data) {
     struct driver_break_priv *priv = (struct driver_break_priv *)data;
     if (!priv)
         return;
@@ -1205,8 +1206,7 @@ static void driver_break_show_motorcycle_intervals_dialog(struct gui_priv *gui_p
     label = gui_internal_label_new(gui_priv, buffer);
     gui_internal_widget_append(box, label);
 
-    snprintf(buffer, sizeof(buffer), "Terrain: %s",
-             priv->config.motorcycle_terrain_subtype ? "Adventure" : "Road");
+    snprintf(buffer, sizeof(buffer), "Terrain: %s", priv->config.motorcycle_terrain_subtype ? "Adventure" : "Road");
     label = gui_internal_label_new(gui_priv, buffer);
     gui_internal_widget_append(box, label);
 

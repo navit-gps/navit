@@ -308,7 +308,7 @@ GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const 
 
     /* If poi_categories is NULL, search for general POIs */
     if (!poi_categories || num_categories == 0) {
-#    ifdef HAVE_CURL
+#ifdef HAVE_CURL
         /* General POIs: cafes, shops, bike, etc. */
         const char *general_categories[] = {"amenity=cafe",     "amenity=restaurant",
                                             "tourism=museum",   "tourism=viewpoint",
@@ -317,16 +317,16 @@ GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const 
                                             "shop=bicycle",     "amenity=bicycle_repair_station"};
         pois = driver_break_poi_overpass_search(center, radius_km, general_categories,
                                                 sizeof(general_categories) / sizeof(general_categories[0]), 1);
-#    else
+#else
         dbg(lvl_warning, "Driver Break plugin: libcurl not available, POI discovery disabled");
-#    endif
+#endif
     } else {
         /* Use Overpass API for specific categories */
-#    ifdef HAVE_CURL
+#ifdef HAVE_CURL
         pois = driver_break_poi_overpass_search(center, radius_km, poi_categories, num_categories, 0);
-#    else
+#else
         dbg(lvl_warning, "Driver Break plugin: libcurl not available, POI discovery disabled");
-#    endif
+#endif
     }
 
     return pois;
