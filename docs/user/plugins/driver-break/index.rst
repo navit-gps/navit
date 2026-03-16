@@ -201,12 +201,34 @@ History and persistence
 
 The plugin stores rest stop history, fuel stop history, fuel consumption samples, trip summaries, and all configuration persistently across sessions. History can be browsed in the GUI and older entries can be cleared. Configuration changes made through the menus are saved automatically and restored on the next start.
 
+.. _config-file-vs-menus:
+
+Configuration: config file vs on-screen menus
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**What you configure in the config file (e.g. navit.xml)**
+
+- **Plugin load** – Include ``<plugin path="$NAVIT_LIBDIR/plugin/${NAVIT_LIBPREFIX}libosd_driver_break.so"/>`` so the Driver Break plugin is loaded.
+- **OSD on/off** – ``<osd enabled="yes" type="driver_break"/>`` enables the plugin OSD and its menu commands; ``enabled="no"`` disables it.
+- **Initial vehicle mode (optional)** – On the same ``<osd>`` element, ``<attr name="type" value="car"/>`` (or ``truck``, ``hiking``, ``cycling``, ``motorcycle``) sets the initial rest/fuel mode if present; otherwise the plugin uses the active vehicle's profile.
+- **Database path (optional)** – ``<attr name="data" value="/path/to/driver_break.db"/>`` on the ``<osd>`` element sets the SQLite database file for config and history; if omitted, a default path is used.
+- **Vehicle profile** – The active vehicle's ``profilename`` (e.g. ``profilename="car"``, ``"truck"``, ``"motorcycle"``) determines which rest and fuel behaviour applies and which "Configure intervals" dialog is shown. Define vehicle profiles and assign them to vehicles in the config file.
+
+**What you can turn on/off or set in on-screen menus**
+
+- **Configure Driver Break Intervals** – Opens a profile-specific dialog. You can set: car (soft limit, max hours, break interval, break duration); truck (mandatory break after, duration, max daily hours); hiking (main/alt break distances, max daily distance); cycling (same); motorcycle (soft limit, mandatory break after, break duration, terrain Road/Adventure). Values are saved to the database.
+- **Configure Overnight Stops** – Shows min distance from buildings, glaciers (for hiking), POI search radius, water search radius, cabin search radius, and a **toggle for water POIs at rest stops** (remote/arid/hot) for car, truck, and motorcycle. Use the toggle to turn that option on or off; press OK to save.
+- **Configure fuel** – Two toggles: **live ECU** (OBD-II, J1939, MegaSquirt) on/off, and **adaptive fuel learning** on/off. Press OK to save. Separate menu actions: set fuel level, log fuel stop.
+- **Other menu actions** – Suggest rest stop, Rest stop history, Start break, End break (no toggles; they perform an action).
+
+All settings changed in the dialogs are stored in the plugin database and restored on the next start.
+
 .. _ui-and-configuration:
 
 User interface and configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The plugin registers as an OSD element in Navit's display. With the internal GUI, menu actions are available: suggest rest stop (along current route), rest stop history, start break, end break, configure intervals (per profile: car, truck, hiking, cycling, motorcycle), configure overnight settings (minimum distance from buildings and glaciers, POI search radii), and configure fuel. In the fuel configuration dialog, two toggles are available: one for live ECU (OBD-II, J1939, MegaSquirt) and one for adaptive fuel learning; press OK to save. Session state — including driving time, whether a break is in progress, and whether a mandatory break is required — is tracked continuously. Vehicle type is selected via the OSD configuration.
+The plugin registers as an OSD element in Navit's display. With the internal GUI, menu actions are available: suggest rest stop (along current route), rest stop history, start break, end break, configure intervals (per profile: car, truck, hiking, cycling, motorcycle), configure overnight settings (minimum distance from buildings and glaciers, POI search radii, water POIs toggle), and configure fuel. In the fuel configuration dialog, two toggles are available: one for live ECU (OBD-II, J1939, MegaSquirt) and one for adaptive fuel learning; press OK to save. Session state — including driving time, whether a break is in progress, and whether a mandatory break is required — is tracked continuously. Vehicle type is selected via the active vehicle's profile (config file) or the OSD ``type`` attribute.
 
 Further reading
 ~~~~~~~~~~~~~~~
