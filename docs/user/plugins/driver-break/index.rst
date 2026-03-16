@@ -175,7 +175,7 @@ Attribute ``eco_mode_fuel_enabled`` (for DBus / API)
 
 The plugin exposes a boolean attribute **eco_mode_fuel_enabled**. It is **true** when either (1) an ECU backend is available and running (OBD-II, J1939, or MegaSquirt), or (2) adaptive fuel learning is enabled in configuration. This allows external components to detect whether the plugin is using live fuel data or learned consumption for eco/fuel-related behaviour.
 
-**DBus:** The attribute is available on the Navit DBus interface. Call ``get_attr("eco_mode_fuel_enabled")`` on the navit object; the method returns ``(attrname, value)`` with a boolean value. No need to resolve the Driver Break OSD; Navit aggregates the value from its OSDs. For service name, object paths, and examples in Python and with ``dbus-send``, see :doc:`dbus`.
+**DBus:** The attribute is available on the Navit DBus interface. Call ``get_attr("eco_mode_fuel_enabled")`` on the navit object; the method returns ``(attrname, value)`` with a boolean value. No need to resolve the Driver Break OSD; Navit aggregates the value from its OSDs. For service name, object paths, and examples in Python and with ``dbus-send``, see  https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/dbus.rst
 
 .. _history-and-persistence:
 
