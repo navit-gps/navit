@@ -102,8 +102,6 @@ var files_dup =
     [ "osd.h", "osd_8h.html", "osd_8h" ],
     [ "param.c", "param_8c.html", "param_8c" ],
     [ "param.h", "param_8h.html", "param_8h" ],
-    [ "phrase.c", "phrase_8c.html", "phrase_8c" ],
-    [ "phrase.h", "phrase_8h.html", "phrase_8h" ],
     [ "plugin.c", "plugin_8c.html", "plugin_8c" ],
     [ "plugin.h", "plugin_8h.html", "plugin_8h" ],
     [ "plugin_def.h", "plugin__def_8h.html", "plugin__def_8h" ],

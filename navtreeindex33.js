@@ -1,12 +1,5 @@
 var NAVTREEINDEX33 =
 {
-"structelement.html#ac5e252df6fb3f15d2a7f45b57f855cec":[2,0,89,8],
-"structelement.html#acc618d178997357592c3cd0e8643a036":[2,0,89,4],
-"structelement.html#ad157e2bf31faa11ff3784b602ef9f88f":[2,0,89,3],
-"structelement.html#ae08bff15ca88d01d2e82cbdc427c5053":[2,0,89,18],
-"structelement.html#ae8a5f00158d74cfd369314cddfeeb236":[2,0,89,10],
-"structelement__func.html":[2,0,90],
-"structelement__func.html#a10ba04651de520fcad41f26fbada3af5":[2,0,90,2],
 "structelement__func.html#a4691942c19b25a11bfb89d4a4450b765":[2,0,90,1],
 "structelement__func.html#a81c0b21b654fb82deaa1cc5d1cf8e5c2":[2,0,90,3],
 "structelement__func.html#aeca7a1c6689603970de7f92ca4e5541a":[2,0,90,0],
@@ -249,5 +242,12 @@ var NAVTREEINDEX33 =
 "structgeodesic.html#aaadc0a6a43c47841d16e15c35b2475ec":[2,0,119,7],
 "structgeodesic.html#ab39f00c50b63ab80922b4ec34b328d30":[2,0,119,11],
 "structgeodesic.html#ab47dc4bb3b56b08368f0b0e4502261ee":[2,0,119,8],
-"structgeodesic.html#ab85597f33a03e8aee70df3ae83e6ddc4":[2,0,119,1]
+"structgeodesic.html#ab85597f33a03e8aee70df3ae83e6ddc4":[2,0,119,1],
+"structgeodesic.html#abb18bc2f6c729fb67c920475c228f6c1":[2,0,119,0],
+"structgeodesic.html#ada9c9833686928f7b2ad12ad8eba170d":[2,0,119,4],
+"structgeodesic.html#ae4cfa70411abfee7a0990280320942a4":[2,0,119,2],
+"structgeom__poly__segment.html":[2,0,120],
+"structgeom__poly__segment.html#a153a1deb23a8d3839f38b19cc0e35ebb":[2,0,120,0],
+"structgeom__poly__segment.html#a5bba65a6c8c16287968a881bac0afc16":[2,0,120,2],
+"structgeom__poly__segment.html#a79eeb717775ae026a6fa6964537bf8f4":[2,0,120,1]
 };
