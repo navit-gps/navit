@@ -30,8 +30,10 @@
 "op"
 "af"
 "bij"
+"tot"
 
 "route"
+"routepunt"
 "weg"
 "straat"
 "afslag"
@@ -50,6 +52,7 @@
 "uur"
 "minuten"
 "minuut"
+"afstand"
 
 "invoegen"
 "uitvoegen"
@@ -59,6 +62,7 @@
 "scherp"
 
 "indien mogelijk omkeren"
+"geschatte reistijd"
 "geschatte aankomsttijd"
 "bestemming"
 "bereikt"
