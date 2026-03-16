@@ -34,6 +34,9 @@
  * meters per second. */
 #define MPS_TO_KPH 3.6
 
+#define INVALID_ANGLE 361
+#define ROUNDABOUT_EXTRA_LENGTH 50
+
 #ifdef __cplusplus
 extern "C" {
 #endif
