@@ -2427,6 +2427,18 @@ tags.
    |              |       |              | tion <Config |              |
    |              |       |              | uration>`__. |              |
    +--------------+-------+--------------+--------------+--------------+
+   | data-tts     |       |              | Same as      | `            |
+   |              |       |              | 'data'       |            ` |
+   |              |       |              | When using   |              |
+   |              |       |              | sample files |              |
+   |              |       |              | use this     |              |
+   |              |       |              | option to    |              |
+   |              |       |              | configure    |              |
+   |              |       |              | TTS and use  |              |
+   |              |       |              | 'data' to    |              |
+   |              |       |              | configure    |              |
+   |              |       |              | sample files.|              |
+   +--------------+-------+--------------+--------------+--------------+
    | cps          |       | 0 - ∞        | Speed at     | ``cps="15"`` |
    |              |       |              | which Navit  |              |
    |              |       |              | should speak |              |
