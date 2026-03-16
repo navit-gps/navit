@@ -103,6 +103,7 @@ static int driver_break_db_load_config_value(const char *key, int value, struct 
          MAX_POI_WATER_CABIN_RADIUS_KM, 0},
         {"poi_cabin_search_radius_km", offsetof(struct driver_break_config, poi_cabin_search_radius_km), 0,
          MAX_POI_WATER_CABIN_RADIUS_KM, 0},
+        {"enable_water_pois_remote_arid", offsetof(struct driver_break_config, enable_water_pois_remote_arid), 0, 1, 1},
         {"min_distance_from_glaciers", offsetof(struct driver_break_config, min_distance_from_glaciers), 0,
          MAX_DISTANCE_METERS, 0},
         {"driver_break_interval_min_hours", offsetof(struct driver_break_config, driver_break_interval_min_hours), 0,
@@ -423,7 +424,8 @@ int driver_break_db_save_config(struct driver_break_db *db, struct driver_break_
                           "fuel_high_load_threshold", "fuel_adaptive_learning_enabled", "motorcycle_soft_limit_minutes",
                           "motorcycle_mandatory_break_after_minutes", "motorcycle_break_duration_min",
                           "motorcycle_terrain_subtype", "motorcycle_adventure_max_smoothness",
-                          "motorcycle_adventure_max_tracktype", "motorcycle_default_weight_kg"};
+                          "motorcycle_adventure_max_tracktype", "motorcycle_default_weight_kg",
+                          "enable_water_pois_remote_arid"};
 
     int values[] = {
         config->vehicle_type, config->car_soft_limit_hours, config->car_max_hours, config->car_break_interval_hours,
@@ -437,7 +439,8 @@ int driver_break_db_save_config(struct driver_break_db *db, struct driver_break_
         config->fuel_high_load_threshold, config->fuel_adaptive_learning_enabled, config->motorcycle_soft_limit_minutes,
         config->motorcycle_mandatory_break_after_minutes, config->motorcycle_break_duration_min,
         config->motorcycle_terrain_subtype, config->motorcycle_adventure_max_smoothness,
-        config->motorcycle_adventure_max_tracktype, config->motorcycle_default_weight_kg};
+        config->motorcycle_adventure_max_tracktype, config->motorcycle_default_weight_kg,
+        config->enable_water_pois_remote_arid};
 
     int i;
     for (i = 0; i < G_N_ELEMENTS(keys); i++) {

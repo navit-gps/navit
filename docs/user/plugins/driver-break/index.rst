@@ -32,11 +32,11 @@ The Driver Break plugin provides configurable rest period management for multipl
 Travel modes
 ~~~~~~~~~~~~
 
-- **Car** – Configurable soft and maximum driving hours, break interval (e.g. every 4–4.5 hours), and break duration (e.g. 15–45 minutes).
-- **Truck** – Mandatory rest and driving time rules aligned with EU Regulation EC 561/2006 and related rules (e.g. break after 4.5 hours, 45-minute break, max daily driving, daily and weekly rest, and other driving/rest time limits).
+- **Car** – Configurable soft and maximum driving hours, break interval (e.g. every 4–4.5 hours), and break duration (e.g. 15–45 minutes). Optional **remote/arid/hot climate** mode adds water POIs (drinking water, fountain, spring) at rest stops (see :ref:`water-sources-and-filtration`).
+- **Truck** – Mandatory rest and driving time rules aligned with EU Regulation EC 561/2006 and related rules (e.g. break after 4.5 hours, 45-minute break, max daily driving, daily and weekly rest, and other driving/rest time limits). Optional **remote/arid/hot climate** mode adds water POIs at rest stops.
 - **Hiking** – Daily segments: 40 km suggested maximum per day. Rest stops at 11.295 km intervals (main) or 2.275 km (alternative). Optional SRTM elevation and POI support (water, cabins).
 - **Bicycle (cycling)** – Daily segments: 100 km suggested maximum per day. Rest stops at 28.24 km intervals (main) or 5.69 km (alternative). Suggested defaults use the same rast/vei concept as hiking, scaled up for cycling (see :ref:`rast-and-vei` below).
-- **Motorcycle** – Soft limit 2 hours riding, mandatory break after 3.5 hours, break duration 15–30 minutes (all configurable). Terrain sub-type: **Road** (paved only: surface=asphalt, paved) or **Adventure/dual-sport** (additionally gravel, unpaved, track with tracktype grade1–3 and configurable smoothness; see :ref:`motorcycle-adventure-legal`). Routing prefers motorcycle=yes/designated/permissive and filters motorcycle=no and motor_vehicle=no. Fuel: OBD-II for Euro 4+ bikes, adaptive estimation and manual tank/consumption for others. Energy-based routing uses configurable rider+bike weight (default 250 kg).
+- **Motorcycle** – Soft limit 2 hours riding, mandatory break after 3.5 hours, break duration 15–30 minutes (all configurable). Terrain sub-type: **Road** (paved only: surface=asphalt, paved) or **Adventure/dual-sport** (additionally gravel, unpaved, track with tracktype grade1–3 and configurable smoothness; see :ref:`motorcycle-adventure-legal`). Routing prefers motorcycle=yes/designated/permissive and filters motorcycle=no and motor_vehicle=no. Fuel: OBD-II for Euro 4+ bikes, adaptive estimation and manual tank/consumption for others. Energy-based routing uses configurable rider+bike weight (default 250 kg). Optional **remote/arid/hot climate** mode adds water POIs at rest stops.
 
 .. _motorcycle-adventure-legal:
 
@@ -52,7 +52,7 @@ POIs searched
 
 The plugin discovers nearby Points of Interest depending on travel mode. Search radii are configurable (e.g. water 2 km, cabins 5 km, general POI 15 km, network huts 25 km). Searched POI types include:
 
-- **Water** – Drinking water, fountain, spring (for hiking/cycling rest stops).
+- **Water** – Drinking water, fountain, spring (for hiking/cycling rest stops; and for car, truck, motorcycle when **remote/arid/hot climate** is enabled in Configure overnight).
 - **Cabins and huts** – Wilderness hut, alpine hut, hostel, camping; with optional DNT/network detection for prioritization.
 - **Car** – Cafe, restaurant, museum, viewpoint, picnic, attraction (and similar amenities along driving routes).
 - **Motorcycle** – Same as car (cafe, restaurant, viewpoint, petrol, picnic), plus amenity=motorcycle_repair and shop=motorcycle when present in map data.
@@ -71,6 +71,23 @@ Distance from glaciers (overnight)
 
 Nightly camping positions too close to glaciers are rejected. A configurable minimum distance (e.g. 300 m) applies; the check can be relaxed when the location has a camping building.
 
+.. _water-sources-and-filtration:
+
+Water sources and filtration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When using water from natural sources such as streams, lakes, or springs suggested as rest stop POIs, always treat or filter the water before drinking. A good portable filter should include:
+
+- A hollow fiber or ceramic membrane rated at 0.1 micron or smaller to remove bacteria, protozoa, and parasites such as Giardia and Cryptosporidium
+- An activated carbon stage (preferably carbon block) to remove pesticides, herbicides, heavy metals, chlorine, and improve taste and odour
+- Look for NSF/ANSI 42 and 53 certified filters
+
+Note that standard filters do not remove viruses. In remote wilderness areas (Norway, Sweden, Finland) viral contamination is generally low risk, but in areas near settlements, farms, or grazing land, consider using a filter rated to 0.02 micron or adding chemical treatment (iodine tablets, chlorine dioxide) as a second stage.
+
+Water sources inside Norwegian national parks and nature reserves are generally considered safe to drink directly, as these areas are protected from agricultural runoff, grazing, and industrial activity. However, even in protected areas it is advisable to collect water from fast-moving streams or high-altitude sources rather than slow or stagnant water, and to avoid collecting immediately downstream of trails, campsites, or huts.
+
+Even water tagged as ``amenity=drinking_water`` on OpenStreetMap should be treated with caution in remote areas, as tags may be outdated or conditions may have changed.
+
 .. _configurable-rest-stop-periods:
 
 Configurable rest stop periods
@@ -83,7 +100,7 @@ Rest parameters are configurable per mode, including:
 - Hiking: main and alternative break distances (km), max daily distance (km).
 - Cycling: main and alternative break distances (km), max daily distance (km).
 - Motorcycle: soft limit (minutes), mandatory break after (minutes), break duration (minutes), terrain sub-type (road/adventure), adventure max smoothness and tracktype, default weight for energy routing.
-- General: rest interval range (min/max hours), POI search radii, minimum distance from buildings (camping / allemannsretten), minimum distance from glaciers for overnight stops.
+- General: rest interval range (min/max hours), POI search radii, minimum distance from buildings (camping / allemannsretten), minimum distance from glaciers for overnight stops, and **water POIs at rest stops** for car/truck/motorcycle (remote/arid/hot climate).
 
 .. _rast-and-vei:
 

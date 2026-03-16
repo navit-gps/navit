@@ -225,6 +225,13 @@ static void driver_break_toggle_live_ecu_callback(struct gui_priv *gui_priv, str
 static void driver_break_show_motorcycle_intervals_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv);
 static void driver_break_toggle_motorcycle_terrain_callback(struct gui_priv *gui_priv, struct widget *widget,
                                                             void *data);
+static void driver_break_toggle_water_remote_arid_callback(struct gui_priv *gui_priv, struct widget *widget,
+                                                          void *data);
+static void driver_break_show_overnight_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv,
+                                               const char *profile_name);
+
+/* Profile name used when reopening overnight dialog from toggle (e.g. water remote/arid) */
+static const char *s_overnight_profile_name;
 
 static struct command_table driver_break_commands[] = {
     {"driver_break_suggest_stop",        command_cast(driver_break_cmd_suggest_stop)       },
@@ -1174,6 +1181,16 @@ static void driver_break_toggle_motorcycle_terrain_callback(struct gui_priv *gui
     driver_break_show_motorcycle_intervals_dialog(gui_priv, priv);
 }
 
+static void driver_break_toggle_water_remote_arid_callback(struct gui_priv *gui_priv, struct widget *widget,
+                                                          void *data) {
+    struct driver_break_priv *priv = (struct driver_break_priv *)data;
+    if (!priv)
+        return;
+    priv->config.enable_water_pois_remote_arid = !priv->config.enable_water_pois_remote_arid;
+    gui_internal_back(gui_priv, NULL, NULL);
+    driver_break_show_overnight_dialog(gui_priv, priv, s_overnight_profile_name ? s_overnight_profile_name : "car");
+}
+
 /* Show motorcycle interval configuration dialog */
 static void driver_break_show_motorcycle_intervals_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv) {
     struct widget *menu, *box, *label, *button;
@@ -1304,6 +1321,7 @@ static void driver_break_show_overnight_dialog(struct gui_priv *gui_priv, struct
     char buffer[256];
     char title[128];
 
+    s_overnight_profile_name = profile_name;
     if (!priv) {
         dbg(lvl_error, "Driver Break plugin: driver_break_show_overnight_dialog called with NULL priv");
         return;
@@ -1392,6 +1410,16 @@ static void driver_break_show_overnight_dialog(struct gui_priv *gui_priv, struct
         label = gui_internal_label_new(gui_priv, buffer);
         gui_internal_widget_append(box, label);
     }
+
+    /* Water POIs for car/truck/motorcycle (remote/arid/hot) */
+    snprintf(buffer, sizeof(buffer), "Water POIs at rest stops (car/truck/motorcycle): %s",
+             priv->config.enable_water_pois_remote_arid ? "on" : "off");
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+    button = gui_internal_button_new_with_callback(gui_priv, "Toggle water POIs (remote/arid/hot)", NULL,
+                                                   gravity_center | flags_fill,
+                                                   driver_break_toggle_water_remote_arid_callback, priv);
+    gui_internal_widget_append(box, button);
 
     /* Note about editing */
     label = gui_internal_label_new(gui_priv, "Note: Advanced editing coming soon");

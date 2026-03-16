@@ -246,6 +246,9 @@ static char *highway_type_name_from_item(struct item *street_item) {
     return g_strdup("tertiary");
 }
 
+/* Water POI categories for remote/arid/hot mode (car, truck, motorcycle) */
+static const char *water_poi_categories[] = {"amenity=drinking_water", "amenity=fountain", "natural=spring"};
+
 /* Create one rest stop at the given coordinate. Caller frees stop. */
 static struct driver_break_stop *create_rest_stop_at(struct coord_geo *coord_geo, double accumulated_km,
                                                      struct item *street_item, struct driver_break_config *config) {
@@ -255,6 +258,12 @@ static struct driver_break_stop *create_rest_stop_at(struct coord_geo *coord_geo
     stop->name = g_strdup_printf("Rest stop at %.1f km", accumulated_km);
     stop->highway_type = highway_type_name_from_item(street_item);
     stop->pois = driver_break_poi_discover(coord_geo, config->poi_search_radius_km, NULL, 0);
+    if (config->enable_water_pois_remote_arid && config->poi_water_search_radius_km > 0) {
+        GList *water =
+            driver_break_poi_discover(coord_geo, config->poi_water_search_radius_km, water_poi_categories, 3);
+        if (water)
+            stop->pois = g_list_concat(stop->pois, water);
+    }
     dbg(lvl_info, "Driver Break plugin: Rest stop created at lat=%.5f lon=%.5f distance=%.1f km", coord_geo->lat,
         coord_geo->lng, accumulated_km);
     return stop;
@@ -374,6 +383,12 @@ GList *driver_break_finder_find_near(struct coord_geo *center, double distance_k
 
                     /* Discover additional POIs */
                     stop->pois = driver_break_poi_discover(&candidate->coord, config->poi_search_radius_km, NULL, 0);
+                    if (config->enable_water_pois_remote_arid && config->poi_water_search_radius_km > 0) {
+                        GList *water = driver_break_poi_discover(&candidate->coord, config->poi_water_search_radius_km,
+                                                                water_poi_categories, 3);
+                        if (water)
+                            stop->pois = g_list_concat(stop->pois, water);
+                    }
 
                     stops = g_list_append(stops, stop);
                     count++;
