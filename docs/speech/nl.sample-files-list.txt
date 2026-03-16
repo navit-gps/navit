@@ -61,7 +61,8 @@
 "flauw"
 "scherp"
 
-"indien mogelijk omkeren"
+"indien mogelijk"
+"omkeren"
 "geschatte reistijd"
 "geschatte aankomsttijd"
 "bestemming"
