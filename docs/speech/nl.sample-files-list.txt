@@ -149,7 +149,7 @@
 
 # Note:
 # '12 kilometer' is spoken as 'one two kilometer' because there is no audio file for '12'.
-# It is clear what is meant but you can create as many audio files with numbers as yoy like or need.
+# It is clear what is meant but you can create as many audio files with numbers as you like or need.
 
 11 - 19
 21 - 24
