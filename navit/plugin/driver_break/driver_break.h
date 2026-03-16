@@ -106,13 +106,13 @@ struct driver_break_config {
     int motorcycle_default_weight_kg;             /* Rider+bike for energy (e.g. 250 kg) */
 
     /* Rest stop settings */
-    int min_distance_from_buildings;       /* 150 meters */
-    int min_distance_from_glaciers;       /* 300 meters for nightly */
-    int poi_search_radius_km;            /* 15 km */
-    int poi_water_search_radius_km;       /* 2 km */
-    int enable_water_pois_remote_arid;    /* 1 = include water POIs for car/truck/motorcycle (remote/arid/hot) */
-    int poi_cabin_search_radius_km;   /* 5 km */
-    int network_hut_search_radius_km; /* 25 km for network huts when DNT priority enabled */
+    int min_distance_from_buildings;   /* 150 meters */
+    int min_distance_from_glaciers;    /* 300 meters for nightly */
+    int poi_search_radius_km;          /* 15 km */
+    int poi_water_search_radius_km;    /* 2 km */
+    int enable_water_pois_remote_arid; /* 1 = include water POIs for car/truck/motorcycle (remote/arid/hot) */
+    int poi_cabin_search_radius_km;    /* 5 km */
+    int network_hut_search_radius_km;  /* 25 km for network huts when DNT priority enabled */
 
     /* Network and route priority */
     int enable_dnt_priority;               /* Enable DNT/network priority mode (0=disabled, 1=enabled) */

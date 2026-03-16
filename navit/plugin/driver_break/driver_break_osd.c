@@ -226,7 +226,7 @@ static void driver_break_show_motorcycle_intervals_dialog(struct gui_priv *gui_p
 static void driver_break_toggle_motorcycle_terrain_callback(struct gui_priv *gui_priv, struct widget *widget,
                                                             void *data);
 static void driver_break_toggle_water_remote_arid_callback(struct gui_priv *gui_priv, struct widget *widget,
-                                                          void *data);
+                                                           void *data);
 static void driver_break_show_overnight_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv,
                                                const char *profile_name);
 
@@ -1182,7 +1182,7 @@ static void driver_break_toggle_motorcycle_terrain_callback(struct gui_priv *gui
 }
 
 static void driver_break_toggle_water_remote_arid_callback(struct gui_priv *gui_priv, struct widget *widget,
-                                                          void *data) {
+                                                           void *data) {
     struct driver_break_priv *priv = (struct driver_break_priv *)data;
     if (!priv)
         return;

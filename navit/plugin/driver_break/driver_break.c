@@ -125,9 +125,9 @@ void driver_break_config_default(struct driver_break_config *config) {
     config->min_distance_from_buildings = 150;
     config->min_distance_from_glaciers = 300; /* 300m for nightly */
     config->poi_search_radius_km = 15;
-    config->poi_water_search_radius_km = 2;       /* 2 km for water */
-    config->poi_cabin_search_radius_km = 5;      /* 5 km for cabins */
-    config->enable_water_pois_remote_arid = 0;   /* off by default */
+    config->poi_water_search_radius_km = 2;    /* 2 km for water */
+    config->poi_cabin_search_radius_km = 5;    /* 5 km for cabins */
+    config->enable_water_pois_remote_arid = 0; /* off by default */
     config->network_hut_search_radius_km = 25; /* 25 km for network huts (DNT, STF) */
 
     /* Network and route priority defaults */

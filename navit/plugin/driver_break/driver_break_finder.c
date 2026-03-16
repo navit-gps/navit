@@ -385,7 +385,7 @@ GList *driver_break_finder_find_near(struct coord_geo *center, double distance_k
                     stop->pois = driver_break_poi_discover(&candidate->coord, config->poi_search_radius_km, NULL, 0);
                     if (config->enable_water_pois_remote_arid && config->poi_water_search_radius_km > 0) {
                         GList *water = driver_break_poi_discover(&candidate->coord, config->poi_water_search_radius_km,
-                                                                water_poi_categories, 3);
+                                                                 water_poi_categories, 3);
                         if (water)
                             stop->pois = g_list_concat(stop->pois, water);
                     }

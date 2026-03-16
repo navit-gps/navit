@@ -413,19 +413,18 @@ int driver_break_db_save_config(struct driver_break_db *db, struct driver_break_
     }
 
     /* Save configuration as key-value pairs */
-    const char *keys[] = {"vehicle_type", "car_soft_limit_hours", "car_max_hours", "car_break_interval_hours",
-                          "car_break_duration_min", "truck_mandatory_break_after_hours",
-                          "truck_mandatory_break_duration_min", "truck_max_daily_hours", "min_distance_from_buildings",
-                          "poi_search_radius_km", "driver_break_interval_min_hours", "driver_break_interval_max_hours",
-                          /* Fuel configuration keys */
-                          "fuel_type", "fuel_tank_capacity_l", "fuel_avg_consumption_x10", "fuel_obd_available",
-                          "fuel_j1939_available", "fuel_megasquirt_available", "fuel_injector_flow_cc_min",
-                          "fuel_ethanol_manual_pct", "fuel_low_warning_km", "fuel_search_buffer_km",
-                          "fuel_high_load_threshold", "fuel_adaptive_learning_enabled", "motorcycle_soft_limit_minutes",
-                          "motorcycle_mandatory_break_after_minutes", "motorcycle_break_duration_min",
-                          "motorcycle_terrain_subtype", "motorcycle_adventure_max_smoothness",
-                          "motorcycle_adventure_max_tracktype", "motorcycle_default_weight_kg",
-                          "enable_water_pois_remote_arid"};
+    const char *keys[] = {
+        "vehicle_type", "car_soft_limit_hours", "car_max_hours", "car_break_interval_hours", "car_break_duration_min",
+        "truck_mandatory_break_after_hours", "truck_mandatory_break_duration_min", "truck_max_daily_hours",
+        "min_distance_from_buildings", "poi_search_radius_km", "driver_break_interval_min_hours",
+        "driver_break_interval_max_hours",
+        /* Fuel configuration keys */
+        "fuel_type", "fuel_tank_capacity_l", "fuel_avg_consumption_x10", "fuel_obd_available", "fuel_j1939_available",
+        "fuel_megasquirt_available", "fuel_injector_flow_cc_min", "fuel_ethanol_manual_pct", "fuel_low_warning_km",
+        "fuel_search_buffer_km", "fuel_high_load_threshold", "fuel_adaptive_learning_enabled",
+        "motorcycle_soft_limit_minutes", "motorcycle_mandatory_break_after_minutes", "motorcycle_break_duration_min",
+        "motorcycle_terrain_subtype", "motorcycle_adventure_max_smoothness", "motorcycle_adventure_max_tracktype",
+        "motorcycle_default_weight_kg", "enable_water_pois_remote_arid"};
 
     int values[] = {
         config->vehicle_type, config->car_soft_limit_hours, config->car_max_hours, config->car_break_interval_hours,
