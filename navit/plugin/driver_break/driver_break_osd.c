@@ -219,6 +219,12 @@ int driver_break_cmd_configure_fuel(struct navit *nav, char *function, struct at
 
 /* Forward declaration for config save callback used by multiple dialogs. */
 static void driver_break_save_config_callback(struct gui_priv *gui_priv, struct widget *widget, void *data);
+static void driver_break_toggle_adaptive_learning_callback(struct gui_priv *gui_priv, struct widget *widget,
+                                                           void *data);
+static void driver_break_toggle_live_ecu_callback(struct gui_priv *gui_priv, struct widget *widget, void *data);
+static void driver_break_show_motorcycle_intervals_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv);
+static void driver_break_toggle_motorcycle_terrain_callback(struct gui_priv *gui_priv, struct widget *widget,
+                                                            void *data);
 
 static struct command_table driver_break_commands[] = {
     {"driver_break_suggest_stop",        command_cast(driver_break_cmd_suggest_stop)       },
@@ -538,6 +544,7 @@ int driver_break_cmd_configure(struct navit *nav, char *function, struct attr **
 static void driver_break_show_fuel_config_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv) {
     struct widget *menu, *box, *label, *button;
     char buffer[256];
+    int live_ecu_on;
 
     if (!priv) {
         dbg(lvl_error, "Driver Break plugin: driver_break_show_fuel_config_dialog called with NULL priv");
@@ -577,17 +584,24 @@ static void driver_break_show_fuel_config_dialog(struct gui_priv *gui_priv, stru
     label = gui_internal_label_new(gui_priv, buffer);
     gui_internal_widget_append(box, label);
 
-    snprintf(buffer, sizeof(buffer), "OBD-II available: %s", priv->config.fuel_obd_available ? "yes" : "no");
+    live_ecu_on = priv->config.fuel_obd_available || priv->config.fuel_j1939_available
+                  || priv->config.fuel_megasquirt_available;
+    snprintf(buffer, sizeof(buffer), "Live ECU (OBD-II, J1939, MegaSquirt): %s", live_ecu_on ? "on" : "off");
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+    button = gui_internal_button_new_with_callback(gui_priv, "Toggle live ECU", NULL, gravity_center | flags_fill,
+                                                  driver_break_toggle_live_ecu_callback, priv);
+    gui_internal_widget_append(box, button);
+
+    snprintf(buffer, sizeof(buffer), "Adaptive fuel learning: %s",
+             priv->config.fuel_adaptive_learning_enabled ? "on" : "off");
     label = gui_internal_label_new(gui_priv, buffer);
     gui_internal_widget_append(box, label);
 
-    snprintf(buffer, sizeof(buffer), "J1939 available: %s", priv->config.fuel_j1939_available ? "yes" : "no");
-    label = gui_internal_label_new(gui_priv, buffer);
-    gui_internal_widget_append(box, label);
-
-    snprintf(buffer, sizeof(buffer), "MegaSquirt available: %s", priv->config.fuel_megasquirt_available ? "yes" : "no");
-    label = gui_internal_label_new(gui_priv, buffer);
-    gui_internal_widget_append(box, label);
+    button = gui_internal_button_new_with_callback(gui_priv, "Toggle adaptive learning", NULL,
+                                                   gravity_center | flags_fill,
+                                                   driver_break_toggle_adaptive_learning_callback, priv);
+    gui_internal_widget_append(box, button);
 
     if (priv->config.fuel_injector_flow_cc_min > 0) {
         snprintf(buffer, sizeof(buffer), "Injector flow: %d cc/min", priv->config.fuel_injector_flow_cc_min);
@@ -895,7 +909,30 @@ int driver_break_cmd_end_break(struct navit *nav, char *function, struct attr **
     return 1;
 }
 
-/* Callback to save configuration after dialog interaction */
+/* Callback: one toggle for live ECU (OBD-II, J1939, MegaSquirt) - all on or all off */
+static void driver_break_toggle_live_ecu_callback(struct gui_priv *gui_priv, struct widget *widget, void *data) {
+    struct driver_break_priv *priv = (struct driver_break_priv *)data;
+    int any_on;
+    if (!priv)
+        return;
+    any_on = priv->config.fuel_obd_available || priv->config.fuel_j1939_available
+             || priv->config.fuel_megasquirt_available;
+    priv->config.fuel_obd_available = any_on ? 0 : 1;
+    priv->config.fuel_j1939_available = any_on ? 0 : 1;
+    priv->config.fuel_megasquirt_available = any_on ? 0 : 1;
+    gui_internal_back(gui_priv, NULL, NULL);
+    driver_break_show_fuel_config_dialog(gui_priv, priv);
+}
+
+static void driver_break_toggle_adaptive_learning_callback(struct gui_priv *gui_priv, struct widget *widget, void *data) {
+    struct driver_break_priv *priv = (struct driver_break_priv *)data;
+    if (!priv)
+        return;
+    priv->config.fuel_adaptive_learning_enabled = !priv->config.fuel_adaptive_learning_enabled;
+    gui_internal_back(gui_priv, NULL, NULL);
+    driver_break_show_fuel_config_dialog(gui_priv, priv);
+}
+
 static void driver_break_save_config_callback(struct gui_priv *gui_priv, struct widget *widget, void *data) {
     struct driver_break_priv *priv = (struct driver_break_priv *)data;
     if (priv && priv->db) {
@@ -1126,6 +1163,75 @@ static void driver_break_show_cycling_intervals_dialog(struct gui_priv *gui_priv
     graphics_draw_mode(gui_priv->gra, draw_mode_end);
 }
 
+static void driver_break_toggle_motorcycle_terrain_callback(struct gui_priv *gui_priv, struct widget *widget,
+                                                            void *data) {
+    struct driver_break_priv *priv = (struct driver_break_priv *)data;
+    if (!priv)
+        return;
+    priv->config.motorcycle_terrain_subtype = !priv->config.motorcycle_terrain_subtype;
+    gui_internal_back(gui_priv, NULL, NULL);
+    driver_break_show_motorcycle_intervals_dialog(gui_priv, priv);
+}
+
+/* Show motorcycle interval configuration dialog */
+static void driver_break_show_motorcycle_intervals_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv) {
+    struct widget *menu, *box, *label, *button;
+    char buffer[256];
+
+    if (!priv) {
+        dbg(lvl_error, "Driver Break plugin: driver_break_show_motorcycle_intervals_dialog called with NULL priv");
+        return;
+    }
+
+    graphics_draw_mode(gui_priv->gra, draw_mode_begin);
+    gui_internal_enter(gui_priv, 1);
+    gui_internal_set_click_coord(gui_priv, NULL);
+    gui_internal_enter_setup(gui_priv);
+
+    menu = gui_internal_menu(gui_priv, "Motorcycle Rest Intervals");
+    box = gui_internal_box_new(gui_priv, gravity_left_top | orientation_vertical | flags_expand | flags_fill);
+    gui_internal_widget_append(menu, box);
+
+    snprintf(buffer, sizeof(buffer), "Soft limit: %d min", priv->config.motorcycle_soft_limit_minutes);
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "Mandatory break after: %d min",
+             priv->config.motorcycle_mandatory_break_after_minutes);
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "Break duration: %d min", priv->config.motorcycle_break_duration_min);
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "Terrain: %s",
+             priv->config.motorcycle_terrain_subtype ? "Adventure" : "Road");
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    button = gui_internal_button_new_with_callback(gui_priv, "Toggle terrain (Road/Adventure)", NULL,
+                                                   gravity_center | flags_fill,
+                                                   driver_break_toggle_motorcycle_terrain_callback, priv);
+    gui_internal_widget_append(box, button);
+
+    if (priv->config.motorcycle_terrain_subtype) {
+        label = gui_internal_label_new(gui_priv,
+                                       "Adventure mode: Off-road motor traffic on uncultivated land is prohibited by "
+                                       "law in many countries (e.g. Norway, Sweden, Finland). Use only ways with "
+                                       "explicit access. Permits may be required.");
+        gui_internal_widget_append(box, label);
+    }
+
+    button = gui_internal_button_new_with_callback(gui_priv, "OK", NULL, gravity_center | flags_fill,
+                                                   driver_break_save_config_callback, priv);
+    gui_internal_widget_append(box, button);
+
+    gui_internal_menu_render(gui_priv);
+    gui_internal_leave(gui_priv);
+    graphics_draw_mode(gui_priv->gra, draw_mode_end);
+}
+
 /* Configure rest stop intervals command */
 int driver_break_cmd_configure_intervals(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
     struct driver_break_priv *priv;
@@ -1180,6 +1286,8 @@ int driver_break_cmd_configure_intervals(struct navit *nav, char *function, stru
         driver_break_show_hiking_intervals_dialog(gui_priv, priv);
     } else if (!g_ascii_strcasecmp(profile_name, "bike") || !g_ascii_strcasecmp(profile_name, "cycling")) {
         driver_break_show_cycling_intervals_dialog(gui_priv, priv);
+    } else if (!g_ascii_strcasecmp(profile_name, "motorcycle")) {
+        driver_break_show_motorcycle_intervals_dialog(gui_priv, priv);
     } else {
         dbg(lvl_warning, "Driver Break plugin: Unknown profile type: %s", profile_name);
         navit_add_message(nav, "Driver Break plugin: Configuration not available for this profile");

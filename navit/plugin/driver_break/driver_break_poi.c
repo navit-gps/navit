@@ -288,6 +288,7 @@ static GList *driver_break_poi_overpass_search(struct coord_geo *center, int rad
     return pois;
 }
 #    endif /* HAVE_CURL */
+#endif     /* HAVE_CURL */
 
 /* Discover POIs using map data (preferred) or Overpass API (fallback) */
 GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const char **poi_categories,

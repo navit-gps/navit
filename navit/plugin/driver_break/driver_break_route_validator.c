@@ -60,6 +60,34 @@ const char *route_validator_map_item_to_highway_type(struct item *street_item) {
     return get_highway_from_item(street_item);
 }
 
+/* Copy OSM tag value for key into static buffer; returns NULL if key missing or buffer too small */
+static const char *get_osm_tag_value_item(struct item *item, const char *key, char *buf, size_t buf_size) {
+    struct attr attr;
+    if (!item || !key || !buf || buf_size == 0)
+        return NULL;
+    if (!item_attr_get(item, attr_osm_tag, &attr) || !attr.u.str)
+        return NULL;
+    size_t key_len = strlen(key);
+    const char *tags = attr.u.str;
+    const char *pos = tags;
+    for (;;) {
+        pos = strstr(pos, key);
+        if (!pos)
+            return NULL;
+        if ((pos == tags || pos[-1] == ' ') && pos[key_len] == '=') {
+            pos += key_len + 1;
+            const char *end = strchr(pos, ' ');
+            size_t len = end ? (size_t)(end - pos) : strlen(pos);
+            if (len >= buf_size)
+                return NULL;
+            memcpy(buf, pos, len);
+            buf[len] = '\0';
+            return buf;
+        }
+        pos += key_len;
+    }
+}
+
 /* Forbidden highways for hikers */
 static const char *forbidden_highways[] = {"motorway",      "trunk",      "primary", "primary_link",
                                            "motorway_link", "trunk_link", NULL};
@@ -214,6 +242,54 @@ struct route_validation_result *route_validator_validate_hiking_with_priority(st
     append_validation_warnings(result);
     result->is_valid = (result->forbidden_percentage == 0);
     return result;
+}
+
+/* Motorcycle: 1 if forbidden (motorcycle=no or motor_vehicle=no) */
+int route_validator_motorcycle_is_forbidden(struct item *item) {
+    char val[32];
+    if (!item)
+        return 0;
+    if (get_osm_tag_value_item(item, "motorcycle", val, sizeof(val)) && !strcmp(val, "no"))
+        return 1;
+    if (get_osm_tag_value_item(item, "motor_vehicle", val, sizeof(val)) && !strcmp(val, "no"))
+        return 1;
+    return 0;
+}
+
+/* Motorcycle: 1 if preferred (motorcycle=yes, designated, permissive) */
+int route_validator_motorcycle_is_preferred(struct item *item) {
+    char val[32];
+    if (!item || !get_osm_tag_value_item(item, "motorcycle", val, sizeof(val)))
+        return 0;
+    return (!strcmp(val, "yes") || !strcmp(val, "designated") || !strcmp(val, "permissive"));
+}
+
+/* Motorcycle road terrain: 1 if surface is paved only (asphalt, paved) */
+int route_validator_motorcycle_road_surface_ok(struct item *item) {
+    char val[32];
+    if (!item)
+        return 0;
+    if (!get_osm_tag_value_item(item, "surface", val, sizeof(val)))
+        return 1; /* No surface tag: assume allowed */
+    return (!strcmp(val, "asphalt") || !strcmp(val, "paved"));
+}
+
+/* Motorcycle adventure: 1 if access allowed; never route access=private or access=no (legal requirement) */
+int route_validator_motorcycle_adventure_access_ok(struct item *item) {
+    char val[32];
+    if (!item)
+        return 0;
+    if (get_osm_tag_value_item(item, "access", val, sizeof(val))) {
+        if (!strcmp(val, "private") || !strcmp(val, "no"))
+            return 0;
+        if (!strcmp(val, "yes") || !strcmp(val, "permissive"))
+            return 1;
+    }
+    if (get_osm_tag_value_item(item, "motorcycle", val, sizeof(val))) {
+        if (!strcmp(val, "yes") || !strcmp(val, "designated") || !strcmp(val, "permissive"))
+            return 1;
+    }
+    return 0;
 }
 
 void route_validator_free_result(struct route_validation_result *result) {

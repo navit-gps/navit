@@ -14,6 +14,7 @@ Navit includes several plugins that extend its functionality:
    Driver Break aftermarket ECUs <aftermarket_ecus>
    Driver Break formulas <formulas>
    Driver Break Navit-daemon integration <navit_daemon_integration>
+   Driver Break DBus API (eco_mode_fuel_enabled) <dbus>
 
 .. contents:: On this page
    :local:
@@ -35,6 +36,14 @@ Travel modes
 - **Truck** – Mandatory rest and driving time rules aligned with EU Regulation EC 561/2006 and related rules (e.g. break after 4.5 hours, 45-minute break, max daily driving, daily and weekly rest, and other driving/rest time limits).
 - **Hiking** – Daily segments: 40 km suggested maximum per day. Rest stops at 11.295 km intervals (main) or 2.275 km (alternative). Optional SRTM elevation and POI support (water, cabins).
 - **Bicycle (cycling)** – Daily segments: 100 km suggested maximum per day. Rest stops at 28.24 km intervals (main) or 5.69 km (alternative). Suggested defaults use the same rast/vei concept as hiking, scaled up for cycling (see :ref:`rast-and-vei` below).
+- **Motorcycle** – Soft limit 2 hours riding, mandatory break after 3.5 hours, break duration 15–30 minutes (all configurable). Terrain sub-type: **Road** (paved only: surface=asphalt, paved) or **Adventure/dual-sport** (additionally gravel, unpaved, track with tracktype grade1–3 and configurable smoothness; see :ref:`motorcycle-adventure-legal`). Routing prefers motorcycle=yes/designated/permissive and filters motorcycle=no and motor_vehicle=no. Fuel: OBD-II for Euro 4+ bikes, adaptive estimation and manual tank/consumption for others. Energy-based routing uses configurable rider+bike weight (default 250 kg).
+
+.. _motorcycle-adventure-legal:
+
+Motorcycle adventure mode – legal restrictions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Adventure/dual-sport mode is strictly limited to legally accessible ways. The plugin never routes across uncultivated land (utmark), unmapped terrain, or ways tagged access=private or access=no. Only highway=track and similar ways with explicit access=yes, access=permissive, or motorcycle=yes/designated/permissive are considered. Off-road motor traffic on uncultivated land is prohibited without a permit in many countries. When adventure mode is active, a country-aware warning is shown reminding the user of these rules. Relevant legislation includes: Norway – Motorferdselloven (1977); Sweden – Terrängkörningslagen (1975:1313); Finland – Maastoliikennelaki (1710/1995); and similar laws in most other European countries.
 
 .. _pois-searched:
 
@@ -46,6 +55,7 @@ The plugin discovers nearby Points of Interest depending on travel mode. Search 
 - **Water** – Drinking water, fountain, spring (for hiking/cycling rest stops).
 - **Cabins and huts** – Wilderness hut, alpine hut, hostel, camping; with optional DNT/network detection for prioritization.
 - **Car** – Cafe, restaurant, museum, viewpoint, picnic, attraction (and similar amenities along driving routes).
+- **Motorcycle** – Same as car (cafe, restaurant, viewpoint, petrol, picnic), plus amenity=motorcycle_repair and shop=motorcycle when present in map data.
 
 .. _distance-from-buildings:
 
@@ -72,6 +82,7 @@ Rest parameters are configurable per mode, including:
 - Truck: mandatory break after (hours), break duration (minutes), max daily driving hours.
 - Hiking: main and alternative break distances (km), max daily distance (km).
 - Cycling: main and alternative break distances (km), max daily distance (km).
+- Motorcycle: soft limit (minutes), mandatory break after (minutes), break duration (minutes), terrain sub-type (road/adventure), adventure max smoothness and tracktype, default weight for energy routing.
 - General: rest interval range (min/max hours), POI search radii, minimum distance from buildings (camping / allemannsretten), minimum distance from glaciers for overnight stops.
 
 .. _rast-and-vei:
@@ -148,12 +159,23 @@ The plugin can read live fuel consumption directly from the vehicle's ECU. This 
 
 - **MegaSquirt** – Supports aftermarket and performance ECUs from the MegaSquirt family, including MS1, MS2, MS3, MS3-Pro, and MicroSquirt. These are commonly used in kit cars, race vehicles, and custom engine installations. The plugin connects to the ECU over a serial connection and reads engine data to calculate fuel consumption. As with the other backends, if the ECU is not available or not configured the plugin continues to work normally using adaptive estimation.
 
+In the fuel configuration dialog (Configure fuel), one toggle turns live ECU on or off for all three backends (OBD-II, J1939, MegaSquirt) together. Press OK to save.
+
 .. _adaptive-fuel-learning:
 
 Adaptive fuel learning
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Even without a live ECU connection, the plugin builds up a fuel consumption model over time by recording consumption samples and trip summaries as you travel. This learned data is stored persistently and used to progressively refine fuel estimates for future trips. Fuel stops are also logged alongside rest stop history, giving a complete picture of stops made during a journey.
+Even without a live ECU connection, the plugin builds up a fuel consumption model over time by recording consumption samples and trip summaries as you travel. This learned data is stored persistently and used to progressively refine fuel estimates for future trips. Fuel stops are also logged alongside rest stop history, giving a complete picture of stops made during a journey. A configuration switch controls whether adaptive fuel learning is enabled; when disabled, no samples or trip summaries are recorded. In the fuel configuration dialog, one toggle turns adaptive fuel learning on or off (press OK to save). Energy-based routing remains available for cars and trucks even when no ECU data and no adaptive learning are in use.
+
+.. _eco-mode-fuel-attribute:
+
+Attribute ``eco_mode_fuel_enabled`` (for DBus / API)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The plugin exposes a boolean attribute **eco_mode_fuel_enabled**. It is **true** when either (1) an ECU backend is available and running (OBD-II, J1939, or MegaSquirt), or (2) adaptive fuel learning is enabled in configuration. This allows external components to detect whether the plugin is using live fuel data or learned consumption for eco/fuel-related behaviour.
+
+**DBus:** The attribute is available on the Navit DBus interface. Call ``get_attr("eco_mode_fuel_enabled")`` on the navit object; the method returns ``(attrname, value)`` with a boolean value. No need to resolve the Driver Break OSD; Navit aggregates the value from its OSDs. For service name, object paths, and examples in Python and with ``dbus-send``, see :doc:`dbus`.
 
 .. _history-and-persistence:
 
@@ -167,7 +189,7 @@ The plugin stores rest stop history, fuel stop history, fuel consumption samples
 User interface and configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The plugin registers as an OSD element in Navit's display. With the internal GUI, menu actions are available: suggest rest stop (along current route), rest stop history, start break, end break, configure intervals (per profile: car, truck, hiking, cycling), and configure overnight settings (minimum distance from buildings and glaciers, POI search radii). Session state — including driving time, whether a break is in progress, and whether a mandatory break is required — is tracked continuously. Vehicle type is selected via the OSD configuration.
+The plugin registers as an OSD element in Navit's display. With the internal GUI, menu actions are available: suggest rest stop (along current route), rest stop history, start break, end break, configure intervals (per profile: car, truck, hiking, cycling, motorcycle), configure overnight settings (minimum distance from buildings and glaciers, POI search radii), and configure fuel. In the fuel configuration dialog, two toggles are available: one for live ECU (OBD-II, J1939, MegaSquirt) and one for adaptive fuel learning; press OK to save. Session state — including driving time, whether a break is in progress, and whether a mandatory break is required — is tracked continuously. Vehicle type is selected via the OSD configuration.
 
 Further reading
 ~~~~~~~~~~~~~~~
@@ -180,3 +202,4 @@ For details on specific aspects of the Driver Break plugin, see:
 * Aftermarket ECUs: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/aftermarket_ecus.rst
 * Formulas: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/formulas.rst
 * Navit-daemon integration: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/navit_daemon_integration.rst
+* DBus API (eco_mode_fuel_enabled): :doc:`dbus`

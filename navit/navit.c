@@ -40,6 +40,7 @@
 #include "messages.h"
 #include "navigation.h"
 #include "navit_nls.h"
+#include "osd.h"
 #include "param.h"
 #include "point.h"
 #include "popup.h"
@@ -2906,6 +2907,21 @@ int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, 
     case attr_orientation:
         attr->u.num = this_->orientation;
         break;
+    case attr_eco_mode_fuel_enabled: {
+        struct attr **a;
+        struct attr eco_attr;
+        ret = 0;
+        for (a = this_->attrs; a && *a; a++) {
+            if ((*a)->type != attr_osd || !(*a)->u.osd)
+                continue;
+            if (osd_get_attr((*a)->u.osd, attr_eco_mode_fuel_enabled, &eco_attr, NULL)) {
+                *attr = eco_attr;
+                ret = 1;
+                break;
+            }
+        }
+        break;
+    }
     case attr_osd:
         ret = attr_generic_get_attr(this_->attrs, NULL, type, attr, iter ? (struct attr_iter *)&iter->iter : NULL);
         break;

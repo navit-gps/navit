@@ -53,4 +53,16 @@ const char *route_validator_map_item_to_highway_type(struct item *street_item);
 /* Free validation result */
 void route_validator_free_result(struct route_validation_result *result);
 
+/* Motorcycle: 1 if way is forbidden (motorcycle=no or motor_vehicle=no) */
+int route_validator_motorcycle_is_forbidden(struct item *item);
+
+/* Motorcycle: 1 if way is preferred (motorcycle=yes, designated, or permissive) */
+int route_validator_motorcycle_is_preferred(struct item *item);
+
+/* Motorcycle road terrain: 1 if surface is paved only (asphalt, paved) */
+int route_validator_motorcycle_road_surface_ok(struct item *item);
+
+/* Motorcycle adventure: 1 if access allowed (yes/permissive/motorcycle) and not private/no; respects legal use */
+int route_validator_motorcycle_adventure_access_ok(struct item *item);
+
 #endif /* NAVIT_PLUGIN_DRIVER_BREAK_ROUTE_VALIDATOR_H */

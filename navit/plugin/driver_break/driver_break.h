@@ -38,10 +38,17 @@
  * @brief Vehicle type enumeration
  */
 enum driver_break_vehicle_type {
-    DRIVER_BREAK_VEHICLE_CAR = 0,    /**< Car vehicle type */
-    DRIVER_BREAK_VEHICLE_TRUCK = 1,  /**< Truck vehicle type (EU Regulation EC 561/2006) */
-    DRIVER_BREAK_VEHICLE_HIKING = 2, /**< Hiking vehicle type */
-    DRIVER_BREAK_VEHICLE_CYCLING = 3 /**< Cycling vehicle type */
+    DRIVER_BREAK_VEHICLE_CAR = 0,       /**< Car vehicle type */
+    DRIVER_BREAK_VEHICLE_TRUCK = 1,     /**< Truck vehicle type (EU Regulation EC 561/2006) */
+    DRIVER_BREAK_VEHICLE_HIKING = 2,    /**< Hiking vehicle type */
+    DRIVER_BREAK_VEHICLE_CYCLING = 3,   /**< Cycling vehicle type */
+    DRIVER_BREAK_VEHICLE_MOTORCYCLE = 4 /**< Motorcycle (road or adventure/dual-sport) */
+};
+
+/** Motorcycle terrain sub-type: road (paved only) or adventure (unpaved/track, access-restricted) */
+enum driver_break_motorcycle_terrain {
+    DRIVER_BREAK_MC_TERRAIN_ROAD = 0,     /**< Paved only (surface=asphalt, paved) */
+    DRIVER_BREAK_MC_TERRAIN_ADVENTURE = 1 /**< Allow gravel/track; strict access (no utmark/private) */
 };
 
 /**
@@ -66,7 +73,7 @@ enum driver_break_fuel_type {
  * and basic fuel profile / range estimation settings.
  */
 struct driver_break_config {
-    int vehicle_type; /* 0=car, 1=truck, 2=hiking, 3=cycling */
+    int vehicle_type; /* 0=car, 1=truck, 2=hiking, 3=cycling, 4=motorcycle */
 
     /* Car settings */
     int car_soft_limit_hours;     /* 5-9 hours */
@@ -88,6 +95,15 @@ struct driver_break_config {
     double cycling_driver_break_distance_main; /* 28.24 km */
     double cycling_driver_break_distance_alt;  /* 5.69 km */
     double cycling_max_daily_distance;         /* 100 km */
+
+    /* Motorcycle settings */
+    int motorcycle_soft_limit_minutes;           /* Soft limit (e.g. 120 = 2 h) */
+    int motorcycle_mandatory_break_after_minutes; /* Mandatory break after (e.g. 210 = 3.5 h) */
+    int motorcycle_break_duration_min;          /* Break duration 15-30 min */
+    int motorcycle_terrain_subtype;             /* enum driver_break_motorcycle_terrain: road=0, adventure=1 */
+    int motorcycle_adventure_max_smoothness;     /* Max smoothness (0=excellent..4=very_bad); e.g. 3=bad */
+    int motorcycle_adventure_max_tracktype;     /* Max tracktype grade (1-3 for adventure) */
+    int motorcycle_default_weight_kg;           /* Rider+bike for energy (e.g. 250 kg) */
 
     /* Rest stop settings */
     int min_distance_from_buildings;  /* 150 meters */
@@ -121,6 +137,7 @@ struct driver_break_config {
     int fuel_low_warning_km;       /* Low fuel warning threshold (km of range remaining) */
     int fuel_search_buffer_km;     /* Extra km buffer for gas station search (beyond destination distance) */
     int fuel_high_load_threshold;  /* High-load detection threshold (% above baseline, e.g. 25) */
+    int fuel_adaptive_learning_enabled; /* 1 = enable adaptive fuel learning (samples, trip summaries) */
 };
 
 /* Initialize configuration structure with safe defaults. */

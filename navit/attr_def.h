@@ -267,6 +267,7 @@ ATTR(oneway)
 ATTR(tunnel_nightlayout)
 ATTR(layout_daynightauto)
 ATTR(town_use_postal)
+ATTR(eco_mode_fuel_enabled) /* Driver Break: fuel/eco from ECU or adaptive learning (for DBus) */
 ATTR2(0x0002ffff, type_int_end)
 ATTR2(0x00030000, type_string_begin)
 ATTR(type)
