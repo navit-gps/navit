@@ -2495,7 +2495,7 @@ tags.
    +--------------+-------+--------------+--------------+--------------+
    | sample_dir   |       |              | For          | ``sampl      |
    |              |       |              | spe          | e_dir="/path |
-   |              |       |              | ech_cmdline, | /to/waves"`` |
+   |              |       |              | ech_cmdline, | /to/files"`` |
    |              |       |              | defines path |              |
    |              |       |              | where        |              |
    |              |       |              | pre-recorded |              |
