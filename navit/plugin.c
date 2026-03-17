@@ -17,15 +17,14 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include "plugin.h"
 #include "config.h"
 #include "file.h"
 #include <glib.h>
 #include <string.h>
-#define PLUGIN_C
 #include "debug.h"
 #include "item.h"
 #include "plugin.h"
+#include "plugin_impl.h"
 #ifdef USE_PLUGINS
 #    ifdef HAVE_GMODULE
 #        include <gmodule.h>
