@@ -86,10 +86,10 @@ static int vehicle_demo_position_attr_get(struct vehicle_priv *priv, enum attr_t
     int *flags;
     switch (type) {
     case attr_position_speed:
-        attr->u.numd = &priv->speed;
+        attr->u.numd = priv->speed;
         break;
     case attr_position_direction:
-        attr->u.numd = &priv->direction;
+        attr->u.numd = priv->direction;
         break;
     case attr_position_coord_geo:
         attr->u.coord_geo = &priv->geo;
@@ -110,7 +110,7 @@ static int vehicle_demo_position_attr_get(struct vehicle_priv *priv, enum attr_t
         attr->u.num = 3 + ((rand() % 2 + 1) * (rand() % 2 == 0 ? -1 : 1));
         break;
     case attr_position_height:
-        attr->u.numd = &priv->height;
+        attr->u.numd = priv->height;
         break;
     case attr_position_nmea:
         lat = priv->geo.lat;
@@ -162,7 +162,7 @@ static int vehicle_demo_set_attr_do(struct vehicle_priv *priv, struct attr *attr
         priv->config_speed = attr->u.num;
         break;
     case attr_position_height:
-        priv->height = *attr->u.numd;
+        priv->height = attr->u.numd;
         break;
     case attr_interval:
         priv->interval = attr->u.num;
