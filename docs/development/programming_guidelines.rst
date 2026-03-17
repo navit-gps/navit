@@ -5,18 +5,18 @@ Programming guidelines
 NAVIT is a team-project, thus a lot of coders are working on it's development and code base.
 To get a unified coding style and make it easier for everybody to work with parts, that someone else wrote, we tried to specify the formatting of our source and how we deal with third party modules as following.
 
-Enforced guidelines via CircleCI
-================================
+Enforced guidelines via CI
+==========================
 
 The 1st step of the checks enforced after a PR is created or updated is what we call "sanity checks".
 Those enforce the coding style for our C and Java files. During this phase we have several steps:
 
 * verification that the modified files don't contain trailing spaces.
   You can use `sed 's/\s*$//' -i "$f"` if you want to clean your files before pushing your PR.
-* verification that the style of our C and C++  code is respected using `astyle`
-  (to the exception of the following folders: `navit/support/`, `navit/traffic/permanentrestrictions/`).
-  You can use the following command on the files you are modifying (replacing `$f` by your file name):
-  `astyle --indent=spaces=4 --style=attach -n --max-code-length=120 -xf -xh "${f}"`
+* verification that the style of our C and C++ code is respected using `clang-format`
+  (to the exception of the following folders: `navit/support/`, `navit/fib-1.1/`, `navit/traffic/permanentrestrictions/`).
+  You can format your files before pushing by running:
+  `clang-format -i "${f}"`
 * check for compliance with the DTD using xmllint on the modified files. You can check this locally by using:
   `xmllint --noout --dtdvalid navit/navit.dtd "$f"`
 * verification that the style of our Java code follows our standards using `./gradlew checkstyleMain`
@@ -35,18 +35,11 @@ We try to follow those simple rules:
  * the open brackets should be at the end of the line (on the same line as the function name or the if/for/while statement)
  * out line length is of 120 characters
 
-To help us keeping a coherent indentation, we use astyle on C, C++ and java files. Usage example:
+To help us keeping a coherent indentation, we use ``clang-format`` on C and C++ files. You can format a file by running:
 
-.. code-block:: C
+.. code-block:: bash
 
-  astyle --indent=spaces=4 --style=attach -n --max-code-length=120 -xf -xh my_file.c
-
-
-.. note::
-
-  Because of the bug: [https://sourceforge.net/p/astyle/bugs/230/](https://sourceforge.net/p/astyle/bugs/230/) on astyle,
-  we cannot rely on astyle to handle properly the line length of 120 characters that we choose.
-  It would be recommended to set that line length in the editor you are using.
+  clang-format -i my_file.c
 
 Character encoding and line breaks
 ----------------------------------
