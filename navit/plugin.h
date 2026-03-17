@@ -65,22 +65,22 @@ struct popup_item;
 #undef PLUGIN_CATEGORY
 #define PLUGIN_PROTO(name, ...) void name(__VA_ARGS__)
 
-#define PLUGIN_FUNC1(name, t1, p1)                                                                                 \
-    void plugin_register_##name(void (*func)(t1 p1));                                                              \
+#define PLUGIN_FUNC1(name, t1, p1)                                                                                     \
+    void plugin_register_##name(void (*func)(t1 p1));                                                                  \
     void plugin_call_##name(t1 p1);
 
-#define PLUGIN_FUNC3(name, t1, p1, t2, p2, t3, p3)                                                                 \
-    void plugin_register_##name(void (*func)(t1 p1, t2 p2, t3 p3));                                                \
+#define PLUGIN_FUNC3(name, t1, p1, t2, p2, t3, p3)                                                                     \
+    void plugin_register_##name(void (*func)(t1 p1, t2 p2, t3 p3));                                                    \
     void plugin_call_##name(t1 p1, t2 p2, t3 p3);
 
-#define PLUGIN_FUNC4(name, t1, p1, t2, p2, t3, p3, t4, p4)                                                         \
-    void plugin_register_##name(void (*func)(t1 p1, t2 p2, t3 p3, t4 p4));                                         \
+#define PLUGIN_FUNC4(name, t1, p1, t2, p2, t3, p3, t4, p4)                                                             \
+    void plugin_register_##name(void (*func)(t1 p1, t2 p2, t3 p3, t4 p4));                                             \
     void plugin_call_##name(t1 p1, t2 p2, t3 p3, t4 p4);
 
-#define PLUGIN_CATEGORY(category, newargs)                                                                         \
-    struct category##_priv;                                                                                        \
-    struct category##_methods;                                                                                     \
-    void plugin_register_category_##category(const char *name, struct category##_priv *(*new_)newargs);            \
+#define PLUGIN_CATEGORY(category, newargs)                                                                             \
+    struct category##_priv;                                                                                            \
+    struct category##_methods;                                                                                         \
+    void plugin_register_category_##category(const char *name, struct category##_priv *(*new_)newargs);                \
     void *plugin_get_category_##category(const char *name);
 
 #include "plugin_def.h"
