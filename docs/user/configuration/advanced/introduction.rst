@@ -25,8 +25,6 @@ Note that Navit internally handles all text in UTF-8 encoding. If you use a file
 
 Note that if any file that is needed to compose the complete phrase is missing then Navit will be silent. In that case a warning will be printed. There is a list of the samples required for the Dutch language. Lists for other languages can be created by reading the log file. Look for lines containing "Cannot speak text" and create the missing audio files. The list for Dutch can be used as a starting point (the list for the numbers is the same in every language). Other texts are probably different because of the order of words in a sentence.
 
-If you have created lists for other languages please add them here.
-
 WARNING: THERE ARE ANNOUNCEMENTS THAT CONTAIN GEOGRAPHICAL NAMES. SO THERE IS NO PRACTICAL USE FOR THIS FEATURE AT THIS MOMENT SINCE IT IS IMPOSSIBLE TO CREATE AUDIO FILES FOR ALL THE NAMES.
 A SOLUTION TO USE TEXT TO SPEECH FOR MISSING AUDIO FILES IS BEING TESTED.
 
