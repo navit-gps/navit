@@ -9,6 +9,7 @@
 /.project
 /CMakeLists.txt.user*
 /navit/android/cmake_plugin_settings.txt
+cmake_plugin_settings.txt
 /nbproject/
 navit/android/checkstyle
 
