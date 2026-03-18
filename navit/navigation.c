@@ -778,7 +778,7 @@ int navigation_set_attr(struct navigation *this_, struct attr *attr) {
         break;
     case attr_nav_status:
         this_->nav_status = attr->u.num;
-         dbg(lvl_debug, "nav_status = %i", attr.u.num);
+         dbg(lvl_debug, "nav_status = %i", attr->u.num);
         break;
     default:
         break;
