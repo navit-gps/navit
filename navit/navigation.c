@@ -770,11 +770,11 @@ int navigation_set_attr(struct navigation *this_, struct attr *attr) {
     case attr_speech:
         this_->speech = attr->u.speech;
 
-	if (speech_get_attr(this_->speech, attr_name, &name_attr, NULL))
-	    dbg(lvl_debug, "Speech set to: %s", name_attr.u.str);
-	else
-	    dbg(lvl_debug, "Speech set");
-
+        if (speech_get_attr(this_->speech, attr_name, &name_attr, NULL)) {
+            dbg(lvl_debug, "Speech set to: %s", name_attr.u.str);
+        } else {
+            dbg(lvl_debug, "Speech set");
+        }
         break;
     case attr_nav_status:
         this_->nav_status = attr->u.num;
