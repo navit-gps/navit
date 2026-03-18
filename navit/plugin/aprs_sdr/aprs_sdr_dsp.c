@@ -70,6 +70,10 @@ struct aprs_sdr_dsp {
     double bit_accumulator;
     double samples_per_bit;
 
+    /* FM discriminator -> bit decision (audio-domain) */
+    double bit_audio_sum;
+    int bit_audio_count;
+
     /* NRZI decoder state */
     int last_bit;
 
@@ -79,6 +83,9 @@ struct aprs_sdr_dsp {
     int frame_buffer_pos;
     int in_frame;
     int bit_stuff_count;
+    int flag_pos;
+    int in_frame_bit_pos;
+    unsigned char in_frame_current_byte;
 
     /* Statistics */
     int frames_decoded;
@@ -99,6 +106,7 @@ struct aprs_sdr_dsp {
     long long diag_rf_samples;
     long long diag_audio_samples;
     long long diag_goertzel_blocks;
+    long long diag_goertzel_block;
     long long diag_raw_bits;
     long long diag_decoded_bits;
     long long diag_flags_found;
@@ -176,72 +184,159 @@ static int nrzi_decode(int bit, int *last_bit) {
     return decoded;
 }
 
-/* Look for flag sequence (0x7E). Returns after consuming this bit. */
+/* Look for the AX.25/HDLC flag pattern (0x7E, LSB-first).
+ *
+ * Important:
+ * - This runs on the NRZI-decoded *data* bits.
+ * - Do not keep state as static locals; this DSP is used in tests and can be
+ *   instantiated multiple times.
+ * - When a flag is found we enter in-frame mode, but we still expect to see
+ *   additional 0x7E bytes (preamble flush) before real payload starts. */
 static void process_ax25_flag_search(struct aprs_sdr_dsp *dsp, int bit) {
     static int flag_pattern[] = {0, 1, 1, 1, 1, 1, 1, 0};
-    static int flag_pos = 0;
 
-    if (bit == flag_pattern[flag_pos]) {
-        flag_pos++;
-        if (flag_pos == 8) {
+    fprintf(stderr, "FLAG_SEARCH decoded=%lld bit=%d flag_pos=%d\n",
+            (long long)dsp->diag_decoded_bits, bit, dsp->flag_pos);
+
+    if (bit == flag_pattern[dsp->flag_pos]) {
+        dsp->flag_pos++;
+        if (dsp->flag_pos == 8) {
+            fprintf(stderr, "FLAG_FOUND at decoded=%lld\n",
+                    (long long)dsp->diag_decoded_bits);
+            fprintf(stderr, "FLAG_FOUND at decoded=%lld goertzel_blk=%lld\n",
+                    (long long)dsp->diag_decoded_bits,
+                    (long long)dsp->diag_goertzel_block);
+            fprintf(stderr, "FLAG_FOUND last_bit=%d\n", dsp->last_bit);
             dsp->in_frame = 1;
             dsp->frame_buffer_pos = 0;
             dsp->bit_stuff_count = 0;
+            dsp->in_frame_bit_pos = 0;
+            dsp->in_frame_current_byte = 0;
             dsp->diag_flags_found++;
-            flag_pos = 0;
+            dsp->flag_pos = 0;
+            return;
         }
     } else {
-        flag_pos = (bit == flag_pattern[0]) ? 1 : 0;
+        fprintf(stderr, "FLAG_RESET at decoded=%lld bit=%d expected=%d\n",
+                (long long)dsp->diag_decoded_bits, bit,
+                flag_pattern[dsp->flag_pos]);
+        dsp->flag_pos = (bit == flag_pattern[0]) ? 1 : 0;
     }
 }
 
-/* Handle bit stuffing and byte accumulation when in frame. */
+/* Handle bit stuffing and byte accumulation while in-frame.
+ *
+ * Critical boundary condition:
+ * - Bit de-stuffing applies only to the payload bitstream between flags.
+ * - If a stuffed 0 is discarded while assembling a would-be flag byte, the
+ *   decoder slips by one bit and the next payload byte will be wrong (classic:
+ *   0x45 instead of 0x82 in the integration test).
+ *
+ * The implementation relies on preamble flush handling (0x7E with small
+ * frame_buffer_pos) to keep the byte boundary aligned before payload begins. */
 static void process_ax25_in_frame(struct aprs_sdr_dsp *dsp, int bit) {
-    static int bit_pos = 0;
-    static unsigned char current_byte = 0;
+    /* At top of process_ax25_in_frame, for first 20 bits of frame */
+    if (dsp->frame_buffer_pos == 0 && dsp->in_frame_bit_pos < 8) {
+        fprintf(stderr, "ASSEMBLE decoded=%lld bit=%d bit_pos=%d\n",
+                (long long)dsp->diag_decoded_bits, bit, dsp->in_frame_bit_pos);
+    }
+    if (dsp->frame_buffer_pos == 1 && dsp->in_frame_bit_pos < 8) {
+        fprintf(stderr, "ASSEMBLE2 decoded=%lld bit=%d bit_pos=%d\n",
+                (long long)dsp->diag_decoded_bits, bit, dsp->in_frame_bit_pos);
+    }
+    if (dsp->frame_buffer_pos == 0 && dsp->in_frame_bit_pos < 8) {
+        fprintf(stderr, "ASSEMBLE_POST_FLAG decoded=%lld bit=%d bit_pos=%d\n",
+                (long long)dsp->diag_decoded_bits, bit, dsp->in_frame_bit_pos);
+    }
+    if (dsp->frame_buffer_pos == 0 && dsp->in_frame_bit_pos == 0 && dsp->in_frame_current_byte == 0) {
+        fprintf(stderr, "ASSEMBLE_POST_FLAG_RESET decoded=%lld\n",
+                (long long)dsp->diag_decoded_bits);
+    }
+    if (dsp->frame_buffer_pos == 0 && dsp->in_frame_bit_pos < 8) {
+        fprintf(stderr, "ASSEMBLE_POST_FLAG_LAST decoded=%lld last_bit=%d\n",
+                (long long)dsp->diag_decoded_bits, dsp->last_bit);
+    }
 
-    if (dsp->bit_stuff_count == 5) {
-        if (bit != 0) {
-            dsp->in_frame = 0;
-            dsp->frame_buffer_pos = 0;
+    fprintf(stderr, "in_frame_bit: decoded=%lld bit=%d bit_pos=%d stuff=%d buf_pos=%d\n",
+            (long long)dsp->diag_decoded_bits,
+            bit,
+            dsp->in_frame_bit_pos,
+            dsp->bit_stuff_count,
+            dsp->frame_buffer_pos);
+
+    /* Bit-stuff removal */
+    if (bit == 1) {
+        dsp->bit_stuff_count++;
+    } else {
+        if (dsp->bit_stuff_count == 5) {
+            fprintf(stderr, "DISCARD stuffed zero at decoded=%lld bit_pos=%d\n",
+                    (long long)dsp->diag_decoded_bits,
+                    dsp->in_frame_bit_pos);
             dsp->bit_stuff_count = 0;
             return;
         }
         dsp->bit_stuff_count = 0;
-        return;
     }
-    if (bit == 1)
-        dsp->bit_stuff_count++;
-    else
-        dsp->bit_stuff_count = 0;
 
-    current_byte |= (bit << bit_pos);
-    bit_pos++;
-    if (bit_pos != 8)
-        return;
+    /* Place bit LSB first */
+    dsp->in_frame_current_byte |= (unsigned char)((bit & 1) << dsp->in_frame_bit_pos);
+    dsp->in_frame_bit_pos++;
 
-    /* We have assembled a complete byte (LSB-first) */
-    fprintf(stderr, "frame_byte[%d]=0x%02X (bit_pos=%d)\n", dsp->frame_buffer_pos, current_byte, bit_pos);
-    bit_pos = 0;
-    if (dsp->frame_buffer_pos >= dsp->frame_buffer_size) {
-        dsp->in_frame = 0;
-        dsp->frame_buffer_pos = 0;
-        current_byte = 0;
+    if (dsp->in_frame_bit_pos < 8) {
         return;
     }
-    dsp->frame_buffer[dsp->frame_buffer_pos++] = current_byte;
-    if (current_byte == 0x7E) {
-        if (dsp->frame_callback && dsp->frame_buffer_pos > 2)
-            dsp->frame_callback(dsp->frame_buffer, dsp->frame_buffer_pos - 2, dsp->frame_callback_user_data);
-        dsp->frames_decoded++;
-        dsp->in_frame = 0;
-        dsp->frame_buffer_pos = 0;
+
+    /* Byte complete */
+    unsigned char completed_byte = dsp->in_frame_current_byte;
+    dsp->in_frame_bit_pos = 0;
+    dsp->in_frame_current_byte = 0;
+
+    fprintf(stderr, "frame_byte[%d]=0x%02X (bit_pos=8)\n",
+            dsp->frame_buffer_pos, completed_byte);
+
+    if (completed_byte == 0x7E) {
+        if (dsp->frame_buffer_pos >= 15) {
+            /* Closing flag */
+            dsp->diag_flags_found++;
+            if (dsp->frame_callback && dsp->frame_buffer_pos > 2) {
+                fprintf(stderr, "frame_callback: length=%d first4=%02X %02X %02X %02X\n",
+                        dsp->frame_buffer_pos - 2,
+                        dsp->frame_buffer[0], dsp->frame_buffer[1],
+                        dsp->frame_buffer[2], dsp->frame_buffer[3]);
+                dsp->frame_callback(dsp->frame_buffer,
+                                    dsp->frame_buffer_pos - 2,
+                                    dsp->frame_callback_user_data);
+            }
+            dsp->frames_decoded++;
+            dsp->in_frame = 0;
+            dsp->frame_buffer_pos = 0;
+            dsp->bit_stuff_count = 0;
+            dsp->in_frame_bit_pos = 0;
+            dsp->in_frame_current_byte = 0;
+        } else {
+            /* Preamble flag (flush):
+             * Reset byte assembly but stay in-frame so we can consume repeated
+             * 0x7E bytes until real payload arrives. */
+            dsp->frame_buffer_pos = 0;
+            dsp->bit_stuff_count = 0;
+            dsp->in_frame_bit_pos = 0;
+            dsp->in_frame_current_byte = 0;
+        }
+        return;
     }
-    current_byte = 0;
+
+    /* Normal payload byte */
+    if (dsp->frame_buffer_pos < dsp->frame_buffer_size) {
+        dsp->frame_buffer[dsp->frame_buffer_pos++] = completed_byte;
+    }
 }
 
 static void process_ax25_bit(struct aprs_sdr_dsp *dsp, int bit) {
     static int bit_dump_count = 0;
+    if (dsp->in_frame && dsp->frame_buffer_pos == 0) {
+        fprintf(stderr, "AX25_BIT_INFRAME decoded=%lld bit=%d\n",
+                (long long)dsp->diag_decoded_bits, bit);
+    }
     if (bit_dump_count < 32) {
         fprintf(stderr, "DSP bit[%d]=%d\n", bit_dump_count, bit);
         bit_dump_count++;
@@ -306,11 +401,16 @@ struct aprs_sdr_dsp *aprs_sdr_dsp_new(const struct aprs_sdr_dsp_config *config) 
 
     dsp->bit_phase = 0;
     dsp->bit_accumulator = 0.0;
+    dsp->bit_audio_sum = 0.0;
+    dsp->bit_audio_count = 0;
     /* Assume idle NRZI line state is mark (1), so first transition (space) decodes as data 0. */
     dsp->last_bit = 1;
     dsp->in_frame = 0;
     dsp->frame_buffer_pos = 0;
     dsp->bit_stuff_count = 0;
+    dsp->flag_pos = 0;
+    dsp->in_frame_bit_pos = 0;
+    dsp->in_frame_current_byte = 0;
     dsp->frames_decoded = 0;
     dsp->bit_errors = 0;
 
@@ -337,6 +437,7 @@ struct aprs_sdr_dsp *aprs_sdr_dsp_new(const struct aprs_sdr_dsp_config *config) 
     dsp->diag_rf_samples = 0;
     dsp->diag_audio_samples = 0;
     dsp->diag_goertzel_blocks = 0;
+    dsp->diag_goertzel_block = 0;
     dsp->diag_raw_bits = 0;
     dsp->diag_decoded_bits = 0;
     dsp->diag_flags_found = 0;
@@ -417,23 +518,25 @@ int aprs_sdr_dsp_process_samples(struct aprs_sdr_dsp *dsp, const unsigned char *
 
         /* Now at an audio-rate sample. Compute phase difference vs previous
          * kept sample (prev_i/prev_q) and then update prev_* to this one. */
+        double audio_sample = 0.0;
         if (dsp->prev_i == 0.0 && dsp->prev_q == 0.0) {
+            /* Seed discriminator state without skipping a sample. */
             dsp->prev_i = base_i;
             dsp->prev_q = base_q;
-            continue;
-        }
-        /* c * conj(prev) using POST-downmix samples */
-        double re = base_i * dsp->prev_i + base_q * dsp->prev_q;
-        double im = base_q * dsp->prev_i - base_i * dsp->prev_q;
-        if (dsp->diag_audio_samples < 8) {
-            fprintf(stderr, "disc_check: prev_i=%.4f prev_q=%.4f base_i=%.4f base_q=%.4f\n",
-                    dsp->prev_i, dsp->prev_q, base_i, base_q);
-        }
-        dsp->prev_i = base_i;
-        dsp->prev_q = base_q;
+        } else {
+            /* c * conj(prev) using POST-downmix samples */
+            double re = base_i * dsp->prev_i + base_q * dsp->prev_q;
+            double im = base_q * dsp->prev_i - base_i * dsp->prev_q;
+            if (dsp->diag_audio_samples < 8) {
+                fprintf(stderr, "disc_check: prev_i=%.4f prev_q=%.4f base_i=%.4f base_q=%.4f\n",
+                        dsp->prev_i, dsp->prev_q, base_i, base_q);
+            }
+            dsp->prev_i = base_i;
+            dsp->prev_q = base_q;
 
-        /* Phase difference is proportional to instantaneous frequency deviation (audio sample) */
-        double audio_sample = atan2(im, re);
+            /* Phase difference is proportional to instantaneous frequency deviation (audio sample) */
+            audio_sample = atan2(im, re);
+        }
         if (dsp->diag_audio_samples < 8
             || (dsp->diag_audio_samples >= 280 && dsp->diag_audio_samples <= 285)) {
             double measured_freq = audio_sample * dsp->config.audio_sample_rate / (2.0 * M_PI);
@@ -444,21 +547,22 @@ int aprs_sdr_dsp_process_samples(struct aprs_sdr_dsp *dsp, const unsigned char *
                     dsp->prev_i, dsp->prev_q, audio_sample, measured_freq);
         }
 
-        /* Feed each audio sample into Goertzel; one decision per goertzel_block_size samples. */
+        /* One bit decision per symbol (40 audio samples @ 48 kHz / 1200 baud). */
         dsp->diag_audio_samples++;
-        goertzel_process_sample(dsp, audio_sample);
+        dsp->bit_audio_sum += audio_sample;
+        dsp->bit_audio_count++;
 
-        if (dsp->goertzel_sample_count >= dsp->goertzel_block_size) {
-            if (dsp->diag_goertzel_blocks < 4) {
-                fprintf(stderr, "Goertzel block[%lld] starts at RF sample %lld\n",
-                        (long long)dsp->diag_goertzel_blocks, dsp->diag_rf_samples);
-            }
-            int raw_bit = goertzel_get_bit(dsp);
-            if (dsp->diag_raw_bits < 32) {
-                fprintf(stderr, "raw_bit[%lld]=%d\n",
-                        (long long)dsp->diag_raw_bits, raw_bit);
-            }
+        if (dsp->bit_audio_count >= dsp->goertzel_block_size) {
+            double avg = dsp->bit_audio_sum / (double)dsp->bit_audio_count;
+            /* From verify output: mark ~= 0.17, space ~= 0.29 */
+            const double threshold = 0.23;
+            int raw_bit = (avg < threshold) ? 1 : 0; /* mark=1, space=0 */
             int decoded_bit = nrzi_decode(raw_bit, &dsp->last_bit);
+
+            dsp->bit_audio_sum = 0.0;
+            dsp->bit_audio_count = 0;
+
+            dsp->diag_goertzel_block++;
             dsp->diag_goertzel_blocks++;
             dsp->diag_raw_bits++;
             dsp->diag_decoded_bits++;

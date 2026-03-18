@@ -46,8 +46,9 @@ High level data flow
          the RF offset down to baseband.
        - Runs an FM discriminator to recover a Bell 202 audio stream at an
          audio-rate sample frequency.
-       - Uses Goertzel filters, bit timing and NRZI decoding to recover AX.25
-         bits and frames.
+       - Uses per-bit averaging of the discriminator output (40 audio samples
+         per bit at 48 kHz / 1200 baud) and a threshold to decide mark vs space,
+         then NRZI decoding to recover AX.25 bits and frames.
        - Calls ``aprs_sdr_frame_delivery_callback()`` with decoded AX.25
          frames.
 
@@ -235,8 +236,9 @@ APRS SDR plugin (RTL-SDR and DSP)
 
 * ``aprs_sdr_dsp_new()`` / ``aprs_sdr_dsp_process_samples()`` (``aprs_sdr_dsp.c``)
 
-  * Bell 202 demodulator; implements Goertzel filters, NRZI decoding and
-    AX.25 flag/bit-stuffing handling, then calls the frame callback.
+  * Bell 202 demodulator; implements mixing/DC blocking, FM discriminator,
+    discriminator-based bit decisions (per-bit averaging + threshold), NRZI
+    decoding and AX.25 flag/bit-stuffing handling, then calls the frame callback.
 
 
 OSD and commands

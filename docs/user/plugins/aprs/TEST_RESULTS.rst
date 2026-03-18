@@ -81,7 +81,7 @@ Tests Bell 202 demodulation and DSP operations.
 **Dependencies:**
 
 - GLib 2.0
-- Math library (for Goertzel filters)
+- Math library (for DSP math, e.g. ``sin/cos/atan2``)
 
 Running Tests
 -------------

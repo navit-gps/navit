@@ -79,7 +79,8 @@ The demodulation uses:
   DC spike and remove residual offsets.
 * An FM discriminator (phase-difference based) to produce an audio stream at a
   configurable audio sample rate (typically 48 kHz).
-* Goertzel filters at 1200 Hz and 2200 Hz for mark/space detection.
+* Per-bit averaging of the FM discriminator output (40 audio samples per bit at
+  48 kHz / 1200 baud) and a threshold to decide mark vs space.
 * Bit synchronization, NRZI decoding and AX.25 frame extraction with
   bit-stuffing handling.
 

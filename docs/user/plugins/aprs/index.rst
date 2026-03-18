@@ -9,15 +9,18 @@ Navit includes several plugins that extend its functionality:
    aprs
    aprs_test_results
    aprs_sdr
+   aprs_sdr_expected_decode
+   aprs_protocol_layers
 
 APRS Plugin
 -----------
 
 The APRS (Automatic Packet Reporting System) plugin provides real-time tracking of APRS stations on the map. It decodes APRS packets (Bell 202 / AX.25), stores station information in a SQLite database, and displays moving objects on the Navit map.
 
-See :doc:`aprs` for complete documentation.
+See:
 
-Test results: :doc:`aprs_test_results`
+- https://github.com/Supermagnum/navit/blob/feature/aprs-clean/docs/user/plugins/aprs/aprs.rst
+- https://github.com/Supermagnum/navit/blob/feature/aprs-clean/docs/user/plugins/aprs/aprs_test_results.rst
 
 APRS SDR Plugin
 ---------------
@@ -31,7 +34,9 @@ APRS plugin and supports common RTL-SDR devices, including:
 * Nooelec NESDR series
 * Generic RTL2832U-based dongles
 
-See :doc:`aprs_sdr` for complete documentation.
+See:
+
+- https://github.com/Supermagnum/navit/blob/feature/aprs-clean/docs/user/plugins/aprs/aprs_sdr.rst
 
 
 Additional APRS documentation
@@ -71,6 +76,15 @@ where to find functions and values relevant for debugging, see:
 * APRS/APRS SDR unit test results:
   https://github.com/Supermagnum/navit/blob/feature/aprs-clean/docs/user/plugins/aprs/TEST_RESULTS.rst
   (which unit tests exist for database, decoder and DSP, and what they verify)
+
+* APRS SDR protocol/layer overview and synthetic IQ generation:
+  https://github.com/Supermagnum/navit/blob/feature/aprs-clean/docs/user/plugins/aprs/aprs_protocol_layers.rst
+
+* APRS SDR expected decode pipeline output (reference log lines):
+  https://github.com/Supermagnum/navit/blob/feature/aprs-clean/docs/user/plugins/aprs/aprs_sdr_expected_decode.rst
+
+* SDR basics and RTL-SDR hardware artifacts (DC spike, IQ imbalance, IF offsets):
+  https://github.com/Supermagnum/navit/blob/feature/aprs-clean/docs/user/plugins/aprs/sdr_basics_and_rtlsdr_artifacts.rst
 
 * Logging guidelines for APRS/APRS SDR:
   https://github.com/Supermagnum/navit/blob/feature/aprs-clean/docs/user/plugins/aprs/how-to-log.rst
