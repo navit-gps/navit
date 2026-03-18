@@ -217,431 +217,431 @@ debug
 navit
 -----
 
-+-------------+-------------+-------------+-------------+---------------------------+
-| Attribute   | Units       | Values      | Notes       | Example                   |
-+=============+=============+=============+=============+===========================+
-| center      | coords      | ``DD.dd``   | | Map will  | ``center="4808 N 1134 E"``|
-|             |             | or          |   be        |                           |
-|             |             | ``DDMM.ss`` |   centred   |                           |
-|             |             |             |   at these  |                           |
-|             |             |             |             |                           |
-|             |             |             | coordinates |                           |
-|             |             |             |   on        |                           |
-|             |             |             |   startup.  |                           |
-|             |             |             |             |                           |
-|             |             |             | Coordinates |                           |
-|             |             |             |   are       |                           |
-|             |             |             |   either in |                           |
-|             |             |             |   decimal   |                           |
-|             |             |             |   degrees   |                           |
-|             |             |             |   (with     |                           |
-|             |             |             |   sign in   |                           |
-|             |             |             |   front to  |                           |
-|             |             |             |   denote    |                           |
-|             |             |             |   N/S or    |                           |
-|             |             |             |   E/W) or   |                           |
-|             |             |             |   decimal   |                           |
-|             |             |             |   minutes   |                           |
-|             |             |             |   with      |                           |
-|             |             |             |   trailing  |                           |
-|             |             |             |   N/S or    |                           |
-|             |             |             |   E/W where |                           |
-|             |             |             |   a         |                           |
-|             |             |             | ppropriate. |                           |
-|             |             |             | |           |                           |
-|             |             |             |  **Default: |                           |
-|             |             |             |   ``53.1    |                           |
-|             |             |             | 3 11.70``** |                           |
-+-------------+-------------+-------------+-------------+---------------------------+
-| orientation | degrees (or | 0-360 /     | | ``orienta | ``orientation="-1"``      |
-|             | -1)         | **-1**      | tion="0"``: |                           |
-|             |             |             |   Map       |                           |
-|             |             |             |   oriented  |                           |
-|             |             |             |   North.    |                           |
-|             |             |             | |           |                           |
-|             |             |             | ``orientati |                           |
-|             |             |             | on="180"``: |                           |
-|             |             |             |   Map       |                           |
-|             |             |             |   oriented  |                           |
-|             |             |             |   South.    |                           |
-|             |             |             | |           |                           |
-|             |             |             |  ``orientat |                           |
-|             |             |             | ion="-1"``: |                           |
-|             |             |             |   Map       |                           |
-|             |             |             |   oriented  |                           |
-|             |             |             |   in        |                           |
-|             |             |             |   direction |                           |
-|             |             |             |   of        |                           |
-|             |             |             |   travel.   |                           |
-|             |             |             | | This is   |                           |
-|             |             |             |             |                           |
-|             |             |             |  equivalent |                           |
-|             |             |             |   to        |                           |
-|             |             |             |   selecting |                           |
-|             |             |             |             |                           |
-|             |             |             | ``Settings  |                           |
-|             |             |             | -> Rules -> |                           |
-|             |             |             |  Northing`` |                           |
-|             |             |             |   in the    |                           |
-|             |             |             |   internal  |                           |
-|             |             |             |   gui.      |                           |
-+-------------+-------------+-------------+-------------+---------------------------+
-| tracking    |             | 0 / **1**   | | ``trac    | ``tracking="1"``          |
-|             |             |             | king="1"``: |                           |
-|             |             |             |   Vehicle   |                           |
-|             |             |             |   cursor    |                           |
-|             |             |             |   will lock |                           |
-|             |             |             |   to the    |                           |
-|             |             |             |   roads on  |                           |
-|             |             |             |   the map.  |                           |
-|             |             |             | | This is   |                           |
-|             |             |             |             |                           |
-|             |             |             |  equivalent |                           |
-|             |             |             |   to        |                           |
-|             |             |             |   selecting |                           |
-|             |             |             |   ``Se      |                           |
-|             |             |             | ttings -> R |                           |
-|             |             |             | ules -> Loc |                           |
-|             |             |             | k on road`` |                           |
-|             |             |             |   in the    |                           |
-|             |             |             |   internal  |                           |
-|             |             |             |   gui.      |                           |
-+-------------+-------------+-------------+-------------+---------------------------+
-| way         |             | **0** / 1   | | `         | ``waypoints_flag="1"``    |
-| points_flag |             |             | `waypoints_ |                           |
-|             |             |             | flag="1"``: |                           |
-|             |             |             |   Set       |                           |
-|             |             |             |             |                           |
-|             |             |             | destination |                           |
-|             |             |             |   will used |                           |
-|             |             |             |   to add    |                           |
-|             |             |             |   next      |                           |
-|             |             |             |   waypoint. |                           |
-|             |             |             |   Previous  |                           |
-|             |             |             |             |                           |
-|             |             |             | destination |                           |
-|             |             |             |   will not  |                           |
-|             |             |             |   deleted.  |                           |
-|             |             |             | | This is   |                           |
-|             |             |             |             |                           |
-|             |             |             |  equivalent |                           |
-|             |             |             |   to        |                           |
-|             |             |             |   selecting |                           |
-|             |             |             |             |                           |
-|             |             |             | ``Settings  |                           |
-|             |             |             | -> Rules -> |                           |
-|             |             |             |  Plan with  |                           |
-|             |             |             | waypoints`` |                           |
-|             |             |             |   in the    |                           |
-|             |             |             |   internal  |                           |
-|             |             |             |   gui.      |                           |
-+-------------+-------------+-------------+-------------+---------------------------+
-| zoom        |             | | 1 - ∞     | | ``        | ``zoom="50"``             |
-|             |             | | **256**   | zoom="1"``: |                           |
-|             |             |             |   Most      |                           |
-|             |             |             |   zoomed    |                           |
-|             |             |             |   in. Upper |                           |
-|             |             |             |   limit is  |                           |
-|             |             |             |   actually  |                           |
-|             |             |             |   2097152.  |                           |
-|             |             |             | | Map will  |                           |
-|             |             |             |   be zoomed |                           |
-|             |             |             |   in at     |                           |
-|             |             |             |   this      |                           |
-|             |             |             |   level on  |                           |
-|             |             |             |   startup.  |                           |
-+-------------+-------------+-------------+-------------+---------------------------+
-| auto        |             | **0** / 1   | | ``        | ``autozoom_active="1"``   |
-| zoom_active |             |             | autozoom_ac |                           |
-|             |             |             | tive="0"``: |                           |
-|             |             |             |   Autozoom  |                           |
-|             |             |             |   disabled. |                           |
-|             |             |             | | ``        |                           |
-|             |             |             | autozoom_ac |                           |
-|             |             |             | tive="1"``: |                           |
-|             |             |             |   Autozoom  |                           |
-|             |             |             |   enabled.  |                           |
-+-------------+-------------+-------------+-------------+---------------------------+
-| autozoom    | seconds     | | 1 - ∞     | | Number of | ``autozoom="60"``         |
-|             |             | | **10**    |   seconds   |                           |
-|             |             |             |   of the    |                           |
-|             |             |             |   way ahead |                           |
-|             |             |             |   to leave  |                           |
-|             |             |             |   visible   |                           |
-|             |             |             |   during    |                           |
-|             |             |             |   autozoom. |                           |
-|             |             |             | | In        |                           |
-|             |             |             |   effect,   |                           |
-|             |             |             |   this      |                           |
-|             |             |             |   specifies |                           |
-|             |             |             |   the zoom  |                           |
-|             |             |             |   level     |                           |
-|             |             |             |   when      |                           |
-|             |             |             |   autozoom  |                           |
-|             |             |             |   is        |                           |
-|             |             |             |   enabled.  |                           |
-|             |             |             | | ``aut     |                           |
-|             |             |             | ozoom="1"`` |                           |
-|             |             |             |   is        |                           |
-|             |             |             |   closest   |                           |
-|             |             |             |   zoom.     |                           |
-|             |             |             | | This      |                           |
-|             |             |             |   attribute |                           |
-|             |             |             |   has no    |                           |
-|             |             |             |   effect    |                           |
-|             |             |             |   without   |                           |
-|             |             |             |   ``        |                           |
-|             |             |             | autozoom_ac |                           |
-|             |             |             | tive="1"``. |                           |
-+-------------+-------------+-------------+-------------+---------------------------+
-| imperial    |             | **0**/1     | Use         | ``imperial="1"``          |
-|             |             |             | imperial    |                           |
-|             |             |             | units       |                           |
-|             |             |             | (miles,     |                           |
-|             |             |             | feet and    |                           |
-|             |             |             | miles       |                           |
-|             |             |             | -per-hour). |                           |
-|             |             |             | Only in     |                           |
-|             |             |             | Navit       |                           |
-|             |             |             | versions    |                           |
-|             |             |             | since .     |                           |
-+-------------+-------------+-------------+-------------+---------------------------+
-| osd_co      |             | **1** - 32  | Sets the    | ``osd_configuration="1"`` |
-| nfiguration |             |             | initial     |                           |
-|             |             |             | value of    |                           |
-|             |             |             | ```os       |                           |
-|             |             |             | d_configura |                           |
-|             |             |             | tion`` <OSD |                           |
-|             |             |             | #osd_config |                           |
-|             |             |             | uration>`__ |                           |
-|             |             |             | when Navit  |                           |
-|             |             |             | starts up.  |                           |
-+-------------+-------------+-------------+-------------+---------------------------+
-| pitch       | degrees     | 0 - 359     | | ``p       | ``pitch="20"``            |
-|             |             |             | itch="0"``: |                           |
-|             |             |             |             |                           |
-|             |             |             |  Bird's-eye |                           |
-|             |             |             |   view of   |                           |
-|             |             |             |   map.      |                           |
-|             |             |             | | ``pi      |                           |
-|             |             |             | tch="20"``: |                           |
-|             |             |             |   Map       |                           |
-|             |             |             |   tilted by |                           |
-|             |             |             |   20        |                           |
-|             |             |             |   degrees   |                           |
-|             |             |             |   to give   |                           |
-|             |             |             |   3D view.  |                           |
-|             |             |             | | ``pit     |                           |
-|             |             |             | ch="180"``: |                           |
-|             |             |             |   x-axis of |                           |
-|             |             |             |   the map   |                           |
-|             |             |             |   seems     |                           |
-|             |             |             |   inverted, |                           |
-|             |             |             |   since you |                           |
-|             |             |             |   are       |                           |
-|             |             |             |   seeing    |                           |
-|             |             |             |   the map   |                           |
-|             |             |             |   "from the |                           |
-|             |             |             |   bottom    |                           |
-|             |             |             |   up"       |                           |
-|             |             |             | | Values    |                           |
-|             |             |             |   between 0 |                           |
-|             |             |             |   and 85    |                           |
-|             |             |             |   are       |                           |
-|             |             |             |   r         |                           |
-|             |             |             | ecommended. |                           |
-+-------------+-------------+-------------+-------------+---------------------------+
-| radius      | percent     | | -50 - 50  | |           | ``radius="33"``           |
-|             |             | | **30**    |  Percentage |                           |
-|             |             |             |   of screen |                           |
-|             |             |             |   size to   |                           |
-|             |             |             |   offset    |                           |
-|             |             |             |   vehicle   |                           |
-|             |             |             |   cursor    |                           |
-|             |             |             |   from      |                           |
-|             |             |             |   centre    |                           |
-|             |             |             |   when      |                           |
-|             |             |             |   moving.   |                           |
-|             |             |             | | ``r       |                           |
-|             |             |             | adius="0"`` |                           |
-|             |             |             |   places    |                           |
-|             |             |             |   the       |                           |
-|             |             |             |   vehicle   |                           |
-|             |             |             |   cursor in |                           |
-|             |             |             |   the       |                           |
-|             |             |             |   center of |                           |
-|             |             |             |   the map.  |                           |
-|             |             |             | | ``ra      |                           |
-|             |             |             | dius="50"`` |                           |
-|             |             |             |   places    |                           |
-|             |             |             |   the       |                           |
-|             |             |             |   vehicle   |                           |
-|             |             |             |   cursor on |                           |
-|             |             |             |   the edge  |                           |
-|             |             |             |   of the    |                           |
-|             |             |             |   screen,   |                           |
-|             |             |             |   showing   |                           |
-|             |             |             |   only the  |                           |
-|             |             |             |   map in    |                           |
-|             |             |             |   front of  |                           |
-|             |             |             |   you       |                           |
-|             |             |             | | ``rad     |                           |
-|             |             |             | ius="-50"`` |                           |
-|             |             |             |   places    |                           |
-|             |             |             |   the       |                           |
-|             |             |             |   vehicle   |                           |
-|             |             |             |   cursor on |                           |
-|             |             |             |   the edge  |                           |
-|             |             |             |   of the    |                           |
-|             |             |             |   screen,   |                           |
-|             |             |             |   showing   |                           |
-|             |             |             |   only the  |                           |
-|             |             |             |   map       |                           |
-|             |             |             |   behind    |                           |
-|             |             |             |   you       |                           |
-|             |             |             | | Higher    |                           |
-|             |             |             |   values    |                           |
-|             |             |             |   cause the |                           |
-|             |             |             |   map to    |                           |
-|             |             |             |   "lead"    |                           |
-|             |             |             |   the       |                           |
-|             |             |             |   vehicle,  |                           |
-|             |             |             |   showing   |                           |
-|             |             |             |   more of   |                           |
-|             |             |             |   where     |                           |
-|             |             |             |   you're    |                           |
-|             |             |             |   going and |                           |
-|             |             |             |   less of   |                           |
-|             |             |             |   where     |                           |
-|             |             |             |   you've    |                           |
-|             |             |             |   been.     |                           |
-|             |             |             |   Values    |                           |
-|             |             |             |   less than |                           |
-|             |             |             |   -50 or    |                           |
-|             |             |             |   more than |                           |
-|             |             |             |   50 are    |                           |
-|             |             |             |   possible, |                           |
-|             |             |             |   but the   |                           |
-|             |             |             |   vehicle   |                           |
-|             |             |             |   cursor    |                           |
-|             |             |             |   will be   |                           |
-|             |             |             |   placed    |                           |
-|             |             |             |   out of    |                           |
-|             |             |             |   the       |                           |
-|             |             |             |   screen    |                           |
-|             |             |             |   area.     |                           |
-+-------------+-------------+-------------+-------------+---------------------------+
-| recent_dest |             | | 1 - ∞     | | Number of | ``recent_dest="20"``      |
-|             |             | | **10**    |   entries   |                           |
-|             |             |             |   kept in   |                           |
-|             |             |             |   desti     |                           |
-|             |             |             | nation.txt. |                           |
-|             |             |             |   This text |                           |
-|             |             |             |   file      |                           |
-|             |             |             |   stores    |                           |
-|             |             |             |   the most  |                           |
-|             |             |             |   recent    |                           |
-|             |             |             |   d         |                           |
-|             |             |             | estinations |                           |
-|             |             |             |   set by    |                           |
-|             |             |             |   the user  |                           |
-|             |             |             |   in Navit. |                           |
-|             |             |             | | Defaults  |                           |
-|             |             |             |   to ∞, if  |                           |
-|             |             |             |   tag isn't |                           |
-|             |             |             |   set.      |                           |
-+-------------+-------------+-------------+-------------+---------------------------+
-| timeout     | gps updates | | 1 - ∞     | When the    | ``timeout="5"``           |
-|             |             | | **10**    | user        |                           |
-|             |             |             | scrolls the |                           |
-|             |             |             | map, it     |                           |
-|             |             |             | stays       |                           |
-|             |             |             | there.      |                           |
-|             |             |             | After       |                           |
-|             |             |             | ``timeout`` |                           |
-|             |             |             | number of   |                           |
-|             |             |             | GPS updates |                           |
-|             |             |             | the map     |                           |
-|             |             |             | jumps back  |                           |
-|             |             |             | to the      |                           |
-|             |             |             | current     |                           |
-|             |             |             | location of |                           |
-|             |             |             | the active  |                           |
-|             |             |             | vehicle.    |                           |
-|             |             |             | Since most  |                           |
-|             |             |             | GPS-modules |                           |
-|             |             |             | have an     |                           |
-|             |             |             | update rate |                           |
-|             |             |             | of 1Hz,     |                           |
-|             |             |             | "gps        |                           |
-|             |             |             | updates" is |                           |
-|             |             |             | likely to   |                           |
-|             |             |             | be          |                           |
-|             |             |             | equivalent  |                           |
-|             |             |             | to          |                           |
-|             |             |             | "seconds"   |                           |
-|             |             |             | (see )      |                           |
-+-------------+-------------+-------------+-------------+---------------------------+
-| fo          |             | 0/**1**     | | 1 = Map   | ``follow_cursor="0"``     |
-| llow_cursor |             |             |   will      |                           |
-|             |             |             |   au        |                           |
-|             |             |             | tomatically |                           |
-|             |             |             |   scroll to |                           |
-|             |             |             |   follow    |                           |
-|             |             |             |   the       |                           |
-|             |             |             |   cursor    |                           |
-|             |             |             |   (active   |                           |
-|             |             |             |   vehicle). |                           |
-|             |             |             |   0 = Map   |                           |
-|             |             |             |   will not  |                           |
-|             |             |             |   follow    |                           |
-|             |             |             |   the       |                           |
-|             |             |             |   cursor.   |                           |
-|             |             |             | | This is   |                           |
-|             |             |             |             |                           |
-|             |             |             |  equivalent |                           |
-|             |             |             |   to        |                           |
-|             |             |             |   selecting |                           |
-|             |             |             |             |                           |
-|             |             |             | ``Settings  |                           |
-|             |             |             | -> Rules -> |                           |
-|             |             |             |  Map follow |                           |
-|             |             |             | s Vehicle`` |                           |
-|             |             |             |   in the    |                           |
-|             |             |             |   internal  |                           |
-|             |             |             |   gui.      |                           |
-|             |             |             | | Note:     |                           |
-|             |             |             |   When      |                           |
-|             |             |             |   setting   |                           |
-|             |             |             |   this to   |                           |
-|             |             |             |   0, you    |                           |
-|             |             |             |   can still |                           |
-|             |             |             |   jump to   |                           |
-|             |             |             |   the       |                           |
-|             |             |             |   cursor    |                           |
-|             |             |             |   position  |                           |
-|             |             |             |   by        |                           |
-|             |             |             |   calling   |                           |
-|             |             |             |   the       |                           |
-|             |             |             |   `Navit    |                           |
-|             |             |             |   command < |                           |
-|             |             |             | OSD#Navit_c |                           |
-|             |             |             | ommands>`__ |                           |
-|             |             |             |   ``        |                           |
-|             |             |             | set_center_ |                           |
-|             |             |             | cursor()``, |                           |
-|             |             |             |   for       |                           |
-|             |             |             |   example   |                           |
-|             |             |             |   via an    |                           |
-|             |             |             |   OSD       |                           |
-|             |             |             |   button    |                           |
-|             |             |             |   with      |                           |
-|             |             |             |             |                           |
-|             |             |             |  ``command= |                           |
-|             |             |             | "follow=0;s |                           |
-|             |             |             | et_center_c |                           |
-|             |             |             | ursor()"``. |                           |
-+-------------+-------------+-------------+-------------+---------------------------+
++-------------------+-------------+-------------+-------------+---------------------------+
+| Attribute         | Units       | Values      | Notes       | Example                   |
++===================+=============+=============+=============+===========================+
+| center            | coords      | ``DD.dd``   | | Map will  | ``center="4808 N 1134 E"``|
+|                   |             | or          |   be        |                           |
+|                   |             | ``DDMM.ss`` |   centred   |                           |
+|                   |             |             |   at these  |                           |
+|                   |             |             |             |                           |
+|                   |             |             | coordinates |                           |
+|                   |             |             |   on        |                           |
+|                   |             |             |   startup.  |                           |
+|                   |             |             |             |                           |
+|                   |             |             | Coordinates |                           |
+|                   |             |             |   are       |                           |
+|                   |             |             |   either in |                           |
+|                   |             |             |   decimal   |                           |
+|                   |             |             |   degrees   |                           |
+|                   |             |             |   (with     |                           |
+|                   |             |             |   sign in   |                           |
+|                   |             |             |   front to  |                           |
+|                   |             |             |   denote    |                           |
+|                   |             |             |   N/S or    |                           |
+|                   |             |             |   E/W) or   |                           |
+|                   |             |             |   decimal   |                           |
+|                   |             |             |   minutes   |                           |
+|                   |             |             |   with      |                           |
+|                   |             |             |   trailing  |                           |
+|                   |             |             |   N/S or    |                           |
+|                   |             |             |   E/W where |                           |
+|                   |             |             |   a         |                           |
+|                   |             |             | ppropriate. |                           |
+|                   |             |             | |           |                           |
+|                   |             |             |  **Default: |                           |
+|                   |             |             |   ``53.1    |                           |
+|                   |             |             | 3 11.70``** |                           |
++-------------------+-------------+-------------+-------------+---------------------------+
+| orientation       | degrees (or | 0-360 /     | | ``orienta | ``orientation="-1"``      |
+|                   | -1)         | **-1**      | tion="0"``: |                           |
+|                   |             |             |   Map       |                           |
+|                   |             |             |   oriented  |                           |
+|                   |             |             |   North.    |                           |
+|                   |             |             | |           |                           |
+|                   |             |             | ``orientati |                           |
+|                   |             |             | on="180"``: |                           |
+|                   |             |             |   Map       |                           |
+|                   |             |             |   oriented  |                           |
+|                   |             |             |   South.    |                           |
+|                   |             |             | |           |                           |
+|                   |             |             |  ``orientat |                           |
+|                   |             |             | ion="-1"``: |                           |
+|                   |             |             |   Map       |                           |
+|                   |             |             |   oriented  |                           |
+|                   |             |             |   in        |                           |
+|                   |             |             |   direction |                           |
+|                   |             |             |   of        |                           |
+|                   |             |             |   travel.   |                           |
+|                   |             |             | | This is   |                           |
+|                   |             |             |             |                           |
+|                   |             |             |  equivalent |                           |
+|                   |             |             |   to        |                           |
+|                   |             |             |   selecting |                           |
+|                   |             |             |             |                           |
+|                   |             |             | ``Settings  |                           |
+|                   |             |             | -> Rules -> |                           |
+|                   |             |             |  Northing`` |                           |
+|                   |             |             |   in the    |                           |
+|                   |             |             |   internal  |                           |
+|                   |             |             |   gui.      |                           |
++-------------------+-------------+-------------+-------------+---------------------------+
+| tracking          |             | 0 / **1**   | | ``trac    | ``tracking="1"``          |
+|                   |             |             | king="1"``: |                           |
+|                   |             |             |   Vehicle   |                           |
+|                   |             |             |   cursor    |                           |
+|                   |             |             |   will lock |                           |
+|                   |             |             |   to the    |                           |
+|                   |             |             |   roads on  |                           |
+|                   |             |             |   the map.  |                           |
+|                   |             |             | | This is   |                           |
+|                   |             |             |             |                           |
+|                   |             |             |  equivalent |                           |
+|                   |             |             |   to        |                           |
+|                   |             |             |   selecting |                           |
+|                   |             |             |   ``Se      |                           |
+|                   |             |             | ttings -> R |                           |
+|                   |             |             | ules -> Loc |                           |
+|                   |             |             | k on road`` |                           |
+|                   |             |             |   in the    |                           |
+|                   |             |             |   internal  |                           |
+|                   |             |             |   gui.      |                           |
++-------------------+-------------+-------------+-------------+---------------------------+
+| waypoints_flag    |             | **0** / 1   | | `         | ``waypoints_flag="1"``    |
+|                   |             |             | `waypoints_ |                           |
+|                   |             |             | flag="1"``: |                           |
+|                   |             |             |   Set       |                           |
+|                   |             |             |             |                           |
+|                   |             |             | destination |                           |
+|                   |             |             |   will used |                           |
+|                   |             |             |   to add    |                           |
+|                   |             |             |   next      |                           |
+|                   |             |             |   waypoint. |                           |
+|                   |             |             |   Previous  |                           |
+|                   |             |             |             |                           |
+|                   |             |             | destination |                           |
+|                   |             |             |   will not  |                           |
+|                   |             |             |   deleted.  |                           |
+|                   |             |             | | This is   |                           |
+|                   |             |             |             |                           |
+|                   |             |             |  equivalent |                           |
+|                   |             |             |   to        |                           |
+|                   |             |             |   selecting |                           |
+|                   |             |             |             |                           |
+|                   |             |             | ``Settings  |                           |
+|                   |             |             | -> Rules -> |                           |
+|                   |             |             |  Plan with  |                           |
+|                   |             |             | waypoints`` |                           |
+|                   |             |             |   in the    |                           |
+|                   |             |             |   internal  |                           |
+|                   |             |             |   gui.      |                           |
++-------------------+-------------+-------------+-------------+---------------------------+
+| zoom              |             | | 1 - ∞     | | ``        | ``zoom="50"``             |
+|                   |             | | **256**   | zoom="1"``: |                           |
+|                   |             |             |   Most      |                           |
+|                   |             |             |   zoomed    |                           |
+|                   |             |             |   in. Upper |                           |
+|                   |             |             |   limit is  |                           |
+|                   |             |             |   actually  |                           |
+|                   |             |             |   2097152.  |                           |
+|                   |             |             | | Map will  |                           |
+|                   |             |             |   be zoomed |                           |
+|                   |             |             |   in at     |                           |
+|                   |             |             |   this      |                           |
+|                   |             |             |   level on  |                           |
+|                   |             |             |   startup.  |                           |
++-------------------+-------------+-------------+-------------+---------------------------+
+| autozoom_active   |             | **0** / 1   | | ``        | ``autozoom_active="1"``   |
+|                   |             |             | autozoom_ac |                           |
+|                   |             |             | tive="0"``: |                           |
+|                   |             |             |   Autozoom  |                           |
+|                   |             |             |   disabled. |                           |
+|                   |             |             | | ``        |                           |
+|                   |             |             | autozoom_ac |                           |
+|                   |             |             | tive="1"``: |                           |
+|                   |             |             |   Autozoom  |                           |
+|                   |             |             |   enabled.  |                           |
++-------------------+-------------+-------------+-------------+---------------------------+
+| autozoom          | seconds     | | 1 - ∞     | | Number of | ``autozoom="60"``         |
+|                   |             | | **10**    |   seconds   |                           |
+|                   |             |             |   of the    |                           |
+|                   |             |             |   way ahead |                           |
+|                   |             |             |   to leave  |                           |
+|                   |             |             |   visible   |                           |
+|                   |             |             |   during    |                           |
+|                   |             |             |   autozoom. |                           |
+|                   |             |             | | In        |                           |
+|                   |             |             |   effect,   |                           |
+|                   |             |             |   this      |                           |
+|                   |             |             |   specifies |                           |
+|                   |             |             |   the zoom  |                           |
+|                   |             |             |   level     |                           |
+|                   |             |             |   when      |                           |
+|                   |             |             |   autozoom  |                           |
+|                   |             |             |   is        |                           |
+|                   |             |             |   enabled.  |                           |
+|                   |             |             | | ``aut     |                           |
+|                   |             |             | ozoom="1"`` |                           |
+|                   |             |             |   is        |                           |
+|                   |             |             |   closest   |                           |
+|                   |             |             |   zoom.     |                           |
+|                   |             |             | | This      |                           |
+|                   |             |             |   attribute |                           |
+|                   |             |             |   has no    |                           |
+|                   |             |             |   effect    |                           |
+|                   |             |             |   without   |                           |
+|                   |             |             |   ``        |                           |
+|                   |             |             | autozoom_ac |                           |
+|                   |             |             | tive="1"``. |                           |
++-------------------+-------------+-------------+-------------+---------------------------+
+| imperial          |             | **0**/1     | Use         | ``imperial="1"``          |
+|                   |             |             | imperial    |                           |
+|                   |             |             | units       |                           |
+|                   |             |             | (miles,     |                           |
+|                   |             |             | feet and    |                           |
+|                   |             |             | miles       |                           |
+|                   |             |             | -per-hour). |                           |
+|                   |             |             | Only in     |                           |
+|                   |             |             | Navit       |                           |
+|                   |             |             | versions    |                           |
+|                   |             |             | since .     |                           |
++-------------------+-------------+-------------+-------------+---------------------------+
+| osd_configuration |             | **1** - 32  | Sets the    | ``osd_configuration="1"`` |
+|                   |             |             | initial     |                           |
+|                   |             |             | value of    |                           |
+|                   |             |             | ```os       |                           |
+|                   |             |             | d_configura |                           |
+|                   |             |             | tion`` <OSD |                           |
+|                   |             |             | #osd_config |                           |
+|                   |             |             | uration>`__ |                           |
+|                   |             |             | when Navit  |                           |
+|                   |             |             | starts up.  |                           |
++-------------------+-------------+-------------+-------------+---------------------------+
+| pitch             | degrees     | 0 - 359     | | ``p       | ``pitch="20"``            |
+|                   |             |             | itch="0"``: |                           |
+|                   |             |             |             |                           |
+|                   |             |             |  Bird's-eye |                           |
+|                   |             |             |   view of   |                           |
+|                   |             |             |   map.      |                           |
+|                   |             |             | | ``pi      |                           |
+|                   |             |             | tch="20"``: |                           |
+|                   |             |             |   Map       |                           |
+|                   |             |             |   tilted by |                           |
+|                   |             |             |   20        |                           |
+|                   |             |             |   degrees   |                           |
+|                   |             |             |   to give   |                           |
+|                   |             |             |   3D view.  |                           |
+|                   |             |             | | ``pit     |                           |
+|                   |             |             | ch="180"``: |                           |
+|                   |             |             |   x-axis of |                           |
+|                   |             |             |   the map   |                           |
+|                   |             |             |   seems     |                           |
+|                   |             |             |   inverted, |                           |
+|                   |             |             |   since you |                           |
+|                   |             |             |   are       |                           |
+|                   |             |             |   seeing    |                           |
+|                   |             |             |   the map   |                           |
+|                   |             |             |   "from the |                           |
+|                   |             |             |   bottom    |                           |
+|                   |             |             |   up"       |                           |
+|                   |             |             | | Values    |                           |
+|                   |             |             |   between 0 |                           |
+|                   |             |             |   and 85    |                           |
+|                   |             |             |   are       |                           |
+|                   |             |             |   r         |                           |
+|                   |             |             | ecommended. |                           |
++-------------------+-------------+-------------+-------------+---------------------------+
+| radius            | percent     | | -50 - 50  | |           | ``radius="33"``           |
+|                   |             | | **30**    |  Percentage |                           |
+|                   |             |             |   of screen |                           |
+|                   |             |             |   size to   |                           |
+|                   |             |             |   offset    |                           |
+|                   |             |             |   vehicle   |                           |
+|                   |             |             |   cursor    |                           |
+|                   |             |             |   from      |                           |
+|                   |             |             |   centre    |                           |
+|                   |             |             |   when      |                           |
+|                   |             |             |   moving.   |                           |
+|                   |             |             | | ``r       |                           |
+|                   |             |             | adius="0"`` |                           |
+|                   |             |             |   places    |                           |
+|                   |             |             |   the       |                           |
+|                   |             |             |   vehicle   |                           |
+|                   |             |             |   cursor in |                           |
+|                   |             |             |   the       |                           |
+|                   |             |             |   center of |                           |
+|                   |             |             |   the map.  |                           |
+|                   |             |             | | ``ra      |                           |
+|                   |             |             | dius="50"`` |                           |
+|                   |             |             |   places    |                           |
+|                   |             |             |   the       |                           |
+|                   |             |             |   vehicle   |                           |
+|                   |             |             |   cursor on |                           |
+|                   |             |             |   the edge  |                           |
+|                   |             |             |   of the    |                           |
+|                   |             |             |   screen,   |                           |
+|                   |             |             |   showing   |                           |
+|                   |             |             |   only the  |                           |
+|                   |             |             |   map in    |                           |
+|                   |             |             |   front of  |                           |
+|                   |             |             |   you       |                           |
+|                   |             |             | | ``rad     |                           |
+|                   |             |             | ius="-50"`` |                           |
+|                   |             |             |   places    |                           |
+|                   |             |             |   the       |                           |
+|                   |             |             |   vehicle   |                           |
+|                   |             |             |   cursor on |                           |
+|                   |             |             |   the edge  |                           |
+|                   |             |             |   of the    |                           |
+|                   |             |             |   screen,   |                           |
+|                   |             |             |   showing   |                           |
+|                   |             |             |   only the  |                           |
+|                   |             |             |   map       |                           |
+|                   |             |             |   behind    |                           |
+|                   |             |             |   you       |                           |
+|                   |             |             | | Higher    |                           |
+|                   |             |             |   values    |                           |
+|                   |             |             |   cause the |                           |
+|                   |             |             |   map to    |                           |
+|                   |             |             |   "lead"    |                           |
+|                   |             |             |   the       |                           |
+|                   |             |             |   vehicle,  |                           |
+|                   |             |             |   showing   |                           |
+|                   |             |             |   more of   |                           |
+|                   |             |             |   where     |                           |
+|                   |             |             |   you're    |                           |
+|                   |             |             |   going and |                           |
+|                   |             |             |   less of   |                           |
+|                   |             |             |   where     |                           |
+|                   |             |             |   you've    |                           |
+|                   |             |             |   been.     |                           |
+|                   |             |             |   Values    |                           |
+|                   |             |             |   less than |                           |
+|                   |             |             |   -50 or    |                           |
+|                   |             |             |   more than |                           |
+|                   |             |             |   50 are    |                           |
+|                   |             |             |   possible, |                           |
+|                   |             |             |   but the   |                           |
+|                   |             |             |   vehicle   |                           |
+|                   |             |             |   cursor    |                           |
+|                   |             |             |   will be   |                           |
+|                   |             |             |   placed    |                           |
+|                   |             |             |   out of    |                           |
+|                   |             |             |   the       |                           |
+|                   |             |             |   screen    |                           |
+|                   |             |             |   area.     |                           |
++-------------------+-------------+-------------+-------------+---------------------------+
+| recent_dest       |             | | 1 - ∞     | | Number of | ``recent_dest="20"``      |
+|                   |             | | **10**    |   entries   |                           |
+|                   |             |             |   kept in   |                           |
+|                   |             |             |   desti     |                           |
+|                   |             |             | nation.txt. |                           |
+|                   |             |             |   This text |                           |
+|                   |             |             |   file      |                           |
+|                   |             |             |   stores    |                           |
+|                   |             |             |   the most  |                           |
+|                   |             |             |   recent    |                           |
+|                   |             |             |   d         |                           |
+|                   |             |             | estinations |                           |
+|                   |             |             |   set by    |                           |
+|                   |             |             |   the user  |                           |
+|                   |             |             |   in Navit. |                           |
+|                   |             |             | | Defaults  |                           |
+|                   |             |             |   to ∞, if  |                           |
+|                   |             |             |   tag isn't |                           |
+|                   |             |             |   set.      |                           |
++-------------------+-------------+-------------+-------------+---------------------------+
+| timeout           | gps updates | | 1 - ∞     | When the    | ``timeout="5"``           |
+|                   |             | | **10**    | user        |                           |
+|                   |             |             | scrolls the |                           |
+|                   |             |             | map, it     |                           |
+|                   |             |             | stays       |                           |
+|                   |             |             | there.      |                           |
+|                   |             |             | After       |                           |
+|                   |             |             | ``timeout`` |                           |
+|                   |             |             | number of   |                           |
+|                   |             |             | GPS updates |                           |
+|                   |             |             | the map     |                           |
+|                   |             |             | jumps back  |                           |
+|                   |             |             | to the      |                           |
+|                   |             |             | current     |                           |
+|                   |             |             | location of |                           |
+|                   |             |             | the active  |                           |
+|                   |             |             | vehicle.    |                           |
+|                   |             |             | Since most  |                           |
+|                   |             |             | GPS-modules |                           |
+|                   |             |             | have an     |                           |
+|                   |             |             | update rate |                           |
+|                   |             |             | of 1Hz,     |                           |
+|                   |             |             | "gps        |                           |
+|                   |             |             | updates" is |                           |
+|                   |             |             | likely to   |                           |
+|                   |             |             | be          |                           |
+|                   |             |             | equivalent  |                           |
+|                   |             |             | to          |                           |
+|                   |             |             | "seconds"   |                           |
+|                   |             |             | (see )      |                           |
++-------------------+-------------+-------------+-------------+---------------------------+
+| follow_cursor     |             | 0/**1**     | | 1 = Map   | ``follow_cursor="0"``     |
+|                   |             |             |   will      |                           |
+|                   |             |             |   au        |                           |
+|                   |             |             | tomatically |                           |
+|                   |             |             |   scroll to |                           |
+|                   |             |             |   follow    |                           |
+|                   |             |             |   the       |                           |
+|                   |             |             |   cursor    |                           |
+|                   |             |             |   (active   |                           |
+|                   |             |             |   vehicle). |                           |
+|                   |             |             |   0 = Map   |                           |
+|                   |             |             |   will not  |                           |
+|                   |             |             |   follow    |                           |
+|                   |             |             |   the       |                           |
+|                   |             |             |   cursor.   |                           |
+|                   |             |             | | This is   |                           |
+|                   |             |             |             |                           |
+|                   |             |             |  equivalent |                           |
+|                   |             |             |   to        |                           |
+|                   |             |             |   selecting |                           |
+|                   |             |             |             |                           |
+|                   |             |             | ``Settings  |                           |
+|                   |             |             | -> Rules -> |                           |
+|                   |             |             |  Map follow |                           |
+|                   |             |             | s Vehicle`` |                           |
+|                   |             |             |   in the    |                           |
+|                   |             |             |   internal  |                           |
+|                   |             |             |   gui.      |                           |
+|                   |             |             | | Note:     |                           |
+|                   |             |             |   When      |                           |
+|                   |             |             |   setting   |                           |
+|                   |             |             |   this to   |                           |
+|                   |             |             |   0, you    |                           |
+|                   |             |             |   can still |                           |
+|                   |             |             |   jump to   |                           |
+|                   |             |             |   the       |                           |
+|                   |             |             |   cursor    |                           |
+|                   |             |             |   position  |                           |
+|                   |             |             |   by        |                           |
+|                   |             |             |   calling   |                           |
+|                   |             |             |   the       |                           |
+|                   |             |             |   `Navit    |                           |
+|                   |             |             |   command < |                           |
+|                   |             |             | OSD#Navit_c |                           |
+|                   |             |             | ommands>`__ |                           |
+|                   |             |             |   ``        |                           |
+|                   |             |             | set_center_ |                           |
+|                   |             |             | cursor()``, |                           |
+|                   |             |             |   for       |                           |
+|                   |             |             |   example   |                           |
+|                   |             |             |   via an    |                           |
+|                   |             |             |   OSD       |                           |
+|                   |             |             |   button    |                           |
+|                   |             |             |   with      |                           |
+|                   |             |             |             |                           |
+|                   |             |             |  ``command= |                           |
+|                   |             |             | "follow=0;s |                           |
+|                   |             |             | et_center_c |                           |
+|                   |             |             | ursor()"``. |                           |
++-------------------+-------------+-------------+-------------+---------------------------+
 
 graphics
 --------
