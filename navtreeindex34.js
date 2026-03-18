@@ -1,6 +1,5 @@
 var NAVTREEINDEX34 =
 {
-"structgps__sat.html":[0,2,0,9,0],
 "structgps__sat.html":[0,2,0,2,0],
 "structgps__status.html":[2,0,122],
 "structgps__status.html#a30a0f4080c2b22c302725c0cd53cd971":[2,0,122,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX34 =
 "structgraphics__priv.html#a29915263994ffc735b6832f82bce8592":[2,0,140,133],
 "structgraphics__priv.html#a2d42fa46e9dcc636f66a651e0f17327f":[2,0,140,30],
 "structgraphics__priv.html#a2d572fa6bb305bf1870e38eb5e457f05":[2,0,140,2],
-"structgraphics__priv.html#a2dcbeaf1ede6fda8faaa940d62083b7c":[2,0,140,48]
+"structgraphics__priv.html#a2dcbeaf1ede6fda8faaa940d62083b7c":[2,0,140,48],
+"structgraphics__priv.html#a2defd2bcea6fafd634320bb39ee55164":[2,0,140,11]
 };

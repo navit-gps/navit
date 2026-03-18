@@ -1,6 +1,5 @@
 var NAVTREEINDEX42 =
 {
-"structroute__graph__point.html#a1127ea4456120f96cabb020b431c7dc4":[2,0,328,8],
 "structroute__graph__point.html#a2047932dbd1174018cabb25d15876665":[2,0,328,9],
 "structroute__graph__point.html#a29fc76a3d4fcfa78ccb61bd5aaf75555":[2,0,328,4],
 "structroute__graph__point.html#a6f1ac223fb31be643f9080e7004a9055":[2,0,328,7],
@@ -249,5 +248,6 @@ var NAVTREEINDEX42 =
 "structspeech__priv.html#ad5615554111588dfb1fb4ed6a5a5f6d2":[2,0,360,20],
 "structspeech__priv.html#ae0e850f80a013cad640bdc05d9443be5":[2,0,360,16],
 "structspeech__priv.html#aec7e763754a46095e3a6ec93a09ee595":[2,0,360,6],
-"structspeech__priv.html#af35628554664222c75209e0f748a6089":[2,0,360,15]
+"structspeech__priv.html#af35628554664222c75209e0f748a6089":[2,0,360,15],
+"structstatusbar__priv.html":[2,0,361]
 };

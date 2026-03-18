@@ -1,6 +1,5 @@
 var NAVTREEINDEX47 =
 {
-"town_8c.html#ad51681841ab743884a141fb074c07690":[3,0,6,5,5,0],
 "town_8c.html#adeb0279e86436e1191b805431fba9e72":[3,0,6,5,5,10],
 "town_8c.html#aee5890e8af9890e286702bcebeaf187b":[3,0,6,5,5,8],
 "track_8c.html":[3,0,130],
@@ -249,5 +248,6 @@ var NAVTREEINDEX47 =
 "traffic_8h.html#a430b444c74dd3fd1472a31714ec5f1cea3dfbea2dc025a466c24368aa876a312f":[3,0,133,9,19],
 "traffic_8h.html#a430b444c74dd3fd1472a31714ec5f1cea46e2937c7f2781962adb730a52b5ff14":[3,0,133,9,20],
 "traffic_8h.html#a430b444c74dd3fd1472a31714ec5f1cea4a39f29c5be37438f009eeeeb6b02cb3":[3,0,133,9,33],
-"traffic_8h.html#a430b444c74dd3fd1472a31714ec5f1cea4a631677f2552612fc8cf53e88adb69f":[3,0,133,9,17]
+"traffic_8h.html#a430b444c74dd3fd1472a31714ec5f1cea4a631677f2552612fc8cf53e88adb69f":[3,0,133,9,17],
+"traffic_8h.html#a430b444c74dd3fd1472a31714ec5f1cea4b5fe35debed1964a0290eb5074bf283":[3,0,133,9,54]
 };

@@ -147,7 +147,6 @@ var route_8c =
     [ "street_data_dup", "route_8c.html#a742e9787a1e369f3a2ae775adca783b8", null ],
     [ "street_data_free", "route_8c.html#abbb407c7b7f4e713736961d6b6c121f0", null ],
     [ "street_get_data", "route_8c.html#a4733a41d784e1c9ef685fde457bdc94b", null ],
-    [ "debug_route", "route_8c.html#a2ce0d27052b039e875248c6359a968e5", null ],
     [ "methods_point_item", "route_8c.html#a6558a96ed6a9fc7b8ed849c1c15535c0", null ],
     [ "methods_route_item", "route_8c.html#a89cbb1b131f51c1186a0b28270e2203f", null ],
     [ "route_func", "route_8c.html#a44e68e38b75a73288198f97c5971aa04", null ],
