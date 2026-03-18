@@ -1301,6 +1301,7 @@ void route_remove_waypoint(struct route *this) {
         route_path_destroy(path, 0);
         if (!this->destinations) {
             this->route_status = route_status_no_destination;
+            dbg(lvl_debug, "route_status set to: %i", this->route_status);
             this->reached_destinations_count = 0;
             return;
         }
@@ -2712,16 +2713,11 @@ void route_recalculate_partial(struct route *this_) {
         return;
 
     route_status.type = attr_route_status;
-
     route_status.u.num = route_status_building_graph;
     route_set_attr(this_, &route_status);
-
-    printf("Expanding points which have changed\n");
-
+    dbg(lvl_error, "Expanding points which have changed");
     route_graph_compute_shortest_path(this_->graph, this_->vehicleprofile, NULL);
-
-    printf("Point expansion complete, recalculating route path\n");
-
+    dbg(lvl_error, "Point expansion complete, recalculating route path");
     route_path_update_done(this_, 0);
 }
 
@@ -3843,8 +3839,7 @@ static void rm_rect_destroy(struct map_rect_priv *mr) {
     }
     if (mr->path) {
         mr->path->in_use--;
-        if (mr->path->update_required && (mr->path->in_use == 1)
-            && (mr->mpriv->route->route_status & ~route_status_destination_set))
+        if (mr->path->update_required && (mr->path->in_use == 1) && (mr->mpriv->route->route_status & ~route_status_destination_set))
             route_path_update_done(mr->mpriv->route, mr->path->update_required - 1);
         else if (!mr->path->in_use)
             g_free(mr->path);
@@ -4171,8 +4166,11 @@ int route_set_attr(struct route *this_, struct attr *attr) {
     int attr_updated = 0;
     switch (attr->type) {
     case attr_route_status:
+        dbg(lvl_debug, "current route_status = %i", this_->route_status);
         attr_updated = (this_->route_status != attr->u.num);
         this_->route_status = attr->u.num;
+        dbg(lvl_debug, "route_status set to: %i", attr->u.num);
+        dbg(lvl_debug, "attr_updated (0 or 1): %i", attr_updated);
         break;
     case attr_destination:
         route_set_destination(this_, attr->u.pcoord, 1);
@@ -4184,6 +4182,7 @@ int route_set_attr(struct route *this_, struct attr *attr) {
         return route_set_position_flags(this_, attr->u.pcoord, route_path_flag_no_rebuild);
     case attr_vehicle:
         attr_updated = (this_->v != attr->u.vehicle);
+        dbg(lvl_debug, "vehicle attribute attr_updated: %i", attr_updated);
         this_->v = attr->u.vehicle;
         if (attr_updated) {
             struct attr g;
@@ -4274,9 +4273,7 @@ int route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, 
         attr->u.num = this_->route_status;
         break;
     case attr_destination_time:
-        if (this_->path2
-            && (this_->route_status == route_status_path_done_new
-                || this_->route_status == route_status_path_done_incremental)) {
+        if (this_->path2 && (this_->route_status == route_status_path_done_new || this_->route_status == route_status_path_done_incremental)) {
             struct route_path *path = this_->path2;
             attr->u.num = 0;
             while (path) {
@@ -4288,9 +4285,7 @@ int route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, 
             ret = 0;
         break;
     case attr_destination_length:
-        if (this_->path2
-            && (this_->route_status == route_status_path_done_new
-                || this_->route_status == route_status_path_done_incremental)) {
+        if (this_->path2 && (this_->route_status == route_status_path_done_new || this_->route_status == route_status_path_done_incremental)) {
             struct route_path *path = this_->path2;
             attr->u.num = 0;
             while (path) {
