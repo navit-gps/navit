@@ -2208,43 +2208,6 @@ tags.
    |           |           |       | vit/map_i |           |         |
    |           |           |       | tems>`__. |           |         |
    +-----------+-----------+-------+-----------+-----------+---------+
-   | rou       | km/h      | 0 - ∞ | The       | ``ro      |         |
-   | te_weight |           |       | weighting | ute_weigh |         |
-   |           |           |       | which the | t="150"`` |         |
-   |           |           |       | routing   |           |         |
-   |           |           |       | algorithm |           |         |
-   |           |           |       | should    |           |         |
-   |           |           |       | give this |           |         |
-   |           |           |       | road      |           |         |
-   |           |           |       | type. A   |           |         |
-   |           |           |       | large     |           |         |
-   |           |           |       | ``route   |           |         |
-   |           |           |       | _weight`` |           |         |
-   |           |           |       | will      |           |         |
-   |           |           |       | force the |           |         |
-   |           |           |       | routing   |           |         |
-   |           |           |       | algorithm |           |         |
-   |           |           |       | to choose |           |         |
-   |           |           |       | that road |           |         |
-   |           |           |       | type over |           |         |
-   |           |           |       | others    |           |         |
-   |           |           |       | when      |           |         |
-   |           |           |       | ca        |           |         |
-   |           |           |       | lculating |           |         |
-   |           |           |       | a route.  |           |         |
-   |           |           |       | This      |           |         |
-   |           |           |       | value is  |           |         |
-   |           |           |       | also used |           |         |
-   |           |           |       | to        |           |         |
-   |           |           |       | calculate |           |         |
-   |           |           |       | the route |           |         |
-   |           |           |       | time      |           |         |
-   |           |           |       | remaining |           |         |
-   |           |           |       | IF        |           |         |
-   |           |           |       | ``maxspe  |           |         |
-   |           |           |       | ed_handli |           |         |
-   |           |           |       | ng="2"``. |           |         |
-   +-----------+-----------+-------+-----------+-----------+---------+
    | speed     | km/h      | 0 - ∞ | Used      | ``spe     |         |
    |           |           |       | solely    | ed="50"`` |         |
    |           |           |       | for       |           |         |
