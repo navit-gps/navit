@@ -118,23 +118,26 @@ debug
 |              |       |                 | be appended |                        |
 |              |       |                 | with a colon|                        |
 |              |       |                 | (:). The    |                        |
-|              |       |                 | modules     |                        |
-|              |       |                 | correspond  |                        |
-|              |       |                 | to the      |                        |
-|              |       |                 | directories |                        |
-|              |       |                 | of Navit's  |                        |
-|              |       |                 | source code |                        |
-|              |       |                 | tree (the   |                        |
 |              |       |                 | module name |                        |
-|              |       |                 | is set in   |                        |
-|              |       |                 | the         |                        |
-|              |       |                 | Makefile.am |                        |
-|              |       |                 | in each     |                        |
-|              |       |                 | directory,  |                        |
-|              |       |                 | by a        |                        |
-|              |       |                 | statement   |                        |
-|              |       |                 | "-DM        |                        |
-|              |       |                 | ODULE=XXX").|                        |
+|              |       |                 | is defined  |                        |
+|              |       |                 | by the      |                        |
+|              |       |                 | module_add  |                        |
+|              |       |                 | _library()  |                        |
+|              |       |                 | call in each|                        |
+|              |       |                 | plugin's    |                        |
+|              |       |                 | CMakeLists  |                        |
+|              |       |                 | .txt file.  |                        |
+|              |       |                 | Common      |                        |
+|              |       |                 | examples:   |                        |
+|              |       |                 | navit,      |                        |
+|              |       |                 | gui_internal|                        |
+|              |       |                 | , map_      |                        |
+|              |       |                 | binfile,    |                        |
+|              |       |                 | speech_     |                        |
+|              |       |                 | speech_     |                        |
+|              |       |                 | dispatcher, |                        |
+|              |       |                 | vehicle_    |                        |
+|              |       |                 | gpsd.       |                        |
 |              |       |                 | A           |                        |
 |              |       |                 | dditionally,|                        |
 |              |       |                 | there are   |                        |
