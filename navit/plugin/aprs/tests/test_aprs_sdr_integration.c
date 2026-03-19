@@ -8,8 +8,8 @@
  * with aprs_decode_ax25() to verify end-to-end correctness without hardware.
  */
 
-#include "../../aprs_sdr/aprs_sdr_dsp.h"
 #include "../../aprs/aprs_decode.h"
+#include "../../aprs_sdr/aprs_sdr_dsp.h"
 #include "../../debug.h"
 
 #include <glib.h>
@@ -21,7 +21,7 @@
 #include <time.h>
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846
+#    define M_PI 3.14159265358979323846
 #endif
 
 /* Stub for debug_printf and max_debug_level for unit tests */
@@ -39,12 +39,12 @@ void debug_printf(dbg_level level, const char *module, const int mlen, const cha
     /* No-op in tests */
 }
 
-#define TEST_ASSERT(condition, message)                                                                                 \
-    do {                                                                                                                \
-        if (!(condition)) {                                                                                             \
-            fprintf(stderr, "FAIL: %s:%d: %s\n", __FILE__, __LINE__, (message));                                        \
-            return 1;                                                                                                   \
-        }                                                                                                               \
+#define TEST_ASSERT(condition, message)                                                                                \
+    do {                                                                                                               \
+        if (!(condition)) {                                                                                            \
+            fprintf(stderr, "FAIL: %s:%d: %s\n", __FILE__, __LINE__, (message));                                       \
+            return 1;                                                                                                  \
+        }                                                                                                              \
     } while (0)
 
 struct test_frame_accumulator {
@@ -226,9 +226,7 @@ static GArray *nrzi_encode_bits(const GArray *bits) {
             state ^= 1;
         }
         if (i < 16) {
-            fprintf(stderr,
-                    "NRZI encode: i=%d data=%d state_before=%d state_after=%d\n",
-                    i, b, state_before, state);
+            fprintf(stderr, "NRZI encode: i=%d data=%d state_before=%d state_after=%d\n", i, b, state_before, state);
         }
         g_array_append_val(encoded, state);
     }
@@ -253,14 +251,8 @@ static double gaussian_noise(double stddev) {
 /**
  * Emit one noisy IQ sample into the interleaved buffer and advance phase and index.
  */
-static void write_noisy_iq_sample(unsigned char *iq,
-                                  int *sample_index,
-                                  double rf_freq,
-                                  int rf_sample_rate,
-                                  double noise_std,
-                                  double *phase,
-                                  int log_window_start,
-                                  int log_window_end) {
+static void write_noisy_iq_sample(unsigned char *iq, int *sample_index, double rf_freq, int rf_sample_rate,
+                                  double noise_std, double *phase, int log_window_start, int log_window_end) {
     int idx = *sample_index;
     double phase_inc = 2.0 * M_PI * rf_freq / (double)rf_sample_rate;
     double ci = cos(*phase);
@@ -343,8 +335,7 @@ static unsigned char *generate_fsk_iq(const GArray *nrzi_bits, int *out_len, dou
             rf_sample_rate);
     if (total_bits > 7) {
         unsigned char b7 = g_array_index((GArray *)nrzi_bits, unsigned char, 7);
-        fprintf(stderr, "Encoder NRZI bit 7 = %d, starts at RF sample %d\n",
-                b7, 7 * samples_per_bit);
+        fprintf(stderr, "Encoder NRZI bit 7 = %d, starts at RF sample %d\n", b7, 7 * samples_per_bit);
     }
     const int total_audio_samples = total_bits * audio_per_bit;
     int audio_remainder = total_audio_samples % 40;
@@ -362,8 +353,7 @@ static unsigned char *generate_fsk_iq(const GArray *nrzi_bits, int *out_len, dou
 
     /* Report where the first few bits start in RF sample indices. */
     for (int b = 0; b < 4; b++) {
-        fprintf(stderr, "Encoder bit[%d] starts at RF sample %d\n",
-                b, b * samples_per_bit);
+        fprintf(stderr, "Encoder bit[%d] starts at RF sample %d\n", b, b * samples_per_bit);
     }
 
     /* Seed noise deterministically for reproducible tests. */
@@ -375,34 +365,20 @@ static unsigned char *generate_fsk_iq(const GArray *nrzi_bits, int *out_len, dou
         double audio_freq = line ? mark_freq : space_freq;
         double rf_freq = if_offset_hz + audio_freq;
         if (i >= 6 && i <= 8) {
-            fprintf(stderr,
-                    "Encoder bit[%d]: nrzi=%d audio_freq=%.0f rf_freq=%.0f\n",
-                    (int)i, line, audio_freq, rf_freq);
+            fprintf(stderr, "Encoder bit[%d]: nrzi=%d audio_freq=%.0f rf_freq=%.0f\n", (int)i, line, audio_freq,
+                    rf_freq);
         }
         for (int j = 0; j < samples_per_bit; j++) {
-            write_noisy_iq_sample(iq,
-                                  &sample_index,
-                                  rf_freq,
-                                  rf_sample_rate,
-                                  noise_std,
-                                  &phase,
-                                  155,
-                                  165);
+            write_noisy_iq_sample(iq, &sample_index, rf_freq, rf_sample_rate, noise_std, &phase, 155, 165);
         }
     }
 
     /* Pad with idle mark tone to complete any partial 40-sample audio block. */
     while (sample_index < total_samples) {
         double rf_freq_pad = if_offset_hz + mark_freq;
-        write_noisy_iq_sample(iq,
-                              &sample_index,
-                              rf_freq_pad,
-                              rf_sample_rate,
-                              noise_std,
-                              &phase,
+        write_noisy_iq_sample(iq, &sample_index, rf_freq_pad, rf_sample_rate, noise_std, &phase,
                               /* logging disabled for padding region */
-                              -1,
-                              -1);
+                              -1, -1);
     }
 
     /* Pad to multiple of 4 bytes with trailing zero-IQ (128,128). */
@@ -472,8 +448,7 @@ static int run_dsp_and_decode(double if_offset_hz, int expect_success) {
             aprs_packet_free(&pkt_check);
             goto cleanup;
         }
-        fprintf(stderr,
-                "Synthetic AX.25 pre-DSP decode: src=%s dest=%s info=%s\n",
+        fprintf(stderr, "Synthetic AX.25 pre-DSP decode: src=%s dest=%s info=%s\n",
                 pkt_check.source_callsign ? pkt_check.source_callsign : "(null)",
                 pkt_check.destination_callsign ? pkt_check.destination_callsign : "(null)",
                 pkt_check.information_field ? pkt_check.information_field : "(null)");
@@ -490,13 +465,9 @@ static int run_dsp_and_decode(double if_offset_hz, int expect_success) {
         const int closing_flag = 1;
         const int total_bits = (int)bits->len;
         const int payload_bit_count = total_bits - (num_preamble_flags + opening_flag + closing_flag) * 8;
-        fprintf(stderr,
-                "ENC: preamble_flags=%d opening_flag=1 payload_bits=%d closing_flag=1 total=%d\n",
-                num_preamble_flags,
-                payload_bit_count,
-                total_bits);
-        fprintf(stderr, "ENC: opening_flag_starts_at_nrzi=%d payload_starts_at_nrzi=%d\n",
-                num_preamble_flags * 8,
+        fprintf(stderr, "ENC: preamble_flags=%d opening_flag=1 payload_bits=%d closing_flag=1 total=%d\n",
+                num_preamble_flags, payload_bit_count, total_bits);
+        fprintf(stderr, "ENC: opening_flag_starts_at_nrzi=%d payload_starts_at_nrzi=%d\n", num_preamble_flags * 8,
                 num_preamble_flags * 8 + 8);
 
         fprintf(stderr, "ENC_DATA bits 0-199: ");
@@ -581,14 +552,8 @@ static int run_dsp_and_decode(double if_offset_hz, int expect_success) {
         int idx_m = m * 2;
         int nrzi = (b >= 0 && b < (int)nrzi_bits->len) ? (int)g_array_index(nrzi_bits, unsigned char, b) : -1;
         if (idx_s + 1 < iq_len && idx_m + 1 < iq_len) {
-            fprintf(stderr,
-                    "ENC_IQ blk[%d]: start I=%u Q=%u  mid I=%u Q=%u  nrzi=%d\n",
-                    b,
-                    (unsigned)iq[idx_s],
-                    (unsigned)iq[idx_s + 1],
-                    (unsigned)iq[idx_m],
-                    (unsigned)iq[idx_m + 1],
-                    nrzi);
+            fprintf(stderr, "ENC_IQ blk[%d]: start I=%u Q=%u  mid I=%u Q=%u  nrzi=%d\n", b, (unsigned)iq[idx_s],
+                    (unsigned)iq[idx_s + 1], (unsigned)iq[idx_m], (unsigned)iq[idx_m + 1], nrzi);
         } else {
             fprintf(stderr, "ENC_IQ blk[%d]: out_of_range (iq_len=%d)\n", b, iq_len);
         }
@@ -596,24 +561,15 @@ static int run_dsp_and_decode(double if_offset_hz, int expect_success) {
 
     /* After generating the IQ buffer, print IQ samples at bit boundaries. */
     for (int b = 127; b <= 137; b++) {
-        int sample_start = b * 160;      /* 160 RF samples per bit */
+        int sample_start = b * 160;         /* 160 RF samples per bit */
         int sample_mid = sample_start + 80; /* middle of bit period */
         int idx0 = sample_start * 2;
         int idx1 = sample_mid * 2;
         if (idx0 + 1 < iq_len && idx1 + 1 < iq_len) {
-            fprintf(stderr,
-                    "ENC_IQ bit[%d]: sample[%d] I=%u Q=%u  sample[%d] I=%u Q=%u\n",
-                    b,
-                    sample_start,
-                    (unsigned)iq[idx0],
-                    (unsigned)iq[idx0 + 1],
-                    sample_mid,
-                    (unsigned)iq[idx1],
-                    (unsigned)iq[idx1 + 1]);
+            fprintf(stderr, "ENC_IQ bit[%d]: sample[%d] I=%u Q=%u  sample[%d] I=%u Q=%u\n", b, sample_start,
+                    (unsigned)iq[idx0], (unsigned)iq[idx0 + 1], sample_mid, (unsigned)iq[idx1], (unsigned)iq[idx1 + 1]);
         } else {
-            fprintf(stderr,
-                    "ENC_IQ bit[%d]: out_of_range (iq_len=%d)\n",
-                    b, iq_len);
+            fprintf(stderr, "ENC_IQ bit[%d]: out_of_range (iq_len=%d)\n", b, iq_len);
         }
     }
 
@@ -621,8 +577,7 @@ static int run_dsp_and_decode(double if_offset_hz, int expect_success) {
     fprintf(stderr, "IQ raw bytes around bit 7 boundary:\n");
     for (int n = 1118; n <= 1132; n++) {
         if (n * 2 + 1 < iq_len) {
-            fprintf(stderr, "RF[%d]: I=%d Q=%d\n",
-                    n, (int)iq[n * 2], (int)iq[n * 2 + 1]);
+            fprintf(stderr, "RF[%d]: I=%d Q=%d\n", n, (int)iq[n * 2], (int)iq[n * 2 + 1]);
         }
     }
 
@@ -639,9 +594,7 @@ static int run_dsp_and_decode(double if_offset_hz, int expect_success) {
     {
         int total_bits = (int)nrzi_bits->len;
         int expected_iq_len = total_bits * 160 * 2; /* 160 RF samples/bit, I+Q bytes */
-        fprintf(stderr,
-                "Calling aprs_sdr_dsp_process_samples with iq_len=%d (expected %d)\n",
-                iq_len, expected_iq_len);
+        fprintf(stderr, "Calling aprs_sdr_dsp_process_samples with iq_len=%d (expected %d)\n", iq_len, expected_iq_len);
     }
 
     aprs_sdr_dsp_set_frame_callback(dsp, test_frame_callback, &acc);
@@ -670,8 +623,7 @@ static int run_dsp_and_decode(double if_offset_hz, int expect_success) {
             rc = 1;
             goto cleanup;
         }
-        if (!packet.information_field
-            || strcmp(packet.information_field, "!5132.00N/00007.00W-Test") != 0) {
+        if (!packet.information_field || strcmp(packet.information_field, "!5132.00N/00007.00W-Test") != 0) {
             fprintf(stderr, "Information field must match synthetic payload (got '%s')\n",
                     packet.information_field ? packet.information_field : "(null)");
             rc = 1;
@@ -736,4 +688,3 @@ int main(void) {
     printf("%d test(s) failed\n", failures);
     return 1;
 }
-

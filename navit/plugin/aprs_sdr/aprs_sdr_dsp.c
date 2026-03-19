@@ -161,8 +161,7 @@ static G_GNUC_UNUSED void goertzel_process_sample(struct aprs_sdr_dsp *dsp, doub
 
     /* For block 7 diagnostics, dump first few inputs. */
     if (dsp->diag_goertzel_blocks == 7 && dsp->goertzel_sample_count <= 3) {
-        fprintf(stderr, "goertzel_input[blk7,sample%d]=%.6f\n",
-                dsp->goertzel_sample_count - 1, sample);
+        fprintf(stderr, "goertzel_input[blk7,sample%d]=%.6f\n", dsp->goertzel_sample_count - 1, sample);
     }
 }
 
@@ -182,13 +181,13 @@ static G_GNUC_UNUSED int goertzel_get_bit(struct aprs_sdr_dsp *dsp) {
     static int goertzel_dump = 0;
     int raw_bit = (mark_power > space_power) ? 1 : 0;
     if (goertzel_dump < 16) {
-        fprintf(stderr, "goertzel[%d]: mark_power=%.6f space_power=%.6f raw_bit=%d\n",
-                goertzel_dump, mark_power, space_power, raw_bit);
+        fprintf(stderr, "goertzel[%d]: mark_power=%.6f space_power=%.6f raw_bit=%d\n", goertzel_dump, mark_power,
+                space_power, raw_bit);
         goertzel_dump++;
     }
     if (dsp->diag_goertzel_blocks >= 5 && dsp->diag_goertzel_blocks <= 10) {
-        fprintf(stderr, "goertzel_blk[%lld]: mark=%.6f space=%.6f raw=%d\n",
-                (long long)dsp->diag_goertzel_blocks, mark_power, space_power, raw_bit);
+        fprintf(stderr, "goertzel_blk[%lld]: mark=%.6f space=%.6f raw=%d\n", (long long)dsp->diag_goertzel_blocks,
+                mark_power, space_power, raw_bit);
     }
     return raw_bit;
 }
@@ -211,16 +210,14 @@ static int nrzi_decode(int bit, int *last_bit) {
 static void process_ax25_flag_search(struct aprs_sdr_dsp *dsp, int bit) {
     static int flag_pattern[] = {0, 1, 1, 1, 1, 1, 1, 0};
 
-    fprintf(stderr, "FLAG_SEARCH decoded=%lld bit=%d flag_pos=%d\n",
-            (long long)dsp->diag_decoded_bits, bit, dsp->flag_pos);
+    fprintf(stderr, "FLAG_SEARCH decoded=%lld bit=%d flag_pos=%d\n", (long long)dsp->diag_decoded_bits, bit,
+            dsp->flag_pos);
 
     if (bit == flag_pattern[dsp->flag_pos]) {
         dsp->flag_pos++;
         if (dsp->flag_pos == 8) {
-            fprintf(stderr, "FLAG_FOUND at decoded=%lld\n",
-                    (long long)dsp->diag_decoded_bits);
-            fprintf(stderr, "FLAG_FOUND at decoded=%lld goertzel_blk=%lld\n",
-                    (long long)dsp->diag_decoded_bits,
+            fprintf(stderr, "FLAG_FOUND at decoded=%lld\n", (long long)dsp->diag_decoded_bits);
+            fprintf(stderr, "FLAG_FOUND at decoded=%lld goertzel_blk=%lld\n", (long long)dsp->diag_decoded_bits,
                     (long long)dsp->diag_goertzel_block);
             fprintf(stderr, "FLAG_FOUND last_bit=%d\n", dsp->last_bit);
             dsp->in_frame = 1;
@@ -233,8 +230,7 @@ static void process_ax25_flag_search(struct aprs_sdr_dsp *dsp, int bit) {
             return;
         }
     } else {
-        fprintf(stderr, "FLAG_RESET at decoded=%lld bit=%d expected=%d\n",
-                (long long)dsp->diag_decoded_bits, bit,
+        fprintf(stderr, "FLAG_RESET at decoded=%lld bit=%d expected=%d\n", (long long)dsp->diag_decoded_bits, bit,
                 flag_pattern[dsp->flag_pos]);
         dsp->flag_pos = (bit == flag_pattern[0]) ? 1 : 0;
     }
@@ -253,40 +249,34 @@ static void process_ax25_flag_search(struct aprs_sdr_dsp *dsp, int bit) {
 static void process_ax25_in_frame(struct aprs_sdr_dsp *dsp, int bit) {
     /* At top of process_ax25_in_frame, for first 20 bits of frame */
     if (dsp->frame_buffer_pos == 0 && dsp->in_frame_bit_pos < 8) {
-        fprintf(stderr, "ASSEMBLE decoded=%lld bit=%d bit_pos=%d\n",
-                (long long)dsp->diag_decoded_bits, bit, dsp->in_frame_bit_pos);
+        fprintf(stderr, "ASSEMBLE decoded=%lld bit=%d bit_pos=%d\n", (long long)dsp->diag_decoded_bits, bit,
+                dsp->in_frame_bit_pos);
     }
     if (dsp->frame_buffer_pos == 1 && dsp->in_frame_bit_pos < 8) {
-        fprintf(stderr, "ASSEMBLE2 decoded=%lld bit=%d bit_pos=%d\n",
-                (long long)dsp->diag_decoded_bits, bit, dsp->in_frame_bit_pos);
+        fprintf(stderr, "ASSEMBLE2 decoded=%lld bit=%d bit_pos=%d\n", (long long)dsp->diag_decoded_bits, bit,
+                dsp->in_frame_bit_pos);
     }
     if (dsp->frame_buffer_pos == 0 && dsp->in_frame_bit_pos < 8) {
-        fprintf(stderr, "ASSEMBLE_POST_FLAG decoded=%lld bit=%d bit_pos=%d\n",
-                (long long)dsp->diag_decoded_bits, bit, dsp->in_frame_bit_pos);
+        fprintf(stderr, "ASSEMBLE_POST_FLAG decoded=%lld bit=%d bit_pos=%d\n", (long long)dsp->diag_decoded_bits, bit,
+                dsp->in_frame_bit_pos);
     }
     if (dsp->frame_buffer_pos == 0 && dsp->in_frame_bit_pos == 0 && dsp->in_frame_current_byte == 0) {
-        fprintf(stderr, "ASSEMBLE_POST_FLAG_RESET decoded=%lld\n",
-                (long long)dsp->diag_decoded_bits);
+        fprintf(stderr, "ASSEMBLE_POST_FLAG_RESET decoded=%lld\n", (long long)dsp->diag_decoded_bits);
     }
     if (dsp->frame_buffer_pos == 0 && dsp->in_frame_bit_pos < 8) {
-        fprintf(stderr, "ASSEMBLE_POST_FLAG_LAST decoded=%lld last_bit=%d\n",
-                (long long)dsp->diag_decoded_bits, dsp->last_bit);
+        fprintf(stderr, "ASSEMBLE_POST_FLAG_LAST decoded=%lld last_bit=%d\n", (long long)dsp->diag_decoded_bits,
+                dsp->last_bit);
     }
 
     fprintf(stderr, "in_frame_bit: decoded=%lld bit=%d bit_pos=%d stuff=%d buf_pos=%d\n",
-            (long long)dsp->diag_decoded_bits,
-            bit,
-            dsp->in_frame_bit_pos,
-            dsp->bit_stuff_count,
-            dsp->frame_buffer_pos);
+            (long long)dsp->diag_decoded_bits, bit, dsp->in_frame_bit_pos, dsp->bit_stuff_count, dsp->frame_buffer_pos);
 
     /* Bit-stuff removal */
     if (bit == 1) {
         dsp->bit_stuff_count++;
     } else {
         if (dsp->bit_stuff_count == 5) {
-            fprintf(stderr, "DISCARD stuffed zero at decoded=%lld bit_pos=%d\n",
-                    (long long)dsp->diag_decoded_bits,
+            fprintf(stderr, "DISCARD stuffed zero at decoded=%lld bit_pos=%d\n", (long long)dsp->diag_decoded_bits,
                     dsp->in_frame_bit_pos);
             dsp->bit_stuff_count = 0;
             return;
@@ -307,21 +297,16 @@ static void process_ax25_in_frame(struct aprs_sdr_dsp *dsp, int bit) {
     dsp->in_frame_bit_pos = 0;
     dsp->in_frame_current_byte = 0;
 
-    fprintf(stderr, "frame_byte[%d]=0x%02X (bit_pos=8)\n",
-            dsp->frame_buffer_pos, completed_byte);
+    fprintf(stderr, "frame_byte[%d]=0x%02X (bit_pos=8)\n", dsp->frame_buffer_pos, completed_byte);
 
     if (completed_byte == 0x7E) {
         if (dsp->frame_buffer_pos >= 15) {
             /* Closing flag */
             dsp->diag_flags_found++;
             if (dsp->frame_callback && dsp->frame_buffer_pos > 2) {
-                fprintf(stderr, "frame_callback: length=%d first4=%02X %02X %02X %02X\n",
-                        dsp->frame_buffer_pos - 2,
-                        dsp->frame_buffer[0], dsp->frame_buffer[1],
-                        dsp->frame_buffer[2], dsp->frame_buffer[3]);
-                dsp->frame_callback(dsp->frame_buffer,
-                                    dsp->frame_buffer_pos - 2,
-                                    dsp->frame_callback_user_data);
+                fprintf(stderr, "frame_callback: length=%d first4=%02X %02X %02X %02X\n", dsp->frame_buffer_pos - 2,
+                        dsp->frame_buffer[0], dsp->frame_buffer[1], dsp->frame_buffer[2], dsp->frame_buffer[3]);
+                dsp->frame_callback(dsp->frame_buffer, dsp->frame_buffer_pos - 2, dsp->frame_callback_user_data);
             }
             dsp->frames_decoded++;
             dsp->in_frame = 0;
@@ -350,15 +335,13 @@ static void process_ax25_in_frame(struct aprs_sdr_dsp *dsp, int bit) {
 static void process_ax25_bit(struct aprs_sdr_dsp *dsp, int bit) {
     static int bit_dump_count = 0;
     if (dsp->in_frame && dsp->frame_buffer_pos == 0) {
-        fprintf(stderr, "AX25_BIT_INFRAME decoded=%lld bit=%d\n",
-                (long long)dsp->diag_decoded_bits, bit);
+        fprintf(stderr, "AX25_BIT_INFRAME decoded=%lld bit=%d\n", (long long)dsp->diag_decoded_bits, bit);
     }
     if (bit_dump_count < 32) {
         fprintf(stderr, "DSP bit[%d]=%d\n", bit_dump_count, bit);
         bit_dump_count++;
     }
-    fprintf(stderr, "ax25_bit: pos=%lld bit=%d in_frame=%d\n",
-            (long long)dsp->diag_decoded_bits, bit, dsp->in_frame);
+    fprintf(stderr, "ax25_bit: pos=%lld bit=%d in_frame=%d\n", (long long)dsp->diag_decoded_bits, bit, dsp->in_frame);
     if (!dsp->in_frame) {
         process_ax25_flag_search(dsp, bit);
         return;
@@ -453,8 +436,7 @@ struct aprs_sdr_dsp *aprs_sdr_dsp_new(const struct aprs_sdr_dsp_config *config) 
         /* Mix DOWN by IF offset to bring APRS channel from RF center
          * (APRS + if_offset) to baseband. */
         dsp->mixer_phase_inc = -2.0 * M_PI * dsp->config.if_offset_hz / (double)dsp->config.rf_sample_rate;
-        fprintf(stderr,
-                "mixer: phase_inc=%.10f if_offset=%.0f rf_rate=%d expected_phase_inc=%.10f\n",
+        fprintf(stderr, "mixer: phase_inc=%.10f if_offset=%.0f rf_rate=%d expected_phase_inc=%.10f\n",
                 dsp->mixer_phase_inc, dsp->config.if_offset_hz, dsp->config.rf_sample_rate,
                 -2.0 * M_PI * dsp->config.if_offset_hz / (double)dsp->config.rf_sample_rate);
     } else {
@@ -475,8 +457,7 @@ struct aprs_sdr_dsp *aprs_sdr_dsp_new(const struct aprs_sdr_dsp_config *config) 
     dsp->diag_decoded_bits = 0;
     dsp->diag_flags_found = 0;
 
-    fprintf(stderr,
-            "DSP created: mark_freq=%.0f space_freq=%.0f if_offset=%.0f rf_rate=%d audio_rate=%d\n",
+    fprintf(stderr, "DSP created: mark_freq=%.0f space_freq=%.0f if_offset=%.0f rf_rate=%d audio_rate=%d\n",
             dsp->config.mark_freq, dsp->config.space_freq, dsp->config.if_offset_hz, dsp->config.rf_sample_rate,
             dsp->config.audio_sample_rate);
 
@@ -520,8 +501,8 @@ int aprs_sdr_dsp_process_samples(struct aprs_sdr_dsp *dsp, const unsigned char *
         double cos_phase = cos(dsp->mixer_phase);
         double sin_phase = sin(dsp->mixer_phase);
         if (dsp->diag_rf_samples < 4) {
-            fprintf(stderr, "mixer_phase[%lld]=%.6f cos=%.4f sin=%.4f\n",
-                    (long long)dsp->diag_rf_samples, dsp->mixer_phase, cos_phase, sin_phase);
+            fprintf(stderr, "mixer_phase[%lld]=%.6f cos=%.4f sin=%.4f\n", (long long)dsp->diag_rf_samples,
+                    dsp->mixer_phase, cos_phase, sin_phase);
         }
         double base_i = i_sample * cos_phase - q_sample * sin_phase;
         double base_q = i_sample * sin_phase + q_sample * cos_phase;
@@ -561,8 +542,8 @@ int aprs_sdr_dsp_process_samples(struct aprs_sdr_dsp *dsp, const unsigned char *
             double re = base_i * dsp->prev_i + base_q * dsp->prev_q;
             double im = base_q * dsp->prev_i - base_i * dsp->prev_q;
             if (dsp->diag_audio_samples < 8) {
-                fprintf(stderr, "disc_check: prev_i=%.4f prev_q=%.4f base_i=%.4f base_q=%.4f\n",
-                        dsp->prev_i, dsp->prev_q, base_i, base_q);
+                fprintf(stderr, "disc_check: prev_i=%.4f prev_q=%.4f base_i=%.4f base_q=%.4f\n", dsp->prev_i,
+                        dsp->prev_q, base_i, base_q);
             }
             dsp->prev_i = base_i;
             dsp->prev_q = base_q;
@@ -570,14 +551,13 @@ int aprs_sdr_dsp_process_samples(struct aprs_sdr_dsp *dsp, const unsigned char *
             /* Phase difference is proportional to instantaneous frequency deviation (audio sample) */
             audio_sample = atan2(im, re);
         }
-        if (dsp->diag_audio_samples < 8
-            || (dsp->diag_audio_samples >= 280 && dsp->diag_audio_samples <= 285)) {
+        if (dsp->diag_audio_samples < 8 || (dsp->diag_audio_samples >= 280 && dsp->diag_audio_samples <= 285)) {
             double measured_freq = audio_sample * dsp->config.audio_sample_rate / (2.0 * M_PI);
             fprintf(stderr,
                     "verify[%lld]: base_i=%.4f base_q=%.4f prev_i=%.4f prev_q=%.4f "
                     "audio=%.6f freq=%.1fHz\n",
-                    (long long)dsp->diag_audio_samples, base_i, base_q,
-                    dsp->prev_i, dsp->prev_q, audio_sample, measured_freq);
+                    (long long)dsp->diag_audio_samples, base_i, base_q, dsp->prev_i, dsp->prev_q, audio_sample,
+                    measured_freq);
         }
 
         dsp->diag_audio_samples++;
@@ -663,4 +643,3 @@ int aprs_sdr_dsp_set_frame_callback(struct aprs_sdr_dsp *dsp, aprs_sdr_dsp_frame
     dsp->frame_callback_user_data = user_data;
     return 1;
 }
-
