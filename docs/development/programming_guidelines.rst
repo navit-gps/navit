@@ -14,7 +14,7 @@ Those enforce the coding style for our C and Java files. During this phase we ha
 * verification that the modified files don't contain trailing spaces.
   You can use `sed 's/\s*$//' -i "$f"` if you want to clean your files before pushing your PR.
 * verification that the style of our C and C++ code is respected using `clang-format`
-  (to the exception of the following folders: `navit/support/`, `navit/fib-1.1/`, `navit/traffic/permanentrestrictions/`).
+  (to the exception of the following folders: `navit/support/`, `navit/traffic/permanentrestrictions/`).
   You can format your files before pushing by running:
   `clang-format -i "${f}"`
 * check for compliance with the DTD using xmllint on the modified files. You can check this locally by using:
