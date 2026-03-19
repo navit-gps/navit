@@ -69,7 +69,10 @@ android {
             res.srcDirs = ["navit/android/res", layout.buildDirectory.file('generated/navit_generated/android/res').get().getAsFile()]
             assets.srcDirs =  ["navit/android/assets", layout.buildDirectory.file('generated/navit_generated/android/assets').get().getAsFile()]
 
-            }
+        }
+        release {
+            manifest.srcFile "navit/android/AndroidManifestRelease.xml"
+        }
     }
     externalNativeBuild {
         cmake {
