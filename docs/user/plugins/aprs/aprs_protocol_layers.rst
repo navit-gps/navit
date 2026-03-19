@@ -177,8 +177,9 @@ The SDR DSP then:
 - Applies DC blocking.
 - Runs a phase-difference FM discriminator to produce one audio sample per
   decimated sample.
-- Makes one bit decision per 40 audio samples by averaging discriminator output
-  and comparing to a threshold.
+- Tracks DC on the discriminator output, runs a bit-timing PLL, averages
+  DC-centered samples over each symbol (nominal 40 audio samples per bit), and
+  decides mark vs space with threshold **0.0** on that average.
 - NRZI-decodes and performs HDLC/AX.25 flag search, de-stuffing, and byte
   assembly, then calls the frame callback.
 

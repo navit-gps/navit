@@ -32,7 +32,8 @@ Plugin 2: ``aprs_sdr`` (SDR Plugin - Optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - **RTL-SDR Hardware Interface**: Direct access to RTL-SDR dongles
-- **Bell 202 Demodulation**: 2FSK demodulation at 1200 bps (based on Direwolf patterns)
+- **Bell 202 Demodulation**: 2FSK at 1200 bps via FM discriminator, DC tracking,
+  bit-timing PLL, and AX.25 extraction (implementation informed by common APRS/SDR practice)
 - **Device Support**: RTL-SDR Blog V3, V4 R828D, Nooelec, Generic RTL2832U
 - **Android USB Support**: Native Android USB Host API integration
 - **Frequency Control**: Configurable RX frequency, gain, and PPM correction
@@ -149,7 +150,8 @@ The ``aprs_sdr`` plugin provides direct RTL-SDR hardware access with built-in Be
 
 - **Automatic Discovery**: SDR plugin automatically finds and connects to APRS plugin
 - **Hardware Support**: RTL-SDR Blog V3, V4 R828D, Nooelec, Generic RTL2832U
-- **Bell 202 Demodulation**: Built-in 2FSK demodulation (1200 bps) - no external tools needed
+- **Bell 202 Demodulation**: Built-in 2FSK (1200 bps) via FM discriminator, DC
+  tracking, and bit PLL - no external demodulator needed
 - **Android Support**: Native Android USB Host API integration
 - **Configuration**: Frequency, gain, and PPM correction via GUI menu
 

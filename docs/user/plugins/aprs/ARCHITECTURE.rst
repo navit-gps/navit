@@ -64,7 +64,7 @@ Plugin 2: ``aprs_sdr`` (SDR Plugin)
 
 - ``aprs_sdr.c`` – Main plugin implementation and inter-plugin communication
 - ``aprs_sdr_hw.c/h`` – RTL-SDR hardware interface
-- ``aprs_sdr_dsp.c/h`` – Bell 202 demodulation
+- ``aprs_sdr_dsp.c/h`` – Bell 202 demodulation (FM discriminator, DC tracking, bit PLL)
 - ``aprs_sdr_android.c/h`` – Android USB Host API integration
 
 **Dependencies:**

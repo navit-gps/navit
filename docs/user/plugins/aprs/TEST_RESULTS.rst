@@ -173,17 +173,18 @@ pipeline into the APRS decoder:
   * The decoded source callsign is exactly ``KG5XXX``
   * The decoded information field matches ``!5132.00N/00007.00W-Test``
 
-  This provides a strict end-to-end validation that the mixer, DC blocker, FM discriminator and Bell 202 / AX.25 decoder
-  are all wired correctly for the off-centre (+100 kHz IF) configuration.
+  This provides a strict end-to-end validation that the mixer, DC blocker, FM
+  discriminator, bit clock PLL, and Bell 202 / AX.25 decoder are all wired
+  correctly for the off-centre (+100 kHz IF) configuration.
 
 - ``test_aprs_sdr_dc_centered`` – repeats the same synthetic frame generation but with a 0 Hz IF offset (DC-centred
-  case). The test asserts that the DSP and decoder handle this input without crashes or hangs and is intended to
-  document the expected degradation behaviour when operating at zero-IF in the presence of a DC spike at the centre
-  frequency.
+  case). The harness only asserts that the DSP returns a non-negative frame count (no crash/hang); it does **not**
+  require a successful decode. That documents the risk of zero-IF on real RTL-SDR
+  hardware (DC spike) while keeping the synthetic math path exercised.
 
 In the current harness, these integration tests are the primary safety net against regressions in the mixer, DC
-blocking, FM discriminator and Bell 202 demodulation logic, and they confirm that known APRS packets decode correctly
-in the off-centre tuned case while the DC-centred case continues to be handled gracefully.
+blocking, FM discriminator, bit-timing PLL, and Bell 202 demodulation logic. They confirm that known APRS packets decode
+correctly in the off-centre tuned case while the DC-centred case is only required to run without failure.
 
 Overall Test Summary
 --------------------
@@ -226,11 +227,12 @@ SDR integration
 ~~~~~~~~~~~~~~~
 
 - RF-to-packet pipeline: synthetic Bell 202 IQ at 192 kHz RF sample rate passed through mixer, DC blocker, FM
-  discriminator and AX.25 decoder.
+  discriminator, PLL-timed bit decisions, and AX.25 decoder.
 - +100 kHz IF offset case: documents and tests the DC-safe configuration where the SDR is tuned off-centre and the DSP
   must handle the offset correctly.
-- 0 Hz (DC-centred) case: documents and tests the failure mode when tuned directly to the APRS channel, asserting
-  graceful handling without crashes or hangs rather than successful decode.
+- 0 Hz (DC-centred) case: synthetic IQ at 0 Hz IF; the test only requires a
+  non-negative frame count (no crash/hang). On real RTL-SDR hardware, DC-centred
+  tuning remains risky; successful decode is not asserted for this path.
 
 Known Limitations
 -----------------

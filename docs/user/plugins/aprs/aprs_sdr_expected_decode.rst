@@ -13,8 +13,9 @@ Target payload expectation (what the DSP must ultimately deliver to the callback
 Important
 ---------
 
-The demodulation pipeline makes **bit decisions from the FM discriminator output**
-using **per-bit averaging + threshold**, not Goertzel.
+The demodulation pipeline makes **bit decisions from DC-centered FM discriminator
+output** using a **bit-timing PLL** (phase accumulator, optional zero-crossing
+nudge), **per-symbol averaging**, and **threshold 0.0**, not Goertzel.
 
 Conventions used below
 ----------------------
@@ -144,46 +145,49 @@ Interpretation (approximate):
 is not a meaningful frequency estimate. The first valid discriminator output is
 ``verify[1]`` (and subsequent).
 
-Stage 7/12. Per-bit averaging (40 audio samples per bit)
---------------------------------------------------------
+Stage 7/12. Per-bit averaging (nominal 40 audio samples per PLL symbol)
+-------------------------------------------------------------------------
 
-For each bit period, average 40 discriminator samples.
-The resulting per-bit averages should cluster near the space/mark values:
+For each symbol, the DSP accumulates discriminator samples until the PLL phase
+wraps (nominal ``samples_per_bit`` audio samples at 48 kHz / 1200 baud). A slow
+IIR removes DC from the ``atan2`` discriminator so mark and space straddle zero;
+averages are then negative for mark and positive for space.
+
+Uncentered example (before DC removal in logs):
 
 ::
 
    avg_disc[0..7] (example): 0.29 0.29 0.29 0.29 0.29 0.29 0.29 0.17
                               S    S    S    S    S    S    S    M
 
-Stage 8/12. Raw bit decision (threshold on averaged discriminator)
-------------------------------------------------------------------
+After centering, the same bits correspond to averages with opposite sign for
+mark vs space around **0.0**.
 
-Threshold used by the DSP: **0.23**.
+Stage 8/12. Raw bit decision (threshold on averaged, DC-centered discriminator)
+-------------------------------------------------------------------------------
 
-Why 0.23?
-~~~~~~~~~
+Threshold used by the DSP: **0.0** (physically motivated: mark below midpoint,
+space above).
 
-In this synthetic test, the averaged discriminator output clusters around:
-
-- mark ≈ 0.17
-- space ≈ 0.29
-
-The threshold is the midpoint: \((0.17 + 0.29) / 2 \approx 0.23\).
+The previous fixed midpoint **0.23** applied to **uncentered** ``atan2`` output
+where mark clustered near **0.17** and space near **0.29**; DC tracking replaces
+that with a zero threshold on the centered signal.
 
 Real hardware note:
 
-- The discriminator units and separation are **signal-dependent** (gain,
-  filtering, deviation, DC removal).
-- Real RTL-SDR reception may need threshold tuning and/or hysteresis.
+- Separation and DC behaviour remain **signal-dependent** (gain, filtering,
+  deviation). The DC tracker may need tuning via ``fm_dc_alpha``; optional PLL
+  loop gain ``pll_alpha`` can track baud offset on air (see comments in
+  ``aprs_sdr_dsp.c``).
 
 Decision rule:
 
 ::
 
-   raw_bit = 1 (mark)  if avg < 0.23
-   raw_bit = 0 (space) if avg >= 0.23
+   raw_bit = 1 (mark)  if avg < 0.0
+   raw_bit = 0 (space) if avg >= 0.0
 
-Using the example averages:
+Using the uncentered example averages (conceptually mirrored after DC removal):
 
 ::
 
@@ -314,13 +318,13 @@ Quick Fault Reference
 Symptom                                       Likely cause
 ===========================================  ==============================================
 ``flags_found=0``                              Raw-bit polarity wrong (mark/space swapped),
-                                             or discriminator threshold wrong
+                                             or DC centering / threshold-at-zero wrong
 ``flags_found=2 frames=0``                     Closing-flag handling broken (guard too strict/loose),
                                              or stuck in repeated preamble flush
 Many ``frame_byte[*]=0x7E`` then no payload    Preamble flush rule wrong (should keep ``in_frame=1``),
-                                              or threshold too close to boundary causing bit flips
+                                              or unstable mark/space decisions (DC/PLL/threshold)
 ``length`` too small (truncated frame)         Closing flag detected too early (guard too loose) or
-                                              bit averaging/threshold unstable (spurious 0x7E)
+                                              symbol timing / averaging unstable (spurious 0x7E)
 ``length`` too large / never closes            Closing flag never recognized (guard too strict), or
                                               raw bit decisions unstable so 0x7E pattern never forms
 First payload byte ``0x45`` (expected ``0x82``) De-stuffer ran during flag assembly (stuffed-zero discard
@@ -328,7 +332,7 @@ First payload byte ``0x45`` (expected ``0x82``) De-stuffer ran during flag assem
 Payload byte ``0xBE``                          Byte/bit position not reset on preamble flush, or state
                                              persisted (static locals)
 ``DISCARD stuffed zero`` during flags          De-stuffer incorrectly active while assembling a flag byte
-Wrong ``first4`` (not ``82 A0 A4 A6``)         Bit averaging window misaligned, threshold wrong, or
-                                             destuff/NRZI boundary violated
+Wrong ``first4`` (not ``82 A0 A4 A6``)         PLL symbol alignment, DC centering, or destuff/NRZI
+                                             boundary violated
 ``first4=82 A0 A4 A6``                         Correct
 ===========================================  ==============================================

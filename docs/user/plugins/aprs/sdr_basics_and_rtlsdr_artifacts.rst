@@ -80,28 +80,38 @@ One common discriminator is:
 - \( y[n] = \arg(x[n] \cdot \overline{x[n-1]}) \)
 
 This produces a scalar stream \(y[n]\) where the average value corresponds to
-frequency. In the integration test's synthetic signal:
+frequency. In the integration test's synthetic signal, **before** slow DC
+tracking on the discriminator output, short-term averages cluster roughly at:
 
-- mark (1200 Hz) tends to produce a discriminator average around ~0.17
-- space (2200 Hz) tends to produce a discriminator average around ~0.29
+- mark (1200 Hz) around ~0.17
+- space (2200 Hz) around ~0.29
 
-Bit decisions from discriminator output (why we average)
---------------------------------------------------------
+The DSP subtracts a tracked DC level so that mark and space straddle **0.0** for
+the bit decision (see ``aprs_sdr_dsp.c``).
+
+Bit decisions from discriminator output (PLL, averaging, threshold)
+--------------------------------------------------------------------
 
 The discriminator output is not a 1200/2200 Hz sinusoid in this pipeline.
-It is a scalar proportional to frequency. The APRS SDR DSP therefore decides
-mark vs space by:
+It is a scalar proportional to frequency. The APRS SDR DSP decides mark vs space
+by:
 
-- averaging discriminator samples over one bit period
-- thresholding the average
+- tracking and subtracting DC on the ``atan2`` discriminator output
+  (``fm_dc`` / ``fm_dc_alpha``)
+- running a **bit-timing PLL**: a phase accumulator advanced by
+  ``1 / samples_per_bit`` per audio sample, with optional zero-crossing nudges
+  after lock (``pll_alpha``; default **0** in-tree for stable synthetic-test
+  symbol count)
+- **averaging** the DC-centered samples from the start of each symbol until the
+  PLL phase wraps (nominal **40** audio samples per bit at 48 kHz / 1200 baud)
+- comparing the per-symbol average to **0.0** (mark if negative, space if
+  non-negative)
 
-For 48 kHz audio and 1200 baud:
+Goertzel filter helpers remain in the same source file for reference but are **not**
+used on the main demodulation path.
 
-- samples per bit = 48000 / 1200 = 40
-
-The threshold used in the synthetic integration tests is 0.23, which is the
-midpoint between the observed clusters (~0.17 and ~0.29). For real hardware this
-threshold is signal-dependent and may require tuning and/or hysteresis.
+For real hardware, ``fm_dc_alpha`` and (if enabled) ``pll_alpha`` may need tuning;
+strong baud offset or poor centering can still break decode without field tests.
 
 RTL-SDR hardware artifacts (why DC-centered reception is problematic)
 ---------------------------------------------------------------------

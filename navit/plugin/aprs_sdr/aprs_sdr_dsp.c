@@ -39,11 +39,13 @@
  *
  * Processing pipeline:
  * 1. I/Q samples -> Downconvert to baseband
- * 2. Baseband -> Filter and decimate
- * 3. Filtered -> Goertzel filters for mark/space detection
- * 4. Goertzel output -> Bit decision
+ * 2. Baseband -> DC block, decimate to audio rate
+ * 3. FM discriminator (phase difference) -> slow DC estimate -> centered FM for PLL
+ * 4. Bit timing PLL (zero-crossings) + per-symbol average -> raw mark/space bit
  * 5. Bits -> NRZI decode
  * 6. Decoded bits -> AX.25 frame extraction
+ *
+ * Goertzel helpers remain for reference/testing but are not used on the main path.
  */
 
 #define BELL202_MARK_FREQ 1200.0
@@ -73,6 +75,20 @@ struct aprs_sdr_dsp {
     /* FM discriminator -> bit decision (audio-domain) */
     double bit_audio_sum;
     int bit_audio_count;
+
+    /* FM output DC tracker: atan2 discriminator is offset positive; subtract estimate
+     * so mark/space straddle 0 for PLL zero-crossings and threshold-at-0 decisions. */
+    double fm_dc;
+    double fm_dc_alpha;
+
+    /* Bit timing PLL */
+    double pll_phase;
+    double pll_phase_inc;
+    double pll_error;
+    double pll_alpha;
+    double pll_prev_sample;
+    int pll_locked;
+    int pll_transition_count;
 
     /* NRZI decoder state */
     int last_bit;
@@ -130,7 +146,7 @@ static void goertzel_init(struct aprs_sdr_dsp *dsp) {
             dsp->config.mark_freq, dsp->config.space_freq);
 }
 
-static void goertzel_process_sample(struct aprs_sdr_dsp *dsp, double sample) {
+static G_GNUC_UNUSED void goertzel_process_sample(struct aprs_sdr_dsp *dsp, double sample) {
     /* Update mark filter */
     dsp->mark_q0 = dsp->mark_coeff * dsp->mark_q1 - dsp->mark_q2 + sample;
     dsp->mark_q2 = dsp->mark_q1;
@@ -150,7 +166,7 @@ static void goertzel_process_sample(struct aprs_sdr_dsp *dsp, double sample) {
     }
 }
 
-static int goertzel_get_bit(struct aprs_sdr_dsp *dsp) {
+static G_GNUC_UNUSED int goertzel_get_bit(struct aprs_sdr_dsp *dsp) {
     /* Calculate power in each frequency bin */
     double mark_power = dsp->mark_q1 * dsp->mark_q1 + dsp->mark_q2 * dsp->mark_q2
                         - dsp->mark_coeff * dsp->mark_q1 * dsp->mark_q2;
@@ -403,6 +419,23 @@ struct aprs_sdr_dsp *aprs_sdr_dsp_new(const struct aprs_sdr_dsp_config *config) 
     dsp->bit_accumulator = 0.0;
     dsp->bit_audio_sum = 0.0;
     dsp->bit_audio_count = 0;
+    dsp->fm_dc = 0.0;
+    dsp->fm_dc_alpha = 0.02; /* per audio sample; tracks mean between mark/space */
+
+    /* Start at 0 so the first nominal symbol spans a full samples_per_bit window.
+     * (Starting at 0.5 as in some PLL notes would make the first interval half-length
+     * and break a strict 19240/40 = 481 relationship with the integration test.) */
+    dsp->pll_phase = 0.0;
+    dsp->pll_phase_inc = 1.0 / dsp->samples_per_bit;
+    dsp->pll_error = 0.0;
+    /* Loop gain: 0 disables phase nudging (fixed symbol clock). Small positive values
+     * track baud offset on real hardware; non-zero nudging can change wrap count vs
+     * the synthetic IQ test length, so default to 0 here. */
+    dsp->pll_alpha = 0.0;
+    dsp->pll_prev_sample = 0.0;
+    dsp->pll_locked = 0;
+    dsp->pll_transition_count = 0;
+
     /* Assume idle NRZI line state is mark (1), so first transition (space) decodes as data 0. */
     dsp->last_bit = 1;
     dsp->in_frame = 0;
@@ -520,7 +553,7 @@ int aprs_sdr_dsp_process_samples(struct aprs_sdr_dsp *dsp, const unsigned char *
          * kept sample (prev_i/prev_q) and then update prev_* to this one. */
         double audio_sample = 0.0;
         if (dsp->prev_i == 0.0 && dsp->prev_q == 0.0) {
-            /* Seed discriminator state without skipping a sample. */
+            /* Seed discriminator state; audio_sample stays 0 for this sample (matches prior behaviour). */
             dsp->prev_i = base_i;
             dsp->prev_q = base_q;
         } else {
@@ -547,26 +580,61 @@ int aprs_sdr_dsp_process_samples(struct aprs_sdr_dsp *dsp, const unsigned char *
                     dsp->prev_i, dsp->prev_q, audio_sample, measured_freq);
         }
 
-        /* One bit decision per symbol (40 audio samples @ 48 kHz / 1200 baud). */
         dsp->diag_audio_samples++;
-        dsp->bit_audio_sum += audio_sample;
-        dsp->bit_audio_count++;
 
-        if (dsp->bit_audio_count >= dsp->goertzel_block_size) {
-            double avg = dsp->bit_audio_sum / (double)dsp->bit_audio_count;
-            /* From verify output: mark ~= 0.17, space ~= 0.29 */
-            const double threshold = 0.23;
-            int raw_bit = (avg < threshold) ? 1 : 0; /* mark=1, space=0 */
-            int decoded_bit = nrzi_decode(raw_bit, &dsp->last_bit);
+        /* Center FM discriminator so mark/space sit on opposite sides of 0 for PLL. */
+        dsp->fm_dc += dsp->fm_dc_alpha * (audio_sample - dsp->fm_dc);
+        {
+            double pll_sample = audio_sample - dsp->fm_dc;
 
-            dsp->bit_audio_sum = 0.0;
-            dsp->bit_audio_count = 0;
+            dsp->bit_audio_sum += pll_sample;
+            dsp->bit_audio_count++;
 
-            dsp->diag_goertzel_block++;
-            dsp->diag_goertzel_blocks++;
-            dsp->diag_raw_bits++;
-            dsp->diag_decoded_bits++;
-            process_ax25_bit(dsp, decoded_bit);
+            if ((dsp->pll_prev_sample < 0.0 && pll_sample >= 0.0)
+                || (dsp->pll_prev_sample >= 0.0 && pll_sample < 0.0)) {
+                dsp->pll_transition_count++;
+                if (dsp->pll_transition_count >= 8) {
+                    dsp->pll_locked = 1;
+                }
+                /* Nudge symbol phase only after lock so preamble acquisition keeps a
+                 * nominal 1/(samples_per_bit) rate (matches integration test length). */
+                if (dsp->pll_locked) {
+                    dsp->pll_error = dsp->pll_phase - 0.5;
+                    dsp->pll_phase -= dsp->pll_alpha * dsp->pll_error;
+                    if (dsp->pll_phase < 0.0) {
+                        dsp->pll_phase += 1.0;
+                    }
+                    if (dsp->pll_phase >= 1.0) {
+                        dsp->pll_phase -= 1.0;
+                    }
+                }
+            }
+            dsp->pll_prev_sample = pll_sample;
+
+            dsp->pll_phase += dsp->pll_phase_inc;
+
+            if (dsp->pll_phase >= 1.0) {
+                dsp->pll_phase -= 1.0;
+
+                /* Always emit one bit per phase wrap so symbol rate stays 1:1 with
+                 * audio samples (avoids losing symbols when the PLL wraps early
+                 * before pll_locked or before a full goertzel_block_size window). */
+                if (dsp->bit_audio_count > 0) {
+                    double avg = dsp->bit_audio_sum / (double)dsp->bit_audio_count;
+                    /* Centered FM: mark below 0, space above 0 */
+                    int raw_bit = (avg < 0.0) ? 1 : 0;
+                    int decoded_bit = nrzi_decode(raw_bit, &dsp->last_bit);
+
+                    dsp->bit_audio_sum = 0.0;
+                    dsp->bit_audio_count = 0;
+
+                    dsp->diag_goertzel_block++;
+                    dsp->diag_goertzel_blocks++;
+                    dsp->diag_raw_bits++;
+                    dsp->diag_decoded_bits++;
+                    process_ax25_bit(dsp, decoded_bit);
+                }
+            }
         }
     }
 

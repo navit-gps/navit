@@ -85,7 +85,8 @@ every low-level helper:
 
     * Device count and selected index.
     * RF configuration (frequency, sample rate, gain, PPM).
-    * DSP initialization (mark/space frequencies, samples per bit).
+    * DSP initialization (mark/space frequencies, audio rate, nominal samples per bit).
+    * When debugging demodulation: discriminator/DC/PLL state (phase, lock) at ``lvl_debug``.
     * Number of frames decoded per call (use ``lvl_debug`` to avoid noise).
 
 

@@ -52,7 +52,7 @@ There are two main ways to get APRS packets into Navit:
       aprs_sdr_hw.c  (RTL-SDR RF I/Q at RF sample rate, e.g. 192 kHz)
           |
           v
-      aprs_sdr_dsp.c (IF downconversion, DC block, FM discriminator, Bell 202)
+      aprs_sdr_dsp.c (IF downconversion, DC block, FM discriminator, bit PLL, Bell 202)
           |
           v
       AX.25 Frames

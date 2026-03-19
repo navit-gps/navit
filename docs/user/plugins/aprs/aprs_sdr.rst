@@ -38,7 +38,7 @@ The SDR plugin is a separate, optional component that handles all RF-related ope
    aprs_sdr_hw.c (Hardware Interface, RF sample rate)
        |
        v
-   aprs_sdr_dsp.c (IF downconversion, DC block, FM discriminator, Bell 202 DSP)
+   aprs_sdr_dsp.c (IF downconversion, DC block, FM discriminator, bit clock PLL, AX.25 bitstream)
        |
        v
    AX.25 Frames
@@ -79,10 +79,11 @@ The demodulation uses:
   DC spike and remove residual offsets.
 * An FM discriminator (phase-difference based) to produce an audio stream at a
   configurable audio sample rate (typically 48 kHz).
-* Per-bit averaging of the FM discriminator output (40 audio samples per bit at
-  48 kHz / 1200 baud) and a threshold to decide mark vs space.
-* Bit synchronization, NRZI decoding and AX.25 frame extraction with
-  bit-stuffing handling.
+* DC tracking on the discriminator output, a bit-timing PLL (phase accumulator
+  with optional zero-crossing correction after lock), **per-symbol averaging**
+  between PLL wraps (nominal 40 audio samples per bit at 48 kHz / 1200 baud),
+  and a **0.0** threshold on the centered average for mark vs space.
+* NRZI decoding and AX.25 frame extraction with bit-stuffing handling.
 
 Inter-Plugin Communication
 ---------------------------
@@ -262,9 +263,10 @@ generate synthetic Bell 202 IQ at the RF sample rate used by the plugin and driv
   channel. The expectation is that the code handles this input without crashes or hangs and degrades gracefully in the
   presence of a DC spike at the centre frequency rather than guaranteeing successful decode.
 
-These integration tests are the primary safety net for regressions in the mixer, DC blocking, FM discriminator and Bell
-202 demodulation logic and currently confirm that known APRS packets decode correctly in the off-centre tuned case
-while documenting the limitations of the DC-centred configuration.
+These integration tests are the primary safety net for regressions in the mixer, DC blocking, FM discriminator, bit clock
+PLL, and Bell 202 / AX.25 demodulation logic. They confirm that known APRS packets decode correctly in the off-centre
+tuned case while documenting the limitations of the DC-centred configuration (synthetic test only requires no crash for
+0 Hz IF; successful decode is not asserted there).
 
 Hardware Testing
 ~~~~~~~~~~~~~~~~
