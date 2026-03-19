@@ -165,6 +165,12 @@ SDR integration and DSP pipeline (``test_aprs_sdr_integration.c``)
 The SDR integration test exercises the full RF-to-packet path, from synthetic Bell 202 IQ samples through the SDR DSP
 pipeline into the APRS decoder:
 
+- ``test_aprs_sdr_pll_preamble_lock`` – builds synthetic IQ for 16 preamble-only
+  ``0x7E`` flag bytes, with ``pll_alpha = 0.08`` so the PLL can nudge phase. After
+  ``aprs_sdr_dsp_process_samples()``, asserts ``aprs_sdr_dsp_pll_locked()``,
+  ``aprs_sdr_dsp_pll_transition_count() >= 8``, and that ``aprs_sdr_dsp_pll_phase()``
+  lies in ``[0, 1)``. This checks PLL acquisition independently of full-frame decode.
+
 - ``test_aprs_sdr_if_offset`` – feeds a known APRS UI frame (for example
   ``KG5XXX>APRS:!5132.00N/00007.00W-Test``) encoded into Bell 202 FSK IQ at 192 kHz with a +100 kHz IF offset. The test
   drives ``aprs_sdr_dsp_process_samples()`` and the normal APRS decode path and now asserts that:
@@ -189,8 +195,8 @@ correctly in the off-centre tuned case while the DC-centred case is only require
 Overall Test Summary
 --------------------
 
-- Total test cases: 17
-- Tests passed: 17
+- Total test cases: 18
+- Tests passed: 18
 - Tests failed: 0
 - Success rate: 100%
 - Memory leaks: None detected

@@ -45,8 +45,10 @@ struct aprs_sdr_dsp_config {
     int audio_sample_rate; /* Audio sample rate for Bell 202 demod (e.g. 48000 Hz) */
     double if_offset_hz;   /* Frequency offset between RF center and APRS channel (e.g. 100000 Hz) */
     double mark_freq;      /* Mark frequency (1200 Hz) */
-    double space_freq;     /* Space frequency (2200 Hz) */
+    double space_freq;      /* Space frequency (2200 Hz) */
     double baud_rate;      /* Symbol rate (1200 bps) */
+    /* Bit PLL loop gain on zero-crossings (0 = fixed symbol clock; try 0.05-0.1 for real RF). */
+    double pll_alpha;
 };
 
 struct aprs_sdr_dsp *aprs_sdr_dsp_new(const struct aprs_sdr_dsp_config *config);
@@ -69,5 +71,12 @@ int aprs_sdr_dsp_process_samples(struct aprs_sdr_dsp *dsp, const unsigned char *
  */
 typedef void (*aprs_sdr_dsp_frame_callback)(const unsigned char *frame, int frame_length, void *user_data);
 int aprs_sdr_dsp_set_frame_callback(struct aprs_sdr_dsp *dsp, aprs_sdr_dsp_frame_callback callback, void *user_data);
+
+/** PLL lock flag (1 after enough zero-crossings on centered FM output). */
+int aprs_sdr_dsp_pll_locked(const struct aprs_sdr_dsp *dsp);
+/** Count of observed FM zero-crossings (lock declared at 8). */
+int aprs_sdr_dsp_pll_transition_count(const struct aprs_sdr_dsp *dsp);
+/** PLL phase accumulator in [0,1) after last processed sample. */
+double aprs_sdr_dsp_pll_phase(const struct aprs_sdr_dsp *dsp);
 
 #endif /* NAVIT_APRS_SDR_DSP_H */

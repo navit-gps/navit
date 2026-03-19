@@ -404,6 +404,153 @@ static unsigned char *generate_fsk_iq(const GArray *nrzi_bits, int *out_len, dou
     }
 }
 
+static void test_log_encoded_bit_dumps(const GArray *bits, const GArray *nrzi_bits) {
+    int total_bits = (int)bits->len;
+    const int num_preamble_flags = 16;
+    const int opening_flag = 1;
+    const int closing_flag = 1;
+    const int payload_bit_count = total_bits - (num_preamble_flags + opening_flag + closing_flag) * 8;
+
+    fprintf(stderr, "ENC: preamble_flags=%d opening_flag=1 payload_bits=%d closing_flag=1 total=%d\n",
+            num_preamble_flags, payload_bit_count, total_bits);
+    fprintf(stderr, "ENC: opening_flag_starts_at_nrzi=%d payload_starts_at_nrzi=%d\n", num_preamble_flags * 8,
+            num_preamble_flags * 8 + 8);
+
+    fprintf(stderr, "ENC_DATA bits 0-199: ");
+    for (int i = 0; i < 200 && i < total_bits; i++) {
+        fprintf(stderr, "%d", (int)g_array_index(bits, unsigned char, i));
+        if (((i + 1) % 8) == 0) {
+            fprintf(stderr, " ");
+        }
+    }
+    fprintf(stderr, "\n");
+
+    {
+        const guint8 flag_bits_check[8] = {0, 1, 1, 1, 1, 1, 1, 0};
+        fprintf(stderr, "Flag bits array: ");
+        for (int b = 0; b < 8; b++) {
+            fprintf(stderr, "%d", flag_bits_check[b]);
+        }
+        fprintf(stderr, "\n");
+    }
+    {
+        int dump = bits->len < 32 ? bits->len : 32;
+        fprintf(stderr, "Encoder DATA bits first %d: ", dump);
+        for (int i = 0; i < dump; i++) {
+            fprintf(stderr, "%d", g_array_index(bits, unsigned char, i));
+        }
+        fprintf(stderr, "\n");
+        fprintf(stderr, "Encoder DATA bits 0-10 (detailed): ");
+        for (int i = 0; i <= 10 && i < dump; i++) {
+            fprintf(stderr, "%d", g_array_index(bits, unsigned char, i));
+        }
+        fprintf(stderr, "\n");
+    }
+
+    fprintf(stderr, "ENC_DATA bits 128-144: ");
+    for (int i = 128; i <= 144; i++) {
+        if (i >= 0 && i < (int)bits->len) {
+            fprintf(stderr, "%d", g_array_index(bits, unsigned char, i));
+        } else {
+            fprintf(stderr, "?");
+        }
+    }
+    fprintf(stderr, "\n");
+
+    fprintf(stderr, "ENC_DATA bits 248-270: ");
+    for (int i = 248; i <= 270 && i < total_bits; i++) {
+        fprintf(stderr, "%d", (int)g_array_index(bits, unsigned char, i));
+    }
+    fprintf(stderr, "\n");
+
+    fprintf(stderr, "ENC_NRZI bits 128-144: ");
+    for (int i = 128; i <= 144; i++) {
+        if (i >= 0 && i < (int)nrzi_bits->len) {
+            fprintf(stderr, "%d", g_array_index(nrzi_bits, unsigned char, i));
+        } else {
+            fprintf(stderr, "?");
+        }
+    }
+    fprintf(stderr, "\n");
+
+    fprintf(stderr, "ENC_NRZI blk 247-269: ");
+    for (int i = 247; i <= 269 && i < (int)nrzi_bits->len; i++) {
+        fprintf(stderr, "%d", (int)g_array_index(nrzi_bits, unsigned char, i));
+    }
+    fprintf(stderr, "\n");
+}
+
+static void test_log_iq_dumps(unsigned char *iq, int iq_len, const GArray *nrzi_bits) {
+    for (int b = 248; b <= 256; b++) {
+        int s = b * 160;
+        int m = s + 80;
+        int idx_s = s * 2;
+        int idx_m = m * 2;
+        int nrzi = (b >= 0 && b < (int)nrzi_bits->len) ? (int)g_array_index(nrzi_bits, unsigned char, b) : -1;
+        if (idx_s + 1 < iq_len && idx_m + 1 < iq_len) {
+            fprintf(stderr, "ENC_IQ blk[%d]: start I=%u Q=%u  mid I=%u Q=%u  nrzi=%d\n", b, (unsigned)iq[idx_s],
+                    (unsigned)iq[idx_s + 1], (unsigned)iq[idx_m], (unsigned)iq[idx_m + 1], nrzi);
+        } else {
+            fprintf(stderr, "ENC_IQ blk[%d]: out_of_range (iq_len=%d)\n", b, iq_len);
+        }
+    }
+
+    for (int b = 127; b <= 137; b++) {
+        int sample_start = b * 160;
+        int sample_mid = sample_start + 80;
+        int idx0 = sample_start * 2;
+        int idx1 = sample_mid * 2;
+        if (idx0 + 1 < iq_len && idx1 + 1 < iq_len) {
+            fprintf(stderr, "ENC_IQ bit[%d]: sample[%d] I=%u Q=%u  sample[%d] I=%u Q=%u\n", b, sample_start,
+                    (unsigned)iq[idx0], (unsigned)iq[idx0 + 1], sample_mid, (unsigned)iq[idx1], (unsigned)iq[idx1 + 1]);
+        } else {
+            fprintf(stderr, "ENC_IQ bit[%d]: out_of_range (iq_len=%d)\n", b, iq_len);
+        }
+    }
+
+    fprintf(stderr, "IQ raw bytes around bit 7 boundary:\n");
+    for (int n = 1118; n <= 1132; n++) {
+        if (n * 2 + 1 < iq_len) {
+            fprintf(stderr, "RF[%d]: I=%d Q=%d\n", n, (int)iq[n * 2], (int)iq[n * 2 + 1]);
+        }
+    }
+
+    {
+        int dump = nrzi_bits->len < 32 ? nrzi_bits->len : 32;
+        fprintf(stderr, "Encoder first %d NRZI: ", dump);
+        for (int i = 0; i < dump; i++) {
+            fprintf(stderr, "%d", g_array_index(nrzi_bits, unsigned char, i));
+        }
+        fprintf(stderr, "\n");
+    }
+}
+
+static int test_verify_expect_success(int frames, struct test_frame_accumulator *acc, struct aprs_packet *packet) {
+    if (frames < 1) {
+        fprintf(stderr, "Expected at least one complete frame from DSP\n");
+        return 1;
+    }
+    if (!(acc->count >= 1 && acc->frame != NULL)) {
+        fprintf(stderr, "Expected frame callback to be invoked at least once\n");
+        return 1;
+    }
+    if (aprs_decode_ax25(acc->frame, acc->length, packet) != 1) {
+        fprintf(stderr, "Frame must decode successfully\n");
+        return 1;
+    }
+    if (!packet->source_callsign || strcmp(packet->source_callsign, "KG5XXX") != 0) {
+        fprintf(stderr, "Source callsign must match KG5XXX (got '%s')\n",
+                packet->source_callsign ? packet->source_callsign : "(null)");
+        return 1;
+    }
+    if (!packet->information_field || strcmp(packet->information_field, "!5132.00N/00007.00W-Test") != 0) {
+        fprintf(stderr, "Information field must match synthetic payload (got '%s')\n",
+                packet->information_field ? packet->information_field : "(null)");
+        return 1;
+    }
+    return 0;
+}
+
 static int run_dsp_and_decode(double if_offset_hz, int expect_success) {
     struct aprs_sdr_dsp_config config = {
         .rf_sample_rate = 192000,
@@ -459,174 +606,21 @@ static int run_dsp_and_decode(double if_offset_hz, int expect_success) {
     append_flag_and_stuff_bits(frame, frame_len, bits);
     fprintf(stderr, "Total encoder bits (with preamble and flags) = %d\n", (int)bits->len);
 
-    {
-        const int num_preamble_flags = 16;
-        const int opening_flag = 1;
-        const int closing_flag = 1;
-        const int total_bits = (int)bits->len;
-        const int payload_bit_count = total_bits - (num_preamble_flags + opening_flag + closing_flag) * 8;
-        fprintf(stderr, "ENC: preamble_flags=%d opening_flag=1 payload_bits=%d closing_flag=1 total=%d\n",
-                num_preamble_flags, payload_bit_count, total_bits);
-        fprintf(stderr, "ENC: opening_flag_starts_at_nrzi=%d payload_starts_at_nrzi=%d\n", num_preamble_flags * 8,
-                num_preamble_flags * 8 + 8);
-
-        fprintf(stderr, "ENC_DATA bits 0-199: ");
-        for (int i = 0; i < 200 && i < total_bits; i++) {
-            fprintf(stderr, "%d", (int)g_array_index(bits, unsigned char, i));
-            if (((i + 1) % 8) == 0) {
-                fprintf(stderr, " ");
-            }
-        }
-        fprintf(stderr, "\n");
-    }
-    /* Verify flag_bits pattern is correct (0 1 1 1 1 1 1 0). */
-    {
-        const guint8 flag_bits_check[8] = {0, 1, 1, 1, 1, 1, 1, 0};
-        fprintf(stderr, "Flag bits array: ");
-        for (int b = 0; b < 8; b++) {
-            fprintf(stderr, "%d", flag_bits_check[b]);
-        }
-        fprintf(stderr, "\n");
-    }
-    /* Encoder DATA bits before NRZI (including preamble flags). */
-    {
-        int dump = bits->len < 32 ? bits->len : 32;
-        fprintf(stderr, "Encoder DATA bits first %d: ", dump);
-        for (int i = 0; i < dump; i++) {
-            fprintf(stderr, "%d", g_array_index(bits, unsigned char, i));
-        }
-        fprintf(stderr, "\n");
-        fprintf(stderr, "Encoder DATA bits 0-10 (detailed): ");
-        for (int i = 0; i <= 10 && i < dump; i++) {
-            fprintf(stderr, "%d", g_array_index(bits, unsigned char, i));
-        }
-        fprintf(stderr, "\n");
-    }
-
-    fprintf(stderr, "ENC_DATA bits 128-144: ");
-    for (int i = 128; i <= 144; i++) {
-        if (i >= 0 && i < (int)bits->len) {
-            fprintf(stderr, "%d", g_array_index(bits, unsigned char, i));
-        } else {
-            fprintf(stderr, "?");
-        }
-    }
-    fprintf(stderr, "\n");
-
     nrzi_bits = nrzi_encode_bits(bits);
-
-    {
-        int total_bits = (int)bits->len;
-        fprintf(stderr, "ENC_DATA bits 248-270: ");
-        for (int i = 248; i <= 270 && i < total_bits; i++) {
-            fprintf(stderr, "%d", (int)g_array_index(bits, unsigned char, i));
-        }
-        fprintf(stderr, "\n");
-    }
-
-    fprintf(stderr, "ENC_NRZI bits 128-144: ");
-    for (int i = 128; i <= 144; i++) {
-        if (i >= 0 && i < (int)nrzi_bits->len) {
-            fprintf(stderr, "%d", g_array_index(nrzi_bits, unsigned char, i));
-        } else {
-            fprintf(stderr, "?");
-        }
-    }
-    fprintf(stderr, "\n");
-
-    {
-        int total_bits = (int)nrzi_bits->len;
-        fprintf(stderr, "ENC_NRZI blk 247-269: ");
-        for (int i = 247; i <= 269 && i < total_bits; i++) {
-            fprintf(stderr, "%d", (int)g_array_index(nrzi_bits, unsigned char, i));
-        }
-        fprintf(stderr, "\n");
-    }
+    test_log_encoded_bit_dumps(bits, nrzi_bits);
 
     iq = generate_fsk_iq(nrzi_bits, &iq_len, if_offset_hz);
+    test_log_iq_dumps(iq, iq_len, nrzi_bits);
 
-    for (int b = 248; b <= 256; b++) {
-        int s = b * 160; /* RF sample at start of bit period b */
-        int m = s + 80;  /* middle of bit period */
-        int idx_s = s * 2;
-        int idx_m = m * 2;
-        int nrzi = (b >= 0 && b < (int)nrzi_bits->len) ? (int)g_array_index(nrzi_bits, unsigned char, b) : -1;
-        if (idx_s + 1 < iq_len && idx_m + 1 < iq_len) {
-            fprintf(stderr, "ENC_IQ blk[%d]: start I=%u Q=%u  mid I=%u Q=%u  nrzi=%d\n", b, (unsigned)iq[idx_s],
-                    (unsigned)iq[idx_s + 1], (unsigned)iq[idx_m], (unsigned)iq[idx_m + 1], nrzi);
-        } else {
-            fprintf(stderr, "ENC_IQ blk[%d]: out_of_range (iq_len=%d)\n", b, iq_len);
-        }
-    }
-
-    /* After generating the IQ buffer, print IQ samples at bit boundaries. */
-    for (int b = 127; b <= 137; b++) {
-        int sample_start = b * 160;         /* 160 RF samples per bit */
-        int sample_mid = sample_start + 80; /* middle of bit period */
-        int idx0 = sample_start * 2;
-        int idx1 = sample_mid * 2;
-        if (idx0 + 1 < iq_len && idx1 + 1 < iq_len) {
-            fprintf(stderr, "ENC_IQ bit[%d]: sample[%d] I=%u Q=%u  sample[%d] I=%u Q=%u\n", b, sample_start,
-                    (unsigned)iq[idx0], (unsigned)iq[idx0 + 1], sample_mid, (unsigned)iq[idx1], (unsigned)iq[idx1 + 1]);
-        } else {
-            fprintf(stderr, "ENC_IQ bit[%d]: out_of_range (iq_len=%d)\n", b, iq_len);
-        }
-    }
-
-    /* Dump raw IQ bytes around the RF index where bit 7 starts. */
-    fprintf(stderr, "IQ raw bytes around bit 7 boundary:\n");
-    for (int n = 1118; n <= 1132; n++) {
-        if (n * 2 + 1 < iq_len) {
-            fprintf(stderr, "RF[%d]: I=%d Q=%d\n", n, (int)iq[n * 2], (int)iq[n * 2 + 1]);
-        }
-    }
-
-    /* Dump first 32 NRZI encoder bits for comparison with DSP. */
-    {
-        int dump = nrzi_bits->len < 32 ? nrzi_bits->len : 32;
-        fprintf(stderr, "Encoder first %d NRZI: ", dump);
-        for (int i = 0; i < dump; i++) {
-            fprintf(stderr, "%d", g_array_index(nrzi_bits, unsigned char, i));
-        }
-        fprintf(stderr, "\n");
-    }
-
-    {
-        int total_bits = (int)nrzi_bits->len;
-        int expected_iq_len = total_bits * 160 * 2; /* 160 RF samples/bit, I+Q bytes */
-        fprintf(stderr, "Calling aprs_sdr_dsp_process_samples with iq_len=%d (expected %d)\n", iq_len, expected_iq_len);
-    }
+    fprintf(stderr, "Calling aprs_sdr_dsp_process_samples with iq_len=%d (expected %d)\n", iq_len,
+            (int)nrzi_bits->len * 160 * 2);
 
     aprs_sdr_dsp_set_frame_callback(dsp, test_frame_callback, &acc);
     frames = aprs_sdr_dsp_process_samples(dsp, iq, iq_len);
 
     if (expect_success) {
-        /* With diagnostics available in the DSP, we rely on frames/flags; no implicit flag count here. */
-        if (frames < 1) {
-            fprintf(stderr, "Expected at least one complete frame from DSP\n");
-            rc = 1;
-            goto cleanup;
-        }
-        if (!(acc.count >= 1 && acc.frame != NULL)) {
-            fprintf(stderr, "Expected frame callback to be invoked at least once\n");
-            rc = 1;
-            goto cleanup;
-        }
-        if (aprs_decode_ax25(acc.frame, acc.length, &packet) != 1) {
-            fprintf(stderr, "Frame must decode successfully\n");
-            rc = 1;
-            goto cleanup;
-        }
-        if (!packet.source_callsign || strcmp(packet.source_callsign, "KG5XXX") != 0) {
-            fprintf(stderr, "Source callsign must match KG5XXX (got '%s')\n",
-                    packet.source_callsign ? packet.source_callsign : "(null)");
-            rc = 1;
-            goto cleanup;
-        }
-        if (!packet.information_field || strcmp(packet.information_field, "!5132.00N/00007.00W-Test") != 0) {
-            fprintf(stderr, "Information field must match synthetic payload (got '%s')\n",
-                    packet.information_field ? packet.information_field : "(null)");
-            rc = 1;
+        rc = test_verify_expect_success(frames, &acc, &packet);
+        if (rc != 0) {
             goto cleanup;
         }
     } else {
@@ -662,6 +656,76 @@ cleanup:
     return rc;
 }
 
+static int test_aprs_sdr_pll_preamble_lock(void) {
+    struct aprs_sdr_dsp_config config = {
+        .rf_sample_rate = 192000,
+        .audio_sample_rate = 48000,
+        .if_offset_hz = 100000.0,
+        .mark_freq = 1200.0,
+        .space_freq = 2200.0,
+        .baud_rate = 1200.0,
+        .pll_alpha = 0.08,
+    };
+    struct aprs_sdr_dsp *dsp = NULL;
+    GArray *bits = NULL;
+    GArray *nrzi = NULL;
+    unsigned char *iq = NULL;
+    int iq_len = 0;
+    int stuff_count = 0;
+    int i;
+    int rc = 0;
+
+    fprintf(stderr, "=== test_aprs_sdr_pll_preamble_lock (NRZI preamble, pll_alpha=0.08) ===\n");
+    dsp = aprs_sdr_dsp_new(&config);
+    if (!dsp) {
+        fprintf(stderr, "PLL test: DSP creation failed\n");
+        return 1;
+    }
+    bits = g_array_new(FALSE, FALSE, sizeof(unsigned char));
+    for (i = 0; i < 16; i++) {
+        encode_flag_bits(bits, &stuff_count);
+    }
+    nrzi = nrzi_encode_bits(bits);
+    iq = generate_fsk_iq(nrzi, &iq_len, 100000.0);
+    if (!iq) {
+        fprintf(stderr, "PLL test: IQ generation failed\n");
+        rc = 1;
+        goto cleanup;
+    }
+    aprs_sdr_dsp_process_samples(dsp, iq, iq_len);
+    if (!aprs_sdr_dsp_pll_locked(dsp)) {
+        fprintf(stderr, "PLL test: expected pll_locked after preamble\n");
+        rc = 1;
+        goto cleanup;
+    }
+    if (aprs_sdr_dsp_pll_transition_count(dsp) < 8) {
+        fprintf(stderr, "PLL test: expected pll_transition_count >= 8\n");
+        rc = 1;
+        goto cleanup;
+    }
+    {
+        double ph = aprs_sdr_dsp_pll_phase(dsp);
+        if (ph < 0.0 || ph >= 1.0) {
+            fprintf(stderr, "PLL test: pll_phase not in [0,1)\n");
+            rc = 1;
+        }
+    }
+cleanup:
+    if (iq) {
+        g_free(iq);
+    }
+    if (nrzi) {
+        g_array_free(nrzi, TRUE);
+    }
+    if (bits) {
+        g_array_free(bits, TRUE);
+    }
+    if (dsp) {
+        aprs_sdr_dsp_destroy(dsp);
+    }
+    return rc;
+}
+
 static int test_aprs_sdr_if_offset(void) {
     fprintf(stderr, "=== test_aprs_sdr_if_offset (+100 kHz IF) ===\n");
     return run_dsp_and_decode(100000.0, 1);
@@ -677,6 +741,7 @@ int main(void) {
 
     printf("Running APRS SDR integration tests...\n");
 
+    failures += test_aprs_sdr_pll_preamble_lock();
     failures += test_aprs_sdr_if_offset();
     failures += test_aprs_sdr_dc_centered();
 
