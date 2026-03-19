@@ -493,8 +493,8 @@ static void dsp_mix_to_baseband(struct aprs_sdr_dsp *dsp, double i_sample, doubl
     double cos_phase = cos(dsp->mixer_phase);
     double sin_phase = sin(dsp->mixer_phase);
     if (dsp->diag_rf_samples < 4) {
-        fprintf(stderr, "mixer_phase[%lld]=%.6f cos=%.4f sin=%.4f\n", (long long)dsp->diag_rf_samples,
-                dsp->mixer_phase, cos_phase, sin_phase);
+        fprintf(stderr, "mixer_phase[%lld]=%.6f cos=%.4f sin=%.4f\n", (long long)dsp->diag_rf_samples, dsp->mixer_phase,
+                cos_phase, sin_phase);
     }
     *base_i = i_sample * cos_phase - q_sample * sin_phase;
     *base_q = i_sample * sin_phase + q_sample * cos_phase;
@@ -530,8 +530,8 @@ static double dsp_discriminator_audio(struct aprs_sdr_dsp *dsp, double base_i, d
         double re = base_i * dsp->prev_i + base_q * dsp->prev_q;
         double im = base_q * dsp->prev_i - base_i * dsp->prev_q;
         if (dsp->diag_audio_samples < 8) {
-            fprintf(stderr, "disc_check: prev_i=%.4f prev_q=%.4f base_i=%.4f base_q=%.4f\n", dsp->prev_i,
-                    dsp->prev_q, base_i, base_q);
+            fprintf(stderr, "disc_check: prev_i=%.4f prev_q=%.4f base_i=%.4f base_q=%.4f\n", dsp->prev_i, dsp->prev_q,
+                    base_i, base_q);
         }
         dsp->prev_i = base_i;
         dsp->prev_q = base_q;
@@ -595,8 +595,7 @@ static void dsp_feed_pll_and_decode(struct aprs_sdr_dsp *dsp, double audio_sampl
         dsp->bit_audio_sum += pll_sample;
         dsp->bit_audio_count++;
 
-        if ((dsp->pll_prev_sample < 0.0 && pll_sample >= 0.0)
-            || (dsp->pll_prev_sample >= 0.0 && pll_sample < 0.0)) {
+        if ((dsp->pll_prev_sample < 0.0 && pll_sample >= 0.0) || (dsp->pll_prev_sample >= 0.0 && pll_sample < 0.0)) {
             dsp_pll_on_zero_crossing(dsp);
         }
         dsp->pll_prev_sample = pll_sample;

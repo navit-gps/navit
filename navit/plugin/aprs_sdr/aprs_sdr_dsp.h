@@ -45,7 +45,7 @@ struct aprs_sdr_dsp_config {
     int audio_sample_rate; /* Audio sample rate for Bell 202 demod (e.g. 48000 Hz) */
     double if_offset_hz;   /* Frequency offset between RF center and APRS channel (e.g. 100000 Hz) */
     double mark_freq;      /* Mark frequency (1200 Hz) */
-    double space_freq;      /* Space frequency (2200 Hz) */
+    double space_freq;     /* Space frequency (2200 Hz) */
     double baud_rate;      /* Symbol rate (1200 bps) */
     /* Bit PLL loop gain on zero-crossings (0 = fixed symbol clock; try 0.05-0.1 for real RF). */
     double pll_alpha;

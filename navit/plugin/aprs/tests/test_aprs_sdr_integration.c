@@ -404,8 +404,7 @@ static unsigned char *generate_fsk_iq(const GArray *nrzi_bits, int *out_len, dou
     }
 }
 
-static void test_log_encoded_bit_dumps(const GArray *bits, const GArray *nrzi_bits) {
-    int total_bits = (int)bits->len;
+static void test_log_enc_header_lines(int total_bits) {
     const int num_preamble_flags = 16;
     const int opening_flag = 1;
     const int closing_flag = 1;
@@ -415,7 +414,9 @@ static void test_log_encoded_bit_dumps(const GArray *bits, const GArray *nrzi_bi
             num_preamble_flags, payload_bit_count, total_bits);
     fprintf(stderr, "ENC: opening_flag_starts_at_nrzi=%d payload_starts_at_nrzi=%d\n", num_preamble_flags * 8,
             num_preamble_flags * 8 + 8);
+}
 
+static void test_log_enc_data_bits_0_199(const GArray *bits, int total_bits) {
     fprintf(stderr, "ENC_DATA bits 0-199: ");
     for (int i = 0; i < 200 && i < total_bits; i++) {
         fprintf(stderr, "%d", (int)g_array_index(bits, unsigned char, i));
@@ -424,60 +425,66 @@ static void test_log_encoded_bit_dumps(const GArray *bits, const GArray *nrzi_bi
         }
     }
     fprintf(stderr, "\n");
+}
 
-    {
-        const guint8 flag_bits_check[8] = {0, 1, 1, 1, 1, 1, 1, 0};
-        fprintf(stderr, "Flag bits array: ");
-        for (int b = 0; b < 8; b++) {
-            fprintf(stderr, "%d", flag_bits_check[b]);
-        }
-        fprintf(stderr, "\n");
-    }
-    {
-        int dump = bits->len < 32 ? bits->len : 32;
-        fprintf(stderr, "Encoder DATA bits first %d: ", dump);
-        for (int i = 0; i < dump; i++) {
-            fprintf(stderr, "%d", g_array_index(bits, unsigned char, i));
-        }
-        fprintf(stderr, "\n");
-        fprintf(stderr, "Encoder DATA bits 0-10 (detailed): ");
-        for (int i = 0; i <= 10 && i < dump; i++) {
-            fprintf(stderr, "%d", g_array_index(bits, unsigned char, i));
-        }
-        fprintf(stderr, "\n");
-    }
+static void test_log_enc_flag_pattern_and_prefix(const GArray *bits) {
+    const guint8 flag_bits_check[8] = {0, 1, 1, 1, 1, 1, 1, 0};
+    int dump = bits->len < 32 ? (int)bits->len : 32;
+    int i;
 
-    fprintf(stderr, "ENC_DATA bits 128-144: ");
-    for (int i = 128; i <= 144; i++) {
-        if (i >= 0 && i < (int)bits->len) {
-            fprintf(stderr, "%d", g_array_index(bits, unsigned char, i));
+    fprintf(stderr, "Flag bits array: ");
+    for (i = 0; i < 8; i++) {
+        fprintf(stderr, "%d", flag_bits_check[i]);
+    }
+    fprintf(stderr, "\n");
+
+    fprintf(stderr, "Encoder DATA bits first %d: ", dump);
+    for (i = 0; i < dump; i++) {
+        fprintf(stderr, "%d", g_array_index(bits, unsigned char, i));
+    }
+    fprintf(stderr, "\n");
+
+    fprintf(stderr, "Encoder DATA bits 0-10 (detailed): ");
+    for (i = 0; i <= 10 && i < dump; i++) {
+        fprintf(stderr, "%d", g_array_index(bits, unsigned char, i));
+    }
+    fprintf(stderr, "\n");
+}
+
+static void test_log_bits_range_label(const char *label, const GArray *arr, int start, int end) {
+    int i;
+
+    fprintf(stderr, "%s", label);
+    for (i = start; i <= end; i++) {
+        if (i >= 0 && i < (int)arr->len) {
+            fprintf(stderr, "%d", g_array_index(arr, unsigned char, i));
         } else {
             fprintf(stderr, "?");
         }
     }
     fprintf(stderr, "\n");
+}
 
-    fprintf(stderr, "ENC_DATA bits 248-270: ");
-    for (int i = 248; i <= 270 && i < total_bits; i++) {
-        fprintf(stderr, "%d", (int)g_array_index(bits, unsigned char, i));
+static void test_log_bits_range_no_oob(const char *label, const GArray *arr, int start, int end, int total_cap) {
+    int i;
+
+    fprintf(stderr, "%s", label);
+    for (i = start; i <= end && i < total_cap; i++) {
+        fprintf(stderr, "%d", (int)g_array_index(arr, unsigned char, i));
     }
     fprintf(stderr, "\n");
+}
 
-    fprintf(stderr, "ENC_NRZI bits 128-144: ");
-    for (int i = 128; i <= 144; i++) {
-        if (i >= 0 && i < (int)nrzi_bits->len) {
-            fprintf(stderr, "%d", g_array_index(nrzi_bits, unsigned char, i));
-        } else {
-            fprintf(stderr, "?");
-        }
-    }
-    fprintf(stderr, "\n");
+static void test_log_encoded_bit_dumps(const GArray *bits, const GArray *nrzi_bits) {
+    int total_bits = (int)bits->len;
 
-    fprintf(stderr, "ENC_NRZI blk 247-269: ");
-    for (int i = 247; i <= 269 && i < (int)nrzi_bits->len; i++) {
-        fprintf(stderr, "%d", (int)g_array_index(nrzi_bits, unsigned char, i));
-    }
-    fprintf(stderr, "\n");
+    test_log_enc_header_lines(total_bits);
+    test_log_enc_data_bits_0_199(bits, total_bits);
+    test_log_enc_flag_pattern_and_prefix(bits);
+    test_log_bits_range_label("ENC_DATA bits 128-144: ", bits, 128, 144);
+    test_log_bits_range_no_oob("ENC_DATA bits 248-270: ", bits, 248, 270, total_bits);
+    test_log_bits_range_label("ENC_NRZI bits 128-144: ", nrzi_bits, 128, 144);
+    test_log_bits_range_no_oob("ENC_NRZI blk 247-269: ", nrzi_bits, 247, 269, (int)nrzi_bits->len);
 }
 
 static void test_log_iq_dumps(unsigned char *iq, int iq_len, const GArray *nrzi_bits) {
@@ -551,6 +558,60 @@ static int test_verify_expect_success(int frames, struct test_frame_accumulator 
     return 0;
 }
 
+/* Standalone decode of synthetic frame before DSP (expect_success path only). */
+static int run_dsp_precheck_ax25_decode(unsigned char *frame, int frame_len) {
+    struct aprs_packet pkt_check;
+
+    memset(&pkt_check, 0, sizeof(pkt_check));
+    if (aprs_decode_ax25(frame, frame_len, &pkt_check) != 1) {
+        fprintf(stderr, "Synthetic AX.25 frame failed to decode pre-DSP\n");
+        aprs_packet_free(&pkt_check);
+        return 1;
+    }
+    fprintf(stderr, "Synthetic AX.25 pre-DSP decode: src=%s dest=%s info=%s\n",
+            pkt_check.source_callsign ? pkt_check.source_callsign : "(null)",
+            pkt_check.destination_callsign ? pkt_check.destination_callsign : "(null)",
+            pkt_check.information_field ? pkt_check.information_field : "(null)");
+    aprs_packet_free(&pkt_check);
+    return 0;
+}
+
+static int run_dsp_postcheck_results(int expect_success, int frames, struct test_frame_accumulator *acc,
+                                     struct aprs_packet *packet) {
+    if (expect_success) {
+        return test_verify_expect_success(frames, acc, packet);
+    }
+    if (frames < 0) {
+        fprintf(stderr, "DSP reported negative frame count\n");
+        return 1;
+    }
+    return 0;
+}
+
+static void run_dsp_integration_teardown(struct aprs_sdr_dsp *dsp, unsigned char *frame, GArray *bits,
+                                         GArray *nrzi_bits, unsigned char *iq, struct aprs_packet *packet,
+                                         struct test_frame_accumulator *acc) {
+    if (acc->frame) {
+        g_free(acc->frame);
+    }
+    if (frame) {
+        g_free(frame);
+    }
+    if (bits) {
+        g_array_free(bits, TRUE);
+    }
+    if (nrzi_bits) {
+        g_array_free(nrzi_bits, TRUE);
+    }
+    if (iq) {
+        g_free(iq);
+    }
+    aprs_packet_free(packet);
+    if (dsp) {
+        aprs_sdr_dsp_destroy(dsp);
+    }
+}
+
 static int run_dsp_and_decode(double if_offset_hz, int expect_success) {
     struct aprs_sdr_dsp_config config = {
         .rf_sample_rate = 192000,
@@ -574,32 +635,19 @@ static int run_dsp_and_decode(double if_offset_hz, int expect_success) {
 
     memset(&packet, 0, sizeof(packet));
 
-    if (!dsp) {
-        fprintf(stderr, "DSP creation failed\n");
+    if (!dsp || !frame) {
+        fprintf(stderr, "%s\n", !dsp ? "DSP creation failed" : "Frame allocation failed");
         rc = 1;
-        goto cleanup;
-    }
-    if (!frame) {
-        fprintf(stderr, "Frame allocation failed\n");
-        rc = 1;
-        goto cleanup;
+        run_dsp_integration_teardown(dsp, frame, bits, nrzi_bits, iq, &packet, &acc);
+        return rc;
     }
 
-    /* Sanity-check that the raw AX.25 frame decodes on its own. */
     if (expect_success) {
-        struct aprs_packet pkt_check;
-        memset(&pkt_check, 0, sizeof(pkt_check));
-        if (aprs_decode_ax25(frame, frame_len, &pkt_check) != 1) {
-            fprintf(stderr, "Synthetic AX.25 frame failed to decode pre-DSP\n");
-            rc = 1;
-            aprs_packet_free(&pkt_check);
-            goto cleanup;
+        rc = run_dsp_precheck_ax25_decode(frame, frame_len);
+        if (rc != 0) {
+            run_dsp_integration_teardown(dsp, frame, bits, nrzi_bits, iq, &packet, &acc);
+            return rc;
         }
-        fprintf(stderr, "Synthetic AX.25 pre-DSP decode: src=%s dest=%s info=%s\n",
-                pkt_check.source_callsign ? pkt_check.source_callsign : "(null)",
-                pkt_check.destination_callsign ? pkt_check.destination_callsign : "(null)",
-                pkt_check.information_field ? pkt_check.information_field : "(null)");
-        aprs_packet_free(&pkt_check);
     }
 
     bits = g_array_new(FALSE, FALSE, sizeof(unsigned char));
@@ -618,41 +666,9 @@ static int run_dsp_and_decode(double if_offset_hz, int expect_success) {
     aprs_sdr_dsp_set_frame_callback(dsp, test_frame_callback, &acc);
     frames = aprs_sdr_dsp_process_samples(dsp, iq, iq_len);
 
-    if (expect_success) {
-        rc = test_verify_expect_success(frames, &acc, &packet);
-        if (rc != 0) {
-            goto cleanup;
-        }
-    } else {
-        /* For 0 Hz (DC-centred) case we only require that the DSP and decoder handle input without crash/hang. */
-        if (frames < 0) {
-            fprintf(stderr, "DSP reported negative frame count\n");
-            rc = 1;
-            goto cleanup;
-        }
-    }
+    rc = run_dsp_postcheck_results(expect_success, frames, &acc, &packet);
 
-cleanup:
-    if (acc.frame) {
-        g_free(acc.frame);
-    }
-    if (frame) {
-        g_free(frame);
-    }
-    if (bits) {
-        g_array_free(bits, TRUE);
-    }
-    if (nrzi_bits) {
-        g_array_free(nrzi_bits, TRUE);
-    }
-    if (iq) {
-        g_free(iq);
-    }
-    aprs_packet_free(&packet);
-    if (dsp) {
-        aprs_sdr_dsp_destroy(dsp);
-    }
-
+    run_dsp_integration_teardown(dsp, frame, bits, nrzi_bits, iq, &packet, &acc);
     return rc;
 }
 
