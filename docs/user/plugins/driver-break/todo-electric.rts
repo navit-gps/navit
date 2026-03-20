@@ -19,7 +19,7 @@ battery_soc_pct — replaces fuel_current role for range anchoring
 power_kw — signed, replaces fuel_rate_l_h; negative value = regenerating
 battery_temp_c — optional but important for cold-weather range warnings
 battery_voltage — optional, sanity checking
-battery_capacity_kwh — user-configured, needed for range math
+battery_capacity_kwh — user-configured, needed for range math. Optionally look for a battery health PID if that exist.
 
 ELM327 / OBD-II backend extension
 
