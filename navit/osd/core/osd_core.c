@@ -3017,7 +3017,7 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
     struct point p, p2[4];
     char *str, *last, *next, *value, *absbegin;
     int do_draw = opc->osd_item.do_draw;
-    struct attr attr, vehicle_attr, maxspeed_attr, imperial_attr;
+    struct attr attr, vehicle_attr, maxspeed_attr, imperial_attr, destination_description_attr;
     struct navigation *nav = NULL;
     struct tracking *tracking = NULL;
     struct map *nav_map = NULL;
@@ -3029,6 +3029,10 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
     int yspacing = height / 2;
     int xspacing = height / 4;
     int imperial = 0;
+    char *destination_description;
+    char *destination_town;
+    char *destination_street;
+    char *destination_house_number;
 
     if (navit_get_attr(navit, attr_imperial, &imperial_attr, NULL))
         imperial = imperial_attr.u.num;
@@ -3140,6 +3144,51 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
 
                 value[len] = '\0';
             }
+
+            // destination_description
+            if (oti->attr_typ == attr_destination_description) {
+                if (navit_get_attr(navit, attr_destination_description, &destination_description_attr, NULL)) {
+                    destination_description = destination_description_attr.u.str;
+                    value = g_strdup(destination_description);
+                } else {
+                    value = g_strdup(_("no destination"));
+                }
+                dbg(lvl_debug, "value destination description: '%s'", value);
+            } // destination_description
+
+            // destination_town
+            if (oti->subkey == attr_destination_town) {
+                if (navit_get_attr(navit, attr_destination_town, &destination_town_attr, NULL)) {
+                    destination_town = destination_town_attr.u.str;
+                    value = g_strdup(destination_town);
+		} else {
+                    value = g_strdup(_("no destination"));
+		}
+                dbg(lvl_debug, "value destination town: '%s'", value);
+	    } // destination_town
+
+            // destination_street
+            if (oti->subkey == attr_destination_street) {
+                if (navit_get_attr(navit, attr_destination_street, &destination_street_attr, NULL)) {
+                    destination_street = destination_street_attr.u.str;
+                    value = g_strdup(destination_street);
+		} else {
+                    value = g_strdup(_("no destination"));
+		}
+                dbg(lvl_debug, "value destination street: '%s'", value);
+	    } // destination_street
+
+            // destination_house_number
+            if (oti->subkey == attr_destination_house_number) {
+                if (navit_get_attr(navit, attr_destination_house_number, &destination_house_number_attr, NULL)) {
+                    destination_house_number = destination_house_number_attr.u.str;
+                    value = g_strdup(destination_house_number);
+		} else {
+                    value = g_strdup(_("no destination"));
+		}
+                dbg(lvl_debug, "value destination house_number: '%s'", value);
+	    } // destination_house_number
+
         }
 
         next = g_strdup_printf("%s%s", str ? str : "", value ? value : " ");

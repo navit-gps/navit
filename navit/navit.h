@@ -88,6 +88,12 @@ void navit_add_destination_description(struct navit *this_, struct pcoord *c, co
 int navit_get_destinations(struct navit *this_, struct pcoord *pc, int count);
 int navit_get_destination_count(struct navit *this_);
 char *navit_get_destination_description(struct navit *this_, int n);
+char *navit_get_destination_house_number(struct navit *this_, int n);
+char *navit_get_destination_street(struct navit *this_, int n);
+char *navit_get_destination_town(struct navit *this_, int n);
+void navit_set_destination_house_number(struct navit *this_, char *house_number);
+void navit_set_destination_street(struct navit *this_, char *street);
+void navit_set_destination_town(struct navit *this_, char *town);
 void navit_remove_nth_waypoint(struct navit *this_, int n);
 void navit_remove_waypoint(struct navit *this_);
 char *navit_get_coord_description(struct navit *this_, struct pcoord *c);
