@@ -325,8 +325,7 @@ int set_std_osd_attr(struct osd_priv *priv, struct attr *the_attr) {
             attr_set = 1;
         }
         if (attr_set && opc->osd_item.gr) {
-            osd_std_calculate_sizes(&opc->osd_item, navit_get_width(opc->osd_item.navit),
-                                    navit_get_height(opc->osd_item.navit));
+            osd_std_calculate_sizes(&opc->osd_item, navit_get_width(opc->osd_item.navit), navit_get_height(opc->osd_item.navit));
             osd_std_resize(&opc->osd_item);
             return 1;
         }
@@ -2611,8 +2610,7 @@ static void osd_speed_warner_draw(struct osd_priv_common *opc, struct navit *nav
             char *routespeed_str = format_speed(routespeed, "", "value", imperial);
             g_snprintf(text, 16, "%s%s", osm_data ? "" : "~", routespeed_str);
             g_free(routespeed_str);
-            if (this->speed_exceed_limit_offset + routespeed < tracking_speed
-                && (100.0 + this->speed_exceed_limit_percent) / 100.0 * routespeed < tracking_speed) {
+            if (this->speed_exceed_limit_offset + routespeed < tracking_speed && (100.0 + this->speed_exceed_limit_percent) / 100.0 * routespeed < tracking_speed) {
                 if (this->announce_state == eNoWarn && this->announce_on) {
                     if (this->wait_before_warn > 0) {
                         this->wait_before_warn--;
@@ -3017,7 +3015,7 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
     struct point p, p2[4];
     char *str, *last, *next, *value, *absbegin;
     int do_draw = opc->osd_item.do_draw;
-    struct attr attr, vehicle_attr, maxspeed_attr, imperial_attr;
+    struct attr attr, vehicle_attr, maxspeed_attr, imperial_attr, destination_description_attr;
     struct navigation *nav = NULL;
     struct tracking *tracking = NULL;
     struct map *nav_map = NULL;
@@ -3029,6 +3027,7 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
     int yspacing = height / 2;
     int xspacing = height / 4;
     int imperial = 0;
+    char *destination_description;
 
     if (navit_get_attr(navit, attr_imperial, &imperial_attr, NULL))
         imperial = imperial_attr.u.num;
@@ -3091,8 +3090,7 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
                 if (item && (oti->attr_typ == attr_speed)) {
                     double routespeed = -1;
                     int *flags = tracking_get_current_flags(tracking);
-                    if (flags && (*flags & AF_SPEED_LIMIT)
-                        && tracking_get_attr(tracking, attr_maxspeed, &maxspeed_attr, NULL)) {
+                    if (flags && (*flags & AF_SPEED_LIMIT) && tracking_get_attr(tracking, attr_maxspeed, &maxspeed_attr, NULL)) {
                         routespeed = maxspeed_attr.u.num;
                     }
                     if (routespeed == -1) {
@@ -3140,6 +3138,18 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
 
                 value[len] = '\0';
             }
+
+            // destination_description
+            if (oti->attr_typ == attr_destination_description) {
+                if (navit_get_attr(navit, attr_destination_description, &destination_description_attr, NULL)) {
+                    destination_description = destination_description_attr.u.str;
+                    value = g_strdup(destination_description);
+                } else {
+                    value = g_strdup(_("no destination"));
+                }
+                dbg(lvl_debug, "value destination description: '%s'", value);
+            } // destination_description
+
         }
 
         next = g_strdup_printf("%s%s", str ? str : "", value ? value : " ");
