@@ -5,39 +5,23 @@ apply plugin: 'checkstyle'
 buildscript {
     repositories {
         google()
-        jcenter()
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.3'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.android.tools.build:gradle:9.1.0'
     }
 }
 
 allprojects {
     repositories {
         google()
-        jcenter()
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
+        mavenCentral()
     }
 }
 
-/*
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-*/
 android {
-    compileSdkVersion 29
-    ndkVersion "25.2.9519653"
+    namespace = "org.navitproject.navit"
+    ndkVersion = "27.3.13750724"
     signingConfigs {
         release {
             // We can leave these in environment variables
@@ -48,11 +32,10 @@ android {
         }
     }
     defaultConfig {
-        compileSdk 33
-        compileSdkVersion 33
+        compileSdk = 36
         applicationId "org.navitproject.navit"
-        minSdkVersion 10
-        targetSdkVersion 33
+        minSdk 21
+        targetSdk 36
         versionCode gitVersionCode
         versionName gitVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -61,22 +44,21 @@ android {
         }
         externalNativeBuild {
             cmake {
-                arguments '-DDISABLE_CXX=y', '-DUSE_PLUGINS=n', '-DBUILD_MAPTOOL=n', '-DXSL_PROCESSING=y', '-DSAMPLE_MAP=n', '-DGRADLE_BUILD_DIR='+layout.buildDirectory.file('generated/navit_generated').get().getAsFile()
+                arguments '-DDISABLE_CXX=y', '-DUSE_PLUGINS=n', '-DBUILD_MAPTOOL=n', '-DXSL_PROCESSING=y', '-DSAMPLE_MAP=n', '-DGRADLE_BUILD_DIR='+layout.buildDirectory.file('generated/navit_generated').get().getAsFile(),"-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
             }
         }
     }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             if(file(System.getenv("KEYSTORE")  ?: "/store").exists()){
                 signingConfig signingConfigs.release
             }
         }
-    }
-    lintOptions {
-        disable 'UnusedResources'
-        abortOnError true
+        debug {
+            applicationIdSuffix ".debug"
+        }
     }
     sourceSets {
         main {
@@ -87,7 +69,10 @@ android {
             res.srcDirs = ["navit/android/res", layout.buildDirectory.file('generated/navit_generated/android/res').get().getAsFile()]
             assets.srcDirs =  ["navit/android/assets", layout.buildDirectory.file('generated/navit_generated/android/assets').get().getAsFile()]
 
-            }
+        }
+        release {
+            manifest.srcFile "navit/android/AndroidManifestRelease.xml"
+        }
     }
     externalNativeBuild {
         cmake {
@@ -96,7 +81,7 @@ android {
         }
     }
 
-    task checkstyleMain(type: Checkstyle){
+    tasks.register('checkstyleMain', Checkstyle) {
         source 'navit/android/src'
         include '**/*.java'
         configFile = rootProject.file('checkstyle.xml')
@@ -105,14 +90,14 @@ android {
         // empty classpath
         classpath = files()
         reports {
-            include ('**/*.java')
-            xml.required = true
-            html.required = true
+            include('**/*.java')
             xml {
-                destination file("checkstyle/checkstyleMain.xml")
+                required = true
+                outputLocation = file("checkstyle/checkstyleMain.xml")
             }
             html {
-                destination file("checkstyle/checkstyleMain.html")
+                required = true
+                outputLocation = file("checkstyle/checkstyleMain.html")
             }
         }
 
@@ -120,42 +105,39 @@ android {
             toolVersion = '13.2.0'
         }
     }
-    applicationVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "navit-${variant.buildType.name}.apk"
-        }
-        // create tasks to generate Javadocs
-        task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
-            source = android.sourceSets.main.java.srcDirs
-            destinationDir = file("navit/android/build/outputs/docs/javadoc/")
-            title = rootProject.name
-            options.memberLevel = JavadocMemberLevel.PACKAGE
-            verbose = true
-            failOnError false
-        }
+    lint {
+        abortOnError = true
+        disable 'UnusedResources'
+    }
+    buildFeatures {
+        renderScript = true
+    }
+    lint {
+        abortOnError = true
+        disable 'UnusedResources'
+    }
+    buildFeatures {
+        renderScript = true
     }
 
+    androidComponents {
+        onVariants(selector().all(), { variant ->
+            variant.outputs.each { output ->
+                def isSigned = variant.signingConfig != null ? "signed" : "unsigned"
+                output.outputFileName.set("navit-android-${gitVersionName}-${variant.name}-${isSigned}.apk")
+            }
+        })
+    }
 }
 
-afterEvaluate {
-    android.applicationVariants.all { variant ->
-        def cap = variant.name.capitalize()
-
-        tasks.matching { it.name.endsWith("Assets") ||it.name.endsWith("Resources") }
-            .configureEach {
-                dependsOn(tasks.matching { t ->
-                    t.name.startsWith("externalNativeBuild${cap}")
-            })
-        }
-    }
+clean {
+    delete "./android-builddir"
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'navit/android/libs')
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testImplementation 'junit:junit:4.12'
-    implementation 'ch.acra:acra:4.9.2'
-//    implementation 'com.android.support:support-v4:28.0.0'
+    testImplementation 'junit:junit:4.13.2'
+    implementation 'com.android.support:support-v4:28.0.0'
 }
