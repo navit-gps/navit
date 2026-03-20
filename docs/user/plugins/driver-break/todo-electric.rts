@@ -1,0 +1,53 @@
+EV backend — to-do
+Research & PID mapping
+
+Survey OpenDBC, evDash, and EVNotify for the most complete per-model PID coverage
+Identify which makes/models have reliable community-verified PIDs (Nissan Leaf and Hyundai Ioniq/Kia e-Niro are the safest starting points)
+Determine which PIDs are realistically readable via ELM327 vs requiring raw SocketCAN access
+Document scaling factors and sign conventions for motor current (regen negative vs positive varies by manufacturer)
+Investigate whether any SoC PIDs overlap with the existing standard PID 0x2F across common EV models
+
+Vehicle profile table
+
+Design the schema: make, model, year range, SoC PID, power/current PID, battery temp PID, battery voltage PID, protocol hint
+Decide storage format — database table alongside existing driver_break_config, or a separate config file
+Define fallback behavior when a vehicle isn't in the table (adaptive estimation, same as existing backends)
+
+New internal fields
+
+battery_soc_pct — replaces fuel_current role for range anchoring
+power_kw — signed, replaces fuel_rate_l_h; negative value = regenerating
+battery_temp_c — optional but important for cold-weather range warnings
+battery_voltage — optional, sanity checking
+battery_capacity_kwh — user-configured, needed for range math
+
+ELM327 / OBD-II backend extension
+
+Add ev_obd_available flag to driver_break_config
+Implement mutual exclusivity with combustion OBD-II backend (same adapter, different PIDs)
+Handle 29-bit CAN addressing where required (some EVs need AT CAF1 / ATSH header commands beyond standard ELM327 init sequence)
+Add protocol hints to vehicle profile so the correct ELM327 init variant is selected per model
+
+Energy-based routing integration
+
+Feed real power_kw readings into the existing recuperation model instead of relying solely on elevation estimates
+Build per-segment regen yield learning into the adaptive system — elevation drop vs actual regen recovered, per vehicle
+Use battery_temp_c to apply a capacity derating factor in range estimates when battery is cold
+
+User-facing additions
+
+Cold battery warning when battery_temp_c is below a configurable threshold
+Regen indicator in OSD — show when power_kw is negative
+Range estimate based on battery_soc_pct × battery_capacity_kwh ÷ rolling average power_kw
+
+Documentation
+
+New RST page following ecu_ports.rst style covering the vehicle profile table, EV-specific config flags, and supported models
+Update index.rst fuel monitoring section to include the EV backend
+Note limitations clearly — unlisted models fall back to adaptive estimation, no guarantees on PID accuracy across model years
+
+Testing
+
+Verify against at least two real vehicles before merging (Nissan Leaf and one of Ioniq/e-Niro recommended as starting points given community PID documentation quality)
+Test cold battery derating with logged data if live testing isn't possible
+Test fallback behavior with an unlisted vehicle profile
