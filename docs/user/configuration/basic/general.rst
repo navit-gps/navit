@@ -86,3 +86,22 @@ This string should match the <tt>name</tt> attribute of the required <tt><layout
 See [[Configuration/Layout_Options| layout options]] for more details.
 [[Category:Customizing]]
 [[Category:Configuration]]
+
+Address formnat
+---------------
+By default, Navit displays an adress in the format house_number, street town. However, you can configure Navit to display an address. Simply add an <tt>address_format</tt> attribute to the Navit tag, and set its value to a text template, as shown below:
+
+ address_format="{house_number}, {street} in {town}"
+
+Only one or more of the 3 placeholders above can be used (multiple times) in any order.
+To display the destination address add a label to the OSD with the placeholder <tt>destination_description</tt>
+
+Town name
+---------
+By default, when Navit displays a town name Navit only displays the name of the town (level = 1). However, you can configure Navit to display more info. Simply add an <tt>destination_town_level</tt> attribute to the Navit tag, and set its value to 1, 2 or 3, as shown below:
+
+ destination_town_level="3"
+
+1 = name only
+2 = name and province/state
+3 = name, province/state and postal code
