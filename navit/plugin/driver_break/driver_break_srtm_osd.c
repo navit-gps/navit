@@ -93,15 +93,15 @@ static void srtm_resolve_gui_internal(void) {
     gui_internal_set_click_coord_ptr =
         (void (*)(struct gui_priv *, struct point *))dlsym(handle, "gui_internal_set_click_coord");
     gui_internal_enter_setup_ptr = (void (*)(struct gui_priv *))dlsym(handle, "gui_internal_enter_setup");
-    gui_internal_menu_ptr = (struct widget * (*)(struct gui_priv *, const char *))dlsym(handle, "gui_internal_menu");
-    gui_internal_box_new_ptr =
-        (struct widget * (*)(struct gui_priv *, enum flags))dlsym(handle, "gui_internal_box_new");
-    gui_internal_label_new_ptr =
-        (struct widget * (*)(struct gui_priv *, const char *))dlsym(handle, "gui_internal_label_new");
-    gui_internal_button_new_with_callback_ptr =
-        (struct widget * (*)(struct gui_priv *, const char *, struct widget *, enum flags,
-                             void (*)(struct gui_priv *, struct widget *, void *), void *))
-            dlsym(handle, "gui_internal_button_new_with_callback");
+    gui_internal_menu_ptr = (struct widget * (*)(struct gui_priv *, const char *)) dlsym(handle, "gui_internal_menu");
+    gui_internal_box_new_ptr = (struct widget * (*)(struct gui_priv *, enum flags))
+        dlsym(handle, "gui_internal_box_new");
+    gui_internal_label_new_ptr = (struct widget * (*)(struct gui_priv *, const char *))
+        dlsym(handle, "gui_internal_label_new");
+    gui_internal_button_new_with_callback_ptr = (struct widget
+                                                 * (*)(struct gui_priv *, const char *, struct widget *, enum flags,
+                                                       void (*)(struct gui_priv *, struct widget *, void *), void *))
+        dlsym(handle, "gui_internal_button_new_with_callback");
     gui_internal_widget_append_ptr =
         (void (*)(struct widget *, struct widget *))dlsym(handle, "gui_internal_widget_append");
     gui_internal_menu_render_ptr = (void (*)(struct gui_priv *))dlsym(handle, "gui_internal_menu_render");
@@ -148,14 +148,14 @@ static void srtm_resolve_gui_internal(void) {
 #    define gui_internal_label_new(p, s)                                                                               \
         (srtm_resolve_gui_internal(), gui_internal_label_new_ptr ? gui_internal_label_new_ptr(p, s) : NULL)
 #    define gui_internal_button_new_with_callback(p, s, w, f, cb, d)                                                   \
-        (srtm_resolve_gui_internal(), gui_internal_button_new_with_callback_ptr                                       \
-                                           ? gui_internal_button_new_with_callback_ptr(p, s, w, f, cb, d)              \
-                                           : NULL)
+        (srtm_resolve_gui_internal(), gui_internal_button_new_with_callback_ptr                                        \
+                                          ? gui_internal_button_new_with_callback_ptr(p, s, w, f, cb, d)               \
+                                          : NULL)
 #    define gui_internal_widget_append(w1, w2)                                                                         \
         do {                                                                                                           \
             srtm_resolve_gui_internal();                                                                               \
             if (gui_internal_widget_append_ptr)                                                                        \
-                gui_internal_widget_append_ptr(w1, w2);                                                              \
+                gui_internal_widget_append_ptr(w1, w2);                                                                \
         } while (0)
 #    define gui_internal_menu_render(p)                                                                                \
         do {                                                                                                           \
