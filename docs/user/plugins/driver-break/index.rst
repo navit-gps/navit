@@ -10,6 +10,8 @@ Navit includes several plugins that extend its functionality:
    Driver Break Plugin <self>
    How the plugin works <how_it_works>
    Driver Break ECU ports <ecu_ports>
+   Driver Break EV backend (to-do) <todo-electric>
+   Driver Break EV vehicle profile (SQLite) <ev_vehicle_profile>
    Driver Break Tests <tests>
    Driver Break aftermarket ECUs <aftermarket_ecus>
    Driver Break formulas <formulas>
@@ -176,6 +178,9 @@ The plugin can read live fuel consumption directly from the vehicle's ECU. This 
 
 - **MegaSquirt** – Supports aftermarket and performance ECUs from the MegaSquirt family, including MS1, MS2, MS3, MS3-Pro, and MicroSquirt. These are commonly used in kit cars, race vehicles, and custom engine installations. The plugin connects to the ECU over a serial connection and reads engine data to calculate fuel consumption. As with the other backends, if the ECU is not available or not configured the plugin continues to work normally using adaptive estimation.
 
+Planned support for **battery electric vehicles** (live SoC, power, and related OBD/CAN data) is outlined in :doc:`todo-electric`. The same content is available on GitHub at
+`todo-electric.rst <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/todo-electric.rst>`__.
+
 In the fuel configuration dialog (Configure fuel), one toggle turns live ECU on or off for all three backends (OBD-II, J1939, MegaSquirt) together. Press OK to save.
 
 .. _adaptive-fuel-learning:
@@ -237,6 +242,9 @@ For details on specific aspects of the Driver Break plugin, see:
 
 * How the plugin works: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/how_it_works.rst
 * ECU ports: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/ecu_ports.rst
+* EV backend (to-do, design checklist): https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/todo-electric.rst
+* EV vehicle profile table (SQLite spec): https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/ev_vehicle_profile.rst
+* EV vehicle profile DDL (SQL file): https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/ev_vehicle_profile.sql
 * Tests: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/tests.rst
 * Aftermarket ECUs: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/aftermarket_ecus.rst
 * Formulas: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/formulas.rst
