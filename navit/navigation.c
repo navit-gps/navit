@@ -763,12 +763,22 @@ static void navigation_set_turnaround(struct navigation *this_, int val) {
 }
 
 int navigation_set_attr(struct navigation *this_, struct attr *attr) {
+    struct attr name_attr;
+    
+    name_attr.type == attr_name;
     switch (attr->type) {
     case attr_speech:
         this_->speech = attr->u.speech;
+
+        if (speech_get_attr(this_->speech, attr_name, &name_attr, NULL)) {
+            dbg(lvl_debug, "Speech set to: %s", name_attr.u.str);
+        } else {
+            dbg(lvl_debug, "Speech set");
+        }
         break;
     case attr_nav_status:
         this_->nav_status = attr->u.num;
+         dbg(lvl_debug, "nav_status = %i", attr->u.num);
         break;
     default:
         break;
@@ -3473,6 +3483,9 @@ static char *show_maneuver(struct navigation *nav, struct navigation_itm *itm, s
     g_free(instruction);
     g_free(street_destination_announce);
     g_free(strength);
+
+    dbg(lvl_debug, "instruction: %s", ret);
+
     return ret;
 }
 
