@@ -2845,6 +2845,7 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
     switch (attr->type) {
         case attr_position_speed:
             formatted_value = format_speed(*attr->u.numd, "", format, imperial);
+            break;
         case attr_position_height:
             /**
              * johnk 8/13/2020
@@ -2858,14 +2859,16 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
                 return (format_float_0(*attr->u.numd * FEET_PER_METER));
             }
             formatted_value = (format_float_0(*attr->u.numd));
+            break;
         case attr_position_direction:
             formatted_value = format_float_0(*attr->u.numd);
+            break;
         case attr_position_magnetic_direction:
             formatted_value = g_strdup_printf("%ld", attr->u.num);
+            break;
         case attr_position_coord_geo:
             if ((!format) || (!strcmp(format, "pos_degminsec"))) {
-                coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer,
-                             sizeof(buffer));
+                coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
                 formatted_value = g_strdup(buffer);
             } else if (!strcmp(format, "pos_degmin")) {
                 coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES, buffer, sizeof(buffer));
@@ -2897,6 +2900,7 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
                              sizeof(buffer));
                 formatted_value = g_strdup(buffer);
             }
+            break;
         case attr_destination_time:
             if (!format || (strcmp(format, "arrival") && strcmp(format, "remaining")))
                 break;
@@ -2919,7 +2923,9 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
                 days = (mktime(&text_tm0) - mktime(&tm) + 43200) / 86400;
             }
             formatted_value = format_time(&text_tm, days);
+            break;
         case attr_length:
+            break;
         case attr_destination_length:
             if (!format)
                 break;
@@ -2967,12 +2973,13 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
                 }
                 formatted_value = g_strdup(buffer);
             }
+            break;
         default:
             dbg(lvl_debug, "attribute '%s' in text is not formatted", attr_to_name(attr->type));
             formatted_value = attr_to_text(attr, NULL, 1);
             break;
     }  // switch (attr->type)
-    
+
     dbg(lvl_debug, "formatted_value: '%s'", formatted_value);
     return formatted_value;
 }
