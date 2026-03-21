@@ -10,9 +10,9 @@
 # Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.5.6\n"
+"Project-Id-Version: navit 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:22+0100\n"
+"POT-Creation-Date: 2026-03-21 04:21+0100\n"
 "PO-Revision-Date: 2026-02-18 17:39+0000\n"
 "Last-Translator: Priit Jõerüüt <jrthwlate@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Estonian <https://hosted.weblate.org/projects/navit/navit-"
@@ -136,7 +136,8 @@ msgid_plural "in %d kilometers"
 msgstr[0] "ühe kilomeetri pärast"
 msgstr[1] "%d kilomeetri pärast"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if
+#. * required), 4: Street Name
 #, c-format
 msgid "%1$sonto the %2$s%3$s%4$s"
 msgstr ""
@@ -146,17 +147,20 @@ msgstr ""
 msgid "%1$sonto %2$s"
 msgstr ""
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after
+#. * | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|masculine form"
 msgstr ""
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after
+#. * | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|feminine form"
 msgstr ""
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after |
+#. * doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|neuter form"
 msgstr ""
@@ -164,22 +168,26 @@ msgstr ""
 msgid "onto the motorway ramp"
 msgstr "kaldteele"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
 msgstr "%s %s%s%s tänavale"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
 msgstr "%s %s%s%s tänavale"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
 msgstr "%s %s%s%s tänavale"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
 msgstr "%s %s%s%s tänavale"
@@ -226,22 +234,26 @@ msgstr "nüüd"
 msgid "then"
 msgstr "siis"
 
-#. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have
+#. * to be included.
 #, c-format
 msgid "then merge%1$s|right"
 msgstr ""
 
-#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge,
+#. * the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
 msgstr ""
 
-#. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to
+#. * be included.
 #, c-format
 msgid "then merge%1$s|left"
 msgstr ""
 
-#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the
+#. * stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
 msgstr ""
@@ -252,17 +264,18 @@ msgstr "vasakul pool"
 msgid "on your right"
 msgstr "paremal pool"
 
-#. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
+#. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the
+#. * third is distance
 #, c-format
 msgid "Take exit %1$s %2$s %3$s"
 msgstr ""
 
-#. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
+#. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is
+#. * destination
 #, c-format
 msgid "Take the exit %1$s %2$s%3$s"
 msgstr ""
 
-#. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
 msgstr ""
 
@@ -274,7 +287,8 @@ msgstr ""
 msgid "then continue straight%1$s"
 msgstr ""
 
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is
+#. * destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
 msgstr ""
@@ -284,7 +298,8 @@ msgstr ""
 msgid "then keep right%1$s"
 msgstr ""
 
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is
+#. * destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
 msgstr ""
@@ -294,7 +309,8 @@ msgstr ""
 msgid "then keep left%1$s"
 msgstr ""
 
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is
+#. * destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
 msgstr ""
@@ -327,7 +343,8 @@ msgstr "Vali %1$s tee, mis viib %2$s"
 msgid "after %i roads"
 msgstr "pärast %i teed"
 
-#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
+#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the
+#. * fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "Pööra %1$s%2$s %3$s%4$s"
@@ -346,6 +363,7 @@ msgid "then make a U-turn|right"
 msgstr "siis pööra ümber"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
+#.
 #, c-format
 msgid "Make a U-turn %1$s|right"
 msgstr "Pööra ümber %1$s"
@@ -1629,7 +1647,9 @@ msgstr "Järjehoidja"
 msgid "Destination"
 msgstr "Sihtpunkt"
 
-#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character)
+#. for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic
+#. key is desired).
 msgid "_Display"
 msgstr "_Kuva"
 
@@ -2130,30 +2150,17 @@ msgstr "Ettevaatust! Kaamera!"
 msgid "Please decrease your speed"
 msgstr "Palun vähenda kiirust!"
 
-msgid "Vehicle Position"
-msgstr "Sõiduki asukoht"
-
 msgid "Main menu"
 msgstr "Põhimenüü"
 
-msgid ""
-"Show\n"
-"Map"
+msgid "Town search"
 msgstr ""
-"Näita\n"
-"Kaarti"
 
-msgid "Settings"
-msgstr "Seaded"
+msgid "Former destinations"
+msgstr ""
 
-msgid "Tools"
-msgstr "Tööriistad"
-
-msgid "Route"
-msgstr "Teekond"
-
-msgid "About"
-msgstr "Programmist"
+msgid "Show Map"
+msgstr ""
 
 msgid "Quit"
 msgstr "Välju"
@@ -2161,25 +2168,122 @@ msgstr "Välju"
 msgid "Actions"
 msgstr "Tegevused"
 
-msgid ""
-"Former\n"
-"Destinations"
+msgid "Suggest rest stop"
 msgstr ""
-"Eelnevad\n"
-"Sihtpunktid"
 
-msgid "Coordinates"
-msgstr "Koordinaadid"
-
-msgid ""
-"Stop\n"
-"Navigation"
+msgid "Alias: rest_suggest_stop"
 msgstr ""
-"Peata\n"
-"Navigeerimine"
+
+msgid "Start break"
+msgstr ""
+
+msgid "Alias: rest_start_break"
+msgstr ""
+
+msgid "End break"
+msgstr ""
+
+msgid "Alias: rest_end_break"
+msgstr ""
+
+msgid "Log fuel stop"
+msgstr ""
+
+msgid "Route"
+msgstr "Teekond"
+
+msgid "Route description"
+msgstr ""
+
+msgid "Height profile"
+msgstr ""
+
+msgid "Zoom to route"
+msgstr "Suumi teekonnale"
+
+msgid "Remove last waypoint"
+msgstr ""
+
+msgid "Remove next waypoint"
+msgstr ""
+
+msgid "Abort navigation"
+msgstr ""
+
+msgid "Settings"
+msgstr "Seaded"
 
 msgid "Display"
 msgstr "Ekraan"
+
+msgid "Locale"
+msgstr ""
+
+msgid "About"
+msgstr "Programmist"
+
+#. Android resource: @strings/map_download_title
+msgid "Map download"
+msgstr "Kaardi allaladimine"
+
+#. Android resource: @strings/optionsmenu_set_map_location
+msgid "Set map location"
+msgstr "Seadista kaardi asukoht"
+
+#. Android resource: @strings/optionsmenu_backup_restore
+msgid "Backup / Restore"
+msgstr "Loo varukoopia/taasta"
+
+msgid "Plugins"
+msgstr ""
+
+msgid "Driver Break"
+msgstr ""
+
+msgid "Suggest stop"
+msgstr ""
+
+msgid "Show history"
+msgstr ""
+
+msgid "Alias: rest_show_history"
+msgstr ""
+
+msgid "Configure"
+msgstr ""
+
+msgid "Plugin configuration"
+msgstr ""
+
+msgid "Intervals"
+msgstr ""
+
+msgid "Alias: rest_configure_intervals"
+msgstr ""
+
+msgid "Overnight"
+msgstr ""
+
+msgid "Alias: rest_configure_overnight"
+msgstr ""
+
+msgid "Fuel / EV"
+msgstr ""
+
+msgid "Set fuel level"
+msgstr ""
+
+msgid "Elevation"
+msgstr ""
+
+msgid "Download manager"
+msgstr ""
+
+msgid "Download region"
+msgstr ""
+
+msgid "Current elevation"
+msgstr ""
 
 msgid "Fullscreen"
 msgstr "Täisekraan"
@@ -2195,22 +2299,6 @@ msgstr "Käsitsi suum"
 
 msgid "Layers"
 msgstr "Kaardikihid"
-
-msgid "Zoom to route"
-msgstr "Suumi teekonnale"
-
-msgid "Description"
-msgstr "Kirjeldus"
-
-msgid ""
-"Drop last\n"
-"Waypoint"
-msgstr "Loobu eelmisest teekonnapunktist"
-
-msgid ""
-"Drop next\n"
-"Waypoint"
-msgstr "Loobu järgmisest teekonnapunktist"
 
 msgid "Satellite Status"
 msgstr "Satelliidi olek"
@@ -2298,14 +2386,6 @@ msgstr "Huvipunktide lülitamine"
 msgid "Exit Navit"
 msgstr "Välju Navitist"
 
-#. Android resource: @strings/optionsmenu_backup_restore
-msgid "Backup / Restore"
-msgstr "Loo varukoopia/taasta"
-
-#. Android resource: @strings/optionsmenu_set_map_location
-msgid "Set map location"
-msgstr "Seadista kaardi asukoht"
-
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
 msgstr "Teekond siia"
@@ -2321,10 +2401,6 @@ msgstr ""
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
 msgstr "Kustuta see kaart?"
-
-#. Android resource: @strings/map_download_title
-msgid "Map download"
-msgstr "Kaardi allaladimine"
 
 #. Android resource: @strings/map_download_downloading
 msgid "Downloading:"
@@ -3002,6 +3078,49 @@ msgstr "Lõuna+Kesk-Ameerika"
 #. Android resource: @strings/guyane_francaise
 msgid "Guyane Francaise"
 msgstr "Prantsuse Guajaana"
+
+#~ msgid "Vehicle Position"
+#~ msgstr "Sõiduki asukoht"
+
+#~ msgid ""
+#~ "Show\n"
+#~ "Map"
+#~ msgstr ""
+#~ "Näita\n"
+#~ "Kaarti"
+
+#~ msgid "Tools"
+#~ msgstr "Tööriistad"
+
+#~ msgid ""
+#~ "Former\n"
+#~ "Destinations"
+#~ msgstr ""
+#~ "Eelnevad\n"
+#~ "Sihtpunktid"
+
+#~ msgid "Coordinates"
+#~ msgstr "Koordinaadid"
+
+#~ msgid ""
+#~ "Stop\n"
+#~ "Navigation"
+#~ msgstr ""
+#~ "Peata\n"
+#~ "Navigeerimine"
+
+#~ msgid "Description"
+#~ msgstr "Kirjeldus"
+
+#~ msgid ""
+#~ "Drop last\n"
+#~ "Waypoint"
+#~ msgstr "Loobu eelmisest teekonnapunktist"
+
+#~ msgid ""
+#~ "Drop next\n"
+#~ "Waypoint"
+#~ msgstr "Loobu järgmisest teekonnapunktist"
 
 #~ msgid "No config file navit.xml, navit.xml.local found\n"
 #~ msgstr "Ei leidnud konfiguratsioonifaile navit.xml, navit.xml.local\n"

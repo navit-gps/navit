@@ -35,7 +35,6 @@ AlignConsecutiveShortCaseStatements:
   Enabled:         false
   AcrossEmptyLines: false
   AcrossComments:  false
-  AlignCaseArrows: false
   AlignCaseColons: false
 AlignConsecutiveTableGenBreakingDAGArgColons:
   Enabled:         false
@@ -248,7 +247,6 @@ SpacesInLineCommentPrefix:
   Maximum:         -1
 SpacesInParens:  Never
 SpacesInParensOptions:
-  ExceptDoubleParentheses: false
   InCStyleCasts:   false
   InConditionalStatements: false
   InEmptyParentheses: false
