@@ -287,7 +287,7 @@ struct gui_local {
 };
 
 /* Get internal GUI priv from navit - returns NULL if not internal GUI */
-static struct gui_priv *driver_break_get_internal_gui_priv(struct navit *nav) {
+struct gui_priv *driver_break_get_internal_gui_priv(struct navit *nav) {
     struct gui *gui;
     struct gui_local *gui_local;
     struct attr type_attr;

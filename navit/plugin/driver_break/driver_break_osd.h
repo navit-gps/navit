@@ -24,6 +24,11 @@
 #include "config.h"
 #include "navit.h"
 
+struct gui_priv;
+
+/* Internal GUI access for plugin commands (NULL if not using internal GUI). */
+struct gui_priv *driver_break_get_internal_gui_priv(struct navit *nav);
+
 /* Command functions */
 int driver_break_cmd_suggest_stop(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_show_history(struct navit *nav, char *function, struct attr **in, struct attr ***out);
