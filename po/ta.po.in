@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:22+0100\n"
+"POT-Creation-Date: 2026-03-21 04:21+0100\n"
 "PO-Revision-Date: 2026-03-02 06:09+0000\n"
 "Last-Translator: தமிழ்நேரம் <tamilneram247@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/navit/navit-core/"
@@ -135,7 +135,8 @@ msgid_plural "in %d kilometers"
 msgstr[0] "ஒரு கிலோமீட்டருக்குள்"
 msgstr[1] "%d கிலோமீட்டர்களுக்குள்"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if
+#. * required), 4: Street Name
 #, c-format
 msgid "%1$sonto the %2$s%3$s%4$s"
 msgstr "%1$s சோன்டோ%2$s%3$s%4$s"
@@ -145,17 +146,20 @@ msgstr "%1$s சோன்டோ%2$s%3$s%4$s"
 msgid "%1$sonto %2$s"
 msgstr "%1$s வாரம்%2$s கள்"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after
+#. * | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|masculine form"
 msgstr "%1$s வாரம்%2$s கள்"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after
+#. * | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|feminine form"
 msgstr "%1$s வாரம்%2$s கள்"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after |
+#. * doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|neuter form"
 msgstr "%1$s வாரம்%2$s கள்"
@@ -163,22 +167,26 @@ msgstr "%1$s வாரம்%2$s கள்"
 msgid "onto the motorway ramp"
 msgstr "மின்னோடி பாதை வளைவில்"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
 msgstr "%s உள் %s%s%s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
 msgstr "%s உள் %s%s%s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
 msgstr "%s உள் %s%s%s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
 msgstr "%s உள் %s%s%s"
@@ -225,22 +233,26 @@ msgstr "இப்பொழுது"
 msgid "then"
 msgstr "பின்னர்"
 
-#. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have
+#. * to be included.
 #, c-format
 msgid "then merge%1$s|right"
 msgstr "பின்னர்%1$s ஐ இணைக்கவும்"
 
-#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge,
+#. * the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
 msgstr "%1$s %2$s ஐ இணைக்கவும்"
 
-#. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to
+#. * be included.
 #, c-format
 msgid "then merge%1$s|left"
 msgstr "பின்னர்%1$s ஐ இணைக்கவும்"
 
-#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the
+#. * stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
 msgstr "%1$s %2$s ஐ இணைக்கவும்"
@@ -251,17 +263,18 @@ msgstr "உங்கள் இடதுபுறத்தில்"
 msgid "on your right"
 msgstr "உங்கள் வலதுபுறத்தில்"
 
-#. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
+#. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the
+#. * third is distance
 #, c-format
 msgid "Take exit %1$s %2$s %3$s"
 msgstr "வெளியேறு %1$s %2$s %3$s ஐ எடுத்துக் கொள்ளுங்கள்"
 
-#. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
+#. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is
+#. * destination
 #, c-format
 msgid "Take the exit %1$s %2$s%3$s"
 msgstr "வெளியேறும் %1$s %2$s %3$s ஐ எடுத்துக் கொள்ளுங்கள்"
 
-#. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
 msgstr "பரிமாற்றத்தில்"
 
@@ -273,7 +286,8 @@ msgstr "வெளியேறும்போது"
 msgid "then continue straight%1$s"
 msgstr "பின்னர் நேராக%1$s தொடரவும்"
 
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is
+#. * destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
 msgstr "நேராக%1$s%2$s%3$s தொடரவும்"
@@ -283,7 +297,8 @@ msgstr "நேராக%1$s%2$s%3$s தொடரவும்"
 msgid "then keep right%1$s"
 msgstr "பின்னர்%1$s ஐ வைத்திருங்கள்"
 
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is
+#. * destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
 msgstr "வலதுபுறம்%1$s%2$s%3$s"
@@ -293,7 +308,8 @@ msgstr "வலதுபுறம்%1$s%2$s%3$s"
 msgid "then keep left%1$s"
 msgstr "பின்னர் இடது%1$s வைத்திருங்கள்"
 
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is
+#. * destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
 msgstr "இடது%1$s%2$s%3$s ஐ வைத்திருங்கள்"
@@ -326,7 +342,8 @@ msgstr "%2$s க்கு %1$s சாலையை எடுத்துக் �
 msgid "after %i roads"
 msgstr "%iநான் சாலைகளுக்குப் பிறகு"
 
-#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
+#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the
+#. * fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "%1$s %2$s %3$s %4$s ஐத் திருப்புங்கள்"
@@ -345,6 +362,7 @@ msgid "then make a U-turn|right"
 msgstr "பின்னர் யு-டர்ன் செய்யுங்கள்"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
+#.
 #, c-format
 msgid "Make a U-turn %1$s|right"
 msgstr "U-turn %1$s ஐ உருவாக்குங்கள்"
@@ -1639,7 +1657,9 @@ msgstr "புத்தககுறி"
 msgid "Destination"
 msgstr "இலக்கு"
 
-#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character)
+#. for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic
+#. key is desired).
 msgid "_Display"
 msgstr "_ டிச்ப்ளே"
 
@@ -2140,30 +2160,17 @@ msgstr "வெளியே பாருங்கள்! கேமரா!"
 msgid "Please decrease your speed"
 msgstr "உங்கள் வேகத்தை குறைக்கவும்"
 
-msgid "Vehicle Position"
-msgstr "வாகன நிலை"
-
 msgid "Main menu"
 msgstr "பட்டியல் விளையாடுங்கள்"
 
-msgid ""
-"Show\n"
-"Map"
+msgid "Town search"
 msgstr ""
-"காட்டு\n"
-" வரைபடம்"
 
-msgid "Settings"
-msgstr "அமைப்புகள்"
+msgid "Former destinations"
+msgstr ""
 
-msgid "Tools"
-msgstr "கருவிகள்"
-
-msgid "Route"
-msgstr "பாதை"
-
-msgid "About"
-msgstr "பற்றி"
+msgid "Show Map"
+msgstr ""
 
 msgid "Quit"
 msgstr "வெளியேறு"
@@ -2171,25 +2178,122 @@ msgstr "வெளியேறு"
 msgid "Actions"
 msgstr "செயல்கள்"
 
-msgid ""
-"Former\n"
-"Destinations"
+msgid "Suggest rest stop"
 msgstr ""
-"முன்னாள்\n"
-" இடங்கள்"
 
-msgid "Coordinates"
-msgstr "ஒருங்கிணைப்புகள்"
-
-msgid ""
-"Stop\n"
-"Navigation"
+msgid "Alias: rest_suggest_stop"
 msgstr ""
-"நிறுத்து\n"
-" வழிசெலுத்தல்"
+
+msgid "Start break"
+msgstr ""
+
+msgid "Alias: rest_start_break"
+msgstr ""
+
+msgid "End break"
+msgstr ""
+
+msgid "Alias: rest_end_break"
+msgstr ""
+
+msgid "Log fuel stop"
+msgstr ""
+
+msgid "Route"
+msgstr "பாதை"
+
+msgid "Route description"
+msgstr ""
+
+msgid "Height profile"
+msgstr ""
+
+msgid "Zoom to route"
+msgstr "பாதைக்கு பெரிதாக்கவும்"
+
+msgid "Remove last waypoint"
+msgstr ""
+
+msgid "Remove next waypoint"
+msgstr ""
+
+msgid "Abort navigation"
+msgstr ""
+
+msgid "Settings"
+msgstr "அமைப்புகள்"
 
 msgid "Display"
 msgstr "காட்சி"
+
+msgid "Locale"
+msgstr ""
+
+msgid "About"
+msgstr "பற்றி"
+
+#. Android resource: @strings/map_download_title
+msgid "Map download"
+msgstr "வரைபடம் பதிவிறக்கம்"
+
+#. Android resource: @strings/optionsmenu_set_map_location
+msgid "Set map location"
+msgstr "வரைபட இருப்பிடத்தை அமைக்கவும்"
+
+#. Android resource: @strings/optionsmenu_backup_restore
+msgid "Backup / Restore"
+msgstr "காப்புப்பிரதி / மீட்டமை"
+
+msgid "Plugins"
+msgstr ""
+
+msgid "Driver Break"
+msgstr ""
+
+msgid "Suggest stop"
+msgstr ""
+
+msgid "Show history"
+msgstr ""
+
+msgid "Alias: rest_show_history"
+msgstr ""
+
+msgid "Configure"
+msgstr ""
+
+msgid "Plugin configuration"
+msgstr ""
+
+msgid "Intervals"
+msgstr ""
+
+msgid "Alias: rest_configure_intervals"
+msgstr ""
+
+msgid "Overnight"
+msgstr ""
+
+msgid "Alias: rest_configure_overnight"
+msgstr ""
+
+msgid "Fuel / EV"
+msgstr ""
+
+msgid "Set fuel level"
+msgstr ""
+
+msgid "Elevation"
+msgstr ""
+
+msgid "Download manager"
+msgstr ""
+
+msgid "Download region"
+msgstr ""
+
+msgid "Current elevation"
+msgstr ""
 
 msgid "Fullscreen"
 msgstr "முழு திரை"
@@ -2205,32 +2309,6 @@ msgstr "கைமுறையாக பெரிதாக்குதல்"
 
 msgid "Layers"
 msgstr "அடுக்குகள்"
-
-msgid "Zoom to route"
-msgstr "பாதைக்கு பெரிதாக்கவும்"
-
-msgid "Description"
-msgstr "விவரம்"
-
-msgid ""
-"Drop last\n"
-"Waypoint"
-msgstr ""
-"கடைசியாக கைவிடவும் \n"
-"வழிப்பாதை"
-
-msgid ""
-"Drop next\n"
-"Waypoint"
-msgstr ""
-"அடுத்து கைவிடவும் \n"
-"வழிப்பாதை"
-
-msgid "Configure Driver Break Intervals"
-msgstr ""
-
-msgid "Configure Overnight Stops"
-msgstr ""
 
 msgid "Satellite Status"
 msgstr "செயற்கைக்கோள் நிலை"
@@ -2327,14 +2405,6 @@ msgstr "மாற்றவும்"
 msgid "Exit Navit"
 msgstr "நவி வெளியேறு"
 
-#. Android resource: @strings/optionsmenu_backup_restore
-msgid "Backup / Restore"
-msgstr "காப்புப்பிரதி / மீட்டமை"
-
-#. Android resource: @strings/optionsmenu_set_map_location
-msgid "Set map location"
-msgstr "வரைபட இருப்பிடத்தை அமைக்கவும்"
-
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
 msgstr "இங்கே செல்லும் பாதை"
@@ -2350,10 +2420,6 @@ msgstr "உடன் நிலையைப் பயன்படுத்தவ�
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
 msgstr "இந்த வரைபடத்தை நீக்கவா?"
-
-#. Android resource: @strings/map_download_title
-msgid "Map download"
-msgstr "வரைபடம் பதிவிறக்கம்"
 
 #. Android resource: @strings/map_download_downloading
 msgid "Downloading:"
@@ -2422,8 +2488,8 @@ msgid ""
 "Current map location %s is not available Please restart Navit after you "
 "attach an SD card or select a different map location."
 msgstr ""
-"தற்போதைய வரைபட இருப்பிடம் %s கிடைக்கவில்லை, எச்டி கார்டை இணைத்தபிறகு அல்லது வேறு வரைபட "
-"இருப்பிடத்தைத் தேர்ந்தெடுத்த பிறகு நேவ்த்தை மீண்டும் தொடங்கு."
+"தற்போதைய வரைபட இருப்பிடம் %s கிடைக்கவில்லை, எச்டி கார்டை இணைத்தபிறகு அல்லது வேறு "
+"வரைபட இருப்பிடத்தைத் தேர்ந்தெடுத்த பிறகு நேவ்த்தை மீண்டும் தொடங்கு."
 
 #. Android resource: @strings/address_search_title
 msgid "Address search"
@@ -2550,8 +2616,8 @@ msgid ""
 "Navit needs permission to access GPS and read the map.\n"
 "If you change your mind please restart Navit and grant the permissions"
 msgstr ""
-"உலக இடம் காட்டும் அமைப்பு (இடம் காட்டி) ஐ அணுகவும் வரைபடத்தைப் படிக்கவும் Navitக்கு இசைவு "
-"தேவை. \n"
+"உலக இடம் காட்டும் அமைப்பு (இடம் காட்டி) ஐ அணுகவும் வரைபடத்தைப் படிக்கவும் Navitக்கு "
+"இசைவு தேவை. \n"
 "நீங்கள் உங்கள் எண்ணத்தை மாற்றினால், Navit ஐ மறுதொடக்கம் செய்து அனுமதிகளை வழங்கவும்"
 
 #. Android resource: @strings/permissions_info_box_title
@@ -3041,6 +3107,53 @@ msgstr "தெற்கு+மத்திய அமெரிக்கா"
 #. Android resource: @strings/guyane_francaise
 msgid "Guyane Francaise"
 msgstr "கயானா ஃபிராங்காய்"
+
+#~ msgid "Vehicle Position"
+#~ msgstr "வாகன நிலை"
+
+#~ msgid ""
+#~ "Show\n"
+#~ "Map"
+#~ msgstr ""
+#~ "காட்டு\n"
+#~ " வரைபடம்"
+
+#~ msgid "Tools"
+#~ msgstr "கருவிகள்"
+
+#~ msgid ""
+#~ "Former\n"
+#~ "Destinations"
+#~ msgstr ""
+#~ "முன்னாள்\n"
+#~ " இடங்கள்"
+
+#~ msgid "Coordinates"
+#~ msgstr "ஒருங்கிணைப்புகள்"
+
+#~ msgid ""
+#~ "Stop\n"
+#~ "Navigation"
+#~ msgstr ""
+#~ "நிறுத்து\n"
+#~ " வழிசெலுத்தல்"
+
+#~ msgid "Description"
+#~ msgstr "விவரம்"
+
+#~ msgid ""
+#~ "Drop last\n"
+#~ "Waypoint"
+#~ msgstr ""
+#~ "கடைசியாக கைவிடவும் \n"
+#~ "வழிப்பாதை"
+
+#~ msgid ""
+#~ "Drop next\n"
+#~ "Waypoint"
+#~ msgstr ""
+#~ "அடுத்து கைவிடவும் \n"
+#~ "வழிப்பாதை"
 
 #~ msgid "No config file navit.xml, navit.xml.local found\n"
 #~ msgstr "கட்டமைப்பு கோப்பு navit.xml, navit.xml.local இல்லை"
