@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 09:49+0100\n"
+"POT-Creation-Date: 2026-03-21 04:54+0100\n"
 "PO-Revision-Date: 2025-06-28 13:05+0000\n"
 "Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/navit/navit-core/"
@@ -2180,133 +2180,94 @@ msgstr "¡Atención! Radar"
 msgid "Please decrease your speed"
 msgstr "Por favor, disminuya su velocidad"
 
-msgid "Vehicle Position"
-msgstr "Posición del vehículo"
-
 msgid "Main menu"
 msgstr "Menú principal"
 
-msgid ""
-"Show\n"
-"Map"
+msgid "Town search"
 msgstr ""
-"Mostrar\n"
-"Mapa"
 
-msgid "Settings"
-msgstr "Configuración"
+msgid "Former destinations"
+msgstr ""
 
-msgid "Tools"
-msgstr "Herramientas"
+msgid "Show Map"
+msgstr ""
 
 msgid "Route"
 msgstr "Ruta"
 
-msgid "About"
-msgstr "Acerca de"
+msgid "Settings"
+msgstr "Configuración"
 
 msgid "Quit"
 msgstr "Salir"
 
-msgid "Actions"
-msgstr "Acciones"
-
-msgid ""
-"Former\n"
-"Destinations"
+msgid "Route description"
 msgstr ""
-"Destinos\n"
-"anteriores"
 
-msgid "Coordinates"
-msgstr "Coordenadas"
-
-msgid ""
-"Stop\n"
-"Navigation"
+msgid "Height profile"
 msgstr ""
-"Parar\n"
-"Navegación"
+
+msgid "Zoom to route"
+msgstr ""
+
+msgid "Remove last waypoint"
+msgstr ""
+
+msgid "Remove next waypoint"
+msgstr ""
+
+msgid "Abort navigation"
+msgstr ""
 
 msgid "Display"
 msgstr "Visualizar"
 
+msgid "Plugins"
+msgstr ""
+
+msgid "Locale"
+msgstr ""
+
+#. Android resource: @strings/map_download_title
+msgid "Map download"
+msgstr "Mapa descargado"
+
+#. Android resource: @strings/optionsmenu_set_map_location
+msgid "Set map location"
+msgstr "Establecer ubicación en mapa"
+
+#. Android resource: @strings/optionsmenu_backup_restore
+msgid "Backup / Restore"
+msgstr "Respaldar / Restaurar"
+
+msgid "About"
+msgstr "Acerca de"
+
 msgid "APRS"
 msgstr ""
 
-msgid "APRS Settings"
+msgid "APRS settings (runtime)"
 msgstr ""
 
-msgid "RX Frequency"
+msgid "Input device"
 msgstr ""
 
-msgid "Station Timeout"
-msgstr ""
-
-msgid "Device"
+msgid "Frequency"
 msgstr ""
 
 msgid "NMEA Settings"
 msgstr ""
 
-msgid "APRS RX Frequency"
-msgstr ""
-
-msgid "144.39 MHz (North America)"
-msgstr ""
-
-msgid "144.80 MHz (Europe)"
-msgstr ""
-
-msgid "145.175 MHz (Australia)"
-msgstr ""
-
-msgid "144.575 MHz (New Zealand)"
-msgstr ""
-
-msgid "144.64 MHz (China/Japan)"
-msgstr ""
-
-msgid "144.66 MHz (Japan Kyushu)"
-msgstr ""
-
-msgid "144.93 MHz (Argentina/Uruguay)"
-msgstr ""
-
-msgid "145.57 MHz (Brazil)"
-msgstr ""
-
-msgid "APRS Station Timeout"
-msgstr ""
-
-msgid "30 minutes"
-msgstr ""
-
-msgid "60 minutes"
-msgstr ""
-
-msgid "90 minutes"
-msgstr ""
-
-msgid "120 minutes"
-msgstr ""
-
-msgid "180 minutes"
-msgstr ""
-
-msgid "Clear Expired"
-msgstr ""
-
-msgid "APRS Device"
+msgid "Station timeout"
 msgstr ""
 
 msgid "RTL-SDR Blog V3"
 msgstr ""
 
-msgid "V4 R828D"
+msgid "RTL-SDR Blog V4 R828D"
 msgstr ""
 
-msgid "Nooelec"
+msgid "Nooelec NESDR"
 msgstr ""
 
 msgid "Generic RTL-SDR"
@@ -2315,16 +2276,55 @@ msgstr ""
 msgid "NMEA Serial"
 msgstr ""
 
-msgid "APRS NMEA Settings"
+msgid "144.390 MHz (North America)"
 msgstr ""
 
-msgid "Baud Rate"
+msgid "144.800 MHz (Europe)"
+msgstr ""
+
+msgid "145.175 MHz (Australia)"
+msgstr ""
+
+msgid "144.575 MHz (New Zealand)"
+msgstr ""
+
+msgid "144.640 MHz (China/Japan)"
+msgstr ""
+
+msgid "144.660 MHz (Japan Kyushu)"
+msgstr ""
+
+msgid "144.930 MHz (Argentina/Uruguay)"
+msgstr ""
+
+msgid "145.570 MHz (Brazil)"
+msgstr ""
+
+msgid "Refresh frequency index"
+msgstr ""
+
+msgid "30 minutes"
+msgstr ""
+
+msgid "60 minutes"
+msgstr ""
+
+msgid "90 minutes (default)"
+msgstr ""
+
+msgid "120 minutes"
+msgstr ""
+
+msgid "180 minutes"
+msgstr ""
+
+msgid "Clear expired now"
+msgstr ""
+
+msgid "Baud rate"
 msgstr ""
 
 msgid "Parity"
-msgstr ""
-
-msgid "APRS NMEA Baud Rate"
 msgstr ""
 
 msgid "4800"
@@ -2337,9 +2337,6 @@ msgid "19200"
 msgstr ""
 
 msgid "38400"
-msgstr ""
-
-msgid "APRS NMEA Parity"
 msgstr ""
 
 msgid "None"
@@ -2364,28 +2361,6 @@ msgid "Manual zoom"
 msgstr ""
 
 msgid "Layers"
-msgstr ""
-
-msgid "Zoom to route"
-msgstr ""
-
-msgid "Description"
-msgstr "Descripción"
-
-msgid ""
-"Drop last\n"
-"Waypoint"
-msgstr ""
-
-msgid ""
-"Drop next\n"
-"Waypoint"
-msgstr ""
-
-msgid "Configure Driver Break Intervals"
-msgstr ""
-
-msgid "Configure Overnight Stops"
 msgstr ""
 
 msgid "Satellite Status"
@@ -2474,14 +2449,6 @@ msgstr "Alternar POIs"
 msgid "Exit Navit"
 msgstr "Salir de Navit"
 
-#. Android resource: @strings/optionsmenu_backup_restore
-msgid "Backup / Restore"
-msgstr "Respaldar / Restaurar"
-
-#. Android resource: @strings/optionsmenu_set_map_location
-msgid "Set map location"
-msgstr "Establecer ubicación en mapa"
-
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
 msgstr "Ruta hasta aquí"
@@ -2497,10 +2464,6 @@ msgstr ""
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
 msgstr "¿Borrar este mapa?"
-
-#. Android resource: @strings/map_download_title
-msgid "Map download"
-msgstr "Mapa descargado"
 
 #. Android resource: @strings/map_download_downloading
 msgid "Downloading:"
@@ -3181,6 +3144,42 @@ msgstr ""
 #. Android resource: @strings/guyane_francaise
 msgid "Guyane Francaise"
 msgstr ""
+
+#~ msgid "Vehicle Position"
+#~ msgstr "Posición del vehículo"
+
+#~ msgid ""
+#~ "Show\n"
+#~ "Map"
+#~ msgstr ""
+#~ "Mostrar\n"
+#~ "Mapa"
+
+#~ msgid "Tools"
+#~ msgstr "Herramientas"
+
+#~ msgid "Actions"
+#~ msgstr "Acciones"
+
+#~ msgid ""
+#~ "Former\n"
+#~ "Destinations"
+#~ msgstr ""
+#~ "Destinos\n"
+#~ "anteriores"
+
+#~ msgid "Coordinates"
+#~ msgstr "Coordenadas"
+
+#~ msgid ""
+#~ "Stop\n"
+#~ "Navigation"
+#~ msgstr ""
+#~ "Parar\n"
+#~ "Navegación"
+
+#~ msgid "Description"
+#~ msgstr "Descripción"
 
 #~ msgid "Select a search radius from screen center"
 #~ msgstr "Distancia del centro de la pantalla"
