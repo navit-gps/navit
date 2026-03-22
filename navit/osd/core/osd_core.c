@@ -2836,140 +2836,154 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
     time_t textt;
     int days = 0;
     char buffer[1024];
+    char *formatted_value;
+    char *tmp, *pos;
 
     dbg(lvl_debug, "attribute type: '%s'", attr_to_name(attr->type));
     dbg(lvl_debug, "format: '%s'", format);
     dbg(lvl_debug, "imperial: '%i'", imperial);
 
     switch (attr->type) {
-    case attr_position_speed:
-        return format_speed(*attr->u.numd, "", format, imperial);
-    case attr_position_height:
-        /**
-         * johnk 8/13/2020
-         * if format is "feet" then return feet
-         *   else
-         *       if format is "imperial"
-         *           return meters or feet as controlled by "imperial"
-         *  return meters
-         */
-        if (format && (!strcmp(format, "feet") || (!strcmp(format, "imperial") && imperial == 1))) {
-            return (format_float_0(*attr->u.numd * FEET_PER_METER));
-        }
-        return (format_float_0(*attr->u.numd));
-    case attr_position_direction:
-        return format_float_0(*attr->u.numd);
-    case attr_position_magnetic_direction:
-        return g_strdup_printf("%ld", attr->u.num);
-    case attr_position_coord_geo:
-        if ((!format) || (!strcmp(format, "pos_degminsec"))) {
-            coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer,
-                         sizeof(buffer));
-            return g_strdup(buffer);
-        } else if (!strcmp(format, "pos_degmin")) {
-            coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES, buffer, sizeof(buffer));
-            return g_strdup(buffer);
-        } else if (!strcmp(format, "pos_deg")) {
-            coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_DECIMAL, buffer, sizeof(buffer));
-            return g_strdup(buffer);
-        } else if (!strcmp(format, "lat_degminsec")) {
-            coord_format(attr->u.coord_geo->lat, 360, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
-            return g_strdup(buffer);
-        } else if (!strcmp(format, "lat_degmin")) {
-            coord_format(attr->u.coord_geo->lat, 360, DEGREES_MINUTES, buffer, sizeof(buffer));
-            return g_strdup(buffer);
-        } else if (!strcmp(format, "lat_deg")) {
-            coord_format(attr->u.coord_geo->lat, 360, DEGREES_DECIMAL, buffer, sizeof(buffer));
-            return g_strdup(buffer);
-        } else if (!strcmp(format, "lng_degminsec")) {
-            coord_format(360, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
-            return g_strdup(buffer);
-        } else if (!strcmp(format, "lng_degmin")) {
-            coord_format(360, attr->u.coord_geo->lng, DEGREES_MINUTES, buffer, sizeof(buffer));
-            return g_strdup(buffer);
-        } else if (!strcmp(format, "lng_deg")) {
-            coord_format(360, attr->u.coord_geo->lng, DEGREES_DECIMAL, buffer, sizeof(buffer));
-            return g_strdup(buffer);
-        } else {
-            // fall back to pos_degminsec
-            coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer,
-                         sizeof(buffer));
-            return g_strdup(buffer);
-        }
-    case attr_destination_time:
-        if (!format || (strcmp(format, "arrival") && strcmp(format, "remaining")))
+        case attr_position_speed:
+            formatted_value = format_speed(*attr->u.numd, "", format, imperial);
             break;
-        textt = time(NULL);
-        tm = *localtime(&textt);
-        if (!strcmp(format, "remaining")) {
-            textt -= tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
-            tm = *localtime(&textt);
-        }
-        textt += attr->u.num / 10;
-        text_tm = *localtime(&textt);
-        if (tm.tm_year != text_tm.tm_year || tm.tm_mon != text_tm.tm_mon || tm.tm_mday != text_tm.tm_mday) {
-            text_tm0 = text_tm;
-            text_tm0.tm_sec = 0;
-            text_tm0.tm_min = 0;
-            text_tm0.tm_hour = 0;
-            tm.tm_sec = 0;
-            tm.tm_min = 0;
-            tm.tm_hour = 0;
-            days = (mktime(&text_tm0) - mktime(&tm) + 43200) / 86400;
-        }
-        return format_time(&text_tm, days);
-    case attr_length:
-    case attr_destination_length:
-        if (!format)
-            break;
-        if (!strcmp(format, "named"))
-            return format_distance(attr->u.num, "", imperial);
-        if (!strcmp(format, "value") || !strcmp(format, "unit")) {
-            char *ret, *tmp = format_distance(attr->u.num, " ", imperial);
-            char *pos = strchr(tmp, ' ');
-            if (!pos)
-                return tmp;
-            *pos++ = '\0';
-            if (!strcmp(format, "value"))
-                return tmp;
-            ret = g_strdup(pos);
-            g_free(tmp);
-            return ret;
-        }
-        break;
-    case attr_position_time_iso8601:
-        if ((!format) || (!strcmp(format, "iso8601"))) {
-            break;
-        } else {
-            if (strstr(format, "local;") == format) {
-                textt = iso8601_to_secs(attr->u.str);
-                memcpy((void *)&tm, (void *)localtime(&textt), sizeof(tm));
-                strftime(buffer, sizeof(buffer), (char *)(format + 6), &tm);
-            } else if ((sscanf(format, "%*c%2d:%2d;", &(text_tm.tm_hour), &(text_tm.tm_min)) == 2)
-                       && (strchr("+-", format[0]))) {
-                if (strchr("-", format[0])) {
-                    textt = iso8601_to_secs(attr->u.str) - text_tm.tm_hour * 3600 - text_tm.tm_min * 60;
-                } else {
-                    textt = iso8601_to_secs(attr->u.str) + text_tm.tm_hour * 3600 + text_tm.tm_min * 60;
-                }
-                memcpy((void *)&tm, (void *)gmtime(&textt), sizeof(tm));
-                strftime(buffer, sizeof(buffer), &format[strcspn(format, ";") + 1], &tm);
+        case attr_position_height:
+            /**
+             * johnk 8/13/2020
+             * if format is "feet" then return feet
+             *   else
+             *       if format is "imperial"
+             *           return meters or feet as controlled by "imperial"
+             *  return meters
+             */
+            if (format && (!strcmp(format, "feet") || (!strcmp(format, "imperial") && imperial == 1))) {
+                formatted_value = format_float_0(*attr->u.numd * FEET_PER_METER);
             } else {
-                sscanf(attr->u.str, "%4d-%2d-%2dT%2d:%2d:%2d", &(tm.tm_year), &(tm.tm_mon), &(tm.tm_mday),
-                       &(tm.tm_hour), &(tm.tm_min), &(tm.tm_sec));
-                // the tm structure definition is kinda weird and needs some extra voodoo
-                tm.tm_year -= 1900;
-                tm.tm_mon--;
-                // get weekday and day of the year
-                mktime(&tm);
-                strftime(buffer, sizeof(buffer), format, &tm);
+                formatted_value = format_float_0(*attr->u.numd);
             }
-            return g_strdup(buffer);
-        }
-    default:
+            break;
+        case attr_position_direction:
+            formatted_value = format_float_0(*attr->u.numd);
+            break;
+        case attr_position_magnetic_direction:
+            formatted_value = g_strdup_printf("%ld", attr->u.num);
+            break;
+        case attr_position_coord_geo:
+            // default value for position
+            coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
+            formatted_value = g_strdup(buffer);
+
+            if ((!format) || (!strcmp(format, "pos_degminsec"))) {
+                coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
+                formatted_value = g_strdup(buffer);
+            } else if (!strcmp(format, "pos_degmin")) {
+                coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES, buffer, sizeof(buffer));
+                formatted_value = g_strdup(buffer);
+            } else if (!strcmp(format, "pos_deg")) {
+                coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_DECIMAL, buffer, sizeof(buffer));
+                formatted_value = g_strdup(buffer);
+            } else if (!strcmp(format, "lat_degminsec")) {
+                coord_format(attr->u.coord_geo->lat, 360, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
+                formatted_value = g_strdup(buffer);
+            } else if (!strcmp(format, "lat_degmin")) {
+                coord_format(attr->u.coord_geo->lat, 360, DEGREES_MINUTES, buffer, sizeof(buffer));
+                formatted_value = g_strdup(buffer);
+            } else if (!strcmp(format, "lat_deg")) {
+                coord_format(attr->u.coord_geo->lat, 360, DEGREES_DECIMAL, buffer, sizeof(buffer));
+                formatted_value = g_strdup(buffer);
+            } else if (!strcmp(format, "lng_degminsec")) {
+                coord_format(360, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
+                formatted_value = g_strdup(buffer);
+            } else if (!strcmp(format, "lng_degmin")) {
+                coord_format(360, attr->u.coord_geo->lng, DEGREES_MINUTES, buffer, sizeof(buffer));
+                formatted_value = g_strdup(buffer);
+            } else if (!strcmp(format, "lng_deg")) {
+                coord_format(360, attr->u.coord_geo->lng, DEGREES_DECIMAL, buffer, sizeof(buffer));
+                formatted_value = g_strdup(buffer);
+            }
+            break;
+        case attr_destination_time:
+            if (!format || (strcmp(format, "arrival") && strcmp(format, "remaining")))
+                break;
+            textt = time(NULL);
+            tm = *localtime(&textt);
+            if (!strcmp(format, "remaining")) {
+                textt -= tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
+                tm = *localtime(&textt);
+            }
+            textt += attr->u.num / 10;
+            text_tm = *localtime(&textt);
+            if (tm.tm_year != text_tm.tm_year || tm.tm_mon != text_tm.tm_mon || tm.tm_mday != text_tm.tm_mday) {
+                text_tm0 = text_tm;
+                text_tm0.tm_sec = 0;
+                text_tm0.tm_min = 0;
+                text_tm0.tm_hour = 0;
+                tm.tm_sec = 0;
+                tm.tm_min = 0;
+                tm.tm_hour = 0;
+                days = (mktime(&text_tm0) - mktime(&tm) + 43200) / 86400;
+            }
+            formatted_value = format_time(&text_tm, days);
+            break;
+        case attr_length:
+        case attr_destination_length:
+        if (format) {
+            if (!strcmp(format, "named")) {
+                formatted_value = format_distance(attr->u.num, "", imperial);
+            } else {
+                if (!strcmp(format, "value") || !strcmp(format, "unit")) {
+                    tmp = format_distance(attr->u.num, " ", imperial);
+                    pos = strchr(tmp, ' ');
+                    if (!pos) {
+                        formatted_value = tmp;
+                    } else {
+                        *pos++ = '\0';
+                        if (!strcmp(format, "value")) {
+                            formatted_value = tmp;
+                        } else {
+                            formatted_value = g_strdup(pos);
+                        }
+                        g_free(tmp);
+                    } // pos
+                } // value or unit
+            } // named
+        } // format
         break;
-    }
-    return attr_to_text(attr, NULL, 1);
+        case attr_position_time_iso8601:
+            if ((!format) || (!strcmp(format, "iso8601"))) {
+                break;
+            } else {
+                if (strstr(format, "local;") == format) {
+                    textt = iso8601_to_secs(attr->u.str);
+                    memcpy((void *)&tm, (void *)localtime(&textt), sizeof(tm));
+                    strftime(buffer, sizeof(buffer), (char *)(format + 6), &tm);
+                } else if ((sscanf(format, "%*c%2d:%2d;", &(text_tm.tm_hour), &(text_tm.tm_min)) == 2)
+                        && (strchr("+-", format[0]))) {
+                    if (strchr("-", format[0])) {
+                        textt = iso8601_to_secs(attr->u.str) - text_tm.tm_hour * 3600 - text_tm.tm_min * 60;
+                    } else {
+                        textt = iso8601_to_secs(attr->u.str) + text_tm.tm_hour * 3600 + text_tm.tm_min * 60;
+                    }
+                    memcpy((void *)&tm, (void *)gmtime(&textt), sizeof(tm));
+                    strftime(buffer, sizeof(buffer), &format[strcspn(format, ";") + 1], &tm);
+                } else {
+                    sscanf(attr->u.str, "%4d-%2d-%2dT%2d:%2d:%2d", &(tm.tm_year), &(tm.tm_mon), &(tm.tm_mday),
+                        &(tm.tm_hour), &(tm.tm_min), &(tm.tm_sec));
+                    // the tm structure definition is kinda weird and needs some extra voodoo
+                    tm.tm_year -= 1900;
+                    tm.tm_mon--;
+                    // get weekday and day of the year
+                    mktime(&tm);
+                    strftime(buffer, sizeof(buffer), format, &tm);
+                }
+                return g_strdup(buffer);
+            }
+        default:
+            formatted_value = attr_to_text(attr, NULL, 1);
+            break;
+    } // switch
+
+    return formatted_value;
 }
 
 /**
