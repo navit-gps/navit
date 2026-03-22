@@ -2873,34 +2873,40 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
             coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
             formatted_value = g_strdup(buffer);
 
-            if ((!format) || (!strcmp(format, "pos_degminsec"))) {
-                coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
-                formatted_value = g_strdup(buffer);
-            } else if (!strcmp(format, "pos_degmin")) {
-                coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES, buffer, sizeof(buffer));
-                formatted_value = g_strdup(buffer);
-            } else if (!strcmp(format, "pos_deg")) {
-                coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_DECIMAL, buffer, sizeof(buffer));
-                formatted_value = g_strdup(buffer);
-            } else if (!strcmp(format, "lat_degminsec")) {
-                coord_format(attr->u.coord_geo->lat, 360, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
-                formatted_value = g_strdup(buffer);
-            } else if (!strcmp(format, "lat_degmin")) {
-                coord_format(attr->u.coord_geo->lat, 360, DEGREES_MINUTES, buffer, sizeof(buffer));
-                formatted_value = g_strdup(buffer);
-            } else if (!strcmp(format, "lat_deg")) {
-                coord_format(attr->u.coord_geo->lat, 360, DEGREES_DECIMAL, buffer, sizeof(buffer));
-                formatted_value = g_strdup(buffer);
-            } else if (!strcmp(format, "lng_degminsec")) {
-                coord_format(360, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
-                formatted_value = g_strdup(buffer);
-            } else if (!strcmp(format, "lng_degmin")) {
-                coord_format(360, attr->u.coord_geo->lng, DEGREES_MINUTES, buffer, sizeof(buffer));
-                formatted_value = g_strdup(buffer);
-            } else if (!strcmp(format, "lng_deg")) {
-                coord_format(360, attr->u.coord_geo->lng, DEGREES_DECIMAL, buffer, sizeof(buffer));
-                formatted_value = g_strdup(buffer);
-            }
+            if (format) {
+                if (!strcmp(format, "pos_degmin")) {
+                    coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES, buffer, sizeof(buffer));
+                    formatted_value = g_strdup(buffer);
+                }
+                if (!strcmp(format, "pos_deg")) {
+                    coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_DECIMAL, buffer, sizeof(buffer));
+                    formatted_value = g_strdup(buffer);
+                }
+                if (!strcmp(format, "lat_degminsec")) {
+                    coord_format(attr->u.coord_geo->lat, 360, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
+                    formatted_value = g_strdup(buffer);
+                }
+                if (!strcmp(format, "lat_degmin")) {
+                    coord_format(attr->u.coord_geo->lat, 360, DEGREES_MINUTES, buffer, sizeof(buffer));
+                    formatted_value = g_strdup(buffer);
+                }
+                if (!strcmp(format, "lat_deg")) {
+                    coord_format(attr->u.coord_geo->lat, 360, DEGREES_DECIMAL, buffer, sizeof(buffer));
+                    formatted_value = g_strdup(buffer);
+                }
+                if (!strcmp(format, "lng_degminsec")) {
+                    coord_format(360, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
+                    formatted_value = g_strdup(buffer);
+                }
+                if (!strcmp(format, "lng_degmin")) {
+                    coord_format(360, attr->u.coord_geo->lng, DEGREES_MINUTES, buffer, sizeof(buffer));
+                    formatted_value = g_strdup(buffer);
+                }
+                if (!strcmp(format, "lng_deg")) {
+                    coord_format(360, attr->u.coord_geo->lng, DEGREES_DECIMAL, buffer, sizeof(buffer));
+                    formatted_value = g_strdup(buffer);
+                }
+            } // format 
             break;
         case attr_destination_time:
             if (format) {
