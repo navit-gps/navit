@@ -2836,143 +2836,170 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
     time_t textt;
     int days = 0;
     char buffer[1024];
+    char *formatted_value;
+    char *tmp, *pos;
+
+    dbg(lvl_debug, "attribute type: '%s'", attr_to_name(attr->type));
+    dbg(lvl_debug, "format: '%s'", format);
+    dbg(lvl_debug, "imperial: '%i'", imperial);
 
     switch (attr->type) {
-    case attr_position_speed:
-        return format_speed(*attr->u.numd, "", format, imperial);
-    case attr_position_height:
-        /**
-         * johnk 8/13/2020
-         * if format is "feet" then return feet
-         *   else
-         *       if format is "imperial"
-         *           return meters or feet as controlled by "imperial"
-         *  return meters
-         */
-        if (format && (!strcmp(format, "feet") || (!strcmp(format, "imperial") && imperial == 1))) {
-            return (format_float_0(*attr->u.numd * FEET_PER_METER));
-        }
-        return (format_float_0(*attr->u.numd));
-    case attr_position_direction:
-        return format_float_0(*attr->u.numd);
-    case attr_position_magnetic_direction:
-        return g_strdup_printf("%ld", attr->u.num);
-    case attr_position_coord_geo:
-        if ((!format) || (!strcmp(format, "pos_degminsec"))) {
-            coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer,
-                         sizeof(buffer));
-            return g_strdup(buffer);
-        } else if (!strcmp(format, "pos_degmin")) {
-            coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES, buffer, sizeof(buffer));
-            return g_strdup(buffer);
-        } else if (!strcmp(format, "pos_deg")) {
-            coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_DECIMAL, buffer, sizeof(buffer));
-            return g_strdup(buffer);
-        } else if (!strcmp(format, "lat_degminsec")) {
-            coord_format(attr->u.coord_geo->lat, 360, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
-            return g_strdup(buffer);
-        } else if (!strcmp(format, "lat_degmin")) {
-            coord_format(attr->u.coord_geo->lat, 360, DEGREES_MINUTES, buffer, sizeof(buffer));
-            return g_strdup(buffer);
-        } else if (!strcmp(format, "lat_deg")) {
-            coord_format(attr->u.coord_geo->lat, 360, DEGREES_DECIMAL, buffer, sizeof(buffer));
-            return g_strdup(buffer);
-        } else if (!strcmp(format, "lng_degminsec")) {
-            coord_format(360, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
-            return g_strdup(buffer);
-        } else if (!strcmp(format, "lng_degmin")) {
-            coord_format(360, attr->u.coord_geo->lng, DEGREES_MINUTES, buffer, sizeof(buffer));
-            return g_strdup(buffer);
-        } else if (!strcmp(format, "lng_deg")) {
-            coord_format(360, attr->u.coord_geo->lng, DEGREES_DECIMAL, buffer, sizeof(buffer));
-            return g_strdup(buffer);
-        } else {
-            // fall back to pos_degminsec
-            coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer,
-                         sizeof(buffer));
-            return g_strdup(buffer);
-        }
-    case attr_destination_time:
-        if (!format || (strcmp(format, "arrival") && strcmp(format, "remaining")))
+        case attr_position_speed:
+            formatted_value = format_speed(*attr->u.numd, "", format, imperial);
             break;
-        textt = time(NULL);
-        tm = *localtime(&textt);
-        if (!strcmp(format, "remaining")) {
-            textt -= tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
-            tm = *localtime(&textt);
-        }
-        textt += attr->u.num / 10;
-        text_tm = *localtime(&textt);
-        if (tm.tm_year != text_tm.tm_year || tm.tm_mon != text_tm.tm_mon || tm.tm_mday != text_tm.tm_mday) {
-            text_tm0 = text_tm;
-            text_tm0.tm_sec = 0;
-            text_tm0.tm_min = 0;
-            text_tm0.tm_hour = 0;
-            tm.tm_sec = 0;
-            tm.tm_min = 0;
-            tm.tm_hour = 0;
-            days = (mktime(&text_tm0) - mktime(&tm) + 43200) / 86400;
-        }
-        return format_time(&text_tm, days);
-    case attr_length:
-    case attr_destination_length:
-        if (!format)
-            break;
-        if (!strcmp(format, "named"))
-            return format_distance(attr->u.num, "", imperial);
-        if (!strcmp(format, "value") || !strcmp(format, "unit")) {
-            char *ret, *tmp = format_distance(attr->u.num, " ", imperial);
-            char *pos = strchr(tmp, ' ');
-            if (!pos)
-                return tmp;
-            *pos++ = '\0';
-            if (!strcmp(format, "value"))
-                return tmp;
-            ret = g_strdup(pos);
-            g_free(tmp);
-            return ret;
-        }
-        break;
-    case attr_position_time_iso8601:
-        if ((!format) || (!strcmp(format, "iso8601"))) {
-            break;
-        } else {
-            if (strstr(format, "local;") == format) {
-                textt = iso8601_to_secs(attr->u.str);
-                memcpy((void *)&tm, (void *)localtime(&textt), sizeof(tm));
-                strftime(buffer, sizeof(buffer), (char *)(format + 6), &tm);
-            } else if ((sscanf(format, "%*c%2d:%2d;", &(text_tm.tm_hour), &(text_tm.tm_min)) == 2)
-                       && (strchr("+-", format[0]))) {
-                if (strchr("-", format[0])) {
-                    textt = iso8601_to_secs(attr->u.str) - text_tm.tm_hour * 3600 - text_tm.tm_min * 60;
-                } else {
-                    textt = iso8601_to_secs(attr->u.str) + text_tm.tm_hour * 3600 + text_tm.tm_min * 60;
-                }
-                memcpy((void *)&tm, (void *)gmtime(&textt), sizeof(tm));
-                strftime(buffer, sizeof(buffer), &format[strcspn(format, ";") + 1], &tm);
+        case attr_position_height:
+            /**
+             * johnk 8/13/2020
+             * if format is "feet" then return feet
+             *   else
+             *       if format is "imperial"
+             *           return meters or feet as controlled by "imperial"
+             *  return meters
+             */
+            if (format && (!strcmp(format, "feet") || (!strcmp(format, "imperial") && imperial == 1))) {
+                formatted_value = format_float_0(*attr->u.numd * FEET_PER_METER);
             } else {
-                sscanf(attr->u.str, "%4d-%2d-%2dT%2d:%2d:%2d", &(tm.tm_year), &(tm.tm_mon), &(tm.tm_mday),
-                       &(tm.tm_hour), &(tm.tm_min), &(tm.tm_sec));
-                // the tm structure definition is kinda weird and needs some extra voodoo
-                tm.tm_year -= 1900;
-                tm.tm_mon--;
-                // get weekday and day of the year
-                mktime(&tm);
-                strftime(buffer, sizeof(buffer), format, &tm);
+                formatted_value = format_float_0(*attr->u.numd);
             }
-            return g_strdup(buffer);
-        }
-    default:
+            break;
+        case attr_position_direction:
+            formatted_value = format_float_0(*attr->u.numd);
+            break;
+        case attr_position_magnetic_direction:
+            formatted_value = g_strdup_printf("%ld", attr->u.num);
+            break;
+        case attr_position_coord_geo:
+            // default value for position
+            coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
+            formatted_value = g_strdup(buffer);
+
+            if (format) {
+                if (!strcmp(format, "pos_degmin")) {
+                    coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_MINUTES, buffer, sizeof(buffer));
+                    formatted_value = g_strdup(buffer);
+                }
+                if (!strcmp(format, "pos_deg")) {
+                    coord_format(attr->u.coord_geo->lat, attr->u.coord_geo->lng, DEGREES_DECIMAL, buffer, sizeof(buffer));
+                    formatted_value = g_strdup(buffer);
+                }
+                if (!strcmp(format, "lat_degminsec")) {
+                    coord_format(attr->u.coord_geo->lat, 360, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
+                    formatted_value = g_strdup(buffer);
+                }
+                if (!strcmp(format, "lat_degmin")) {
+                    coord_format(attr->u.coord_geo->lat, 360, DEGREES_MINUTES, buffer, sizeof(buffer));
+                    formatted_value = g_strdup(buffer);
+                }
+                if (!strcmp(format, "lat_deg")) {
+                    coord_format(attr->u.coord_geo->lat, 360, DEGREES_DECIMAL, buffer, sizeof(buffer));
+                    formatted_value = g_strdup(buffer);
+                }
+                if (!strcmp(format, "lng_degminsec")) {
+                    coord_format(360, attr->u.coord_geo->lng, DEGREES_MINUTES_SECONDS, buffer, sizeof(buffer));
+                    formatted_value = g_strdup(buffer);
+                }
+                if (!strcmp(format, "lng_degmin")) {
+                    coord_format(360, attr->u.coord_geo->lng, DEGREES_MINUTES, buffer, sizeof(buffer));
+                    formatted_value = g_strdup(buffer);
+                }
+                if (!strcmp(format, "lng_deg")) {
+                    coord_format(360, attr->u.coord_geo->lng, DEGREES_DECIMAL, buffer, sizeof(buffer));
+                    formatted_value = g_strdup(buffer);
+                }
+            } // format
+            break;
+        case attr_destination_time:
+            if (format) {
+                if (!strcmp(format, "arrival") || !strcmp(format, "remaining")) {
+                    textt = time(NULL);
+                    tm = *localtime(&textt);
+                    if (!strcmp(format, "remaining")) {
+                        textt -= tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
+                        tm = *localtime(&textt);
+                    }
+                    textt += attr->u.num / 10;
+                    text_tm = *localtime(&textt);
+                    if (tm.tm_year != text_tm.tm_year || tm.tm_mon != text_tm.tm_mon || tm.tm_mday != text_tm.tm_mday) {
+                        text_tm0 = text_tm;
+                        text_tm0.tm_sec = 0;
+                        text_tm0.tm_min = 0;
+                        text_tm0.tm_hour = 0;
+                        tm.tm_sec = 0;
+                        tm.tm_min = 0;
+                        tm.tm_hour = 0;
+                        days = (mktime(&text_tm0) - mktime(&tm) + 43200) / 86400;
+                    }
+                    formatted_value = format_time(&text_tm, days);
+                } // arrival or remaining
+            } // format
+            break;
+        case attr_length:
+        case attr_destination_length:
+        if (format) {
+            if (!strcmp(format, "named")) {
+                formatted_value = format_distance(attr->u.num, "", imperial);
+            } else {
+                if (!strcmp(format, "value") || !strcmp(format, "unit")) {
+                    tmp = format_distance(attr->u.num, " ", imperial);
+                    pos = strchr(tmp, ' ');
+                    if (!pos) {
+                        formatted_value = tmp;
+                    } else {
+                        *pos++ = '\0';
+                        if (!strcmp(format, "value")) {
+                            formatted_value = tmp;
+                        } else {
+                            formatted_value = g_strdup(pos);
+                        }
+                        g_free(tmp);
+                    } // pos
+                } // value or unit
+            } // named
+        } // format
         break;
-    }
-    return attr_to_text(attr, NULL, 1);
+        case attr_position_time_iso8601:
+            if (format) {
+                if (strcmp(format, "iso8601")) {
+                    if (strstr(format, "local;") == format) {
+                        textt = iso8601_to_secs(attr->u.str);
+                        memcpy((void *)&tm, (void *)localtime(&textt), sizeof(tm));
+                        strftime(buffer, sizeof(buffer), (char *)(format + 6), &tm);
+                    }
+
+                    if ((sscanf(format, "%*c%2d:%2d;", &(text_tm.tm_hour), &(text_tm.tm_min)) == 2) && (strchr("+-", format[0]))) {
+                        if (strchr("-", format[0])) {
+                            textt = iso8601_to_secs(attr->u.str) - text_tm.tm_hour * 3600 - text_tm.tm_min * 60;
+                        } else {
+                            textt = iso8601_to_secs(attr->u.str) + text_tm.tm_hour * 3600 + text_tm.tm_min * 60;
+                        }
+                        memcpy((void *)&tm, (void *)gmtime(&textt), sizeof(tm));
+                        strftime(buffer, sizeof(buffer), &format[strcspn(format, ";") + 1], &tm);
+                    } else {
+                        sscanf(attr->u.str, "%4d-%2d-%2dT%2d:%2d:%2d", &(tm.tm_year), &(tm.tm_mon), &(tm.tm_mday), &(tm.tm_hour), &(tm.tm_min), &(tm.tm_sec));
+                        // the tm structure definition is kinda weird and needs some extra voodoo
+                        tm.tm_year -= 1900;
+                        tm.tm_mon--;
+                        // get weekday and day of the year
+                        mktime(&tm);
+                        strftime(buffer, sizeof(buffer), format, &tm);
+                    }
+                    formatted_value = g_strdup(buffer);
+                } // no iso8601
+            } // formatattr_position_time_iso8601
+            break;
+        default:
+            formatted_value = attr_to_text(attr, NULL, 1);
+            break;
+    } // switch
+
+    return formatted_value;
 }
 
 /**
  * @brief Parses a string of the form key.subkey or key[index].subkey into its components, where subkey
  * can itself have its own index and further subkeys
  *
- * @param in String to parse (the part before subkey will be modified by the function); upon returning
+ * @param in String to parse (the part beattr_position_time_iso8601fore subkey will be modified by the function); upon returning
  * this pointer will point to a string containing key
  * @param index Pointer to an address that will receive a pointer to a string containing index or NULL
  * if key does not have an index
@@ -2981,7 +3008,7 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
  * fails (index with missing closed bracket or passing a null pointer as index argument when an index
  * was encountered), the return value is NULL
  */
-static char *osd_text_split(char *in, char **index) {
+static char *osd_get_key(char *in, char **index) {
     char *pos;
     int len;
     if (index)
@@ -3015,7 +3042,7 @@ static char *osd_text_split(char *in, char **index) {
 static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *v) {
     struct osd_text *this = (struct osd_text *)opc->data;
     struct point p, p2[4];
-    char *str, *last, *next, *value, *absbegin;
+    char *text, *last, *next, *value, *absbegin;
     int do_draw = opc->osd_item.do_draw;
     struct attr attr, vehicle_attr, maxspeed_attr, imperial_attr;
     struct navigation *nav = NULL;
@@ -3035,14 +3062,18 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
 
     vehicle_attr.u.vehicle = NULL;
     oti = this->items;
-    str = NULL;
+    text = NULL;
 
     while (oti) {
         item = NULL;
         value = NULL;
 
+        // Static text
         if (oti->static_text) {
             value = g_strdup(oti->text);
+            dbg(lvl_debug, "value (static_text): '%s'", value);
+
+        // Navigation
         } else if (oti->section == attr_navigation) {
             if (navit && !nav)
                 nav = navit_get_navigation(navit);
@@ -3066,13 +3097,16 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
             }
 
             if (item) {
-                dbg(lvl_debug, "name %s", item_to_name(item->type));
-                dbg(lvl_debug, "type %s", attr_to_name(oti->attr_typ));
+                dbg(lvl_debug, "item type name: '%s'", item_to_name(item->type));
+                dbg(lvl_debug, "item type: '%s'", attr_to_name(oti->attr_typ));
                 if (item_attr_get(item, oti->attr_typ, &attr))
                     value = osd_text_format_attr(&attr, oti->format, imperial);
+                    dbg(lvl_debug, "item value: '%s'", value);
             }
             if (nav_mr)
                 map_rect_destroy(nav_mr);
+
+        // Vehicle
         } else if (oti->section == attr_vehicle) {
             if (navit && !vehicle_attr.u.vehicle) {
                 navit_get_attr(navit, attr_vehicle, &vehicle_attr, NULL);
@@ -3080,8 +3114,11 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
             if (vehicle_attr.u.vehicle) {
                 if (vehicle_get_attr(vehicle_attr.u.vehicle, oti->attr_typ, &attr, NULL)) {
                     value = osd_text_format_attr(&attr, oti->format, imperial);
+                    dbg(lvl_debug, "vehicle value: '%s'", value);
                 }
             }
+
+        // Tracking
         } else if (oti->section == attr_tracking) {
             if (navit) {
                 tracking = navit_get_tracking(navit);
@@ -3106,12 +3143,15 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
                     }
 
                     value = format_speed(routespeed, "", oti->format, imperial);
+                    dbg(lvl_debug, "tracking value: '%s'", value);
                 } else if (item) {
                     if (tracking_get_attr(tracking, oti->attr_typ, &attr, NULL))
                         value = osd_text_format_attr(&attr, oti->format, imperial);
+                        dbg(lvl_debug, "tracking item value: '%s'", value);
                 }
             }
 
+        // Navit
         } else if (oti->section == attr_navit) {
             if (oti->attr_typ == attr_message) {
                 struct message *msg;
@@ -3140,32 +3180,36 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
 
                 value[len] = '\0';
             }
-        }
+        } // if static text
 
-        next = g_strdup_printf("%s%s", str ? str : "", value ? value : " ");
+        next = g_strdup_printf("%s%s", text ? text : "", value ? value : " ");
+        dbg(lvl_debug, "next: '%s'", next);
+
         if (value)
             g_free(value);
-        if (str)
-            g_free(str);
-        str = next;
+        if (text)
+            g_free(text);
+        text = next;
         oti = oti->next;
-    }
+    } // while(oti)
 
-    if (!this->last || !str || strcmp(this->last, str)) {
+    if (!this->last || !text || strcmp(this->last, text)) {
         do_draw = 1;
         if (this->last)
             g_free(this->last);
-        this->last = g_strdup(str);
+        this->last = g_strdup(text);
     }
 
-    absbegin = str;
+
+    // Draw //
+    absbegin = text;
 
     if (do_draw) {
         osd_fill_with_bgcolor(&opc->osd_item);
-        if (str) {
+        if (text) {
             lines = 0;
-            next = str;
-            last = str;
+            next = text;
+            last = text;
             while ((next = strstr(next, "\\n"))) {
                 last = next;
                 lines++;
@@ -3204,13 +3248,13 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
                 p.y = (opc->osd_item.h - lines * (height + yspacing) - yspacing) / 2;
             }
 
-            while (str) {
-                next = strstr(str, "\\n");
+            while (text) {
+                next = strstr(text, "\\n");
                 if (next) {
                     *next = '\0';
                     next += 2;
                 }
-                graphics_get_text_bbox(opc->osd_item.gr, opc->osd_item.font, str, 0x10000, 0x0, p2, 0);
+                graphics_get_text_bbox(opc->osd_item.gr, opc->osd_item.font, text, 0x10000, 0x0, p2, 0);
                 switch (this->align & 12) {
                 case 4:
                     p.x = xspacing;
@@ -3222,9 +3266,9 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
                     p.x = ((p2[0].x - p2[2].x) / 2) + (opc->osd_item.w / 2);
                 }
                 p.y += height + yspacing;
-                graphics_draw_text(opc->osd_item.gr, opc->osd_item.graphic_fg_text, NULL, opc->osd_item.font, str, &p,
+                graphics_draw_text(opc->osd_item.gr, opc->osd_item.graphic_fg_text, NULL, opc->osd_item.font, text, &p,
                                    0x10000, 0);
-                str = next;
+                text = next;
             }
         }
         graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
@@ -3255,35 +3299,36 @@ static struct osd_text_item *oti_new(struct osd_text_item *parent) {
 }
 
 /**
- * @brief Prepares a text type OSD element
+ * @brief Parse a text type OSD element
  *
  * This function parses the label string (as specified in the XML file) for a text type OSD element
- * into attributes and static text.
+ * into attributes (type and format properties) and static text.
  *
  * @param opc The {@code struct osd_priv_common} for the OSD element. {@code opc->data->items} will
  * receive a pointer to a list of {@code osd_text_item} structures.
  * @param nav The navit structure
  */
-static void osd_text_prepare(struct osd_priv_common *opc, struct navit *nav) {
+static void osd_parse_label_text(struct osd_priv_common *opc, struct navit *nav) {
     struct osd_text *this = (struct osd_text *)opc->data;
 
-    char *absbegin, *str, *start, *end, *key, *subkey, *index;
+    char *absbegin, *text_to_parse, *start, *end, *key, *subkey, *index;
     struct osd_text_item *oti;
 
     oti = NULL;
-    str = g_strdup(this->text);
-    absbegin = str;
+    text_to_parse = g_strdup(this->text);
+    absbegin = text_to_parse;
 
-    while ((start = strstr(str, "${"))) {
+    while ((start = strstr(text_to_parse, "${"))) {
 
         *start = '\0';
         start += 2;
 
-        // find plain text before
-        if (start != str) {
+        // New OSD static text item
+        if (start != text_to_parse) {
             oti = oti_new(oti);
+            dbg(lvl_debug, "new static text oti (in while loop): '%s'", text_to_parse);
             oti->static_text = 1;
-            oti->text = g_strdup(str);
+            oti->text = g_strdup(text_to_parse);
         }
 
         end = strstr(start, "}");
@@ -3292,50 +3337,70 @@ static void osd_text_prepare(struct osd_priv_common *opc, struct navit *nav) {
 
         *end++ = '\0';
         key = start;
+        dbg(lvl_debug, "key: '%s'", key);
 
-        subkey = osd_text_split(key, NULL);
+        subkey = osd_get_key(key, NULL);
+        dbg(lvl_debug, "subkey: '%s'", subkey);
 
+
+        // New OSD text item
         oti = oti_new(oti);
+        dbg(lvl_debug, "new text oti containing variables");
+
+        // Set section
         oti->section = attr_from_name(key);
+        dbg(lvl_debug, "set section: '%s'", key);
 
-        if ((oti->section == attr_navigation || oti->section == attr_tracking) && subkey) {
-            key = osd_text_split(subkey, &index);
+        // Subkey
+        if (subkey) {
+            // Section navigation and tracking
+            if (oti->section == attr_navigation || oti->section == attr_tracking) {
+                key = osd_get_key(subkey, &index);
+                dbg(lvl_debug, "key: '%s'", key);
 
-            if (index)
-                oti->offset = atoi(index);
+                 if (index)
+                      oti->offset = atoi(index);
 
-            subkey = osd_text_split(key, &index);
+                subkey = osd_get_key(key, &index);
+                dbg(lvl_debug, "subkey: '%s'", subkey);
 
-            if (!strcmp(key, "route_speed")) {
-                oti->attr_typ = attr_speed;
-            } else {
-                oti->attr_typ = attr_from_name(key);
+                if (!strcmp(key, "route_speed")) {
+                    oti->attr_typ = attr_speed;
+                } else {
+                    oti->attr_typ = attr_from_name(key);
+                }
+                oti->format = g_strdup(index);
             }
-            oti->format = g_strdup(index);
-
-        } else if ((oti->section == attr_vehicle || oti->section == attr_navit) && subkey) {
-            key = osd_text_split(subkey, &index);
-            if (!strcmp(subkey, "messages")) {
-                oti->attr_typ = attr_message;
-            } else {
-                oti->attr_typ = attr_from_name(subkey);
+            
+            // Section vehicle and navit
+            if (oti->section == attr_vehicle || oti->section == attr_navit) {
+                key = osd_get_key(subkey, &index);
+                dbg(lvl_debug, "key: '%s'", key);
+                if (!strcmp(subkey, "messages")) {
+                    oti->attr_typ = attr_message;
+                } else {
+                    oti->attr_typ = attr_from_name(subkey);
+                }
+                oti->format = g_strdup(index);
             }
-            oti->format = g_strdup(index);
-        }
 
-        switch (oti->attr_typ) {
-        default:
-            navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_text_draw), attr_position_coord_geo, opc));
-            break;
-        }
+            dbg(lvl_debug, "oti attribute typ (not a typo): '%s'", subkey);
+            dbg(lvl_debug, "oti format: '%s'", oti->format);
+            
+        }  // end subkey
 
-        str = (end);
-    }
+         // Callback
+         navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_text_draw), attr_position_coord_geo, opc));
 
-    if (*str != '\0') {
+         text_to_parse = (end);
+    }  // while start
+
+
+    if (*text_to_parse != '\0') {
         oti = oti_new(oti);
+            dbg(lvl_debug, "new static text oti (after while loop): '%s'", text_to_parse);
         oti->static_text = 1;
-        oti->text = g_strdup(str);
+        oti->text = g_strdup(text_to_parse);
     }
 
     if (oti)
@@ -3346,13 +3411,15 @@ static void osd_text_prepare(struct osd_priv_common *opc, struct navit *nav) {
     g_free(absbegin);
 }
 
+// Only used for callback
 static void osd_text_init(struct osd_priv_common *opc, struct navit *nav) {
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
     navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item));
-    osd_text_prepare(opc, nav);
+    osd_parse_label_text(opc, nav);
     osd_text_draw(opc, nav, NULL);
 }
 
+// Only called from osd_text_new
 static int osd_text_set_attr(struct osd_priv_common *opc, struct attr *attr) {
     struct osd_text *this_ = (struct osd_text *)opc->data;
 
@@ -3370,7 +3437,7 @@ static int osd_text_set_attr(struct osd_priv_common *opc, struct attr *attr) {
         else
             this_->text = g_strdup("");
 
-        osd_text_prepare(opc, nav);
+        osd_parse_label_text(opc, nav);
 
         if (navit_get_blocked(nav) & 1)
             return 1;
@@ -3378,6 +3445,8 @@ static int osd_text_set_attr(struct osd_priv_common *opc, struct attr *attr) {
         osd_text_draw(opc, nav, NULL);
         navit_draw(opc->osd_item.navit);
         return 1;
+    } else {
+         dbg(lvl_debug, "attribute is not a label");
     }
     return 0;
 }
