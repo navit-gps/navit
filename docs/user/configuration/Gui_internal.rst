@@ -32,6 +32,16 @@ with
 
 inside the <gui .../> tag.
 
+The internal gui has a feature to call a browser on OSM nodes. To use it,
+place a shellscript called navit-browser.sh into your PATH.
+
+The shellscript should contain a call to the browser that is meant to be
+executed, similar to this
+
+.. code-block: bash
+   #!/bin/bash
+   xdg-open $@
+
 Menu
 ----
 
