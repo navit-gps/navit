@@ -3157,7 +3157,7 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
 
                 value[len] = '\0';
             }
-        }
+        } // if static text
 
         next = g_strdup_printf("%s%s", text ? text : "", value ? value : " ");
         dbg(lvl_debug, "next: '%s'", next);
@@ -3175,6 +3175,7 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
         if (this->last)
             g_free(this->last);
         this->last = g_strdup(text);
+    }
 
 
     // Draw //
