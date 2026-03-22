@@ -2985,7 +2985,7 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
                     }
                     formatted_value = g_strdup(buffer);
                 } // no iso8601
-            } // format
+            } // formatattr_position_time_iso8601
             break;
         default:
             formatted_value = attr_to_text(attr, NULL, 1);
@@ -2999,7 +2999,7 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
  * @brief Parses a string of the form key.subkey or key[index].subkey into its components, where subkey
  * can itself have its own index and further subkeys
  *
- * @param in String to parse (the part before subkey will be modified by the function); upon returning
+ * @param in String to parse (the part beattr_position_time_iso8601fore subkey will be modified by the function); upon returning
  * this pointer will point to a string containing key
  * @param index Pointer to an address that will receive a pointer to a string containing index or NULL
  * if key does not have an index
