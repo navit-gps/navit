@@ -2906,7 +2906,7 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
                     coord_format(360, attr->u.coord_geo->lng, DEGREES_DECIMAL, buffer, sizeof(buffer));
                     formatted_value = g_strdup(buffer);
                 }
-            } // format 
+            } // format
             break;
         case attr_destination_time:
             if (format) {
