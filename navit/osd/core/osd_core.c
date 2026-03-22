@@ -2903,27 +2903,29 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
             }
             break;
         case attr_destination_time:
-            if (!format || (strcmp(format, "arrival") && strcmp(format, "remaining")))
-                break;
-            textt = time(NULL);
-            tm = *localtime(&textt);
-            if (!strcmp(format, "remaining")) {
-                textt -= tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
-                tm = *localtime(&textt);
-            }
-            textt += attr->u.num / 10;
-            text_tm = *localtime(&textt);
-            if (tm.tm_year != text_tm.tm_year || tm.tm_mon != text_tm.tm_mon || tm.tm_mday != text_tm.tm_mday) {
-                text_tm0 = text_tm;
-                text_tm0.tm_sec = 0;
-                text_tm0.tm_min = 0;
-                text_tm0.tm_hour = 0;
-                tm.tm_sec = 0;
-                tm.tm_min = 0;
-                tm.tm_hour = 0;
-                days = (mktime(&text_tm0) - mktime(&tm) + 43200) / 86400;
-            }
-            formatted_value = format_time(&text_tm, days);
+            if (format) {
+                if (!strcmp(format, "arrival") || !strcmp(format, "remaining")) {
+                    textt = time(NULL);
+                    tm = *localtime(&textt);
+                    if (!strcmp(format, "remaining")) {
+                        textt -= tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
+                        tm = *localtime(&textt);
+                    }
+                    textt += attr->u.num / 10;
+                    text_tm = *localtime(&textt);
+                    if (tm.tm_year != text_tm.tm_year || tm.tm_mon != text_tm.tm_mon || tm.tm_mday != text_tm.tm_mday) {
+                        text_tm0 = text_tm;
+                        text_tm0.tm_sec = 0;
+                        text_tm0.tm_min = 0;
+                        text_tm0.tm_hour = 0;
+                        tm.tm_sec = 0;
+                        tm.tm_min = 0;
+                        tm.tm_hour = 0;
+                        days = (mktime(&text_tm0) - mktime(&tm) + 43200) / 86400;
+                    }
+                    formatted_value = format_time(&text_tm, days);
+                } // arrival or remaining
+            } // format
             break;
         case attr_length:
         case attr_destination_length:
