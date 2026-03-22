@@ -2958,34 +2958,35 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
         } // format
         break;
         case attr_position_time_iso8601:
-            if ((!format) || (!strcmp(format, "iso8601"))) {
-                break;
-            } else {
-                if (strstr(format, "local;") == format) {
-                    textt = iso8601_to_secs(attr->u.str);
-                    memcpy((void *)&tm, (void *)localtime(&textt), sizeof(tm));
-                    strftime(buffer, sizeof(buffer), (char *)(format + 6), &tm);
-                } else if ((sscanf(format, "%*c%2d:%2d;", &(text_tm.tm_hour), &(text_tm.tm_min)) == 2)
-                        && (strchr("+-", format[0]))) {
-                    if (strchr("-", format[0])) {
-                        textt = iso8601_to_secs(attr->u.str) - text_tm.tm_hour * 3600 - text_tm.tm_min * 60;
-                    } else {
-                        textt = iso8601_to_secs(attr->u.str) + text_tm.tm_hour * 3600 + text_tm.tm_min * 60;
+            if (format) {
+                if (strcmp(format, "iso8601")) {
+                    if (strstr(format, "local;") == format) {
+                        textt = iso8601_to_secs(attr->u.str);
+                        memcpy((void *)&tm, (void *)localtime(&textt), sizeof(tm));
+                        strftime(buffer, sizeof(buffer), (char *)(format + 6), &tm);
                     }
-                    memcpy((void *)&tm, (void *)gmtime(&textt), sizeof(tm));
-                    strftime(buffer, sizeof(buffer), &format[strcspn(format, ";") + 1], &tm);
-                } else {
-                    sscanf(attr->u.str, "%4d-%2d-%2dT%2d:%2d:%2d", &(tm.tm_year), &(tm.tm_mon), &(tm.tm_mday),
-                        &(tm.tm_hour), &(tm.tm_min), &(tm.tm_sec));
-                    // the tm structure definition is kinda weird and needs some extra voodoo
-                    tm.tm_year -= 1900;
-                    tm.tm_mon--;
-                    // get weekday and day of the year
-                    mktime(&tm);
-                    strftime(buffer, sizeof(buffer), format, &tm);
-                }
-                return g_strdup(buffer);
-            }
+
+                    if ((sscanf(format, "%*c%2d:%2d;", &(text_tm.tm_hour), &(text_tm.tm_min)) == 2) && (strchr("+-", format[0]))) {
+                        if (strchr("-", format[0])) {
+                            textt = iso8601_to_secs(attr->u.str) - text_tm.tm_hour * 3600 - text_tm.tm_min * 60;
+                        } else {
+                            textt = iso8601_to_secs(attr->u.str) + text_tm.tm_hour * 3600 + text_tm.tm_min * 60;
+                        }
+                        memcpy((void *)&tm, (void *)gmtime(&textt), sizeof(tm));
+                        strftime(buffer, sizeof(buffer), &format[strcspn(format, ";") + 1], &tm);
+                    } else {
+                        sscanf(attr->u.str, "%4d-%2d-%2dT%2d:%2d:%2d", &(tm.tm_year), &(tm.tm_mon), &(tm.tm_mday), &(tm.tm_hour), &(tm.tm_min), &(tm.tm_sec));
+                        // the tm structure definition is kinda weird and needs some extra voodoo
+                        tm.tm_year -= 1900;
+                        tm.tm_mon--;
+                        // get weekday and day of the year
+                        mktime(&tm);
+                        strftime(buffer, sizeof(buffer), format, &tm);
+                    }
+                    formatted_value = g_strdup(buffer);
+                } // no iso8601
+            } // format
+            break;
         default:
             formatted_value = attr_to_text(attr, NULL, 1);
             break;
