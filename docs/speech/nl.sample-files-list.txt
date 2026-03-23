@@ -61,14 +61,13 @@
 "flauw"
 "scherp"
 
-"indien mogelijk"
-"omkeren"
+"indien mogelijk omkeren"
 "geschatte reistijd"
 "geschatte aankomsttijd"
 "bestemming"
 "bereikt"
 "daarna heeft u uw bestemming bereikt"
-
+"ga terug naar de route"
 "verminder snelheid"
 
 
