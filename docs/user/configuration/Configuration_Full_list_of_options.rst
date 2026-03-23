@@ -2187,7 +2187,7 @@ tags.
    +------------+-----------+-------+-----------+-----------+---------+
    | Tag        | Attribute | Units | Values    | Notes     | Example |
    +============+===========+=======+===========+===========+=========+
-   | item_types |           |       |           | Types of  | ``it    |         |
+   | item_types |           |       |           | Types of  | ``it    |
    |            |           |       | ways for  | em_types= |         |
    |            |           |       | which     | "steps"`` |         |
    |            |           |       | this      |           |         |
