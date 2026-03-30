@@ -1670,6 +1670,7 @@ static void gui_internal_window_closed(struct gui_priv *this) {
 static void gui_internal_cmd_map_download_do(struct gui_priv *this, struct widget *wm, void *data) {
     struct map_download_info *dl_info=data;
     pthread_t download;
+    pthread_t progress;
     int error;
 
     struct gui_download_data *dl_data = g_malloc(sizeof(struct gui_download_data));
@@ -1677,6 +1678,7 @@ static void gui_internal_cmd_map_download_do(struct gui_priv *this, struct widge
     dl_data->wm = wm;
     dl_data->data = dl_info;
     error = pthread_create(&download, NULL, download_map2, dl_data);
+    pthread_create(&progress, NULL, gui_internal_populate_download_table, this);
 
     //download_map(this, wm, dl_info);
 }
@@ -1703,7 +1705,7 @@ void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, voi
     on.type = off.type = attr_active;
     on.u.num = 1;
     off.u.num = 0;
-    wb = gui_internal_menu(this, wm->name ? wm->name : _("Map Download"));
+    wb = gui_internal_menu(this, "Map Download");
     w = gui_internal_widget_table_new(this, gravity_top_center | orientation_vertical | flags_expand | flags_fill, 1);
     gui_internal_widget_append(wb, w);
 

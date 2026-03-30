@@ -170,6 +170,8 @@ void gui_internal_download_update(struct gui_priv * this) {
 }*/
 
 
+
+
 /**
  * Populates the map download table, called with a timeout
  *
@@ -178,10 +180,14 @@ void gui_internal_download_update(struct gui_priv * this) {
  * @returns nothing
  */
 
-void gui_internal_populate_download_table(struct gui_priv * this) {
+void * gui_internal_populate_download_table(void* parent) {
+    struct gui_priv * this = parent;
     struct widget * label = NULL;
     struct widget * row = NULL;
     char *text;
+    this->download_data.download_table = gui_internal_widget_table_new(this,
+                                         gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
+    this->download_data.download_showing=1;
     if(this->download_data.download_showing) {
         GList *toprow;
         struct item topitem= {0};
@@ -197,19 +203,23 @@ void gui_internal_populate_download_table(struct gui_priv * this) {
         gui_internal_widget_append(this->download_data.download_table,row);
         double percent = ( dl_info.dl_total > 0 ? dl_info.dl_now / dl_info.dl_total * 100 : 0 );
         char * text;
-        text=g_strdup_printf(
+        text=g_strdup_printf("nichts geht mehr");
+	/*
                  "Download of %s is %s %1.0lf Mb / %1.0lf Mb = %1.0f% \n",
                  dl_info.name,
                  dl_info.downloading == 1 ? "active" : "inactive",
                  dl_info.dl_now / 1024 / 1024,
                  dl_info.dl_total / 1024 / 1024,
-                 percent);
+                 percent);*/
         label = gui_internal_label_new(this,text);
         gui_internal_widget_append(row,label);
         g_free(text);
+        dbg(lvl_warning, "Showing download data\n");
     }
+
     text=g_strdup_printf("%s", "funktioniert");
     gui_internal_widget_append(this->download_data.download_table, row=gui_internal_label_new(this, text));
+    gui_internal_menu_render(this);
     g_free(text);
     dbg(lvl_warning, "Error creating download thread\n");
 }

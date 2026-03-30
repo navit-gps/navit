@@ -249,7 +249,7 @@ void gui_internal_route_update(struct gui_priv *this, struct navit *navit, struc
 void gui_internal_route_screen_free(struct gui_priv *this_, struct widget *w);
 void gui_internal_populate_route_table(struct gui_priv *this, struct navit *navit);
 void gui_internal_download_update(struct gui_priv *this);
-void gui_internal_populate_download_table(struct gui_priv *this);
+void * gui_internal_populate_download_table(void * parent);
 void gui_internal_download_screen_free(struct gui_priv *this_, struct widget *w);
 
 void plugin_init(void);
