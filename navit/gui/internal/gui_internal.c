@@ -47,6 +47,7 @@
 #include "color.h"
 #include "command.h"
 #include "config.h"
+#include "speech.h"
 #include "config_.h"
 #include "coord.h"
 #include "country.h"
@@ -1842,6 +1843,15 @@ static void gui_internal_cmd_show_nmea_data(struct gui_priv *this, struct widget
 }
 
 /**
+ * A container to hold the selected voice and the profile in
+ * one data item.
+ */
+struct voice_and_profilename {
+    struct speech *speech;
+    char *profilename;
+};
+
+/**
  * A container to hold the selected vehicle and the desired profile in
  * one data item.
  */
@@ -1849,6 +1859,45 @@ struct vehicle_and_profilename {
     struct vehicle *vehicle;
     char *profilename;
 };
+
+/** 
+ * Figures out whether the given voice is the active voice.
+ *
+ * @return true if the voice is active, false otherwise. 
+ */ 
+static int gui_internal_is_active_voice(struct gui_priv *this, struct speech *profile) {
+    struct attr active_voice_attr;
+    struct attr active_voice_name_attr;
+    struct attr active_voice_active_attr;
+    struct attr profile_name_attr;
+    struct attr profile_active_attr;
+    int active = 0;
+
+    active_voice_attr.type = attr_speech;
+    active_voice_name_attr.type = attr_name;
+    active_voice_active_attr.type = attr_active;
+
+    profile_name_attr.type = attr_name;
+    profile_active_attr.type = attr_active;
+
+    // Voice profile
+    speech_get_attr(profile, attr_name, &profile_name_attr, NULL);
+    speech_get_attr(profile, attr_active, &profile_active_attr, NULL);
+    dbg(lvl_debug, "Voice name: %s", profile_name_attr.u.str);
+    dbg(lvl_debug, "Voice active: %i", profile_active_attr.u.num);
+
+    // Active voice profile
+    navit_get_attr(this->nav, attr_speech, &active_voice_attr, NULL);
+    speech_get_attr(active_voice_attr.u.speech, attr_name, &active_voice_name_attr, NULL);
+    speech_get_attr(active_voice_attr.u.speech, attr_active, &active_voice_active_attr, NULL);
+    dbg(lvl_debug, "Active voice name: %s", active_voice_name_attr.u.str);
+    dbg(lvl_debug, "Active voice active: %i", active_voice_active_attr.u.num);
+
+    active = active_voice_name_attr.u.str == profile_name_attr.u.str;
+    dbg(lvl_debug, "Profile is active: %i", active);
+
+    return active;
+}
 
 /**
  * Figures out whether the given vehicle is the active vehicle.
@@ -1884,6 +1933,69 @@ static void save_vehicle_xml(struct vehicle *v) {
     } else
         printf(" />\n");
     vehicle_attr_iter_destroy(iter);
+}
+
+/**
+ * @brief Toggles the active voice
+ */                                                                                                                                                                                                                                           
+static int navit_active_voice_toggle(struct navit *this_, int active) { 
+    struct navigation *nav;
+    struct attr attr, speechattr, navigationattr;
+
+    // Set active attribute value
+    if (navit_get_attr(this_, attr_speech, &speechattr, NULL)) {
+        if (speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL)) {
+            if (active == 2) {
+                active = !attr.u.num;
+            }
+        } else {
+            attr.type = attr_active;
+        }
+        attr.u.num = active;
+    } else {
+        return 1;
+    }
+    dbg(lvl_info, "Active voice active attribute value: '%i'", active);
+
+    // Set active attribute in active voice
+    if (!speech_set_attr(speechattr.u.speech, &attr))
+        return 2;
+
+    // Debug
+    navit_get_attr(this_, attr_speech, &speechattr, NULL);
+    speech_get_attr(speechattr.u.speech, attr_name, &attr, NULL);
+    dbg(lvl_debug, "Active voice name: '%s'", attr.u.str);
+    speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL);
+    dbg(lvl_debug, "Active voice active attribute value: '%i'", attr.u.num);
+
+    return 0;
+}
+
+/**
+ * Reacts to a button press that changes a voice's active profile.
+ *
+ * @see gui_internal_add_voice_profile
+ */
+static void gui_internal_cmd_set_active_voice_profile(struct gui_priv *this, struct widget *wm, void *data) {
+    struct voice_and_profilename *vapn = data;
+    struct attr active_speech_attr;
+    struct attr active_active_attr;
+    struct attr speech_attr;
+    struct attr active_attr;
+
+    dbg(lvl_info, "Selected voice: '%s'", vapn->profilename);
+    speech_attr.type = attr_speech;
+    speech_attr.u.speech = vapn->speech;
+    active_attr.type = attr_active;
+    active_attr.u.num = 1;
+
+    navit_get_attr(this->nav, attr_speech, &active_speech_attr, NULL);
+    navit_set_attr(this->nav, &speech_attr);
+    navit_active_voice_toggle(this->nav, 1);
+    dbg(lvl_debug, "Changed voice to '%s'", vapn->profilename);
+
+    gui_internal_prune_menu_count(this, 1, 0);
+    gui_internal_menu_voice_settings(this);
 }
 
 /**
@@ -1934,7 +2046,52 @@ static void gui_internal_cmd_set_active_profile(struct gui_priv *this, struct wi
 }
 
 /**
- * Adds the vehicle profile to the GUI, allowing the user to pick a
+ * Adds one voice profile to the GUI, allowing the user to pick a
+ * profile for the voice.
+ */
+static void gui_internal_add_voice_profile(struct gui_priv *this, struct widget *parent, struct speech *profile) {
+    struct attr name_attr;
+    struct attr *attr = NULL;
+    char *name = NULL;
+    char *active_profile = NULL;
+    char *label = NULL;
+    int active;
+    struct voice_and_profilename *context = NULL;
+
+    // Figure out the profile name
+    if(speech_get_attr(profile, attr_name, &name_attr, NULL))
+       name = name_attr.u.str;
+    else
+       name = "<none>";
+
+    active = gui_internal_is_active_voice(this, profile);
+    dbg(lvl_debug, "Adding voice profile '%s' active=%i", name, active);
+
+    // Build a translatable label.
+    if(active) {
+        label = g_strdup_printf(_("Current profile: %s"), name);
+    } else {
+        label = g_strdup_printf(_("Change profile to: %s"), name);
+    }
+
+    // Create the context object (the voice)
+    context = g_new0(struct voice_and_profilename, 1);
+    context->speech = profile;
+    context->profilename = name;
+
+    // Add the button
+    gui_internal_widget_append(parent,
+                               gui_internal_button_new_with_callback(
+                                   this, label,
+                                   image_new_xs(this, active ? "gui_active" : "gui_inactive"),
+                                   gravity_left_center|orientation_horizontal|flags_fill,
+                                   gui_internal_cmd_set_active_voice_profile, context));
+
+    free(label);
+}
+
+/**
+ * Adds one vehicle profile to the GUI, allowing the user to pick a
  * profile for the currently selected vehicle.
  */
 static void gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget *parent, struct vehicle *v,
@@ -1989,6 +2146,29 @@ static void gui_internal_add_vehicle_profile(struct gui_priv *this, struct widge
     free(label);
 }
 
+void gui_internal_menu_voice_settings(struct gui_priv *this) {
+    struct widget *w,*wb,*row;
+    struct attr attr;
+    struct speech *profile = NULL;
+    GList *profiles;
+
+    wb=gui_internal_menu(this, _("Voice"));
+    w=gui_internal_widget_table_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill,1);
+    gui_internal_widget_append(wb, w);
+
+    // Add all the possible voice profiles to the menu
+    profiles = navit_get_voiceprofiles(this->nav);
+    while(profiles) {
+        profile = (struct speech *)profiles->data;
+        gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this, gravity_left|orientation_horizontal|flags_fill));
+        gui_internal_add_voice_profile(this, row, profile);
+        profiles = g_list_next(profiles);
+    }
+
+    callback_list_call_attr_2(this->cbl, attr_vehicle, w, profile);
+    gui_internal_menu_render(this);
+}
+
 void gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v, char *name) {
     struct widget *w, *wb, *row;
     struct attr attr;
@@ -2039,6 +2219,10 @@ void gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v
 
     callback_list_call_attr_2(this->cbl, attr_vehicle, w, v);
     gui_internal_menu_render(this);
+}
+
+void gui_internal_cmd_voice_settings(struct gui_priv *this, struct widget *wm, void *data) {
+    gui_internal_menu_voice_settings(this);
 }
 
 void gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void *data) {

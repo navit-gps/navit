@@ -223,6 +223,8 @@ void gui_internal_keypress_do(struct gui_priv *this, char *key);
 char *gui_internal_cmd_match_expand(char *pattern, struct attr **in);
 int gui_internal_set(char *remove, char *add);
 void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, void *data);
+void gui_internal_menu_voice_settings(struct gui_priv *this);
+void gui_internal_cmd_voice_settings(struct gui_priv *this, struct widget *wm, void *data);
 void gui_internal_menu_vehicle_settings(struct gui_priv *this, struct vehicle *v, char *name);
 void gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void *data);
 void gui_internal_evaluate(struct gui_priv *this, const char *command);

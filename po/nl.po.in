@@ -1658,7 +1658,7 @@ msgstr "Bestemming"
 
 #. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
 msgid "_Display"
-msgstr "Display"
+msgstr "Scherm"
 
 msgid "_Route"
 msgstr "Route"
@@ -1677,6 +1677,9 @@ msgstr "Opmaak"
 
 msgid "_Projection"
 msgstr "Projectie"
+
+msgid "_Voice"
+msgstr "Stem"
 
 msgid "_Vehicle"
 msgstr "Voertuig"
@@ -2077,6 +2080,9 @@ msgstr "Breedtegraad Lengtegraad"
 msgid "Enter coordinates, for example:"
 msgstr "voer coordinaat in, bijvorbeeld:"
 
+msgid "Voice"
+msgstr "Stem"
+
 msgid "Vehicle"
 msgstr "Voertuig"
 
@@ -2206,7 +2212,7 @@ msgstr ""
 "navigatie"
 
 msgid "Display"
-msgstr "Display"
+msgstr "Scherm"
 
 msgid "Fullscreen"
 msgstr "Beeldvullend"

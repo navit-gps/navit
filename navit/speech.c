@@ -37,7 +37,7 @@ struct speech *speech_new(struct attr *parent, struct attr **attrs) {
     struct attr *attr;
 
     attr = attr_search(attrs, attr_type);
-    if (!attr) {
+    if (! attr) {
         dbg(lvl_error, "type missing");
         return NULL;
     }
@@ -52,7 +52,7 @@ struct speech *speech_new(struct attr *parent, struct attr **attrs) {
     this_->priv = speech_new(&this_->meth, this_->attrs, parent);
     dbg(lvl_debug, "say=%p", this_->meth.say);
     dbg(lvl_debug, "priv=%p", this_->priv);
-    if (!this_->priv) {
+    if (! this_->priv) {
         speech_destroy(this_);
         return NULL;
     }
@@ -72,8 +72,10 @@ int speech_say(struct speech *this_, const char *text) {
     return (this_->meth.say)(this_->priv, text);
 }
 
+struct attr name = ATTR_STRING(name, "Voice name");
 struct attr active = ATTR_INT(active, 1);
 struct attr *speech_default_attrs[] = {
+    &name,
     &active,
     NULL,
 };
