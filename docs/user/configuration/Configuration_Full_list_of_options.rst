@@ -2184,116 +2184,79 @@ roadprofile
 .. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags.
 
-   +-----------+-----------+-------+-----------+-----------+---------+
-   | Tag       | Attribute | Units | Values    | Notes     | Example |
-   +===========+===========+=======+===========+===========+=========+
-   | i         |           |       | Types of  | ``it      |         |
-   | tem_types |           |       | ways for  | em_types= |         |
-   |           |           |       | which     | "steps"`` |         |
-   |           |           |       | this      |           |         |
-   |           |           |       | ro        |           |         |
-   |           |           |       | adprofile |           |         |
-   |           |           |       | is valid. |           |         |
-   |           |           |       | **Way     |           |         |
-   |           |           |       | types can |           |         |
-   |           |           |       | be found  |           |         |
-   |           |           |       | in**\ `ma |           |         |
-   |           |           |       | p_items < |           |         |
-   |           |           |       | http://wi |           |         |
-   |           |           |       | ki.navit- |           |         |
-   |           |           |       | project.o |           |         |
-   |           |           |       | rg/index. |           |         |
-   |           |           |       | php/Confi |           |         |
-   |           |           |       | guring_Na |           |         |
-   |           |           |       | vit/map_i |           |         |
-   |           |           |       | tems>`__. |           |         |
-   +-----------+-----------+-------+-----------+-----------+---------+
-   | rou       | km/h      | 0 - ∞ | The       | ``ro      |         |
-   | te_weight |           |       | weighting | ute_weigh |         |
-   |           |           |       | which the | t="150"`` |         |
-   |           |           |       | routing   |           |         |
-   |           |           |       | algorithm |           |         |
-   |           |           |       | should    |           |         |
-   |           |           |       | give this |           |         |
-   |           |           |       | road      |           |         |
-   |           |           |       | type. A   |           |         |
-   |           |           |       | large     |           |         |
-   |           |           |       | ``route   |           |         |
-   |           |           |       | _weight`` |           |         |
-   |           |           |       | will      |           |         |
-   |           |           |       | force the |           |         |
-   |           |           |       | routing   |           |         |
-   |           |           |       | algorithm |           |         |
-   |           |           |       | to choose |           |         |
-   |           |           |       | that road |           |         |
-   |           |           |       | type over |           |         |
-   |           |           |       | others    |           |         |
-   |           |           |       | when      |           |         |
-   |           |           |       | ca        |           |         |
-   |           |           |       | lculating |           |         |
-   |           |           |       | a route.  |           |         |
-   |           |           |       | This      |           |         |
-   |           |           |       | value is  |           |         |
-   |           |           |       | also used |           |         |
-   |           |           |       | to        |           |         |
-   |           |           |       | calculate |           |         |
-   |           |           |       | the route |           |         |
-   |           |           |       | time      |           |         |
-   |           |           |       | remaining |           |         |
-   |           |           |       | IF        |           |         |
-   |           |           |       | ``maxspe  |           |         |
-   |           |           |       | ed_handli |           |         |
-   |           |           |       | ng="2"``. |           |         |
-   +-----------+-----------+-------+-----------+-----------+---------+
-   | speed     | km/h      | 0 - ∞ | Used      | ``spe     |         |
-   |           |           |       | solely    | ed="50"`` |         |
-   |           |           |       | for       |           |         |
-   |           |           |       | ca        |           |         |
-   |           |           |       | lculating |           |         |
-   |           |           |       | the       |           |         |
-   |           |           |       | estimated |           |         |
-   |           |           |       | time of   |           |         |
-   |           |           |       | arrival.  |           |         |
-   +-----------+-----------+-------+-----------+-----------+---------+
-   | maxspeed  | km/h      | 0 - ∞ | When      | ``maxspe  |         |
-   |           |           |       | driving,  | ed="50"`` |         |
-   |           |           |       | Navit     |           |         |
-   |           |           |       | will use  |           |         |
-   |           |           |       | the       |           |         |
-   |           |           |       | ``m       |           |         |
-   |           |           |       | axspeed`` |           |         |
-   |           |           |       | of the    |           |         |
-   |           |           |       | road type |           |         |
-   |           |           |       | to inform |           |         |
-   |           |           |       | the       |           |         |
-   |           |           |       | driver of |           |         |
-   |           |           |       | the       |           |         |
-   |           |           |       | current   |           |         |
-   |           |           |       | speed     |           |         |
-   |           |           |       | limit     |           |         |
-   |           |           |       | using the |           |         |
-   |           |           |       | `speed_wa |           |         |
-   |           |           |       | rner <OSD |           |         |
-   |           |           |       | #speed_wa |           |         |
-   |           |           |       | rner>`__. |           |         |
-   |           |           |       | ``m       |           |         |
-   |           |           |       | axspeed`` |           |         |
-   |           |           |       | will only |           |         |
-   |           |           |       | be used   |           |         |
-   |           |           |       | if there  |           |         |
-   |           |           |       | is no OSM |           |         |
-   |           |           |       | speed     |           |         |
-   |           |           |       | data for  |           |         |
-   |           |           |       | that      |           |         |
-   |           |           |       | road.     |           |         |
-   |           |           |       | This data |           |         |
-   |           |           |       | is        |           |         |
-   |           |           |       | **not**   |           |         |
-   |           |           |       | used for  |           |         |
-   |           |           |       | routing   |           |         |
-   |           |           |       | calc      |           |         |
-   |           |           |       | ulations. |           |         |
-   +-----------+-----------+-------+-----------+-----------+---------+
+   +------------+-----------+-------+-----------+-----------+---------+
+   | Tag        | Attribute | Units | Values    | Notes     | Example |
+   +============+===========+=======+===========+===========+=========+
+   | item_types |           |       |           | Types of  | ``it    |
+   |            |           |       | ways for  | em_types= |         |
+   |            |           |       | which     | "steps"`` |         |
+   |            |           |       | this      |           |         |
+   |            |           |       | ro        |           |         |
+   |            |           |       | adprofile |           |         |
+   |            |           |       | is valid. |           |         |
+   |            |           |       | **Way     |           |         |
+   |            |           |       | types can |           |         |
+   |            |           |       | be found  |           |         |
+   |            |           |       | in**\ `ma |           |         |
+   |            |           |       | p_items < |           |         |
+   |            |           |       | http://wi |           |         |
+   |            |           |       | ki.navit- |           |         |
+   |            |           |       | project.o |           |         |
+   |            |           |       | rg/index. |           |         |
+   |            |           |       | php/Confi |           |         |
+   |            |           |       | guring_Na |           |         |
+   |            |           |       | vit/map_i |           |         |
+   |            |           |       | tems>`__. |           |         |
+   +------------+-----------+-------+-----------+-----------+---------+
+   | speed      | km/h      | 0 - ∞ | Used      | ``spe     |         |
+   |            |           |       | solely    | ed="50"`` |         |
+   |            |           |       | for       |           |         |
+   |            |           |       | ca        |           |         |
+   |            |           |       | lculating |           |         |
+   |            |           |       | the       |           |         |
+   |            |           |       | estimated |           |         |
+   |            |           |       | time of   |           |         |
+   |            |           |       | arrival.  |           |         |
+   +------------+-----------+-------+-----------+-----------+---------+
+   | maxspeed   | km/h      | 0 - ∞ | When      | ``maxspe  |         |
+   |            |           |       | driving,  | ed="50"`` |         |
+   |            |           |       | Navit     |           |         |
+   |            |           |       | will use  |           |         |
+   |            |           |       | the       |           |         |
+   |            |           |       | ``m       |           |         |
+   |            |           |       | axspeed`` |           |         |
+   |            |           |       | of the    |           |         |
+   |            |           |       | road type |           |         |
+   |            |           |       | to inform |           |         |
+   |            |           |       | the       |           |         |
+   |            |           |       | driver of |           |         |
+   |            |           |       | the       |           |         |
+   |            |           |       | current   |           |         |
+   |            |           |       | speed     |           |         |
+   |            |           |       | limit     |           |         |
+   |            |           |       | using the |           |         |
+   |            |           |       | `speed_wa |           |         |
+   |            |           |       | rner <OSD |           |         |
+   |            |           |       | #speed_wa |           |         |
+   |            |           |       | rner>`__. |           |         |
+   |            |           |       | ``m       |           |         |
+   |            |           |       | axspeed`` |           |         |
+   |            |           |       | will only |           |         |
+   |            |           |       | be used   |           |         |
+   |            |           |       | if there  |           |         |
+   |            |           |       | is no OSM |           |         |
+   |            |           |       | speed     |           |         |
+   |            |           |       | data for  |           |         |
+   |            |           |       | that      |           |         |
+   |            |           |       | road.     |           |         |
+   |            |           |       | This data |           |         |
+   |            |           |       | is        |           |         |
+   |            |           |       | **not**   |           |         |
+   |            |           |       | used for  |           |         |
+   |            |           |       | routing   |           |         |
+   |            |           |       | calc      |           |         |
+   |            |           |       | ulations. |           |         |
+   +------------+-----------+-------+-----------+-----------+---------+
 
 announcement
 ------------
@@ -2303,32 +2266,32 @@ tags. **Although included in the default navit.xml, ``announcement``
 tags in ``roadprofile`` are currently not honoured. Please use the
 ``announce`` tag within ``navigation`` (see below).**
 
-   +----------------+--------+---------+----------------+----------------+
-   | Attribute      | Units  | Values  | Notes          | Example        |
-   +================+========+=========+================+================+
-   | level          |        | 0, 1, 2 | Type of oral   | ``level="0"``  |
-   |                |        |         | announcement   |                |
-   |                |        |         | to make. For   |                |
-   |                |        |         | example,       |                |
-   |                |        |         | ``level="2"``  |                |
-   |                |        |         | means an       |                |
-   |                |        |         | announcement   |                |
-   |                |        |         | such as "turn  |                |
-   |                |        |         | left soon"     |                |
-   |                |        |         | will be made;  |                |
-   |                |        |         | ``level="1"``  |                |
-   |                |        |         | is "turn left  |                |
-   |                |        |         | in x metres";  |                |
-   |                |        |         | ``level="0"``  |                |
-   |                |        |         | is "turn left  |                |
-   |                |        |         | now".          |                |
-   +----------------+--------+---------+----------------+----------------+
-   | d              | metres | 0 - ∞   | Distance from  | ``distance     |
-   | istance_metric |        |         | the upcoming   | _metric="25"`` |
-   |                |        |         | manoeuvre to   |                |
-   |                |        |         | perform the    |                |
-   |                |        |         | announcement.  |                |
-   +----------------+--------+---------+----------------+----------------+
+   +-----------------+--------+---------+----------------+--------------------------+
+   | Attribute       | Units  | Values  | Notes          | Example                  |
+   +=================+========+=========+================+==========================+
+   | level           |        | 0, 1, 2 | Type of oral   | ``level="0"``            |
+   |                 |        |         | announcement   |                          |
+   |                 |        |         | to make. For   |                          |
+   |                 |        |         | example,       |                          |
+   |                 |        |         | ``level="2"``  |                          |
+   |                 |        |         | means an       |                          |
+   |                 |        |         | announcement   |                          |
+   |                 |        |         | such as "turn  |                          |
+   |                 |        |         | left soon"     |                          |
+   |                 |        |         | will be made;  |                          |
+   |                 |        |         | ``level="1"``  |                          |
+   |                 |        |         | is "turn left  |                          |
+   |                 |        |         | in x metres";  |                          |
+   |                 |        |         | ``level="0"``  |                          |
+   |                 |        |         | is "turn left  |                          |
+   |                 |        |         | now".          |                          |
+   +-----------------+--------+---------+----------------+--------------------------+
+   | distance_metric | metres | 0 - ∞   | Distance from  | ``distance_metric="25"`` |
+   |                 |        |         | the upcoming   |                          |
+   |                 |        |         | manoeuvre to   |                          |
+   |                 |        |         | perform the    |                          |
+   |                 |        |         | announcement.  |                          |
+   +-----------------+--------+---------+----------------+--------------------------+
 
 navigation
 ----------
