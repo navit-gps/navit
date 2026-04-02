@@ -10,6 +10,8 @@
 
 #define g_return_if_fail
 
+#define HAVE_GLIB_FAKE 1
+
 
 #if USE_POSIX_THREADS
 # define GMutex pthread_mutex_t

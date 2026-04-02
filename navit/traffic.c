@@ -45,6 +45,7 @@
 #include "util.h"
 #include "vehicleprofile.h"
 #include "xmlconfig.h"
+#include <locale.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
@@ -124,6 +125,11 @@ struct traffic {
     struct event_timeout *timeout;      /**< The timeout event that triggers the loop function */
     struct callback *idle_cb;           /**< Idle callback to process new messages */
     struct event_idle *idle_ev;         /**< The pointer to the idle event */
+#ifndef WIN32                           // TODO: find win32 implementation to allow parsing of traff data
+                                        // independent from locale
+    locale_t systemlocale;
+    locale_t trafflocale;
+#endif
 };
 
 struct traffic_location_priv {
@@ -245,6 +251,9 @@ struct point_data {
  * to NULL when a message is created.
  */
 struct xml_state {
+    char *status;                      /**< Response status, indicating success or an error, if any */
+    char *subscription_id;             /**< Subscription ID, if any */
+    int timeout;                       /**< Timeout in seconds, if any, else 0 */
     GList *messages;                   /**< Messages read so far */
     GList *tagstack;                   /**< Currently open tags (order is bottom to top) */
     int is_valid;                      /**< Whether `tagstack` represents a hierarchy of elements we recognize */
@@ -296,6 +305,7 @@ static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
 static int tm_type_set(void *priv_data, enum item_type type);
 static struct map_selection *traffic_location_get_rect(struct traffic_location *this_, enum projection projection);
 static struct route_graph *traffic_location_get_route_graph(struct traffic_location *this_, struct mapset *ms);
+struct traffic_response *traffic_get_response_from_parsed_xml(struct xml_state *state);
 static int traffic_location_match_attributes(struct traffic_location *this_, struct item *item);
 static int traffic_message_add_segments(struct traffic_message *this_, struct mapset *ms, struct seg_data *data,
                                         struct map *map, struct route *route);
@@ -1231,13 +1241,13 @@ static struct map_methods traffic_map_meth = {
  */
 static int traffic_event_is_valid(struct traffic_event *this_) {
     if (!this_->event_class || !this_->type) {
-        dbg(lvl_debug, "event_class (%d) or type (%d) are unknown", this_->event_class, this_->type);
+        dbg(lvl_warning, "event_class (%d) or type (%d) are unknown", this_->event_class, this_->type);
         return 0;
     }
     switch (this_->event_class) {
     case event_class_congestion:
         if ((this_->type < event_congestion_cleared) || (this_->type >= event_delay_clearance)) {
-            dbg(lvl_debug, "illegal type (%d) for event_class_congestion", this_->type);
+            dbg(lvl_warning, "illegal type (%d) for event_class_congestion", this_->type);
             return 0;
         }
         break;
@@ -1255,11 +1265,11 @@ static int traffic_event_is_valid(struct traffic_event *this_) {
         }
         break;
     default:
-        dbg(lvl_debug, "unknown event class %d", this_->event_class);
+        dbg(lvl_warning, "unknown event class %d", this_->event_class);
         return 0;
     }
     if (this_->si_count && !this_->si) {
-        dbg(lvl_debug, "si_count=%d but no supplementary information", this_->si_count);
+        dbg(lvl_warning, "si_count=%d but no supplementary information", this_->si_count);
         return 0;
     }
     /* TODO check SI */
@@ -3587,6 +3597,8 @@ static int traffic_message_restore_segments(struct traffic_message *this_, struc
              * Iterate through items in the map.
              */
             while ((map_item = map_rect_get_item(mr))) {
+                if (!map_item)
+                    continue;
                 /* If item is not routable, continue */
                 if ((map_item->type < route_item_first) || (map_item->type > route_item_last))
                     continue;
@@ -3615,6 +3627,8 @@ static int traffic_message_restore_segments(struct traffic_message *this_, struc
 
                     /* Skip already-matched items */
                     if (pitem->is_matched)
+                        continue;
+                    if (!map_item)
                         continue;
                     /* If IDs do not match, continue */
                     if ((map_item->id_hi != pitem->id_hi) || (map_item->id_lo != pitem->id_lo))
@@ -3851,7 +3865,7 @@ static int traffic_message_is_valid(struct traffic_message *this_) {
         return 0;
     }
     if (!this_->receive_time || !this_->update_time) {
-        dbg(lvl_debug, "%s: receive_time or update_time not supplied", this_->id);
+        dbg(lvl_warning, "%s: receive_time or update_time not supplied", this_->id);
         return 0;
     }
     if (!this_->is_cancellation) {
@@ -3860,15 +3874,15 @@ static int traffic_message_is_valid(struct traffic_message *this_) {
             return 0;
         }
         if (!this_->location) {
-            dbg(lvl_debug, "%s: not a cancellation, but no location supplied", this_->id);
+            dbg(lvl_warning, "%s: not a cancellation, but no location supplied", this_->id);
             return 0;
         }
         if (!traffic_location_is_valid(this_->location)) {
-            dbg(lvl_debug, "%s: not a cancellation, but location is invalid", this_->id);
+            dbg(lvl_warning, "%s: not a cancellation, but location is invalid", this_->id);
             return 0;
         }
         if (!this_->event_count || !this_->events) {
-            dbg(lvl_debug, "%s: not a cancellation, but no events supplied", this_->id);
+            dbg(lvl_warning, "%s: not a cancellation, but no events supplied", this_->id);
             return 0;
         }
         for (i = 0; i < this_->event_count; i++)
@@ -4601,8 +4615,8 @@ static void traffic_loop(struct traffic *this_) {
  */
 static struct traffic *traffic_new(struct attr *parent, struct attr **attrs) {
     struct traffic *this_;
-    struct traffic_priv *(*traffic_new)(struct navit *nav, struct traffic_methods *meth, struct attr **attrs,
-                                        struct callback_list *cbl);
+    struct traffic_priv *(*traffic_priv_new)(struct navit *nav, struct traffic_methods *meth, struct attr **attrs,
+                                             struct callback_list *cbl);
     struct attr *attr;
 
     attr = attr_search(attrs, attr_type);
@@ -4611,9 +4625,9 @@ static struct traffic *traffic_new(struct attr *parent, struct attr **attrs) {
         return NULL;
     }
     dbg(lvl_debug, "type='%s'", attr->u.str);
-    traffic_new = plugin_get_category_traffic(attr->u.str);
-    dbg(lvl_debug, "new=%p", traffic_new);
-    if (!traffic_new) {
+    traffic_priv_new = plugin_get_category_traffic(attr->u.str);
+    dbg(lvl_debug, "new=%p", traffic_priv_new);
+    if (!traffic_priv_new) {
         dbg(lvl_error, "wrong type '%s'", attr->u.str);
         return NULL;
     }
@@ -4626,7 +4640,7 @@ static struct traffic *traffic_new(struct attr *parent, struct attr **attrs) {
         return NULL;
     }
 
-    this_->priv = traffic_new(parent->u.navit, &this_->meth, this_->attrs, NULL);
+    this_->priv = traffic_priv_new(parent->u.navit, &this_->meth, this_->attrs, NULL);
     dbg(lvl_debug, "get_messages=%p", this_->meth.get_messages);
     dbg(lvl_debug, "priv=%p", this_->priv);
     if (!this_->priv) {
@@ -4724,6 +4738,10 @@ static void traffic_xml_element_destroy(struct xml_element *this_) {
 /**
  * @brief Retrieves the value of an XML attribute.
  *
+ * The return value is a pointer from `values`. If this is called from an XML parser callback function,
+ * the return value is valid only inside that function. Callers wishing to store the value for later use
+ * must store a copy of the return value.
+ *
  * @param name The name of the attribute to retrieve
  * @param names All attribute names
  * @param values Attribute values (indices correspond to `names`)
@@ -4755,9 +4773,14 @@ static int traffic_xml_is_tagstack_valid(struct xml_state *state) {
         el = (struct xml_element *)tagiter->data;
         el_parent = tagiter->next ? tagiter->next->data : NULL;
 
-        if (!g_ascii_strcasecmp(el->tag_name, "navit_messages") || !g_ascii_strcasecmp(el->tag_name, "feed"))
+        if (!g_ascii_strcasecmp(el->tag_name, "navit_messages") || !g_ascii_strcasecmp(el->tag_name, "response"))
+            /* response and navit_messages are only allowed as root elements */
             ret = !tagiter->next;
+        else if (!g_ascii_strcasecmp(el->tag_name, "feed"))
+            /* feed can be a root element or a child of response */
+            ret = (!el_parent || !g_ascii_strcasecmp(el_parent->tag_name, "response"));
         else if (!g_ascii_strcasecmp((char *)el->tag_name, "message"))
+            /* message can be a root element or a child of feed or navit_messages */
             ret = (!el_parent || !g_ascii_strcasecmp(el_parent->tag_name, "navit_messages")
                    || !g_ascii_strcasecmp(el_parent->tag_name, "feed"));
         else if (!g_ascii_strcasecmp(el->tag_name, "events") || !g_ascii_strcasecmp(el->tag_name, "location")
@@ -4768,6 +4791,7 @@ static int traffic_xml_is_tagstack_valid(struct xml_state *state) {
         else if (!g_ascii_strcasecmp(el->tag_name, "from") || !g_ascii_strcasecmp(el->tag_name, "to")
                  || !g_ascii_strcasecmp(el->tag_name, "at") || !g_ascii_strcasecmp(el->tag_name, "via")
                  || !g_ascii_strcasecmp(el->tag_name, "not_via") || !g_ascii_strcasecmp(el->tag_name, "navit_items"))
+            /* FIXME navit_messages is not legal in TraFF (root element is feed or response) */
             ret = (el_parent && !g_ascii_strcasecmp(el_parent->tag_name, "location"));
         else if (!g_ascii_strcasecmp(el->tag_name, "supplementary_info"))
             ret = (el_parent && !g_ascii_strcasecmp(el_parent->tag_name, "event"));
@@ -4805,7 +4829,16 @@ static void traffic_xml_start(xml_context *dummy, const char *tag_name, const ch
 
     dbg(lvl_debug, "OPEN: %s", tag_name);
 
-    if (!g_ascii_strcasecmp((char *)tag_name, "supplementary_info")) {
+    if (!g_ascii_strcasecmp((char *)tag_name, "response")) {
+        state->status = traffic_xml_get_attr("status", el->names, el->values);
+        if (state->status)
+            state->status = g_strdup(state->status);
+        state->subscription_id = traffic_xml_get_attr("subscription_id", el->names, el->values);
+        if (state->subscription_id)
+            state->subscription_id = g_strdup(state->subscription_id);
+        state->timeout = 0;
+        /* TODO parse timeout */
+    } else if (!g_ascii_strcasecmp((char *)tag_name, "supplementary_info")) {
         state->si = g_list_append(
             state->si, traffic_suppl_info_new(si_class_new(traffic_xml_get_attr("class", el->names, el->values)),
                                               si_type_new(traffic_xml_get_attr("type", el->names, el->values)),
@@ -4828,6 +4861,29 @@ static void traffic_xml_start(xml_context *dummy, const char *tag_name, const ch
      * from, to, at, via, not_via: Everything handled in end callback
      * navit_items: Everything handled in end callback
      */
+}
+
+static int floatparse(char *line, gdouble *lat, gdouble *lon) {
+    char *foo = g_strdup(line);
+    char *token = strtok(foo, " ");
+
+    if (token) {
+        *lat = g_ascii_strtod(token, NULL);
+        token = strtok(NULL, " ");
+        if (token) {
+            *lon = g_ascii_strtod(token, NULL);
+        } else {
+            g_free(foo);
+            return 1;
+        }
+    } else {
+        g_free(foo);
+        return 1;
+    }
+
+    g_free(foo);
+
+    return 0;
 }
 
 /**
@@ -4859,7 +4915,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
     /* New traffic event */
     struct traffic_event *event = NULL;
 
-    float lat, lon;
+    navit_float lat, lon;
 
     if (state->is_valid) {
         dbg(lvl_debug, "  END:  %s", tag_name);
@@ -4886,6 +4942,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
                                           0, NULL, state->location, count, (struct traffic_event **)children);
             if (!traffic_message_is_valid(message)) {
                 dbg(lvl_error, "%s: malformed message detected, skipping", message->id);
+
                 traffic_message_destroy(message);
             } else
                 state->messages = g_list_append(state->messages, message);
@@ -4971,7 +5028,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
 
         if (point) {
             /* we have a location point (from, at, to, via or not_via) to process */
-            if (sscanf(el->text, "%f %f", &lat, &lon) == 2) {
+            if (floatparse(el->text, &lat, &lon) == 0) {
                 *point = traffic_point_new(lon, lat, traffic_xml_get_attr("junction_name", el->names, el->values),
                                            traffic_xml_get_attr("junction_ref", el->names, el->values),
                                            traffic_xml_get_attr("tmc_id", el->names, el->values));
@@ -5004,8 +5061,11 @@ static void traffic_xml_text(xml_context *dummy, const char *text, gsize len, vo
 
     dbg(lvl_debug, " TEXT: '%s'", text_sz);
     if (state->is_valid && state->is_opened) {
-        /* this will work only for leaf nodes, which is not an issue at the moment as the only nodes
-         * with actual text data are leaf nodes */
+        /* This will work only for leaf nodes, which is not an issue at the moment as the only nodes
+         * with actual text data are leaf nodes. For a node which has children, this function will get
+         * called multiple times: for text before, within, between and after the child nodes (even if
+         * empty), in the order encountered. */
+        // FIXME make sure we avoid memory leaks if this function is called multiple times
         el->text = g_strndup(text, len);
     }
     g_free(text_sz);
@@ -5843,6 +5903,28 @@ static struct traffic_message **traffic_get_messages_from_parsed_xml(struct xml_
     return ret;
 }
 
+/**
+ * @brief Reads a TraFF response (including messages, if any) from parsed XML data.
+ *
+ * @param state The XML parser state after parsing the XML data
+ *
+ * @return The response, or NULL if the data did not contain a response
+ */
+struct traffic_response *traffic_get_response_from_parsed_xml(struct xml_state *state) {
+    struct traffic_response *ret = NULL;
+    struct traffic_message **messages = NULL;
+
+    messages = traffic_get_messages_from_parsed_xml(state);
+    if (messages || state->status) {
+        ret = g_new0(struct traffic_response, 1);
+        ret->status = state->status;
+        ret->subscription_id = state->subscription_id;
+        ret->timeout = state->timeout;
+        ret->messages = messages;
+    }
+    return ret;
+}
+
 struct traffic_message **traffic_get_messages_from_xml_file(struct traffic *this_, char *filename) {
     struct traffic_message **ret = NULL;
     struct xml_state state;
@@ -5857,6 +5939,23 @@ struct traffic_message **traffic_get_messages_from_xml_file(struct traffic *this
             dbg(lvl_error, "could not retrieve stored traffic messages");
         }
     } /* if (traffic_filename) */
+    return ret;
+}
+
+struct traffic_response *traffic_get_response_from_xml_string(struct traffic *this_, char *xml) {
+    struct traffic_response *ret = NULL;
+    struct xml_state state;
+    int read_success = 0;
+
+    if (xml) {
+        memset(&state, 0, sizeof(struct xml_state));
+        read_success = xml_parse_text(xml, &state, traffic_xml_start, traffic_xml_end, traffic_xml_text);
+        if (read_success) {
+            ret = traffic_get_response_from_parsed_xml(&state);
+        } else {
+            dbg(lvl_error, "no data supplied");
+        }
+    } /* if (xml) */
     return ret;
 }
 

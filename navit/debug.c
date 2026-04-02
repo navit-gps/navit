@@ -24,6 +24,7 @@
 #include "debug.h"
 #include "file.h"
 #include "item.h"
+#include "thread.h"
 #include <glib.h>
 #include <glib/gtypes.h>
 #include <signal.h>
@@ -61,6 +62,9 @@
 static int debug_socket = -1;
 static struct sockaddr_in debug_sin;
 #endif
+
+/** Read/write lock for console output */
+static thread_lock *rw_lock;
 
 #define DEFAULT_DEBUG_LEVEL lvl_error
 dbg_level max_debug_level = DEFAULT_DEBUG_LEVEL;
@@ -137,6 +141,7 @@ void debug_init(const char *program_name) {
     gdb_program = g_strdup(program_name);
     signal(SIGSEGV, sigsegv);
 #endif
+    rw_lock = thread_lock_new();
     debug_hash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
     debug_fp = stdout;
@@ -463,9 +468,11 @@ void debug_vprintf(dbg_level level, const char *module, const int mlen, const ch
 void debug_printf(dbg_level level, const char *module, const int mlen, const char *function, const int flen, int prefix,
                   const char *fmt, ...) {
     va_list ap;
+    thread_lock_acquire_read(rw_lock);
     va_start(ap, fmt);
     debug_vprintf(level, module, mlen, function, flen, prefix, fmt, ap);
     va_end(ap);
+    thread_lock_release_read(rw_lock);
 }
 
 void debug_assert_fail(const char *module, const int mlen, const char *function, const int flen, const char *file,
@@ -481,6 +488,8 @@ void debug_destroy(void) {
         return;
     fclose(debug_fp);
     debug_fp = NULL;
+    thread_lock_destroy(rw_lock);
+    rw_lock = NULL;
 }
 
 void debug_set_logfile(const char *path) {
