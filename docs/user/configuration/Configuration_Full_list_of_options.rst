@@ -2430,6 +2430,18 @@ tags.
    |              |       |              | tion <Config |              |
    |              |       |              | uration>`__. |              |
    +--------------+-------+--------------+--------------+--------------+
+   | data-tts     |       |              | Same as      | `            |
+   |              |       |              | 'data'.      |            ` |
+   |              |       |              | When using   |              |
+   |              |       |              | sample files |              |
+   |              |       |              | use this     |              |
+   |              |       |              | option to    |              |
+   |              |       |              | configure    |              |
+   |              |       |              | TTS and use  |              |
+   |              |       |              | 'data' to    |              |
+   |              |       |              | configure    |              |
+   |              |       |              | sample files.|              |
+   +--------------+-------+--------------+--------------+--------------+
    | cps          |       | 0 - ∞        | Speed at     | ``cps="15"`` |
    |              |       |              | which Navit  |              |
    |              |       |              | should speak |              |
@@ -2486,7 +2498,7 @@ tags.
    +--------------+-------+--------------+--------------+--------------+
    | sample_dir   |       |              | For          | ``sampl      |
    |              |       |              | spe          | e_dir="/path |
-   |              |       |              | ech_cmdline, | /to/waves"`` |
+   |              |       |              | ech_cmdline, | /to/files"`` |
    |              |       |              | defines path |              |
    |              |       |              | where        |              |
    |              |       |              | pre-recorded |              |
