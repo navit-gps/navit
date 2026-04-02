@@ -23,7 +23,7 @@ extern "C" {
 #include "debug.h"
 }
 
-Qt5EspeakAudioOut::Qt5EspeakAudioOut(int samplerate, const char* category) {
+Qt5EspeakAudioOut::Qt5EspeakAudioOut(int samplerate, const char *category) {
     data = new QByteArray();
     buffer = new QBuffer(data);
     buffer->open(QIODevice::ReadWrite);
@@ -39,26 +39,24 @@ Qt5EspeakAudioOut::Qt5EspeakAudioOut(int samplerate, const char* category) {
 
     QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
     if (!info.isFormatSupported(format)) {
-        dbg(lvl_error,
-            "Raw audio format not supported by backend, cannot play audio.");
+        dbg(lvl_error, "Raw audio format not supported by backend, cannot play audio.");
         return;
     }
 
     audio = new QAudioOutput(format, this);
     /* try to set a rather huge buffer size in order to avoid chopping due to
-    * event loop
-    * not getting idle. Drawing may take just too long time. This hopefully
-    * removes the
-    * need to do multi threading with all its problems. May be a problem on
-    * systems with
-    * really low memory.*/
+     * event loop
+     * not getting idle. Drawing may take just too long time. This hopefully
+     * removes the
+     * need to do multi threading with all its problems. May be a problem on
+     * systems with
+     * really low memory.*/
     audio->setBufferSize((samplerate * 1 /*ch*/ * 2 /*samplezize*/) * 5 /*seconds*/);
     dbg(lvl_debug, "Buffer size is: %d", audio->bufferSize());
     if (category != NULL)
         audio->setCategory(QString(category));
 
-    connect(audio, SIGNAL(stateChanged(QAudio::State)), this,
-            SLOT(handleStateChanged(QAudio::State)));
+    connect(audio, SIGNAL(stateChanged(QAudio::State)), this, SLOT(handleStateChanged(QAudio::State)));
     /* to cope with resume coming from other thread (of libespeak)*/
     connect(this, SIGNAL(call_resume(int)), this, SLOT(resume(int)));
 }
@@ -87,8 +85,8 @@ void Qt5EspeakAudioOut::handleStateChanged(QAudio::State newState) {
         buffer->seek(0);
         dbg(lvl_debug, "Size %d", data->size());
         break;
-// Sailfish's QT version doesn't have this. Doesn't do anything either.
-//    case QAudio::InterruptedState:
+        // Sailfish's QT version doesn't have this. Doesn't do anything either.
+        //    case QAudio::InterruptedState:
     default:
         break;
     }
@@ -100,7 +98,7 @@ void Qt5EspeakAudioOut::resume(int state) {
         audio->start(buffer);
 }
 
-void Qt5EspeakAudioOut::addSamples(short* wav, int numsamples) {
+void Qt5EspeakAudioOut::addSamples(short *wav, int numsamples) {
     dbg(lvl_debug, "Enter (%d samples)", numsamples);
 
     /*remove all data that was already read (if any)*/
@@ -108,9 +106,8 @@ void Qt5EspeakAudioOut::addSamples(short* wav, int numsamples) {
     buffer->seek(0);
 
     if (numsamples > 0) {
-        data->append((const char*)wav, numsamples * sizeof(short));
-        dbg(lvl_debug, "%ld samples in buffer",
-            (long int)(buffer->size() / sizeof(short)));
+        data->append((const char *)wav, numsamples * sizeof(short));
+        dbg(lvl_debug, "%ld samples in buffer", (long int)(buffer->size() / sizeof(short)));
         emit call_resume(numsamples);
     }
 }
