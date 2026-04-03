@@ -6,6 +6,7 @@
 #include <glib.h>
 #include "unistd.h"
 #include "stddef.h"
+#include "navit.h"
 #include <navit/coord.h>
 #include <navit/color.h>
 #include <navit/item.h>
@@ -69,7 +70,7 @@ long long get_size(char *key, int *maps_count, MapData *maps_size) {
  * Download a map using libcurl
  *
  * @param arguments a void * that we can cast to a map_download_info * as this function is intended to be run
- * 		  within a thread
+ *        within a thread
  *
  * @returns Returns curl's result
  */
@@ -205,6 +206,80 @@ void * download_map2(void *data) {
     return NULL; //(int)res;
 }
 
+
+void * download_map3(void * data) {
+    // check name
+    // if name directly in list, skip it and only take elements which are not part of others
+    // build download list
+    // download list one by one
+    // make dl_info and call download_map2
+
+    char buffer[256];
+    FILE *f;
+    f = fopen("maps/menu.tsv", "r");
+
+    // --- Define Lists ---
+    char *continents_arr[] = {"africa", "asia", "australia-oceania", "central-america", "europe", "north-america", "south-america"};
+    StringList continents = create_string_list(continents_arr, 7);
+    char *countries_europe_subregion_arr[] = {"europe-france", "europe-germany", "europe-great-britain", "europe-italy", "europe-netherlands", "europe-poland"};
+    StringList countries_europe_subregion = create_string_list(countries_europe_subregion_arr, 6);
+    char *countries_north_america_subregion_arr[] = {"north-america-canada", "north-america-us"};
+    StringList countries_north_america_subregion = create_string_list(countries_north_america_subregion_arr, 2);
+    char *countries_south_america_subregion_arr[] = {"south-america-brazil"};
+    StringList countries_south_america_subregion = create_string_list(countries_south_america_subregion_arr, 1);
+
+    struct map_download_info *dl_info2 = g_malloc(sizeof(struct map_download_info));
+    struct gui_download_data *dl_data = data;
+    struct map_download_info * dl_info = dl_data->data;
+    char * requested_name = dl_info->name;
+
+    while (f && fgets(buffer, sizeof(buffer), f)) {
+        char* name = g_strsplit(buffer,"\t",0)[0];
+
+        if (strcmp(requested_name, "planet") == 0) {
+            if (in_list(name,continents) == 1)  {
+                continue;
+            } else if (in_list(name, countries_europe_subregion) == 1) {
+                continue;
+            } else if (in_list(name, countries_north_america_subregion) == 1) {
+                continue;
+            } else if (in_list(name, countries_south_america_subregion) == 1) {
+                continue;
+            }
+            dl_info2->name = name;
+            dl_info2->path = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/maps/", name, ".bin",  NULL);
+            dl_info2->xml = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/maps/", name, ".xml",  NULL);
+            dl_info2->url = g_strjoin(NULL, "https://github.com/navit-gps/gh-actions-mapserver/releases/download/", g_date_time_format(g_date_time_new_now_utc(), "%Y-%m-%d"), "/", name, "-", g_date_time_format(g_date_time_new_now_utc(), "%Y-%m-%d"), ".bin", NULL);
+        } else {
+        if (g_strstr_len(name, -1, requested_name)!=NULL){
+                if (in_list(name,continents) == 1) {
+                    continue;
+                } else if (in_list(name, countries_europe_subregion) == 1) {
+                    continue;
+                } else if (in_list(name, countries_north_america_subregion) == 1) {
+                    continue;
+                } else if (in_list(name, countries_south_america_subregion) == 1) {
+                   continue;
+                }
+                dl_info2->name = name;
+                dl_info2->path = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/maps/", name, ".bin",  NULL);
+                dl_info2->xml = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/maps/", name, ".xml",  NULL);
+                dl_info2->url = g_strjoin(NULL, "https://github.com/navit-gps/gh-actions-mapserver/releases/download/", g_date_time_format(g_date_time_new_now_local(), "%Y-%m-%d"), "/", name, "-", g_date_time_format(g_date_time_new_now_local(), "%Y-%m-%d"), ".bin", NULL);
+            } else {
+                continue;
+            }
+        }
+
+        dl_data->data = dl_info2;
+        download_map2(dl_data);
+
+    }
+
+    fclose(f);
+    return NULL;
+}
+
+
 // --- Helper Functions ---
 
 size_t write_callback(void *contents, size_t size, size_t nmemb, void *userp) {
@@ -231,6 +306,7 @@ void format_filesize(long long map_size, char *buffer) {
     }
 }
 
+// replace by g_strv_contains
 int in_list(const char *str, StringList sl) {
     for (int i = 0; i < sl.count; i++) {
         if (strcmp(str, sl.list[i]) == 0) {
@@ -255,7 +331,7 @@ void update_download_table(){
     cJSON *json = NULL;
     cJSON *assets = NULL;
     cJSON *asset = NULL;
-    
+
     response = malloc(1);
     response[0] = '\0';
 
@@ -266,7 +342,7 @@ void update_download_table(){
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcurl-agent/1.0");
-        
+
         res = curl_easy_perform(curl);
         if(res != CURLE_OK) {
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
@@ -304,16 +380,16 @@ void update_download_table(){
     cJSON_ArrayForEach(asset, assets) {
         cJSON *name = cJSON_GetObjectItemCaseSensitive(asset, "name");
         cJSON *size = cJSON_GetObjectItemCaseSensitive(asset, "size");
-        
+
         if (cJSON_IsString(name) && cJSON_IsNumber(size)) {
             char *asset_name = name->valuestring;
             char *dash_pos = strstr(asset_name, "-2");
             int key_len = dash_pos ? (int)(dash_pos - asset_name) : (int)strlen(asset_name);
-            
+
             char *key = malloc(key_len + 1);
             strncpy(key, asset_name, key_len);
             key[key_len] = '\0';
-            
+
             for(int k=0; k<key_len; k++) {
                 if(key[k] == '-') key[k] = '_';
             }
@@ -402,7 +478,7 @@ void update_download_table(){
             for (int i = 0; i < countries_europe.count; i++) {
                 char *country = countries_europe.list[i];
                 long long size_country = 0;
-                
+
                 if (in_list(country, countries_europe_subregion)) {
                     StringList regions;
                     if (strcmp(country, "france") == 0) regions = regions_france;
@@ -435,13 +511,13 @@ void update_download_table(){
             }
             add_to_listdata("europe", size_europe, &listdata_count, listdata);
             size_planet += size_europe;
-        } 
+        }
         else if (strcmp(continent, "north_america") == 0) {
             long long size_north_america = 0;
             for (int i = 0; i < countries_north_america.count; i++) {
                 char *country = countries_north_america.list[i];
                 long long size_country = 0;
-                
+
                 if (in_list(country, countries_north_america_subregion)) {
                     StringList regions;
                     if (strcmp(country, "canada") == 0) regions = regions_canada;
@@ -474,7 +550,7 @@ void update_download_table(){
             for (int i = 0; i < countries_south_america.count; i++) {
                 char *country = countries_south_america.list[i];
                 long long size_country = 0;
-                
+
                 if (in_list(country, countries_south_america_subregion)) {
                     StringList regions;
                     if (strcmp(country, "brazil") == 0) regions = regions_brazil;
@@ -545,7 +621,7 @@ void update_download_table(){
     if (xml) {
         fprintf(xml, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n");
         for (int i = 0; i < listdata_count; i++) {
-            fprintf(xml, "  <item>\n    <name>%s</name>\n    <size>%s</size>\n  </item>\n", 
+            fprintf(xml, "  <item>\n    <name>%s</name>\n    <size>%s</size>\n  </item>\n",
                     listdata[i].name, listdata[i].size_str);
         }
         fprintf(xml, "</root>\n");
