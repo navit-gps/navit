@@ -63,7 +63,7 @@
  */
 struct transformation {
     int yaw; /* Rotation angle */
-    int pitch;
+    float pitch;
     int ddd;           /* 3d mode/isometric view active? (0/1) */
     int m00, m01, m02; /* 3d transformation matrix */
     int m10, m11, m12;
@@ -122,7 +122,7 @@ static void transform_setup_matrix(struct transformation *t) {
     int scale = t->scale;
     int order_dir = -1;
 
-    dbg(lvl_debug, "yaw=%d pitch=%d center=0x%x,0x%x", t->yaw, t->pitch, t->map_center.x, t->map_center.y);
+    dbg(lvl_debug, "yaw=%d pitch=%f center=0x%x,0x%x", t->yaw, t->pitch, t->map_center.x, t->map_center.y);
     t->znear = 1 << POST_SHIFT;
     t->zfar = 300 * t->znear;
     t->scale_shift = 0;
@@ -791,11 +791,11 @@ int transform_get_yaw(struct transformation *this_) {
     return this_->yaw;
 }
 
-void transform_set_pitch(struct transformation *this_, int pitch) {
+void transform_set_pitch(struct transformation *this_, float pitch) {
     this_->pitch = pitch;
     transform_setup_matrix(this_);
 }
-int transform_get_pitch(struct transformation *this_) {
+float transform_get_pitch(struct transformation *this_) {
     return this_->pitch;
 }
 

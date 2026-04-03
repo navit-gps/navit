@@ -81,16 +81,16 @@ static int vehicle_null_position_attr_get(struct vehicle_priv *priv, enum attr_t
     dbg(lvl_debug, "enter %s", attr_to_name(type));
     switch (type) {
     case attr_position_height:
-        attr->u.numd = &priv->height;
+        attr->u.numd = priv->height;
         break;
     case attr_position_speed:
-        attr->u.numd = &priv->speed;
+        attr->u.numd = priv->speed;
         break;
     case attr_position_direction:
-        attr->u.numd = &priv->direction;
+        attr->u.numd = priv->direction;
         break;
     case attr_position_radius:
-        attr->u.numd = &priv->radius;
+        attr->u.numd = priv->radius;
         break;
     case attr_position_coord_geo:
         attr->u.coord_geo = &priv->geo;
@@ -111,10 +111,10 @@ static int vehicle_null_position_attr_get(struct vehicle_priv *priv, enum attr_t
 static int vehicle_null_set_attr(struct vehicle_priv *priv, struct attr *attr) {
     switch (attr->type) {
     case attr_position_speed:
-        priv->speed = *attr->u.numd;
+        priv->speed = attr->u.numd;
         break;
     case attr_position_direction:
-        priv->direction = *attr->u.numd;
+        priv->direction = attr->u.numd;
         break;
     case attr_position_coord_geo:
         priv->geo = *attr->u.coord_geo;
