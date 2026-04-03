@@ -1678,7 +1678,7 @@ static void gui_internal_cmd_map_download_do(struct gui_priv *this, struct widge
     dl_data->wm = wm;
     dl_data->data = dl_info;
     error = pthread_create(&download, NULL, download_map3, dl_data);
-//    pthread_create(&progress, NULL, gui_internal_populate_download_table, this);
+    pthread_create(&progress, NULL, gui_internal_populate_download_table, this);
 
     //download_map(this, wm, dl_info);
 }

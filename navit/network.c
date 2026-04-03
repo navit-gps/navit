@@ -11,6 +11,7 @@
 #include <navit/color.h>
 #include <navit/item.h>
 #include <navit/point.h>
+#include <pthread.h>
 #include "gui/internal/gui_internal.h"
 #include "gui/internal/gui_internal_map_downloader.h"
 #include "gui/internal/gui_internal_widget.h"
@@ -237,6 +238,7 @@ void * download_map3(void * data) {
 
     while (f && fgets(buffer, sizeof(buffer), f)) {
         char* name = g_strsplit(buffer,"\t",0)[0];
+        pthread_t download;
 
         if (strcmp(requested_name, "planet") == 0) {
             if (in_list(name,continents) == 1)  {
@@ -274,7 +276,8 @@ void * download_map3(void * data) {
         }
 
         dl_data->data = dl_info2;
-        download_map2(dl_data);
+        pthread_create(&download, NULL, download_map2, dl_data);
+        //download_map2(dl_data);
 
     }
 
