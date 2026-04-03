@@ -203,14 +203,13 @@ void * gui_internal_populate_download_table(void* parent) {
         gui_internal_widget_append(this->download_data.download_table,row);
         double percent = ( dl_info.dl_total > 0 ? dl_info.dl_now / dl_info.dl_total * 100 : 0 );
         char * text;
-        text=g_strdup_printf("nichts geht mehr");
-	/*
+        text=g_strdup_printf(
                  "Download of %s is %s %1.0lf Mb / %1.0lf Mb = %1.0f% \n",
                  dl_info.name,
                  dl_info.downloading == 1 ? "active" : "inactive",
                  dl_info.dl_now / 1024 / 1024,
                  dl_info.dl_total / 1024 / 1024,
-                 percent);*/
+                 percent);
         label = gui_internal_label_new(this,text);
         gui_internal_widget_append(row,label);
         g_free(text);

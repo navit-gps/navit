@@ -182,12 +182,13 @@ void * download_map2(void *data) {
     file = fopen( dl_info->path, current_size > 0 ? "ab":"wb");
     curl_easy_setopt( handle, CURLOPT_WRITEDATA, file) ;
     res = curl_easy_perform( handle );
-    fclose(file);
+    //fclose(file);
 
     if(res != CURLE_OK)
         dbg(lvl_error, "%s\n", curl_easy_strerror(res));
 
     curl_easy_cleanup(handle);
+    curl_global_cleanup();
 
 
     dbg(lvl_debug, "download complete, creating XML\n");
@@ -202,7 +203,6 @@ void * download_map2(void *data) {
     fclose(file);
 
     dl_info->downloading = 0;
-    //enable_map(this->nav, dl_info->path);
     return NULL; //(int)res;
 }
 
@@ -321,7 +321,7 @@ int in_list(const char *str, StringList sl) {
  *
  * @param nothing
  *
- * @retuerns nothing
+ * @returns nothing
  */
 
 void update_download_table(){
