@@ -84,18 +84,18 @@ void gui_internal_download_update(struct gui_priv * this) {
     if(dl_info.downloading == 1) {
         event_add_timeout(500, 0, callback_new_1(callback_cast(this->download_cb), this));
     } else {
-        if(pthread_join(dl_thread, NULL)) {
-            dbg(lvl_error, "Error joining download thread\n");
-        }
-        enable_map(this->nav, dl_info.path);
+        //if(pthread_join(dl_thread, NULL)) {
+        //    dbg(lvl_error, "Error joining download thread\n");
+        //}
+        //enable_map(this->nav, dl_info.path);
     }
-
+/*
     if(this->download_data.download_showing) {
         gui_internal_populate_download_table(this);
         graphics_draw_mode(this->gra, draw_mode_begin);
         gui_internal_menu_render(this);
         graphics_draw_mode(this->gra, draw_mode_end);
-    }
+    }*/
 }
 
 

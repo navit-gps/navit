@@ -166,8 +166,8 @@ void * download_map2(void *data) {
 
     if (current_size>0) {
         dbg(lvl_debug, "Current size : %i, will resume\n", current_size);
-        curl_easy_setopt(handle, CURLOPT_RESUME_FROM, current_size);
-        dl_info->resume = 1;
+//        curl_easy_setopt(handle, CURLOPT_RESUME_FROM, current_size);
+//        dl_info->resume = 1;
     } else {
         dbg(lvl_debug, "Downloading from scratch\n");
     }
@@ -182,7 +182,8 @@ void * download_map2(void *data) {
     file = fopen( dl_info->path, current_size > 0 ? "ab":"wb");
     curl_easy_setopt( handle, CURLOPT_WRITEDATA, file) ;
     res = curl_easy_perform( handle );
-    //fclose(file);
+    fflush(file);
+    fclose(file); // needed to prevent EOC errors
 
     if(res != CURLE_OK)
         dbg(lvl_error, "%s\n", curl_easy_strerror(res));
@@ -200,6 +201,7 @@ void * download_map2(void *data) {
     }
 
     fprintf(file, "<map type=\"binfile\" data=\"$NAVIT_SHAREDIR/maps/%s.bin\" />", dl_info->name);
+    fflush(file);
     fclose(file);
 
     dl_info->downloading = 0;
@@ -264,7 +266,8 @@ void * download_map3(void * data) {
                 dl_info2->name = name;
                 dl_info2->path = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/maps/", name, ".bin",  NULL);
                 dl_info2->xml = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/maps/", name, ".xml",  NULL);
-                dl_info2->url = g_strjoin(NULL, "https://github.com/navit-gps/gh-actions-mapserver/releases/download/", g_date_time_format(g_date_time_new_now_local(), "%Y-%m-%d"), "/", name, "-", g_date_time_format(g_date_time_new_now_local(), "%Y-%m-%d"), ".bin", NULL);
+                //dl_info2->url = g_strjoin(NULL, "https://github.com/navit-gps/gh-actions-mapserver/releases/download/", g_date_time_format(g_date_time_new_now_local(), "%Y-%m-%d"), "/", name, "-", g_date_time_format(g_date_time_new_now_local(), "%Y-%m-%d"), ".bin", NULL);
+                dl_info2->url = g_strjoin(NULL, "https://github.com/navit-gps/gh-actions-mapserver/releases/download/2026-04-03/", name, "-2026-04-03.bin", NULL);
             } else {
                 continue;
             }
