@@ -1690,6 +1690,8 @@ void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, voi
     FILE *f;
     char *search, buffer[256];
     int found, sp_match = 0;
+    pthread_t download;
+    int error;
 
     dbg(lvl_debug, "wm=%p prefix=%s", wm, wm->prefix);
 
@@ -1740,6 +1742,7 @@ void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, voi
 	g_free(buffer2);
 
     }
+    //error = pthread_create(&download, NULL, update_download_table, NULL);
 
     gui_internal_menu_render(this);
 }

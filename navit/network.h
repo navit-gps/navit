@@ -38,7 +38,7 @@ int in_list(const char *str, StringList sl);
 void * download_map (struct gui_priv *this, struct widget *wm, struct map_download_info * dl_info);
 void * download_map2 (void * data);
 void * download_map3(void * data);
-void update_download_table();
+void * update_download_table();
 #ifdef __cplusplus
 }
 #endif

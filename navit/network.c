@@ -190,7 +190,6 @@ void * download_map2(void *data) {
         dbg(lvl_error, "%s\n", curl_easy_strerror(res));
 
     curl_easy_cleanup(handle);
-    curl_global_cleanup();
 
 
     dbg(lvl_debug, "download complete, creating XML\n");
@@ -206,6 +205,17 @@ void * download_map2(void *data) {
     fclose(file);
 
     dl_info->downloading = 0;
+
+       // Free dl_info and its strings
+    if (dl_info) {
+        g_free(dl_info->name);
+        g_free(dl_info->path);
+        g_free(dl_info->url);
+        g_free(dl_info);
+    }
+
+    // Free dl_data (safe because only used in threads)
+    g_free(dl_data);
     return NULL; //(int)res;
 }
 
@@ -219,8 +229,13 @@ void * download_map3(void * data) {
 
     char buffer[256];
     FILE *f;
-    f = fopen("maps/menu.tsv", "r");
-
+    GThreadPool *pool = g_thread_pool_new(
+    (GFunc)download_map2,
+        NULL,
+        5,                     // Max 5 threads
+        FALSE,
+        NULL
+    );
     // --- Define Lists ---
     char *continents_arr[] = {"africa", "asia", "australia-oceania", "central-america", "europe", "north-america", "south-america"};
     StringList continents = create_string_list(continents_arr, 7);
@@ -230,15 +245,23 @@ void * download_map3(void * data) {
     StringList countries_north_america_subregion = create_string_list(countries_north_america_subregion_arr, 2);
     char *countries_south_america_subregion_arr[] = {"south-america-brazil"};
     StringList countries_south_america_subregion = create_string_list(countries_south_america_subregion_arr, 1);
-
-    struct map_download_info *dl_info2 = g_malloc(sizeof(struct map_download_info));
     struct gui_download_data *dl_data = data;
     struct map_download_info * dl_info = dl_data->data;
     char * requested_name = dl_info->name;
 
+    f = fopen("maps/menu.tsv", "r");
+
+
+
+
     while (f && fgets(buffer, sizeof(buffer), f)) {
         char* name = g_strsplit(buffer,"\t",0)[0];
-        pthread_t download;
+        struct map_download_info *dl_info2 = g_malloc(sizeof(struct map_download_info));
+        struct gui_download_data *dl_data2 = g_malloc(sizeof(struct gui_download_data));
+
+	dl_data2->this = dl_data->this;
+	dl_data2->wm = dl_data->wm;
+	dl_data2->data = dl_info2;
 
         if (strcmp(requested_name, "planet") == 0) {
             if (in_list(name,continents) == 1)  {
@@ -250,7 +273,7 @@ void * download_map3(void * data) {
             } else if (in_list(name, countries_south_america_subregion) == 1) {
                 continue;
             }
-            dl_info2->name = name;
+            dl_info2->name = g_strdup(name);
             dl_info2->path = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/maps/", name, ".bin",  NULL);
             dl_info2->xml = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/maps/", name, ".xml",  NULL);
             dl_info2->url = g_strjoin(NULL, "https://github.com/navit-gps/gh-actions-mapserver/releases/download/", g_date_time_format(g_date_time_new_now_utc(), "%Y-%m-%d"), "/", name, "-", g_date_time_format(g_date_time_new_now_utc(), "%Y-%m-%d"), ".bin", NULL);
@@ -265,23 +288,23 @@ void * download_map3(void * data) {
                 } else if (in_list(name, countries_south_america_subregion) == 1) {
                    continue;
                 }
-                dl_info2->name = name;
+                dl_info2->name = g_strdup(name);
                 dl_info2->path = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/maps/", name, ".bin",  NULL);
                 dl_info2->xml = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/maps/", name, ".xml",  NULL);
-                //dl_info2->url = g_strjoin(NULL, "https://github.com/navit-gps/gh-actions-mapserver/releases/download/", g_date_time_format(g_date_time_new_now_local(), "%Y-%m-%d"), "/", name, "-", g_date_time_format(g_date_time_new_now_local(), "%Y-%m-%d"), ".bin", NULL);
-                dl_info2->url = g_strjoin(NULL, "https://github.com/navit-gps/gh-actions-mapserver/releases/download/2026-04-03/", name, "-2026-04-03.bin", NULL);
+                dl_info2->url = g_strjoin(NULL, "https://github.com/navit-gps/gh-actions-mapserver/releases/download/", g_date_time_format(g_date_time_new_now_local(), "%Y-%m-%d"), "/", name, "-", g_date_time_format(g_date_time_new_now_local(), "%Y-%m-%d"), ".bin", NULL);
+                //dl_info2->url = g_strjoin(NULL, "https://github.com/navit-gps/gh-actions-mapserver/releases/download/2026-04-03/", name, "-2026-04-03.bin", NULL);
             } else {
                 continue;
             }
         }
 
-        dl_data->data = dl_info2;
-        pthread_create(&download, NULL, download_map2, dl_data);
-        //download_map2(dl_data);
+        g_thread_pool_push(pool, dl_data2, NULL); // Push to thread pool
 
     }
 
+    curl_global_cleanup();
     fclose(f);
+    g_thread_pool_free(pool, FALSE, TRUE); // Wait for all tasks to finish
     return NULL;
 }
 
@@ -330,7 +353,7 @@ int in_list(const char *str, StringList sl) {
  * @returns nothing
  */
 
-void update_download_table(){
+void * update_download_table(){
     CURL *curl;
     CURLcode res;
     char *response = NULL;
@@ -355,7 +378,7 @@ void update_download_table(){
             free(response);
             curl_easy_cleanup(curl);
             curl_global_cleanup();
-            return;
+            return NULL;
         }
         curl_easy_cleanup(curl);
     }
@@ -368,7 +391,7 @@ void update_download_table(){
         }
         free(response);
         curl_global_cleanup();
-        return;
+        return NULL;
     }
     free(response);
 
@@ -376,7 +399,7 @@ void update_download_table(){
     if (!cJSON_IsArray(assets)) {
         fprintf(stderr, "Assets not found or not an array\n");
         cJSON_Delete(json);
-        return;
+        return NULL;
     }
 
     // Build maps_size dictionary
@@ -622,21 +645,10 @@ void update_download_table(){
         fclose(tsv);
     }
 
-    // --- Output to XML ---
-    FILE *xml = fopen("test.xml", "w");
-    if (xml) {
-        fprintf(xml, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n");
-        for (int i = 0; i < listdata_count; i++) {
-            fprintf(xml, "  <item>\n    <name>%s</name>\n    <size>%s</size>\n  </item>\n",
-                    listdata[i].name, listdata[i].size_str);
-        }
-        fprintf(xml, "</root>\n");
-        fclose(xml);
-    }
-
     // Cleanup
     cJSON_Delete(json);
     curl_global_cleanup();
     // Free allocated memory...
+    return NULL;
 
 }
