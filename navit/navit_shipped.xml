@@ -23,8 +23,22 @@
 	<!-- The global debug level (like using command line option "-d"). Ignored if option -d is used. -->
 	<!-- Possible debug levels: error, warning, info, debug. -->
 	<debug name="global" dbg_level="error"/>
-	<!-- Example of setting the debug level for a single function.  -->
+	<!--
+	    Per-module and per-function debug: use name="MODULE" or name="MODULE:function".
+	    The MODULE name is set by module_add_library() in each plugin's CMakeLists.txt.
+	    Examples of module names:
+	      navit, gui_internal, graphics_qt5, map_binfile,
+	      speech_speech_dispatcher, vehicle_gpsd, osd_core, font_freetype
+	    To find a module name, look at the CMakeLists.txt in that plugin's directory
+	    for the module_add_library(MODULE_NAME ...) call.
+	-->
+	<!-- Debug a whole module: -->
+	<debug name="navit" dbg_level="error"/>
+	<!-- Debug a single function (format is MODULE:function): -->
 	<debug name="navit:do_draw" dbg_level="error"/>
+	<!-- Example: debug the speech dispatcher's speechd_say function:
+	<debug name="speech_speech_dispatcher:speechd_say" dbg_level="debug"/>
+	-->
 	<!-- Example for logging timing/profiling information. Note the prefix "profile:".
 	<debug name="profile:navit:do_draw" dbg_level="debug"/>
 	-->
