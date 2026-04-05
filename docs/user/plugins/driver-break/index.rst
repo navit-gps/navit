@@ -104,6 +104,13 @@ Rest parameters are configurable per mode, including:
 - Motorcycle: soft limit (minutes), mandatory break after (minutes), break duration (minutes), terrain sub-type (road/adventure), adventure max smoothness and tracktype, default weight for energy routing.
 - General: rest interval range (min/max hours), POI search radii, minimum distance from buildings (camping / allemannsretten), minimum distance from glaciers for overnight stops, and **water POIs at rest stops** for car/truck/motorcycle (remote/arid/hot climate).
 
+.. _example-osd-navit-xml:
+
+Example layered OSD (navit.xml)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A full **text-only** on-screen menu example using ``osd_configuration`` bitmasks (main menu, travel mode, per-mode break settings, routing toggles) and the commands ``driver_break_open_settings()``, ``driver_break_set_mode()``, and ``driver_break_toggle()`` is available as :download:`navit_driver_break_osd_example.xml`. It includes a minimal valid ``<config>`` skeleton; merge the Driver Break OSD block into your own ``navit.xml`` or adapt paths and layout as needed.
+
 .. _rast-and-vei:
 
 Rast and vei (historical basis for hiking and cycling defaults)

@@ -126,6 +126,8 @@ static int driver_break_db_load_config_value(const char *key, int value, struct 
         {"fuel_high_load_threshold", offsetof(struct driver_break_config, fuel_high_load_threshold), 0, 100, 0},
         {"fuel_adaptive_learning_enabled", offsetof(struct driver_break_config, fuel_adaptive_learning_enabled), 0, 1,
          1},
+        {"use_energy_routing", offsetof(struct driver_break_config, use_energy_routing), 0, 1, 1},
+        {"use_ecu_route_cost", offsetof(struct driver_break_config, use_ecu_route_cost), 0, 1, 1},
         /* Motorcycle */
         {"motorcycle_soft_limit_minutes", offsetof(struct driver_break_config, motorcycle_soft_limit_minutes), 60,
          MAX_MOTORCYCLE_MINUTES, 0},
@@ -422,6 +424,7 @@ int driver_break_db_save_config(struct driver_break_db *db, struct driver_break_
         "fuel_type", "fuel_tank_capacity_l", "fuel_avg_consumption_x10", "fuel_obd_available", "fuel_j1939_available",
         "fuel_megasquirt_available", "fuel_injector_flow_cc_min", "fuel_ethanol_manual_pct", "fuel_low_warning_km",
         "fuel_search_buffer_km", "fuel_high_load_threshold", "fuel_adaptive_learning_enabled",
+        "use_energy_routing", "use_ecu_route_cost",
         "motorcycle_soft_limit_minutes", "motorcycle_mandatory_break_after_minutes", "motorcycle_break_duration_min",
         "motorcycle_terrain_subtype", "motorcycle_adventure_max_smoothness", "motorcycle_adventure_max_tracktype",
         "motorcycle_default_weight_kg", "enable_water_pois_remote_arid"};
@@ -435,7 +438,8 @@ int driver_break_db_save_config(struct driver_break_db *db, struct driver_break_
         config->fuel_type, config->fuel_tank_capacity_l, config->fuel_avg_consumption_x10, config->fuel_obd_available,
         config->fuel_j1939_available, config->fuel_megasquirt_available, config->fuel_injector_flow_cc_min,
         config->fuel_ethanol_manual_pct, config->fuel_low_warning_km, config->fuel_search_buffer_km,
-        config->fuel_high_load_threshold, config->fuel_adaptive_learning_enabled, config->motorcycle_soft_limit_minutes,
+        config->fuel_high_load_threshold, config->fuel_adaptive_learning_enabled, config->use_energy_routing,
+        config->use_ecu_route_cost, config->motorcycle_soft_limit_minutes,
         config->motorcycle_mandatory_break_after_minutes, config->motorcycle_break_duration_min,
         config->motorcycle_terrain_subtype, config->motorcycle_adventure_max_smoothness,
         config->motorcycle_adventure_max_tracktype, config->motorcycle_default_weight_kg,

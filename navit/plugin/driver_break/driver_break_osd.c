@@ -213,6 +213,9 @@ int driver_break_cmd_start_break(struct navit *nav, char *function, struct attr 
 int driver_break_cmd_end_break(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_configure_intervals(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_configure_overnight(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+int driver_break_cmd_open_settings(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+int driver_break_cmd_set_mode(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+int driver_break_cmd_toggle(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_set_fuel_level(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_log_fuel_stop(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_configure_fuel(struct navit *nav, char *function, struct attr **in, struct attr ***out);
@@ -241,6 +244,9 @@ static struct command_table driver_break_commands[] = {
     {"driver_break_end_break",           command_cast(driver_break_cmd_end_break)          },
     {"driver_break_configure_intervals", command_cast(driver_break_cmd_configure_intervals)},
     {"driver_break_configure_overnight", command_cast(driver_break_cmd_configure_overnight)},
+    {"driver_break_open_settings",       command_cast(driver_break_cmd_open_settings)      },
+    {"driver_break_set_mode",            command_cast(driver_break_cmd_set_mode)           },
+    {"driver_break_toggle",              command_cast(driver_break_cmd_toggle)             },
     {"driver_break_set_fuel_level",      command_cast(driver_break_cmd_set_fuel_level)     },
     {"driver_break_log_fuel_stop",       command_cast(driver_break_cmd_log_fuel_stop)      },
     {"driver_break_configure_fuel",      command_cast(driver_break_cmd_configure_fuel)     },
@@ -1249,42 +1255,178 @@ static void driver_break_show_motorcycle_intervals_dialog(struct gui_priv *gui_p
     graphics_draw_mode(gui_priv->gra, draw_mode_end);
 }
 
-/* Configure rest stop intervals command */
-int driver_break_cmd_configure_intervals(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
-    struct driver_break_priv *priv;
-    struct vehicleprofile *profile;
-    struct attr profile_attr;
-    char *profile_name;
-    void *plugin;
-    struct gui_priv *gui_priv;
+/* osd_configuration bitmask for layered Driver Break OSD menus (see docs example navit.xml). */
+static int driver_break_osd_flag_for_vehicle_type(int vehicle_type) {
+    switch ((enum driver_break_vehicle_type)vehicle_type) {
+    case DRIVER_BREAK_VEHICLE_CAR:
+        return 4;
+    case DRIVER_BREAK_VEHICLE_HIKING:
+        return 8;
+    case DRIVER_BREAK_VEHICLE_TRUCK:
+        return 16;
+    case DRIVER_BREAK_VEHICLE_CYCLING:
+        return 32;
+    case DRIVER_BREAK_VEHICLE_MOTORCYCLE:
+        return 128;
+    default:
+        return 4;
+    }
+}
 
-    dbg(lvl_info, "Driver Break plugin: driver_break_cmd_configure_intervals called");
+static const char *driver_break_profile_label_for_vehicle_type(int vehicle_type) {
+    switch ((enum driver_break_vehicle_type)vehicle_type) {
+    case DRIVER_BREAK_VEHICLE_TRUCK:
+        return "truck";
+    case DRIVER_BREAK_VEHICLE_HIKING:
+        return "hiking";
+    case DRIVER_BREAK_VEHICLE_CYCLING:
+        return "cycling";
+    case DRIVER_BREAK_VEHICLE_MOTORCYCLE:
+        return "motorcycle";
+    case DRIVER_BREAK_VEHICLE_CAR:
+    default:
+        return "car";
+    }
+}
+
+/* Set navit osd_configuration to the break-settings layer for the active plugin travel mode. */
+int driver_break_cmd_open_settings(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+    struct attr a;
+
+    (void)function;
+    (void)in;
+    (void)out;
+
+    if (!nav) {
+        return 0;
+    }
+
     plugin = driver_break_get_plugin(nav);
     if (!plugin) {
-        dbg(lvl_error, "Driver Break plugin: Plugin not found - OSD may not be instantiated. Check if <osd "
-                       "type=\"rest\" enabled=\"yes\"/> is in config.");
-        navit_add_message(nav, "Driver Break plugin: Plugin not loaded. Please check configuration.");
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
+    }
+
+    priv = (struct driver_break_priv *)plugin;
+    a.type = attr_osd_configuration;
+    a.u.num = driver_break_osd_flag_for_vehicle_type(priv->config.vehicle_type);
+    navit_set_attr(nav, &a);
+    return 1;
+}
+
+/* Set plugin travel mode: function argument car|truck|hiking|cycling|motorcycle */
+int driver_break_cmd_set_mode(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+
+    (void)in;
+    (void)out;
+
+    if (!nav) {
+        return 0;
+    }
+
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
         return 0;
     }
 
     priv = (struct driver_break_priv *)plugin;
 
-    /* Get current vehicle profile */
-    profile = navit_get_vehicleprofile(nav);
-    if (!profile) {
-        dbg(lvl_warning, "Driver Break plugin: No vehicle profile found");
-        navit_add_message(nav, "Driver Break plugin: No vehicle profile selected");
+    if (!function || !*function) {
+        navit_add_message(nav, "Driver Break plugin: driver_break_set_mode needs an argument (car|truck|hiking|cycling|motorcycle)");
         return 0;
     }
 
-    if (!vehicleprofile_get_attr(profile, attr_name, &profile_attr, NULL)) {
-        dbg(lvl_warning, "Driver Break plugin: Could not get profile name");
-        navit_add_message(nav, "Driver Break plugin: Could not get profile name");
+    if (!g_ascii_strcasecmp(function, "car")) {
+        priv->config.vehicle_type = DRIVER_BREAK_VEHICLE_CAR;
+    } else if (!g_ascii_strcasecmp(function, "truck")) {
+        priv->config.vehicle_type = DRIVER_BREAK_VEHICLE_TRUCK;
+    } else if (!g_ascii_strcasecmp(function, "hiking")) {
+        priv->config.vehicle_type = DRIVER_BREAK_VEHICLE_HIKING;
+    } else if (!g_ascii_strcasecmp(function, "cycling")) {
+        priv->config.vehicle_type = DRIVER_BREAK_VEHICLE_CYCLING;
+    } else if (!g_ascii_strcasecmp(function, "motorcycle")) {
+        priv->config.vehicle_type = DRIVER_BREAK_VEHICLE_MOTORCYCLE;
+    } else {
+        navit_add_message(nav, "Driver Break plugin: unknown mode (use car, truck, hiking, cycling, motorcycle)");
         return 0;
     }
 
-    profile_name = profile_attr.u.str;
-    dbg(lvl_info, "Driver Break plugin: Configure intervals for profile: %s", profile_name);
+    if (priv->db) {
+        driver_break_db_save_config(priv->db, &priv->config);
+    }
+
+    dbg(lvl_info, "Driver Break plugin: travel mode set to vehicle_type=%d", priv->config.vehicle_type);
+    return 1;
+}
+
+/* Toggle kinetic (energy routing) or eco (ECU-weighted route cost). */
+int driver_break_cmd_toggle(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+
+    (void)in;
+    (void)out;
+
+    if (!nav) {
+        return 0;
+    }
+
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
+    }
+
+    priv = (struct driver_break_priv *)plugin;
+
+    if (!function || !*function) {
+        navit_add_message(nav, "Driver Break plugin: driver_break_toggle needs kinetic or eco");
+        return 0;
+    }
+
+    if (!g_ascii_strcasecmp(function, "kinetic")) {
+        priv->config.use_energy_routing = !priv->config.use_energy_routing;
+        dbg(lvl_info, "Driver Break plugin: use_energy_routing=%d", priv->config.use_energy_routing);
+    } else if (!g_ascii_strcasecmp(function, "eco")) {
+        priv->config.use_ecu_route_cost = !priv->config.use_ecu_route_cost;
+        dbg(lvl_info, "Driver Break plugin: use_ecu_route_cost=%d", priv->config.use_ecu_route_cost);
+    } else {
+        navit_add_message(nav, "Driver Break plugin: driver_break_toggle: use kinetic or eco");
+        return 0;
+    }
+
+    if (priv->db) {
+        driver_break_db_save_config(priv->db, &priv->config);
+    }
+
+    return 1;
+}
+
+/* Configure rest stop intervals command */
+int driver_break_cmd_configure_intervals(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+    struct gui_priv *gui_priv;
+
+    (void)function;
+    (void)in;
+    (void)out;
+
+    dbg(lvl_info, "Driver Break plugin: driver_break_cmd_configure_intervals called");
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        dbg(lvl_error, "Driver Break plugin: Plugin not found - OSD may not be instantiated. Check if <osd "
+                       "type=\"driver_break\" enabled=\"yes\"/> is in config.");
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded. Please check configuration.");
+        return 0;
+    }
+
+    priv = (struct driver_break_priv *)plugin;
 
     /* Get internal GUI priv - if not available, show message */
     gui_priv = driver_break_get_internal_gui_priv(nav);
@@ -1294,21 +1436,26 @@ int driver_break_cmd_configure_intervals(struct navit *nav, char *function, stru
         return 0;
     }
 
-    /* Show configuration dialog based on profile */
-    if (!g_ascii_strcasecmp(profile_name, "car")) {
+    /* Dialog follows plugin travel mode (driver_break_set_mode), not only Navit vehicle profile name */
+    switch ((enum driver_break_vehicle_type)priv->config.vehicle_type) {
+    case DRIVER_BREAK_VEHICLE_CAR:
         driver_break_show_car_intervals_dialog(gui_priv, priv);
-    } else if (!g_ascii_strcasecmp(profile_name, "truck") || !g_ascii_strcasecmp(profile_name, "Truck")) {
+        break;
+    case DRIVER_BREAK_VEHICLE_TRUCK:
         driver_break_show_truck_intervals_dialog(gui_priv, priv);
-    } else if (!g_ascii_strcasecmp(profile_name, "hiking") || !g_ascii_strcasecmp(profile_name, "pedestrian")) {
+        break;
+    case DRIVER_BREAK_VEHICLE_HIKING:
         driver_break_show_hiking_intervals_dialog(gui_priv, priv);
-    } else if (!g_ascii_strcasecmp(profile_name, "bike") || !g_ascii_strcasecmp(profile_name, "cycling")) {
+        break;
+    case DRIVER_BREAK_VEHICLE_CYCLING:
         driver_break_show_cycling_intervals_dialog(gui_priv, priv);
-    } else if (!g_ascii_strcasecmp(profile_name, "motorcycle")) {
+        break;
+    case DRIVER_BREAK_VEHICLE_MOTORCYCLE:
         driver_break_show_motorcycle_intervals_dialog(gui_priv, priv);
-    } else {
-        dbg(lvl_warning, "Driver Break plugin: Unknown profile type: %s", profile_name);
-        navit_add_message(nav, "Driver Break plugin: Configuration not available for this profile");
-        return 0;
+        break;
+    default:
+        driver_break_show_car_intervals_dialog(gui_priv, priv);
+        break;
     }
 
     return 1;
@@ -1359,8 +1506,9 @@ static void driver_break_show_overnight_dialog(struct gui_priv *gui_priv, struct
         gui_internal_widget_append(box, label);
     }
 
-    /* Min distance from glaciers (for hiking) */
-    if (!g_ascii_strcasecmp(profile_name, "hiking") || !g_ascii_strcasecmp(profile_name, "pedestrian")) {
+    /* Min distance from glaciers (hiking and motorcycle touring / allemannsretten-style rules) */
+    if (!g_ascii_strcasecmp(profile_name, "hiking") || !g_ascii_strcasecmp(profile_name, "pedestrian")
+        || !g_ascii_strcasecmp(profile_name, "motorcycle")) {
         int val = priv->config.min_distance_from_glaciers;
         if (val < 0 || val > 10000) {
             dbg(lvl_error, "Driver Break plugin: Invalid min_distance_from_glaciers value: %d, using default 300", val);
@@ -1438,39 +1586,26 @@ static void driver_break_show_overnight_dialog(struct gui_priv *gui_priv, struct
 /* Configure overnight stops command */
 int driver_break_cmd_configure_overnight(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
     struct driver_break_priv *priv;
-    struct vehicleprofile *profile;
-    struct attr profile_attr;
-    char *profile_name;
     void *plugin;
     struct gui_priv *gui_priv;
+    const char *profile_name;
+
+    (void)function;
+    (void)in;
+    (void)out;
 
     dbg(lvl_info, "Driver Break plugin: driver_break_cmd_configure_overnight called");
     plugin = driver_break_get_plugin(nav);
     if (!plugin) {
         dbg(lvl_error, "Driver Break plugin: Plugin not found - OSD may not be instantiated. Check if <osd "
-                       "type=\"rest\" enabled=\"yes\"/> is in config.");
+                       "type=\"driver_break\" enabled=\"yes\"/> is in config.");
         navit_add_message(nav, "Driver Break plugin: Plugin not loaded. Please check configuration.");
         return 0;
     }
 
     priv = (struct driver_break_priv *)plugin;
-
-    /* Get current vehicle profile */
-    profile = navit_get_vehicleprofile(nav);
-    if (!profile) {
-        dbg(lvl_warning, "Driver Break plugin: No vehicle profile found");
-        navit_add_message(nav, "Driver Break plugin: No vehicle profile selected");
-        return 0;
-    }
-
-    if (!vehicleprofile_get_attr(profile, attr_name, &profile_attr, NULL)) {
-        dbg(lvl_warning, "Driver Break plugin: Could not get profile name");
-        navit_add_message(nav, "Driver Break plugin: Could not get profile name");
-        return 0;
-    }
-
-    profile_name = profile_attr.u.str;
-    dbg(lvl_info, "Driver Break plugin: Configure overnight stops for profile: %s", profile_name);
+    profile_name = driver_break_profile_label_for_vehicle_type(priv->config.vehicle_type);
+    dbg(lvl_info, "Driver Break plugin: Configure overnight stops for travel mode: %s", profile_name);
 
     /* Get internal GUI priv - if not available, show message */
     gui_priv = driver_break_get_internal_gui_priv(nav);
