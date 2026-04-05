@@ -493,7 +493,6 @@ void * update_download_table(){
  
 			add_to_listdata(key, map_size, menu_data, -1);
                     }
-                    const char *region = regions[0];
                     if (strcmp(country, "france") == 0) pos = 145; 
                     else if (strcmp(country, "germany") == 0) pos = 174;
                     else if (strcmp(country, "great_britain") == 0) pos = 191;
@@ -510,7 +509,6 @@ void * update_download_table(){
 		add_to_listdata(key, size_country, menu_data, pos);
                 size_europe += size_country;
             }
-            const char *country = countries_europe_arr[0];
 	    pos = 130;
             add_to_listdata("europe", size_europe, menu_data, pos);
             size_planet += size_europe;
@@ -549,7 +547,6 @@ void * update_download_table(){
 		add_to_listdata(key, size_country, menu_data, pos);
                 size_north_america += size_country;
             }
-            const char *country = countries_north_america_arr[0];
 	    pos = 259;
             add_to_listdata("north_america", size_north_america, menu_data, pos);
             size_planet += size_north_america;
@@ -587,7 +584,6 @@ void * update_download_table(){
 		add_to_listdata(key, size_country, menu_data, pos);
                 size_south_america += size_country;
             }
-            const char *country = countries_south_america_arr[0];
 	    pos = 329;
             add_to_listdata("south_america", size_south_america, menu_data, pos);
             size_planet += size_south_america;
