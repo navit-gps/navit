@@ -1720,7 +1720,7 @@ void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, voi
     download_enabled.type = download_disabled.type = attr_update;
     download_enabled.u.num = 1;
     download_disabled.u.num = 0;
-    f = fopen("maps/menu.tsv", "r");
+    f = fopen("maps/menu2.tsv", "r");
 
 
     while (f && fgets(buffer, sizeof(buffer), f)) {

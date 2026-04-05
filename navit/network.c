@@ -41,16 +41,7 @@ int progressCallBack(struct map_download_info *dl_info, double dltotal, double d
 }
 
 
-// Helper to add to listdata
-void add_to_listdata(char *name, long long size, int* listdata_count, MapData *listdata) {
-    char size_buf[32];
-    format_filesize(size, size_buf);
-    listdata[*listdata_count].name = strdup(name);
-    listdata[*listdata_count].size_str = strdup(size_buf);
-    (*listdata_count)++;
-}
-
-void add_to_listdata2(char *name, long long size, GArray *maps_data, int pos) {
+void add_to_listdata(char *name, long long size, GArray *maps_data, int pos) {
     char size_buf[32];
     MapData *item = malloc(sizeof(MapData));
     format_filesize(size, size_buf);
@@ -253,7 +244,7 @@ void * download_map3(void * data) {
     struct map_download_info * dl_info = dl_data->data;
     char * requested_name = dl_info->name;
 
-    f = fopen("maps/menu.tsv", "r");
+    f = fopen("maps/menu2.tsv", "r");
 
 
 
@@ -467,9 +458,7 @@ void * update_download_table(){
     const char *regions_brazil_arr[] = {"centro_oeste", "nordeste", "norte", "sudeste", "sul", NULL};
 
     // --- Processing Logic ---
-    MapData *listdata = malloc(400 * sizeof(MapData));
     GArray* menu_data = g_array_new(TRUE, FALSE, sizeof(MapData));
-    int listdata_count = 0;
     long long size_planet = 0;
     int pos = -1;
 
@@ -502,8 +491,7 @@ void * update_download_table(){
                         long long map_size = get_size(key, &maps_count, maps_size);
                         size_country += map_size;
  
-                        add_to_listdata(key, map_size, &listdata_count, listdata);
-			add_to_listdata2(key, map_size, menu_data, -1);
+			add_to_listdata(key, map_size, menu_data, -1);
                     }
                     const char *region = regions[0];
                     if (strcmp(country, "france") == 0) pos = 145; 
@@ -519,14 +507,12 @@ void * update_download_table(){
                 }
                 char key[256];
                 sprintf(key, "%s_%s", continent, country);
-                add_to_listdata(key, size_country, &listdata_count, listdata);
-		add_to_listdata2(key, size_country, menu_data, pos);
+		add_to_listdata(key, size_country, menu_data, pos);
                 size_europe += size_country;
             }
             const char *country = countries_europe_arr[0];
 	    pos = 130;
-            add_to_listdata("europe", size_europe, &listdata_count, listdata);
-            add_to_listdata2("europe", size_europe, menu_data, pos);
+            add_to_listdata("europe", size_europe, menu_data, pos);
             size_planet += size_europe;
         }
         else if (strcmp(continent, "north_america") == 0) {
@@ -548,8 +534,7 @@ void * update_download_table(){
                         sprintf(key, "%s_%s_%s", continent, country, region);
                         long long map_size = get_size(key, &maps_count, maps_size);
                         size_country += map_size;
-                        add_to_listdata(key, map_size, &listdata_count, listdata);
-			add_to_listdata2(key, map_size, menu_data, -1);
+			add_to_listdata(key, map_size, menu_data, -1);
                     }
                     if (strcmp(country, "canada") == 0) pos = 259;
                     else if (strcmp(country, "us") == 0) pos = 275;
@@ -561,14 +546,12 @@ void * update_download_table(){
                 }
                 char key[256];
                 sprintf(key, "%s_%s", continent, country);
-                add_to_listdata(key, size_country, &listdata_count, listdata);
-		add_to_listdata2(key, size_country, menu_data, pos);
+		add_to_listdata(key, size_country, menu_data, pos);
                 size_north_america += size_country;
             }
             const char *country = countries_north_america_arr[0];
 	    pos = 259;
-            add_to_listdata("north_america", size_north_america, &listdata_count, listdata);
-            add_to_listdata2("north_america", size_north_america, menu_data, pos);
+            add_to_listdata("north_america", size_north_america, menu_data, pos);
             size_planet += size_north_america;
         }
         else if (strcmp(continent, "south_america") == 0) {
@@ -589,8 +572,7 @@ void * update_download_table(){
                         sprintf(key, "%s_%s_%s", continent, country, region);
                         long long map_size = get_size(key, &maps_count, maps_size);
                         size_country += map_size;
-                        add_to_listdata(key, map_size, &listdata_count, listdata);
-			add_to_listdata2(key, map_size, menu_data, -1);
+			add_to_listdata(key, map_size, menu_data, -1);
                     }
                     const char *region = regions[0];
 		    pos = 331;
@@ -602,20 +584,17 @@ void * update_download_table(){
                 }
                 char key[256];
                 sprintf(key, "%s_%s", continent, country);
-                add_to_listdata(key, size_country, &listdata_count, listdata);
-		add_to_listdata2(key, size_country, menu_data, pos);
+		add_to_listdata(key, size_country, menu_data, pos);
                 size_south_america += size_country;
             }
             const char *country = countries_south_america_arr[0];
 	    pos = 329;
-            add_to_listdata("south_america", size_south_america, &listdata_count, listdata);
-            add_to_listdata2("south_america", size_south_america, menu_data, pos);
+            add_to_listdata("south_america", size_south_america, menu_data, pos);
             size_planet += size_south_america;
         }
         else if (strcmp(continent, "antarctica") == 0) {
             long long map_size = get_size(continent, &maps_count, maps_size);
-            add_to_listdata("antartica", map_size, &listdata_count, listdata); 
-            add_to_listdata2("antartica", map_size, menu_data, -1);
+            add_to_listdata("antartica", map_size, menu_data, -1);
             size_planet += map_size;
         }
         else {
@@ -634,33 +613,21 @@ void * update_download_table(){
                 sprintf(key, "%s_%s", continent, country);
                 long long map_size = get_size(key, &maps_count, maps_size);
                 size_continent += map_size;
-                add_to_listdata(key, map_size, &listdata_count, listdata);
-		add_to_listdata2(key, map_size, menu_data, -1);
+		add_to_listdata(key, map_size, menu_data, -1);
             }
             if (strcmp(continent, "africa") == 0) pos = 0;
             else if (strcmp(continent, "asia") == 0) pos = 57;
             else if (strcmp(continent, "australia_oceania") == 0) pos = 95 ;
             else if (strcmp(continent, "central_america") == 0) pos = 119;
 
-            add_to_listdata(continent, size_continent, &listdata_count, listdata);
-            add_to_listdata2(continent, size_continent, menu_data, pos);
+            add_to_listdata(continent, size_continent, menu_data, pos);
             size_planet += size_continent;
         }
     }
 
     // Add Planet
-    add_to_listdata("planet", size_planet, &listdata_count, listdata);
-    add_to_listdata2("planet", size_planet, menu_data, 0);
+    add_to_listdata("planet", size_planet, menu_data, 0);
 
-    // --- Output to TSV ---
-    FILE *tsv = fopen("maps/menu.tsv", "w");
-    if (tsv) {
-        for (int i = 0; i < listdata_count; i++) {
-            fprintf(tsv, "%s\t%s\n", listdata[i].name, listdata[i].size_str);
-        }
-        fclose(tsv);
-    }
-    
     // --- Output to TSV ---
     FILE *tsv2 = fopen("maps/menu2.tsv", "w");
     if (tsv2) {
