@@ -109,7 +109,25 @@ Rest parameters are configurable per mode, including:
 Example layered OSD (navit.xml)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A full **text-only** on-screen menu example using ``osd_configuration`` bitmasks (main menu, travel mode, per-mode break settings, routing toggles) and the commands ``driver_break_open_settings()``, ``driver_break_set_mode()``, and ``driver_break_toggle()`` is available as :download:`navit_driver_break_osd_example.xml`. It includes a minimal valid ``<config>`` skeleton; merge the Driver Break OSD block into your own ``navit.xml`` or adapt paths and layout as needed.
+A full **text-only** on-screen menu example using ``osd_configuration`` bitmasks (main menu, travel mode, per-mode break settings, routing toggles) and the commands ``driver_break_open_settings()``, ``driver_break_set_mode()``, and ``driver_break_toggle()`` is available as :download:`navit_driver_break_osd_example.xml` and on GitHub as `navit_driver_break_osd_example.xml <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/navit_driver_break_osd_example.xml>`__. It includes a minimal valid ``<config>`` skeleton; merge the Driver Break OSD block into your own ``navit.xml`` or adapt paths and layout as needed.
+
+.. _driver-break-example-icons:
+
+Example OSD icons (Driver Break)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Example SVG assets for kinetic (energy-based) routing and eco / ECU-related routing when you use ``type="button"`` with ``src=`` instead of text-only OSD items. Source files in the repository:
+
+- `kinetic-routing.svg <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/Icons/kinetic-routing.svg>`__
+- `nav_eco-mode.svg <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/Icons/nav_eco-mode.svg>`__
+
+.. image:: Icons/kinetic-routing.svg
+   :width: 96px
+   :alt: Kinetic routing example icon for Driver Break OSD
+
+.. image:: Icons/nav_eco-mode.svg
+   :width: 96px
+   :alt: Eco mode example icon for Driver Break OSD
 
 .. _rast-and-vei:
 
@@ -185,8 +203,7 @@ The plugin can read live fuel consumption directly from the vehicle's ECU. This 
 
 - **MegaSquirt** – Supports aftermarket and performance ECUs from the MegaSquirt family, including MS1, MS2, MS3, MS3-Pro, and MicroSquirt. These are commonly used in kit cars, race vehicles, and custom engine installations. The plugin connects to the ECU over a serial connection and reads engine data to calculate fuel consumption. As with the other backends, if the ECU is not available or not configured the plugin continues to work normally using adaptive estimation.
 
-Planned support for **battery electric vehicles** (live SoC, power, and related OBD/CAN data) is outlined in :doc:`todo-electric`. The same content is available on GitHub at
-`todo-electric.rst <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/todo-electric.rst>`__.
+Planned support for **battery electric vehicles** (live SoC, power, and related OBD/CAN data) is outlined in `todo-electric.rst <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/todo-electric.rst>`__.
 
 In the fuel configuration dialog (Configure fuel), one toggle turns live ECU on or off for all three backends (OBD-II, J1939, MegaSquirt) together. Press OK to save.
 
@@ -204,7 +221,7 @@ Attribute ``eco_mode_fuel_enabled`` (for DBus / API)
 
 The plugin exposes a boolean attribute **eco_mode_fuel_enabled**. It is **true** when either (1) an ECU backend is available and running (OBD-II, J1939, or MegaSquirt), or (2) adaptive fuel learning is enabled in configuration. This allows external components to detect whether the plugin is using live fuel data or learned consumption for eco/fuel-related behaviour.
 
-**DBus:** The attribute is available on the Navit DBus interface. Call ``get_attr("eco_mode_fuel_enabled")`` on the navit object; the method returns ``(attrname, value)`` with a boolean value. No need to resolve the Driver Break OSD; Navit aggregates the value from its OSDs. For service name, object paths, and examples in Python and with ``dbus-send``, see  https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/dbus.rst
+**DBus:** The attribute is available on the Navit DBus interface. Call ``get_attr("eco_mode_fuel_enabled")`` on the navit object; the method returns ``(attrname, value)`` with a boolean value. No need to resolve the Driver Break OSD; Navit aggregates the value from its OSDs. For service name, object paths, and examples in Python and with ``dbus-send``, see `dbus.rst <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/dbus.rst>`__.
 
 .. _history-and-persistence:
 
@@ -247,13 +264,14 @@ Further reading
 
 For details on specific aspects of the Driver Break plugin, see:
 
-* How the plugin works: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/how_it_works.rst
-* ECU ports: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/ecu_ports.rst
-* EV backend (to-do, design checklist): https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/todo-electric.rst
-* EV vehicle profile table (SQLite spec): https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/ev_vehicle_profile.rst
-* EV vehicle profile DDL (SQL file): https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/ev_vehicle_profile.sql
-* Tests: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/tests.rst
-* Aftermarket ECUs: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/aftermarket_ecus.rst
-* Formulas: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/formulas.rst
-* Navit-daemon integration: https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/navit_daemon_integration.rst
-* DBus API (eco_mode_fuel_enabled): https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/dbus.rst
+* `How the plugin works <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/how_it_works.rst>`__
+* `ECU ports <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/ecu_ports.rst>`__
+* `EV backend (to-do, design checklist) <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/todo-electric.rst>`__
+* `EV vehicle profile table (SQLite spec) <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/ev_vehicle_profile.rst>`__
+* `EV vehicle profile DDL (SQL file) <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/ev_vehicle_profile.sql>`__
+* `Tests <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/tests.rst>`__
+* `Aftermarket ECUs <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/aftermarket_ecus.rst>`__
+* `Formulas <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/formulas.rst>`__
+* `Navit-daemon integration <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/navit_daemon_integration.rst>`__
+* `DBus API (eco_mode_fuel_enabled) <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/dbus.rst>`__
+* `Example OSD icons (SVG) <https://github.com/Supermagnum/navit/tree/feature/driver-break/docs/user/plugins/driver-break/Icons>`__
