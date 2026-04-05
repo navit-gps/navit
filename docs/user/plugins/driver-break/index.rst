@@ -17,6 +17,7 @@ Navit includes several plugins that extend its functionality:
    Driver Break formulas <formulas>
    Driver Break Navit-daemon integration <navit_daemon_integration>
    Driver Break DBus API (eco_mode_fuel_enabled) <dbus>
+   Driver Break OSD example menu tree <osd_example_menu_tree>
 
 .. contents:: On this page
    :local:
@@ -110,6 +111,10 @@ Example layered OSD (navit.xml)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A full **text-only** on-screen menu example using ``osd_configuration`` bitmasks (main menu, travel mode, per-mode break settings, routing toggles) and the commands ``driver_break_open_settings()``, ``driver_break_set_mode()``, and ``driver_break_toggle()`` is available as :download:`navit_driver_break_osd_example.xml` and on GitHub as `navit_driver_break_osd_example.xml <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/navit_driver_break_osd_example.xml>`__. It includes a minimal valid ``<config>`` skeleton; merge the Driver Break OSD block into your own ``navit.xml`` or adapt paths and layout as needed.
+
+An ASCII tree of the same menu (flags, navigation, and dialog commands) is in :doc:`osd_example_menu_tree` and on GitHub as `osd_example_menu_tree.rst <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/osd_example_menu_tree.rst>`__.
+
+Hiking break settings use a **second page** (bitmask ``256``) so POI, DNT/pilgrimage, and overnight rows stay on screen on typical portrait resolutions; page 1 (bit ``8``) holds interval distances and a "More hiking settings..." control. Motorcycle uses the same pattern: page 1 (bit ``128``) for time-interval rows, page 2 (bitmask ``512``) for POI, overnight, and scenic/tour lines, with "More motorcycle settings..." on page 1. The **Routing mode** submenu uses **fixed labels** for Kinetic and Eco: they do not reflect on or off state in the UI, but each line still toggles the corresponding option and persists it; the example file comments describe this limitation and a possible future approach (expression-bound labels if attributes become available).
 
 .. _driver-break-example-icons:
 
@@ -274,4 +279,5 @@ For details on specific aspects of the Driver Break plugin, see:
 * `Formulas <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/formulas.rst>`__
 * `Navit-daemon integration <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/navit_daemon_integration.rst>`__
 * `DBus API (eco_mode_fuel_enabled) <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/dbus.rst>`__
+* `OSD example menu tree (ASCII) <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/osd_example_menu_tree.rst>`__
 * `Example OSD icons (SVG) <https://github.com/Supermagnum/navit/tree/feature/driver-break/docs/user/plugins/driver-break/Icons>`__
