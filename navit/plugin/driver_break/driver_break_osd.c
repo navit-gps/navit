@@ -1430,9 +1430,8 @@ int driver_break_cmd_configure_intervals(struct navit *nav, char *function, stru
     dbg(lvl_info, "Driver Break plugin: driver_break_cmd_configure_intervals called");
     plugin = driver_break_get_plugin(nav);
     if (!plugin) {
-        dbg(lvl_error,
-            "Driver Break plugin: Plugin not found - OSD may not be instantiated. Check if <osd "
-            "type=\"driver_break\" enabled=\"yes\"/> is in config.");
+        dbg(lvl_error, "Driver Break plugin: Plugin not found - OSD may not be instantiated. Check if <osd "
+                       "type=\"driver_break\" enabled=\"yes\"/> is in config.");
         navit_add_message(nav, "Driver Break plugin: Plugin not loaded. Please check configuration.");
         return 0;
     }
@@ -1602,9 +1601,8 @@ int driver_break_cmd_configure_overnight(struct navit *nav, char *function, stru
     dbg(lvl_info, "Driver Break plugin: driver_break_cmd_configure_overnight called");
     plugin = driver_break_get_plugin(nav);
     if (!plugin) {
-        dbg(lvl_error,
-            "Driver Break plugin: Plugin not found - OSD may not be instantiated. Check if <osd "
-            "type=\"driver_break\" enabled=\"yes\"/> is in config.");
+        dbg(lvl_error, "Driver Break plugin: Plugin not found - OSD may not be instantiated. Check if <osd "
+                       "type=\"driver_break\" enabled=\"yes\"/> is in config.");
         navit_add_message(nav, "Driver Break plugin: Plugin not loaded. Please check configuration.");
         return 0;
     }
