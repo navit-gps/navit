@@ -1742,7 +1742,7 @@ void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, voi
 	g_free(buffer2);
 
     }
-    //error = pthread_create(&download, NULL, update_download_table, NULL);
+    error = pthread_create(&download, NULL, update_download_table, NULL);
 
     gui_internal_menu_render(this);
 }
