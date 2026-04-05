@@ -25,6 +25,7 @@ typedef struct {
 
 int progressCallBack(struct map_download_info *dl_info, double dltotal, double dlnow, double ultotal, double ulnow);
 void add_to_listdata(char *name, long long size, int* listdata_count, MapData *listdata); 
+void add_to_listdata2(char *name, long long size, GArray *maps_data, int pos); 
 long long get_size(char *key, int* maps_count, MapData *maps_size);
 size_t write_callback(void *contents, size_t size, size_t nmemb, void *userp);
 void format_filesize(long long map_size, char *buffer);
