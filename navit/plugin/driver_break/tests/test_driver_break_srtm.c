@@ -636,7 +636,8 @@ static int test_copernicus_glo30_download_and_read(void) {
         return 0;
     }
 
-    /* Rondanestien route integration uses tiles N61E010 (south/mid) and N62E009 (north); not the same as N62E007/N61E009. */
+    /* Rondanestien route integration uses tiles N61E010 (south/mid) and N62E009 (north); not the same as
+     * N62E007/N61E009. */
     {
         const char *tile_61_10 = "Copernicus_DSM_COG_10_N61_00_E010_00_DEM";
         const char *tile_62_9 = "Copernicus_DSM_COG_10_N62_00_E009_00_DEM";

@@ -513,7 +513,8 @@ static void process_cycling_stops(struct driver_break_priv *priv, GList *cycling
                     static const char *cycling_ov[] = {"amenity=charging_station", "shop=bicycle",
                                                        "amenity=bicycle_repair_station"};
                     GList *ov = driver_break_poi_discover(&c_stop->coord, (int)priv->config.poi_search_radius_km,
-                                                          cycling_ov, (int)(sizeof(cycling_ov) / sizeof(cycling_ov[0])));
+                                                          cycling_ov,
+                                                          (int)(sizeof(cycling_ov) / sizeof(cycling_ov[0])));
                     if (ov)
                         stop->pois = g_list_concat(stop->pois, ov);
                 }

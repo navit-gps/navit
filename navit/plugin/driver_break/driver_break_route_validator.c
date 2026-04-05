@@ -220,31 +220,27 @@ static void classify_cycling_segment(double segment_length, struct item *street_
 static void append_cycling_validation_warnings(struct route_validation_result *result, int mtb_scale_max,
                                                int mtb_uphill_max) {
     if (result->forbidden_percentage > 0) {
-        result->warnings =
-            g_list_append(result->warnings,
-                          g_strdup_printf("Route uses %.1f%% of distance on highways unsuitable for cycling "
-                                          "(motorway, trunk, primary and links)",
-                                          result->forbidden_percentage));
+        result->warnings = g_list_append(
+            result->warnings, g_strdup_printf("Route uses %.1f%% of distance on highways unsuitable for cycling "
+                                              "(motorway, trunk, primary and links)",
+                                              result->forbidden_percentage));
     }
     if (result->path_percentage < 50.0 && result->forbidden_percentage == 0) {
-        result->warnings =
-            g_list_append(result->warnings,
-                          g_strdup_printf("Only %.1f%% on cycle-priority infrastructure (cycleway, bicycle=yes/"
-                                          "designated on paths, route=bicycle|mtb, network=ncn|rcn|lcn|icn, "
-                                          "pilgrimage=yes on otherwise secondary segments where tagged)",
-                                          result->path_percentage));
+        result->warnings = g_list_append(
+            result->warnings, g_strdup_printf("Only %.1f%% on cycle-priority infrastructure (cycleway, bicycle=yes/"
+                                              "designated on paths, route=bicycle|mtb, network=ncn|rcn|lcn|icn, "
+                                              "pilgrimage=yes on otherwise secondary segments where tagged)",
+                                              result->path_percentage));
     }
     if (mtb_scale_max >= 4) {
-        result->warnings =
-            g_list_append(result->warnings,
-                          g_strdup_printf("Difficult MTB terrain: mtb:scale up to %d (0=easiest, 6=extreme)",
-                                          mtb_scale_max));
+        result->warnings = g_list_append(
+            result->warnings,
+            g_strdup_printf("Difficult MTB terrain: mtb:scale up to %d (0=easiest, 6=extreme)", mtb_scale_max));
     }
     if (mtb_uphill_max >= 4) {
-        result->warnings =
-            g_list_append(result->warnings,
-                          g_strdup_printf("Steep MTB climbs: mtb:scale:uphill up to %d (0=easiest, 5=extreme)",
-                                          mtb_uphill_max));
+        result->warnings = g_list_append(
+            result->warnings,
+            g_strdup_printf("Steep MTB climbs: mtb:scale:uphill up to %d (0=easiest, 5=extreme)", mtb_uphill_max));
     }
 }
 

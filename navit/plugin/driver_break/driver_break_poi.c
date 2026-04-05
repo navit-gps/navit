@@ -310,11 +310,16 @@ GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const 
     if (!poi_categories || num_categories == 0) {
 #ifdef HAVE_CURL
         /* General POIs: cafes, shops, bike, etc. */
-        const char *general_categories[] = {"amenity=cafe",     "amenity=restaurant",
-                                            "tourism=museum",   "tourism=viewpoint",
-                                            "shop=convenience", "shop=farm",
-                                            "shop=supermarket", "shop=mall",
-                                            "shop=bicycle",     "amenity=bicycle_repair_station",
+        const char *general_categories[] = {"amenity=cafe",
+                                            "amenity=restaurant",
+                                            "tourism=museum",
+                                            "tourism=viewpoint",
+                                            "shop=convenience",
+                                            "shop=farm",
+                                            "shop=supermarket",
+                                            "shop=mall",
+                                            "shop=bicycle",
+                                            "amenity=bicycle_repair_station",
                                             "amenity=charging_station"};
         pois = driver_break_poi_overpass_search(center, radius_km, general_categories,
                                                 sizeof(general_categories) / sizeof(general_categories[0]), 1);

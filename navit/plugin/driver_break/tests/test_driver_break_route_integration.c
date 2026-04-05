@@ -91,10 +91,10 @@ static void init_navit_system(void) {
         struct plugin *pl;
 
         plugin_path = NULL;
-#ifdef DRIVER_BREAK_TEST_BINFILE_SO
+#    ifdef DRIVER_BREAK_TEST_BINFILE_SO
         if (g_file_test(DRIVER_BREAK_TEST_BINFILE_SO, G_FILE_TEST_EXISTS))
             plugin_path = g_strdup(DRIVER_BREAK_TEST_BINFILE_SO);
-#endif
+#    endif
         cwd = g_get_current_dir();
         if (!plugin_path) {
             /* From CTest cwd .../navit/plugin/driver_break/tests: three levels up is .../navit (build tree) */
@@ -390,7 +390,7 @@ static int srtm_dir_has_any_tile(const char *dir) {
     if (!dir || !dir[0])
         return 0;
 #define TILE_CHECK(name)                                                                                               \
-    p = g_build_filename(dir, (name), NULL);                                                                            \
+    p = g_build_filename(dir, (name), NULL);                                                                           \
     ok |= g_file_test(p, G_FILE_TEST_EXISTS);                                                                          \
     g_free(p);
     TILE_CHECK("N61E009.hgt");
@@ -466,7 +466,8 @@ static void srtm_test_assert_rondane(int elev1, int elev2, int elev3) {
 /* Test SRTM elevation along Rondanestien. Tiles: N61E010 (south, mid), N62E009 (north) as HGT or Copernicus .tif.
  * Searches SRTM_TEST_DIR, then /tmp/test_srtm_hgt_download, then /tmp/test_copernicus_glo30.
  * test_driver_break_srtm Copernicus downloads (with libcurl) place tiles under /tmp/test_srtm_hgt_download
- * including optional N61E010 and N62E009 so Test 4 succeeds after ctest; N62E007/N61E009 alone do not cover Rondanestien. */
+ * including optional N61E010 and N62E009 so Test 4 succeeds after ctest; N62E007/N61E009 alone do not cover
+ * Rondanestien. */
 static int test_srtm_elevation_hiking_route(void) {
     char *test_dir = srtm_test_setup_dir();
     int elev1 = srtm_get_elevation(&osm_node_rondane_south);

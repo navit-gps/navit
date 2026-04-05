@@ -116,7 +116,8 @@ struct driver_break_config {
 
     /* Network and route priority */
     int enable_dnt_priority;               /* Enable DNT/network priority mode (0=disabled, 1=enabled) */
-    int enable_hiking_pilgrimage_priority; /* Hiking/cycling: pilgrimage route priority + place_of_worship POIs at rest stops */
+    int enable_hiking_pilgrimage_priority; /* Hiking/cycling: pilgrimage route priority + place_of_worship POIs at rest
+                                              stops */
 
     /* Rest interval range */
     int driver_break_interval_min_hours; /* 1 hour */

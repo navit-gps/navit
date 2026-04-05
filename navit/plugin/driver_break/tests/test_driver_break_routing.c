@@ -107,7 +107,8 @@ static int test_poi_map_worship_invalid_args(void) {
     c.lng = 10.0;
     TEST_ASSERT(driver_break_poi_map_search_place_of_worship(NULL, 5.0, NULL) == NULL, "NULL center returns NULL");
     TEST_ASSERT(driver_break_poi_map_search_place_of_worship(&c, 5.0, NULL) == NULL, "NULL mapset returns NULL");
-    TEST_ASSERT(driver_break_poi_map_search_place_of_worship(&c, 0.0, NULL) == NULL, "Non-positive radius returns NULL");
+    TEST_ASSERT(driver_break_poi_map_search_place_of_worship(&c, 0.0, NULL) == NULL,
+                "Non-positive radius returns NULL");
     return 0;
 }
 
