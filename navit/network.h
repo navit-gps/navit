@@ -18,6 +18,7 @@ struct map_download_info{
 };
 
 void * download_map (struct gui_priv *this, struct widget *wm, struct map_download_info * dl_info);
+void * download_map2 (void * data);
 #ifdef __cplusplus
 }
 #endif

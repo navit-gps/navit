@@ -62,6 +62,7 @@
 #include "gui_internal_gesture.h"
 #include "gui_internal_html.h"
 #include "gui_internal_keyboard.h"
+#include "gui_internal_map_downloader.h"
 #include "gui_internal_menu.h"
 #include "gui_internal_poi.h"
 #include "gui_internal_priv.h"
@@ -79,6 +80,7 @@
 #include "network.h"
 #include "plugin.h"
 #include "point.h"
+#include <pthread.h>
 #include "route.h"
 #include "track.h"
 #include "transform.h"
@@ -1667,7 +1669,16 @@ static void gui_internal_window_closed(struct gui_priv *this) {
 
 static void gui_internal_cmd_map_download_do(struct gui_priv *this, struct widget *wm, void *data) {
     struct map_download_info *dl_info=data;
-    download_map(this, wm, dl_info);
+    pthread_t download;
+    int error;
+
+    struct gui_download_data *dl_data = g_malloc(sizeof(struct gui_download_data));
+    dl_data->this = this;
+    dl_data->wm = wm;
+    dl_data->data = dl_info;
+    error = pthread_create(&download, NULL, download_map2, dl_data);
+
+    //download_map(this, wm, dl_info);
 }
 
 void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, void *data) {

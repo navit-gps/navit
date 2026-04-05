@@ -29,7 +29,6 @@
 pthread_t dl_thread;
 struct map_download_info dl_info;
 
-
 /**
  * Enable a given map
  *
@@ -229,3 +228,4 @@ void gui_internal_download_screen_free(struct gui_priv * this,struct widget * w)
         g_free(w);
     }
 }
+
