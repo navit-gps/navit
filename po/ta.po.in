@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:22+0100\n"
+"POT-Creation-Date: 2026-04-05 03:19+0200\n"
 "PO-Revision-Date: 2026-03-02 06:09+0000\n"
 "Last-Translator: தமிழ்நேரம் <tamilneram247@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/navit/navit-core/"
@@ -2193,7 +2193,7 @@ msgid "Height profile"
 msgstr ""
 
 msgid "Zoom to route"
-msgstr ""
+msgstr "பாதைக்கு பெரிதாக்கவும்"
 
 msgid "Remove last waypoint"
 msgstr ""
@@ -2213,25 +2213,38 @@ msgstr ""
 msgid "Locale"
 msgstr ""
 
-msgid "Auto zoom"
-msgstr "ஆட்டோ சூம்"
+#. Android resource: @strings/map_download_title
+msgid "Map download"
+msgstr ""
 
-msgid "Manual zoom"
-msgstr "கைமுறையாக பெரிதாக்குதல்"
+#. Android resource: @strings/optionsmenu_set_map_location
+msgid "Set map location"
+msgstr ""
 
-msgid "Layers"
-msgstr "அடுக்குகள்"
+#. Android resource: @strings/optionsmenu_backup_restore
+msgid "Backup / Restore"
+msgstr ""
 
-msgid "Zoom to route"
-msgstr "பாதைக்கு பெரிதாக்கவும்"
+msgid "About"
+msgstr ""
+
+msgid "APRS"
+msgstr ""
+
+msgid "APRS settings (runtime)"
+msgstr ""
+
+msgid "Input device"
+msgstr ""
+
+msgid "Frequency"
+msgstr ""
 
 msgid "NMEA Settings"
 msgstr ""
 
 msgid "Station timeout"
 msgstr ""
-"கடைசியாக கைவிடவும் \n"
-"வழிப்பாதை"
 
 msgid "RTL-SDR Blog V3"
 msgstr ""
@@ -2327,15 +2340,13 @@ msgid "Window Mode"
 msgstr "சாளரம் பயன்முறை"
 
 msgid "Auto zoom"
-msgstr ""
+msgstr "ஆட்டோ சூம்"
 
 msgid "Manual zoom"
-msgstr ""
+msgstr "கைமுறையாக பெரிதாக்குதல்"
 
 msgid "Layers"
-msgstr ""
-"அடுத்து கைவிடவும் \n"
-"வழிப்பாதை"
+msgstr "அடுக்குகள்"
 
 msgid "Satellite Status"
 msgstr "செயற்கைக்கோள் நிலை"
@@ -2515,8 +2526,8 @@ msgid ""
 "Current map location %s is not available Please restart Navit after you "
 "attach an SD card or select a different map location."
 msgstr ""
-"தற்போதைய வரைபட இருப்பிடம் %s கிடைக்கவில்லை, எச்டி கார்டை இணைத்தபிறகு அல்லது வேறு வரைபட "
-"இருப்பிடத்தைத் தேர்ந்தெடுத்த பிறகு நேவ்த்தை மீண்டும் தொடங்கு."
+"தற்போதைய வரைபட இருப்பிடம் %s கிடைக்கவில்லை, எச்டி கார்டை இணைத்தபிறகு அல்லது வேறு "
+"வரைபட இருப்பிடத்தைத் தேர்ந்தெடுத்த பிறகு நேவ்த்தை மீண்டும் தொடங்கு."
 
 #. Android resource: @strings/address_search_title
 msgid "Address search"
@@ -2643,8 +2654,8 @@ msgid ""
 "Navit needs permission to access GPS and read the map.\n"
 "If you change your mind please restart Navit and grant the permissions"
 msgstr ""
-"உலக இடம் காட்டும் அமைப்பு (இடம் காட்டி) ஐ அணுகவும் வரைபடத்தைப் படிக்கவும் Navitக்கு இசைவு "
-"தேவை. \n"
+"உலக இடம் காட்டும் அமைப்பு (இடம் காட்டி) ஐ அணுகவும் வரைபடத்தைப் படிக்கவும் Navitக்கு "
+"இசைவு தேவை. \n"
 "நீங்கள் உங்கள் எண்ணத்தை மாற்றினால், Navit ஐ மறுதொடக்கம் செய்து அனுமதிகளை வழங்கவும்"
 
 #. Android resource: @strings/permissions_info_box_title

@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:22+0100\n"
+"POT-Creation-Date: 2026-04-05 03:19+0200\n"
 "PO-Revision-Date: 2026-03-04 10:51+0000\n"
 "Last-Translator: adevoss <arnobugs@hotmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/navit/navit-core/"
@@ -2210,7 +2210,7 @@ msgid "Height profile"
 msgstr ""
 
 msgid "Zoom to route"
-msgstr ""
+msgstr "Inzoomen naar route"
 
 msgid "Remove last waypoint"
 msgstr ""
@@ -2251,24 +2251,119 @@ msgstr ""
 msgid "APRS settings (runtime)"
 msgstr ""
 
-msgid "Layers"
-msgstr "Lagen"
+msgid "Input device"
+msgstr ""
 
-msgid "Zoom to route"
-msgstr "Inzoomen naar route"
+msgid "Frequency"
+msgstr ""
 
 msgid "NMEA Settings"
 msgstr ""
 
-msgid ""
-"Drop last\n"
-"Waypoint"
-msgstr "Laatste tussenstop verwijderen"
+msgid "Station timeout"
+msgstr ""
 
-msgid ""
-"Drop next\n"
-"Waypoint"
-msgstr "Volgende tussenstop verwijderen"
+msgid "RTL-SDR Blog V3"
+msgstr ""
+
+msgid "RTL-SDR Blog V4 R828D"
+msgstr ""
+
+msgid "Nooelec NESDR"
+msgstr ""
+
+msgid "Generic RTL-SDR"
+msgstr ""
+
+msgid "NMEA Serial"
+msgstr ""
+
+msgid "144.390 MHz (North America)"
+msgstr ""
+
+msgid "144.800 MHz (Europe)"
+msgstr ""
+
+msgid "145.175 MHz (Australia)"
+msgstr ""
+
+msgid "144.575 MHz (New Zealand)"
+msgstr ""
+
+msgid "144.640 MHz (China/Japan)"
+msgstr ""
+
+msgid "144.660 MHz (Japan Kyushu)"
+msgstr ""
+
+msgid "144.930 MHz (Argentina/Uruguay)"
+msgstr ""
+
+msgid "145.570 MHz (Brazil)"
+msgstr ""
+
+msgid "Refresh frequency index"
+msgstr ""
+
+msgid "30 minutes"
+msgstr ""
+
+msgid "60 minutes"
+msgstr ""
+
+msgid "90 minutes (default)"
+msgstr ""
+
+msgid "120 minutes"
+msgstr ""
+
+msgid "180 minutes"
+msgstr ""
+
+msgid "Clear expired now"
+msgstr ""
+
+msgid "Baud rate"
+msgstr ""
+
+msgid "Parity"
+msgstr ""
+
+msgid "4800"
+msgstr ""
+
+msgid "9600"
+msgstr ""
+
+msgid "19200"
+msgstr ""
+
+msgid "38400"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Even"
+msgstr ""
+
+msgid "Odd"
+msgstr ""
+
+msgid "Fullscreen"
+msgstr ""
+
+msgid "Window Mode"
+msgstr ""
+
+msgid "Auto zoom"
+msgstr ""
+
+msgid "Manual zoom"
+msgstr ""
+
+msgid "Layers"
+msgstr "Lagen"
 
 msgid "Satellite Status"
 msgstr "GPS-status"
@@ -3053,6 +3148,16 @@ msgstr "Zuid- en Midden-Amerika"
 #. Android resource: @strings/guyane_francaise
 msgid "Guyane Francaise"
 msgstr "Frans Guyana"
+
+#~ msgid ""
+#~ "Drop last\n"
+#~ "Waypoint"
+#~ msgstr "Laatste tussenstop verwijderen"
+
+#~ msgid ""
+#~ "Drop next\n"
+#~ "Waypoint"
+#~ msgstr "Volgende tussenstop verwijderen"
 
 #~ msgid "Vehicle Position"
 #~ msgstr "Voertuigpositie"
