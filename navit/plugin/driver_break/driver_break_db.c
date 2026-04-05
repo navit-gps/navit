@@ -103,7 +103,8 @@ static int driver_break_db_load_config_value(const char *key, int value, struct 
          MAX_POI_WATER_CABIN_RADIUS_KM, 0},
         {"poi_cabin_search_radius_km", offsetof(struct driver_break_config, poi_cabin_search_radius_km), 0,
          MAX_POI_WATER_CABIN_RADIUS_KM, 0},
-        {"enable_water_pois_remote_arid", offsetof(struct driver_break_config, enable_water_pois_remote_arid), 0, 1, 1},
+        {"enable_water_pois_remote_arid", offsetof(struct driver_break_config, enable_water_pois_remote_arid), 0, 1,
+         1},
         {"min_distance_from_glaciers", offsetof(struct driver_break_config, min_distance_from_glaciers), 0,
          MAX_DISTANCE_METERS, 0},
         {"driver_break_interval_min_hours", offsetof(struct driver_break_config, driver_break_interval_min_hours), 0,
@@ -423,27 +424,26 @@ int driver_break_db_save_config(struct driver_break_db *db, struct driver_break_
         /* Fuel configuration keys */
         "fuel_type", "fuel_tank_capacity_l", "fuel_avg_consumption_x10", "fuel_obd_available", "fuel_j1939_available",
         "fuel_megasquirt_available", "fuel_injector_flow_cc_min", "fuel_ethanol_manual_pct", "fuel_low_warning_km",
-        "fuel_search_buffer_km", "fuel_high_load_threshold", "fuel_adaptive_learning_enabled",
-        "use_energy_routing", "use_ecu_route_cost",
-        "motorcycle_soft_limit_minutes", "motorcycle_mandatory_break_after_minutes", "motorcycle_break_duration_min",
-        "motorcycle_terrain_subtype", "motorcycle_adventure_max_smoothness", "motorcycle_adventure_max_tracktype",
-        "motorcycle_default_weight_kg", "enable_water_pois_remote_arid"};
+        "fuel_search_buffer_km", "fuel_high_load_threshold", "fuel_adaptive_learning_enabled", "use_energy_routing",
+        "use_ecu_route_cost", "motorcycle_soft_limit_minutes", "motorcycle_mandatory_break_after_minutes",
+        "motorcycle_break_duration_min", "motorcycle_terrain_subtype", "motorcycle_adventure_max_smoothness",
+        "motorcycle_adventure_max_tracktype", "motorcycle_default_weight_kg", "enable_water_pois_remote_arid"};
 
-    int values[] = {
-        config->vehicle_type, config->car_soft_limit_hours, config->car_max_hours, config->car_break_interval_hours,
-        config->car_break_duration_min, config->truck_mandatory_break_after_hours,
-        config->truck_mandatory_break_duration_min, config->truck_max_daily_hours, config->min_distance_from_buildings,
-        config->poi_search_radius_km, config->driver_break_interval_min_hours, config->driver_break_interval_max_hours,
-        /* Fuel configuration values */
-        config->fuel_type, config->fuel_tank_capacity_l, config->fuel_avg_consumption_x10, config->fuel_obd_available,
-        config->fuel_j1939_available, config->fuel_megasquirt_available, config->fuel_injector_flow_cc_min,
-        config->fuel_ethanol_manual_pct, config->fuel_low_warning_km, config->fuel_search_buffer_km,
-        config->fuel_high_load_threshold, config->fuel_adaptive_learning_enabled, config->use_energy_routing,
-        config->use_ecu_route_cost, config->motorcycle_soft_limit_minutes,
-        config->motorcycle_mandatory_break_after_minutes, config->motorcycle_break_duration_min,
-        config->motorcycle_terrain_subtype, config->motorcycle_adventure_max_smoothness,
-        config->motorcycle_adventure_max_tracktype, config->motorcycle_default_weight_kg,
-        config->enable_water_pois_remote_arid};
+    int values[] = {config->vehicle_type, config->car_soft_limit_hours, config->car_max_hours,
+                    config->car_break_interval_hours, config->car_break_duration_min,
+                    config->truck_mandatory_break_after_hours, config->truck_mandatory_break_duration_min,
+                    config->truck_max_daily_hours, config->min_distance_from_buildings, config->poi_search_radius_km,
+                    config->driver_break_interval_min_hours, config->driver_break_interval_max_hours,
+                    /* Fuel configuration values */
+                    config->fuel_type, config->fuel_tank_capacity_l, config->fuel_avg_consumption_x10,
+                    config->fuel_obd_available, config->fuel_j1939_available, config->fuel_megasquirt_available,
+                    config->fuel_injector_flow_cc_min, config->fuel_ethanol_manual_pct, config->fuel_low_warning_km,
+                    config->fuel_search_buffer_km, config->fuel_high_load_threshold,
+                    config->fuel_adaptive_learning_enabled, config->use_energy_routing, config->use_ecu_route_cost,
+                    config->motorcycle_soft_limit_minutes, config->motorcycle_mandatory_break_after_minutes,
+                    config->motorcycle_break_duration_min, config->motorcycle_terrain_subtype,
+                    config->motorcycle_adventure_max_smoothness, config->motorcycle_adventure_max_tracktype,
+                    config->motorcycle_default_weight_kg, config->enable_water_pois_remote_arid};
 
     int i;
     for (i = 0; i < G_N_ELEMENTS(keys); i++) {

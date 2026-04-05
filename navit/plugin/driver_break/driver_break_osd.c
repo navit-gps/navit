@@ -232,6 +232,15 @@ static void driver_break_toggle_water_remote_arid_callback(struct gui_priv *gui_
                                                            void *data);
 static void driver_break_show_overnight_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv,
                                                const char *profile_name);
+static void driver_break_overnight_append_buildings_row(struct gui_priv *gui_priv, struct widget *box,
+                                                        struct driver_break_priv *priv);
+static void driver_break_overnight_append_glacier_row(struct gui_priv *gui_priv, struct widget *box,
+                                                      struct driver_break_priv *priv, const char *profile_name);
+static void driver_break_overnight_append_clamped_km_row(struct gui_priv *gui_priv, struct widget *box, int *field_km,
+                                                         int max_km, int def_km, const char *key_name,
+                                                         const char *label_fmt);
+static void driver_break_overnight_append_water_remote_section(struct gui_priv *gui_priv, struct widget *box,
+                                                               struct driver_break_priv *priv);
 
 /* Profile name used when reopening overnight dialog from toggle (e.g. water remote/arid) */
 static const char *s_overnight_profile_name;
@@ -1337,7 +1346,8 @@ int driver_break_cmd_set_mode(struct navit *nav, char *function, struct attr **i
     priv = (struct driver_break_priv *)plugin;
 
     if (!function || !*function) {
-        navit_add_message(nav, "Driver Break plugin: driver_break_set_mode needs an argument (car|truck|hiking|cycling|motorcycle)");
+        navit_add_message(
+            nav, "Driver Break plugin: driver_break_set_mode needs an argument (car|truck|hiking|cycling|motorcycle)");
         return 0;
     }
 
@@ -1420,8 +1430,9 @@ int driver_break_cmd_configure_intervals(struct navit *nav, char *function, stru
     dbg(lvl_info, "Driver Break plugin: driver_break_cmd_configure_intervals called");
     plugin = driver_break_get_plugin(nav);
     if (!plugin) {
-        dbg(lvl_error, "Driver Break plugin: Plugin not found - OSD may not be instantiated. Check if <osd "
-                       "type=\"driver_break\" enabled=\"yes\"/> is in config.");
+        dbg(lvl_error,
+            "Driver Break plugin: Plugin not found - OSD may not be instantiated. Check if <osd "
+            "type=\"driver_break\" enabled=\"yes\"/> is in config.");
         navit_add_message(nav, "Driver Break plugin: Plugin not loaded. Please check configuration.");
         return 0;
     }
@@ -1461,11 +1472,74 @@ int driver_break_cmd_configure_intervals(struct navit *nav, char *function, stru
     return 1;
 }
 
+static void driver_break_overnight_append_buildings_row(struct gui_priv *gui_priv, struct widget *box,
+                                                        struct driver_break_priv *priv) {
+    char buffer[256];
+    int val = priv->config.min_distance_from_buildings;
+
+    if (val < 0 || val > 10000) {
+        dbg(lvl_error, "Driver Break plugin: Invalid min_distance_from_buildings value: %d, using default 150", val);
+        val = 150;
+        priv->config.min_distance_from_buildings = val;
+    }
+    snprintf(buffer, sizeof(buffer), "Min distance from buildings: %d m", val);
+    gui_internal_widget_append(box, gui_internal_label_new(gui_priv, buffer));
+}
+
+static void driver_break_overnight_append_glacier_row(struct gui_priv *gui_priv, struct widget *box,
+                                                      struct driver_break_priv *priv, const char *profile_name) {
+    char buffer[256];
+    int val;
+
+    if (g_ascii_strcasecmp(profile_name, "hiking") && g_ascii_strcasecmp(profile_name, "pedestrian")
+        && g_ascii_strcasecmp(profile_name, "motorcycle")) {
+        return;
+    }
+    val = priv->config.min_distance_from_glaciers;
+    if (val < 0 || val > 10000) {
+        dbg(lvl_error, "Driver Break plugin: Invalid min_distance_from_glaciers value: %d, using default 300", val);
+        val = 300;
+        priv->config.min_distance_from_glaciers = val;
+    }
+    snprintf(buffer, sizeof(buffer), "Min distance from glaciers: %d m", val);
+    gui_internal_widget_append(box, gui_internal_label_new(gui_priv, buffer));
+}
+
+static void driver_break_overnight_append_clamped_km_row(struct gui_priv *gui_priv, struct widget *box, int *field_km,
+                                                         int max_km, int def_km, const char *key_name,
+                                                         const char *label_fmt) {
+    char buffer[256];
+    int val = *field_km;
+
+    if (val < 0 || val > max_km) {
+        dbg(lvl_error, "Driver Break plugin: Invalid %s value: %d, using default %d", key_name, val, def_km);
+        val = def_km;
+        *field_km = val;
+    }
+    snprintf(buffer, sizeof(buffer), label_fmt, val);
+    gui_internal_widget_append(box, gui_internal_label_new(gui_priv, buffer));
+}
+
+static void driver_break_overnight_append_water_remote_section(struct gui_priv *gui_priv, struct widget *box,
+                                                               struct driver_break_priv *priv) {
+    char buffer[256];
+    struct widget *label;
+    struct widget *button;
+
+    snprintf(buffer, sizeof(buffer), "Water POIs at rest stops (car/truck/motorcycle): %s",
+             priv->config.enable_water_pois_remote_arid ? "on" : "off");
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+    button = gui_internal_button_new_with_callback(gui_priv, "Toggle water POIs (remote/arid/hot)", NULL,
+                                                   gravity_center | flags_fill,
+                                                   driver_break_toggle_water_remote_arid_callback, priv);
+    gui_internal_widget_append(box, button);
+}
+
 /* Show overnight stops configuration dialog */
 static void driver_break_show_overnight_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv,
                                                const char *profile_name) {
     struct widget *menu, *box, *label, *button;
-    char buffer[256];
     char title[128];
 
     s_overnight_profile_name = profile_name;
@@ -1492,88 +1566,19 @@ static void driver_break_show_overnight_dialog(struct gui_priv *gui_priv, struct
     box = gui_internal_box_new(gui_priv, gravity_left_top | orientation_vertical | flags_expand | flags_fill);
     gui_internal_widget_append(menu, box);
 
-    /* Min distance from buildings - validate before displaying */
-    {
-        int val = priv->config.min_distance_from_buildings;
-        if (val < 0 || val > 10000) {
-            dbg(lvl_error, "Driver Break plugin: Invalid min_distance_from_buildings value: %d, using default 150",
-                val);
-            val = 150;
-            priv->config.min_distance_from_buildings = val;
-        }
-        snprintf(buffer, sizeof(buffer), "Min distance from buildings: %d m", val);
-        label = gui_internal_label_new(gui_priv, buffer);
-        gui_internal_widget_append(box, label);
-    }
+    driver_break_overnight_append_buildings_row(gui_priv, box, priv);
+    driver_break_overnight_append_glacier_row(gui_priv, box, priv, profile_name);
+    driver_break_overnight_append_clamped_km_row(gui_priv, box, &priv->config.poi_search_radius_km, 1000, 15,
+                                                 "poi_search_radius_km", "POI search radius: %d km");
+    driver_break_overnight_append_clamped_km_row(gui_priv, box, &priv->config.poi_water_search_radius_km, 100, 2,
+                                                 "poi_water_search_radius_km", "Water search radius: %d km");
+    driver_break_overnight_append_clamped_km_row(gui_priv, box, &priv->config.poi_cabin_search_radius_km, 100, 5,
+                                                 "poi_cabin_search_radius_km", "Cabin search radius: %d km");
+    driver_break_overnight_append_water_remote_section(gui_priv, box, priv);
 
-    /* Min distance from glaciers (hiking and motorcycle touring / allemannsretten-style rules) */
-    if (!g_ascii_strcasecmp(profile_name, "hiking") || !g_ascii_strcasecmp(profile_name, "pedestrian")
-        || !g_ascii_strcasecmp(profile_name, "motorcycle")) {
-        int val = priv->config.min_distance_from_glaciers;
-        if (val < 0 || val > 10000) {
-            dbg(lvl_error, "Driver Break plugin: Invalid min_distance_from_glaciers value: %d, using default 300", val);
-            val = 300;
-            priv->config.min_distance_from_glaciers = val;
-        }
-        snprintf(buffer, sizeof(buffer), "Min distance from glaciers: %d m", val);
-        label = gui_internal_label_new(gui_priv, buffer);
-        gui_internal_widget_append(box, label);
-    }
-
-    /* POI search radius - validate before displaying */
-    {
-        int val = priv->config.poi_search_radius_km;
-        if (val < 0 || val > 1000) {
-            dbg(lvl_error, "Driver Break plugin: Invalid poi_search_radius_km value: %d, using default 15", val);
-            val = 15;
-            priv->config.poi_search_radius_km = val;
-        }
-        snprintf(buffer, sizeof(buffer), "POI search radius: %d km", val);
-        label = gui_internal_label_new(gui_priv, buffer);
-        gui_internal_widget_append(box, label);
-    }
-
-    /* Water search radius - validate before displaying */
-    {
-        int val = priv->config.poi_water_search_radius_km;
-        if (val < 0 || val > 100) {
-            dbg(lvl_error, "Driver Break plugin: Invalid poi_water_search_radius_km value: %d, using default 2", val);
-            val = 2;
-            priv->config.poi_water_search_radius_km = val;
-        }
-        snprintf(buffer, sizeof(buffer), "Water search radius: %d km", val);
-        label = gui_internal_label_new(gui_priv, buffer);
-        gui_internal_widget_append(box, label);
-    }
-
-    /* Cabin search radius - validate before displaying */
-    {
-        int val = priv->config.poi_cabin_search_radius_km;
-        if (val < 0 || val > 100) {
-            dbg(lvl_error, "Driver Break plugin: Invalid poi_cabin_search_radius_km value: %d, using default 5", val);
-            val = 5;
-            priv->config.poi_cabin_search_radius_km = val;
-        }
-        snprintf(buffer, sizeof(buffer), "Cabin search radius: %d km", val);
-        label = gui_internal_label_new(gui_priv, buffer);
-        gui_internal_widget_append(box, label);
-    }
-
-    /* Water POIs for car/truck/motorcycle (remote/arid/hot) */
-    snprintf(buffer, sizeof(buffer), "Water POIs at rest stops (car/truck/motorcycle): %s",
-             priv->config.enable_water_pois_remote_arid ? "on" : "off");
-    label = gui_internal_label_new(gui_priv, buffer);
-    gui_internal_widget_append(box, label);
-    button = gui_internal_button_new_with_callback(gui_priv, "Toggle water POIs (remote/arid/hot)", NULL,
-                                                   gravity_center | flags_fill,
-                                                   driver_break_toggle_water_remote_arid_callback, priv);
-    gui_internal_widget_append(box, button);
-
-    /* Note about editing */
     label = gui_internal_label_new(gui_priv, "Note: Advanced editing coming soon");
     gui_internal_widget_append(box, label);
 
-    /* Save button */
     button = gui_internal_button_new_with_callback(gui_priv, "OK", NULL, gravity_center | flags_fill,
                                                    driver_break_save_config_callback, priv);
     gui_internal_widget_append(box, button);
@@ -1597,8 +1602,9 @@ int driver_break_cmd_configure_overnight(struct navit *nav, char *function, stru
     dbg(lvl_info, "Driver Break plugin: driver_break_cmd_configure_overnight called");
     plugin = driver_break_get_plugin(nav);
     if (!plugin) {
-        dbg(lvl_error, "Driver Break plugin: Plugin not found - OSD may not be instantiated. Check if <osd "
-                       "type=\"driver_break\" enabled=\"yes\"/> is in config.");
+        dbg(lvl_error,
+            "Driver Break plugin: Plugin not found - OSD may not be instantiated. Check if <osd "
+            "type=\"driver_break\" enabled=\"yes\"/> is in config.");
         navit_add_message(nav, "Driver Break plugin: Plugin not loaded. Please check configuration.");
         return 0;
     }
