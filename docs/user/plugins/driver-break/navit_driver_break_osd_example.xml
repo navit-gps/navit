@@ -17,6 +17,7 @@
     128 Break settings: motorcycle
     256 Hiking page 2 (overnight / extended POI and priority rows; see hiking section below)
     512 Motorcycle page 2 (POI, overnight, scenic/tour; see motorcycle section below)
+    1024 Elevation data (SRTM / Copernicus: download manager, region picker, named quick downloads)
 
   Commands (register on navit):
     navit.driver_break_open_settings()
@@ -27,6 +28,9 @@
       Toggles use_energy_routing and use_ecu_route_cost; persist to plugin DB.
     navit.driver_break_configure_intervals() / navit.driver_break_configure_overnight()
       Open internal-GUI dialogs (combined per profile; several OSD rows may call the same command).
+    navit.srtm_download_menu() / navit.srtm_download_region() / navit.srtm_get_elevation()
+      Elevation tiles: downloads use fixed region bboxes (not map or route). Named download example:
+      navit.srtm_download_region(new name("Sweden")). srtm_get_elevation only reads existing tiles.
 
   Routing submenu: Kinetic and Eco apply to motorcycle as well when ECU data and energy routing are available.
 
@@ -90,7 +94,10 @@
 		<osd enabled="yes" type="text" osd_configuration="1" x="0" y="150" w="160" h="44" label="Routing mode" font_size="200"
 			command="osd_configuration=64"
 			/>
-		<osd enabled="yes" type="text" osd_configuration="1" x="0" y="200" w="160" h="44" label="Close" font_size="200"
+		<osd enabled="yes" type="text" osd_configuration="1" x="0" y="200" w="160" h="44" label="Elevation data" font_size="200"
+			command="osd_configuration=1024"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1" x="0" y="250" w="160" h="44" label="Close" font_size="200"
 			command="osd_configuration=0"
 			/>
 
@@ -274,6 +281,32 @@
 			/>
 		<osd enabled="yes" type="text" osd_configuration="64" x="0" y="150" w="160" h="44" label="Back" font_size="200"
 			command="osd_configuration=1"
+			/>
+
+		<!-- Elevation (1024): fixed region bboxes in plugin; not derived from map or route. -->
+		<osd enabled="yes" type="text" osd_configuration="1024" x="0" y="50" w="160" h="44" label="Elevation" font_size="200"
+			command="osd_configuration=1024"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1024" x="0" y="100" w="160" h="44" label="Back" font_size="200"
+			command="osd_configuration=1"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1024" x="0" y="150" w="160" h="44" label="Download regions" font_size="200"
+			command="navit.srtm_download_menu()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1024" x="0" y="200" w="160" h="44" label="Pick region" font_size="200"
+			command="navit.srtm_download_region()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1024" x="0" y="250" w="160" h="44" label="Download Norway" font_size="200"
+			command="navit.srtm_download_region(new name(&quot;Norway&quot;))"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1024" x="0" y="300" w="160" h="44" label="Download Sweden" font_size="200"
+			command="navit.srtm_download_region(new name(&quot;Sweden&quot;))"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1024" x="0" y="350" w="160" h="44" label="Download Germany" font_size="200"
+			command="navit.srtm_download_region(new name(&quot;Germany&quot;))"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1024" x="0" y="400" w="160" h="44" label="Elevation here" font_size="200"
+			command="navit.srtm_get_elevation()"
 			/>
 
 		<!-- DTD order: traffic*, vehicle*, tracking?, vehicleprofile*, then route... -->

@@ -96,4 +96,14 @@ For **cycling** rest stops, ``process_cycling_stops()`` also loads **cycling ser
         |       Eco / ECU (toggle)             -> driver_break_toggle(eco); labels static in XML
         |       Back  -> flag 1
         |
+        +-- Elevation data  (flag 1024)
+        |       Elevation  (title row; stays on flag 1024)
+        |       Back  -> flag 1
+        |       Download regions             -> srtm_download_menu()
+        |       Pick region                  -> srtm_download_region()
+        |       Download Norway              -> srtm_download_region(new name("Norway"))
+        |       Download Sweden              -> srtm_download_region(new name("Sweden"))
+        |       Download Germany             -> srtm_download_region(new name("Germany"))
+        |       Elevation here               -> srtm_get_elevation()
+        |
         +-- Close  -> flag 0

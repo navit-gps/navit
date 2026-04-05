@@ -108,11 +108,26 @@ Registered from ``driver_break_srtm_osd.c`` when the plugin loads.
      - None
      - Open the SRTM download manager (list of predefined regions) when internal GUI is available; otherwise print a short summary message.
    * - ``srtm_download_region``
-     - Optional (see below)
-     - If the command invocation supplies a **name** attribute matching a predefined region, starts an asynchronous download for that region (requires libcurl). If no name is given, behaves like opening the region picker when the internal GUI is available.
+     - Optional ``name`` (see below)
+     - If the invocation supplies a **name** attribute matching a predefined region (for example ``new name("Sweden")`` in the command expression), starts an asynchronous download for that region (requires libcurl). If no name is given, behaves like opening the region picker when the internal GUI is available.
    * - ``srtm_get_elevation``
      - Optional coordinate
-     - Query elevation at the given ``position_coord_geo`` when provided in the command attribute list; otherwise uses the current vehicle position. Shows a dialog (internal GUI) or a user message with the result. When output attributes are requested by the caller, may supply ``attr_height`` with the elevation value.
+     - Query elevation at the given ``position_coord_geo`` when provided in the command attribute list; otherwise uses the current vehicle position. Shows a dialog (internal GUI) or a user message with the result. When output attributes are requested by the caller, may supply ``attr_height`` with the elevation value. This command **only reads** elevation from tiles already on disk (GeoTIFF or HGT per 1-degree tile); it does **not** download missing tiles.
+
+How elevation downloads are scoped
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Downloads are driven **only** by OSD (or other) commands and by **fixed bounding boxes** attached to each predefined region name in the plugin. The plugin does **not** infer coverage from the loaded map, the active route, the current map view, or vehicle position. To get tiles for an area, pick a region (or open the manager / picker) and start a download explicitly.
+
+Predefined region names are matched **case-sensitively** (same spelling as in the manager). The built-in list includes: **Europe**, **Germany**, **France**, **United Kingdom**, **Italy**, **Spain**, **Norway**, **Sweden**, **Poland**, **United States**, **China**, **Japan**.
+
+From an OSD ``command`` attribute, pass a region name with Navit's ``new name("...")`` so the handler receives ``attr_name``. Example (XML-escaped quotes inside the attribute value)::
+
+  command="navit.srtm_download_region(new name(&quot;Sweden&quot;))"
+
+You can also wrap the attribute value in single quotes in XML if that is easier than escaping double quotes.
+
+Where Copernicus GeoTIFF and SRTM HGT sources are enabled in the build, the downloader tries Copernicus first where applicable, then falls back to HGT; **libcurl** is required for HTTP downloads, and **GeoTIFF** support is needed to read Copernicus ``.tif`` tiles after download.
 
 See also
 --------
