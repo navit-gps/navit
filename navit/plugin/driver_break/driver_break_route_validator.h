@@ -41,11 +41,17 @@ struct route_validation_result *route_validator_validate_hiking(struct route *ro
 struct route_validation_result *route_validator_validate_hiking_with_priority(struct route *route,
                                                                               int enable_hiking_pilgrimage_priority);
 
+/* Validate cycling route: forbidden motor roads, priority cycleways and bicycle-tagged paths, MTB scale warnings */
+struct route_validation_result *route_validator_validate_cycling(struct route *route);
+
 /* Check if highway type is forbidden for hikers */
 int route_validator_is_forbidden_highway(const char *highway_type);
 
 /* Check if highway type is a priority path for hikers */
 int route_validator_is_priority_path(const char *highway_type);
+
+/* highway=cycleway counts as cycling-priority infrastructure */
+int route_validator_is_cycling_priority_highway(const char *highway_type);
 
 /* Map Navit item types to OSM highway types */
 const char *route_validator_map_item_to_highway_type(struct item *street_item);

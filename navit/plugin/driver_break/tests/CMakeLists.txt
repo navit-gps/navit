@@ -151,6 +151,15 @@ target_include_directories(test_driver_break_route_integration PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
+# POI/map tests: map_data lives next to this CMakeLists.txt; binfile driver is built as target map_binfile.
+target_compile_definitions(test_driver_break_route_integration PRIVATE
+    "DRIVER_BREAK_TEST_MAP_DATA_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/map_data\"")
+if(USE_PLUGINS AND TARGET map_binfile)
+    add_dependencies(test_driver_break_route_integration map_binfile)
+    target_compile_definitions(test_driver_break_route_integration PRIVATE
+        "DRIVER_BREAK_TEST_BINFILE_SO=\"$<TARGET_FILE:map_binfile>\"")
+endif()
+
 # OBD-II and J1939 backend tests (pure logic, no hardware required)
 add_executable(test_driver_break_obd_j1939
     test_driver_break_obd_j1939.c

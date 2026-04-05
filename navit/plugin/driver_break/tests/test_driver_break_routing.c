@@ -73,6 +73,44 @@ static int test_route_validation_car(void) {
     return 0;
 }
 
+/* Cycling: cycleway priority helper and cycle network tag helper (NULL item) */
+static int test_route_validation_cycling(void) {
+    TEST_ASSERT(route_validator_is_cycling_priority_highway("cycleway") == 1, "Cycleway should be cycling priority");
+    TEST_ASSERT(route_validator_is_cycling_priority_highway("path") == 0, "Path alone is not cycling priority");
+    TEST_ASSERT(route_validator_is_cycling_priority_highway(NULL) == 0, "NULL highway not cycling priority");
+
+    TEST_ASSERT(driver_break_route_is_cycle_network_way(NULL) == 0, "NULL item for cycle network");
+
+    return 0;
+}
+
+/* Cycling full-route validation: NULL route is invalid with a warning */
+static int test_validate_cycling_null_route(void) {
+    struct route_validation_result *r = route_validator_validate_cycling(NULL);
+    TEST_ASSERT(r != NULL, "validate_cycling(NULL) should return a result struct");
+    TEST_ASSERT(r->is_valid == 0, "NULL route should be invalid");
+    TEST_ASSERT(r->warnings != NULL, "NULL route should append a warning");
+    int saw_empty = 0;
+    for (GList *l = r->warnings; l; l = g_list_next(l)) {
+        if (l->data && strstr((char *)l->data, "Empty"))
+            saw_empty = 1;
+    }
+    TEST_ASSERT(saw_empty, "Warning should mention empty or null route");
+    route_validator_free_result(r);
+    return 0;
+}
+
+/* Place of worship map search: invalid arguments return NULL */
+static int test_poi_map_worship_invalid_args(void) {
+    struct coord_geo c;
+    c.lat = 60.0;
+    c.lng = 10.0;
+    TEST_ASSERT(driver_break_poi_map_search_place_of_worship(NULL, 5.0, NULL) == NULL, "NULL center returns NULL");
+    TEST_ASSERT(driver_break_poi_map_search_place_of_worship(&c, 5.0, NULL) == NULL, "NULL mapset returns NULL");
+    TEST_ASSERT(driver_break_poi_map_search_place_of_worship(&c, 0.0, NULL) == NULL, "Non-positive radius returns NULL");
+    return 0;
+}
+
 /* Test hiking route with pilgrimage priority */
 static int test_route_pilgrimage_priority(void) {
     /* Test that pilgrimage routes are detected */
@@ -183,6 +221,9 @@ int main(void) {
 
     failures += test_route_validation_hiking();
     failures += test_route_validation_car();
+    failures += test_route_validation_cycling();
+    failures += test_validate_cycling_null_route();
+    failures += test_poi_map_worship_invalid_args();
     failures += test_route_pilgrimage_priority();
     failures += test_route_validation_result();
     failures += test_hiking_route_coordinates();

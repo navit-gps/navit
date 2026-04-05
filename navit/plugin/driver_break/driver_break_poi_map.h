@@ -42,6 +42,12 @@ GList *driver_break_poi_map_search_car_pois(struct coord_geo *center, double rad
  * repair/shop when mapped) */
 GList *driver_break_poi_map_search_motorcycle_pois(struct coord_geo *center, double radius_km, struct mapset *ms);
 
+/* Cycling: bike shop, repair, rental, parking (map types; charging often via Overpass in caller) */
+GList *driver_break_poi_map_search_cycling_service_pois(struct coord_geo *center, double radius_km, struct mapset *ms);
+
+/* Churches and other worship (amenity=place_of_worship); used when pilgrimage priority is enabled */
+GList *driver_break_poi_map_search_place_of_worship(struct coord_geo *center, double radius_km, struct mapset *ms);
+
 /* Search for fuel stations in maps matching vehicle fuel type */
 GList *driver_break_poi_map_search_fuel(struct coord_geo *center, double radius_km, struct mapset *ms,
                                         enum driver_break_vehicle_type vehicle_type, int fuel_type);
@@ -51,5 +57,8 @@ int driver_break_poi_is_network_cabin(struct item *item, char **network_name);
 
 /* Check if route segment has pilgrimage/hiking route tags */
 int driver_break_route_is_pilgrimage_hiking(struct item *item);
+
+/* OSM tags on way: route=bicycle or route=mtb, or network ncn/rcn/lcn (signed cycle networks) */
+int driver_break_route_is_cycle_network_way(struct item *item);
 
 #endif /* NAVIT_PLUGIN_DRIVER_BREAK_POI_MAP_H */

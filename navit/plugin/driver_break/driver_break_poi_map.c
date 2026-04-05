@@ -163,6 +163,38 @@ int driver_break_route_is_pilgrimage_hiking(struct item *item) {
     return 0;
 }
 
+/* Way tags: signed bicycle/MTB routes or national/regional/local cycle networks */
+int driver_break_route_is_cycle_network_way(struct item *item) {
+    if (!item) {
+        return 0;
+    }
+
+    char *route = get_osm_tag_value(item, "route");
+    if (route) {
+        char *rl = g_ascii_strdown(route, -1);
+        int hit = (strcmp(rl, "bicycle") == 0 || strcmp(rl, "mtb") == 0);
+        g_free(rl);
+        g_free(route);
+        if (hit) {
+            return 1;
+        }
+    }
+
+    char *network = get_osm_tag_value(item, "network");
+    if (network) {
+        char *nl = g_ascii_strdown(network, -1);
+        int hit =
+            (strcmp(nl, "ncn") == 0 || strcmp(nl, "rcn") == 0 || strcmp(nl, "lcn") == 0 || strcmp(nl, "icn") == 0);
+        g_free(nl);
+        g_free(network);
+        if (hit) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 /* Return 1 if item type is in the list */
 static int item_type_matches(struct item *item, enum item_type *poi_types, int num_types) {
     int i;
@@ -418,6 +450,19 @@ GList *driver_break_poi_map_search_motorcycle_pois(struct coord_geo *center, dou
                                      type_poi_repair_service,
                                      type_none};
     return driver_break_poi_map_search(center, radius_km, mc_poi_types, 10, ms);
+}
+
+GList *driver_break_poi_map_search_cycling_service_pois(struct coord_geo *center, double radius_km, struct mapset *ms) {
+    enum item_type cycling_types[] = {type_poi_shop_bicycle, type_poi_repair_service, type_poi_bicycle_rental,
+                                      type_poi_bicycle_parking, type_none};
+
+    return driver_break_poi_map_search(center, radius_km, cycling_types, 4, ms);
+}
+
+GList *driver_break_poi_map_search_place_of_worship(struct coord_geo *center, double radius_km, struct mapset *ms) {
+    enum item_type worship_types[] = {type_poi_worship, type_poi_church, type_none};
+
+    return driver_break_poi_map_search(center, radius_km, worship_types, 2, ms);
 }
 
 /* Check if item has any of the given OSM fuel:* tag keys (presence only). */

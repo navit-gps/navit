@@ -594,11 +594,21 @@ static int download_copernicus_tile(const char *url, const char *filepath) {
 }
 #    endif
 
+/* Shared elevation cache: same default as download_test_srtm_data.sh and route integration Test 4. */
+static char *driver_break_srtm_shared_data_dir(void) {
+    const char *e = g_getenv("SRTM_TEST_DIR");
+    if (e && e[0])
+        return g_strdup(e);
+    return g_strdup("/tmp/test_srtm_hgt_download");
+}
+
 /* Test Copernicus GLO-30: download tiles for three OSM map locations (Norway) and verify read.
  * Locations: map=12/62.0937/7.1433, map=12/61.5919/9.7018, map=15/61.36012/9.66941
- * Tiles: N62E007, N61E009. */
+ * Tiles for those points: N62E007, N61E009.
+ * Also downloads N61E010 and N62E009 when CURL is available so test_driver_break_route_integration
+ * Test 4 (Rondanestien) can read elevation from the same directory after ctest. */
 static int test_copernicus_glo30_download_and_read(void) {
-    char *test_dir = g_strdup("/tmp/test_copernicus_glo30");
+    char *test_dir = driver_break_srtm_shared_data_dir();
     g_mkdir_with_parents(test_dir, 0755);
 
 #    ifdef HAVE_CURL
@@ -625,6 +635,24 @@ static int test_copernicus_glo30_download_and_read(void) {
         g_free(test_dir);
         return 0;
     }
+
+    /* Rondanestien route integration uses tiles N61E010 (south/mid) and N62E009 (north); not the same as N62E007/N61E009. */
+    {
+        const char *tile_61_10 = "Copernicus_DSM_COG_10_N61_00_E010_00_DEM";
+        const char *tile_62_9 = "Copernicus_DSM_COG_10_N62_00_E009_00_DEM";
+        char *url = g_strdup_printf("%s%s/%s.tif", base, tile_61_10, tile_61_10);
+        char *path = g_build_filename(test_dir, "Copernicus_DSM_COG_10_N61_00_E010_00_DEM.tif", NULL);
+        if (!download_copernicus_tile(url, path))
+            printf("  Copernicus GLO-30: optional N61E010 tile for route integration Test 4 not downloaded.\n");
+        g_free(url);
+        g_free(path);
+        url = g_strdup_printf("%s%s/%s.tif", base, tile_62_9, tile_62_9);
+        path = g_build_filename(test_dir, "Copernicus_DSM_COG_10_N62_00_E009_00_DEM.tif", NULL);
+        if (!download_copernicus_tile(url, path))
+            printf("  Copernicus GLO-30: optional N62E009 tile for route integration Test 4 not downloaded.\n");
+        g_free(url);
+        g_free(path);
+    }
 #    else
     /* Without CURL we only run if tiles are already present and valid (e.g. from a previous run) */
     char *path_62_7 = g_build_filename(test_dir, "Copernicus_DSM_COG_10_N62_00_E007_00_DEM.tif", NULL);
@@ -634,7 +662,9 @@ static int test_copernicus_glo30_download_and_read(void) {
     g_free(path_62_7);
     g_free(path_61_9);
     if (!got_62_7 || !got_61_9) {
-        printf("Copernicus GLO-30: tiles not present or invalid (no CURL). Skip test.\n");
+        printf("Copernicus GLO-30: no valid GeoTIFF tiles in %s (test built without libcurl, so tiles cannot be "
+               "downloaded; install libcurl and rebuild, or place Copernicus *.tif files there). Skip test.\n",
+               test_dir);
         g_free(test_dir);
         return 0;
     }

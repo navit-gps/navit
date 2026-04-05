@@ -14,6 +14,8 @@ or `navit_driver_break_osd_example.xml on GitHub <https://github.com/Supermagnum
 Rows that call ``navit.driver_break_configure_intervals()`` or ``navit.driver_break_configure_overnight()``
 open the plugin's combined internal-GUI dialogs; several labels map to the same command.
 
+For **cycling** rest stops, ``process_cycling_stops()`` also loads **cycling service POIs** (map: bike shop, repair, rental, parking; Overpass: ``amenity=charging_station`` for e-bikes, ``shop=bicycle``, ``amenity=bicycle_repair_station`` when libcurl is available) within the **general POI search radius** from Configure overnight, in addition to water and cabin radii on the same dialog.
+
 .. code-block:: text
 
     Break Plugin  (always visible; opens flag 1)
@@ -69,6 +71,8 @@ open the plugin's combined internal-GUI dialogs; several labels map to the same 
         |   |       Max daily (km)             -> configure_intervals()
         |   |       POI: water (km)            -> configure_overnight()
         |   |       POI: cabins (km)           -> configure_overnight()
+        |   |       POI search radius (km)   -> configure_overnight()
+        |   |        (general radius for cycling service POIs: charging/e-bikes, shop, repair, etc.)
         |   |       Back  -> flag 1
         |   |
         |   +-- Motorcycle page 1  (flag 128)

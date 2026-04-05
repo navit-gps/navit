@@ -13,11 +13,13 @@ Navit includes several plugins that extend its functionality:
    Driver Break EV backend (to-do) <todo-electric>
    Driver Break EV vehicle profile (SQLite) <ev_vehicle_profile>
    Driver Break Tests <tests>
+   Driver Break test results (captured run) <test-results>
    Driver Break aftermarket ECUs <aftermarket_ecus>
    Driver Break formulas <formulas>
    Driver Break Navit-daemon integration <navit_daemon_integration>
    Driver Break DBus API (eco_mode_fuel_enabled) <dbus>
    Driver Break OSD example menu tree <osd_example_menu_tree>
+   Driver Break OSD commands <osd_commands>
 
 .. contents:: On this page
    :local:
@@ -59,6 +61,7 @@ The plugin discovers nearby Points of Interest depending on travel mode. Search 
 - **Cabins and huts** – Wilderness hut, alpine hut, hostel, camping; with optional DNT/network detection for prioritization.
 - **Car** – Cafe, restaurant, museum, viewpoint, picnic, attraction (and similar amenities along driving routes).
 - **Motorcycle** – Same as car (cafe, restaurant, viewpoint, petrol, picnic), plus amenity=motorcycle_repair and shop=motorcycle when present in map data.
+- **Cycling** – Same water and cabin/hut categories as hiking at rest stops. For **e-bikes and utility cycling**, charging is searched explicitly: ``amenity=charging_station`` (Overpass when libcurl is available, and in the general Overpass fallback without a map). Also at rest stops: from map data, bike shop, generic repair (often bicycle repair), bicycle rental, and bicycle parking; plus Overpass for ``shop=bicycle`` and ``amenity=bicycle_repair_station`` (merged with map hits when libcurl is available). Radii for water and cabins are set in Configure overnight; the **general POI search radius** there also limits how far the plugin looks for cycling service POIs (map + Overpass) around each cycling rest stop. With **hiking/pilgrimage priority** enabled, **hiking and cycling** rest stops also include **places of worship** (``amenity=place_of_worship``) for churches and pilgrim services along the stage (same general POI radius).
 
 .. _distance-from-buildings:
 
@@ -113,6 +116,8 @@ Example layered OSD (navit.xml)
 A full **text-only** on-screen menu example using ``osd_configuration`` bitmasks (main menu, travel mode, per-mode break settings, routing toggles) and the commands ``driver_break_open_settings()``, ``driver_break_set_mode()``, and ``driver_break_toggle()`` is available as :download:`navit_driver_break_osd_example.xml` and on GitHub as `navit_driver_break_osd_example.xml <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/navit_driver_break_osd_example.xml>`__. It includes a minimal valid ``<config>`` skeleton; merge the Driver Break OSD block into your own ``navit.xml`` or adapt paths and layout as needed.
 
 An ASCII tree of the same menu (flags, navigation, and dialog commands) is in :doc:`osd_example_menu_tree` and on GitHub as `osd_example_menu_tree.rst <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/osd_example_menu_tree.rst>`__.
+
+A concise reference for every registered command name, arguments, and SRTM helpers is in :doc:`osd_commands`.
 
 Hiking break settings use a **second page** (bitmask ``256``) so POI, DNT/pilgrimage, and overnight rows stay on screen on typical portrait resolutions; page 1 (bit ``8``) holds interval distances and a "More hiking settings..." control. Motorcycle uses the same pattern: page 1 (bit ``128``) for time-interval rows, page 2 (bitmask ``512``) for POI, overnight, and scenic/tour lines, with "More motorcycle settings..." on page 1. The **Routing mode** submenu uses **fixed labels** for Kinetic and Eco: they do not reflect on or off state in the UI, but each line still toggles the corresponding option and persists it; the example file comments describe this limitation and a possible future approach (expression-bound labels if attributes become available).
 
@@ -172,14 +177,23 @@ Networks and priorities
 
   Use at least the typical spacing (e.g. 10–12 km) so nearby huts are found; in remote areas consider raising the radius toward the max values.
 
-- **Hiking/pilgrimage priority** – Optional preference for official hiking and pilgrimage routes when validating or suggesting stops.
+- **Hiking/pilgrimage priority** – Optional preference for official hiking and pilgrimage routes when validating routes, and for rest-stop POI discovery on **hiking and cycling**: when enabled, the plugin also searches for ``amenity=place_of_worship`` (churches and similar) within the **general POI search radius**, for stages along pilgrim paths that offer services. Map search uses worship/church item types; Overpass supplements when libcurl is available.
 
 .. _hiking-route-validation:
 
 Hiking route validation
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-For hiking routes, the plugin can validate that the route avoids forbidden road types (e.g. motorway, trunk, primary) and reports how much of the route uses priority paths (footway, path, track, steps, bridleway). With pilgrimage/hiking priority enabled, segments tagged as pilgrimage or hiking routes are counted as priority. Warnings are produced for high forbidden percentage or low priority path percentage.
+For hiking routes, the plugin can validate that the route avoids forbidden road types (e.g. motorway, trunk, primary) and reports how much of the route uses priority paths (footway, path, track, steps, bridleway). With pilgrimage/hiking priority enabled, segments tagged as pilgrimage or hiking routes are counted as priority. The same toggle adds **place of worship** POIs near hiking (and cycling) rest stops, as above. Warnings are produced for high forbidden percentage or low priority path percentage.
+
+.. _cycling-route-validation:
+
+Cycling route validation
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The API ``route_validator_validate_cycling()`` classifies each route segment using the same **forbidden** highway set as hiking (motorway, trunk, primary, and links). **Cycle-priority** distance includes: ``highway=cycleway``; ways with ``route=bicycle`` or ``route=mtb``; ``network`` of ``ncn``, ``rcn``, ``lcn``, or ``icn`` (international / national / regional / local signed cycle networks); and ``bicycle=yes`` or ``bicycle=designated`` on path-like highways (path, footway, track, living_street, pedestrian, service). Segments that would otherwise count as secondary but are tagged ``pilgrimage=yes`` are promoted to cycle-priority (forbidden highways are never promoted). Tags are read from way strings on Navit street items when present (relation-only route membership may not appear on all extracts).
+
+**MTB scale warnings (threshold ≥ 4):** The plugin scans each segment’s tags for ``mtb:scale`` (0–6, using the leading digit) and ``mtb:scale:uphill`` (0–5, leading digit). It records the **maximum** value seen along the route. A warning is added only when that maximum is **4 or higher**: for ``mtb:scale``, that flags **difficult MTB terrain** (OSM scale 4+ is advanced / expert); for ``mtb:scale:uphill``, that flags **steep or very steep uphill** segments. Values 0–3 do not produce these warnings. Callers can use this alongside hiking validation where appropriate.
 
 .. _energy-based-routing:
 
@@ -275,9 +289,11 @@ For details on specific aspects of the Driver Break plugin, see:
 * `EV vehicle profile table (SQLite spec) <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/ev_vehicle_profile.rst>`__
 * `EV vehicle profile DDL (SQL file) <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/ev_vehicle_profile.sql>`__
 * `Tests <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/tests.rst>`__
+* `Test results (captured run) <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/test-results.rst>`__
 * `Aftermarket ECUs <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/aftermarket_ecus.rst>`__
 * `Formulas <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/formulas.rst>`__
 * `Navit-daemon integration <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/navit_daemon_integration.rst>`__
 * `DBus API (eco_mode_fuel_enabled) <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/dbus.rst>`__
 * `OSD example menu tree (ASCII) <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/osd_example_menu_tree.rst>`__
+* `OSD commands reference <https://github.com/Supermagnum/navit/blob/feature/driver-break/docs/user/plugins/driver-break/osd_commands.rst>`__
 * `Example OSD icons (SVG) <https://github.com/Supermagnum/navit/tree/feature/driver-break/docs/user/plugins/driver-break/Icons>`__

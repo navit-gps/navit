@@ -91,24 +91,25 @@ static void init_navit_system(void) {
         struct plugin *pl;
 
         plugin_path = NULL;
+#ifdef DRIVER_BREAK_TEST_BINFILE_SO
+        if (g_file_test(DRIVER_BREAK_TEST_BINFILE_SO, G_FILE_TEST_EXISTS))
+            plugin_path = g_strdup(DRIVER_BREAK_TEST_BINFILE_SO);
+#endif
         cwd = g_get_current_dir();
-
-        /* Try multiple paths to find the plugin */
-        /* Path 1: Relative from build directory */
-        plugin_path = g_build_filename(cwd, "navit", "map", "binfile", "libmap_binfile.so", NULL);
-        if (!g_file_test(plugin_path, G_FILE_TEST_EXISTS)) {
-            g_free(plugin_path);
-            /* Path 2: Absolute path from build root */
-            plugin_path = g_build_filename("/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit", "build",
-                                           "navit", "map", "binfile", "libmap_binfile.so", NULL);
+        if (!plugin_path) {
+            /* From CTest cwd .../navit/plugin/driver_break/tests: three levels up is .../navit (build tree) */
+            plugin_path = g_build_filename(cwd, "..", "..", "..", "map", "binfile", "libmap_binfile.so", NULL);
+            if (!g_file_test(plugin_path, G_FILE_TEST_EXISTS)) {
+                g_free(plugin_path);
+                plugin_path = g_build_filename(cwd, "navit", "map", "binfile", "libmap_binfile.so", NULL);
+            }
         }
-        if (!g_file_test(plugin_path, G_FILE_TEST_EXISTS)) {
+        if (plugin_path && !g_file_test(plugin_path, G_FILE_TEST_EXISTS)) {
             g_free(plugin_path);
-            /* Path 3: Try from source directory (if running from source) */
-            plugin_path = g_build_filename(cwd, "..", "..", "..", "navit", "map", "binfile", "libmap_binfile.so", NULL);
+            plugin_path = NULL;
         }
 
-        if (plugin_path && g_file_test(plugin_path, G_FILE_TEST_EXISTS)) {
+        if (plugin_path) {
             printf("  Loading binfile map driver from: %s\n", plugin_path);
             /* Create plugin using plugin_new with path attribute */
             path_attr.type = attr_path;
@@ -181,29 +182,29 @@ static struct mapset *load_test_map_data(void) {
     /* Initialize Navit system before loading map */
     init_navit_system();
 
-    /* Try multiple paths to find map data */
-    /* Path 1: Relative from build directory (when run from build/) */
-    map_file = g_build_filename("..", "..", "..", "navit", "plugin", "driver_break", "tests", "map_data",
-                                "osm_bbox_9.5,60.95,11.35,62.25.bin", NULL);
+    /* Map path: CMake sets DRIVER_BREAK_TEST_MAP_DATA_DIR to this directory (map_data next to tests sources). */
+#ifdef DRIVER_BREAK_TEST_MAP_DATA_DIR
+    map_file = g_build_filename(DRIVER_BREAK_TEST_MAP_DATA_DIR, "osm_bbox_9.5,60.95,11.35,62.25.bin", NULL);
     if (!g_file_test(map_file, G_FILE_TEST_EXISTS)) {
         g_free(map_file);
-        /* Path 2: Absolute path from source root */
-        map_file = g_build_filename("/mnt/2e9a1e9f-2097-408c-ab9a-a01b32f11d28/github-projects/navit", "navit",
-                                    "plugin", "driver_break", "tests", "map_data", "osm_bbox_9.5,60.95,11.35,62.25.bin",
-                                    NULL);
+        map_file = NULL;
     }
-    if (!g_file_test(map_file, G_FILE_TEST_EXISTS)) {
-        g_free(map_file);
-        /* Path 3: Try from current working directory */
+#else
+    map_file = NULL;
+#endif
+    if (!map_file) {
         char *cwd = g_get_current_dir();
-        map_file = g_build_filename(cwd, "..", "..", "..", "navit", "plugin", "driver_break", "tests", "map_data",
-                                    "osm_bbox_9.5,60.95,11.35,62.25.bin", NULL);
+        map_file = g_build_filename(cwd, "map_data", "osm_bbox_9.5,60.95,11.35,62.25.bin", NULL);
         g_free(cwd);
+        if (!g_file_test(map_file, G_FILE_TEST_EXISTS)) {
+            g_free(map_file);
+            return NULL; /* Map data not available */
+        }
     }
 
     if (!g_file_test(map_file, G_FILE_TEST_EXISTS)) {
         g_free(map_file);
-        return NULL; /* Map data not available */
+        return NULL;
     }
 
     printf("  Loading map data from: %s\n", map_file);
@@ -382,37 +383,52 @@ static int test_poi_discovery_car_route(void) {
 #define ELEV_RONDANE_MIN 200
 #define ELEV_RONDANE_MAX 1800
 
-/* Setup SRTM test dir from SRTM_TEST_DIR or /tmp paths; inits srtm. Returns test_dir (caller frees). */
+/* True if dir contains any HGT or Copernicus GeoTIFF tile used by Rondanestien or the SRTM unit test. */
+static int srtm_dir_has_any_tile(const char *dir) {
+    char *p;
+    int ok = 0;
+    if (!dir || !dir[0])
+        return 0;
+#define TILE_CHECK(name)                                                                                               \
+    p = g_build_filename(dir, (name), NULL);                                                                            \
+    ok |= g_file_test(p, G_FILE_TEST_EXISTS);                                                                          \
+    g_free(p);
+    TILE_CHECK("N61E009.hgt");
+    TILE_CHECK("N61E010.hgt");
+    TILE_CHECK("N62E009.hgt");
+    TILE_CHECK("N62E007.hgt");
+    TILE_CHECK("Copernicus_DSM_COG_10_N61_00_E009_00_DEM.tif");
+    TILE_CHECK("Copernicus_DSM_COG_10_N61_00_E010_00_DEM.tif");
+    TILE_CHECK("Copernicus_DSM_COG_10_N62_00_E009_00_DEM.tif");
+    TILE_CHECK("Copernicus_DSM_COG_10_N62_00_E007_00_DEM.tif");
+#undef TILE_CHECK
+    return ok;
+}
+
+/* Pick first directory with tiles; same defaults as download_test_srtm_data.sh and test_driver_break_srtm Copernicus.
+ * Legacy /tmp/test_copernicus_glo30 is checked for older runs that wrote only N62E007/N61E009 there (Rondanestien
+ * still needs N61E010 and N62E009; run ctest or download_test_srtm_data.sh for full coverage). */
 static char *srtm_test_setup_dir(void) {
-    char *test_dir = g_strdup("/tmp/test_srtm_route");
-    const char *env_dir = g_getenv("SRTM_TEST_DIR");
-    char *download_dir = env_dir ? g_strdup(env_dir) : g_strdup("/tmp/test_srtm_hgt_download");
-    char *tile_n61_10_hgt = g_build_filename(download_dir, "N61E010.hgt", NULL);
-    char *tile_n62_9_hgt = g_build_filename(download_dir, "N62E009.hgt", NULL);
-    char *tile_n61_9_hgt = g_build_filename(download_dir, "N61E009.hgt", NULL);
-    char *tile_n61_10_tif = g_build_filename(download_dir, "Copernicus_DSM_COG_10_N61_00_E010_00_DEM.tif", NULL);
-    char *tile_n62_9_tif = g_build_filename(download_dir, "Copernicus_DSM_COG_10_N62_00_E009_00_DEM.tif", NULL);
+    const char *env = g_getenv("SRTM_TEST_DIR");
+    char *empty_fallback = g_strdup("/tmp/test_srtm_route");
+    char *chosen = NULL;
 
-    int has_data = g_file_test(tile_n61_10_hgt, G_FILE_TEST_EXISTS) || g_file_test(tile_n62_9_hgt, G_FILE_TEST_EXISTS)
-                   || g_file_test(tile_n61_9_hgt, G_FILE_TEST_EXISTS)
-                   || g_file_test(tile_n61_10_tif, G_FILE_TEST_EXISTS)
-                   || g_file_test(tile_n62_9_tif, G_FILE_TEST_EXISTS);
+    if (env && env[0] && srtm_dir_has_any_tile(env))
+        chosen = g_strdup(env);
+    else if (srtm_dir_has_any_tile("/tmp/test_srtm_hgt_download"))
+        chosen = g_strdup("/tmp/test_srtm_hgt_download");
+    else if (srtm_dir_has_any_tile("/tmp/test_copernicus_glo30"))
+        chosen = g_strdup("/tmp/test_copernicus_glo30");
 
-    if (has_data) {
-        g_free(test_dir);
-        test_dir = download_dir;
-        printf("  Using elevation data from: %s\n", test_dir);
-    } else {
-        g_free(download_dir);
-        g_mkdir_with_parents(test_dir, 0755);
+    if (chosen) {
+        printf("  Using elevation data from: %s\n", chosen);
+        srtm_init(chosen);
+        g_free(empty_fallback);
+        return chosen;
     }
-    g_free(tile_n61_10_hgt);
-    g_free(tile_n62_9_hgt);
-    g_free(tile_n61_9_hgt);
-    g_free(tile_n61_10_tif);
-    g_free(tile_n62_9_tif);
-    srtm_init(test_dir);
-    return test_dir;
+    g_mkdir_with_parents(empty_fallback, 0755);
+    srtm_init(empty_fallback);
+    return empty_fallback;
 }
 
 /* Assert Rondanestien elevations in valid range and optional Rondane band / elevation gain. */
@@ -447,9 +463,10 @@ static void srtm_test_assert_rondane(int elev1, int elev2, int elev3) {
     }
 }
 
-/* Test SRTM elevation along Rondanestien. Uses dir from download_test_srtm_data.sh if present:
- * HGT (N61E009, N61E010, N62E009) or Copernicus GeoTIFF (same tiles).
- * Set SRTM_TEST_DIR to override (e.g. if tiles are not in /tmp/test_srtm_hgt_download). */
+/* Test SRTM elevation along Rondanestien. Tiles: N61E010 (south, mid), N62E009 (north) as HGT or Copernicus .tif.
+ * Searches SRTM_TEST_DIR, then /tmp/test_srtm_hgt_download, then /tmp/test_copernicus_glo30.
+ * test_driver_break_srtm Copernicus downloads (with libcurl) place tiles under /tmp/test_srtm_hgt_download
+ * including optional N61E010 and N62E009 so Test 4 succeeds after ctest; N62E007/N61E009 alone do not cover Rondanestien. */
 static int test_srtm_elevation_hiking_route(void) {
     char *test_dir = srtm_test_setup_dir();
     int elev1 = srtm_get_elevation(&osm_node_rondane_south);
@@ -502,6 +519,12 @@ static int test_route_validation_actual(void) {
     TEST_ASSERT(route_validator_is_forbidden_highway("trunk") == 1, "Trunk forbidden check");
     TEST_ASSERT(route_validator_is_priority_path("footway") == 1, "Footway priority check");
     TEST_ASSERT(route_validator_is_priority_path("path") == 1, "Path priority check");
+
+    struct route_validation_result *cyc = route_validator_validate_cycling(NULL);
+    TEST_ASSERT(cyc != NULL, "validate_cycling(NULL) returns result");
+    TEST_ASSERT(cyc->is_valid == 0, "NULL cycling route invalid");
+    TEST_ASSERT(cyc->warnings != NULL, "NULL cycling route has warning");
+    route_validator_free_result(cyc);
 
     return 0;
 }

@@ -349,6 +349,33 @@ static void driver_break_vehicle_callback_wrapper(void *priv_data) {
     }
 }
 
+/* Pilgrimage / hiking-cycling intervals: churches and worship (pilgrim services) near rest stops when enabled */
+static void driver_break_append_pilgrimage_worship_pois(struct driver_break_priv *priv, struct coord_geo *coord,
+                                                        struct driver_break_stop *stop, struct mapset *ms) {
+    double r_km;
+
+    if (!priv || !coord || !stop || !priv->config.enable_hiking_pilgrimage_priority)
+        return;
+
+    r_km = priv->config.poi_search_radius_km;
+    if (r_km <= 0)
+        r_km = 15.0;
+
+    if (ms) {
+        GList *w = driver_break_poi_map_search_place_of_worship(coord, r_km, ms);
+        if (w)
+            stop->pois = g_list_concat(stop->pois, w);
+    }
+#ifdef HAVE_CURL
+    {
+        static const char *pow_tags[] = {"amenity=place_of_worship"};
+        GList *ov = driver_break_poi_discover(coord, (int)r_km, pow_tags, 1);
+        if (ov)
+            stop->pois = g_list_concat(stop->pois, ov);
+    }
+#endif
+}
+
 /* Route callback wrapper */
 /* Convert hiking rest stops to driver_break_stop format and add POIs */
 static void process_hiking_stops(struct driver_break_priv *priv, GList *hiking_stops) {
@@ -410,6 +437,8 @@ static void process_hiking_stops(struct driver_break_priv *priv, GList *hiking_s
             } else {
                 stop->pois = driver_break_poi_discover(&h_stop->coord, priv->config.poi_search_radius_km, NULL, 0);
             }
+
+            driver_break_append_pilgrimage_worship_pois(priv, &h_stop->coord, stop, ms);
 
             priv->suggested_stops = g_list_append(priv->suggested_stops, stop);
         }
@@ -474,9 +503,26 @@ static void process_cycling_stops(struct driver_break_priv *priv, GList *cycling
 
                 poi_free_water_points(water_pois_list);
                 poi_free_cabins(cabin_pois_list);
+
+                GList *cyc_svc = driver_break_poi_map_search_cycling_service_pois(
+                    &c_stop->coord, priv->config.poi_search_radius_km, ms);
+                if (cyc_svc)
+                    stop->pois = g_list_concat(stop->pois, cyc_svc);
+#ifdef HAVE_CURL
+                {
+                    static const char *cycling_ov[] = {"amenity=charging_station", "shop=bicycle",
+                                                       "amenity=bicycle_repair_station"};
+                    GList *ov = driver_break_poi_discover(&c_stop->coord, (int)priv->config.poi_search_radius_km,
+                                                          cycling_ov, (int)(sizeof(cycling_ov) / sizeof(cycling_ov[0])));
+                    if (ov)
+                        stop->pois = g_list_concat(stop->pois, ov);
+                }
+#endif
             } else {
                 stop->pois = driver_break_poi_discover(&c_stop->coord, priv->config.poi_search_radius_km, NULL, 0);
             }
+
+            driver_break_append_pilgrimage_worship_pois(priv, &c_stop->coord, stop, ms);
 
             priv->suggested_stops = g_list_append(priv->suggested_stops, stop);
         }

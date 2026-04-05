@@ -59,6 +59,10 @@ if(LIBTIFF_FOUND)
     target_compile_definitions(plugin_driver_break PRIVATE HAVE_GEOTIFF)
 endif()
 
+if(CURL_FOUND)
+    target_compile_definitions(plugin_driver_break PRIVATE HAVE_CURL)
+endif()
+
 # Add unit tests if enabled
 option(BUILD_DRIVER_BREAK_TESTS "Build Driver Break plugin unit tests" ON)
 if(BUILD_DRIVER_BREAK_TESTS)
