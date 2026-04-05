@@ -20,13 +20,13 @@
 # rob https://launchpad.net/~rvdb
 # wb9688 https://launchpad.net/~wb9688
 # worldcitizen https://launchpad.net/~joop-boonen
-# adevoss <arnobugs@hotmail.com>, 2025.
+# adevoss <arnobugs@hotmail.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-21 04:54+0100\n"
-"PO-Revision-Date: 2025-06-14 10:01+0000\n"
+"POT-Creation-Date: 2025-12-16 19:22+0100\n"
+"PO-Revision-Date: 2026-03-04 10:51+0000\n"
 "Last-Translator: adevoss <arnobugs@hotmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/navit/navit-core/"
 "nl/>\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -231,7 +231,7 @@ msgid "Enter the roundabout %s"
 msgstr "%s de rotonde oprijden"
 
 msgid "then enter the roundabout"
-msgstr ""
+msgstr "ga daarna de rotonde op"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -346,7 +346,7 @@ msgstr "scherp "
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr ""
+msgstr "daarna de %1$s straat %2$s"
 
 #, c-format
 msgid "Take the %1$s road to the %2$s"
@@ -421,13 +421,13 @@ msgid "Length"
 msgstr "Lengte"
 
 msgid "mi"
-msgstr ""
+msgstr "mijl"
 
 msgid "km"
 msgstr "km"
 
 msgid "feet"
-msgstr ""
+msgstr "voet"
 
 msgid "m"
 msgstr "m"
@@ -1201,7 +1201,7 @@ msgstr "Nigeria"
 
 #. 558
 msgid "Nicaragua"
-msgstr "NIcaragua"
+msgstr "Nicaragua"
 
 #. 528
 #. Android resource: @strings/netherlands
@@ -1547,7 +1547,7 @@ msgstr "Samoa"
 
 #. 412
 msgid "Kosovo"
-msgstr ""
+msgstr "Kosovo"
 
 #. 887
 msgid "Yemen"
@@ -1597,22 +1597,23 @@ msgstr ""
 
 #. We have not found an existing config file from all possibilities
 msgid "No config file navit.xml, navit.xml.local found"
-msgstr ""
+msgstr "Geen configuratiebestand gevonden op alle mogelijke locaties"
 
 #, c-format
 msgid "Error parsing config file '%s': %s"
-msgstr ""
+msgstr "Fout tijdens verwerken van configuratiebestand '%s': %s"
 
 #, c-format
 msgid "Using config file '%s'"
-msgstr ""
+msgstr "Huidig configuratiebestand '%s'"
 
 #, c-format
 msgid "Error: No configuration found in config file '%s'"
-msgstr ""
+msgstr "Fout: Geen configuratie gevonden in configuratiebestand '%s'"
 
 msgid "Internal initialization failed, exiting. Check previous error messages."
 msgstr ""
+"Interne initialisatie mislukt, beeindigd. Controleer eerdere foutmeldingen."
 
 msgid "unknown street"
 msgstr "onbekende weg"
@@ -1830,11 +1831,11 @@ msgstr "Winkelen"
 
 #. Input is in kilometers
 msgid "Select a search radius from screen center in km"
-msgstr ""
+msgstr "In kilometers"
 
 #. Input is in miles.
 msgid "Select a search radius from screen center in miles"
-msgstr ""
+msgstr "In mijlen"
 
 #, c-format
 msgid "POI %s. %s"
@@ -1842,15 +1843,15 @@ msgstr "POI %s. %s"
 
 #, c-format
 msgid "Set destination to %ld, %ld "
-msgstr ""
+msgstr "Bestemming ingesteld: %ld, %ld"
 
 #, c-format
 msgid "Set map to %ld, %ld "
-msgstr ""
+msgstr "Kaart ingesteld: %ld, %ld"
 
 #, c-format
 msgid "Set next visit to %ld, %ld "
-msgstr ""
+msgstr "Volgende tussenstop ingesteld: %ld,. %ld"
 
 msgid "POI search"
 msgstr "POI zoeken"
@@ -1871,7 +1872,7 @@ msgid "Direction"
 msgstr "Richting"
 
 msgid "Distance"
-msgstr ""
+msgstr "Afstand"
 
 msgid "Name"
 msgstr "Naam"
@@ -1918,7 +1919,7 @@ msgstr "OT"
 
 #, c-format
 msgid "Route %4.1f%s    %02d:%02d ETA"
-msgstr ""
+msgstr "Route %4.1f%s    %02d:%02d Aankomsttijd"
 
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Route 0000km  0+00:00 Aankomsttijd"
@@ -2129,10 +2130,10 @@ msgid "Height Profile"
 msgstr "Hoogteprofiel"
 
 msgid "please install a map *.heightlines.bin to provide elevationdata"
-msgstr ""
+msgstr "Installeer een  *.heightlines.bin kaart voor hoogte gegevens"
 
 msgid "The route must cross at least 2 heightlines"
-msgstr ""
+msgstr "De route moet op zijn minst 2 hoogtelijnen bevatten"
 
 msgid "Route Description"
 msgstr "Routebeschrijving"
@@ -2141,7 +2142,7 @@ msgid "Show Locale"
 msgstr "Toon taal"
 
 msgid "Network info"
-msgstr ""
+msgstr "Netwerk info"
 
 msgid "Former Destinations"
 msgstr "Vorige bestemmingen"
@@ -2250,119 +2251,24 @@ msgstr ""
 msgid "APRS settings (runtime)"
 msgstr ""
 
-msgid "Input device"
-msgstr ""
+msgid "Layers"
+msgstr "Lagen"
 
-msgid "Frequency"
-msgstr ""
+msgid "Zoom to route"
+msgstr "Inzoomen naar route"
 
 msgid "NMEA Settings"
 msgstr ""
 
-msgid "Station timeout"
-msgstr ""
+msgid ""
+"Drop last\n"
+"Waypoint"
+msgstr "Laatste tussenstop verwijderen"
 
-msgid "RTL-SDR Blog V3"
-msgstr ""
-
-msgid "RTL-SDR Blog V4 R828D"
-msgstr ""
-
-msgid "Nooelec NESDR"
-msgstr ""
-
-msgid "Generic RTL-SDR"
-msgstr ""
-
-msgid "NMEA Serial"
-msgstr ""
-
-msgid "144.390 MHz (North America)"
-msgstr ""
-
-msgid "144.800 MHz (Europe)"
-msgstr ""
-
-msgid "145.175 MHz (Australia)"
-msgstr ""
-
-msgid "144.575 MHz (New Zealand)"
-msgstr ""
-
-msgid "144.640 MHz (China/Japan)"
-msgstr ""
-
-msgid "144.660 MHz (Japan Kyushu)"
-msgstr ""
-
-msgid "144.930 MHz (Argentina/Uruguay)"
-msgstr ""
-
-msgid "145.570 MHz (Brazil)"
-msgstr ""
-
-msgid "Refresh frequency index"
-msgstr ""
-
-msgid "30 minutes"
-msgstr ""
-
-msgid "60 minutes"
-msgstr ""
-
-msgid "90 minutes (default)"
-msgstr ""
-
-msgid "120 minutes"
-msgstr ""
-
-msgid "180 minutes"
-msgstr ""
-
-msgid "Clear expired now"
-msgstr ""
-
-msgid "Baud rate"
-msgstr ""
-
-msgid "Parity"
-msgstr ""
-
-msgid "4800"
-msgstr ""
-
-msgid "9600"
-msgstr ""
-
-msgid "19200"
-msgstr ""
-
-msgid "38400"
-msgstr ""
-
-msgid "None"
-msgstr ""
-
-msgid "Even"
-msgstr ""
-
-msgid "Odd"
-msgstr ""
-
-msgid "Fullscreen"
-msgstr "Beeldvullend"
-
-msgid "Window Mode"
-msgstr "Venstermodus"
-
-msgid "Auto zoom"
-msgstr ""
-
-msgid "Manual zoom"
-msgstr ""
-
-msgid "Layers"
-msgstr ""
+msgid ""
+"Drop next\n"
+"Waypoint"
+msgstr "Volgende tussenstop verwijderen"
 
 msgid "Satellite Status"
 msgstr "GPS-status"
@@ -2495,7 +2401,7 @@ msgid ""
 "Sorry, we currently do not support maps above 3.8G on Android, please select "
 "a smaller one."
 msgstr ""
-"Kaarten gorter dan 3,8GB zijn momenteel niet ondersteund op Android.\n"
+"Kaarten groter dan 3,8GB zijn momenteel niet ondersteund op Android.\n"
 "Kies a.u.b. een kleinere kaart."
 
 #. Android resource: @strings/map_no_fix
