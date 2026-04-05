@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Driver Break plugin: example layered OSD menu (text-only).
+
+  Bitmask (navit osd_configuration, AND with each item's osd_configuration):
+    -1  Always visible (implemented here with enable_expression="1" so the entry
+        stays visible when osd_configuration=0; plain osd_configuration="-1"
+        would hide at global 0).
+    0   All bitmask-driven items hidden (Close).
+    1   Main menu
+    2   Travel mode submenu
+    4   Break settings: car
+    8   Break settings: hiking
+    16  Break settings: truck
+    32  Break settings: cycling
+    64  Routing mode submenu (Kinetic / Eco toggles)
+    128 Break settings: motorcycle
+    256 Hiking page 2 (overnight / extended POI and priority rows; see hiking section below)
+    512 Motorcycle page 2 (POI, overnight, scenic/tour; see motorcycle section below)
+    1024 Elevation data (SRTM / Copernicus: download manager, region picker, named quick downloads)
+
+  Commands (register on navit):
+    navit.driver_break_open_settings()
+      Sets osd_configuration to 4, 8, 16, 32, or 128 from the active travel mode
+      (plugin vehicle_type set via driver_break_set_mode), not 64 (routing).
+    navit.driver_break_set_mode(car|truck|hiking|cycling|motorcycle)
+    navit.driver_break_toggle(kinetic|eco)
+      Toggles use_energy_routing and use_ecu_route_cost; persist to plugin DB.
+    navit.driver_break_configure_intervals() / navit.driver_break_configure_overnight()
+      Open internal-GUI dialogs (combined per profile; several OSD rows may call the same command).
+    navit.srtm_download_menu() / navit.srtm_download_region() / navit.srtm_get_elevation()
+      Elevation tiles: downloads use fixed region bboxes (not map or route). Named download example:
+      navit.srtm_download_region(new name("Sweden")). srtm_get_elevation only reads existing tiles.
+
+  Routing submenu: Kinetic and Eco apply to motorcycle as well when ECU data and energy routing are available.
+
+  Navit default osd_configuration is -1, so every positive bit matches until you set a single layer.
+  After first start, tap Close once (osd_configuration=0) so only the entry line remains; then open Break Plugin.
+
+  Plugin load path: typical install is libosd_driver_break.so under the plugin directory (see shipped navit.xml).
+  Adjust path if your build uses a different name or location.
+
+  DTD note: navit.dtd declares <osd> only generically; xmllint --valid may warn on type="text"
+  attributes (w, h, label, osd_configuration, ...). Navit's xmlconfig accepts them at runtime.
+-->
+<!DOCTYPE config SYSTEM "../../../../navit/navit.dtd">
+<config xmlns:xi="http://www.w3.org/2001/XInclude">
+	<plugins>
+		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}lib*.so" ondemand="yes"/>
+		<!--
+		  Driver Break OSD module (output name libosd_driver_break.so).
+		  Alternative explicit path often used: $NAVIT_LIBDIR/plugin/${NAVIT_LIBPREFIX}libosd_driver_break.so
+		-->
+		<plugin path="$NAVIT_LIBDIR/plugin/${NAVIT_LIBPREFIX}libosd_driver_break.so" active="yes" ondemand="no"/>
+	</plugins>
+
+	<navit center="11.5666 48.1333" zoom="256" tracking="1" orientation="-1" recent_dest="250" drag_bitmap="0" default_layout="Car">
+		<graphics type="gtk_drawing_area"/>
+		<gui type="internal" enabled="yes">
+			<![CDATA[<html></html>]]>
+		</gui>
+
+		<!--
+		  PLACEHOLDER: Paste your full internal <gui> CDATA menu from the stock navit.xml if needed.
+		  PLACEHOLDER: Additional <osd> items (compass, zoom, etc.).
+		-->
+
+		<!--
+		  Registers plugin instance and commands; keep enabled whenever using Driver Break OSD below.
+		  Optional child elements on <osd type="driver_break"/> (see user docs / config file vs menus):
+		  <attr name="type" value="car"/> — initial travel mode: car, truck, hiking, cycling, or motorcycle
+		    (optional; if omitted, default is car until the active vehicle profile or menus change it).
+		  <attr name="data" value="/path/to/driver_break.db"/> — SQLite path for config and history
+		    (optional; defaults under Navit user data directory).
+		-->
+		<osd enabled="yes" type="driver_break"/>
+
+		<!-- ========== Driver Break Plugin OSD configuration (layered text menus) ========== -->
+
+		<!-- Entry: always visible; opens main menu. -->
+		<osd enabled="yes" type="text" x="0" y="0" w="160" h="44" label="Break Plugin" font_size="200"
+			enable_expression="1"
+			command="osd_configuration=1"
+			/>
+
+		<!-- Main menu (osd_configuration 1) -->
+		<osd enabled="yes" type="text" osd_configuration="1" x="0" y="50" w="160" h="44" label="Travel modes" font_size="200"
+			command="osd_configuration=2"
+			/>
+		<!-- Break settings: driver_break_open_settings() selects layer 4/8/16/32/128 from active travel mode. -->
+		<osd enabled="yes" type="text" osd_configuration="1" x="0" y="100" w="160" h="44" label="Break settings" font_size="200"
+			command="navit.driver_break_open_settings()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1" x="0" y="150" w="160" h="44" label="Routing mode" font_size="200"
+			command="osd_configuration=64"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1" x="0" y="200" w="160" h="44" label="Elevation data" font_size="200"
+			command="osd_configuration=1024"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1" x="0" y="250" w="160" h="44" label="Close" font_size="200"
+			command="osd_configuration=0"
+			/>
+
+		<!-- Travel mode submenu (2): title row matches other submenus; Kinetic/Eco also apply in motorcycle mode when supported. -->
+		<osd enabled="yes" type="text" osd_configuration="2" x="0" y="50" w="160" h="44" label="Travel mode" font_size="200"
+			command="osd_configuration=2"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="2" x="0" y="100" w="160" h="44" label="Back" font_size="200"
+			command="osd_configuration=1"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="2" x="0" y="150" w="160" h="44" label="Car" font_size="200"
+			command="navit.driver_break_set_mode(car);osd_configuration=1"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="2" x="0" y="200" w="160" h="44" label="Truck" font_size="200"
+			command="navit.driver_break_set_mode(truck);osd_configuration=1"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="2" x="0" y="250" w="160" h="44" label="Hiking" font_size="200"
+			command="navit.driver_break_set_mode(hiking);osd_configuration=1"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="2" x="0" y="300" w="160" h="44" label="Cycling" font_size="200"
+			command="navit.driver_break_set_mode(cycling);osd_configuration=1"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="2" x="0" y="350" w="160" h="44" label="Motorcycle" font_size="200"
+			command="navit.driver_break_set_mode(motorcycle);osd_configuration=1"
+			/>
+
+		<!-- Break settings: car (4); each row opens the combined car intervals dialog (POI radius and categories in plugin logic). -->
+		<osd enabled="yes" type="text" osd_configuration="4" x="0" y="50" w="160" h="44" label="Soft limit hours" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="4" x="0" y="100" w="160" h="44" label="Max drive hours" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="4" x="0" y="150" w="160" h="44" label="Break interval (h)" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="4" x="0" y="200" w="160" h="44" label="Break duration (min)" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="4" x="0" y="250" w="160" h="44" label="POI: cafe/rest..." font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="4" x="0" y="300" w="160" h="44" label="Back" font_size="200"
+			command="osd_configuration=1"
+			/>
+
+		<!-- Break settings: truck (16) -->
+		<osd enabled="yes" type="text" osd_configuration="16" x="0" y="50" w="160" h="44" label="Break after (h, EU)" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="16" x="0" y="100" w="160" h="44" label="Break duration (min)" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="16" x="0" y="150" w="160" h="44" label="Max daily drive (h)" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="16" x="0" y="200" w="160" h="44" label="POI: truck stops" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="16" x="0" y="250" w="160" h="44" label="Back" font_size="200"
+			command="osd_configuration=1"
+			/>
+
+		<!-- Break settings: hiking page 1 (8) — interval rows only; avoids a single column past ~y=550 on small screens. -->
+		<osd enabled="yes" type="text" osd_configuration="8" x="0" y="50" w="160" h="44" label="Main break (km)" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="8" x="0" y="100" w="160" h="44" label="Alt break (km)" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="8" x="0" y="150" w="160" h="44" label="Max daily (km)" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="8" x="0" y="200" w="160" h="44" label="More hiking settings..." font_size="200"
+			command="osd_configuration=256"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="8" x="0" y="250" w="160" h="44" label="Back" font_size="200"
+			command="osd_configuration=1"
+			/>
+
+		<!-- Break settings: hiking page 2 (256) — POI radii, priorities, overnight; Back returns to page 1 (8). -->
+		<osd enabled="yes" type="text" osd_configuration="256" x="0" y="50" w="160" h="44" label="POI: water (km)" font_size="200"
+			command="navit.driver_break_configure_overnight()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="256" x="0" y="100" w="160" h="44" label="POI: cabins (km)" font_size="200"
+			command="navit.driver_break_configure_overnight()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="256" x="0" y="150" w="160" h="44" label="POI: network huts" font_size="200"
+			command="navit.driver_break_configure_overnight()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="256" x="0" y="200" w="160" h="44" label="DNT / network prio" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="256" x="0" y="250" w="160" h="44" label="Pilgrimage / hiking" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="256" x="0" y="300" w="160" h="44" label="Overnight vs buildings" font_size="200"
+			command="navit.driver_break_configure_overnight()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="256" x="0" y="350" w="160" h="44" label="Overnight vs glaciers" font_size="200"
+			command="navit.driver_break_configure_overnight()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="256" x="0" y="400" w="160" h="44" label="Back" font_size="200"
+			command="osd_configuration=8"
+			/>
+
+		<!-- Break settings: cycling (32); general POI radius drives cycling service POIs (charging, bike shop, repair, ...) at rest stops -->
+		<osd enabled="yes" type="text" osd_configuration="32" x="0" y="50" w="160" h="44" label="Main break (km)" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="32" x="0" y="100" w="160" h="44" label="Alt break (km)" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="32" x="0" y="150" w="160" h="44" label="Max daily (km)" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="32" x="0" y="200" w="160" h="44" label="POI: water (km)" font_size="200"
+			command="navit.driver_break_configure_overnight()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="32" x="0" y="250" w="160" h="44" label="POI: cabins (km)" font_size="200"
+			command="navit.driver_break_configure_overnight()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="32" x="0" y="300" w="160" h="44" label="POI search radius (km)" font_size="200"
+			command="navit.driver_break_configure_overnight()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="32" x="0" y="350" w="160" h="44" label="Back" font_size="200"
+			command="osd_configuration=1"
+			/>
+
+		<!-- Break settings: motorcycle page 1 (128) — time intervals only; same two-page idea as hiking for small screens. -->
+		<osd enabled="yes" type="text" osd_configuration="128" x="0" y="50" w="160" h="44" label="Soft limit (time)" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="128" x="0" y="100" w="160" h="44" label="Max ride (time)" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="128" x="0" y="150" w="160" h="44" label="Break interval" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="128" x="0" y="200" w="160" h="44" label="Break duration" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="128" x="0" y="250" w="160" h="44" label="More motorcycle settings..." font_size="200"
+			command="osd_configuration=512"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="128" x="0" y="300" w="160" h="44" label="Back" font_size="200"
+			command="osd_configuration=1"
+			/>
+
+		<!-- Break settings: motorcycle page 2 (512) — POI, overnight, scenic/tour; Back returns to page 1 (128). -->
+		<osd enabled="yes" type="text" osd_configuration="512" x="0" y="50" w="160" h="44" label="POI: scenic / fuel..." font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="512" x="0" y="100" w="160" h="44" label="POI: cabins / tour" font_size="200"
+			command="navit.driver_break_configure_overnight()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="512" x="0" y="150" w="160" h="44" label="Overnight vs buildings" font_size="200"
+			command="navit.driver_break_configure_overnight()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="512" x="0" y="200" w="160" h="44" label="Overnight vs glaciers" font_size="200"
+			command="navit.driver_break_configure_overnight()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="512" x="0" y="250" w="160" h="44" label="Scenic / tour routes" font_size="200"
+			command="navit.driver_break_configure_intervals()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="512" x="0" y="300" w="160" h="44" label="Back" font_size="200"
+			command="osd_configuration=128"
+			/>
+
+		<!--
+		  Routing mode (64). Labels are static: they do not show whether Kinetic or Eco is on or off; the commands
+		  still toggle persisted state in the plugin database. Documented in the Driver Break plugin index alongside
+		  this file; a future improvement is expression-bound labels (e.g. enable_expression) if Navit exposes
+		  readable attributes for these flags on the OSD or navit object.
+		-->
+		<osd enabled="yes" type="text" osd_configuration="64" x="0" y="50" w="160" h="44" label="Kinetic (toggle)" font_size="200"
+			command="navit.driver_break_toggle(kinetic)"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="64" x="0" y="100" w="160" h="44" label="Eco / ECU (toggle)" font_size="200"
+			command="navit.driver_break_toggle(eco)"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="64" x="0" y="150" w="160" h="44" label="Back" font_size="200"
+			command="osd_configuration=1"
+			/>
+
+		<!-- Elevation (1024): fixed region bboxes in plugin; not derived from map or route. -->
+		<osd enabled="yes" type="text" osd_configuration="1024" x="0" y="50" w="160" h="44" label="Elevation" font_size="200"
+			command="osd_configuration=1024"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1024" x="0" y="100" w="160" h="44" label="Back" font_size="200"
+			command="osd_configuration=1"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1024" x="0" y="150" w="160" h="44" label="Download regions" font_size="200"
+			command="navit.srtm_download_menu()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1024" x="0" y="200" w="160" h="44" label="Pick region" font_size="200"
+			command="navit.srtm_download_region()"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1024" x="0" y="250" w="160" h="44" label="Download Norway" font_size="200"
+			command="navit.srtm_download_region(new name(&quot;Norway&quot;))"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1024" x="0" y="300" w="160" h="44" label="Download Sweden" font_size="200"
+			command="navit.srtm_download_region(new name(&quot;Sweden&quot;))"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1024" x="0" y="350" w="160" h="44" label="Download Germany" font_size="200"
+			command="navit.srtm_download_region(new name(&quot;Germany&quot;))"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="1024" x="0" y="400" w="160" h="44" label="Elevation here" font_size="200"
+			command="navit.srtm_get_elevation()"
+			/>
+
+		<!-- DTD order: traffic*, vehicle*, tracking?, vehicleprofile*, then route... -->
+		<traffic type="null"/>
+
+		<!-- PLACEHOLDER: Replace with your GPS vehicle and profiles from stock navit.xml. -->
+		<vehicle name="Demo" profilename="car" enabled="yes" active="1" source="demo://"/>
+
+		<tracking cdf_histsize="0"/>
+
+		<vehicleprofile name="car" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" route_mode="0">
+			<roadprofile item_types="street_0" speed="50"/>
+		</vehicleprofile>
+
+		<route destination_distance="50"/>
+		<navigation>
+			<announce type="street_0" level0="25" level1="100" level2="200" unit="m"/>
+		</navigation>
+		<speech type="cmdline" data="echo '%s'" cps="15"/>
+
+		<!-- PLACEHOLDER: Use your real mapset; xi:include is typical on installed Navit. -->
+		<mapset enabled="yes">
+			<xi:include href="$NAVIT_SHAREDIR/maps/*.xml"/>
+		</mapset>
+
+		<layer name="Found items" order="0-">
+			<itemgra item_types="found_item">
+				<circle color="#008080" radius="24" width="2" text_size="12"/>
+			</itemgra>
+		</layer>
+
+		<xi:include href="$NAVIT_USER_DATADIR/navit_layout_*.xml"/>
+		<xi:include href="$NAVIT_SHAREDIR/navit_layout_*.xml"/>
+
+		<layout name="Route">
+			<layer name="streets">
+				<itemgra item_types="street_route_occluded" order="0-">
+					<polyline color="#0000a0" width="20"/>
+				</itemgra>
+			</layer>
+		</layout>
+	</navit>
+</config>

@@ -39,17 +39,17 @@
 # spaetz https://launchpad.net/~spaetz
 # vsandre https://launchpad.net/~vsandre
 # "J. Lavoie" <j.lavoie@net-c.ca>, 2024.
-# jkoan <jkoan@gmx.de>, 2024, 2026.
+# jkoan <jkoan@gmx.de>, 2024.
 # Ettore Atalan <atalanttore@googlemail.com>, 2024, 2025.
 # Patrick Höhn <hoehnp@gmx.de>, 2025.
-# Christof Schulze <christof.schulze@gmx.net>, 2025, 2026.
+# Christof Schulze <christof.schulze@gmx.net>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.5.6\n"
+"Project-Id-Version: navit 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:22+0100\n"
-"PO-Revision-Date: 2026-02-09 18:25+0000\n"
-"Last-Translator: jkoan <jkoan@gmx.de>\n"
+"POT-Creation-Date: 2026-03-21 04:21+0100\n"
+"PO-Revision-Date: 2025-12-18 13:05+0000\n"
+"Last-Translator: Christof Schulze <christof.schulze@gmx.net>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/navit/navit-core/"
 "de/>\n"
 "Language: de\n"
@@ -57,7 +57,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 5.15.1-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -65,7 +65,7 @@ msgstr "Aus dem Quellverzeichnis starten\n"
 
 #. libc of navit returns "dummy"
 msgid "Error getting current path. use ./ \n"
-msgstr "Fehler beim Abruf des aktuellen Verzeichnis. Nutze ./ \n"
+msgstr ""
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -171,7 +171,8 @@ msgid_plural "in %d kilometers"
 msgstr[0] "In einem Kilometer"
 msgstr[1] "In %d Kilometern"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if
+#. * required), 4: Street Name
 #, c-format
 msgid "%1$sonto the %2$s%3$s%4$s"
 msgstr "%1$sauf die %2$s%3$s%4$s"
@@ -181,17 +182,20 @@ msgstr "%1$sauf die %2$s%3$s%4$s"
 msgid "%1$sonto %2$s"
 msgstr "%1$sauf die Straße %2$s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Masculine form. The stuff after
+#. * | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|masculine form"
 msgstr "%1$sauf den %2$s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Feminine form. The stuff after
+#. * | doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|feminine form"
 msgstr "%1$sauf die %2$s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name. Neuter form. The stuff after |
+#. * doesn't have to be included
 #, c-format
 msgid "%1$sonto %2$s|neuter form"
 msgstr "%1$sauf das %2$s"
@@ -199,22 +203,26 @@ msgstr "%1$sauf das %2$s"
 msgid "onto the motorway ramp"
 msgstr "auf die Auffahrt"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name
 #, c-format
 msgid "%sinto %s%s%s"
 msgstr "%sauf die Straße %s%s%s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name. Masculine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|masculine form"
 msgstr "%sauf den %s%s%s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name. Feminine form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|feminine form"
 msgstr "%sauf die %s%s%s"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4:
+#. * Systematic Street Name. Neuter form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto %s%s%s|neuter form"
 msgstr "%sauf das %s%s%s"
@@ -246,7 +254,7 @@ msgid "Enter the roundabout %s"
 msgstr "%s in den Kreisverkehr einfahren"
 
 msgid "then enter the roundabout"
-msgstr "Dann in den Kreisverkehr einfahren"
+msgstr ""
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -262,22 +270,26 @@ msgstr "Jetzt"
 msgid "then"
 msgstr "dann"
 
-#. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have
+#. * to be included.
 #, c-format
 msgid "then merge%1$s|right"
 msgstr "dann%1$s auffahren"
 
-#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Right merge,
+#. * the stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|right"
 msgstr "Fahren Sie %1$s%2$s auf"
 
-#. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the arg. is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to
+#. * be included.
 #, c-format
 msgid "then merge%1$s|left"
 msgstr "dann%1$s auffahren"
 
-#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the stuff after | doesn't have to be included.
+#. TRANSLATORS: the first arg. is distance, the second is the phrase 'onto ...'. Left merge, the
+#. * stuff after | doesn't have to be included.
 #, c-format
 msgid "Merge %1$s%2$s|left"
 msgstr "Fahren Sie %1$s%2$s auf"
@@ -288,17 +300,18 @@ msgstr "links"
 msgid "on your right"
 msgstr "rechts"
 
-#. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the third is distance
+#. TRANSLATORS: the first arg. is exit ref and/or name, the second is the direction of exit and the
+#. * third is distance
 #, c-format
 msgid "Take exit %1$s %2$s %3$s"
 msgstr "%3$s nehmen Sie %2$s die Ausfahrt %1$s"
 
-#. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is destination
+#. TRANSLATORS: the first arg. is the direction of exit, the second is distance, the third is
+#. * destination
 #, c-format
 msgid "Take the exit %1$s %2$s%3$s"
 msgstr "%2$s nehmen Sie %1$s die Ausfahrt %3$s"
 
-#. TRANSLATORS: as in "Keep right at interchange 42 Greenmond-West"
 msgid "at interchange"
 msgstr "am Autobahnknoten"
 
@@ -310,7 +323,8 @@ msgstr "an der Ausfahrt"
 msgid "then continue straight%1$s"
 msgstr "dann%1$s geradeaus fahren"
 
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is
+#. * destination
 #, c-format
 msgid "Continue straight %1$s%2$s%3$s"
 msgstr "%1$s%2$s geradeaus fahren%3$s"
@@ -320,7 +334,8 @@ msgstr "%1$s%2$s geradeaus fahren%3$s"
 msgid "then keep right%1$s"
 msgstr "dann rechts halten%1$s"
 
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is
+#. * destination
 #, c-format
 msgid "Keep right %1$s%2$s%3$s"
 msgstr "%1$s rechts halten%2$s%3$s"
@@ -330,7 +345,8 @@ msgstr "%1$s rechts halten%2$s%3$s"
 msgid "then keep left%1$s"
 msgstr "dann links halten%1$s"
 
-#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is destination
+#. TRANSLATORS: the first arg. is distance, the second is where to do the maneuver, the third is
+#. * destination
 #, c-format
 msgid "Keep left %1$s%2$s%3$s"
 msgstr "%1$s links halten%2$s%3$s"
@@ -363,7 +379,8 @@ msgstr "Die %1$s Straße %2$s abbiegen"
 msgid "after %i roads"
 msgstr "nach %i Straßen"
 
-#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the fourth is destination
+#. TRANSLATORS: the first arg. is strength, the second is direction, the third is distance, the
+#. * fourth is destination
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "%3$s %1$s%2$s abbiegen%4$s"
@@ -382,6 +399,7 @@ msgid "then make a U-turn|right"
 msgstr "dann wenden"
 
 #. TRANSLATORS: the arg. is distance. Right U-turn, the stuff after | doesn't have to be included.
+#.
 #, c-format
 msgid "Make a U-turn %1$s|right"
 msgstr "Wenden Sie %1$s"
@@ -426,13 +444,13 @@ msgid "Length"
 msgstr "Länge"
 
 msgid "mi"
-msgstr "mi"
+msgstr ""
 
 msgid "km"
 msgstr "km"
 
 msgid "feet"
-msgstr "Fuß"
+msgstr ""
 
 msgid "m"
 msgstr "m"
@@ -1548,7 +1566,7 @@ msgstr "Samoa"
 
 #. 412
 msgid "Kosovo"
-msgstr "Kosovo"
+msgstr ""
 
 #. 887
 msgid "Yemen"
@@ -1678,7 +1696,9 @@ msgstr "Lesezeichen"
 msgid "Destination"
 msgstr "Reiseziel"
 
-#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
+#. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character)
+#. for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic
+#. key is desired).
 msgid "_Display"
 msgstr "_Anzeige"
 
@@ -2180,30 +2200,17 @@ msgstr "Achtung Blitzer!"
 msgid "Please decrease your speed"
 msgstr "Bitte Geschwindigkeit verringern"
 
-msgid "Vehicle Position"
-msgstr "Fahrzeugposition"
-
 msgid "Main menu"
 msgstr "Hauptmenü"
 
-msgid ""
-"Show\n"
-"Map"
+msgid "Town search"
 msgstr ""
-"Karte\n"
-"anzeigen"
 
-msgid "Settings"
-msgstr "Einstellungen"
+msgid "Former destinations"
+msgstr ""
 
-msgid "Tools"
-msgstr "Werkzeuge"
-
-msgid "Route"
-msgstr "Route"
-
-msgid "About"
-msgstr "Über"
+msgid "Show Map"
+msgstr ""
 
 msgid "Quit"
 msgstr "Beenden"
@@ -2211,25 +2218,122 @@ msgstr "Beenden"
 msgid "Actions"
 msgstr "Aktionen"
 
-msgid ""
-"Former\n"
-"Destinations"
+msgid "Suggest rest stop"
 msgstr ""
-"Vorherige\n"
-"Ziele"
 
-msgid "Coordinates"
-msgstr "Koordinaten"
-
-msgid ""
-"Stop\n"
-"Navigation"
+msgid "Alias: rest_suggest_stop"
 msgstr ""
-"Navigation\n"
-"beenden"
+
+msgid "Start break"
+msgstr ""
+
+msgid "Alias: rest_start_break"
+msgstr ""
+
+msgid "End break"
+msgstr ""
+
+msgid "Alias: rest_end_break"
+msgstr ""
+
+msgid "Log fuel stop"
+msgstr ""
+
+msgid "Route"
+msgstr "Route"
+
+msgid "Route description"
+msgstr ""
+
+msgid "Height profile"
+msgstr ""
+
+msgid "Zoom to route"
+msgstr "Zoom auf Route"
+
+msgid "Remove last waypoint"
+msgstr ""
+
+msgid "Remove next waypoint"
+msgstr ""
+
+msgid "Abort navigation"
+msgstr ""
+
+msgid "Settings"
+msgstr "Einstellungen"
 
 msgid "Display"
 msgstr "Darstellung"
+
+msgid "Locale"
+msgstr ""
+
+msgid "About"
+msgstr "Über"
+
+#. Android resource: @strings/map_download_title
+msgid "Map download"
+msgstr "Kartendownload"
+
+#. Android resource: @strings/optionsmenu_set_map_location
+msgid "Set map location"
+msgstr "Kartenort festlegen"
+
+#. Android resource: @strings/optionsmenu_backup_restore
+msgid "Backup / Restore"
+msgstr "Sichern / Wiederherstellen"
+
+msgid "Plugins"
+msgstr ""
+
+msgid "Driver Break"
+msgstr ""
+
+msgid "Suggest stop"
+msgstr ""
+
+msgid "Show history"
+msgstr ""
+
+msgid "Alias: rest_show_history"
+msgstr ""
+
+msgid "Configure"
+msgstr ""
+
+msgid "Plugin configuration"
+msgstr ""
+
+msgid "Intervals"
+msgstr ""
+
+msgid "Alias: rest_configure_intervals"
+msgstr ""
+
+msgid "Overnight"
+msgstr ""
+
+msgid "Alias: rest_configure_overnight"
+msgstr ""
+
+msgid "Fuel / EV"
+msgstr ""
+
+msgid "Set fuel level"
+msgstr ""
+
+msgid "Elevation"
+msgstr ""
+
+msgid "Download manager"
+msgstr ""
+
+msgid "Download region"
+msgstr ""
+
+msgid "Current elevation"
+msgstr ""
 
 msgid "Fullscreen"
 msgstr "Vollbildmodus"
@@ -2245,22 +2349,6 @@ msgstr ""
 
 msgid "Layers"
 msgstr "Ebenen"
-
-msgid "Zoom to route"
-msgstr "Zoom auf Route"
-
-msgid "Description"
-msgstr "Beschreibung"
-
-msgid ""
-"Drop last\n"
-"Waypoint"
-msgstr "Letzten Wegpunkt entfernen"
-
-msgid ""
-"Drop next\n"
-"Waypoint"
-msgstr "nächsten Wegpunkt entfernen"
 
 msgid "Satellite Status"
 msgstr "Satellitenstatus"
@@ -2319,15 +2407,6 @@ msgid ""
 "\n"
 "Enjoy Navit!"
 msgstr ""
-"Willkommen bei Navit!\n"
-"\n"
-"Wähle \"Karte herunterladen\" im Menü um Navit zu nutzen. Die Karten können "
-"sehr groß  (&gt50MB) sein - die Nutzung einer WLAN-Verbindung wird "
-"empfohlen.\n"
-"\n"
-"Kartendaten: (c) Mitwirkende des OpenStreetMap Projekts\n"
-"\n"
-"Viel Spaß mit Navit!"
 
 #. Android resource: @strings/initial_info_box_OK
 msgid "OK"
@@ -2357,14 +2436,6 @@ msgstr "POI ein/aus"
 msgid "Exit Navit"
 msgstr "Navit beenden"
 
-#. Android resource: @strings/optionsmenu_backup_restore
-msgid "Backup / Restore"
-msgstr "Sichern / Wiederherstellen"
-
-#. Android resource: @strings/optionsmenu_set_map_location
-msgid "Set map location"
-msgstr "Kartenort festlegen"
-
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
 msgstr "Ziel setzen"
@@ -2380,10 +2451,6 @@ msgstr ""
 #. Android resource: @strings/map_delete
 msgid "Delete this map?"
 msgstr "Diese Karte löschen?"
-
-#. Android resource: @strings/map_download_title
-msgid "Map download"
-msgstr "Kartendownload"
 
 #. Android resource: @strings/map_download_downloading
 msgid "Downloading:"
@@ -2427,7 +2494,7 @@ msgstr "Karten passend zur aktuellen Position"
 
 #. Android resource: @strings/maps_installed
 msgid "Installed maps"
-msgstr "Installierte Karten"
+msgstr ""
 
 #. Android resource: @strings/map_downloading
 msgid "downloading"
@@ -3067,6 +3134,49 @@ msgstr "Süd+Mittel-Amerika"
 #. Android resource: @strings/guyane_francaise
 msgid "Guyane Francaise"
 msgstr "Französisch-Guayana"
+
+#~ msgid "Vehicle Position"
+#~ msgstr "Fahrzeugposition"
+
+#~ msgid ""
+#~ "Show\n"
+#~ "Map"
+#~ msgstr ""
+#~ "Karte\n"
+#~ "anzeigen"
+
+#~ msgid "Tools"
+#~ msgstr "Werkzeuge"
+
+#~ msgid ""
+#~ "Former\n"
+#~ "Destinations"
+#~ msgstr ""
+#~ "Vorherige\n"
+#~ "Ziele"
+
+#~ msgid "Coordinates"
+#~ msgstr "Koordinaten"
+
+#~ msgid ""
+#~ "Stop\n"
+#~ "Navigation"
+#~ msgstr ""
+#~ "Navigation\n"
+#~ "beenden"
+
+#~ msgid "Description"
+#~ msgstr "Beschreibung"
+
+#~ msgid ""
+#~ "Drop last\n"
+#~ "Waypoint"
+#~ msgstr "Letzten Wegpunkt entfernen"
+
+#~ msgid ""
+#~ "Drop next\n"
+#~ "Waypoint"
+#~ msgstr "nächsten Wegpunkt entfernen"
 
 #~ msgid ""
 #~ "Thank you for installing Navit!\n"
