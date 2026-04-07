@@ -1,0 +1,12 @@
+---
+description: Navit gettext PO templates and CI check_po
+globs:
+  - "po/**/*.po.in"
+alwaysApply: false
+---
+
+# `po/*.po.in` and translations
+
+- After changing strings extracted via xgettext (including `navit_shipped.xml` via generated `navit_shipped.c`), run **`make locales`** from a CMake build under `po/`, then sync generated `*.po` into **`po/*.po.in`** so CI `check_po` passes.
+- **`msgmerge` fails** on duplicate `msgid` in the same file—each `msgid` must appear once per `.po.in`.
+- When copying build outputs to `po/*.po.in`, exclude transient files such as `navit_tmp.po`.

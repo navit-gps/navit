@@ -1,0 +1,20 @@
+---
+description: Navit PR checks from scripts/ci_sanity_checks.sh and i18n
+alwaysApply: true
+---
+
+# CI sanity and PR hygiene
+
+Primary reference: [Programming guidelines (v0.5.7)](https://navit.readthedocs.io/en/v0.5.7/development/programming_guidelines.html). This repo enforces style via `scripts/ci_sanity_checks.sh` (clang-format on C/H/C++, not the older astyle-only flow described in that doc alone).
+
+## Before opening or updating a PR
+
+1. **Rebase or merge** so your branch is reasonably current with the integration branch (avoids sanity running on unrelated diffs).
+2. **PO / gettext**: If you change user-visible strings in sources or `navit/navit_shipped.xml`, run a build with `make locales` in `build-*/po`, then refresh `po/*.po.in` so `check_po` passes. Avoid duplicate `msgid` entries in any `.po.in` (breaks `msgmerge`).
+3. **Trailing whitespace**: CI strips trailing whitespace on text files with `sed 's/\s*$//' -i` (`.bat` skipped). Do not leave trailing spaces on touched lines.
+4. **C/C++/headers**: Files under diff vs `SANITY_GIT_BASE` get `clang-format -i` using `navit/.clang-format`. Match that style locally (use `clang-format-18` if available).
+5. **Skipped paths** (no format/space pass in script): `navit/support/`, `navit/fib-1.1/`, `navit/traffic/permanentrestrictions/`.
+6. **`\*shipped.xml`**: All must validate: `xmllint --noout --dtdvalid navit/navit.dtd <file>`.
+7. **End state**: After the script, `git diff` must be empty (committed sanitizer output).
+
+Override merge base locally: `SANITY_GIT_BASE=refs/remotes/origin/trunk bash scripts/ci_sanity_checks.sh` when needed.

@@ -1,0 +1,14 @@
+---
+description: Navit shipped XML and DTD validation
+globs:
+  - "**/*shipped.xml"
+alwaysApply: false
+---
+
+# Shipped XML (`*shipped.xml`)
+
+- Validate against the project DTD:  
+  `xmllint --noout --dtdvalid navit/navit.dtd <path-to-file>`
+- Keep documents **UTF-8** without BOM unless the project already uses otherwise.
+- `navit.dtd` constrains element order and attributes; invalid children (e.g. non-EMPTY content where DTD says EMPTY) will fail CI.
+- Changing strings inside `navit_shipped.xml` that are extracted for gettext requires updating **`po/*.po.in`** (see `po/CMakeLists.txt` and `make locales`).

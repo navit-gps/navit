@@ -1,0 +1,30 @@
+---
+description: Navit C/C++ style (guidelines + clang-format)
+globs:
+  - "**/*.c"
+  - "**/*.h"
+  - "**/*.cpp"
+alwaysApply: false
+---
+
+# Navit C and C++ source
+
+See [Programming guidelines](https://navit.readthedocs.io/en/v0.5.7/development/programming_guidelines.html) and format with **`navit/.clang-format`** (run `clang-format` on changed files; CI uses the same).
+
+## Layout and encoding
+
+- Indent: **4 spaces**; braces **attached** (K&R-style); aim for **120** character lines.
+- Text files: **UTF-8** where non-ASCII appears; line endings **LF** only.
+
+## C dialect (project tradition)
+
+Guidelines target **C95-style** portability (no mid-block declarations, no VLAs, no `//` comments in C—use `/* */`, avoid `{}` empty struct init where restricted—prefer `{0,}`). Follow existing surrounding code when it already uses newer C; do not refactor unrelated code.
+
+## Libraries and comments
+
+- Prefer **GLib** (`g_new`, `g_free`, `g_strdup`, `g_strcmp0`, …) over libc where Navit already does; respect `navit/support/` limitations for embedded ports.
+- New public APIs: add **Doxygen** (`@brief`, `@param`, `@return`) like the examples in the guidelines.
+
+## Java (Android)
+
+Follow **Google Java Style**; repo uses Checkstyle (`checkstyle.xml`). Run `./gradlew checkstyleMain` when changing Java under `navit/android/`.
