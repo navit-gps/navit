@@ -1,0 +1,26 @@
+---
+description: Navit CI sanity checks, formatting, XML, and C conventions
+alwaysApply: true
+---
+
+# Navit: CI and style (all files)
+
+Official reference: [Navit programming guidelines](https://navit.readthedocs.io/en/v0.5.7/development/programming_guidelines.html).
+
+## What CI enforces (`scripts/ci_sanity_checks.sh`)
+
+- **Trailing whitespace**: None on changed text files (`.bat` excluded). CI runs `sed` to strip and fails if the tree still diffs.
+- **`*shipped.xml`**: Must satisfy `xmllint --noout --dtdvalid navit/navit.dtd` on each file.
+- **Locale / `po`**: Script rebuilds locales; do not leave inconsistent `msgid` changes vs `po/*.po.in`.
+
+## C / C++ / headers (`navit/**/*.c`, `.h`, `.cpp`)
+
+- This repo formats with **`clang-format`** using **`navit/.clang-format`** (4 spaces, attach braces, **120** column limit, LF). Run locally before push: `clang-format -i <file>`.
+- Paths **excluded** from the sanity formatter: `navit/support/`, `navit/fib-1.1/`, `navit/traffic/permanentrestrictions/`.
+- Upstream Navit docs mention **astyle**; treat **clang-format + `.clang-format`** here as the source of truth for this tree.
+- Prefer **C95-safe** patterns in Navit core: no VLAs (use `g_alloca`), avoid mid-block declarations, use `{0,}`-style struct init where needed, **`/* */`** comments.
+- Prefer **GLib** alloc/string APIs over raw libc; add **Doxygen** for new public functions.
+
+## Docs
+
+- Branch **`readthedocs`**: CircleCI runs **misspell** on `docs/`.

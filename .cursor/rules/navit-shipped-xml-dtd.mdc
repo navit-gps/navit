@@ -1,0 +1,15 @@
+---
+description: Validate Navit shipped XML against navit.dtd before push
+globs: **/*shipped.xml
+alwaysApply: false
+---
+
+# *shipped.xml and DTD
+
+CI runs:
+
+```bash
+xmllint --noout --dtdvalid navit/navit.dtd your_shipped.xml
+```
+
+Fix validation errors before pushing; DTD path is relative to the repository root.

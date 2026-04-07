@@ -1,0 +1,15 @@
+---
+description: Run clang-format on Navit C/C++ after edits
+globs: navit/**/*.c,navit/**/*.h,navit/**/*.cpp
+alwaysApply: false
+---
+
+# Navit C/C++: format before commit
+
+After editing `*.c`, `*.h`, or `*.cpp` under `navit/` (except `navit/support/`, `navit/fib-1.1/`, `navit/traffic/permanentrestrictions/`), run:
+
+```bash
+clang-format -i path/to/changed_file.c
+```
+
+Config: `navit/.clang-format` (120 columns, indent 4, attach braces). CI runs the same via `scripts/ci_sanity_checks.sh`.
