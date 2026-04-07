@@ -8,7 +8,8 @@ Used by GitHub Actions (`sanity_check` job) and CircleCI. The script diffs chang
 
 1. **Trailing whitespace** — Strips trailing spaces on changed **text** files (`.bat` excluded). The job fails if `git diff` is non-empty afterward. Do not leave trailing spaces on touched lines.
 2. **C / C++ / headers** — Runs `clang-format -i` on changed `.c`, `.h`, `.cpp`. Style is defined in `navit/.clang-format` (4-space indent, attach braces, 120 column limit, LF). **Skipped paths** (not reformatted by this script): `navit/support/`, `navit/fib-1.1/`, `navit/traffic/permanentrestrictions/`.
-3. **Shipped XML** — All `*shipped.xml` files must validate:  
+3. **Shipped XML** — All `*shipped.xml` files must validate:
+
    `xmllint --noout --dtdvalid navit/navit.dtd <file>`
 4. **Translations** — The script rebuilds locales and fails if `po/*.po` would change `msgid` entries relative to `po/*.po.in`. Coordinate with the normal gettext workflow when changing translatable strings.
 
