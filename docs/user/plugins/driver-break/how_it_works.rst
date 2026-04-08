@@ -100,6 +100,7 @@ predicted energy use).
   **height difference** (delta_h), **elevation** (for air density correction),
   and **speed limit**.
 - The cost is computed from:
+
   - Rolling force (constant per metre).
   - Air resistance (proportional to speed squared; adjusted for temperature
     and elevation).
@@ -132,7 +133,7 @@ mathematical details are in :doc:`formulas`.
 
 
 How live fuel data is read (OBD-II, J1939, MegaSquirt)
------------------------------------------------------
+------------------------------------------------------
 
 The plugin can read instantaneous fuel rate and (where supported) fuel level
 from the vehicle. Only one serial-based backend runs at a time: **OBD-II** or
@@ -208,6 +209,7 @@ path).
 - ``srtm_get_elevation(coord)`` computes ``lon_idx`` and ``lat_idx`` from
   the coordinate, checks whether that tile exists (file present in the data
   directory), then:
+
   - If a GeoTIFF for that tile exists, it reads the pixel at the coordinate
     (interpolated to tile bounds) and returns the elevation value.
   - Otherwise it opens the HGT file, computes the pixel offset (from the

@@ -197,10 +197,76 @@ The API ``route_validator_validate_cycling()`` classifies each route segment usi
 
 .. _energy-based-routing:
 
-Energy-based routing (cycling,car,trucks,walking)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Energy-based routing (car, truck, motorcycle, cycling, hiking)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Optional energy-based routing is also an **eco-mode**: it models the physical effort and energy use required for each segment of a route, taking into account total weight, rolling and air resistance, elevation changes, and recuperation on downhill sections. **A terrain profile (per-segment elevation along the route) must be available** for this to work: without elevation data, grade and potential-energy terms in the model are not defined and energy-based routing cannot meaningfully distinguish hilly from flat alternatives. Obtain coverage for your regions via SRTM / DEM tiles as described under :ref:`srtm-elevation`. When a compatible ECU is connected (see :ref:`fuel-monitoring`), live fuel consumption data from the vehicle is incorporated into the route cost calculations, giving a more accurate picture of the energy demands of the planned route. This allows Navit to prefer flatter or more energy-efficient (fuel-saving) paths where alternatives exist.
+The plugin can steer routing toward **lower predicted energy use** in two related ways:
+
+- **Kinetic (energy) routing** – When enabled (``use_energy_routing``), Navit uses a **kinematic model** per route segment: total mass, rolling resistance, air drag (from **Cd** and **frontal area**), elevation change, and downhill recuperation contribute to a segment **cost**. The router prefers paths with lower summed cost. This applies in principle to **motorized and human-powered** profiles (car, truck, motorcycle, cycling, hiking) whenever the router consults this cost; you must supply parameters that match the **current** mode (see below).
+
+- **Eco / ECU route cost** – A separate flag (``use_ecu_route_cost``) controls whether **live or learned fuel consumption** from the plugin (see :ref:`fuel-monitoring` and :ref:`adaptive-fuel-learning`) is blended into route costs. This refines **motor-fuel** routing when data is available; it is not a substitute for setting mass and aerodynamics for the kinetic model.
+
+**A terrain profile (per-segment elevation along the route) must be available** for kinetic routing to be useful: without elevation data, grade and potential-energy terms are not meaningful and the model cannot reliably prefer flatter or easier grades over hilly shortcuts. Obtain coverage for your regions via SRTM / DEM tiles as described under :ref:`srtm-elevation`. Formulas and implementation details are in :doc:`formulas` and :doc:`how_it_works`.
+
+How to use (kinetic and eco)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1. **Load the plugin** – Include an enabled ``<osd type="driver_break" .../>`` in ``navit.xml`` so commands and configuration are available (:ref:`example-osd-navit-xml`).
+
+2. **Provide elevation data** – Download tiles for the regions you route through (:ref:`srtm-elevation`, :doc:`osd_commands`). Without tiles, toggling kinetic routing on has little practical effect on route choice.
+
+3. **Set travel mode** – Use ``navit.driver_break_set_mode(...)`` or your vehicle profile so the plugin mode matches reality (car, truck, motorcycle, hiking, cycling). Mode affects **rest stops, POIs, and fuel backends**; it does **not** automatically switch kinetic parameters (mass, Cd, area).
+
+4. **Set kinetic parameters** – Adjust **total mass (kg)**, **drag coefficient Cd** (dimensionless), and **frontal area (m**\ :sup:`2`\ **)** so they describe the **rider or vehicle system** you are routing for. Use the Navit commands (below), the illustrative presets in :download:`navit_driver_break_osd_example.xml`, or edit the SQLite database keys if you maintain config offline. After a mode change (e.g. car to motorcycle), update these values if the defaults no longer match.
+
+5. **Enable kinetic routing** – Run ``navit.driver_break_toggle(kinetic)`` from an OSD or script until **kinetic** is on (the example menu uses **fixed labels** that do not show on/off; each tap toggles). The state is stored as ``use_energy_routing`` in the plugin database and persists across sessions.
+
+6. **Optional: enable ECU eco cost** – For cars, trucks, or motorcycles with fuel monitoring, run ``navit.driver_break_toggle(eco)`` to turn **ECU-weighted route cost** on (``use_ecu_route_cost``). This uses live or adaptive fuel data when :ref:`eco-mode-fuel-attribute` is satisfied. Kinetic and eco can be enabled independently; together they combine physics-based costs with observed consumption where implemented.
+
+Full command syntax and argument types are in :doc:`osd_commands`.
+
+Parameters the plugin expects
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+These values are **validated** when set via commands (invalid numbers are rejected with a user message). They are persisted in the plugin SQLite database when the DB is available.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 18 28 20 34
+
+   * - Meaning
+     - SQLite key
+     - Allowed range
+     - Typical use
+   * - Total mass
+     - ``total_weight``
+     - 1–50000 kg
+     - Car/truck: laden vehicle. Motorcycle: rider + bike + gear. Cycling/hiking: rider + bike or pack as appropriate.
+   * - Drag coefficient **Cd**
+     - ``energy_drag_cd``
+     - 0.01–1.5 (dimensionless)
+     - Shape of the moving body; with frontal area sets air drag at speed.
+   * - Frontal area
+     - ``energy_frontal_area_sqm``
+     - 0.05–20 m\ :sup:`2`
+     - Projected area for aerodynamic drag; small for an upright cyclist, larger for a car or truck.
+
+**Commands:** ``navit.driver_break_set_total_weight(…)``, ``navit.driver_break_set_drag_cd(…)``, ``navit.driver_break_set_frontal_area(…)`` – see :doc:`osd_commands`.
+
+**Defaults** after a fresh install (before DB overrides) are oriented toward a **light passenger car** order of magnitude for Cd and area, with a **low** default mass (see :doc:`how_it_works`); for **hiking or cycling**, lower **frontal area** and set **mass** to your body plus equipment (and bicycle if applicable). **Motorcycle** interval settings include a separate default weight hint for the UI; the kinetic model still uses the ``total_weight`` field until you change it.
+
+**Per-mode storage:** The plugin keeps **one** triple (mass, Cd, area) at a time. Switching travel mode does not load alternate presets automatically.
+
+How these settings affect behaviour
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- **Kinetic routing on** – Segment costs include work against **rolling resistance** (scales with **total mass**), **air drag** (scales with **Cd**, frontal area, and effective speed), and **grade** (needs elevation along the segment). Downhill segments can recover part of the energy via the model’s recuperation term. **Route choice** may shift toward longer but flatter or slower-speed paths when that lowers total predicted energy. **Rest-stop timing**, break dialogs, and POI logic are **not** driven by these numbers; they still follow :ref:`travel-modes` and your interval configuration.
+
+- **Kinetic routing off** – Navit’s usual time/distance routing applies (subject to profile and traffic); the stored mass, Cd, and area remain in the database for the next time you enable kinetic routing.
+
+- **Eco / ``use_ecu_route_cost`` on** – When fuel data is available, route costs can reflect **observed or learned consumption** in addition to or instead of pure time-based costs (depending on integration in your build). If no ECU is connected and adaptive learning is off, turning **eco** on may have limited effect until data exists.
+
+- **Poor parameter choice** – Overstated mass or drag makes **every** segment look “expensive” in a similar way, which **weakens** the model’s ability to separate “easy” vs “hard” alternatives; wrong elevation is worse than wrong Cd for **hill** decisions. Prefer realistic values for the **current** trip mode.
 
 .. _srtm-elevation:
 
