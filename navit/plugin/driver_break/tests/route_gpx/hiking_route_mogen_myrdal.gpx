@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Navit Driver Break plugin - generate_hiking_route_gpx.sh"
+     xmlns="http://www.topografix.com/GPX/1/1"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Hiking route: Mogen - Tråastølen - Finsehytta - Myrdal Fjellstove</name>
+    <desc>DNT huts with elevation for height profile. Start node 1356402304, via 872147024, 444092409, end way 1012805346.</desc>
+  </metadata>
+  <rte>
+    <name>Mogen to Myrdal Fjellstove</name>
+    <rtept lat="60.0229368" lon="7.8902169">
+      <ele>950</ele>
+      <name>Mogen</name>
+    </rtept>
+    <rtept lat="60.3691699" lon="7.5217305">
+      <ele>1240</ele>
+      <name>Tråastølen</name>
+    </rtept>
+    <rtept lat="60.5979163" lon="7.5070391">
+      <ele>1223</ele>
+      <name>Finsehytta</name>
+    </rtept>
+    <rtept lat="60.7337393" lon="7.1206845">
+      <ele>867</ele>
+      <name>Myrdal Fjellstove</name>
+    </rtept>
+  </rte>
+  <trk>
+    <name>Mogen to Myrdal Fjellstove (track)</name>
+    <trkseg>
+      <trkpt lat="60.0229368" lon="7.8902169"><ele>950</ele></trkpt>
+      <trkpt lat="60.3691699" lon="7.5217305"><ele>1240</ele></trkpt>
+      <trkpt lat="60.5979163" lon="7.5070391"><ele>1223</ele></trkpt>
+      <trkpt lat="60.7337393" lon="7.1206845"><ele>867</ele></trkpt>
+    </trkseg>
+  </trk>
+  <wpt lat="60.0229368" lon="7.8902169"><ele>950</ele><name>Mogen</name></wpt>
+  <wpt lat="60.3691699" lon="7.5217305"><ele>1240</ele><name>Tråastølen</name></wpt>
+  <wpt lat="60.5979163" lon="7.5070391"><ele>1223</ele><name>Finsehytta</name></wpt>
+  <wpt lat="60.7337393" lon="7.1206845"><ele>867</ele><name>Myrdal Fjellstove</name></wpt>
+</gpx>
