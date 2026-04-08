@@ -1311,6 +1311,10 @@ void osm_add_tag(char *k, char *v) {
         g_strlcpy(is_in_buffer, v, sizeof(is_in_buffer));
         level = 5;
     }
+    if ((!g_strcmp0(k, "de:amtlicher_gemeindeschluessel")) || (!g_strcmp0(k, "de:regionalschluessel"))) {
+        g_strlcpy(is_in_buffer, "Deutschland", sizeof(is_in_buffer));
+        level = 5;
+    }
     if (!g_strcmp0(k, "place_county")) {
         /**
          * Ireland uses the place_county OSM tag to describe what county a town is in.
@@ -1789,6 +1793,8 @@ static void relation_add_tag(char *k, char *v) {
         if (!g_strcmp0(v, "administrative") || !g_strcmp0(v, "postal_code")) {
             boundary = 1;
         }
+    } else if (!g_strcmp0(k, "de:amtlicher_gemeindeschluessel") || !g_strcmp0(k, "de:regionalschluessel")) {
+        g_strlcpy(iso_code, "DE", 3);
     } else if (!g_strcmp0(k, "ISO3166-1") || !g_strcmp0(k, "ISO3166-1:alpha2")) {
         g_strlcpy(iso_code, v, sizeof(iso_code));
     } else if (!g_strcmp0(k, "name")) {
@@ -2217,6 +2223,8 @@ static GList *osm_process_town_by_boundary(GList *bl, struct item_bin *town, str
                 osm_process_town_by_boundary_update_attrs(town, tc, matches);
         }
     }
+
+    // could we check for countries here and see if a town is geographically inside it?
 
     g_list_free(matches);
 
