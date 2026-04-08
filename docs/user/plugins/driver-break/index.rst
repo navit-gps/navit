@@ -50,7 +50,11 @@ vehicle and used to improve route calculations.
 
 Travel modes
 ~~~~~~~~~~~~
-
+- **Motorcycle** – Similar to car mode but with shorter default break intervals (e.g. every
+  2 hours) and shorter maximum riding periods, reflecting the higher physical and mental fatigue
+  of riding. POIs and fuel monitoring work the same as for car. OBD-II fuel monitoring is
+  supported on motorcycles equipped with an OBD-II port (common on Euro 3 and later models);
+  for older or non-OBD bikes the plugin uses adaptive fuel estimation instead.
 - **Car** – Configurable soft and maximum driving hours, break interval (e.g. every 4–4.5 hours),
   and break duration (e.g. 15–45 minutes).
 - **Truck** – Mandatory rest and driving time rules aligned with EU Regulation EC 561/2006 and
@@ -183,6 +187,40 @@ Networks and priorities
   when validating or suggesting stops.
 
 .. _route-validation:
+
+
+Water safety
+~~~~~~~~~~~~
+ 
+When hiking or cycling, the plugin locates water sources along your route, but not all sources
+are equally safe to drink from without treatment. The following guidance applies:
+ 
+**Treated / reliable sources (safe to drink directly):**
+ 
+- Marked drinking water taps (``amenity=drinking_water`` in OpenStreetMap) in towns, trailheads,
+  and staffed cabins are the safest option and are always preferred when available.
+- Staffed huts and mountain lodges typically supply treated or reliably clean water.
+ 
+**Untreated natural sources (treat before drinking):**
+ 
+- Springs, streams, and rivers should be treated before drinking, even when they look clean and
+  run fast. Animal grazing, decaying vegetation, and human activity upstream can introduce
+  bacteria, parasites (e.g. *Giardia*, *Cryptosporidium*), and other contaminants that are
+  invisible to the eye.
+- Common treatment options: boiling (1 minute, or 3 minutes above 2,000 m), a certified
+  filter (0.1 µm or finer), chemical treatment (iodine or chlorine tablets), or a UV pen.
+- Stagnant water (pools, puddles, bog water) carries a higher risk and should be avoided where
+  possible; if used, boiling is the safest treatment.
+- Water near farms, roads, mining areas, or glacial runoff may contain chemical or heavy-metal
+  contamination that filters and boiling cannot remove — find an alternative source.
+
+Running water in the North European national parks are generally safe to drink without any treatment needed,but be aware of rodent years even if cases of issues caused by rodent carried viruses/bacteria are scarce.
+ 
+**Daily water needs (approximate):**
+ 
+- Hiking: 0.5 l per hour of activity; more in heat or at altitude.
+- Cycling: 0.5–0.75 l per hour of activity.
+- Add extra for cooking and camp use.
 
 Route validation (hiking and cycling)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
