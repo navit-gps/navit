@@ -136,3 +136,24 @@ struct energy_result energy_calculate_segment(struct energy_model *model, double
 
     return result;
 }
+
+double driver_break_energy_f_air_from_drag(double cd, double frontal_area_sqm) {
+    const double rho0 = 1.225;
+
+    if (cd <= 0.0 || frontal_area_sqm <= 0.0)
+        return 0.0;
+    return 0.5 * rho0 * cd * frontal_area_sqm;
+}
+
+void driver_break_energy_model_from_config(struct energy_model *model, const struct driver_break_config *cfg) {
+    double f_air;
+    double f_roll;
+    const double crr = 0.015;
+
+    if (!model || !cfg)
+        return;
+
+    f_air = driver_break_energy_f_air_from_drag(cfg->energy_drag_cd, cfg->energy_frontal_area_sqm);
+    f_roll = crr * cfg->total_weight * 9.81;
+    energy_model_init(model, cfg->total_weight, f_roll, f_air, 0.0);
+}

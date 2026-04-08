@@ -13,6 +13,7 @@
  */
 
 #include "driver_break_j1939.h"
+#include "callback.h"
 #include "debug.h"
 #include "event.h"
 #include <errno.h>

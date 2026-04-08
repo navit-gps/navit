@@ -67,6 +67,15 @@ These names are defined in ``driver_break_osd.c`` (``driver_break_commands[]``).
    * - ``driver_break_configure_fuel``
      - None
      - Open the fuel configuration summary / setup dialog (tank, consumption, ECU options where applicable). Requires internal GUI.
+   * - ``driver_break_set_drag_cd``
+     - Numeric literal (dimensionless)
+     - Set the aerodynamic **drag coefficient** ``Cd`` for the kinetic energy model (range 0.01 to 1.5). Persisted to the database. Example: ``navit.driver_break_set_drag_cd(0.29)``.
+   * - ``driver_break_set_frontal_area``
+     - Numeric literal (square metres)
+     - Set **frontal area** in square metres; with ``Cd`` this defines air drag as ``0.5 * rho * Cd * A * v^2`` at sea-level air density inside the model (range 0.05 to 20). Example: ``navit.driver_break_set_frontal_area(2.15)``.
+   * - ``driver_break_set_total_weight``
+     - Numeric literal (kilograms)
+     - Set **total mass** for the energy model (rolling resistance and elevation work; range 1 to 50000 kg). Example: ``navit.driver_break_set_total_weight(1650)``.
 
 Legacy command aliases
 ----------------------

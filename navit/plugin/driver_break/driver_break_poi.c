@@ -26,6 +26,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+static double coord_distance(struct coord_geo *c1, struct coord_geo *c2);
+
 #ifdef HAVE_CURL
 #    include <curl/curl.h>
 
@@ -365,12 +367,14 @@ static int driver_break_poi_compare_distance(gconstpointer a, gconstpointer b) {
     return 0;
 }
 
-/* Rank POIs by distance and other factors */
-void driver_break_poi_rank(GList *pois, struct coord_geo *driver_break_stop, struct driver_break_config *config) {
+/* Rank POIs by distance and other factors. Returns sorted list head (may differ from input). */
+GList *driver_break_poi_rank(GList *pois, struct coord_geo *driver_break_stop, struct driver_break_config *config) {
     GList *l;
 
+    (void)config;
+
     if (!pois || !driver_break_stop) {
-        return;
+        return pois;
     }
 
     for (l = pois; l; l = g_list_next(l)) {
@@ -390,7 +394,7 @@ void driver_break_poi_rank(GList *pois, struct coord_geo *driver_break_stop, str
     }
 
     /* Sort by distance (closest first) */
-    g_list_sort(pois, driver_break_poi_compare_distance);
+    return g_list_sort(pois, driver_break_poi_compare_distance);
 }
 
 void driver_break_poi_free_list(GList *pois) {

@@ -26,6 +26,7 @@
  */
 
 #include "driver_break_obd.h"
+#include "callback.h"
 #include "debug.h"
 #include "event.h"
 #include "file.h"
@@ -324,9 +325,6 @@ static void obd_poll(struct driver_break_obd *obd) {
     }
 
     struct driver_break_priv *priv = obd->priv;
-    char resp[128];
-    unsigned char bytes[8];
-    int n;
 
     double fuel_rate_l_h = priv->fuel_rate_l_h;
     double maf_g_s = 0.0;

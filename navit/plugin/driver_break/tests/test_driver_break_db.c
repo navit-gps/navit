@@ -9,6 +9,7 @@
 #include "../driver_break.h"
 #include "../driver_break_db.h"
 #include <glib.h>
+#include <math.h>
 #include <sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -207,6 +208,9 @@ static int test_db_save_load_config(void) {
     config.fuel_low_warning_km = 100;
     config.fuel_search_buffer_km = 25;
     config.fuel_high_load_threshold = 30;
+    config.total_weight = 1520.0;
+    config.energy_drag_cd = 0.31;
+    config.energy_frontal_area_sqm = 2.45;
 
     int result = driver_break_db_save_config(db, &config);
     TEST_ASSERT(result == 1, "Config save failed");
@@ -230,6 +234,9 @@ static int test_db_save_load_config(void) {
     TEST_ASSERT(loaded_config.fuel_low_warning_km == 100, "Fuel low warning km mismatch");
     TEST_ASSERT(loaded_config.fuel_search_buffer_km == 25, "Fuel search buffer km mismatch");
     TEST_ASSERT(loaded_config.fuel_high_load_threshold == 30, "Fuel high load threshold mismatch");
+    TEST_ASSERT(fabs(loaded_config.total_weight - 1520.0) < 1e-5, "total_weight mismatch");
+    TEST_ASSERT(fabs(loaded_config.energy_drag_cd - 0.31) < 1e-5, "energy_drag_cd mismatch");
+    TEST_ASSERT(fabs(loaded_config.energy_frontal_area_sqm - 2.45) < 1e-5, "energy_frontal_area_sqm mismatch");
 
     driver_break_db_destroy(db);
     unlink(db_path);

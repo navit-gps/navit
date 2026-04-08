@@ -142,6 +142,8 @@ void driver_break_config_default(struct driver_break_config *config) {
     config->use_energy_routing = 0; /* Disabled by default */
     config->use_ecu_route_cost = 0;
     config->total_weight = 80.0; /* 80 kg default (person + gear) */
+    config->energy_drag_cd = 0.30;
+    config->energy_frontal_area_sqm = 2.2; /* Typical passenger car; adjust per vehicle */
 
     /* Fuel profile defaults */
     config->fuel_type = DRIVER_BREAK_FUEL_PETROL;

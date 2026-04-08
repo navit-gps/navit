@@ -124,9 +124,11 @@ struct driver_break_config {
     int driver_break_interval_max_hours; /* 6 hours */
 
     /* Energy-based routing */
-    int use_energy_routing; /* 1 to enable energy-based (kinetic) routing */
-    int use_ecu_route_cost; /* 1 to prefer live ECU fuel data in route cost (eco) */
-    double total_weight;    /* Total weight for energy calculations (kg) */
+    int use_energy_routing;         /* 1 to enable energy-based (kinetic) routing */
+    int use_ecu_route_cost;         /* 1 to prefer live ECU fuel data in route cost (eco) */
+    double total_weight;            /* Total mass for energy model (kg) */
+    double energy_drag_cd;          /* Aerodynamic drag coefficient Cd (dimensionless) */
+    double energy_frontal_area_sqm; /* Frontal area A (m^2); air drag uses 0.5 * rho * Cd * A * v^2 */
 
     /* Fuel profile and range estimation (per-vehicle) */
     int fuel_type;                      /* enum driver_break_fuel_type */

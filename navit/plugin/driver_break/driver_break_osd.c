@@ -24,6 +24,7 @@
 #include "config.h"
 #include "debug.h"
 #include "driver_break_db.h"
+#include "driver_break_energy.h"
 #include "driver_break_finder.h"
 #include "driver_break_poi.h"
 #include "graphics.h"
@@ -219,6 +220,9 @@ int driver_break_cmd_toggle(struct navit *nav, char *function, struct attr **in,
 int driver_break_cmd_set_fuel_level(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_log_fuel_stop(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_configure_fuel(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+int driver_break_cmd_set_drag_cd(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+int driver_break_cmd_set_frontal_area(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+int driver_break_cmd_set_total_weight(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 
 /* Forward declaration for config save callback used by multiple dialogs. */
 static void driver_break_save_config_callback(struct gui_priv *gui_priv, struct widget *widget, void *data);
@@ -259,6 +263,9 @@ static struct command_table driver_break_commands[] = {
     {"driver_break_set_fuel_level",      command_cast(driver_break_cmd_set_fuel_level)     },
     {"driver_break_log_fuel_stop",       command_cast(driver_break_cmd_log_fuel_stop)      },
     {"driver_break_configure_fuel",      command_cast(driver_break_cmd_configure_fuel)     },
+    {"driver_break_set_drag_cd",         command_cast(driver_break_cmd_set_drag_cd)        },
+    {"driver_break_set_frontal_area",    command_cast(driver_break_cmd_set_frontal_area)   },
+    {"driver_break_set_total_weight",    command_cast(driver_break_cmd_set_total_weight)   },
     /* Backward compatibility aliases */
     {"rest_suggest_stop",                command_cast(driver_break_cmd_suggest_stop)       },
     {"rest_show_history",                command_cast(driver_break_cmd_show_history)       },
@@ -606,6 +613,20 @@ static void driver_break_show_fuel_config_dialog(struct gui_priv *gui_priv, stru
     label = gui_internal_label_new(gui_priv, buffer);
     gui_internal_widget_append(box, label);
 
+    snprintf(buffer, sizeof(buffer), "Kinetic model: total mass %.1f kg", priv->config.total_weight);
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "Drag Cd: %.3f, frontal area: %.2f m2", priv->config.energy_drag_cd,
+             priv->config.energy_frontal_area_sqm);
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "Air coeff f_air: %.5f (0.5*rho*Cd*A at sea level)",
+             driver_break_energy_f_air_from_drag(priv->config.energy_drag_cd, priv->config.energy_frontal_area_sqm));
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
     live_ecu_on = priv->config.fuel_obd_available || priv->config.fuel_j1939_available
                   || priv->config.fuel_megasquirt_available;
     snprintf(buffer, sizeof(buffer), "Live ECU (OBD-II, J1939, MegaSquirt): %s", live_ecu_on ? "on" : "off");
@@ -810,6 +831,114 @@ int driver_break_cmd_log_fuel_stop(struct navit *nav, char *function, struct att
         "Driver Break plugin: Fuel stop logged (added=%.2f, level_after=%.2f, remaining_range=%.1f km, ethanol=%d%%)",
         added, priv->fuel_current, priv->fuel_remaining_range, priv->config.fuel_ethanol_manual_pct);
 
+    return 1;
+}
+
+static void driver_break_persist_config_if_db(struct driver_break_priv *priv) {
+    if (priv && priv->db) {
+        driver_break_db_save_config(priv->db, &priv->config);
+    }
+}
+
+/* Set aerodynamic drag coefficient Cd for kinetic (energy) model */
+int driver_break_cmd_set_drag_cd(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+    double v;
+
+    (void)in;
+    (void)out;
+
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
+    }
+    priv = (struct driver_break_priv *)plugin;
+
+    if (!function || *function == '\0') {
+        navit_add_message(nav, "Driver Break plugin: drag Cd requires a numeric argument");
+        return 0;
+    }
+    if (!driver_break_parse_fuel_value(function, &v, "Driver Break plugin: Invalid drag Cd value")) {
+        return 0;
+    }
+    if (v < 0.01 || v > 1.5) {
+        navit_add_message(nav, "Driver Break plugin: drag Cd must be between 0.01 and 1.5");
+        return 0;
+    }
+    priv->config.energy_drag_cd = v;
+    driver_break_persist_config_if_db(priv);
+    navit_add_message(nav, "Driver Break plugin: Drag Cd updated");
+    dbg(lvl_info, "Driver Break plugin: energy_drag_cd=%.4f", priv->config.energy_drag_cd);
+    return 1;
+}
+
+/* Set frontal area (m^2) for kinetic air drag: uses 0.5 * rho * Cd * A * v^2 */
+int driver_break_cmd_set_frontal_area(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+    double v;
+
+    (void)in;
+    (void)out;
+
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
+    }
+    priv = (struct driver_break_priv *)plugin;
+
+    if (!function || *function == '\0') {
+        navit_add_message(nav, "Driver Break plugin: frontal area requires a numeric argument (m^2)");
+        return 0;
+    }
+    if (!driver_break_parse_fuel_value(function, &v, "Driver Break plugin: Invalid frontal area value")) {
+        return 0;
+    }
+    if (v < 0.05 || v > 20.0) {
+        navit_add_message(nav, "Driver Break plugin: frontal area must be between 0.05 and 20 m^2");
+        return 0;
+    }
+    priv->config.energy_frontal_area_sqm = v;
+    driver_break_persist_config_if_db(priv);
+    navit_add_message(nav, "Driver Break plugin: Frontal area updated");
+    dbg(lvl_info, "Driver Break plugin: energy_frontal_area_sqm=%.4f", priv->config.energy_frontal_area_sqm);
+    return 1;
+}
+
+/* Set total mass (kg) for kinetic / energy model */
+int driver_break_cmd_set_total_weight(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+    double v;
+
+    (void)in;
+    (void)out;
+
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
+    }
+    priv = (struct driver_break_priv *)plugin;
+
+    if (!function || *function == '\0') {
+        navit_add_message(nav, "Driver Break plugin: total weight requires a numeric argument (kg)");
+        return 0;
+    }
+    if (!driver_break_parse_fuel_value(function, &v, "Driver Break plugin: Invalid total weight value")) {
+        return 0;
+    }
+    if (v < 1.0 || v > 50000.0) {
+        navit_add_message(nav, "Driver Break plugin: total weight must be between 1 and 50000 kg");
+        return 0;
+    }
+    priv->config.total_weight = v;
+    driver_break_persist_config_if_db(priv);
+    navit_add_message(nav, "Driver Break plugin: Total weight updated");
+    dbg(lvl_info, "Driver Break plugin: total_weight=%.2f kg", priv->config.total_weight);
     return 1;
 }
 

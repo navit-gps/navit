@@ -53,6 +53,12 @@ struct energy_result {
 /* Initialize energy model */
 void energy_model_init(struct energy_model *model, double totalweight, double f_roll, double f_air, double p_standby);
 
+/* f_air coefficient (N*s^2/m^2) from Cd and frontal area at sea-level air density (1.225 kg/m^3) */
+double driver_break_energy_f_air_from_drag(double cd, double frontal_area_sqm);
+
+/* Fill model from plugin config (rolling resistance ~Crr*m*g with Crr=0.015, air from Cd and area) */
+void driver_break_energy_model_from_config(struct energy_model *model, const struct driver_break_config *cfg);
+
 /* Calculate energy cost for a segment */
 struct energy_result energy_calculate_segment(struct energy_model *model, double distance, /* meters */
                                               double delta_h,      /* elevation change (meters) */

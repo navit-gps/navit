@@ -43,6 +43,12 @@
 #define MAX_HOURS_PER_DAY_24 24
 #define MAX_CONFIG_VALUE 1000000
 #define DECIMAL_BASE 10
+#define MIN_DRAG_CD 0.01
+#define MAX_DRAG_CD 1.5
+#define MIN_FRONTAL_AREA_SQM 0.05
+#define MAX_FRONTAL_AREA_SQM 20.0
+#define MIN_TOTAL_WEIGHT_KG 1.0
+#define MAX_TOTAL_WEIGHT_KG 50000.0
 
 struct driver_break_db {
     sqlite3 *db;
@@ -153,6 +159,79 @@ static int driver_break_db_load_config_value(const char *key, int value, struct 
     }
 
     return -1;
+}
+
+static void driver_break_db_save_config_double(struct driver_break_db *db, const char *key, double value) {
+    char *sql;
+    char *err_msg = NULL;
+    int rc;
+
+    if (!db || !db->db || !key) {
+        return;
+    }
+
+    sql = sqlite3_mprintf("INSERT OR REPLACE INTO driver_break_config (key, value) VALUES (%Q, %.9g);", key, value);
+    rc = sqlite3_exec(db->db, sql, NULL, 0, &err_msg);
+    sqlite3_free(sql);
+
+    if (rc != SQLITE_OK) {
+        dbg(lvl_error, "Driver Break plugin: SQL error saving config %s: %s", key, err_msg);
+        sqlite3_free(err_msg);
+    }
+}
+
+/* Return 1 if key is a known floating-point config key (consumed). */
+static int driver_break_db_try_load_double(const char *key, const char *value_str, struct driver_break_config *config,
+                                           int *loaded_count) {
+    char *endptr;
+    double v;
+
+    if (!strcmp(key, "energy_drag_cd")) {
+        v = g_ascii_strtod(value_str, &endptr);
+        if (endptr == value_str || *endptr != '\0') {
+            dbg(lvl_warning, "Driver Break plugin: Invalid energy_drag_cd: %s", value_str);
+            return 1;
+        }
+        if (v >= MIN_DRAG_CD && v <= MAX_DRAG_CD) {
+            config->energy_drag_cd = v;
+            (*loaded_count)++;
+        } else {
+            dbg(lvl_warning, "Driver Break plugin: energy_drag_cd out of range: %g", v);
+        }
+        return 1;
+    }
+
+    if (!strcmp(key, "energy_frontal_area_sqm")) {
+        v = g_ascii_strtod(value_str, &endptr);
+        if (endptr == value_str || *endptr != '\0') {
+            dbg(lvl_warning, "Driver Break plugin: Invalid energy_frontal_area_sqm: %s", value_str);
+            return 1;
+        }
+        if (v >= MIN_FRONTAL_AREA_SQM && v <= MAX_FRONTAL_AREA_SQM) {
+            config->energy_frontal_area_sqm = v;
+            (*loaded_count)++;
+        } else {
+            dbg(lvl_warning, "Driver Break plugin: energy_frontal_area_sqm out of range: %g", v);
+        }
+        return 1;
+    }
+
+    if (!strcmp(key, "total_weight")) {
+        v = g_ascii_strtod(value_str, &endptr);
+        if (endptr == value_str || *endptr != '\0') {
+            dbg(lvl_warning, "Driver Break plugin: Invalid total_weight: %s", value_str);
+            return 1;
+        }
+        if (v >= MIN_TOTAL_WEIGHT_KG && v <= MAX_TOTAL_WEIGHT_KG) {
+            config->total_weight = v;
+            (*loaded_count)++;
+        } else {
+            dbg(lvl_warning, "Driver Break plugin: total_weight out of range: %g", v);
+        }
+        return 1;
+    }
+
+    return 0;
 }
 
 /* Clean up corrupted config entries from database */
@@ -458,6 +537,10 @@ int driver_break_db_save_config(struct driver_break_db *db, struct driver_break_
         }
     }
 
+    driver_break_db_save_config_double(db, "energy_drag_cd", config->energy_drag_cd);
+    driver_break_db_save_config_double(db, "energy_frontal_area_sqm", config->energy_frontal_area_sqm);
+    driver_break_db_save_config_double(db, "total_weight", config->total_weight);
+
     return 1;
 }
 
@@ -488,6 +571,10 @@ int driver_break_db_load_config(struct driver_break_db *db, struct driver_break_
         int value;
 
         if (!key || !value_str) {
+            continue;
+        }
+
+        if (driver_break_db_try_load_double(key, value_str, config, &loaded_count)) {
             continue;
         }
 
