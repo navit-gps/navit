@@ -4,10 +4,11 @@ How the Driver Break plugin works
 This document describes how the Driver Break plugin implements its main
 behaviours: how it uses the current route to suggest rest stops, how it
 reads live fuel data (OBD-II, J1939, MegaSquirt), how it calculates
-energy-based (eco) routing costs, how it uses SRTM elevation data, and how
-it discovers Points of Interest (POIs). It is intended for users and
-developers who want to understand the plugin's internals or debug behaviour;
-each section names the main C functions and source files to search for.
+energy-based (kinetic) routing costs from mass and aerodynamic parameters,
+how it uses SRTM elevation data, and how it discovers Points of Interest
+(POIs). It is intended for users and developers who want to understand the
+plugin's internals or debug behaviour; each section names the main C
+functions and source files to search for.
 
 
 Overview
@@ -15,7 +16,7 @@ Overview
 
 The plugin registers with Navit as an OSD and subscribes to the current route
 and vehicle position. Depending on the selected vehicle type (car, truck,
-hiking, cycling), it:
+motorcycle, hiking, cycling), it:
 
 - **Suggests rest stops** along the route at configurable intervals or when a
   mandatory break is required.
@@ -25,8 +26,9 @@ hiking, cycling), it:
   (ELM327, cars/light vehicles), **J1939** (SocketCAN, trucks), or **MegaSquirt**
   (serial, aftermarket ECUs). Fuel rate and level feed range estimation and
   adaptive learning.
-- **Optionally influences routing** via an energy-based cost model (eco-mode)
-  when enabled.
+- **Optionally influences routing** via a kinematic energy cost model when
+  ``use_energy_routing`` is enabled, and can blend in live ECU-based costs when
+  ``use_ecu_route_cost`` (eco) is enabled; see the energy section below.
 
 All of this uses Navit's existing route and map infrastructure; the plugin
 does not replace Navit's router but adds rest-stop logic and optional segment
@@ -52,7 +54,7 @@ How rest stops are calculated
   For each such position, the plugin finds the nearest point on the route and
   discovers POIs around that point (see "How POIs are found" below).
 
-**Car and truck (along-route search)**
+**Car, truck, and motorcycle (along-route search)**
 
 - When a mandatory break is required (or when suggesting stops), the plugin
   does not precompute fixed intervals. Instead it walks the **route map**
@@ -68,23 +70,32 @@ How rest stops are calculated
 - This yields rest stops that lie on the driven route at sensible road types,
   rather than at arbitrary map points.
 
-So: **hiking/cycling** use distance-based intervals along the route; **car/truck**
-use a walk over the route geometry with highway and location checks.
+So: **hiking/cycling** use distance-based intervals along the route; **car,
+truck, and motorcycle** use a walk over the route geometry with highway and
+location checks.
 
 
-How energy-based (eco) routing works
-------------------------------------
+How energy-based (kinetic) routing works
+----------------------------------------
 
-**Code to look at:** ``energy_model_init``, ``energy_calculate_segment``, ``energy_calculate_gradient``, ``energy_get_effective_speed`` (``driver_break_energy.c``). The model is used when the router requests segment costs; search for ``energy_calculate_segment`` or ``use_energy_routing`` in the plugin and routing code.
+**Code to look at:** ``energy_model_init``, ``energy_calculate_segment``, ``energy_calculate_gradient``, ``energy_get_effective_speed``, ``driver_break_energy_f_air_from_drag``, ``driver_break_energy_model_from_config`` (``driver_break_energy.c``). The model is used when the router requests segment costs; search for ``energy_calculate_segment`` or ``use_energy_routing`` in the plugin and routing code.
 
 When ``use_energy_routing`` is enabled, the plugin uses a **kinematic
 energy model** (inspired by BRouter) to assign a cost to each route segment.
 Navit's router can then prefer routes with lower total cost (i.e. lower
 predicted energy use).
 
-- The model is parameterised by **total weight** (vehicle + cargo + person),
-  **rolling resistance**, **air resistance**, **standby power**, and
-  **recuperation efficiency** for downhill.
+- The model is parameterised by **total mass** (kg), stored as ``total_weight``
+  in the plugin configuration: vehicle, cargo, rider, and gear as appropriate.
+  Rolling resistance force uses this mass with a fixed coefficient of rolling
+  resistance (CRR) inside the energy module.
+- **Air resistance** is derived from the **drag coefficient Cd** and **frontal
+  area** in square metres. The code combines them into a factor
+  ``0.5 * rho * Cd * A`` (see ``driver_break_energy_f_air_from_drag``), then
+  applies speed-squared drag power in the segment calculation. Valid ranges
+  are enforced when values are set (Cd and area; see ``driver_break_osd.c``).
+- **Standby power** and **recuperation efficiency** for downhill also enter the
+  segment model as implemented in ``driver_break_energy.c``.
 - For each segment the plugin (or the routing path) has: **distance**,
   **height difference** (delta_h), **elevation** (for air density correction),
   and **speed limit**.
@@ -99,7 +110,25 @@ predicted energy use).
   preferred when they reduce total energy.
 
 Elevation for this model comes from SRTM (or similar) when available; see
-"How SRTM is used" below. The mathematical details are in :doc:`formulas`.
+"How SRTM is used" below. Without a terrain profile along the route, grade and
+potential-energy terms are not meaningful, so energy-based routing cannot
+reliably distinguish hilly from flat alternatives; use elevation coverage for
+your regions as described under :ref:`srtm-elevation`. The
+mathematical details are in :doc:`formulas`.
+
+**Persistence and commands**
+
+- Cd, frontal area (m\ :sup:`2`\ ), and total mass (kg) are stored in the
+  plugin SQLite database under the keys ``energy_drag_cd``,
+  ``energy_frontal_area_sqm``, and ``total_weight`` (loaded and saved in
+  ``driver_break_db.c``). There is **one** active triple at a time; changing
+  travel mode (car, truck, motorcycle, etc.) does not automatically load a
+  different aerodynamics or mass preset.
+- Navit commands ``driver_break_set_drag_cd``, ``driver_break_set_frontal_area``,
+  and ``driver_break_set_total_weight`` (registered in ``driver_break_osd.c``)
+  update these values and persist them when the database is available. The
+  layered OSD example :download:`navit_driver_break_osd_example.xml` includes
+  illustrative one-tap presets for car, truck, and motorcycle.
 
 
 How live fuel data is read (OBD-II, J1939, MegaSquirt)
@@ -242,10 +271,10 @@ The plugin discovers POIs in two ways: **map-based search** (preferred) and
 
 **Along route vs near a point**
 
-- **Along route**: For car/truck, rest stops are found by walking the route
-  map and, at each valid segment end, calling POI discovery with that
-  coordinate and the configured radius. So POIs are "around" each suggested
-  stop.
+- **Along route**: For car, truck, and motorcycle, rest stops are found by
+  walking the route map and, at each valid segment end, calling POI discovery
+  with that coordinate and the configured radius. So POIs are "around" each
+  suggested stop.
 - **Near a point**: For "find rest stops near me" or for enriching a
   precomputed hiking/cycling stop, the plugin calls POI discovery once per
   stop with the stop's coordinate and the appropriate radius (water, cabin,
@@ -262,11 +291,14 @@ The plugin discovers POIs in two ways: **map-based search** (preferred) and
 Summary
 -------
 
-- **Rest stops**: Hiking/cycling use distance-based intervals; car/truck walk
-  the route map and pick valid highway segments with location checks.
-- **Energy routing**: A kinematic model (weight, rolling/air resistance,
-  gradient, recuperation) yields a cost per segment so the router can prefer
-  energy-efficient paths.
+- **Rest stops**: Hiking/cycling use distance-based intervals; car, truck, and
+  motorcycle walk the route map and pick valid highway segments with location
+  checks.
+- **Energy routing**: A kinematic model uses **total mass (kg)**, **Cd**,
+  **frontal area (m**\ :sup:`2`\ **)**, rolling and air resistance, gradient
+  (needs elevation data), and recuperation to yield a cost per segment so the
+  router can prefer energy-efficient paths. Values persist in SQLite; optional
+  ECU-based cost blending is separate (``use_ecu_route_cost``).
 - **SRTM**: 1x1 degree tiles (Copernicus GeoTIFF first, then HGT, then NASA);
   one elevation value per coordinate from the tile containing that point;
   -32768 means no data.
@@ -345,12 +377,16 @@ function and file names when setting breakpoints or searching the codebase.
 - ``driver_break_osd.c``: ``driver_break_cmd_suggest_stop``, ``driver_break_cmd_show_history``,
   ``driver_break_cmd_configure_fuel``, ``driver_break_cmd_log_fuel_stop``,
   ``driver_break_cmd_configure_intervals``, ``driver_break_cmd_configure_overnight``;
-  ``driver_break_show_suggestions_dialog``, ``driver_break_show_fuel_config_dialog``.
+  ``driver_break_cmd_set_drag_cd``, ``driver_break_cmd_set_frontal_area``,
+  ``driver_break_cmd_set_total_weight``; ``driver_break_show_suggestions_dialog``,
+  ``driver_break_show_fuel_config_dialog``.
 
 **Config and persistence**
 
 - ``driver_break_db.c``: ``driver_break_db_new``, ``driver_break_db_save_config``,
-  ``driver_break_db_load_config``, ``driver_break_db_add_history``, ``driver_break_db_add_fuel_stop``.
+  ``driver_break_db_load_config`` (including ``energy_drag_cd``,
+  ``energy_frontal_area_sqm``, ``total_weight``); ``driver_break_db_add_history``,
+  ``driver_break_db_add_fuel_stop``.
 
 For formulas and configuration details, see :doc:`formulas`, :doc:`ecu_ports`,
 and the main :doc:`index`.

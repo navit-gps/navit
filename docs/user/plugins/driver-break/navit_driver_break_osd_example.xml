@@ -13,7 +13,7 @@
     8   Break settings: hiking
     16  Break settings: truck
     32  Break settings: cycling
-    64  Routing mode submenu (Kinetic / Eco toggles)
+    64  Routing mode submenu (Kinetic / Eco toggles; kinetic Cd, A, mass presets for car / truck / motorcycle)
     128 Break settings: motorcycle
     256 Hiking page 2 (overnight / extended POI and priority rows; see hiking section below)
     512 Motorcycle page 2 (POI, overnight, scenic/tour; see motorcycle section below)
@@ -26,8 +26,19 @@
     navit.driver_break_set_mode(car|truck|hiking|cycling|motorcycle)
     navit.driver_break_toggle(kinetic|eco)
       Toggles use_energy_routing and use_ecu_route_cost; persist to plugin DB.
-    navit.driver_break_configure_intervals() / navit.driver_break_configure_overnight()
-      Open internal-GUI dialogs (combined per profile; several OSD rows may call the same command).
+    navit.driver_break_set_drag_cd(value) / navit.driver_break_set_frontal_area(value)
+    navit.driver_break_set_total_weight(value)
+      Kinetic (energy) model: drag coefficient Cd (0.01-1.5), frontal area in m^2 (0.05-20),
+      total mass in kg (1-50000). Persist to plugin DB (keys energy_drag_cd, energy_frontal_area_sqm,
+      total_weight). One active triple at a time; use presets below or adjust to match your vehicle.
+
+  Example kinetic parameters (illustrative; tune for your vehicle):
+    Car:        Cd 0.30, frontal area 2.20 m2, total mass 1500 kg
+    Truck:      Cd 0.65, frontal area 9.00 m2, total mass 32000 kg
+    Motorcycle: Cd 0.58, frontal area 0.70 m2, total mass 280 kg
+
+  navit.driver_break_configure_intervals() / navit.driver_break_configure_overnight()
+    Open internal-GUI dialogs (combined per profile; several OSD rows may call the same command).
     navit.srtm_download_menu() / navit.srtm_download_region() / navit.srtm_get_elevation()
       Elevation tiles: downloads use fixed region bboxes (not map or route). Named download example:
       navit.srtm_download_region(new name("Sweden")). srtm_get_elevation only reads existing tiles.
@@ -40,7 +51,7 @@
   Plugin load path: typical install is libosd_driver_break.so under the plugin directory (see shipped navit.xml).
   Adjust path if your build uses a different name or location.
 
-  DTD note: navit.dtd declares <osd> only generically; xmllint --valid may warn on type="text"
+  DTD note: navit.dtd declares <osd> only generically; validating with xmllint may warn on type="text"
   attributes (w, h, label, osd_configuration, ...). Navit's xmlconfig accepts them at runtime.
 -->
 <!DOCTYPE config SYSTEM "../../../../navit/navit.dtd">
@@ -72,6 +83,9 @@
 		    (optional; if omitted, default is car until the active vehicle profile or menus change it).
 		  <attr name="data" value="/path/to/driver_break.db"/> — SQLite path for config and history
 		    (optional; defaults under Navit user data directory).
+		  Cd, frontal area (m2), and total mass (kg) for the kinetic model are not XML attributes; they are
+		  stored in that database (or set at runtime via navit.driver_break_set_drag_cd / _set_frontal_area /
+		  _set_total_weight). The Routing mode submenu includes one-tap example presets for car, truck, and motorcycle.
 		-->
 		<osd enabled="yes" type="driver_break"/>
 
@@ -272,6 +286,8 @@
 		  still toggle persisted state in the plugin database. Documented in the Driver Break plugin index alongside
 		  this file; a future improvement is expression-bound labels (e.g. enable_expression) if Navit exposes
 		  readable attributes for these flags on the OSD or navit object.
+		  Kinetic Cd / frontal area (m2) / total mass (kg): example presets for car, truck, motorcycle (see file header
+		  comment for typical values); each row sets travel mode and the three parameters in one command chain.
 		-->
 		<osd enabled="yes" type="text" osd_configuration="64" x="0" y="50" w="160" h="44" label="Kinetic (toggle)" font_size="200"
 			command="navit.driver_break_toggle(kinetic)"
@@ -279,7 +295,16 @@
 		<osd enabled="yes" type="text" osd_configuration="64" x="0" y="100" w="160" h="44" label="Eco / ECU (toggle)" font_size="200"
 			command="navit.driver_break_toggle(eco)"
 			/>
-		<osd enabled="yes" type="text" osd_configuration="64" x="0" y="150" w="160" h="44" label="Back" font_size="200"
+		<osd enabled="yes" type="text" osd_configuration="64" x="0" y="150" w="200" h="44" label="Kinetic: car (Cd,A,m)" font_size="200"
+			command="navit.driver_break_set_mode(car);navit.driver_break_set_drag_cd(0.30);navit.driver_break_set_frontal_area(2.2);navit.driver_break_set_total_weight(1500)"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="64" x="0" y="200" w="200" h="44" label="Kinetic: truck (Cd,A,m)" font_size="200"
+			command="navit.driver_break_set_mode(truck);navit.driver_break_set_drag_cd(0.65);navit.driver_break_set_frontal_area(9.0);navit.driver_break_set_total_weight(32000)"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="64" x="0" y="250" w="240" h="44" label="Kinetic: motorcycle (Cd,A,m)" font_size="200"
+			command="navit.driver_break_set_mode(motorcycle);navit.driver_break_set_drag_cd(0.58);navit.driver_break_set_frontal_area(0.7);navit.driver_break_set_total_weight(280)"
+			/>
+		<osd enabled="yes" type="text" osd_configuration="64" x="0" y="300" w="160" h="44" label="Back" font_size="200"
 			command="osd_configuration=1"
 			/>
 
