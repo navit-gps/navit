@@ -211,14 +211,14 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:a36cf4e6370d391864a9b31b3f27952c6" id="r_a36cf4e6370d391864a9b31b3f27952c6"><td class="memItemLeft" align="right" valign="top">QGuiApplication *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__qt5_8cpp.html#a36cf4e6370d391864a9b31b3f27952c6">navit_app</a> = NULL</td></tr>
 <tr class="separator:a36cf4e6370d391864a9b31b3f27952c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4c3ba6a3ca91e710501bb96de5b775f" id="r_ab4c3ba6a3ca91e710501bb96de5b775f"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structgraphics__font__methods.html">graphics_font_methods</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__qt5_8cpp.html#ab4c3ba6a3ca91e710501bb96de5b775f">font_methods</a></td></tr>
+<tr class="memitem:ab4c3ba6a3ca91e710501bb96de5b775f" id="r_ab4c3ba6a3ca91e710501bb96de5b775f"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structgraphics__font__methods.html">graphics_font_methods</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__qt5_8cpp.html#ab4c3ba6a3ca91e710501bb96de5b775f">font_methods</a> = {<a class="el" href="font__freetype_8c.html#aa89004525e442aba547f01f7279d5043">font_destroy</a>}</td></tr>
 <tr class="memdesc:ab4c3ba6a3ca91e710501bb96de5b775f"><td class="mdescLeft">&#160;</td><td class="mdescRight">font interface structure This structure is preset with all function pointers provided by this implemention to be returned as interface.  <br /></td></tr>
 <tr class="separator:ab4c3ba6a3ca91e710501bb96de5b775f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a536002e3ef92867a552910e5d2969fb1" id="r_a536002e3ef92867a552910e5d2969fb1"><td class="memItemLeft" align="right" valign="top">static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__qt5_8cpp.html#a536002e3ef92867a552910e5d2969fb1">fontfamilies</a> []</td></tr>
 <tr class="separator:a536002e3ef92867a552910e5d2969fb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6bb60bac00d0933222379ee4279d981" id="r_aa6bb60bac00d0933222379ee4279d981"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structgraphics__gc__methods.html">graphics_gc_methods</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__qt5_8cpp.html#aa6bb60bac00d0933222379ee4279d981">gc_methods</a></td></tr>
 <tr class="separator:aa6bb60bac00d0933222379ee4279d981"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2fb728c8b9cdb0aa6ff9a8f66ce7d2e2" id="r_a2fb728c8b9cdb0aa6ff9a8f66ce7d2e2"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structgraphics__image__methods.html">graphics_image_methods</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__qt5_8cpp.html#a2fb728c8b9cdb0aa6ff9a8f66ce7d2e2">image_methods</a></td></tr>
+<tr class="memitem:a2fb728c8b9cdb0aa6ff9a8f66ce7d2e2" id="r_a2fb728c8b9cdb0aa6ff9a8f66ce7d2e2"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structgraphics__image__methods.html">graphics_image_methods</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__qt5_8cpp.html#a2fb728c8b9cdb0aa6ff9a8f66ce7d2e2">image_methods</a> = {<a class="el" href="graphics__android_8c.html#a2ced5fcc590e0df333963f5dc613f59c">image_destroy</a>}</td></tr>
 <tr class="separator:a2fb728c8b9cdb0aa6ff9a8f66ce7d2e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9deff224ce3850c76ba8377ae7a73681" id="r_a9deff224ce3850c76ba8377ae7a73681"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structgraphics__methods.html">graphics_methods</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="graphics__qt5_8cpp.html#a9deff224ce3850c76ba8377ae7a73681">graphics_methods</a></td></tr>
 <tr class="separator:a9deff224ce3850c76ba8377ae7a73681"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1821,7 +1821,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">struct <a class="el" href="structgraphics__font__methods.html">graphics_font_methods</a> font_methods</td>
+          <td class="memname">struct <a class="el" href="structgraphics__font__methods.html">graphics_font_methods</a> font_methods = {<a class="el" href="font__freetype_8c.html#aa89004525e442aba547f01f7279d5043">font_destroy</a>}</td>
         </tr>
       </table>
   </td>
@@ -1830,11 +1830,7 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_function" href="graphics__qt5_8cpp.html#aa89004525e442aba547f01f7279d5043">font_destroy</a></div>
-<div class="line">}</div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_aa89004525e442aba547f01f7279d5043"><div class="ttname"><a href="graphics__qt5_8cpp.html#aa89004525e442aba547f01f7279d5043">font_destroy</a></div><div class="ttdeci">static void font_destroy(struct graphics_font_priv *font)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:142</div></div>
-</div><!-- fragment -->
+
 <p>font interface structure This structure is preset with all function pointers provided by this implemention to be returned as interface. </p>
 
 <p class="reference">Referenced by <a class="el" href="graphics__qt5_8cpp.html#a3e70d71f19e38a1f8a0bad45144ed33b">font_new()</a>.</p>
@@ -1860,15 +1856,13 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <span class="stringliteral">&quot;Liberation Sans&quot;</span>,</div>
-<div class="line">    <span class="stringliteral">&quot;Arial&quot;</span>,</div>
-<div class="line">    <span class="stringliteral">&quot;NcrBI4nh&quot;</span>,</div>
-<div class="line">    <span class="stringliteral">&quot;luximbi&quot;</span>,</div>
-<div class="line">    <span class="stringliteral">&quot;FreeSans&quot;</span>,</div>
-<div class="line">    <span class="stringliteral">&quot;DejaVu Sans&quot;</span>,</div>
-<div class="line">    NULL,</div>
-<div class="line">}</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {<span class="stringliteral">&quot;Liberation Sans&quot;</span>,  </div>
+<div class="line">                                     <span class="stringliteral">&quot;Arial&quot;</span>,            </div>
+<div class="line">                                     <span class="stringliteral">&quot;NcrBI4nh&quot;</span>,         </div>
+<div class="line">                                     <span class="stringliteral">&quot;luximbi&quot;</span>,          </div>
+<div class="line">                                     <span class="stringliteral">&quot;FreeSans&quot;</span>,         </div>
+<div class="line">                                     <span class="stringliteral">&quot;DejaVu Sans&quot;</span>,      </div>
+<div class="line">                                     NULL}</div>
 </div><!-- fragment --><p>List of font families to use, in order of preference </p>
 
 <p class="reference">Referenced by <a class="el" href="graphics__qt5_8cpp.html#a3e70d71f19e38a1f8a0bad45144ed33b">font_new()</a>.</p>
@@ -1895,19 +1889,19 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_function" href="graphics__qt5_8cpp.html#a4f5a58361ff466402ab8cf75992715b3">gc_destroy</a>,</div>
-<div class="line">    <a class="code hl_function" href="graphics__qt5_8cpp.html#add7dfa8917652d28c056970edf329468">gc_set_linewidth</a>,</div>
-<div class="line">    <a class="code hl_function" href="graphics__qt5_8cpp.html#ad776465bab5741fdc7886fb14234b379">gc_set_dashes</a>,</div>
-<div class="line">    <a class="code hl_function" href="graphics__qt5_8cpp.html#a9883b50b443c2aa7ca6b30f86ea9ee51">gc_set_foreground</a>,</div>
-<div class="line">    <a class="code hl_function" href="graphics__qt5_8cpp.html#aa1ba6c9692a5f32227a87a09ddec95b0">gc_set_background</a>,</div>
-<div class="line">    <a class="code hl_function" href="graphics__qt5_8cpp.html#a3dab917205421669fad7feac4fd069f2">gc_set_texture</a></div>
+<div class="line">    .gc_destroy = <a class="code hl_function" href="graphics__qt5_8cpp.html#a4f5a58361ff466402ab8cf75992715b3">gc_destroy</a>,</div>
+<div class="line">    .gc_set_linewidth = <a class="code hl_function" href="graphics__qt5_8cpp.html#add7dfa8917652d28c056970edf329468">gc_set_linewidth</a>,</div>
+<div class="line">    .gc_set_dashes = <a class="code hl_function" href="graphics__qt5_8cpp.html#ad776465bab5741fdc7886fb14234b379">gc_set_dashes</a>,</div>
+<div class="line">    .gc_set_foreground = <a class="code hl_function" href="graphics__qt5_8cpp.html#a9883b50b443c2aa7ca6b30f86ea9ee51">gc_set_foreground</a>,</div>
+<div class="line">    .gc_set_background = <a class="code hl_function" href="graphics__qt5_8cpp.html#aa1ba6c9692a5f32227a87a09ddec95b0">gc_set_background</a>,</div>
+<div class="line">    .gc_set_texture = <a class="code hl_function" href="graphics__qt5_8cpp.html#a3dab917205421669fad7feac4fd069f2">gc_set_texture</a>  </div>
 <div class="line">}</div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_a3dab917205421669fad7feac4fd069f2"><div class="ttname"><a href="graphics__qt5_8cpp.html#a3dab917205421669fad7feac4fd069f2">gc_set_texture</a></div><div class="ttdeci">void gc_set_texture(struct graphics_gc_priv *gc, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:272</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_a4f5a58361ff466402ab8cf75992715b3"><div class="ttname"><a href="graphics__qt5_8cpp.html#a4f5a58361ff466402ab8cf75992715b3">gc_destroy</a></div><div class="ttdeci">static void gc_destroy(struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:225</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_a9883b50b443c2aa7ca6b30f86ea9ee51"><div class="ttname"><a href="graphics__qt5_8cpp.html#a9883b50b443c2aa7ca6b30f86ea9ee51">gc_set_foreground</a></div><div class="ttdeci">static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:257</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_aa1ba6c9692a5f32227a87a09ddec95b0"><div class="ttname"><a href="graphics__qt5_8cpp.html#aa1ba6c9692a5f32227a87a09ddec95b0">gc_set_background</a></div><div class="ttdeci">static void gc_set_background(struct graphics_gc_priv *gc, struct color *c)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:265</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_ad776465bab5741fdc7886fb14234b379"><div class="ttname"><a href="graphics__qt5_8cpp.html#ad776465bab5741fdc7886fb14234b379">gc_set_dashes</a></div><div class="ttdeci">static void gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:237</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_add7dfa8917652d28c056970edf329468"><div class="ttname"><a href="graphics__qt5_8cpp.html#add7dfa8917652d28c056970edf329468">gc_set_linewidth</a></div><div class="ttdeci">static void gc_set_linewidth(struct graphics_gc_priv *gc, int w)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:232</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_a3dab917205421669fad7feac4fd069f2"><div class="ttname"><a href="graphics__qt5_8cpp.html#a3dab917205421669fad7feac4fd069f2">gc_set_texture</a></div><div class="ttdeci">void gc_set_texture(struct graphics_gc_priv *gc, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:268</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_a4f5a58361ff466402ab8cf75992715b3"><div class="ttname"><a href="graphics__qt5_8cpp.html#a4f5a58361ff466402ab8cf75992715b3">gc_destroy</a></div><div class="ttdeci">static void gc_destroy(struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:221</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_a9883b50b443c2aa7ca6b30f86ea9ee51"><div class="ttname"><a href="graphics__qt5_8cpp.html#a9883b50b443c2aa7ca6b30f86ea9ee51">gc_set_foreground</a></div><div class="ttdeci">static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:253</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_aa1ba6c9692a5f32227a87a09ddec95b0"><div class="ttname"><a href="graphics__qt5_8cpp.html#aa1ba6c9692a5f32227a87a09ddec95b0">gc_set_background</a></div><div class="ttdeci">static void gc_set_background(struct graphics_gc_priv *gc, struct color *c)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:261</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_ad776465bab5741fdc7886fb14234b379"><div class="ttname"><a href="graphics__qt5_8cpp.html#ad776465bab5741fdc7886fb14234b379">gc_set_dashes</a></div><div class="ttdeci">static void gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:233</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_add7dfa8917652d28c056970edf329468"><div class="ttname"><a href="graphics__qt5_8cpp.html#add7dfa8917652d28c056970edf329468">gc_set_linewidth</a></div><div class="ttdeci">static void gc_set_linewidth(struct graphics_gc_priv *gc, int w)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:228</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="graphics__qt5_8cpp.html#a07cd818b1139be8cc8cd9b54f02c8ac9">gc_new()</a>.</p>
 
@@ -1953,32 +1947,32 @@ Variables</h2></td></tr>
 <div class="line">    <a class="code hl_function" href="graphics__qt5_8cpp.html#a9c512b3c69845f218e8a7ac4f2de3542">get_text_bbox</a>,</div>
 <div class="line">    <a class="code hl_function" href="graphics__qt5_8cpp.html#a18e3c2e64373fc85093d4d2d684e5ec8">overlay_disable</a>,</div>
 <div class="line">    <a class="code hl_function" href="graphics__qt5_8cpp.html#aec189fd649a7cbaf4513cc2c45ef2678">overlay_resize</a>,</div>
-<div class="line">    NULL, </div>
-<div class="line">    NULL, </div>
-<div class="line">    NULL, </div>
+<div class="line">    NULL,  </div>
+<div class="line">    NULL,  </div>
+<div class="line">    NULL,  </div>
 <div class="line">    <a class="code hl_function" href="graphics__qt5_8cpp.html#ac6005266522242b1dca06e38e39ea71a">get_dpi</a>,</div>
-<div class="line">    <a class="code hl_function" href="graphics__qt5_8cpp.html#abede460fd607c07286fff792e1ca0696">draw_polygon_with_holes</a></div>
+<div class="line">    <a class="code hl_function" href="graphics__qt5_8cpp.html#abede460fd607c07286fff792e1ca0696">draw_polygon_with_holes</a>  </div>
 <div class="line">}</div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_a07cd818b1139be8cc8cd9b54f02c8ac9"><div class="ttname"><a href="graphics__qt5_8cpp.html#a07cd818b1139be8cc8cd9b54f02c8ac9">gc_new</a></div><div class="ttdeci">static struct graphics_gc_priv * gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:300</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_a1166f0e775e95efcad0040474546a4ff"><div class="ttname"><a href="graphics__qt5_8cpp.html#a1166f0e775e95efcad0040474546a4ff">overlay_new</a></div><div class="ttdeci">static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:902</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_a11a445d672efb2d812bf447c8b275923"><div class="ttname"><a href="graphics__qt5_8cpp.html#a11a445d672efb2d812bf447c8b275923">draw_drag</a></div><div class="ttdeci">static void draw_drag(struct graphics_priv *gr, struct point *p)</div><div class="ttdoc">Drag layer.</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:605</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_a18e3c2e64373fc85093d4d2d684e5ec8"><div class="ttname"><a href="graphics__qt5_8cpp.html#a18e3c2e64373fc85093d4d2d684e5ec8">overlay_disable</a></div><div class="ttdeci">static void overlay_disable(struct graphics_priv *gr, int disable)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:817</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_a28060f6abcb0c9559ee9606e745247de"><div class="ttname"><a href="graphics__qt5_8cpp.html#a28060f6abcb0c9559ee9606e745247de">get_data</a></div><div class="ttdeci">static void * get_data(struct graphics_priv *this_priv, char const *type)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:744</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_a3e70d71f19e38a1f8a0bad45144ed33b"><div class="ttname"><a href="graphics__qt5_8cpp.html#a3e70d71f19e38a1f8a0bad45144ed33b">font_new</a></div><div class="ttdeci">static struct graphics_font_priv * font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font, int size, int flags)</div><div class="ttdoc">Allocate a font context.</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:186</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_a4267fcdc24196b92a1f2786683fbf743"><div class="ttname"><a href="graphics__qt5_8cpp.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle</a></div><div class="ttdeci">static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:467</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_a5a6811ae094b9873bf200a4d02ffc841"><div class="ttname"><a href="graphics__qt5_8cpp.html#a5a6811ae094b9873bf200a4d02ffc841">draw_image</a></div><div class="ttdeci">static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:587</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_a6585029b964eeceb550f0e4d0dab9286"><div class="ttname"><a href="graphics__qt5_8cpp.html#a6585029b964eeceb550f0e4d0dab9286">draw_text</a></div><div class="ttdeci">static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)</div><div class="ttdoc">Render given text.</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:495</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_a758db79d3c2efab53a82169a999e147a"><div class="ttname"><a href="graphics__qt5_8cpp.html#a758db79d3c2efab53a82169a999e147a">background_gc</a></div><div class="ttdeci">static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:641</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_a90d3c22cb1dfd9850c373c137ee4e84c"><div class="ttname"><a href="graphics__qt5_8cpp.html#a90d3c22cb1dfd9850c373c137ee4e84c">draw_lines</a></div><div class="ttdeci">static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:408</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_a9c512b3c69845f218e8a7ac4f2de3542"><div class="ttname"><a href="graphics__qt5_8cpp.html#a9c512b3c69845f218e8a7ac4f2de3542">get_text_bbox</a></div><div class="ttdeci">static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate)</div><div class="ttdoc">Calculate pixel space required for font display.</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:783</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_ab6bdd08d0de06ed02373ebf0434198c0"><div class="ttname"><a href="graphics__qt5_8cpp.html#ab6bdd08d0de06ed02373ebf0434198c0">draw_mode</a></div><div class="ttdeci">static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:646</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_abede460fd607c07286fff792e1ca0696"><div class="ttname"><a href="graphics__qt5_8cpp.html#abede460fd607c07286fff792e1ca0696">draw_polygon_with_holes</a></div><div class="ttdeci">static void draw_polygon_with_holes(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count, int hole_count, int *ccount, struct point **holes)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:436</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_ac6005266522242b1dca06e38e39ea71a"><div class="ttname"><a href="graphics__qt5_8cpp.html#ac6005266522242b1dca06e38e39ea71a">get_dpi</a></div><div class="ttdeci">static navit_float get_dpi(struct graphics_priv *gr)</div><div class="ttdoc">Return number of dots per inch.</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:864</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_ac672b05a4284ce992628401d22b00703"><div class="ttname"><a href="graphics__qt5_8cpp.html#ac672b05a4284ce992628401d22b00703">image_new</a></div><div class="ttdeci">static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:323</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_ad23ec2e18eb0e803d1db5ce00f624297"><div class="ttname"><a href="graphics__qt5_8cpp.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon</a></div><div class="ttdeci">static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:421</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_ae4456740fdea7713830cce6af320e250"><div class="ttname"><a href="graphics__qt5_8cpp.html#ae4456740fdea7713830cce6af320e250">image_free</a></div><div class="ttdeci">static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:765</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_aec189fd649a7cbaf4513cc2c45ef2678"><div class="ttname"><a href="graphics__qt5_8cpp.html#aec189fd649a7cbaf4513cc2c45ef2678">overlay_resize</a></div><div class="ttdeci">static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:832</div></div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_af0284e13ff04d3d79092c2fdf352fab6"><div class="ttname"><a href="graphics__qt5_8cpp.html#af0284e13ff04d3d79092c2fdf352fab6">draw_circle</a></div><div class="ttdeci">static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:474</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_a07cd818b1139be8cc8cd9b54f02c8ac9"><div class="ttname"><a href="graphics__qt5_8cpp.html#a07cd818b1139be8cc8cd9b54f02c8ac9">gc_new</a></div><div class="ttdeci">static struct graphics_gc_priv * gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:296</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_a1166f0e775e95efcad0040474546a4ff"><div class="ttname"><a href="graphics__qt5_8cpp.html#a1166f0e775e95efcad0040474546a4ff">overlay_new</a></div><div class="ttdeci">static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int wraparound)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:897</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_a11a445d672efb2d812bf447c8b275923"><div class="ttname"><a href="graphics__qt5_8cpp.html#a11a445d672efb2d812bf447c8b275923">draw_drag</a></div><div class="ttdeci">static void draw_drag(struct graphics_priv *gr, struct point *p)</div><div class="ttdoc">Drag layer.</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:600</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_a18e3c2e64373fc85093d4d2d684e5ec8"><div class="ttname"><a href="graphics__qt5_8cpp.html#a18e3c2e64373fc85093d4d2d684e5ec8">overlay_disable</a></div><div class="ttdeci">static void overlay_disable(struct graphics_priv *gr, int disable)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:812</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_a28060f6abcb0c9559ee9606e745247de"><div class="ttname"><a href="graphics__qt5_8cpp.html#a28060f6abcb0c9559ee9606e745247de">get_data</a></div><div class="ttdeci">static void * get_data(struct graphics_priv *this_priv, char const *type)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:739</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_a3e70d71f19e38a1f8a0bad45144ed33b"><div class="ttname"><a href="graphics__qt5_8cpp.html#a3e70d71f19e38a1f8a0bad45144ed33b">font_new</a></div><div class="ttdeci">static struct graphics_font_priv * font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font, int size, int flags)</div><div class="ttdoc">Allocate a font context.</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:182</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_a4267fcdc24196b92a1f2786683fbf743"><div class="ttname"><a href="graphics__qt5_8cpp.html#a4267fcdc24196b92a1f2786683fbf743">draw_rectangle</a></div><div class="ttdeci">static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:462</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_a5a6811ae094b9873bf200a4d02ffc841"><div class="ttname"><a href="graphics__qt5_8cpp.html#a5a6811ae094b9873bf200a4d02ffc841">draw_image</a></div><div class="ttdeci">static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:582</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_a6585029b964eeceb550f0e4d0dab9286"><div class="ttname"><a href="graphics__qt5_8cpp.html#a6585029b964eeceb550f0e4d0dab9286">draw_text</a></div><div class="ttdeci">static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)</div><div class="ttdoc">Render given text.</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:490</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_a758db79d3c2efab53a82169a999e147a"><div class="ttname"><a href="graphics__qt5_8cpp.html#a758db79d3c2efab53a82169a999e147a">background_gc</a></div><div class="ttdeci">static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:636</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_a90d3c22cb1dfd9850c373c137ee4e84c"><div class="ttname"><a href="graphics__qt5_8cpp.html#a90d3c22cb1dfd9850c373c137ee4e84c">draw_lines</a></div><div class="ttdeci">static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:403</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_a9c512b3c69845f218e8a7ac4f2de3542"><div class="ttname"><a href="graphics__qt5_8cpp.html#a9c512b3c69845f218e8a7ac4f2de3542">get_text_bbox</a></div><div class="ttdeci">static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate)</div><div class="ttdoc">Calculate pixel space required for font display.</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:778</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_ab6bdd08d0de06ed02373ebf0434198c0"><div class="ttname"><a href="graphics__qt5_8cpp.html#ab6bdd08d0de06ed02373ebf0434198c0">draw_mode</a></div><div class="ttdeci">static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:641</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_abede460fd607c07286fff792e1ca0696"><div class="ttname"><a href="graphics__qt5_8cpp.html#abede460fd607c07286fff792e1ca0696">draw_polygon_with_holes</a></div><div class="ttdeci">static void draw_polygon_with_holes(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count, int hole_count, int *ccount, struct point **holes)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:431</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_ac6005266522242b1dca06e38e39ea71a"><div class="ttname"><a href="graphics__qt5_8cpp.html#ac6005266522242b1dca06e38e39ea71a">get_dpi</a></div><div class="ttdeci">static navit_float get_dpi(struct graphics_priv *gr)</div><div class="ttdoc">Return number of dots per inch.</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:859</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_ac672b05a4284ce992628401d22b00703"><div class="ttname"><a href="graphics__qt5_8cpp.html#ac672b05a4284ce992628401d22b00703">image_new</a></div><div class="ttdeci">static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:317</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_ad23ec2e18eb0e803d1db5ce00f624297"><div class="ttname"><a href="graphics__qt5_8cpp.html#ad23ec2e18eb0e803d1db5ce00f624297">draw_polygon</a></div><div class="ttdeci">static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:416</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_ae4456740fdea7713830cce6af320e250"><div class="ttname"><a href="graphics__qt5_8cpp.html#ae4456740fdea7713830cce6af320e250">image_free</a></div><div class="ttdeci">static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:760</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_aec189fd649a7cbaf4513cc2c45ef2678"><div class="ttname"><a href="graphics__qt5_8cpp.html#aec189fd649a7cbaf4513cc2c45ef2678">overlay_resize</a></div><div class="ttdeci">static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:827</div></div>
+<div class="ttc" id="agraphics__qt5_8cpp_html_af0284e13ff04d3d79092c2fdf352fab6"><div class="ttname"><a href="graphics__qt5_8cpp.html#af0284e13ff04d3d79092c2fdf352fab6">draw_circle</a></div><div class="ttdeci">static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:469</div></div>
 <div class="ttc" id="agraphics__qt5_8cpp_html_af4b6f172de9791e46ccdd4b36bb0b1a8"><div class="ttname"><a href="graphics__qt5_8cpp.html#af4b6f172de9791e46ccdd4b36bb0b1a8">graphics_destroy</a></div><div class="ttdeci">static void graphics_destroy(struct graphics_priv *gr)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:89</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="graphics__qt5_8cpp.html#a862176edad0dc5156cc159f326a2f7ca">graphics_qt5_new()</a>, and <a class="el" href="graphics__qt5_8cpp.html#a1166f0e775e95efcad0040474546a4ff">overlay_new()</a>.</p>
@@ -1992,15 +1986,11 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct <a class="el" href="structgraphics__image__methods.html">graphics_image_methods</a> image_methods</td>
+          <td class="memname">struct <a class="el" href="structgraphics__image__methods.html">graphics_image_methods</a> image_methods = {<a class="el" href="graphics__android_8c.html#a2ced5fcc590e0df333963f5dc613f59c">image_destroy</a>}</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">    <a class="code hl_function" href="graphics__qt5_8cpp.html#a2ced5fcc590e0df333963f5dc613f59c">image_destroy</a></div>
-<div class="line">}</div>
-<div class="ttc" id="agraphics__qt5_8cpp_html_a2ced5fcc590e0df333963f5dc613f59c"><div class="ttname"><a href="graphics__qt5_8cpp.html#a2ced5fcc590e0df333963f5dc613f59c">image_destroy</a></div><div class="ttdeci">static void image_destroy(struct graphics_image_priv *img)</div><div class="ttdef"><b>Definition</b> graphics_qt5.cpp:312</div></div>
-</div><!-- fragment -->
+
 <p class="reference">Referenced by <a class="el" href="graphics__qt5_8cpp.html#ac672b05a4284ce992628401d22b00703">image_new()</a>.</p>
 
 </div>
