@@ -248,20 +248,15 @@ struct attr_iter {
 static struct route_info *route_find_nearest_street(struct vehicleprofile *vehicleprofile, struct mapset *ms,
                                                     struct pcoord *c);
 static void route_graph_update(struct route *this, struct callback *cb, int async);
-static struct route_path *route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos,
-                                         struct route_info *dst, struct vehicleprofile *profile);
+static struct route_path *route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, struct vehicleprofile *profile);
 static void route_graph_add_street(struct route_graph *this, struct item *item, struct vehicleprofile *profile);
 static void route_graph_destroy(struct route_graph *this);
 static void route_path_update(struct route *this, int cancel, int async);
-static int route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over,
-                          struct route_traffic_distortion *dist);
-static void route_graph_compute_shortest_path(struct route_graph *graph, struct vehicleprofile *profile,
-                                              struct callback *cb);
+static int route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over, struct route_traffic_distortion *dist);
+static void route_graph_compute_shortest_path(struct route_graph *graph, struct vehicleprofile *profile, struct callback *cb);
 static int route_graph_is_path_computed(struct route_graph *this_);
-static struct route_graph_segment *route_graph_get_segment(struct route_graph *graph, struct street_data *sd,
-                                                           struct route_graph_segment *last);
-static int route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from,
-                           struct route_graph_segment *over, int dir);
+static struct route_graph_segment *route_graph_get_segment(struct route_graph *graph, struct street_data *sd, struct route_graph_segment *last);
+static int route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, struct route_graph_segment *over, int dir);
 static void route_graph_init(struct route_graph *this, struct route_info *dst, struct vehicleprofile *profile);
 static void route_graph_reset(struct route_graph *this);
 
