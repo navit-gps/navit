@@ -1,7 +1,6 @@
 #include "qml_vehicle.h"
 
-VehicleObject::VehicleObject(QObject *parent)
-    : QObject(parent) {
+VehicleObject::VehicleObject(QObject *parent) : QObject(parent) {
 }
 
 VehicleObject::VehicleObject(const QString &name, const bool &active, struct vehicle *v, QObject *parent)
@@ -30,15 +29,13 @@ void VehicleObject::setActive(const bool &active) {
     }
 }
 
-struct vehicle * VehicleObject::vehicle() const {
+struct vehicle *VehicleObject::vehicle() const {
     return m_vehicle;
 }
 
-void VehicleObject::setVehicle(struct vehicle * vehicle) {
+void VehicleObject::setVehicle(struct vehicle *vehicle) {
     if (vehicle != m_vehicle) {
         m_vehicle = vehicle;
         emit vehicleChanged();
     }
 }
-
-
