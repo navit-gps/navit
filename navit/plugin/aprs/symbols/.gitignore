@@ -1,0 +1,8 @@
+# Ignore the cloned repository, but keep the 48x48 directory structure
+aprs-symbols/
+*.git
+
+# Keep the actual symbol PNG files
+!48x48/
+!48x48/**/*.png
+
