@@ -285,6 +285,8 @@ void osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags) {
     item->text_color.g = 0xffff;
     item->text_color.b = 0xffff;
     item->text_color.a = 0xffff;
+    
+    dbg(lvl_debug, "flags: '%i'", flags);
 
     if (flags & TRANSPARENT_BG) {
         item->color_bg.r = 0x0808;
@@ -298,6 +300,8 @@ void osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags) {
         item->color_bg.a = 0x9fff;
     }
 
+
+    // Set attributes in item
     attr = attr_search(attrs, attr_osd_configuration);
     if (attr)
         item->osd_configuration = attr->u.num;
@@ -334,22 +338,28 @@ void osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags) {
     attr = attr_search(attrs, attr_background_color);
     if (attr)
         item->color_bg = *attr->u.color;
+
     attr = attr_search(attrs, attr_command);
     if (attr)
         item->command = g_strdup(attr->u.str);
+
     attr = attr_search(attrs, attr_text_color);
     if (attr)
         item->text_color = *attr->u.color;
+
     attr = attr_search(attrs, attr_foreground_color);
     if (attr)
         item->color_fg = *attr->u.color;
+
     attr = attr_search(attrs, attr_accesskey);
     if (attr)
         item->accesskey = g_strdup(attr->u.str);
+
     attr = attr_search(attrs, attr_font);
     if (attr)
         item->font_name = g_strdup(attr->u.str);
 }
+
 void osd_std_config(struct osd_item *item, struct navit *navit) {
     struct attr attr;
     char *err = NULL; /* Error description */
