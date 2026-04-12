@@ -62,6 +62,7 @@
 #include "gui_internal_gesture.h"
 #include "gui_internal_html.h"
 #include "gui_internal_keyboard.h"
+#include "gui_internal_map_downloader.h"
 #include "gui_internal_menu.h"
 #include "gui_internal_poi.h"
 #include "gui_internal_priv.h"
@@ -76,8 +77,10 @@
 #include "navit.h"
 #include "navit/search.h"
 #include "navit_nls.h"
+#include "network.h"
 #include "plugin.h"
 #include "point.h"
+#include <pthread.h>
 #include "route.h"
 #include "track.h"
 #include "transform.h"
@@ -442,7 +445,7 @@ struct widget *gui_internal_time_help(struct gui_priv *this) {
     }
     if (this->flags & 128) {
         wcn = gui_internal_button_new_with_callback(this, _("Help"), image_new_l(this, "gui_help"),
-                                                    gravity_center | orientation_vertical | flags_fill, NULL, NULL);
+                gravity_center | orientation_vertical | flags_fill, NULL, NULL);
         gui_internal_widget_append(w, wcn);
     }
     return w;
@@ -1665,50 +1668,30 @@ static void gui_internal_window_closed(struct gui_priv *this) {
 }
 
 static void gui_internal_cmd_map_download_do(struct gui_priv *this, struct widget *wm, void *data) {
-    char *text = g_strdup_printf(_("Download %s"), wm->name);
-    struct widget *w, *wb;
-    struct map *map = data;
-    double bllon, bllat, trlon, trlat;
+    struct map_download_info *dl_info=data;
+    pthread_t download;
+    pthread_t progress;
+    int error;
 
-    wb = gui_internal_menu(this, text);
-    g_free(text);
-    w = gui_internal_box_new(this, gravity_top_center | orientation_vertical | flags_expand | flags_fill);
-    w->spy = this->spacing * 3;
-    gui_internal_widget_append(wb, w);
-    if (sscanf(wm->prefix, "%lf,%lf,%lf,%lf", &bllon, &bllat, &trlon, &trlat) == 4) {
-        struct coord_geo g;
-        struct map_selection sel;
-        struct map_rect *mr;
-        struct item *item;
+    struct gui_download_data *dl_data = g_malloc(sizeof(struct gui_download_data));
+    dl_data->this = this;
+    dl_data->wm = wm;
+    dl_data->data = dl_info;
+    error = pthread_create(&download, NULL, download_map3, dl_data);
+    pthread_create(&progress, NULL, gui_internal_populate_download_table, this);
 
-        sel.next = NULL;
-        sel.order = 255;
-        g.lng = bllon;
-        g.lat = trlat;
-        transform_from_geo(projection_mg, &g, &sel.u.c_rect.lu);
-        g.lng = trlon;
-        g.lat = bllat;
-        transform_from_geo(projection_mg, &g, &sel.u.c_rect.rl);
-        sel.range.min = type_none;
-        sel.range.max = type_last;
-        mr = map_rect_new(map, &sel);
-        while ((item = map_rect_get_item(mr))) {
-            dbg(lvl_info, "item");
-        }
-        map_rect_destroy(mr);
-    }
-
-    dbg(lvl_info, "bbox=%s", wm->prefix);
-    gui_internal_menu_render(this);
+    //download_map(this, wm, dl_info);
 }
 
 void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, void *data) {
     struct attr on, off, download_enabled, download_disabled;
-    struct widget *w, *wb, *wma;
+    struct widget *w, *wb, *wma, *wl, *row;
     struct map *map = data;
     FILE *f;
     char *search, buffer[256];
     int found, sp_match = 0;
+    pthread_t download;
+    int error;
 
     dbg(lvl_debug, "wm=%p prefix=%s", wm, wm->prefix);
 
@@ -1724,63 +1707,42 @@ void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, voi
     on.type = off.type = attr_active;
     on.u.num = 1;
     off.u.num = 0;
-    wb = gui_internal_menu(this, wm->name ? wm->name : _("Map Download"));
-    w = gui_internal_box_new(this, gravity_top_center | orientation_vertical | flags_expand | flags_fill);
-    w->spy = this->spacing * 3;
+    wb = gui_internal_menu(this, "Map Download");
+    w = gui_internal_widget_table_new(this, gravity_top_center | orientation_vertical | flags_expand | flags_fill, 1);
     gui_internal_widget_append(wb, w);
+
     if (!search) {
-        wma = gui_internal_button_map_attr_new(
-            this, _("Active"), gravity_left_center | orientation_horizontal | flags_fill, map, &on, &off, 1);
+        wma=gui_internal_button_map_attr_new(this, _("Active"), gravity_left_center|orientation_horizontal|flags_fill, map, &on,
+                                             &off, 1);
         gui_internal_widget_append(w, wma);
     }
 
     download_enabled.type = download_disabled.type = attr_update;
     download_enabled.u.num = 1;
     download_disabled.u.num = 0;
-    wma = gui_internal_button_map_attr_new(this, _("Download Enabled"),
-                                           gravity_left_center | orientation_horizontal | flags_fill, map,
-                                           &download_enabled, &download_disabled, 0);
-    gui_internal_widget_append(w, wma);
+    f = fopen("maps/menu2.tsv", "r");
 
-    f = fopen("maps/areas.tsv", "r");
+
     while (f && fgets(buffer, sizeof(buffer), f)) {
-        char *nl, *description, *description_size, *bbox, *size = NULL;
-        int sp = 0;
-        if ((nl = strchr(buffer, '\n')))
-            *nl = '\0';
-        if ((nl = strchr(buffer, '\r')))
-            *nl = '\0';
-        while (buffer[sp] == ' ')
-            sp++;
-        if ((bbox = strchr(buffer, '\t')))
-            *bbox++ = '\0';
-        if (bbox && (size = strchr(bbox, '\t')))
-            *size++ = '\0';
-        if (search && !strcmp(buffer, search)) {
-            wma = gui_internal_button_new_with_callback(this, _("Download completely"), NULL,
-                                                        gravity_left_center | orientation_horizontal | flags_fill,
-                                                        gui_internal_cmd_map_download_do, map);
-            wma->name = g_strdup(buffer + sp);
-            wma->prefix = g_strdup(bbox);
-            gui_internal_widget_append(w, wma);
-            found = 1;
-        } else if (sp < sp_match)
-            found = 0;
-        if (sp == sp_match && found && buffer[sp]) {
-            description = g_strdup(buffer + sp);
-            if (size)
-                description_size = g_strdup_printf("%s (%s)", description, size);
-            else
-                description_size = g_strdup(description);
-            wma = gui_internal_button_new_with_callback(this, description_size, NULL,
-                                                        gravity_left_center | orientation_horizontal | flags_fill,
-                                                        gui_internal_cmd_map_download, map);
-            g_free(description_size);
-            wma->prefix = g_strdup(buffer);
-            wma->name = description;
-            gui_internal_widget_append(w, wma);
-        }
+	gui_internal_widget_append(w, row=gui_internal_widget_table_row_new(this,
+                                   gravity_left|orientation_horizontal|flags_fill));
+
+	struct map_download_info *dl_info = g_malloc(sizeof(struct map_download_info));
+
+	dl_info->name = g_strsplit(buffer,"\t",0)[0];
+        dl_info->path = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/maps/", dl_info->name, ".bin",  NULL);
+        dl_info->xml = g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/maps/", dl_info->name, ".xml",  NULL);
+	dl_info->url = g_strjoin(NULL, "https://github.com/navit-gps/gh-actions-mapserver/releases/download/", g_date_time_format(g_date_time_new_now_local(), "%Y-%m-%d"), "/", dl_info->name, "-", g_date_time_format(g_date_time_new_now_local(), "%Y-%m-%d"), ".bin", NULL);
+       
+        char* buffer2 = g_strdup_printf("%s", g_strjoin(NULL, g_strsplit(buffer,"\t",0)[0], " ", g_strsplit(buffer,"\t",0)[1], NULL));
+        wl=gui_internal_button_new_with_callback(this, buffer2, NULL,
+                    gravity_left_center|orientation_horizontal|flags_fill, gui_internal_cmd_map_download_do, dl_info);
+
+	gui_internal_widget_append(row, wl);
+	g_free(buffer2);
+
     }
+    error = pthread_create(&download, NULL, update_download_table, NULL);
 
     gui_internal_menu_render(this);
 }
