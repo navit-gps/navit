@@ -90,16 +90,16 @@ static int vehicle_android_position_attr_get(struct vehicle_priv *priv, enum att
         attr->u.num = priv->fix_type;
         break;
     case attr_position_height:
-        attr->u.numd = &priv->height;
+        attr->u.numd = priv->height;
         break;
     case attr_position_speed:
-        attr->u.numd = &priv->speed;
+        attr->u.numd = priv->speed;
         break;
     case attr_position_direction:
-        attr->u.numd = &priv->direction;
+        attr->u.numd = priv->direction;
         break;
     case attr_position_radius:
-        attr->u.numd = &priv->radius;
+        attr->u.numd = priv->radius;
         break;
     case attr_position_qual:
         attr->u.num = priv->sats;

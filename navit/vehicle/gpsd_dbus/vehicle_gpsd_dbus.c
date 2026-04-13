@@ -137,13 +137,13 @@ static void vehicle_gpsd_dbus_destroy(struct vehicle_priv *priv) {
 static int vehicle_gpsd_dbus_position_attr_get(struct vehicle_priv *priv, enum attr_type type, struct attr *attr) {
     switch (type) {
     case attr_position_height:
-        attr->u.numd = &priv->altitude;
+        attr->u.numd = priv->altitude;
         break;
     case attr_position_speed:
-        attr->u.numd = &priv->speed;
+        attr->u.numd = priv->speed;
         break;
     case attr_position_direction:
-        attr->u.numd = &priv->track;
+        attr->u.numd = priv->track;
         break;
     case attr_position_coord_geo:
         attr->u.coord_geo = &priv->geo;

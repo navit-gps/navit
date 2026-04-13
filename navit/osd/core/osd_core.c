@@ -858,7 +858,7 @@ static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, st
                 if (curr_coord.x != this->last_coord.x || curr_coord.y != this->last_coord.y) {
                     if (vehicle_get_attr(curr_vehicle, attr_position_speed, &speed_attr, NULL)) {
                         double dv;
-                        curr_spd = *speed_attr.u.numd;
+                        curr_spd = speed_attr.u.numd;
                         dv = (curr_spd - this->last_speed) / 3.6;  // speed difference in m/sec
                         this->acceleration = dv / dt;
                         this->last_speed = curr_spd;
@@ -1446,7 +1446,7 @@ static void osd_compass_draw(struct osd_priv_common *opc, struct navit *nav, str
     graphics_draw_circle(opc->osd_item.gr, opc->osd_item.graphic_fg, &p, opc->osd_item.w * 5 / 6);
     if (v) {
         if (vehicle_get_attr(v, attr_position_direction, &attr_dir, NULL)) {
-            vdir = *attr_dir.u.numd;
+            vdir = attr_dir.u.numd;
             draw_compass(opc->osd_item.gr, this->north_gc, opc->osd_item.graphic_fg, &p, opc->osd_item.w / 3,
                          -vdir); /* Draw a compass */
         }
@@ -2408,7 +2408,7 @@ static void osd_speed_cam_draw(struct osd_priv_common *opc, struct navit *navit,
         if (opc->osd_item.configured) {
             graphics_overlay_disable(opc->osd_item.gr, 0);
         }
-        speed = *speed_attr.u.numd;
+        speed = speed_attr.u.numd;
         if (dCurrDist <= speed * 750.0 / 130.0) {  // at speed 130 distance limit is 750m
             if (this_->announce_state == eNoWarn && this_->announce_on) {
                 this_->announce_state = eWarningTold;  // warning told
@@ -2443,14 +2443,14 @@ static void osd_speed_cam_draw(struct osd_priv_common *opc, struct navit *navit,
             // tolerance is +-20 degrees
             if (dir_idx == CAMDIR_ONE && dCurrDist <= speed * 750.0 / 130.0
                 && vehicle_get_attr(v, attr_position_direction, &attr_dir, NULL)
-                && fabs(angle_diff(dir, *attr_dir.u.numd)) <= 20) {
+                && fabs(angle_diff(dir, attr_dir.u.numd)) <= 20) {
                 curr_color = this_->red;
             }
             // tolerance is +-20 degrees in both directions
             else if (dir_idx == CAMDIR_TWO && dCurrDist <= speed * 750.0 / 130.0
                      && vehicle_get_attr(v, attr_position_direction, &attr_dir, NULL)
-                     && (fabs(angle_diff(dir, *attr_dir.u.numd)) <= 20
-                         || fabs(angle_diff(dir + 180, *attr_dir.u.numd)) <= 20)) {
+                     && (fabs(angle_diff(dir, attr_dir.u.numd)) <= 20
+                         || fabs(angle_diff(dir + 180, attr_dir.u.numd)) <= 20)) {
                 curr_color = this_->red;
             } else if (dCurrDist <= speed * 750.0 / 130.0) {
                 curr_color = this_->red;
@@ -2606,7 +2606,7 @@ static void osd_speed_warner_draw(struct osd_priv_common *opc, struct navit *nav
             }
         }
         tracking_get_attr(tracking, attr_position_speed, &speed_attr, NULL);
-        tracking_speed = *speed_attr.u.numd;
+        tracking_speed = speed_attr.u.numd;
         if (-1 != tracking_speed && -1 != routespeed) {
             char *routespeed_str = format_speed(routespeed, "", "value", imperial);
             g_snprintf(text, 16, "%s%s", osm_data ? "" : "~", routespeed_str);
@@ -2839,7 +2839,7 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
 
     switch (attr->type) {
     case attr_position_speed:
-        return format_speed(*attr->u.numd, "", format, imperial);
+        return format_speed(attr->u.numd, "", format, imperial);
     case attr_position_height:
         /**
          * johnk 8/13/2020
@@ -2850,11 +2850,11 @@ static char *osd_text_format_attr(struct attr *attr, char *format, int imperial)
          *  return meters
          */
         if (format && (!strcmp(format, "feet") || (!strcmp(format, "imperial") && imperial == 1))) {
-            return (format_float_0(*attr->u.numd * FEET_PER_METER));
+            return (format_float_0(attr->u.numd * FEET_PER_METER));
         }
-        return (format_float_0(*attr->u.numd));
+        return (format_float_0(attr->u.numd));
     case attr_position_direction:
-        return format_float_0(*attr->u.numd);
+        return format_float_0(attr->u.numd);
     case attr_position_magnetic_direction:
         return g_strdup_printf("%ld", attr->u.num);
     case attr_position_coord_geo:
@@ -3445,9 +3445,9 @@ static void osd_gps_status_draw(struct osd_priv_common *opc, struct navit *navit
                         strength = 5;
                     if (strength > 3) {
                         if (vehicle_get_attr(vehicle_attr.u.vehicle, attr_position_hdop, &attr, NULL)) {
-                            if (*attr.u.numd > 2.0 && strength > 4)
+                            if (attr.u.numd > 2.0 && strength > 4)
                                 strength = 4;
-                            if (*attr.u.numd > 4.0 && strength > 3)
+                            if (attr.u.numd > 4.0 && strength > 3)
                                 strength = 3;
                         }
                     }

@@ -567,7 +567,7 @@ static void vehicle_log_gpx(struct vehicle *this_, struct log *log) {
     }
     if (attr_types_contains_default(attr_types, attr_position_height, 0)
         && this_->meth.position_attr_get(this_->priv, attr_position_height, &attr))
-        logstr = g_strconcat_printf(logstr, "\t<ele>%.6f</ele>\n", *attr.u.numd);
+        logstr = g_strconcat_printf(logstr, "\t<ele>%.6f</ele>\n", attr.u.numd);
     // <magvar> magnetic variation in degrees; we might use position_magnetic_direction and position_direction to figure
     // it out
     // <geoidheight> Height (in meters) of geoid (mean sea level) above WGS84 earth ellipsoid. As defined in NMEA GGA
@@ -584,14 +584,14 @@ static void vehicle_log_gpx(struct vehicle *this_, struct log *log) {
         logstr = g_strconcat_printf(logstr, "\t<sat>%d</sat>\n", attr.u.num);
     if (attr_types_contains_default(attr_types, attr_position_hdop, 0)
         && this_->meth.position_attr_get(this_->priv, attr_position_hdop, &attr))
-        logstr = g_strconcat_printf(logstr, "\t<hdop>%.6f</hdop>\n", *attr.u.numd);
+        logstr = g_strconcat_printf(logstr, "\t<hdop>%.6f</hdop>\n", attr.u.numd);
     // <vdop>, <pdop> Vertical and position dilution of precision, no corresponding attribute
     if (attr_types_contains_default(attr_types, attr_position_direction, 0)
         && this_->meth.position_attr_get(this_->priv, attr_position_direction, &attr))
-        logstr = g_strconcat_printf(logstr, "\t<course>%.1f</course>\n", *attr.u.numd);
+        logstr = g_strconcat_printf(logstr, "\t<course>%.1f</course>\n", attr.u.numd);
     if (attr_types_contains_default(attr_types, attr_position_speed, 0)
         && this_->meth.position_attr_get(this_->priv, attr_position_speed, &attr))
-        logstr = g_strconcat_printf(logstr, "\t<speed>%.2f</speed>\n", (*attr.u.numd / 3.6));
+        logstr = g_strconcat_printf(logstr, "\t<speed>%.2f</speed>\n", (attr.u.numd / 3.6));
     if (attr_types_contains_default(attr_types, attr_profilename, 0)
         && (attrp = attr_search(this_->attrs, attr_profilename))) {
         logstr =
@@ -600,7 +600,7 @@ static void vehicle_log_gpx(struct vehicle *this_, struct log *log) {
     }
     if (attr_types_contains_default(attr_types, attr_position_radius, 0)
         && this_->meth.position_attr_get(this_->priv, attr_position_radius, &attr)) {
-        logstr = g_strconcat_printf(logstr, "%s\t\t<navit:radius>%.2f</navit:radius>\n", extensions, *attr.u.numd);
+        logstr = g_strconcat_printf(logstr, "%s\t\t<navit:radius>%.2f</navit:radius>\n", extensions, attr.u.numd);
         extensions = "";
     }
     if (!strcmp(extensions, "")) {

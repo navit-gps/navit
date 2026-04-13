@@ -144,7 +144,7 @@ struct attr {
         struct item *item;
         enum item_type item_type;
         enum projection projection;
-        double *numd;
+        double numd;
         struct color *color;
         struct coord_geo *coord_geo;
         struct navit *navit;
