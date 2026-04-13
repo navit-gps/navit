@@ -25,6 +25,7 @@ A layout consist of one cursor and one or more **layers** which are each a set o
  <layout>
 
 Here the available options:
+
 * item_types: Comma separated list of items (see navit/item.h for definitions)
 * order: Range for zoom levels.
 * speed_range: Range for vehicle speed, useful for cursors.
