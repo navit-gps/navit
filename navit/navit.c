@@ -68,7 +68,6 @@ struct log;
 struct vehicle;
 #ifdef HAVE_API_WIN32_BASE
 #    include <windows.h>
-
 #    include "util.h"
 #endif
 #ifdef HAVE_API_WIN32_CE
@@ -155,8 +154,7 @@ struct navit {
     int blocked; /**< Whether draw operations are currently blocked. This can be a combination of the
                                       following flags:
                                       1: draw operations are blocked
-                                      2: draw operations are pending, requiring a redraw once draw operations are
-                    unblocked */
+                                      2: draw operations are pending, requiring a redraw once draw operations are unblocked */
     int w, h;
     int drag_bitmap;
     int use_mousewheel;
@@ -1286,14 +1284,12 @@ static int navit_cmd_set_destination(struct navit *this, char *function, struct 
     return 0;
 }
 
-static int navit_cmd_route_remove_next_waypoint(struct navit *this, char *function, struct attr **in,
-                                                struct attr ***out) {
+static int navit_cmd_route_remove_next_waypoint(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     navit_remove_waypoint(this);
     return 0;
 }
 
-static int navit_cmd_route_remove_last_waypoint(struct navit *this, char *function, struct attr **in,
-                                                struct attr ***out) {
+static int navit_cmd_route_remove_last_waypoint(struct navit *this, char *function, struct attr **in, struct attr ***out) {
     navit_remove_nth_waypoint(this, navit_get_destination_count(this) - 1);
     return 0;
 }
@@ -1605,17 +1601,16 @@ static void navit_mark_navigation_stopped(char *former_destination_file) {
 void navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async) {
     char *destination_file;
     destination_file = bookmarks_get_destination_file(TRUE);
+
     if (c) {
         this_->destination = *c;
         this_->destination_valid = 1;
 
         dbg(lvl_debug, "c=(%i,%i)", c->x, c->y);
-        bookmarks_append_destinations(this_->former_destination, destination_file, c, 1, type_former_destination,
-                                      description, this_->recentdest_count);
+        bookmarks_append_destinations(this_->former_destination, destination_file, c, 1, type_former_destination, description, this_->recentdest_count);
     } else {
         this_->destination_valid = 0;
-        bookmarks_append_destinations(this_->former_destination, destination_file, NULL, 0, type_former_destination,
-                                      NULL, this_->recentdest_count);
+        bookmarks_append_destinations(this_->former_destination, destination_file, NULL, 0, type_former_destination, NULL, this_->recentdest_count);
         navit_mark_navigation_stopped(destination_file);
     }
     g_free(destination_file);
@@ -1637,8 +1632,7 @@ void navit_set_destination(struct navit *this_, struct pcoord *c, const char *de
             destination_file = bookmarks_get_destination_file(TRUE);
             pc = g_new(struct pcoord, dstcount);
             route_get_destinations(this_->route, pc, dstcount);
-            bookmarks_append_destinations(this_->former_destination, destination_file, pc, dstcount,
-                                          type_former_itinerary, description, this_->recentdest_count);
+            bookmarks_append_destinations(this_->former_destination, destination_file, pc, dstcount, type_former_itinerary, description, this_->recentdest_count);
             g_free(pc);
             g_free(destination_file);
         }
@@ -1663,8 +1657,7 @@ void navit_add_destination_description(struct navit *this_, struct pcoord *c, co
     char *destination_file;
     if (c) {
         destination_file = bookmarks_get_destination_file(TRUE);
-        bookmarks_append_destinations(this_->former_destination, destination_file, c, 1, type_former_destination,
-                                      description, this_->recentdest_count);
+        bookmarks_append_destinations(this_->former_destination, destination_file, c, 1, type_former_destination, description, this_->recentdest_count);
         g_free(destination_file);
     }
 }
@@ -1686,8 +1679,7 @@ void navit_set_destinations(struct navit *this_, struct pcoord *c, int count, co
         this_->destination_valid = 1;
 
         destination_file = bookmarks_get_destination_file(TRUE);
-        bookmarks_append_destinations(this_->former_destination, destination_file, c, count, type_former_itinerary,
-                                      description, this_->recentdest_count);
+        bookmarks_append_destinations(this_->former_destination, destination_file, c, count, type_former_itinerary, description, this_->recentdest_count);
         g_free(destination_file);
     } else
         this_->destination_valid = 0;
@@ -1871,8 +1863,7 @@ void navit_textfile_debug_log(struct navit *this_, const char *fmt, ...) {
     va_start(ap, fmt);
     if (this_->textfile_debug_log && this_->vehicle) {
         str1 = g_strdup_vprintf(fmt, ap);
-        str2 = g_strdup_printf("0x%x 0x%x%s%s\n", this_->vehicle->coord.x, this_->vehicle->coord.y,
-                               strlen(str1) ? " " : "", str1);
+        str2 = g_strdup_printf("0x%x 0x%x%s%s\n", this_->vehicle->coord.x, this_->vehicle->coord.y, strlen(str1) ? " " : "", str1);
         log_write(this_->textfile_debug_log, str2, strlen(str2), 0);
         g_free(str2);
         g_free(str1);
@@ -2090,6 +2081,7 @@ int navit_init(struct navit *this_) {
     this_->w = 0;
     this_->h = 0;
 
+    dbg(lvl_info, "enter navit_init");
     dbg(lvl_info, "enter gui %p graphics %p", this_->gui, this_->gra);
 
     if (!this_->gui && !(this_->flags & 2)) {
@@ -2105,11 +2097,8 @@ int navit_init(struct navit *this_) {
         struct attr attr_type_gui, attr_type_graphics;
         gui_get_attr(this_->gui, attr_type, &attr_type_gui, NULL);
         graphics_get_attr(this_->gra, attr_type, &attr_type_graphics, NULL);
-        dbg(lvl_error, "FATAL: Failed to connect graphics '%s' to gui '%s'", attr_type_graphics.u.str,
-            attr_type_gui.u.str);
-        dbg(lvl_error,
-            "Please see https://navit.readthedocs.io/en/trunk/user/faq/Failed_to_connect_graphics_to_gui.html "
-            "for explanations and solutions\n");
+        dbg(lvl_error, "FATAL: Failed to connect graphics '%s' to gui '%s'", attr_type_graphics.u.str, attr_type_gui.u.str);
+        dbg(lvl_error, "Please see https://navit.readthedocs.io/en/trunk/user/faq/Failed_to_connect_graphics_to_gui.html for explanations and solutions\n");
         exit(1);
     }
     if (this_->speech && this_->navigation) {
@@ -3334,15 +3323,13 @@ static void navit_vehicle_update_position(struct navit *this_, struct navit_vehi
             pc = g_alloca(sizeof(*pc) * count);
             route_get_destinations(this_->route, pc, count);
             destination_file = bookmarks_get_destination_file(TRUE);
-            bookmarks_append_destinations(this_->former_destination, destination_file, pc, count,
-                                          type_former_itinerary_part, description, this_->recentdest_count);
+            bookmarks_append_destinations(this_->former_destination, destination_file, pc, count, type_former_itinerary_part, description, this_->recentdest_count);
             g_free(destination_file);
             g_free(description);
             break;
         case 2:
             destination_file = bookmarks_get_destination_file(TRUE);
-            bookmarks_append_destinations(this_->former_destination, destination_file, NULL, 0,
-                                          type_former_itinerary_part, NULL, this_->recentdest_count);
+            bookmarks_append_destinations(this_->former_destination, destination_file, NULL, 0, type_former_itinerary_part, NULL, this_->recentdest_count);
             navit_set_destination(this_, NULL, NULL, 0);
             g_free(destination_file);
             break;
@@ -3400,10 +3387,13 @@ void navit_set_position(struct navit *this_, struct pcoord *c) {
 
 static int navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp) {
     if (this_->vehicleprofile == vp)
+        dbg(lvl_debug, "vehicleprofile is the same");
         return 0;
     this_->vehicleprofile = vp;
-    if (this_->route)
+    if (this_->route) {
         route_set_profile(this_->route, this_->vehicleprofile);
+        dbg(lvl_debug, "route vehicleprofile is set");
+    }
     return 1;
 }
 
@@ -3415,6 +3405,7 @@ int navit_set_vehicleprofile_name(struct navit *this_, char *name) {
         if (vehicleprofile_get_attr(l->data, attr_name, &attr, NULL)) {
             if (!strcmp(attr.u.str, name)) {
                 navit_set_vehicleprofile(this_, l->data);
+		dbg(lvl_info, "vehicleprofile set to: '%s'", name);
                 return 1;
             }
         }
@@ -3425,6 +3416,8 @@ int navit_set_vehicleprofile_name(struct navit *this_, char *name) {
 
 static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv) {
     struct attr attr;
+    char *name;
+
     this_->vehicle = nv;
     if (nv && vehicle_get_attr(nv->vehicle, attr_profilename, &attr, NULL)) {
         if (navit_set_vehicleprofile_name(this_, attr.u.str))
@@ -3438,13 +3431,29 @@ static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv) {
             l = this_->vehicleprofiles;
             if (l) {
                 this_->vehicleprofile = l->data;
-                if (this_->route)
+                name = g_strdup("<unknown>");
+                if (vehicleprofile_get_attr(l->data, attr_name, &attr, NULL)) {
+                    name = g_strdup(attr.u.str);
+		}
+                dbg(lvl_error, "No vehicle profile enabled! Is it on purpose? Navit can't calculate a route. Please check your navit.xml");
+		dbg(lvl_info, "Vehicleprofile is set to first profile '%s'", name);
+                if (this_->route) {
                     route_set_profile(this_->route, this_->vehicleprofile);
+		    dbg(lvl_debug, "Route vehicleprofile set to first profile '%s'", name);
+		}
             }
-        }
+	} else {
+            dbg(lvl_info, "vehicleprofile set to default profile 'car'");
+        } // car
     } else {
-        if (this_->route)
+        if (this_->route) {
             route_set_profile(this_->route, this_->vehicleprofile);
+            name = g_strdup("<unknown>");
+            if (vehicleprofile_get_attr(this_->vehicleprofile, attr_name, &attr, NULL)) {
+                name = g_strdup(attr.u.str);
+            }
+	    dbg(lvl_debug, "route vehicleprofile is set to '%s'", name);
+	}
     }
 }
 
@@ -3714,12 +3723,11 @@ int navit_set_vehicle_by_name(struct navit *n, const char *name) {
     while (navit_get_attr(n, attr_vehicle, &vehicle_attr, iter)) {
         v = vehicle_attr.u.vehicle;
         vehicle_get_attr(v, attr_name, &name_attr, NULL);
-        if (name_attr.type == attr_name) {
-            if (!strcmp(name, name_attr.u.str)) {
-                navit_set_attr(n, &vehicle_attr);
-                navit_attr_iter_destroy(iter);
-                return 1;
-            }
+        if (!strcmp(name, name_attr.u.str)) {
+            navit_set_attr(n, &vehicle_attr);
+            dbg(lvl_info, "vehicleprofile set to: '%s'", name);
+            navit_attr_iter_destroy(iter);
+            return 1;
         }
     }
     navit_attr_iter_destroy(iter);
