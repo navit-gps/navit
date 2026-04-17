@@ -1707,7 +1707,7 @@ void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, voi
     on.type = off.type = attr_active;
     on.u.num = 1;
     off.u.num = 0;
-    wb = gui_internal_menu(this, "Map Download");
+    wb = gui_internal_menu(this, wm->name ? wm->name : _("Map Download"));
     w = gui_internal_widget_table_new(this, gravity_top_center | orientation_vertical | flags_expand | flags_fill, 1);
     gui_internal_widget_append(wb, w);
 
