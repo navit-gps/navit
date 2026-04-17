@@ -405,10 +405,6 @@ void * update_download_table(){
             strncpy(key, asset_name, key_len);
             key[key_len] = '\0';
 
-            for(int k=0; k<key_len; k++) {
-                if(key[k] == '-') key[k] = '_';
-            }
-
             maps_size[maps_count].name = key;
             maps_size[maps_count].size_val = size->valueint;
             maps_count++;
