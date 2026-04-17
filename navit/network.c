@@ -412,19 +412,19 @@ void * update_download_table(){
     }
 
     // --- Define Lists ---
-    const char *continents_arr[] = {"africa", "antarctica", "asia", "australia_oceania", "central_america", "europe", "north_america", "south_america", NULL};
+    const char *continents_arr[] = {"africa", "antarctica", "asia", "australia-oceania", "central-america", "europe", "north-america", "south-america", NULL};
 
-    const char *countries_europe_subregion_arr[] = {"france", "germany", "great_britain", "italy", "netherlands", "poland", NULL};
+    const char *countries_europe_subregion_arr[] = {"france", "germany", "great-britain", "italy", "netherlands", "poland", NULL};
 
-    const char *countries_europe_arr[] = {"albania", "andorra", "austria", "azores", "belarus", "belgium", "bosnia_herzegovina", "bulgaria", "croatia", "cyprus", "czech_republic", "denmark", "estonia", "faroe_islands", "finland", "france", "georgia", "germany", "great_britain", "greece", "guernsey_jersey", "hungary", "iceland", "ireland_and_northern_ireland", "isle_of_man", "italy", "kosovo", "latvia", "liechtenstein", "lithuania", "luxembourg", "macedonia", "malta", "moldova", "monaco", "montenegro", "netherlands", "norway", "poland", "portugal", "romania", "serbia", "slovakia", "slovenia", "spain", "sweden", "switzerland", "turkey", "ukraine", NULL};
+    const char *countries_europe_arr[] = {"albania", "andorra", "austria", "azores", "belarus", "belgium", "bosnia-herzegovina", "bulgaria", "croatia", "cyprus", "czech-republic", "denmark", "estonia", "faroe-islands", "finland", "france", "georgia", "germany", "great-britain", "greece", "guernsey-jersey", "hungary", "iceland", "ireland-and-northern-ireland", "isle-of-man", "italy", "kosovo", "latvia", "liechtenstein", "lithuania", "luxembourg", "macedonia", "malta", "moldova", "monaco", "montenegro", "netherlands", "norway", "poland", "portugal", "romania", "serbia", "slovakia", "slovenia", "spain", "sweden", "switzerland", "turkey", "ukraine", NULL};
 
-    const char *countries_africa_arr[] = {"algeria", "angola", "benin", "botswana", "burkina_faso", "burundi", "cameroon", "canary_islands", "cape_verde", "central_african_republic", "chad", "comores", "congo_brazzaville", "congo_democratic_republic", "djibouti", "egypt", "equatorial_guinea", "eritrea", "ethiopia", "gabon", "ghana", "guinea", "guinea_bissau", "ivory_coast", "kenya", "lesotho", "liberia", "libya", "madagascar", "malawi", "mali", "mauritania", "mauritius", "morocco", "mozambique", "namibia", "niger", "nigeria", "rwanda", "saint_helena_ascension_and_tristan_da_cunha", "sao_tome_and_principe", "senegal_and_gambia", "seychelles", "sierra_leone", "somalia", "south_africa", "south_sudan", "sudan", "swaziland", "tanzania", "togo", "tunisia", "uganda", "zambia", "zimbabwe", NULL};
+    const char *countries_africa_arr[] = {"algeria", "angola", "benin", "botswana", "burkina-faso", "burundi", "cameroon", "canary-islands", "cape-verde", "central-african-republic", "chad", "comores", "congo-brazzaville", "congo-democratic-republic", "djibouti", "egypt", "equatorial-guinea", "eritrea", "ethiopia", "gabon", "ghana", "guinea", "guinea-bissau", "ivory-coast", "kenya", "lesotho", "liberia", "libya", "madagascar", "malawi", "mali", "mauritania", "mauritius", "morocco", "mozambique", "namibia", "niger", "nigeria", "rwanda", "saint-helena-ascension-and-tristan-da-cunha", "sao-tome-and-principe", "senegal-and-gambia", "seychelles", "sierra-leone", "somalia", "south-africa", "south-sudan", "sudan", "swaziland", "tanzania", "togo", "tunisia", "uganda", "zambia", "zimbabwe", NULL};
 
-    const char *countries_asia_arr[] = {"afghanistan", "armenia", "azerbaijan", "bangladesh", "bhutan", "cambodia", "china", "gcc_states", "india", "indonesia", "iran", "iraq", "israel_and_palestine", "japan", "jordan", "kazakhstan", "kyrgyzstan", "laos", "lebanon", "malaysia_singapore_brunei", "maldives", "mongolia", "myanmar", "nepal", "north_korea", "pakistan", "philippines", "south_korea", "sri_lanka", "syria", "taiwan", "tajikistan", "thailand", "turkmenistan", "uzbekistan", "vietnam", "yemen", NULL};
+    const char *countries_asia_arr[] = {"afghanistan", "armenia", "azerbaijan", "bangladesh", "bhutan", "cambodia", "china", "gcc-states", "india", "indonesia", "iran", "iraq", "israel-and-palestine", "japan", "jordan", "kazakhstan", "kyrgyzstan", "laos", "lebanon", "malaysia-singapore-brunei", "maldives", "mongolia", "myanmar", "nepal", "north-korea", "pakistan", "philippines", "south-korea", "sri-lanka", "syria", "taiwan", "tajikistan", "thailand", "turkmenistan", "uzbekistan", "vietnam", "yemen", NULL};
 
-    const char *countries_australia_oceania_arr[] = {"american_oceania", "australia", "cook_islands", "fiji", "ile_de_clipperton", "kiribati", "marshall_islands", "micronesia", "nauru", "new_caledonia", "new_zealand", "niue", "palau", "papua_new_guinea", "pitcairn_islands", "polynesie_francaise", "samoa", "solomon_islands", "tokelau", "tonga", "tuvalu", "vanuatu", "wallis_et_futuna", NULL};
+    const char *countries_australia_oceania_arr[] = {"american-oceania", "australia", "cook-islands", "fiji", "ile-de-clipperton", "kiribati", "marshall-islands", "micronesia", "nauru", "new-caledonia", "new-zealand", "niue", "palau", "papua-new-guinea", "pitcairn-islands", "polynesie-francaise", "samoa", "solomon-islands", "tokelau", "tonga", "tuvalu", "vanuatu", "wallis-et-futuna", NULL};
 
-    const char *countries_central_america_arr[] = {"bahamas", "belize", "costa_rica", "cuba", "el_salvador", "guatemala", "haiti_and_domrep", "honduras", "jamaica", "nicaragua", NULL};
+    const char *countries_central_america_arr[] = {"bahamas", "belize", "costa-rica", "cuba", "el-salvador", "guatemala", "haiti-and-domrep", "honduras", "jamaica", "nicaragua", NULL};
 
     const char *countries_north_america_subregion_arr[] = {"canada", "us", NULL};
 
@@ -435,23 +435,23 @@ void * update_download_table(){
     const char *countries_south_america_arr[] = {"argentina", "bolivia", "brazil", "chile", "colombia", "ecuador", "paraguay", "peru", "suriname", "uruguay", "venezuela", NULL};
 
     // Regions
-    const char *regions_france_arr[] = {"alsace", "aquitaine", "auvergne", "basse_normandie", "bourgogne", "bretagne", "centre", "champagne_ardenne", "corse", "franche_comte", "guadeloupe", "guyane", "haute_normandie", "ile_de_france", "languedoc_roussillon", "limousin", "lorraine", "martinique", "mayotte", "midi_pyrenees", "nord_pas_de_calais", "pays_de_la_loire", "picardie", "poitou_charentes", "provence_alpes_cote_d_azur", "reunion", "rhone_alpes", NULL};
+    const char *regions_france_arr[] = {"alsace", "aquitaine", "auvergne", "basse-normandie", "bourgogne", "bretagne", "centre", "champagne-ardenne", "corse", "franche-comte", "guadeloupe", "guyane", "haute-normandie", "ile-de-france", "languedoc-roussillon", "limousin", "lorraine", "martinique", "mayotte", "midi-pyrenees", "nord-pas-de-calais", "pays-de-la-loire", "picardie", "poitou-charentes", "provence-alpes-cote-d-azur", "reunion", "rhone-alpes", NULL};
 
-    const char *regions_germany_arr[] = {"baden_wuerttemberg", "bayern", "berlin", "brandenburg", "bremen", "hamburg", "hessen", "mecklenburg_vorpommern", "niedersachsen", "nordrhein_westfalen", "rheinland_pfalz", "saarland", "sachsen_anhalt", "sachsen", "schleswig_holstein", "thueringen", NULL};
+    const char *regions_germany_arr[] = {"baden-wuerttemberg", "bayern", "berlin", "brandenburg", "bremen", "hamburg", "hessen", "mecklenburg-vorpommern", "niedersachsen", "nordrhein-westfalen", "rheinland-pfalz", "saarland", "sachsen-anhalt", "sachsen", "schleswig-holstein", "thueringen", NULL};
 
     const char *regions_great_britain_arr[] = {"england", "scotland", "wales", NULL};
 
-    const char *regions_italy_arr[] = {"centro", "isole", "nord_est", "nord_ovest", "sud", NULL};
+    const char *regions_italy_arr[] = {"centro", "isole", "nord-est", "nord-ovest", "sud", NULL};
 
-    const char *regions_netherlands_arr[] = {"drenthe", "flevoland", "friesland", "gelderland", "groningen", "limburg", "noord_brabant", "noord_holland", "overijssel", "utrecht", "zeeland", "zuid_holland", NULL};
+    const char *regions_netherlands_arr[] = {"drenthe", "flevoland", "friesland", "gelderland", "groningen", "limburg", "noord-brabant", "noord-holland", "overijssel", "utrecht", "zeeland", "zuid-holland", NULL};
 
-    const char *regions_poland_arr[] = {"dolnoslaskie", "kujawsko_pomorskie", "lodzkie", "lubelskie", "lubuskie", "malopolskie", "mazowieckie", "opolskie", "podkarpackie", "podlaskie", "pomorskie", "slaskie", "swietokrzyskie", "warminsko_mazurskie", "wielkopolskie", "zachodniopomorskie", NULL};
+    const char *regions_poland_arr[] = {"dolnoslaskie", "kujawsko-pomorskie", "lodzkie", "lubelskie", "lubuskie", "malopolskie", "mazowieckie", "opolskie", "podkarpackie", "podlaskie", "pomorskie", "slaskie", "swietokrzyskie", "warminsko-mazurskie", "wielkopolskie", "zachodniopomorskie", NULL};
 
-    const char *regions_canada_arr[] = {"alberta", "british_columbia", "manitoba", "new_brunswick", "newfoundland_and_labrador", "northwest_territories", "nova_scotia", "nunavut", "ontario", "prince_edward_island", "quebec", "saskatchewan", "yukon", NULL};
+    const char *regions_canada_arr[] = {"alberta", "british-columbia", "manitoba", "new-brunswick", "newfoundland-and-labrador", "northwest-territories", "nova-scotia", "nunavut", "ontario", "prince-edward-island", "quebec", "saskatchewan", "yukon", NULL};
 
-    const char *regions_us_arr[] = {"alabama", "alaska", "arizona", "arkansas", "california", "colorado", "connecticut", "delaware", "district_of_columbia", "florida", "georgia", "hawaii", "idaho", "illinois", "indiana", "iowa", "kansas", "kentucky", "louisiana", "maine", "maryland", "massachusetts", "michigan", "minnesota", "mississippi", "missouri", "montana", "nebraska", "nevada", "new_hampshire", "new_jersey", "new_mexico", "new_york", "north_carolina", "north_dakota", "ohio", "oklahoma", "oregon", "pennsylvania", "puerto_rico", "rhode_island", "south_carolina", "south_dakota", "tennessee", "texas", "utah", "vermont", "virginia", "washington", "west_virginia", "wisconsin", "wyoming", NULL};
+    const char *regions_us_arr[] = {"alabama", "alaska", "arizona", "arkansas", "california", "colorado", "connecticut", "delaware", "district-of-columbia", "florida", "georgia", "hawaii", "idaho", "illinois", "indiana", "iowa", "kansas", "kentucky", "louisiana", "maine", "maryland", "massachusetts", "michigan", "minnesota", "mississippi", "missouri", "montana", "nebraska", "nevada", "new-hampshire", "new-jersey", "new-mexico", "new-york", "north-carolina", "north-dakota", "ohio", "oklahoma", "oregon", "pennsylvania", "puertonrico", "rhode-island", "south-carolina", "south-dakota", "tennessee", "texas", "utah", "vermont", "virginia", "washington", "west-virginia", "wisconsin", "wyoming", NULL};
 
-    const char *regions_brazil_arr[] = {"centro_oeste", "nordeste", "norte", "sudeste", "sul", NULL};
+    const char *regions_brazil_arr[] = {"centro-oeste", "nordeste", "norte", "sudeste", "sul", NULL};
 
     // --- Processing Logic ---
     GArray* menu_data = g_array_new(TRUE, FALSE, sizeof(MapData));
@@ -483,7 +483,7 @@ void * update_download_table(){
                     for (int r = 0; regions[r]!=NULL; r++) {
                         const char *region = regions[r];
                         char key[256];
-                        sprintf(key, "%s_%s_%s", continent, country, region);
+                        sprintf(key, "%s-%s-%s", continent, country, region);
                         long long map_size = get_size(key, &maps_count, maps_size);
                         size_country += map_size;
  
@@ -491,17 +491,17 @@ void * update_download_table(){
                     }
                     if (strcmp(country, "france") == 0) pos = 145; 
                     else if (strcmp(country, "germany") == 0) pos = 174;
-                    else if (strcmp(country, "great_britain") == 0) pos = 191;
+                    else if (strcmp(country, "great-britain") == 0) pos = 191;
                     else if (strcmp(country, "italy") == 0) pos = 201;
                     else if (strcmp(country, "netherlands") == 0) pos = 217; 
                     else if (strcmp(country, "poland") == 0) pos = 231;
                 } else {
                     char key[256];
-                    sprintf(key, "%s_%s", continent, country);
+                    sprintf(key, "%s-%s", continent, country);
                     size_country = get_size(key, &maps_count, maps_size);
                 }
                 char key[256];
-                sprintf(key, "%s_%s", continent, country);
+                sprintf(key, "%s-%s", continent, country);
 		add_to_listdata(key, size_country, menu_data, pos);
                 size_europe += size_country;
             }
@@ -525,7 +525,7 @@ void * update_download_table(){
                     for (int r = 0; regions[r]!=NULL; r++) {
                         const char *region = regions[r];
                         char key[256];
-                        sprintf(key, "%s_%s_%s", continent, country, region);
+                        sprintf(key, "%s-%s-%s", continent, country, region);
                         long long map_size = get_size(key, &maps_count, maps_size);
                         size_country += map_size;
 			add_to_listdata(key, map_size, menu_data, -1);
@@ -535,19 +535,19 @@ void * update_download_table(){
 
                 } else {
                     char key[256];
-                    sprintf(key, "%s_%s", continent, country);
+                    sprintf(key, "%s-%s", continent, country);
                     size_country = get_size(key, &maps_count, maps_size);
                 }
                 char key[256];
-                sprintf(key, "%s_%s", continent, country);
+                sprintf(key, "%s-%s", continent, country);
 		add_to_listdata(key, size_country, menu_data, pos);
                 size_north_america += size_country;
             }
 	    pos = 259;
-            add_to_listdata("north_america", size_north_america, menu_data, pos);
+            add_to_listdata("north-america", size_north_america, menu_data, pos);
             size_planet += size_north_america;
         }
-        else if (strcmp(continent, "south_america") == 0) {
+        else if (strcmp(continent, "south-america") == 0) {
             long long size_south_america = 0;
             for (int i = 0; countries_south_america_arr[i]!=NULL; i++) {
                 const char *country = countries_south_america_arr[i];
@@ -562,7 +562,7 @@ void * update_download_table(){
                     for (int r = 0; regions[r]!=NULL; r++) {
                         const char *region = regions[r];
                         char key[256];
-                        sprintf(key, "%s_%s_%s", continent, country, region);
+                        sprintf(key, "%s-%s-%s", continent, country, region);
                         long long map_size = get_size(key, &maps_count, maps_size);
                         size_country += map_size;
 			add_to_listdata(key, map_size, menu_data, -1);
@@ -572,16 +572,16 @@ void * update_download_table(){
 
                 } else {
                     char key[256];
-                    sprintf(key, "%s_%s", continent, country);
+                    sprintf(key, "%s-%s", continent, country);
                     size_country = get_size(key, &maps_count, maps_size);
                 }
                 char key[256];
-                sprintf(key, "%s_%s", continent, country);
+                sprintf(key, "%s-%s", continent, country);
 		add_to_listdata(key, size_country, menu_data, pos);
                 size_south_america += size_country;
             }
 	    pos = 329;
-            add_to_listdata("south_america", size_south_america, menu_data, pos);
+            add_to_listdata("south-america", size_south_america, menu_data, pos);
             size_planet += size_south_america;
         }
         else if (strcmp(continent, "antarctica") == 0) {
@@ -595,14 +595,14 @@ void * update_download_table(){
 	    const char ** countries;
             if (strcmp(continent, "africa") == 0) countries = countries_africa_arr;
             else if (strcmp(continent, "asia") == 0) countries = countries_asia_arr;
-            else if (strcmp(continent, "australia_oceania") == 0) countries = countries_australia_oceania_arr;
-            else if (strcmp(continent, "central_america") == 0) countries = countries_central_america_arr;
+            else if (strcmp(continent, "australia-oceania") == 0) countries = countries_australia_oceania_arr;
+            else if (strcmp(continent, "central-america") == 0) countries = countries_central_america_arr;
             else continue;
             
             for (int i = 0; countries[i]!=NULL; i++) {
                 const char *country = countries[i];
                 char key[256];
-                sprintf(key, "%s_%s", continent, country);
+                sprintf(key, "%s-%s", continent, country);
                 long long map_size = get_size(key, &maps_count, maps_size);
                 size_continent += map_size;
 		add_to_listdata(key, map_size, menu_data, -1);
