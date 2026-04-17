@@ -1680,7 +1680,6 @@ static void gui_internal_cmd_map_download_do(struct gui_priv *this, struct widge
     error = pthread_create(&download, NULL, download_maps, dl_data);
     pthread_create(&progress, NULL, gui_internal_populate_download_table, this);
 
-    //download_map(this, wm, dl_info);
 }
 
 void gui_internal_cmd_map_download(struct gui_priv *this, struct widget *wm, void *data) {
