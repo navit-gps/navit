@@ -336,6 +336,10 @@ static void gui_internal_search_idle(struct gui_priv *this, char *wm_name, struc
     struct widget *search_input = NULL;
     struct widget *menu, *resultlist_row, *resultlist_entry;
 
+    gchar *address_label;
+    gchar *town_label;
+    int town_label_level = 1;
+
     res = search_list_get_result(this->sl);
     if (!res) {
         gui_internal_search_idle_end(this);
@@ -359,9 +363,18 @@ static void gui_internal_search_idle(struct gui_priv *this, char *wm_name, struc
         result_sublabel = town_display_label(res, 2, 1);
     } else if (!strcmp(wm_name, "House number")) {
         item_name = res->house_number->house_number;
+
+        // label: order of address elements
+
+        dbg(lvl_debug,"town_label_level: '%i'", town_label_level);
+        town_label = town_display_label(res, town_label_level, 0);
+        dbg(lvl_debug,"town_label: '%s'", town_label);
+        address_label = g_strdup_printf("%s, %s %s", item_name, res->street->name, town_label);
+
         result_main_label = g_strdup_printf("%s, %s", item_name, res->street->name);
         result_sublabel = town_display_label(res, 3, 0);
-        widget_name = g_strdup(result_main_label);
+
+        widget_name = g_strdup(address_label);
     }
     if (!item_name) {
         dbg(lvl_error, "Skipping nameless item in search (search type: %s). Please report this as a bug.", wm_name);
