@@ -220,7 +220,6 @@ void * gui_internal_populate_download_table(void* parent) {
     gui_internal_widget_append(this->download_data.download_table, row=gui_internal_label_new(this, text));
     gui_internal_menu_render(this);
     g_free(text);
-    dbg(lvl_warning, "Error creating download thread\n");
 }
 
 
