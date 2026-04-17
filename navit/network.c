@@ -138,7 +138,7 @@ void * download_map(struct gui_priv *this, struct widget *wm, struct map_downloa
     return NULL; //(int)res;
 }
 
-void * download_map2(void *data) {
+void * download_map(void *data) {
     struct gui_download_data *dl_data = data;
     struct gui_priv *this = dl_data->this;
     struct widget *wm = dl_data->wm;
@@ -219,17 +219,17 @@ void * download_map2(void *data) {
 }
 
 
-void * download_map3(void * data) {
+void * download_maps(void * data) {
     // check name
     // if name directly in list, skip it and only take elements which are not part of others
     // build download list
     // download list one by one
-    // make dl_info and call download_map2
+    // make dl_info and call download_map
 
     char buffer[256];
     FILE *f;
     GThreadPool *pool = g_thread_pool_new(
-    (GFunc)download_map2,
+    (GFunc)download_map,
         NULL,
         5,                     // Max 5 threads
         FALSE,

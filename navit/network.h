@@ -29,8 +29,8 @@ long long get_size(char *key, int* maps_count, MapData *maps_size);
 size_t write_callback(void *contents, size_t size, size_t nmemb, void *userp);
 void format_filesize(long long map_size, char *buffer);
 void * download_map (struct gui_priv *this, struct widget *wm, struct map_download_info * dl_info);
-void * download_map2 (void * data);
-void * download_map3(void * data);
+void * download_map (void * data);
+void * download_maps(void * data);
 void * update_download_table();
 #ifdef __cplusplus
 }
