@@ -526,6 +526,7 @@ endif(HAVE_LIBSPEECHD)
 
 if (HAVE_SYSTEM)
 	set_with_reason(speech/cmdline "system() call is available" TRUE)
+	add_compile_definitions(HAVE_SYSTEM)
 endif(HAVE_SYSTEM)
 
 if (HAVE_CREATEPROCESS)

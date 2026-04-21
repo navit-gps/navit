@@ -19,7 +19,7 @@
 
 #include <glib.h>
 #ifdef HAVE_UNISTD_H
-#include <unistd.h>
+#    include <unistd.h>
 #endif
 extern "C" {
 #include "config.h"
@@ -38,29 +38,28 @@ extern "C" {
 #include "window.h"
 }
 #if defined(WINDOWS) || defined(WIN32) || defined(HAVE_API_WIN32_CE)
-#include <windows.h>
+#    include <windows.h>
 #endif
 #include "QNavitQuick.h"
 #include "graphics_qt5.h"
 #include <QPainter>
 
-QNavitQuick::QNavitQuick(QQuickItem* parent)
-    : QQuickPaintedItem(parent) {
+QNavitQuick::QNavitQuick(QQuickItem *parent) : QQuickPaintedItem(parent) {
     setAcceptedMouseButtons(Qt::AllButtons);
     graphics_priv = NULL;
 }
 
-void QNavitQuick::setGraphicContext(GraphicsPriv* gp) {
+void QNavitQuick::setGraphicContext(GraphicsPriv *gp) {
     dbg(lvl_debug, "enter");
     graphics_priv = gp->gp;
     QObject::connect(gp, SIGNAL(update()), this, SLOT(update()));
 }
 
-static void paintOverlays(QPainter* painter, struct graphics_priv* gp, QPaintEvent* event) {
+static void paintOverlays(QPainter *painter, struct graphics_priv *gp, QPaintEvent *event) {
     GHashTableIter iter;
     struct graphics_priv *key, *value;
     g_hash_table_iter_init(&iter, gp->overlays);
-    while (g_hash_table_iter_next(&iter, (void**)&key, (void**)&value)) {
+    while (g_hash_table_iter_next(&iter, (void **)&key, (void **)&value)) {
         if (!value->disable) {
             QRect rr(value->x, value->y, value->pixmap->width(), value->pixmap->height());
             if (event->rect().intersects(rr)) {
@@ -74,9 +73,9 @@ static void paintOverlays(QPainter* painter, struct graphics_priv* gp, QPaintEve
     }
 }
 
-void QNavitQuick::paint(QPainter* painter) {
-    QPaintEvent event = QPaintEvent(QRect(boundingRect().x(), boundingRect().y(), boundingRect().width(),
-                                          boundingRect().height()));
+void QNavitQuick::paint(QPainter *painter) {
+    QPaintEvent event =
+        QPaintEvent(QRect(boundingRect().x(), boundingRect().y(), boundingRect().width(), boundingRect().height()));
 
     dbg(lvl_debug, "enter (%f, %f, %f, %f)", boundingRect().x(), boundingRect().y(), boundingRect().width(),
         boundingRect().height());
@@ -87,20 +86,19 @@ void QNavitQuick::paint(QPainter* painter) {
         painter->fillRect(boundingRect(), *graphics_priv->background_graphics_gc_priv->brush);
     }
     /* draw base */
-    painter->drawPixmap(graphics_priv->scroll_x, graphics_priv->scroll_y, *graphics_priv->pixmap,
-                        boundingRect().x(), boundingRect().y(),
-                        boundingRect().width(), boundingRect().height());
+    painter->drawPixmap(graphics_priv->scroll_x, graphics_priv->scroll_y, *graphics_priv->pixmap, boundingRect().x(),
+                        boundingRect().y(), boundingRect().width(), boundingRect().height());
     /* disable on root pane disables ALL overlays (for drag of background) */
-    if(!(graphics_priv->disable)) {
+    if (!(graphics_priv->disable)) {
         paintOverlays(painter, graphics_priv, &event);
     }
 }
 
-void QNavitQuick::keyPressEvent(QKeyEvent* event) {
+void QNavitQuick::keyPressEvent(QKeyEvent *event) {
     dbg(lvl_debug, "enter");
     char key[2];
     int keycode;
-    char* text = NULL;
+    char *text = NULL;
 
     keycode = event->key();
     key[0] = '\0';
@@ -153,18 +151,18 @@ void QNavitQuick::keyPressEvent(QKeyEvent* event) {
         }
     }
     if (text != NULL)
-        callback_list_call_attr_1(graphics_priv->callbacks, attr_keypress, (void*)text);
+        callback_list_call_attr_1(graphics_priv->callbacks, attr_keypress, (void *)text);
     else if (key[0])
-        callback_list_call_attr_1(graphics_priv->callbacks, attr_keypress, (void*)key);
+        callback_list_call_attr_1(graphics_priv->callbacks, attr_keypress, (void *)key);
     else
         dbg(lvl_debug, "keyval 0x%x", keycode);
 }
 
-void QNavitQuick::keyReleaseEvent(QKeyEvent* event) {
+void QNavitQuick::keyReleaseEvent(QKeyEvent *event) {
     dbg(lvl_debug, "enter");
 }
 
-void QNavitQuick::geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry) {
+void QNavitQuick::geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry) {
     dbg(lvl_debug, "enter");
     QQuickPaintedItem::geometryChanged(newGeometry, oldGeometry);
     if (graphics_priv == NULL) {
@@ -172,7 +170,7 @@ void QNavitQuick::geometryChanged(const QRectF& newGeometry, const QRectF& oldGe
         return;
     }
     if (graphics_priv->pixmap != NULL) {
-        if((width() != graphics_priv->pixmap->width()) || (height() != graphics_priv->pixmap->height())) {
+        if ((width() != graphics_priv->pixmap->width()) || (height() != graphics_priv->pixmap->height())) {
             delete graphics_priv->pixmap;
             graphics_priv->pixmap = NULL;
         }
@@ -189,7 +187,7 @@ void QNavitQuick::geometryChanged(const QRectF& newGeometry, const QRectF& oldGe
         resize_callback(graphics_priv, width(), height());
 }
 
-void QNavitQuick::mouseEvent(int pressed, QMouseEvent* event) {
+void QNavitQuick::mouseEvent(int pressed, QMouseEvent *event) {
     struct point p;
     dbg(lvl_debug, "enter");
     p.x = event->x();
@@ -212,34 +210,34 @@ void QNavitQuick::mouseEvent(int pressed, QMouseEvent* event) {
     }
 }
 
-void QNavitQuick::mousePressEvent(QMouseEvent* event) {
+void QNavitQuick::mousePressEvent(QMouseEvent *event) {
     dbg(lvl_debug, "enter");
     mouseEvent(1, event);
 }
 
-void QNavitQuick::mouseReleaseEvent(QMouseEvent* event) {
+void QNavitQuick::mouseReleaseEvent(QMouseEvent *event) {
     dbg(lvl_debug, "enter");
     mouseEvent(0, event);
 }
 
-void QNavitQuick::mouseMoveEvent(QMouseEvent* event) {
+void QNavitQuick::mouseMoveEvent(QMouseEvent *event) {
     dbg(lvl_debug, "enter");
     struct point p;
     p.x = event->x();
     p.y = event->y();
-    callback_list_call_attr_1(graphics_priv->callbacks, attr_motion, (void*)&p);
+    callback_list_call_attr_1(graphics_priv->callbacks, attr_motion, (void *)&p);
 }
 
-void QNavitQuick::wheelEvent(QWheelEvent* event) {
+void QNavitQuick::wheelEvent(QWheelEvent *event) {
     struct point p;
     int button;
     dbg(lvl_debug, "enter");
-    p.x = event->x(); // xy-coordinates of the mouse pointer
+    p.x = event->x();  // xy-coordinates of the mouse pointer
     p.y = event->y();
 
-    if (event->delta() > 0) // wheel movement away from the person
+    if (event->delta() > 0)  // wheel movement away from the person
         button = 4;
-    else if (event->delta() < 0) // wheel movement towards the person
+    else if (event->delta() < 0)  // wheel movement towards the person
         button = 5;
     else
         button = -1;
