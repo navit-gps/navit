@@ -1,7 +1,6 @@
 #include "qml_map.h"
 
-MapObject::MapObject(QObject *parent)
-    : QObject(parent) {
+MapObject::MapObject(QObject *parent) : QObject(parent) {
 }
 
 MapObject::MapObject(const QString &name, const bool &active, QObject *parent)
@@ -29,4 +28,3 @@ void MapObject::setActive(const bool &active) {
         emit activeChanged();
     }
 }
-
