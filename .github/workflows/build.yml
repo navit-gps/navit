@@ -169,7 +169,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: sanity_check
     container:
-        image: ubuntu:24.04
+        image: ubuntu:26.04
     steps:
       - run: |
           apt-get update && apt-get install -y git
