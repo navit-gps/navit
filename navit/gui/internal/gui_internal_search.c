@@ -336,6 +336,14 @@ static void gui_internal_search_idle(struct gui_priv *this, char *wm_name, struc
     struct widget *search_input = NULL;
     struct widget *menu, *resultlist_row, *resultlist_entry;
 
+    struct attr attr;
+    gchar *address_format;
+    GString *address_label;
+    gchar *house_number_label;
+    gchar *street_label;
+    gchar *town_label;
+    int town_label_level;
+
     res = search_list_get_result(this->sl);
     if (!res) {
         gui_internal_search_idle_end(this);
@@ -359,10 +367,55 @@ static void gui_internal_search_idle(struct gui_priv *this, char *wm_name, struc
         result_sublabel = town_display_label(res, 2, 1);
     } else if (!strcmp(wm_name, "House number")) {
         item_name = res->house_number->house_number;
-        result_main_label = g_strdup_printf("%s, %s", item_name, res->street->name);
+
+        // label: order of address elements
+
+        // Address format
+        address_format = "{house_number}, {street} {town}";
+        if (navit_get_attr(this->nav, attr_address_format, &attr, NULL))
+            address_format = attr.u.str;
+        dbg(lvl_debug,"address_format: '%s'", address_format);
+        address_label = g_string_new(address_format);
+
+        // Town_level
+        town_label_level = 1;
+        if (navit_get_attr(this->nav, attr_destination_town_level, &attr, NULL)) {
+            if (town_label_level < 1 || town_label_level > 3)
+                town_label_level = 1;
+        }
+        dbg(lvl_debug,"town_label_level: '%i'", town_label_level);
+
+        // Labels
+        house_number_label = item_name;
+        dbg(lvl_debug,"house_number_label: '%s'", house_number_label);
+        street_label = res->street->name;
+        dbg(lvl_debug,"street_label: '%s'", street_label);
+        town_label = town_display_label(res, town_label_level, 0);
+        dbg(lvl_debug,"town_label: '%s'", town_label);
+
+        // Set Navit destination properties
+        dbg(lvl_debug,"house_number_label: '%s'", house_number_label);
+        navit_set_destination_house_number(this->nav, house_number_label);
+        dbg(lvl_debug,"street_label: '%s'", street_label);
+        navit_set_destination_street(this->nav, street_label);
+        dbg(lvl_debug,"town_label: '%s'", town_label);
+        navit_set_destination_town(this->nav, town_label);
+
+        // Replace placeholders
+        g_string_replace(address_label, "{house_number}", house_number_label, 0);
+        dbg(lvl_debug,"address_label: '%s'", address_label->str);
+        g_string_replace(address_label, "{street}", street_label, 0);
+        dbg(lvl_debug,"address_label: '%s'", address_label->str);
+        g_string_replace(address_label, "{town}", town_label, 0);
+        dbg(lvl_debug,"address_label: '%s'", address_label->str);
+
+        result_main_label = g_strdup(address_label->str);
         result_sublabel = town_display_label(res, 3, 0);
-        widget_name = g_strdup(result_main_label);
+
+        // Widget name is also used for destination description
+        widget_name = g_strdup(address_label->str);
     }
+
     if (!item_name) {
         dbg(lvl_error, "Skipping nameless item in search (search type: %s). Please report this as a bug.", wm_name);
         return;

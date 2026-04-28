@@ -68,7 +68,6 @@ struct log;
 struct vehicle;
 #ifdef HAVE_API_WIN32_BASE
 #    include <windows.h>
-
 #    include "util.h"
 #endif
 #ifdef HAVE_API_WIN32_CE
@@ -152,11 +151,19 @@ struct navit {
     struct log *textfile_debug_log;
     struct pcoord destination;
     int destination_valid;
+
+    char *destination_description;  // final destination selected by the user
+    int destination_town_level;
+    char *address_format;
+    char *destination_town;
+    char *destination_street;
+    char *destination_house_number;
+
     int blocked; /**< Whether draw operations are currently blocked. This can be a combination of the
                                       following flags:
                                       1: draw operations are blocked
                                       2: draw operations are pending, requiring a redraw once draw operations are
-                    unblocked */
+                                         unblocked */
     int w, h;
     int drag_bitmap;
     int use_mousewheel;
@@ -1282,6 +1289,8 @@ static int navit_cmd_set_destination(struct navit *this, char *function, struct 
         return 0;
     if (in[0] && ATTR_IS_STRING(in[0]->type))
         description = in[0]->u.str;
+
+    dbg(lvl_debug, "description: %s", description);
     navit_set_destination(this, &pc, description, 1);
     return 0;
 }
@@ -1494,6 +1503,7 @@ struct navit *navit_new(struct attr *parent, struct attr **attrs) {
     this_->tunnel_nightlayout = FALSE;
     this_->layout_before_tunnel = "";
     this_->sunrise_degrees = -5;
+    this_->destination_town_level = 1;
 
     transform_from_geo(pro, &g, &co);
     center.x = co.x;
@@ -1598,27 +1608,41 @@ static void navit_mark_navigation_stopped(char *former_destination_file) {
  * @param navit The navit instance
  * @param c The coordinate to start routing to
  * @param description A label which allows the user to later identify this destination in the former destinations
- * selection
+ *        selection
  * @param async Set to 1 to do route calculation asynchronously
  * @return nothing
  */
 void navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async) {
     char *destination_file;
     destination_file = bookmarks_get_destination_file(TRUE);
+
     if (c) {
         this_->destination = *c;
         this_->destination_valid = 1;
+        this_->destination_description = g_strdup(description);
 
+        dbg(lvl_info, "Calculating route for destination '%s'.", description);
         dbg(lvl_debug, "c=(%i,%i)", c->x, c->y);
+        dbg(lvl_info, "Calculating route using '%s' profile.", profilename);
         bookmarks_append_destinations(this_->former_destination, destination_file, c, 1, type_former_destination,
                                       description, this_->recentdest_count);
     } else {
         this_->destination_valid = 0;
+        this_->destination_description = NULL;
+        this_->destination_town = NULL;
+        this_->destination_street = NULL;
+        this_->destination_house_number = NULL;
         bookmarks_append_destinations(this_->former_destination, destination_file, NULL, 0, type_former_destination,
                                       NULL, this_->recentdest_count);
         navit_mark_navigation_stopped(destination_file);
     }
     g_free(destination_file);
+    dbg(lvl_debug, "this_->destination_description: %s", this_->destination_description);
+    dbg(lvl_debug, "this_->address_format: %s", this_->address_format);
+    dbg(lvl_debug, "this_->destination_town_level: %i", this_->destination_town_level);
+    dbg(lvl_debug, "this_->destination_town: '%s'", this_->destination_town);
+    dbg(lvl_debug, "this_->destination_street: '%s'", this_->destination_street);
+    dbg(lvl_debug, "this_->destination_house_number: '%s'", this_->destination_house_number);
 
     if (this_->route) {
         struct attr attr;
@@ -1739,6 +1763,33 @@ char *navit_get_destination_description(struct navit *this_, int n) {
     return route_get_destination_description(this_->route, n);
 }
 
+char *navit_get_destination_house_number(struct navit *this_, int n) {
+    return this_->destination_house_number;
+}
+
+char *navit_get_destination_street(struct navit *this_, int n) {
+    return this_->destination_street;
+}
+
+char *navit_get_destination_town(struct navit *this_, int n) {
+    return this_->destination_town;
+}
+
+void navit_set_destination_house_number(struct navit *this_, char *house_number) {
+    this_->destination_house_number = house_number;
+    dbg(lvl_debug, "this_->destination_house_number: %s", this_->destination_house_number);
+}
+
+void navit_set_destination_street(struct navit *this_, char *street) {
+    this_->destination_street = street;
+    dbg(lvl_debug, "this_->destination_street: %s", this_->destination_street);
+}
+
+void navit_set_destination_town(struct navit *this_, char *town) {
+    this_->destination_town = town;
+    dbg(lvl_debug, "this_->destination_town: %s", this_->destination_town);
+}
+
 void navit_remove_nth_waypoint(struct navit *this_, int n) {
     if (!this_->route)
         return;
@@ -1824,15 +1875,18 @@ struct map *read_former_destinations_from_file() {
 }
 
 static void navit_add_former_destinations_from_file(struct navit *this_) {
+    struct attr attr;
     struct item *item;
     int i, valid = 0, count = 0, maxcount = 1;
     struct coord *c = g_new(struct coord, maxcount);
     struct pcoord *pc;
     struct map_rect *mr;
+    char *active_destination_description = NULL;
 
     this_->former_destination = read_former_destinations_from_file();
     if (!this_->route || !navit_former_destinations_active(this_) || !this_->vehicle)
         return;
+
     mr = map_rect_new(this_->former_destination, NULL);
     while ((item = map_rect_get_item(mr))) {
         if (item->type == type_former_itinerary || item->type == type_former_itinerary_part) {
@@ -1842,11 +1896,18 @@ static void navit_add_former_destinations_from_file(struct navit *this_) {
                 c = g_realloc(c, sizeof(struct coord) * maxcount);
                 count += item_coord_get(item, &c[count], maxcount - count);
             }
-            if (count)
+            if (count) {
                 valid = 1;
-        }
-    }
+                // Get destination description
+                item_attr_get(item, attr_label, &attr);
+                active_destination_description = g_strdup(attr.u.str);
+                dbg(lvl_debug, "active_destination_description: %s", g_strdup(active_destination_description));
+            }
+
+        } // if type
+    } // while item
     map_rect_destroy(mr);
+
     if (valid && count > 0) {
         pc = g_new(struct pcoord, count);
         for (i = 0; i < count; i++) {
@@ -1858,8 +1919,12 @@ static void navit_add_former_destinations_from_file(struct navit *this_) {
             route_set_destination(this_->route, &pc[0], 1);
         else
             route_set_destinations(this_->route, pc, count, 1);
+
+        // Set destination
         this_->destination = pc[count - 1];
         this_->destination_valid = 1;
+        this_->destination_description = g_strdup(active_destination_description);
+
         g_free(pc);
     }
     g_free(c);
@@ -2090,7 +2155,9 @@ int navit_init(struct navit *this_) {
     this_->w = 0;
     this_->h = 0;
 
-    dbg(lvl_info, "enter gui %p graphics %p", this_->gui, this_->gra);
+    dbg(lvl_debug, "enter navit_init");
+    dbg(lvl_debug, "(begin) ready=%d", this_->ready);
+    dbg(lvl_debug, "enter gui %p graphics %p", this_->gui, this_->gra);
 
     if (!this_->gui && !(this_->flags & 2)) {
         dbg(lvl_error, "FATAL: No GUI available.");
@@ -2111,6 +2178,18 @@ int navit_init(struct navit *this_) {
             "Please see https://navit.readthedocs.io/en/trunk/user/faq/Failed_to_connect_graphics_to_gui.html "
             "for explanations and solutions\n");
         exit(1);
+    }
+    dbg(lvl_info, "Setting Destination Town Level");
+    if (this_->destination_town_level) {
+        dbg(lvl_info, "Destination Town Level set in navit");
+    } else {
+        dbg(lvl_info, "No Destination Town Level set in navit");
+    }
+    dbg(lvl_info, "Setting Address Format");
+    if (this_->address_format) {
+        dbg(lvl_info, "Address Format set in navit");
+    } else {
+        dbg(lvl_info, "No Address Format set in navit");
     }
     if (this_->speech && this_->navigation) {
         struct attr speech;
@@ -2136,6 +2215,7 @@ int navit_init(struct navit *this_) {
         mapset_close(msh);
 
         if (this_->route) {
+            dbg(lvl_debug, "previous route used");
             if ((map = route_get_map(this_->route))) {
                 struct attr map_a;
                 map_a.type = attr_map;
@@ -2153,7 +2233,10 @@ int navit_init(struct navit *this_) {
             }
             route_set_mapset(this_->route, ms);
             route_set_projection(this_->route, transform_get_projection(this_->trans));
+        } else {
+            dbg(lvl_debug, "no route");
         }
+
         if (this_->tracking) {
             tracking_set_mapset(this_->tracking, ms);
             if (this_->route)
@@ -2233,12 +2316,15 @@ int navit_init(struct navit *this_) {
 
     callback_list_call_attr_1(this_->attr_cbl, attr_navit, this_);
     callback = (this_->ready == 2);
+
     this_->ready |= 1;
-    dbg(lvl_info, "ready=%d", this_->ready);
+    dbg(lvl_debug, "ready=%d", this_->ready);
     if (this_->ready == 3)
         navit_draw_async(this_, 1);
     if (callback)
         callback_list_call_attr_1(this_->attr_cbl, attr_graphics_ready, this_);
+
+    dbg(lvl_debug, "(end) ready=%d", this_->ready);
     return 0;
 }
 
@@ -2572,6 +2658,12 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
         dbg(lvl_debug, "0x%x,0x%x", co.x, co.y);
         transform_set_center(this_->trans, &co);
         break;
+    case attr_destination_town_level:
+        this_->destination_town_level = attr->u.num;
+        break;
+    case attr_address_format:
+        this_->address_format = attr->u.str;
+        break;
     case attr_drag_bitmap:
         attr_updated = (this_->drag_bitmap != !!attr->u.num);
         this_->drag_bitmap = !!attr->u.num;
@@ -2845,6 +2937,32 @@ int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, 
         if (!this_->destination_valid)
             return 0;
         attr->u.pcoord = &this_->destination;
+        break;
+    case attr_destination_description:
+        if (!this_->destination_valid)
+            return 0;
+        attr->u.str = g_strdup(this_->destination_description);
+        break;
+    case attr_destination_house_number:
+        if (!this_->destination_valid)
+            return 0;
+        attr->u.str = g_strdup(this_->destination_house_number);
+        break;
+    case attr_destination_street:
+        if (!this_->destination_valid)
+            return 0;
+        attr->u.str = g_strdup(this_->destination_street);
+        break;
+    case attr_destination_town_level:
+        attr->u.num = this_->destination_town_level;
+        break;
+    case attr_destination_town:
+        if (!this_->destination_valid)
+            return 0;
+        attr->u.str = g_strdup(this_->destination_town);
+        break;
+    case attr_address_format:
+        attr->u.str = this_->address_format;
         break;
     case attr_displaylist:
         attr->u.displaylist = this_->displaylist;
