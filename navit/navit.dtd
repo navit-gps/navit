@@ -95,6 +95,7 @@
 <!ELEMENT speech EMPTY>
 <!ATTLIST speech type CDATA #REQUIRED>
 <!ATTLIST speech data CDATA #REQUIRED>
+<!ATTLIST speech data_tts CDATA #IMPLIED>
 <!ATTLIST speech cps CDATA #IMPLIED>
 <!ELEMENT mapset (map*,xi:include*)>
 <!ATTLIST mapset enabled CDATA #IMPLIED>
