@@ -129,6 +129,7 @@ enum attr_position_valid {
 #define ATTR_IS_GROUP(x) ((x) >= attr_type_group_begin && (x) <= attr_type_group_end)
 
 #define ATTR_INT(x, y) ((struct attr){attr_##x, {.num = y}})
+#define ATTR_STRING(x, y) ((struct attr){attr_##x, {.str = y}})
 #define ATTR_OBJECT(x, y) ((struct attr){attr_##x, {.navit = y}})
 
 struct range {
