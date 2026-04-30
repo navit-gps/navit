@@ -101,6 +101,7 @@ static GList *speech_cmdline_search(GList *samples, int suffix_len, const char *
 }
 
 struct speech_priv {
+    char *name;
     char *cmdline;
     char *sample_dir;
     char *sample_suffix;
@@ -212,6 +213,10 @@ static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr 
         return NULL;
     this=g_new0(struct speech_priv,1);
     this->cmdline=g_strdup(attr->u.str);
+    attr = attr_search(attrs, attr_name);
+    if (! attr)
+        return NULL;
+    this->name = g_strdup(attr->u.str);
     if ((attr=attr_search(attrs, attr_sample_dir)))
         this->sample_dir=g_strdup(attr->u.str);
     if ((attr=attr_search(attrs, attr_sample_suffix)))
