@@ -20,98 +20,96 @@
 #define USE_FLOAT 0
 #define REQUIRES_POWER_OF_2 0
 
+#include "graphics_opengl.h"
+#include "attr.h"
+#include "callback.h"
+#include "color.h"
+#include "config.h"
+#include "debug.h"
+#include "event.h"
+#include "graphics.h"
+#include "item.h"
+#include "keys.h"
+#include "navit/font/freetype/font_freetype.h"
+#include "plugin.h"
+#include "point.h"
+#include "window.h"
 #include <glib.h>
-#include <unistd.h>
 #include <math.h>
 #include <stdio.h>
-
 #include <time.h>
-
-#include "item.h"
-#include "attr.h"
-#include "config.h"
-#include "point.h"
-#include "graphics.h"
-#include "color.h"
-#include "plugin.h"
-#include "event.h"
-#include "debug.h"
-#include "callback.h"
-#include "keys.h"
-#include "window.h"
-#include "navit/font/freetype/font_freetype.h"
-#include "graphics_opengl.h"
+#include <unistd.h>
 
 #if defined(WINDOWS) || defined(WIN32)
-#define PIXEL_FORMAT GL_RGBA
-#include <windows.h>
-# define sleep(i) Sleep(i * 1000)
+#    define PIXEL_FORMAT GL_RGBA
+#    include <windows.h>
+#    define sleep(i) Sleep(i * 1000)
 #else
-#define PIXEL_FORMAT GL_BGRA
+#    define PIXEL_FORMAT GL_BGRA
 #endif
 
 #ifdef HAVE_FREEIMAGE
-#include <FreeImage.h>
+#    include <FreeImage.h>
 #endif
 
 #ifdef USE_OPENGLES
-#ifdef USE_OPENGLES2
-#include <GLES2/gl2.h>
-#include <EGL/egl.h>
-#undef USE_FLOAT
-#define USE_FLOAT 1
-#else
-#include <GLES/gl.h>
-#include <GLES/egl.h>
-#endif
-#ifdef USE_GLUT_FOR_OPENGLES
-#define APIENTRY
-#define GLU_TESS_BEGIN                     100100
-#define GLU_TESS_VERTEX                    100101
-#define GLU_TESS_END                       100102
-#define GLU_TESS_COMBINE                   100105
+#    ifdef USE_OPENGLES2
+#        include <EGL/egl.h>
+#        include <GLES2/gl2.h>
+#        undef USE_FLOAT
+#        define USE_FLOAT 1
+#    else
+#        include <GLES/egl.h>
+#        include <GLES/gl.h>
+#    endif
+#    ifdef USE_GLUT_FOR_OPENGLES
+#        define APIENTRY
+#        define GLU_TESS_BEGIN 100100
+#        define GLU_TESS_VERTEX 100101
+#        define GLU_TESS_END 100102
+#        define GLU_TESS_COMBINE 100105
 typedef struct GLUtesselator GLUtesselator;
 typedef double GLdouble;
-#endif
+#    endif
 #else
-#define glOrthof	glOrtho
-#undef USE_FLOAT
-#define USE_FLOAT 1
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
-#include <GL/glut.h>		/* glut.h includes gl.h and glu.h */
-#endif
+#    define glOrthof glOrtho
+#    undef USE_FLOAT
+#    define USE_FLOAT 1
+#    ifdef __APPLE__
+#        include <GLUT/glut.h>
+#    else
+#        include <GL/glut.h> /* glut.h includes gl.h and glu.h */
+#    endif
 #endif
 
 #if USE_FLOAT
-#define glF(x)  x
-#define glD(x)  x
-#define GL_F    GL_FLOAT
+#    define glF(x) x
+#    define glD(x) x
+#    define GL_F GL_FLOAT
 typedef GLfloat GLf;
 #else
-#define glF(x)  ((GLfixed)((x)*(1<<16)))
-#define glD(x)  glF(x)
-#define GL_F    GL_FIXED
+#    define glF(x) ((GLfixed)((x) * (1 << 16)))
+#    define glD(x) glF(x)
+#    define GL_F GL_FIXED
 typedef GLfixed GLf;
 
-#define glClearColor    glClearColorx
-#define glTranslatef    glTranslatex
-#define glRotatef       glRotatex
-#define glMaterialfv    glMaterialxv
-#define glMaterialf     glMaterialx
-#define glOrthof        glOrthox
-#define glScalef        glScalex
-#define glColor4f       glColor4x
+#    define glClearColor glClearColorx
+#    define glTranslatef glTranslatex
+#    define glRotatef glRotatex
+#    define glMaterialfv glMaterialxv
+#    define glMaterialf glMaterialx
+#    define glOrthof glOrthox
+#    define glScalef glScalex
+#    define glColor4f glColor4x
 #endif
 #ifdef FREEGLUT
-#include <GL/freeglut_ext.h>
+#    include <GL/freeglut_ext.h>
 #endif
 
 #define SCREEN_WIDTH 700
 #define SCREEN_HEIGHT 700
 
-//#define MIRRORED_VIEW 1
+// #define MIRRORED_VIEW 1
 
 struct graphics_gc_priv {
     struct graphics_priv *gr;
@@ -138,16 +136,16 @@ struct graphics_priv {
     struct graphics_priv *next;
     struct graphics_gc_priv *background_gc;
     enum draw_mode_num mode;
-    void (*resize_callback) (void *data, int w, int h);
+    void (*resize_callback)(void *data, int w, int h);
     void *resize_callback_data;
-    void (*motion_callback) (void *data, struct point * p);
+    void (*motion_callback)(void *data, struct point *p);
     void *motion_callback_data;
-    void (*button_callback) (void *data, int press, int button, struct point * p);
+    void (*button_callback)(void *data, int press, int button, struct point *p);
     void *button_callback_data;
 #ifdef USE_OPENGLES
     GLuint program;
     GLint mvp_location, position_location, color_location, texture_position_location, use_texture_location,
-          texture_location;
+        texture_location;
 #else
     GLuint DLid;
 #endif
@@ -157,9 +155,9 @@ struct graphics_priv {
     int timeout;
     int delay;
     struct window window;
-    int dirty;		//display needs to be redrawn (draw on root graphics or overlay is done)
-    int force_redraw;	//display needs to be redrawn (draw on root graphics or overlay is done)
-    time_t last_refresh_time;	//last display refresh time
+    int dirty;                 // display needs to be redrawn (draw on root graphics or overlay is done)
+    int force_redraw;          // display needs to be redrawn (draw on root graphics or overlay is done)
+    time_t last_refresh_time;  // last display refresh time
     struct graphics_opengl_window_system *window_system;
     struct graphics_opengl_window_system_methods *window_system_methods;
     struct graphics_opengl_platform *platform;
@@ -188,7 +186,7 @@ static int mouse_event_queue_begin_idx = 0;
 static int mouse_event_queue_end_idx = 0;
 static struct mouse_event_queue_element mouse_queue[100];
 
-//hastable for uncompressed image data
+// hastable for uncompressed image data
 static GHashTable *hImageData;
 
 #ifdef USE_OPENGLES
@@ -197,15 +195,13 @@ static GHashTable *hImageData;
 void APIENTRY tessBeginCB(GLenum which);
 void APIENTRY tessEndCB(void);
 void APIENTRY tessErrorCB(GLenum errorCode);
-void APIENTRY tessVertexCB(const GLvoid * data);
-void APIENTRY tessVertexCB2(const GLvoid * data);
+void APIENTRY tessVertexCB(const GLvoid *data);
+void APIENTRY tessVertexCB2(const GLvoid *data);
 void APIENTRY tessCombineCB(GLdouble c[3], void *d[4], GLfloat w[4], void **out);
 const char *getPrimitiveType(GLenum type);
 #endif
 
-static struct graphics_priv *graphics_opengl_new_helper(struct
-        graphics_methods
-        *meth);
+static struct graphics_priv *graphics_opengl_new_helper(struct graphics_methods *meth);
 static void display(void);
 static void resize_callback(int w, int h);
 #ifdef USE_OPENGLES
@@ -216,34 +212,32 @@ static void resize_callback_do(struct graphics_priv *priv, int w, int h);
 static void glut_close(void);
 
 #ifdef USE_OPENGLES2
-const char vertex_src [] =
-    "                                        \
-   attribute vec2        position;       \
-   attribute vec2        texture_position;       \
-   uniform mat4        mvp;             \
-   varying vec2 v_texture_position; \
-                                         \
-   void main()                           \
-   {                                     \
-      v_texture_position=texture_position; \
-      gl_Position = mvp*vec4(position, 0.0, 1.0);   \
-   }                                     \
+const char vertex_src[] = "                      \
+attribute vec2        position;                  \
+attribute vec2        texture_position;          \
+uniform mat4        mvp;                         \
+varying vec2 v_texture_position;                 \
+                                                 \
+void main()                                      \
+{                                                \
+   v_texture_position=texture_position;          \
+   gl_Position = mvp*vec4(position, 0.0, 1.0);   \
+}                                                \
 ";
 
-const char fragment_src [] =
-    "                                                      \
-   uniform lowp vec4   avcolor;                        \
-   uniform sampler2D texture; \
-   uniform bool use_texture; \
-   varying vec2 v_texture_position; \
-   void  main()                                        \
-   {                                                   \
-      if (use_texture) { \
-         gl_FragColor = texture2D(texture, v_texture_position);     \
-      } else { \
-         gl_FragColor = avcolor; \
-      } \
-   }                                                   \
+const char fragment_src[] = "                                   \
+   uniform lowp vec4   avcolor;                                 \
+   uniform sampler2D texture;                                   \
+   uniform bool use_texture;                                    \
+   varying vec2 v_texture_position;                             \
+   void  main()                                                 \
+   {                                                            \
+      if (use_texture) {                                        \
+         gl_FragColor = texture2D(texture, v_texture_position); \
+      } else {                                                  \
+         gl_FragColor = avcolor;                                \
+      }                                                         \
+   }                                                            \
 ";
 #endif
 
@@ -276,8 +270,8 @@ static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, un
         }
     } else if (1 < n) {
         unsigned char *curr = dash_list;
-        int cnt = 0;	//dot counter
-        int dcnt = 0;	//dash element counter
+        int cnt = 0;   // dot counter
+        int dcnt = 0;  // dash element counter
         int sum_dash = 0;
         gc->dash_mask = 0;
 
@@ -285,23 +279,22 @@ static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, un
             sum_dash += dash_list[i];
         }
 
-        //scale dashlist elements to max size
+        // scale dashlist elements to max size
         if (sum_dash > cOpenglMaskBits) {
-            int num_error[2] = { 0, 0 };	//count elements rounded to 0 for odd(drawn) and even(masked) for compensation
+            int num_error[2] = {0, 0};  // count elements rounded to 0 for odd(drawn) and even(masked) for compensation
             double factor = (1.0 * cOpenglMaskBits) / sum_dash;
-            for (i = 0; i < n; ++i) {	//calculate dashlist max and largest common denomiator for scaling
+            for (i = 0; i < n; ++i) {  // calculate dashlist max and largest common denomiator for scaling
                 dash_list[i] *= factor;
                 if (dash_list[i] == 0) {
                     ++dash_list[i];
                     ++num_error[i % 2];
-                } else if (0 < num_error[i % 2]
-                           && 2 < dash_list[i]) {
+                } else if (0 < num_error[i % 2] && 2 < dash_list[i]) {
                     ++dash_list[i];
                     --num_error[i % 2];
                 }
             }
         }
-        //calculate mask
+        // calculate mask
         for (i = 0; i < cOpenglMaskBits; ++i) {
             gc->dash_mask <<= 1;
             gc->dash_mask |= 1 - dcnt % 2;
@@ -318,7 +311,6 @@ static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, un
     }
 }
 
-
 static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
     gc->fr = c->r / 65535.0;
     gc->fg = c->g / 65535.0;
@@ -334,11 +326,11 @@ static void gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
 }
 
 static struct graphics_gc_methods gc_methods = {
-    gc_destroy,
-    gc_set_linewidth,
-    gc_set_dashes,
-    gc_set_foreground,
-    gc_set_background
+    .gc_destroy = gc_destroy,
+    .gc_set_linewidth = gc_set_linewidth,
+    .gc_set_dashes = gc_set_dashes,
+    .gc_set_foreground = gc_set_foreground,
+    .gc_set_background = gc_set_background,
 };
 
 static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth) {
@@ -355,21 +347,20 @@ static struct graphics_image_priv image_error;
 #endif
 
 static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path,
-        int *w, int *h, struct point *hot, int rotation) {
+                                             int *w, int *h, struct point *hot, int rotation) {
 #ifdef HAVE_FREEIMAGE
     FIBITMAP *image;
     RGBQUAD aPixel;
     unsigned char *data;
     int width, height, i, j;
     struct graphics_image_priv *gi;
-    //check if image already exists in hashmap
-    struct graphics_image_priv *curr_elem =
-        g_hash_table_lookup(hImageData, path);
+    // check if image already exists in hashmap
+    struct graphics_image_priv *curr_elem = g_hash_table_lookup(hImageData, path);
     if (curr_elem == &image_error) {
-        //found but couldn't be loaded
+        // found but couldn't be loaded
         return NULL;
     } else if (curr_elem) {
-        //found and OK -> use hastable entry
+        // found and OK -> use hastable entry
         *w = curr_elem->w;
         *h = curr_elem->h;
         hot->x = curr_elem->w / 2 - 1;
@@ -382,14 +373,12 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
         }
         char *ext_str = path + strlen(path) - 3;
         if (strstr(ext_str, "png") || strstr(path, "PNG")) {
-            if ((image =
-                        FreeImage_Load(FIF_PNG, path, 0)) == NULL) {
+            if ((image = FreeImage_Load(FIF_PNG, path, 0)) == NULL) {
                 g_hash_table_insert(hImageData, g_strdup(path), &image_error);
                 return NULL;
             }
         } else if (strstr(ext_str, "xpm") || strstr(path, "XPM")) {
-            if ((image =
-                        FreeImage_Load(FIF_XPM, path, 0)) == NULL) {
+            if ((image = FreeImage_Load(FIF_XPM, path, 0)) == NULL) {
                 g_hash_table_insert(hImageData, g_strdup(path), &image_error);
                 return NULL;
             }
@@ -413,13 +402,13 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
             FreeImage_Unload(image);
             image = image2;
         }
-#if FREEIMAGE_MAJOR_VERSION*100+FREEIMAGE_MINOR_VERSION  >= 313
+#    if FREEIMAGE_MAJOR_VERSION * 100 + FREEIMAGE_MINOR_VERSION >= 313
         if (rotation) {
             FIBITMAP *image2;
             image2 = FreeImage_Rotate(image, rotation, NULL);
             image = image2;
         }
-#endif
+#    endif
 
         gi = g_new0(struct graphics_image_priv, 1);
 
@@ -435,7 +424,7 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
             height = *h;
         }
 
-        data = (unsigned char *) malloc(width * height * 4);
+        data = (unsigned char *)malloc(width * height * 4);
 
         RGBQUAD *palette = NULL;
         if (FreeImage_GetBPP(image) == 8) {
@@ -447,33 +436,18 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
                 unsigned char idx;
                 if (FreeImage_GetBPP(image) == 8) {
                     FreeImage_GetPixelIndex(image, j, height - i - 1, &idx);
-                    data[4 * width * i + 4 * j + 0] =
-                        palette[idx].rgbRed;
-                    data[4 * width * i + 4 * j + 1] =
-                        palette[idx].rgbGreen;
-                    data[4 * width * i + 4 * j + 2] =
-                        palette[idx].rgbBlue;
-                    data[4 * width * i + 4 * j + 3] =
-                        255;
-                } else if (FreeImage_GetBPP(image) == 16
-                           || FreeImage_GetBPP(image) == 24
+                    data[4 * width * i + 4 * j + 0] = palette[idx].rgbRed;
+                    data[4 * width * i + 4 * j + 1] = palette[idx].rgbGreen;
+                    data[4 * width * i + 4 * j + 2] = palette[idx].rgbBlue;
+                    data[4 * width * i + 4 * j + 3] = 255;
+                } else if (FreeImage_GetBPP(image) == 16 || FreeImage_GetBPP(image) == 24
                            || FreeImage_GetBPP(image) == 32) {
                     FreeImage_GetPixelColor(image, j, height - i - 1, &aPixel);
-                    int transparent =
-                        (aPixel.rgbRed == 0
-                         && aPixel.rgbBlue == 0
-                         && aPixel.rgbGreen == 0);
-                    data[4 * width * i + 4 * j + 0] =
-                        transparent ? 0 : (aPixel.
-                                           rgbRed);
-                    data[4 * width * i + 4 * j + 1] =
-                        (aPixel.rgbGreen);
-                    data[4 * width * i + 4 * j + 2] =
-                        transparent ? 0 : (aPixel.
-                                           rgbBlue);
-                    data[4 * width * i + 4 * j + 3] =
-                        transparent ? 0 : 255;
-
+                    int transparent = (aPixel.rgbRed == 0 && aPixel.rgbBlue == 0 && aPixel.rgbGreen == 0);
+                    data[4 * width * i + 4 * j + 0] = transparent ? 0 : (aPixel.rgbRed);
+                    data[4 * width * i + 4 * j + 1] = (aPixel.rgbGreen);
+                    data[4 * width * i + 4 * j + 2] = transparent ? 0 : (aPixel.rgbBlue);
+                    data[4 * width * i + 4 * j + 3] = transparent ? 0 : 255;
                 }
             }
         }
@@ -490,24 +464,23 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
         hot->y = height / 2 - 1;
         gi->data = data;
         gi->path = path;
-        //add to hashtable
+        // add to hashtable
         g_hash_table_insert(hImageData, g_strdup(path), gi);
         return gi;
     }
 #else
-    dbg(lvl_error,"FreeImage not available - cannot load any images.");
+    dbg(lvl_error, "FreeImage not available - cannot load any images.");
     return NULL;
 #endif
 }
 
-
 static void set_color(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
 #ifdef USE_OPENGLES2
     GLfloat col[4];
-    col[0]=gc->fr;
-    col[1]=gc->fg;
-    col[2]=gc->fb;
-    col[3]=1.0;
+    col[0] = gc->fr;
+    col[1] = gc->fg;
+    col[2] = gc->fb;
+    col[3] = 1.0;
     glUniform4fv(gr->color_location, 1, col);
 #else
     glColor4f(glF(gc->fr), glF(gc->fg), glF(gc->fb), glF(gc->fa));
@@ -517,25 +490,25 @@ static void set_color(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
 static void draw_array(struct graphics_priv *gr, struct point *p, int count, GLenum mode) {
     int i;
 #ifdef USE_OPENGLES
-    GLf x[count*2];
+    GLf x[count * 2];
 #else
     glBegin(mode);
 #endif
 
-    for (i = 0 ; i < count ; i++) {
+    for (i = 0; i < count; i++) {
 #ifdef USE_OPENGLES
-        x[i*2]=glF(p[i].x);
-        x[i*2+1]=glF(p[i].y);
+        x[i * 2] = glF(p[i].x);
+        x[i * 2 + 1] = glF(p[i].y);
 #else
         glVertex2f(p[i].x, p[i].y);
 #endif
     }
 #ifdef USE_OPENGLES
-#ifdef USE_OPENGLES2
-    glVertexAttribPointer (gr->position_location, 2, GL_FLOAT, 0, 0, x );
-#else
+#    ifdef USE_OPENGLES2
+    glVertexAttribPointer(gr->position_location, 2, GL_FLOAT, 0, 0, x);
+#    else
     glVertexPointer(2, GL_F, 0, x);
-#endif
+#    endif
     glDrawArrays(mode, 0, count);
 #else
     glEnd();
@@ -544,20 +517,20 @@ static void draw_array(struct graphics_priv *gr, struct point *p, int count, GLe
 
 static void draw_rectangle_do(struct graphics_priv *gr, struct point *p, int w, int h) {
     struct point pa[4];
-    pa[0]=pa[1]=pa[2]=pa[3]=*p;
-    pa[0].x+=w;
-    pa[1].x+=w;
-    pa[1].y+=h;
-    pa[3].y+=h;
+    pa[0] = pa[1] = pa[2] = pa[3] = *p;
+    pa[0].x += w;
+    pa[1].x += w;
+    pa[1].y += h;
+    pa[3].y += h;
     draw_array(gr, pa, 4, GL_TRIANGLE_STRIP);
 }
 
 #ifdef USE_OPENGLES
 
 static int next_power2(int x) {
-    int r=1;
+    int r = 1;
     while (r < x)
-        r*=2;
+        r *= 2;
     return r;
 }
 
@@ -565,49 +538,48 @@ static void draw_image_es(struct graphics_priv *gr, struct point *p, int w, int 
     GLf x[8];
 
     memset(x, 0, sizeof(x));
-#if REQUIRES_POWER_OF_2
-    int w2=next_power2(w);
-    int h2=next_power2(h);
+#    if REQUIRES_POWER_OF_2
+    int w2 = next_power2(w);
+    int h2 = next_power2(h);
     int y;
     if (w2 != w || h2 != h) {
-        char *newpix=g_malloc0(w2*h2*4);
-        for (y=0 ; y < h ; y++)
-            memcpy(newpix+y*w2*4, data+y*w*4, w*4);
+        char *newpix = g_malloc0(w2 * h2 * 4);
+        for (y = 0; y < h; y++)
+            memcpy(newpix + y * w2 * 4, data + y * w * 4, w * 4);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w2, h2, 0, GL_RGBA, GL_UNSIGNED_BYTE, newpix);
         g_free(newpix);
-        w=w2;
-        h=h2;
+        w = w2;
+        h = h2;
     } else
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-#else
+#    else
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-#endif
-    x[0]+=glF(1);
-    x[2]+=glF(1);
-    x[3]+=glF(1);
-    x[7]+=glF(1);
-#ifdef USE_OPENGLES2
+#    endif
+    x[0] += glF(1);
+    x[2] += glF(1);
+    x[3] += glF(1);
+    x[7] += glF(1);
+#    ifdef USE_OPENGLES2
     glUniform1i(gr->use_texture_location, 1);
     glEnableVertexAttribArray(gr->texture_position_location);
-    glVertexAttribPointer (gr->texture_position_location, 2, GL_FLOAT, 0, 0, x );
-#else
+    glVertexAttribPointer(gr->texture_position_location, 2, GL_FLOAT, 0, 0, x);
+#    else
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glEnable(GL_TEXTURE_2D);
     glTexCoordPointer(2, GL_F, 0, x);
-#endif
+#    endif
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     draw_rectangle_do(gr, p, w, h);
-#ifdef USE_OPENGLES2
+#    ifdef USE_OPENGLES2
     glUniform1i(gr->use_texture_location, 0);
     glDisableVertexAttribArray(gr->texture_position_location);
-#else
+#    else
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisable(GL_TEXTURE_2D);
-#endif
+#    endif
     glDisable(GL_BLEND);
 }
-
 
 #endif
 
@@ -630,8 +602,7 @@ static void get_overlay_pos(struct graphics_priv *gr, struct point *point_out) {
 
 static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     if ((gr->parent && !gr->parent->overlay_enabled)
-            || (gr->parent && gr->parent->overlay_enabled
-                && !gr->overlay_enabled)) {
+        || (gr->parent && gr->parent->overlay_enabled && !gr->overlay_enabled)) {
         return;
     }
 #if !defined(USE_OPENGLES) || defined(USE_OPENGLES2)
@@ -699,34 +670,30 @@ const char *getPrimitiveType(GLenum type) {
 
 void APIENTRY tessBeginCB(GLenum which) {
     dbg(lvl_debug, "glBegin( %s );", getPrimitiveType(which));
-    tess_type=which;
-    tess_count=0;
+    tess_type = which;
+    tess_count = 0;
 }
-
-
 
 void APIENTRY tessEndCB(void) {
     dbg(lvl_debug, "glEnd();");
     draw_array(graphics_priv_root, tess_array, tess_count, tess_type);
 }
 
-
-
-void APIENTRY tessVertexCB(const GLvoid * data) {
+void APIENTRY tessVertexCB(const GLvoid *data) {
     // cast back to double type
-    const GLdouble *ptr = (const GLdouble *) data;
+    const GLdouble *ptr = (const GLdouble *)data;
     dbg(lvl_debug, "  glVertex3d();");
 
-    tess_array[tess_count].x=ptr[0];
-    tess_array[tess_count].y=ptr[1];
+    tess_array[tess_count].x = ptr[0];
+    tess_array[tess_count].y = ptr[1];
     if (tess_count < 511)
         tess_count++;
     else
-        dbg(lvl_error,"overflow");
+        dbg(lvl_error, "overflow");
 }
 
 void APIENTRY tessCombineCB(GLdouble c[3], void *d[4], GLfloat w[4], void **out) {
-    GLdouble *nv = (GLdouble *) malloc(sizeof(GLdouble) * 3);
+    GLdouble *nv = (GLdouble *)malloc(sizeof(GLdouble) * 3);
     nv[0] = c[0];
     nv[1] = c[1];
     nv[2] = c[2];
@@ -735,11 +702,9 @@ void APIENTRY tessCombineCB(GLdouble c[3], void *d[4], GLfloat w[4], void **out)
 
 #endif
 
-
 static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     if ((gr->parent && !gr->parent->overlay_enabled)
-            || (gr->parent && gr->parent->overlay_enabled
-                && !gr->overlay_enabled)) {
+        || (gr->parent && gr->parent->overlay_enabled && !gr->overlay_enabled)) {
         return;
     }
     set_color(gr, gc);
@@ -748,25 +713,24 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
     draw_array(gr, p, count, GL_LINE_STRIP);
 #else
 
-    GLUtesselator *tess = gluNewTess();	// create a tessellator
+    GLUtesselator *tess = gluNewTess();  // create a tessellator
     if (!tess)
-        return;		// failed to create tessellation object, return 0
+        return;  // failed to create tessellation object, return 0
 
     GLdouble quad1[count][3];
     int i;
     for (i = 0; i < count; i++) {
-        quad1[i][0] = (GLdouble) (p[i].x);
-        quad1[i][1] = (GLdouble) (p[i].y);
+        quad1[i][0] = (GLdouble)(p[i].x);
+        quad1[i][1] = (GLdouble)(p[i].y);
         quad1[i][2] = 0;
     }
 
-
     // register callback functions
-    gluTessCallback(tess, GLU_TESS_BEGIN,	(void (APIENTRY *)(void)) tessBeginCB);
-    gluTessCallback(tess, GLU_TESS_END,		(void (APIENTRY *)(void)) tessEndCB);
+    gluTessCallback(tess, GLU_TESS_BEGIN, (void(APIENTRY *)(void))tessBeginCB);
+    gluTessCallback(tess, GLU_TESS_END, (void(APIENTRY *)(void))tessEndCB);
     //     gluTessCallback(tess, GLU_TESS_ERROR, (void (*)(void))tessErrorCB);
-    gluTessCallback(tess, GLU_TESS_VERTEX,	(void (APIENTRY *)(void)) tessVertexCB);
-    gluTessCallback(tess, GLU_TESS_COMBINE, (void (APIENTRY *)(void)) tessCombineCB);
+    gluTessCallback(tess, GLU_TESS_VERTEX, (void(APIENTRY *)(void))tessVertexCB);
+    gluTessCallback(tess, GLU_TESS_COMBINE, (void(APIENTRY *)(void))tessCombineCB);
 
     // tessellate and compile a concave quad into display list
     // gluTessVertex() takes 3 params: tess object, pointer to vertex coords,
@@ -777,7 +741,7 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
     // and UV coords which are needed for actual drawing.
     // Here, we are looking at only vertex coods, so the 2nd and 3rd params are
     // pointing same address.
-    gluTessBeginPolygon(tess, 0);	// with NULL data
+    gluTessBeginPolygon(tess, 0);  // with NULL data
     gluTessBeginContour(tess);
     for (i = 0; i < count; i++) {
         gluTessVertex(tess, quad1[i], quad1[i]);
@@ -785,14 +749,13 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
     gluTessEndContour(tess);
     gluTessEndPolygon(tess);
 
-    gluDeleteTess(tess);	// delete after tessellation
+    gluDeleteTess(tess);  // delete after tessellation
 #endif
 }
 
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
     if ((gr->parent && !gr->parent->overlay_enabled)
-            || (gr->parent && gr->parent->overlay_enabled
-                && !gr->overlay_enabled)) {
+        || (gr->parent && gr->parent->overlay_enabled && !gr->overlay_enabled)) {
         return;
     }
     set_color(gr, gc);
@@ -805,11 +768,9 @@ static void display_text_draw(struct font_freetype_text *text, struct graphics_p
     int i, x, y, stride;
     struct font_freetype_glyph *g, **gp;
     unsigned char *shadow, *glyph;
-    struct color transparent = { 0x0000, 0x0000, 0x0000, 0x0000 };
-    struct color black = {
-        fg->fr * 65535, fg->fg * 65535, fg->fb * 65535, fg->fa * 65535
-    };
-    struct color white = { 0xffff, 0xffff, 0xffff, 0xffff };
+    struct color transparent = {0x0000, 0x0000, 0x0000, 0x0000};
+    struct color black = {fg->fr * 65535, fg->fg * 65535, fg->fb * 65535, fg->fa * 65535};
+    struct color white = {0xffff, 0xffff, 0xffff, 0xffff};
 
     if (bg) {
         if (COLOR_IS_WHITE(black) && COLOR_IS_BLACK(white)) {
@@ -858,15 +819,15 @@ static void display_text_draw(struct font_freetype_text *text, struct graphics_p
                 gr->freetype_methods.get_shadow(g, shadow, stride, &white, &transparent);
 #ifdef USE_OPENGLES
                 struct point p;
-                p.x=((x + g->x) >> 6)-1;
-                p.y=((y + g->y) >> 6)-1;
-                draw_image_es(gr, &p, g->w+2, g->h+2, shadow);
+                p.x = ((x + g->x) >> 6) - 1;
+                p.y = ((y + g->y) >> 6) - 1;
+                draw_image_es(gr, &p, g->w + 2, g->h + 2, shadow);
 #else
-#ifdef MIRRORED_VIEW
-                glPixelZoom(-1.0, -1.0);	//mirrored mode
-#else
+#    ifdef MIRRORED_VIEW
+                glPixelZoom(-1.0, -1.0);  // mirrored mode
+#    else
                 glPixelZoom(1.0, -1.0);
-#endif
+#    endif
                 glRasterPos2d((x + g->x) >> 6, (y + g->y) >> 6);
                 glDrawPixels(g->w + 2, g->h + 2, PIXEL_FORMAT, GL_UNSIGNED_BYTE, shadow);
 #endif
@@ -887,20 +848,19 @@ static void display_text_draw(struct font_freetype_text *text, struct graphics_p
             if (color) {
                 stride = g->w;
                 if (bg) {
-                    glyph =
-                        g_malloc(stride * g->h * 4);
+                    glyph = g_malloc(stride * g->h * 4);
                     gr->freetype_methods.get_glyph(g, glyph, stride * 4, &black, &white, &transparent);
 #ifdef USE_OPENGLES
                     struct point p;
-                    p.x=(x + g->x) >> 6;
-                    p.y=(y + g->y) >> 6;
+                    p.x = (x + g->x) >> 6;
+                    p.y = (y + g->y) >> 6;
                     draw_image_es(gr, &p, g->w, g->h, glyph);
 #else
-#ifdef MIRRORED_VIEW
-                    glPixelZoom(-1.0, -1.0);	//mirrored mode
-#else
+#    ifdef MIRRORED_VIEW
+                    glPixelZoom(-1.0, -1.0);  // mirrored mode
+#    else
                     glPixelZoom(1.0, -1.0);
-#endif
+#    endif
                     glRasterPos2d((x + g->x) >> 6, (y + g->y) >> 6);
                     glDrawPixels(g->w, g->h, PIXEL_FORMAT, GL_UNSIGNED_BYTE, glyph);
 #endif
@@ -911,15 +871,15 @@ static void display_text_draw(struct font_freetype_text *text, struct graphics_p
                 gr->freetype_methods.get_glyph(g, glyph, stride, &black, &white, &transparent);
 #ifdef USE_OPENGLES
                 struct point p;
-                p.x=(x + g->x) >> 6;
-                p.y=(y + g->y) >> 6;
+                p.x = (x + g->x) >> 6;
+                p.y = (y + g->y) >> 6;
                 draw_image_es(gr, &p, g->w, g->h, glyph);
 #else
-#ifdef MIRRORED_VIEW
-                glPixelZoom(-1.0, -1.0);	//mirrored mode
-#else
+#    ifdef MIRRORED_VIEW
+                glPixelZoom(-1.0, -1.0);  // mirrored mode
+#    else
                 glPixelZoom(1.0, -1.0);
-#endif
+#    endif
                 glRasterPos2d((x + g->x) >> 6, (y + g->y) >> 6);
                 glDrawPixels(g->w, g->h, PIXEL_FORMAT, GL_UNSIGNED_BYTE, glyph);
 #endif
@@ -934,8 +894,7 @@ static void display_text_draw(struct font_freetype_text *text, struct graphics_p
 static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg,
                       struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     if ((gr->parent && !gr->parent->overlay_enabled)
-            || (gr->parent && gr->parent->overlay_enabled
-                && !gr->overlay_enabled)) {
+        || (gr->parent && gr->parent->overlay_enabled && !gr->overlay_enabled)) {
         return;
     }
 
@@ -949,7 +908,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 
     graphics_priv_root->dirty = 1;
 
-    t = gr->freetype_methods.text_new(text, (struct font_freetype_font *) font, dx, dy);
+    t = gr->freetype_methods.text_new(text, (struct font_freetype_font *)font, dx, dy);
 
     struct point p_eff;
     p_eff.x = p->x;
@@ -959,15 +918,13 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
     gr->freetype_methods.text_destroy(t);
 }
 
-
 static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p,
                        struct graphics_image_priv *img) {
 #ifdef USE_OPENGLES
     draw_image_es(gr, p, img->w, img->h, img->data);
 #else
     if ((gr->parent && !gr->parent->overlay_enabled)
-            || (gr->parent && gr->parent->overlay_enabled
-                && !gr->overlay_enabled)) {
+        || (gr->parent && gr->parent->overlay_enabled && !gr->overlay_enabled)) {
         return;
     }
 
@@ -987,7 +944,6 @@ static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, st
     glRasterPos2d(p_eff.x - img->hot_x, p_eff.y - img->hot_y);
     glDrawPixels(img->w, img->h, GL_RGBA, GL_UNSIGNED_BYTE, img->data);
 #endif
-
 }
 
 static void draw_drag(struct graphics_priv *gr, struct point *p) {
@@ -1013,39 +969,26 @@ static void handle_mouse_queue(void) {
     }
 
     if (mouse_event_queue_begin_idx < mouse_event_queue_end_idx) {
-        if (mouse_queue[mouse_event_queue_begin_idx].button ==
-                GLUT_LEFT_BUTTON
-                && mouse_queue[mouse_event_queue_begin_idx].state ==
-                GLUT_UP) {
+        if (mouse_queue[mouse_event_queue_begin_idx].button == GLUT_LEFT_BUTTON
+            && mouse_queue[mouse_event_queue_begin_idx].state == GLUT_UP) {
             struct point p;
-            p.x =
-                mouse_queue[mouse_event_queue_begin_idx %
-                                                        mouse_event_queue_size].x;
-            p.y =
-                mouse_queue[mouse_event_queue_begin_idx %
-                                                        mouse_event_queue_size].y;
+            p.x = mouse_queue[mouse_event_queue_begin_idx % mouse_event_queue_size].x;
+            p.y = mouse_queue[mouse_event_queue_begin_idx % mouse_event_queue_size].y;
             graphics_priv_root->force_redraw = 1;
-            callback_list_call_attr_3(graphics_priv_root->cbl, attr_button, (void *) 0, 1, (void *) &p);
-        } else if (mouse_queue[mouse_event_queue_begin_idx].
-                   button == GLUT_LEFT_BUTTON
-                   && mouse_queue[mouse_event_queue_begin_idx].
-                   state == GLUT_DOWN) {
+            callback_list_call_attr_3(graphics_priv_root->cbl, attr_button, (void *)0, 1, (void *)&p);
+        } else if (mouse_queue[mouse_event_queue_begin_idx].button == GLUT_LEFT_BUTTON
+                   && mouse_queue[mouse_event_queue_begin_idx].state == GLUT_DOWN) {
             struct point p;
-            p.x =
-                mouse_queue[mouse_event_queue_begin_idx %
-                                                        mouse_event_queue_size].x;
-            p.y =
-                mouse_queue[mouse_event_queue_begin_idx %
-                                                        mouse_event_queue_size].y;
+            p.x = mouse_queue[mouse_event_queue_begin_idx % mouse_event_queue_size].x;
+            p.y = mouse_queue[mouse_event_queue_begin_idx % mouse_event_queue_size].y;
             graphics_priv_root->force_redraw = 1;
-            callback_list_call_attr_3(graphics_priv_root->cbl, attr_button, (void *) 1, 1, (void *) &p);
+            callback_list_call_attr_3(graphics_priv_root->cbl, attr_button, (void *)1, 1, (void *)&p);
         }
         ++mouse_event_queue_begin_idx;
     }
     locked = 0;
 #endif
 }
-
 
 /*draws root graphics and its overlays*/
 static int redraw_screen(struct graphics_priv *gr) {
@@ -1054,7 +997,7 @@ static int redraw_screen(struct graphics_priv *gr) {
     graphics_priv_root->dirty = 0;
 
     glCallList(gr->DLid);
-    //display overlays display list
+    // display overlays display list
     struct graphics_priv *overlay;
     overlay = gr->overlays;
     while (gr->overlay_enabled && overlay) {
@@ -1074,11 +1017,10 @@ static int redraw_screen(struct graphics_priv *gr) {
     return TRUE;
 }
 
-
 #ifndef USE_OPENGLES
 /*filters call to redraw in overlay enabled(map) mode*/
 static gboolean redraw_filter(gpointer data) {
-    struct graphics_priv *gr = (struct graphics_priv*) data;
+    struct graphics_priv *gr = (struct graphics_priv *)data;
     if (gr->overlay_enabled && gr->dirty) {
         redraw_screen(gr);
     }
@@ -1086,10 +1028,8 @@ static gboolean redraw_filter(gpointer data) {
 }
 #endif
 
-
-
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
-    if (gr->parent) {	//overlay
+    if (gr->parent) {  // overlay
 #ifdef USE_OPENGLES
 #else
         if (mode == draw_mode_begin) {
@@ -1100,7 +1040,7 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
             glEndList();
         }
 #endif
-    } else {		//root graphics
+    } else {  // root graphics
         if (mode == draw_mode_begin) {
 #ifdef USE_OPENGLES
 #else
@@ -1123,10 +1063,8 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
     gr->mode = mode;
 }
 
-static struct graphics_priv *overlay_new(struct graphics_priv *gr,
-        struct graphics_methods *meth,
-        struct point *p, int w, int h,
-        int wraparound);
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
+                                         int w, int h, int wraparound);
 
 static int graphics_opengl_fullscreen(struct window *w, int on) {
     return 1;
@@ -1161,47 +1099,48 @@ static void *get_data(struct graphics_priv *this, const char *type) {
         GLfloat matrix[16];
         int i;
 
-        this->window_system=graphics_opengl_x11_new(NULL, this->width, this->height, 32, &this->window_system_methods);
-        this->platform=graphics_opengl_egl_new(this->window_system_methods->get_display(this->window_system),
-                                               this->window_system_methods->get_window(this->window_system),
-                                               &this->platform_methods);
+        this->window_system =
+            graphics_opengl_x11_new(NULL, this->width, this->height, 32, &this->window_system_methods);
+        this->platform = graphics_opengl_egl_new(this->window_system_methods->get_display(this->window_system),
+                                                 this->window_system_methods->get_window(this->window_system),
+                                                 &this->platform_methods);
         this->window_system_methods->set_callbacks(this->window_system, this, resize_callback_do, click_notify_do,
-                motion_notify_do, NULL);
-        resize_callback(this->width,this->height);
-#if 0
+                                                   motion_notify_do, NULL);
+        resize_callback(this->width, this->height);
+#    if 0
         glClearColor ( 0.4, 0.4, 0.4, 1);
-#endif
-        glClear ( GL_COLOR_BUFFER_BIT );
-#ifdef USE_OPENGLES2
-        this->program=glCreateProgram();
+#    endif
+        glClear(GL_COLOR_BUFFER_BIT);
+#    ifdef USE_OPENGLES2
+        this->program = glCreateProgram();
         vertexShader = load_shader(vertex_src, GL_VERTEX_SHADER);
         fragmentShader = load_shader(fragment_src, GL_FRAGMENT_SHADER);
         glAttachShader(this->program, vertexShader);
         glAttachShader(this->program, fragmentShader);
         glLinkProgram(this->program);
         glUseProgram(this->program);
-        this->mvp_location=glGetUniformLocation(this->program, "mvp");
-        this->position_location=glGetAttribLocation(this->program, "position");
+        this->mvp_location = glGetUniformLocation(this->program, "mvp");
+        this->position_location = glGetAttribLocation(this->program, "position");
         glEnableVertexAttribArray(this->position_location);
-        this->texture_position_location=glGetAttribLocation(this->program, "texture_position");
-        this->color_location=glGetUniformLocation(this->program, "avcolor");
-        this->texture_location=glGetUniformLocation(this->program, "texture");
-        this->use_texture_location=glGetUniformLocation(this->program, "use_texture");
+        this->texture_position_location = glGetAttribLocation(this->program, "texture_position");
+        this->color_location = glGetUniformLocation(this->program, "avcolor");
+        this->texture_location = glGetUniformLocation(this->program, "texture");
+        this->use_texture_location = glGetUniformLocation(this->program, "use_texture");
         glUniform1i(this->use_texture_location, 0);
         glUniform1i(this->texture_location, 0);
 
-        for (i = 0 ; i < 16 ; i++)
-            matrix[i]=0.0;
-        matrix[0]=2.0/this->width;
-        matrix[5]=-2.0/this->height;
-        matrix[10]=1;
-        matrix[12]=-1;
-        matrix[13]=1;
-        matrix[15]=1;
+        for (i = 0; i < 16; i++)
+            matrix[i] = 0.0;
+        matrix[0] = 2.0 / this->width;
+        matrix[5] = -2.0 / this->height;
+        matrix[10] = 1;
+        matrix[12] = -1;
+        matrix[13] = 1;
+        matrix[15] = 1;
         glUniformMatrix4fv(this->mvp_location, 1, GL_FALSE, matrix);
-#else
+#    else
         glEnableClientState(GL_VERTEX_ARRAY);
-#endif
+#    endif
         glGenTextures(1, &textures);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textures);
@@ -1209,9 +1148,9 @@ static void *get_data(struct graphics_priv *this, const char *type) {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-#ifndef USE_OPENGLES2
+#    ifndef USE_OPENGLES2
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-#endif
+#    endif
 #endif
         win = g_new0(struct window, 1);
         win->priv = this;
@@ -1225,13 +1164,11 @@ static void *get_data(struct graphics_priv *this, const char *type) {
         return &this->DLid;
 #endif
     }
-
-
 }
 
 static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv) {
-//TODO free image data in hashtable when graphics is destroyed
-//currently graphics destroy is not called !!!
+    // TODO free image data in hashtable when graphics is destroyed
+    // currently graphics destroy is not called !!!
     /*
       g_free(priv->data);
       priv->data = NULL;
@@ -1312,7 +1249,7 @@ static struct graphics_methods graphics_methods = {
 };
 
 static struct graphics_priv *graphics_opengl_new_helper(struct graphics_methods *meth) {
-    struct font_priv *(*font_freetype_new) (void *meth);
+    struct font_priv *(*font_freetype_new)(void *meth);
     font_freetype_new = plugin_get_category_font("freetype");
 
     if (!font_freetype_new) {
@@ -1324,18 +1261,16 @@ static struct graphics_priv *graphics_opengl_new_helper(struct graphics_methods 
     font_freetype_new(&this->freetype_methods);
     *meth = graphics_methods;
 
-    meth->font_new =
-        (struct graphics_font_priv *
-         (*)(struct graphics_priv *, struct graphics_font_methods *,
-             char *, int, int)) this->freetype_methods.font_new;
-    meth->get_text_bbox =
-        (void (*) (struct graphics_priv *, struct graphics_font_priv *,
-                   char *, int, int, struct point*, int)) this->freetype_methods.get_text_bbox;
+    meth->font_new = (struct graphics_font_priv
+                      * (*)(struct graphics_priv *, struct graphics_font_methods *, char *, int,
+                            int)) this->freetype_methods.font_new;
+    meth->get_text_bbox = (void (*)(struct graphics_priv *, struct graphics_font_priv *, char *, int, int,
+                                    struct point *, int))this->freetype_methods.get_text_bbox;
     return this;
 }
 
-static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth,
-        struct point *p, int w, int h, int wraparound) {
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
+                                         int w, int h, int wraparound) {
     struct graphics_priv *this = graphics_opengl_new_helper(meth);
     this->p = *p;
     this->width = w;
@@ -1359,29 +1294,23 @@ static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphi
     return this;
 }
 
-
 #ifdef USE_OPENGLES
 static void click_notify_do(struct graphics_priv *priv, int button, int state, int x, int y) {
-    struct point p= {x,y};
-    dbg(lvl_debug,"enter state %d button %d",state,button);
-    callback_list_call_attr_3(priv->cbl, attr_button, (void *) state, (void *)button, (void *) &p);
+    struct point p = {x, y};
+    dbg(lvl_debug, "enter state %d button %d", state, button);
+    callback_list_call_attr_3(priv->cbl, attr_button, (void *)state, (void *)button, (void *)&p);
 }
 #endif
 
 static void click_notify(int button, int state, int x, int y) {
-    mouse_queue[mouse_event_queue_end_idx %
-                                          mouse_event_queue_size].button = button;
-    mouse_queue[mouse_event_queue_end_idx %
-                                          mouse_event_queue_size].state = state;
+    mouse_queue[mouse_event_queue_end_idx % mouse_event_queue_size].button = button;
+    mouse_queue[mouse_event_queue_end_idx % mouse_event_queue_size].state = state;
 #ifdef MIRRORED_VIEW
-    mouse_queue[mouse_event_queue_end_idx % mouse_event_queue_size].x =
-        graphics_priv_root->width - x;
+    mouse_queue[mouse_event_queue_end_idx % mouse_event_queue_size].x = graphics_priv_root->width - x;
 #else
-    mouse_queue[mouse_event_queue_end_idx % mouse_event_queue_size].x =
-        x;
+    mouse_queue[mouse_event_queue_end_idx % mouse_event_queue_size].x = x;
 #endif
-    mouse_queue[mouse_event_queue_end_idx % mouse_event_queue_size].y =
-        y;
+    mouse_queue[mouse_event_queue_end_idx % mouse_event_queue_size].y = y;
     ++mouse_event_queue_end_idx;
 }
 
@@ -1393,7 +1322,7 @@ static void motion_notify_do(struct graphics_priv *priv, int x, int y) {
     p.x = x;
 #endif
     p.y = y;
-    callback_list_call_attr_1(priv->cbl, attr_motion, (void *) &p);
+    callback_list_call_attr_1(priv->cbl, attr_motion, (void *)&p);
     return;
 }
 
@@ -1405,14 +1334,14 @@ static void motion_notify(int x, int y) {
 static gboolean graphics_opengl_idle(void *data) {
     static int opengl_init_ok = 0;
     if (!opengl_init_ok) {
-        callback_list_call_attr_2(graphics_priv_root->cbl, attr_resize, GINT_TO_POINTER (graphics_priv_root->width),
-                                  GINT_TO_POINTER (graphics_priv_root->height));
+        callback_list_call_attr_2(graphics_priv_root->cbl, attr_resize, GINT_TO_POINTER(graphics_priv_root->width),
+                                  GINT_TO_POINTER(graphics_priv_root->height));
         opengl_init_ok = 1;
     } else {
 
-#ifdef FREEGLUT
+#    ifdef FREEGLUT
         glutMainLoopEvent();
-#endif
+#    endif
         handle_mouse_queue();
     }
     return TRUE;
@@ -1434,7 +1363,7 @@ static void ProcessNormalKeys(unsigned char key_in, int x, int y) {
     keybuf[0] = key;
     keybuf[1] = '\0';
     graphics_priv_root->force_redraw = 1;
-    callback_list_call_attr_1(graphics_priv_root->cbl, attr_keypress, (void *) keybuf);
+    callback_list_call_attr_1(graphics_priv_root->cbl, attr_keypress, (void *)keybuf);
 }
 
 static void ProcessSpecialKeys(int key_in, int x, int y) {
@@ -1462,12 +1391,12 @@ static void ProcessSpecialKeys(int key_in, int x, int y) {
         break;
     default:
         break;
-    }			//switch
+    }  // switch
 
     graphics_priv_root->force_redraw = 1;
     keybuf[0] = key;
     keybuf[1] = '\0';
-    callback_list_call_attr_1(graphics_priv_root->cbl, attr_keypress, (void *) keybuf);
+    callback_list_call_attr_1(graphics_priv_root->cbl, attr_keypress, (void *)keybuf);
 }
 
 static void resize_callback_do(struct graphics_priv *priv, int w, int h) {
@@ -1475,11 +1404,11 @@ static void resize_callback_do(struct graphics_priv *priv, int w, int h) {
 #ifndef USE_OPENGLES2
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-#ifdef MIRRORED_VIEW
+#    ifdef MIRRORED_VIEW
     glOrthof(glF(w), glF(0), glF(h), glF(0), glF(1), glF(-1));
-#else
+#    else
     glOrthof(glF(0), glF(w), glF(h), glF(0), glF(1), glF(-1));
-#endif
+#    endif
 #endif
     priv->width = w;
     priv->height = h;
@@ -1501,9 +1430,8 @@ static void glut_close(void) {
     callback_list_call_attr_0(graphics_priv_root->cbl, attr_window_closed);
 }
 
-
 static struct graphics_priv *graphics_opengl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
-        struct callback_list *cbl) {
+                                                 struct callback_list *cbl) {
     struct attr *attr;
 
     if (!event_request_system("glib", "graphics_opengl_new"))
@@ -1555,9 +1483,9 @@ static struct graphics_priv *graphics_opengl_new(struct navit *nav, struct graph
     glutMouseFunc(click_notify);
     glutKeyboardFunc(ProcessNormalKeys);
     glutSpecialFunc(ProcessSpecialKeys);
-#ifdef FREEGLUT
+#    ifdef FREEGLUT
     glutCloseFunc(glut_close);
-#endif
+#    endif
     this->DLid = glGenLists(1);
 
     g_timeout_add(G_PRIORITY_DEFAULT + 10, graphics_opengl_idle, NULL);
@@ -1566,11 +1494,10 @@ static struct graphics_priv *graphics_opengl_new(struct navit *nav, struct graph
     g_timeout_add(G_PRIORITY_DEFAULT + 1000, redraw_filter, this);
 #endif
 
-    //create hash table for uncompressed image data
+    // create hash table for uncompressed image data
     hImageData = g_hash_table_new(g_str_hash, g_str_equal);
     return this;
 }
-
 
 static void event_opengl_main_loop_run(void) {
     dbg(lvl_info, "enter");
@@ -1589,7 +1516,6 @@ static void event_opengl_remove_watch(struct event_watch *ev) {
     dbg(lvl_debug, "enter");
 }
 
-
 static struct event_timeout *event_opengl_add_timeout(int timeout, int multi, struct callback *cb) {
     dbg(lvl_debug, "enter");
     return NULL;
@@ -1598,7 +1524,6 @@ static struct event_timeout *event_opengl_add_timeout(int timeout, int multi, st
 static void event_opengl_remove_timeout(struct event_timeout *to) {
     dbg(lvl_debug, "enter");
 }
-
 
 static struct event_idle *event_opengl_add_idle(int priority, struct callback *cb) {
     dbg(lvl_debug, "enter");
@@ -1614,15 +1539,15 @@ static void event_opengl_call_callback(struct callback_list *cb) {
 }
 
 static struct event_methods event_opengl_methods = {
-    event_opengl_main_loop_run,
-    event_opengl_main_loop_quit,
-    event_opengl_add_watch,
-    event_opengl_remove_watch,
-    event_opengl_add_timeout,
-    event_opengl_remove_timeout,
-    event_opengl_add_idle,
-    event_opengl_remove_idle,
-    event_opengl_call_callback,
+    .main_loop_run = event_opengl_main_loop_run,
+    .main_loop_quit = event_opengl_main_loop_quit,
+    .add_watch = event_opengl_add_watch,
+    .remove_watch = event_opengl_remove_watch,
+    .add_timeout = event_opengl_add_timeout,
+    .remove_timeout = event_opengl_remove_timeout,
+    .add_idle = event_opengl_add_idle,
+    .remove_idle = event_opengl_remove_idle,
+    .call_callback = event_opengl_call_callback,
 };
 
 static struct event_priv *event_opengl_new(struct event_methods *meth) {

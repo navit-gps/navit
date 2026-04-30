@@ -53,7 +53,6 @@
 <!ATTLIST vehicleprofile flags CDATA #REQUIRED>
 <!ATTLIST vehicleprofile flags_forward_mask CDATA #REQUIRED>
 <!ATTLIST vehicleprofile flags_reverse_mask CDATA #REQUIRED>
-<!ATTLIST vehicleprofile maxspeed_handling CDATA #REQUIRED>
 <!ATTLIST vehicleprofile route_mode CDATA #REQUIRED>
 <!ATTLIST vehicleprofile route_depth CDATA #IMPLIED>
 <!ATTLIST vehicleprofile static_distance CDATA #IMPLIED>
@@ -78,7 +77,6 @@
 <!ELEMENT roadprofile (announcement*)>
 <!ATTLIST roadprofile item_types CDATA #REQUIRED>
 <!ATTLIST roadprofile speed CDATA #REQUIRED>
-<!ATTLIST roadprofile route_weight CDATA #REQUIRED>
 <!ELEMENT speed EMPTY>
 <!ATTLIST speed type CDATA #REQUIRED>
 <!ATTLIST speed value CDATA #REQUIRED>
@@ -91,7 +89,6 @@
 <!ATTLIST announce unit CDATA #REQUIRED>
 <!ELEMENT announcement EMPTY>
 <!ATTLIST announcement level CDATA #REQUIRED>
-<!ATTLIST announcement distance_metric CDATA #REQUIRED>
 <!ELEMENT speech EMPTY>
 <!ATTLIST speech type CDATA #REQUIRED>
 <!ATTLIST speech data CDATA #REQUIRED>
@@ -130,6 +127,7 @@
 <!ATTLIST osd y CDATA #IMPLIED>
 <!ATTLIST osd src CDATA #IMPLIED>
 <!ATTLIST osd command CDATA #IMPLIED>
+<!ATTLIST osd data CDATA #IMPLIED>
 <!ELEMENT itemgra (polygon|polyline|text|circle|icon|image|arrows|spikes)*>
 <!ATTLIST itemgra item_types CDATA #IMPLIED>
 <!ATTLIST itemgra order CDATA #IMPLIED>
@@ -137,6 +135,9 @@
 <!ELEMENT polygon (coord*)>
 <!ATTLIST polygon color CDATA #REQUIRED>
 <!ATTLIST polygon oneway CDATA #IMPLIED>
+<!ATTLIST polygon src CDATA #IMPLIED>
+<!ATTLIST polygon w CDATA #IMPLIED>
+<!ATTLIST polygon h CDATA #IMPLIED>
 <!ELEMENT polyline (coord*)>
 <!ATTLIST polyline color CDATA #REQUIRED>
 <!ATTLIST polyline width CDATA #IMPLIED>

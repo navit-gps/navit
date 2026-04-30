@@ -17,39 +17,39 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <Python.h>
 #include "debug.h"
+#include <Python.h>
 
 #if defined(MS_WINDOWS) || defined(__CYGWIN__)
-#define Obj_HEAD PyObject_HEAD_INIT(NULL);
+#    define Obj_HEAD PyObject_HEAD_INIT(NULL);
 #else
-#define Obj_HEAD PyObject_HEAD_INIT(&PyType_Type)
+#    define Obj_HEAD PyObject_HEAD_INIT(&PyType_Type)
 #endif
 
 struct navit;
 struct map;
 
-PyObject * python_object_from_attr(struct attr *attr);
+PyObject *python_object_from_attr(struct attr *attr);
 
-PyObject * config_py(PyObject *self, PyObject *args);
+PyObject *config_py(PyObject *self, PyObject *args);
 
-PyObject * map_py_ref(struct map *map);
+PyObject *map_py_ref(struct map *map);
 
 struct navigation;
-PyObject * navigation_py(PyObject *self, PyObject *args);
-PyObject * navigation_py_ref(struct navigation *navigation);
+PyObject *navigation_py(PyObject *self, PyObject *args);
+PyObject *navigation_py_ref(struct navigation *navigation);
 
-PyObject * navit_py(PyObject *self, PyObject *args);
-PyObject * navit_py_ref(struct navit *navit);
+PyObject *navit_py(PyObject *self, PyObject *args);
+PyObject *navit_py_ref(struct navit *navit);
 extern PyTypeObject pcoord_Type;
-PyObject * pcoord_py(PyObject *self, PyObject *args);
+PyObject *pcoord_py(PyObject *self, PyObject *args);
 struct pcoord *pcoord_py_get(PyObject *self);
 
 struct route;
-PyObject * route_py(PyObject *self, PyObject *args);
-PyObject * route_py_ref(struct route *route);
+PyObject *route_py(PyObject *self, PyObject *args);
+PyObject *route_py_ref(struct route *route);
 
 extern PyTypeObject attr_Type;
-PyObject * attr_new_py(PyObject *self, PyObject *args);
-PyObject * attr_new_py_ref(struct attr *attr);
-struct attr * attr_py_get(PyObject *self);
+PyObject *attr_new_py(PyObject *self, PyObject *args);
+PyObject *attr_new_py_ref(struct attr *attr);
+struct attr *attr_py_get(PyObject *self);

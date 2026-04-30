@@ -39,17 +39,17 @@
 # spaetz https://launchpad.net/~spaetz
 # vsandre https://launchpad.net/~vsandre
 # "J. Lavoie" <j.lavoie@net-c.ca>, 2024.
-# jkoan <jkoan@gmx.de>, 2024.
+# jkoan <jkoan@gmx.de>, 2024, 2026.
 # Ettore Atalan <atalanttore@googlemail.com>, 2024, 2025.
 # Patrick Höhn <hoehnp@gmx.de>, 2025.
-# Christof Schulze <christof.schulze@gmx.net>, 2025.
+# Christof Schulze <christof.schulze@gmx.net>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-16 19:22+0100\n"
-"PO-Revision-Date: 2025-12-18 13:05+0000\n"
-"Last-Translator: Christof Schulze <christof.schulze@gmx.net>\n"
+"PO-Revision-Date: 2026-02-09 18:25+0000\n"
+"Last-Translator: jkoan <jkoan@gmx.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/navit/navit-core/"
 "de/>\n"
 "Language: de\n"
@@ -57,7 +57,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15.1-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -65,7 +65,7 @@ msgstr "Aus dem Quellverzeichnis starten\n"
 
 #. libc of navit returns "dummy"
 msgid "Error getting current path. use ./ \n"
-msgstr ""
+msgstr "Fehler beim Abruf des aktuellen Verzeichnis. Nutze ./ \n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -246,7 +246,7 @@ msgid "Enter the roundabout %s"
 msgstr "%s in den Kreisverkehr einfahren"
 
 msgid "then enter the roundabout"
-msgstr ""
+msgstr "Dann in den Kreisverkehr einfahren"
 
 #. TRANSLATORS: first arg. is the manieth exit, second arg. is the destination to follow
 #, c-format
@@ -426,13 +426,13 @@ msgid "Length"
 msgstr "Länge"
 
 msgid "mi"
-msgstr ""
+msgstr "mi"
 
 msgid "km"
 msgstr "km"
 
 msgid "feet"
-msgstr ""
+msgstr "Fuß"
 
 msgid "m"
 msgstr "m"
@@ -1548,7 +1548,7 @@ msgstr "Samoa"
 
 #. 412
 msgid "Kosovo"
-msgstr ""
+msgstr "Kosovo"
 
 #. 887
 msgid "Yemen"
@@ -2319,6 +2319,15 @@ msgid ""
 "\n"
 "Enjoy Navit!"
 msgstr ""
+"Willkommen bei Navit!\n"
+"\n"
+"Wähle \"Karte herunterladen\" im Menü um Navit zu nutzen. Die Karten können "
+"sehr groß  (&gt50MB) sein - die Nutzung einer WLAN-Verbindung wird "
+"empfohlen.\n"
+"\n"
+"Kartendaten: (c) Mitwirkende des OpenStreetMap Projekts\n"
+"\n"
+"Viel Spaß mit Navit!"
 
 #. Android resource: @strings/initial_info_box_OK
 msgid "OK"
@@ -2418,7 +2427,7 @@ msgstr "Karten passend zur aktuellen Position"
 
 #. Android resource: @strings/maps_installed
 msgid "Installed maps"
-msgstr ""
+msgstr "Installierte Karten"
 
 #. Android resource: @strings/map_downloading
 msgid "downloading"

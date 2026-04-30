@@ -13,12 +13,16 @@ response.
 Contact Options
 ===============
 
+.. _discord:
+
 Discord
 -------
 
 We are also on Discord with a Bridge to our IRC channel.
 
 Feel free to join: https://discord.gg/ADfXxZx
+
+.. _irc:
 
 IRC
 ---

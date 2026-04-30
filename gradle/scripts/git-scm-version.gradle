@@ -3,13 +3,9 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven {
-           name = 'ajoberstar-backup'
-           url = 'https://ajoberstar.org/bintray-backup/'
-        }
     }
     dependencies {
-        classpath 'org.ajoberstar:grgit:2.3.0'
+        classpath 'org.ajoberstar.grgit:grgit-core:5.3.3'
     }
 }
 
@@ -18,7 +14,13 @@ import java.time.format.DateTimeFormatter
 
 ext {
     git = Grgit.open(currentDir: projectDir)
-    gitVersionName = git.describe(match: ["v[0-9.rc]*"])
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'describe', '--tags', '--match', 'v[0-9.rc]*', '--dirty'
+        standardOutput = stdout
+        ignoreExitValue true
+    }
+    gitVersionName = stdout.toString().trim()
     hh = Integer.parseInt(DateTimeFormatter.ofPattern("HH").format(git.head().dateTime))
     mm = Integer.parseInt(DateTimeFormatter.ofPattern("mm").format(git.head().dateTime))
     hhmm = Math.round((hh*4)+(mm/15)).toString()

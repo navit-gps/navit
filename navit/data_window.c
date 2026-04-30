@@ -17,8 +17,8 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <glib.h>
 #include "data_window.h"
+#include <glib.h>
 
 void datawindow_mode(struct datawindow *win, int start) {
     win->meth.mode(win->priv, start);
@@ -32,4 +32,3 @@ void datawindow_destroy(struct datawindow *win) {
     win->meth.destroy(win->priv);
     g_free(win);
 }
-

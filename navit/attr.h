@@ -31,52 +31,53 @@ extern "C" {
 #include "attr_type_def.h"
 
 enum attr_format {
-    attr_format_default=0,
-    attr_format_with_units=1,
+    attr_format_default = 0,
+    attr_format_with_units = 1,
 };
 
-#define AF_ONEWAY		(1<<0)
-#define AF_ONEWAYREV		(1<<1)
-#define AF_NOPASS		(AF_ONEWAY|AF_ONEWAYREV)
-#define AF_ONEWAYMASK		(AF_ONEWAY|AF_ONEWAYREV)
-#define AF_SEGMENTED		(1<<2)
-#define AF_ROUNDABOUT 		(1<<3)
-#define AF_ROUNDABOUT_VALID	(1<<4)
-#define AF_ONEWAY_EXCEPTION	(1<<5)
-#define AF_SPEED_LIMIT		(1<<6)
-#define AF_RESERVED1		(1<<7)
-#define AF_SIZE_OR_WEIGHT_LIMIT	(1<<8)
-#define AF_THROUGH_TRAFFIC_LIMIT (1<<9)
-#define AF_TOLL			(1<<10)
-#define AF_SEASONAL		(1<<11)
-#define AF_UNPAVED		(1<<12)
-#define AF_FORD			(1<<13)
-#define AF_UNDERGROUND		(1<<14)
-#define AF_HIGH_OCCUPANCY_CAR_ONLY	(1<<18)
-#define AF_DANGEROUS_GOODS	(1<<19)
-#define AF_EMERGENCY_VEHICLES	(1<<20)
-#define AF_TRANSPORT_TRUCK	(1<<21)
-#define AF_DELIVERY_TRUCK	(1<<22)
-#define AF_PUBLIC_BUS		(1<<23)
-#define AF_TAXI			(1<<24)
-#define AF_HIGH_OCCUPANCY_CAR	(1<<25)
-#define AF_CAR			(1<<26)
-#define AF_MOTORCYCLE		(1<<27)
-#define AF_MOPED		(1<<28)
-#define AF_HORSE		(1<<29)
-#define AF_BIKE			(1<<30)
-#define AF_PEDESTRIAN		(1<<31)
+#define AF_ONEWAY (1 << 0)
+#define AF_ONEWAYREV (1 << 1)
+#define AF_NOPASS (AF_ONEWAY | AF_ONEWAYREV)
+#define AF_ONEWAYMASK (AF_ONEWAY | AF_ONEWAYREV)
+#define AF_SEGMENTED (1 << 2)
+#define AF_ROUNDABOUT (1 << 3)
+#define AF_ROUNDABOUT_VALID (1 << 4)
+#define AF_ONEWAY_EXCEPTION (1 << 5)
+#define AF_SPEED_LIMIT (1 << 6)
+#define AF_RESERVED1 (1 << 7)
+#define AF_SIZE_OR_WEIGHT_LIMIT (1 << 8)
+#define AF_THROUGH_TRAFFIC_LIMIT (1 << 9)
+#define AF_TOLL (1 << 10)
+#define AF_SEASONAL (1 << 11)
+#define AF_UNPAVED (1 << 12)
+#define AF_FORD (1 << 13)
+#define AF_UNDERGROUND (1 << 14)
+#define AF_HIGH_OCCUPANCY_CAR_ONLY (1 << 18)
+#define AF_DANGEROUS_GOODS (1 << 19)
+#define AF_EMERGENCY_VEHICLES (1 << 20)
+#define AF_TRANSPORT_TRUCK (1 << 21)
+#define AF_DELIVERY_TRUCK (1 << 22)
+#define AF_PUBLIC_BUS (1 << 23)
+#define AF_TAXI (1 << 24)
+#define AF_HIGH_OCCUPANCY_CAR (1 << 25)
+#define AF_CAR (1 << 26)
+#define AF_MOTORCYCLE (1 << 27)
+#define AF_MOPED (1 << 28)
+#define AF_HORSE (1 << 29)
+#define AF_BIKE (1 << 30)
+#define AF_PEDESTRIAN (1 << 31)
 
-#define AF_PBH (AF_PEDESTRIAN|AF_BIKE|AF_HORSE)
-#define AF_MOTORIZED_FAST (AF_MOTORCYCLE|AF_CAR|AF_HIGH_OCCUPANCY_CAR|AF_TAXI|AF_PUBLIC_BUS|AF_DELIVERY_TRUCK|AF_TRANSPORT_TRUCK|AF_EMERGENCY_VEHICLES)
-#define AF_ALL (AF_PBH|AF_MOPED|AF_MOTORIZED_FAST)
-#define AF_DISTORTIONMASK (AF_ALL|AF_ONEWAYMASK)
+#define AF_PBH (AF_PEDESTRIAN | AF_BIKE | AF_HORSE)
+#define AF_MOTORIZED_FAST                                                                                              \
+    (AF_MOTORCYCLE | AF_CAR | AF_HIGH_OCCUPANCY_CAR | AF_TAXI | AF_PUBLIC_BUS | AF_DELIVERY_TRUCK | AF_TRANSPORT_TRUCK \
+     | AF_EMERGENCY_VEHICLES)
+#define AF_ALL (AF_PBH | AF_MOPED | AF_MOTORIZED_FAST)
+#define AF_DISTORTIONMASK (AF_ALL | AF_ONEWAYMASK)
 
-
-#define AF_DG_ANY		(1<<0)
-#define AF_DG_WATER_HARMFUL	(1<<1)
-#define AF_DG_EXPLOSIVE		(1<<2)
-#define AF_DG_FLAMMABLE		(1<<3)
+#define AF_DG_ANY (1 << 0)
+#define AF_DG_WATER_HARMFUL (1 << 1)
+#define AF_DG_EXPLOSIVE (1 << 2)
+#define AF_DG_FLAMMABLE (1 << 3)
 
 /*
  * Values for attributes that could carry relative values.
@@ -85,32 +86,33 @@ enum attr_format {
  * values are stored shifted by adding ATTR_REL_RELSHIFT.
  */
 /** Minimum value for an absolute attribute value. */
-#define ATTR_REL_MINABS		-0x40000000
+#define ATTR_REL_MINABS -0x40000000
 /** Maximum value for an absolute attribute value. */
-#define ATTR_REL_MAXABS		0x40000000
+#define ATTR_REL_MAXABS 0x40000000
 /** Minimum value for an relative attribute value (without value shift). */
-#define ATTR_REL_MINREL		-0x1FFFFFFF
+#define ATTR_REL_MINREL -0x1FFFFFFF
 /** Maximum value for an relative attribute value (without value shift). */
-#define ATTR_REL_MAXREL		0x20000000
+#define ATTR_REL_MAXREL 0x20000000
 /**
  * Value shift for relative values. This value is added to an attribute values to indicate
  * a relative value. */
-#define ATTR_REL_RELSHIFT	0x60000000
+#define ATTR_REL_RELSHIFT 0x60000000
 
 /** Indicates whether a position is valid **/
 enum attr_position_valid {
-    attr_position_valid_invalid,              /**< The position is invalid and should be discarded. **/
-    attr_position_valid_static,               /**< The position is valid but the vehicle is not moving, or moving very slowly.
-	                                               Calculations that involve the difference between two consecutive positions,
-	                                               such as bearing, may therefore be inaccurate. **/
-    attr_position_valid_extrapolated_time,    /**< FIXME: this description is just my (mvglasow) guess; this value is not used anywhere as of r5957.
-	                                               The position is the vehicle's last known position, and the consumer of the
-	                                               information should be aware that the vehicle may have moved since. **/
-    attr_position_valid_extrapolated_spatial, /**< FIXME: this description is just my (mvglasow) guess; this value is not used anywhere as of r5957.
-	                                               The position is a prediction of the vehicle's current position, based on
-	                                               its last known position, the time elapsed since it was obtained and possibly
-	                                               other factors. This would be used for positions obtained through inertial
-	                                               navigation. **/
+    attr_position_valid_invalid, /**< The position is invalid and should be discarded. **/
+    attr_position_valid_static,  /**< The position is valid but the vehicle is not moving, or moving very slowly.
+                                          Calculations that involve the difference between two consecutive positions,
+                                          such as bearing, may therefore be inaccurate. **/
+    attr_position_valid_extrapolated_time, /**< FIXME: this description is just my (mvglasow) guess; this value is not
+                                              used anywhere as of r5957. The position is the vehicle's last known
+                                              position, and the consumer of the information should be aware that the
+                                              vehicle may have moved since. **/
+    attr_position_valid_extrapolated_spatial, /**< FIXME: this description is just my (mvglasow) guess; this value is
+                                                 not used anywhere as of r5957. The position is a prediction of the
+                                                 vehicle's current position, based on its last known position, the time
+                                                 elapsed since it was obtained and possibly other factors. This would be
+                                                 used for positions obtained through inertial navigation. **/
     attr_position_valid_valid,                /**< The position is valid and can be used for all purposes. **/
 };
 
@@ -126,8 +128,8 @@ enum attr_position_valid {
 #define ATTR_IS_COORD(x) ((x) >= attr_type_coord_begin && (x) <= attr_type_coord_end)
 #define ATTR_IS_GROUP(x) ((x) >= attr_type_group_begin && (x) <= attr_type_group_end)
 
-#define ATTR_INT(x,y) ((struct attr){attr_##x,{.num=y}})
-#define ATTR_OBJECT(x,y) ((struct attr){attr_##x,{.navit=y}})
+#define ATTR_INT(x, y) ((struct attr){attr_##x, {.num = y}})
+#define ATTR_OBJECT(x, y) ((struct attr){attr_##x, {.navit = y}})
 
 struct range {
     short min, max;
@@ -142,7 +144,7 @@ struct attr {
         struct item *item;
         enum item_type item_type;
         enum projection projection;
-        double * numd;
+        double *numd;
         struct color *color;
         struct coord_geo *coord_geo;
         struct navit *navit;
@@ -218,7 +220,7 @@ void attr_data_set(struct attr *attr, void *data);
 void attr_data_set_le(struct attr *attr, void *data);
 void attr_free_content(struct attr *attr);
 void attr_free(struct attr *attr);
-void attr_free_g(struct attr *attr, void * unused); /* to use as GFunc in glib context */
+void attr_free_g(struct attr *attr, void *unused); /* to use as GFunc in glib context */
 void attr_dup_content(struct attr *src, struct attr *dst);
 struct attr *attr_dup(struct attr *attr);
 void attr_list_free(struct attr **attrs);

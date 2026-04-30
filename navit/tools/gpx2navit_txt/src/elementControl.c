@@ -19,16 +19,14 @@
 
 #include "gpx2navit_txt.h"
 
-void startElementControl(parsedata * pdata, const char *element,
-                         const char **attr);
-void endElementControl(parsedata * pdata, const char *element);
+void startElementControl(parsedata *pdata, const char *element, const char **attr);
+void endElementControl(parsedata *pdata, const char *element);
 
 /*
  * This method controls tag start event.
  * It corrects attributes.
  */
-void startElementControl(parsedata * pdata, const char *element,
-                         const char **attr) {
+void startElementControl(parsedata *pdata, const char *element, const char **attr) {
     int i;
     static int isFirstTrk = 1;
     static int isFirstRte = 1;
@@ -93,7 +91,7 @@ void startElementControl(parsedata * pdata, const char *element,
  * It corrects char elements when the element tag has some data,
  * then start to convert when tag is top level tag like <wpt>.
  */
-void endElementControl(parsedata * pdata, const char *element) {
+void endElementControl(parsedata *pdata, const char *element) {
     static int isFirstWpt = 1;
     static int isFirstTrkAsPoint = 1;
     static int isFirstRteAsPoint = 1;
@@ -181,10 +179,9 @@ void endElementControl(parsedata * pdata, const char *element) {
             if (isFirstWpt) {
                 isFirstWpt = 0;
             }
-            //todo
+            // todo
             if (DEBUG) {
-                fprintf(stderr,"\neectrl wpt %s %s",
-                        pdata->attr->desc,pdata->attr->name);
+                fprintf(stderr, "\neectrl wpt %s %s", pdata->attr->desc, pdata->attr->name);
             }
             setWpt(pdata);
             wipeAttr(pdata->attr);
@@ -209,7 +206,7 @@ void endElementControl(parsedata * pdata, const char *element) {
     /* write trackpoint */
     if (!strcmp(element, "trkseg")) {
         if (pdata->prop->parseTrk) {
-            setPath( pdata);
+            setPath(pdata);
         }
     }
     /* set route data */
@@ -224,19 +221,19 @@ void endElementControl(parsedata * pdata, const char *element) {
             if (isFirstRteAsPoint) {
                 isFirstRteAsPoint = 0;
             }
-            setWpt( pdata);
+            setWpt(pdata);
         }
         wipeAttr(pdata->attr);
     }
     /* write route */
     if (!strcmp(element, "rte")) {
         if (pdata->prop->parseRte) {
-            setPath( pdata);
+            setPath(pdata);
         }
     }
     if (!strcmp(element, "metadata")) {
         setMetadata(pdata);
         wipeAttr(pdata->attr);
     }
-    pdata->bufptr = NULL; //reset bufptr now
+    pdata->bufptr = NULL;  // reset bufptr now
 }

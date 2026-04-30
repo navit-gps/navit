@@ -18,18 +18,18 @@
  *
  */
 
+#include "android.h"
+#include "callback.h"
+#include "coord.h"
+#include "debug.h"
+#include "item.h"
+#include "plugin.h"
+#include "vehicle.h"
 #include <config.h>
-#include <string.h>
 #include <glib.h>
 #include <math.h>
+#include <string.h>
 #include <time.h>
-#include "debug.h"
-#include "callback.h"
-#include "plugin.h"
-#include "coord.h"
-#include "item.h"
-#include "android.h"
-#include "vehicle.h"
 
 /**
  * @defgroup vehicle-android Vehicle Android
@@ -42,26 +42,26 @@
 
 struct vehicle_priv {
     struct callback_list *cbl;
-    struct coord_geo geo;      /**< The last known position of the vehicle **/
-    double speed;              /**< Speed in km/h **/
-    double direction;          /**< Bearing in degrees **/
-    double height;             /**< Elevation in meters **/
-    double radius;             /**< Position accuracy in meters **/
-    int fix_type;              /**< Type of last fix (1 = valid, 0 = invalid) **/
-    time_t fix_time;           /**< Timestamp of last fix (not used) **/
-    char fixiso8601[128];      /**< Timestamp of last fix in ISO 8601 format **/
-    int sats;                  /**< Number of satellites in view **/
-    int sats_used;             /**< Number of satellites used in fix **/
-    int valid;                 /**< Whether the vehicle coordinates in {@code geo} are valid **/
-    struct attr ** attrs;
-    struct callback *pcb;      /**< The callback function for position updates **/
-    struct callback *scb;      /**< The callback function for status updates **/
-    struct callback *fcb;      /**< The callback function for fix status updates **/
-    jclass NavitVehicleClass;  /**< The {@code NavitVehicle} class **/
-    jobject NavitVehicle;      /**< An instance of {@code NavitVehicle} **/
-    jclass LocationClass;      /**< Android's {@code Location} class **/
+    struct coord_geo geo; /**< The last known position of the vehicle **/
+    double speed;         /**< Speed in km/h **/
+    double direction;     /**< Bearing in degrees **/
+    double height;        /**< Elevation in meters **/
+    double radius;        /**< Position accuracy in meters **/
+    int fix_type;         /**< Type of last fix (1 = valid, 0 = invalid) **/
+    time_t fix_time;      /**< Timestamp of last fix (not used) **/
+    char fixiso8601[128]; /**< Timestamp of last fix in ISO 8601 format **/
+    int sats;             /**< Number of satellites in view **/
+    int sats_used;        /**< Number of satellites used in fix **/
+    int valid;            /**< Whether the vehicle coordinates in {@code geo} are valid **/
+    struct attr **attrs;
+    struct callback *pcb;     /**< The callback function for position updates **/
+    struct callback *scb;     /**< The callback function for status updates **/
+    struct callback *fcb;     /**< The callback function for fix status updates **/
+    jclass NavitVehicleClass; /**< The {@code NavitVehicle} class **/
+    jobject NavitVehicle;     /**< An instance of {@code NavitVehicle} **/
+    jclass LocationClass;     /**< Android's {@code Location} class **/
     jmethodID Location_getLatitude, Location_getLongitude, Location_getSpeed, Location_getBearing, Location_getAltitude,
-              Location_getTime, Location_getAccuracy;
+        Location_getTime, Location_getAccuracy;
 };
 
 /**
@@ -71,7 +71,7 @@ struct vehicle_priv {
  * @returns nothing
  */
 static void vehicle_android_destroy(struct vehicle_priv *priv) {
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter");
     g_free(priv);
 }
 
@@ -83,9 +83,8 @@ static void vehicle_android_destroy(struct vehicle_priv *priv) {
  * @param attr Points to an attr structure that will receive the attribute data
  * @returns True for success, false for failure
  */
-static int vehicle_android_position_attr_get(struct vehicle_priv *priv,
-        enum attr_type type, struct attr *attr) {
-    dbg(lvl_debug,"enter %s",attr_to_name(type));
+static int vehicle_android_position_attr_get(struct vehicle_priv *priv, enum attr_type type, struct attr *attr) {
+    dbg(lvl_debug, "enter %s", attr_to_name(type));
     switch (type) {
     case attr_position_fix_type:
         attr->u.num = priv->fix_type;
@@ -114,7 +113,7 @@ static int vehicle_android_position_attr_get(struct vehicle_priv *priv,
             return 0;
         break;
     case attr_position_time_iso8601:
-        attr->u.str=priv->fixiso8601;
+        attr->u.str = priv->fixiso8601;
         break;
     case attr_position_valid:
         attr->u.num = priv->valid;
@@ -122,7 +121,7 @@ static int vehicle_android_position_attr_get(struct vehicle_priv *priv,
     default:
         return 0;
     }
-    dbg(lvl_debug,"ok");
+    dbg(lvl_debug, "ok");
     attr->type = type;
     return 1;
 }
@@ -143,18 +142,18 @@ struct vehicle_methods vehicle_android_methods = {
 static void vehicle_android_position_callback(struct vehicle_priv *v, jobject location) {
     time_t tnow;
     struct tm *tm;
-    dbg(lvl_debug,"enter");
+    dbg(lvl_debug, "enter");
 
     v->geo.lat = (*jnienv)->CallDoubleMethod(jnienv, location, v->Location_getLatitude);
     v->geo.lng = (*jnienv)->CallDoubleMethod(jnienv, location, v->Location_getLongitude);
-    v->speed = (*jnienv)->CallFloatMethod(jnienv, location, v->Location_getSpeed)*3.6;
+    v->speed = (*jnienv)->CallFloatMethod(jnienv, location, v->Location_getSpeed) * 3.6;
     v->direction = (*jnienv)->CallFloatMethod(jnienv, location, v->Location_getBearing);
     v->height = (*jnienv)->CallDoubleMethod(jnienv, location, v->Location_getAltitude);
     v->radius = (*jnienv)->CallFloatMethod(jnienv, location, v->Location_getAccuracy);
-    tnow=(*jnienv)->CallLongMethod(jnienv, location, v->Location_getTime)/1000;
+    tnow = (*jnienv)->CallLongMethod(jnienv, location, v->Location_getTime) / 1000;
     tm = gmtime(&tnow);
     strftime(v->fixiso8601, sizeof(v->fixiso8601), "%Y-%m-%dT%TZ", tm);
-    dbg(lvl_debug,"lat %f lon %f time %s",v->geo.lat,v->geo.lng,v->fixiso8601);
+    dbg(lvl_debug, "lat %f lon %f time %s", v->geo.lat, v->geo.lng, v->fixiso8601);
     if (v->valid != attr_position_valid_valid) {
         v->valid = attr_position_valid_valid;
         callback_list_call_attr_0(v->cbl, attr_position_valid);
@@ -190,7 +189,8 @@ static void vehicle_android_status_callback(struct vehicle_priv *v, int sats_in_
 /**
  * @brief Called when a change in GPS fix status has been reported
  *
- * This function is called by {@code NavitLocationListener} upon receiving a new {@code android.location.GPS_FIX_CHANGE} broadcast.
+ * This function is called by {@code NavitLocationListener} upon receiving a new {@code android.location.GPS_FIX_CHANGE}
+ * broadcast.
  *
  * @param v The {@code struct_vehicle_priv} for the vehicle
  * @param fix_type The fix type (1 = valid, 0 = invalid)
@@ -232,15 +232,15 @@ static int vehicle_android_init(struct vehicle_priv *ret) {
         return 0;
     if (!android_find_class_global("org/navitproject/navit/NavitVehicle", &ret->NavitVehicleClass))
         return 0;
-    dbg(lvl_debug,"at 3");
+    dbg(lvl_debug, "at 3");
     cid = (*jnienv)->GetMethodID(jnienv, ret->NavitVehicleClass, "<init>", "(Landroid/content/Context;JJJ)V");
     if (cid == NULL) {
-        dbg(lvl_error,"no method found");
+        dbg(lvl_error, "no method found");
         return 0; /* exception thrown */
     }
-    ret->NavitVehicle=(*jnienv)->NewObject(jnienv, ret->NavitVehicleClass, cid, android_activity,
-                                           (jlong) ret->pcb, (jlong) ret->scb, (jlong) ret->fcb);
-    dbg(lvl_debug,"result=%p",ret->NavitVehicle);
+    ret->NavitVehicle = (*jnienv)->NewObject(jnienv, ret->NavitVehicleClass, cid, android_activity, (jlong)ret->pcb,
+                                             (jlong)ret->scb, (jlong)ret->fcb);
+    dbg(lvl_debug, "result=%p", ret->NavitVehicle);
     if (!ret->NavitVehicle)
         return 0;
     if (ret->NavitVehicle)
@@ -257,9 +257,8 @@ static int vehicle_android_init(struct vehicle_priv *ret) {
  * @param attrs
  * @returns vehicle_priv
  */
-static struct vehicle_priv *vehicle_android_new_android(struct vehicle_methods *meth,
-        struct callback_list *cbl,
-        struct attr **attrs) {
+static struct vehicle_priv *vehicle_android_new_android(struct vehicle_methods *meth, struct callback_list *cbl,
+                                                        struct attr **attrs) {
     struct vehicle_priv *ret;
 
     dbg(lvl_debug, "enter");

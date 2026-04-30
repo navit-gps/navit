@@ -17,21 +17,21 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <glib.h>
-#include "item.h"
 #include "debug.h"
+#include "item.h"
 #include "xmlconfig.h"
+#include <glib.h>
 
 struct profile_option {
     NAVIT_OBJECT
 };
 
 static struct profile_option *profile_option_new(struct attr *parent, struct attr **attrs) {
-    struct profile_option *po=g_new0(struct profile_option, 1);
-    po->func=&profile_option_func;
+    struct profile_option *po = g_new0(struct profile_option, 1);
+    po->func = &profile_option_func;
     navit_object_ref((struct navit_object *)po);
-    po->attrs=attr_list_dup(attrs);
-    dbg(lvl_debug,"return %p",po);
+    po->attrs = attr_list_dup(attrs);
+    dbg(lvl_debug, "return %p", po);
     return po;
 }
 

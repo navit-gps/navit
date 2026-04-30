@@ -40,7 +40,7 @@ extern "C" {
 
 class QNavitGeoReceiver;
 struct vehicle_priv {
-    struct callback_list* cbl;
+    struct callback_list *cbl;
     struct coord_geo geo;
     double speed;
     double direction;
@@ -52,23 +52,23 @@ struct vehicle_priv {
     int sats;
     int sats_used;
     int have_coords;
-    struct attr** attrs;
+    struct attr **attrs;
 
-    QGeoPositionInfoSource* source;
-    QGeoSatelliteInfoSource* satellites;
-    QNavitGeoReceiver* receiver;
+    QGeoPositionInfoSource *source;
+    QGeoSatelliteInfoSource *satellites;
+    QNavitGeoReceiver *receiver;
 };
 
 class QNavitGeoReceiver : public QObject {
     Q_OBJECT
-public:
-    QNavitGeoReceiver(QObject* parent, struct vehicle_priv* c);
-public slots:
-    void positionUpdated(const QGeoPositionInfo& info);
-    void satellitesInUseUpdated(const QList<QGeoSatelliteInfo>& satellites);
-    void satellitesInViewUpdated(const QList<QGeoSatelliteInfo>& satellites);
+  public:
+    QNavitGeoReceiver(QObject *parent, struct vehicle_priv *c);
+  public slots:
+    void positionUpdated(const QGeoPositionInfo &info);
+    void satellitesInUseUpdated(const QList<QGeoSatelliteInfo> &satellites);
+    void satellitesInViewUpdated(const QList<QGeoSatelliteInfo> &satellites);
 
-private:
-    struct vehicle_priv* priv;
+  private:
+    struct vehicle_priv *priv;
 };
 #endif

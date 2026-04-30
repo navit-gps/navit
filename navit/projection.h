@@ -21,20 +21,21 @@
 #define NAVIT_PROJECTION_H
 
 enum projection {
-	projection_none,	/*!< No projection or unknown projection */
-	projection_mg,		/*!< Mercator projection */
-	projection_garmin,	/*!< Garmin projection */
-	projection_screen,	/*!< Screen projection */
-	projection_utm		/*!< UTM projection */
+    projection_none,   /*!< No projection or unknown projection */
+    projection_mg,     /*!< Mercator projection */
+    projection_garmin, /*!< Garmin projection */
+    projection_screen, /*!< Screen projection */
+    projection_utm     /*!< UTM projection */
 };
 
 enum map_datum {
-	map_datum_none, map_datum_wgs84, map_datum_dhdn
+    map_datum_none,
+    map_datum_wgs84,
+    map_datum_dhdn
 };
 
 struct coord;
 enum projection projection_from_name(const char *name, struct coord *offset);
-char * projection_to_name(enum projection proj);
+char *projection_to_name(enum projection proj);
 
 #endif
-

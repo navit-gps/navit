@@ -17,8 +17,11 @@
  * Boston, MA  02110-1301, USA.
  */
 
- #ifndef NAVIT_BOOKMARKS_H
- #define NAVIT_BOOKMARKS_H
+#ifndef NAVIT_BOOKMARKS_H
+#define NAVIT_BOOKMARKS_H
+
+#include "callback.h"
+#include "glib.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,31 +37,32 @@ int bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *c, const char
 int bookmarks_cut_bookmark(struct bookmarks *this_, const char *label);
 int bookmarks_copy_bookmark(struct bookmarks *this_, const char *label);
 int bookmarks_paste_bookmark(struct bookmarks *this_);
-int bookmarks_rename_bookmark(struct bookmarks *this_, const char *oldName, const char* newName);
+int bookmarks_rename_bookmark(struct bookmarks *this_, const char *oldName, const char *newName);
 int bookmarks_delete_bookmark(struct bookmarks *this_, const char *label);
 
-struct map* bookmarks_get_map(struct bookmarks *this_);
+struct map *bookmarks_get_map(struct bookmarks *this_);
 enum projection bookmarks_get_projection(struct bookmarks *this_);
 
 void bookmarks_move_root(struct bookmarks *this_);
 void bookmarks_move_up(struct bookmarks *this_);
-int bookmarks_move_down(struct bookmarks *this_,const char* name);
+int bookmarks_move_down(struct bookmarks *this_, const char *name);
 
-struct item* bookmarks_get_item(struct bookmarks* this_);
-int bookmarks_get_bookmark_count(struct bookmarks* this_);
-void bookmarks_item_rewind(struct bookmarks* this_);
-const char* bookmarks_item_cwd(struct bookmarks* this_);
+struct item *bookmarks_get_item(struct bookmarks *this_);
+int bookmarks_get_bookmark_count(struct bookmarks *this_);
+void bookmarks_item_rewind(struct bookmarks *this_);
+const char *bookmarks_item_cwd(struct bookmarks *this_);
 
-char* bookmarks_get_user_data_directory(gboolean create);
-char* bookmarks_get_destination_file(gboolean create);
+char *bookmarks_get_user_data_directory(gboolean create);
+char *bookmarks_get_destination_file(gboolean create);
 void bookmarks_set_center_from_file(struct bookmarks *this_, char *file);
-char* bookmarks_get_center_file(gboolean create);
+char *bookmarks_get_center_file(gboolean create);
 void bookmarks_write_center_to_file(struct bookmarks *this_, char *file);
-void bookmarks_append_destinations(struct map *former_destination_map, char *file, struct pcoord *c, int count, enum item_type type, const char *description, int limit);
+void bookmarks_append_destinations(struct map *former_destination_map, char *file, struct pcoord *c, int count,
+                                   enum item_type type, const char *description, int limit);
 /* end of prototypes */
 
 #ifdef __cplusplus
 }
 #endif
 
- #endif /* NAVIT_BOOKMARKS_H */
+#endif /* NAVIT_BOOKMARKS_H */

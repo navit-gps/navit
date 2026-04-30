@@ -73,7 +73,7 @@ If you want to connect multiple tools to your GPS, you need an multiplexer tool,
 
 * source="file:/home/myhome/mynmea.log" : here, navit will replay the nmea logfile (under Windows it is currently not possible in Navit)
 * source="pipe:/usr/bin/gpspipe -r" - any executable that produces NMEA output - gpsbabel, gpspipe, ...
-* source="demo://" : to use the demo vehicle. Set your Position and Destination, and vehicle will follow the calculated route. Useful if you have no nmea data source. A demo vehicle spec could look like this: 
+* source="demo://" : to use the demo vehicle. Set your Position and Destination, and vehicle will follow the calculated route. Useful if you have no nmea data source. A demo vehicle spec could look like this:
 
 .. code-block:: xml
 
@@ -95,7 +95,7 @@ To record your trip , you can add a sub-instance "log" to the vehicle. It is pos
 This will give a log file named YearMonthDaySequencenumber.gpx/.nmea which will be kept in memory and flushed to disk when it is 1048576 bytes large or the oldest data is older than 900 seconds.
 .. how to define, where the file get's stored?
 
-To display your track for more than one hour, you must use [[binfile]] to create a cache file that get's display 
+To display your track for more than one hour, you must use [[binfile]] to create a cache file that get's display
 .. do I need to add it as a map source?
 
 .. code-block:: xml
@@ -117,12 +117,12 @@ Defines the behaviour of the routing and are usually linked to a vehicle section
 .. code-block:: xml
 
   <vehicleprofile name="bike" flags="0x40000000" flags_forward_mask="0x40000000" flags_reverse_mask="0x40000000" maxspeed_handling="1" route_mode="0">
-    <roadprofile item_types="path,track_ground" speed="12" route_weight="5">
+    <roadprofile item_types="path,track_ground" speed="12" >
     </roadprofile>
-    <roadprofile item_types="track_gravelled,track_paved,cycleway,street_service,street_parking_lane,street_0,street_1_city,living_street,street_2_city,street_1_land,street_2_land,street_3_city" speed="25" route_weight="15">
+    <roadprofile item_types="track_gravelled,track_paved,cycleway,street_service,street_parking_lane,street_0,street_1_city,living_street,street_2_city,street_1_land,street_2_land,street_3_city" speed="25" >
     </roadprofile>
-    <roadprofile item_types="roundabout" speed="20" route_weight="10"/>
-    <roadprofile item_types="ferry" speed="40" route_weight="40"/>
+    <roadprofile item_types="roundabout" speed="20" />
+    <roadprofile item_types="ferry" speed="40" />
   </vehicleprofile>
 
 For details on the flags, see [[Vehicle profile flags]].

@@ -17,31 +17,38 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include "config.h"
 #include "navit_lfs.h"
-#ifdef _MSC_VER
-#include <windows.h>
-#else
-#include <dirent.h>
-#endif /* _MSC_VER */
-#include <string.h>
-#include <sys/stat.h>
-#include <sys/mman.h>
-#include <stdlib.h>
-#include <wordexp.h>
-#include <glib.h>
-#include <zlib.h>
-#include "debug.h"
-#include "cache.h"
-#include "file.h"
+
 #include "atom.h"
+#include "cache.h"
+#include "config.h"
+#include "debug.h"
+#include "file.h"
 #include "item.h"
-#include "util.h"
 #include "types.h"
+#include "util.h"
 #include "zipfile.h"
+#include <glib.h>
+#include <glib/gtypes.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <wordexp.h>
+#include <zconf.h>
+#include <zlib.h>
+
+#ifdef _MSC_VER
+#    include <windows.h>
+#else
+#    include <dirent.h>
+#endif /* _MSC_VER */
 #ifdef HAVE_SOCKET
-#include <sys/socket.h>
-#include <netdb.h>
+#    include <netdb.h>
+#    include <sys/socket.h>
 #endif
 
 #ifdef CACHE_SIZE
@@ -51,8 +58,8 @@ static GHashTable *file_name_hash;
 static struct cache *file_cache;
 
 #ifdef HAVE_PRAGMA_PACK
-#pragma pack(push)
-#pragma pack(1)
+#    pragma pack(push)
+#    pragma pack(1)
 #endif
 
 struct file_cache_id {
@@ -63,14 +70,14 @@ struct file_cache_id {
 } ATTRIBUTE_PACKED;
 
 #ifdef HAVE_PRAGMA_PACK
-#pragma pack(pop)
+#    pragma pack(pop)
 #endif
 
 #ifdef HAVE_SOCKET
 static int file_socket_connect(char *host, char *service) {
     struct addrinfo hints;
     struct addrinfo *result, *rp;
-    int fd=-1,s;
+    int fd = -1, s;
 
     memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_family = AF_UNSPEC;
@@ -79,7 +86,7 @@ static int file_socket_connect(char *host, char *service) {
     hints.ai_protocol = 0;
     s = getaddrinfo(host, service, &hints, &result);
     if (s != 0) {
-        dbg(lvl_error,"getaddrinfo error %s",gai_strerror(s));
+        dbg(lvl_error, "getaddrinfo error %s", gai_strerror(s));
         return -1;
     }
     for (rp = result; rp != NULL; rp = rp->ai_next) {
@@ -88,7 +95,7 @@ static int file_socket_connect(char *host, char *service) {
             if (connect(fd, rp->ai_addr, rp->ai_addrlen) != -1)
                 break;
             close(fd);
-            fd=-1;
+            fd = -1;
         }
     }
     freeaddrinfo(result);
@@ -96,11 +103,11 @@ static int file_socket_connect(char *host, char *service) {
 }
 
 static void file_http_request(struct file *file, char *method, char *host, char *path, char *header, int persistent) {
-    char *request=g_strdup_printf("%s %s HTTP/1.0\r\nUser-Agent: navit %s\r\nHost: %s\r\n%s%s%s\r\n",method,path,
-                                  NAVIT_VERSION,
-                                  host,persistent?"Connection: Keep-Alive\r\n":"",header?header:"",header?"\r\n":"");
+    char *request = g_strdup_printf("%s %s HTTP/1.0\r\nUser-Agent: navit %s\r\nHost: %s\r\n%s%s%s\r\n", method, path,
+                                    NAVIT_VERSION, host, persistent ? "Connection: Keep-Alive\r\n" : "",
+                                    header ? header : "", header ? "\r\n" : "");
     int retval = write(file->fd, request, strlen(request));
-    dbg(lvl_debug,"%s returned %d",request, retval);
+    dbg(lvl_debug, "%s returned %d", request, retval);
     file->requests++;
 }
 
@@ -110,36 +117,36 @@ static int file_request_do(struct file *file, struct attr **options, int connect
 
     if (!options)
         return 0;
-    attr=attr_search(options, attr_url);
+    attr = attr_search(options, attr_url);
     if (!attr)
         return 0;
-    name=attr->u.str;
+    name = attr->u.str;
     if (!name)
         return 0;
     g_free(file->name);
     file->name = g_strdup(name);
-    if (!strncmp(name,"http://",7)) {
-        char *host=g_strdup(name+7);
-        char *port=strchr(host,':');
-        char *path=strchr(name+7,'/');
-        char *method="GET";
-        char *header=NULL;
-        int persistent=0;
-        if ((attr=attr_search(options, attr_http_method)) && attr->u.str)
-            method=attr->u.str;
-        if ((attr=attr_search(options, attr_http_header)) && attr->u.str)
-            header=attr->u.str;
-        if ((attr=attr_search(options, attr_persistent)))
-            persistent=attr->u.num;
+    if (!strncmp(name, "http://", 7)) {
+        char *host = g_strdup(name + 7);
+        char *port = strchr(host, ':');
+        char *path = strchr(name + 7, '/');
+        char *method = "GET";
+        char *header = NULL;
+        int persistent = 0;
+        if ((attr = attr_search(options, attr_http_method)) && attr->u.str)
+            method = attr->u.str;
+        if ((attr = attr_search(options, attr_http_header)) && attr->u.str)
+            header = attr->u.str;
+        if ((attr = attr_search(options, attr_persistent)))
+            persistent = attr->u.num;
         if (path)
-            host[path-name-7]='\0';
+            host[path - name - 7] = '\0';
         if (port)
-            *port++='\0';
-        dbg(lvl_debug,"host=%s path=%s",host,path);
+            *port++ = '\0';
+        dbg(lvl_debug, "host=%s path=%s", host, path);
         if (connect)
-            file->fd=file_socket_connect(host,port?port:"80");
-        file_http_request(file,method,host,path,header,persistent);
-        file->special=1;
+            file->fd = file_socket_connect(host, port ? port : "80");
+        file_http_request(file, method, host, path, header, persistent);
+        file->special = 1;
         g_free(host);
     }
     return 1;
@@ -148,16 +155,16 @@ static int file_request_do(struct file *file, struct attr **options, int connect
 
 static unsigned char *file_http_header_end(unsigned char *str, int len) {
     int i;
-    for (i=0; i+1<len; i+=2) {
-        if (str[i+1]=='\n') {
-            if (str[i]=='\n')
-                return str+i+2;
-            else if (str[i]=='\r' && i+3<len && str[i+2]=='\r' && str[i+3]=='\n')
-                return str+i+4;
+    for (i = 0; i + 1 < len; i += 2) {
+        if (str[i + 1] == '\n') {
+            if (str[i] == '\n')
+                return str + i + 2;
+            else if (str[i] == '\r' && i + 3 < len && str[i + 2] == '\r' && str[i + 3] == '\n')
+                return str + i + 4;
             --i;
-        } else if (str[i+1]=='\r') {
-            if (i+4<len && str[i+2]=='\n' && str[i+3]=='\r' && str[i+4]=='\n')
-                return str+i+5;
+        } else if (str[i + 1] == '\r') {
+            if (i + 4 < len && str[i + 2] == '\n' && str[i + 3] == '\r' && str[i + 4] == '\n')
+                return str + i + 5;
             --i;
         }
     }
@@ -178,40 +185,39 @@ char *file_http_header(struct file *f, char *header) {
     return g_hash_table_lookup(f->headers, header);
 }
 
-struct file *
-file_create(char *name, struct attr **options) {
-    struct file *file= g_new0(struct file,1);
+struct file *file_create(char *name, struct attr **options) {
+    struct file *file = g_new0(struct file, 1);
     struct attr *attr;
-    int open_flags=O_LARGEFILE|O_BINARY;
+    int open_flags = O_LARGEFILE | O_BINARY;
 
-    if (options && (attr=attr_search(options, attr_url))) {
+    if (options && (attr = attr_search(options, attr_url))) {
 #ifdef HAVE_SOCKET
         file_request_do(file, options, 1);
 #endif
     } else {
-        if (options && (attr=attr_search(options, attr_readwrite)) && attr->u.num) {
+        if (options && (attr = attr_search(options, attr_readwrite)) && attr->u.num) {
             open_flags |= O_RDWR;
-            if ((attr=attr_search(options, attr_create)) && attr->u.num)
-                open_flags |= O_CREAT|O_TRUNC;
+            if ((attr = attr_search(options, attr_create)) && attr->u.num)
+                open_flags |= O_CREAT | O_TRUNC;
         } else
             open_flags |= O_RDONLY;
         file->name = g_strdup(name);
-        file->fd=open(name, open_flags, 0666);
+        file->fd = open(name, open_flags, 0666);
         if (file->fd == -1) {
             g_free(file->name);
             g_free(file);
             return NULL;
         }
-        dbg(lvl_debug,"fd=%d", file->fd);
-        file->size=lseek(file->fd, 0, SEEK_END);
+        dbg(lvl_debug, "fd=%d", file->fd);
+        file->size = lseek(file->fd, 0, SEEK_END);
         if (file->size < 0)
-            file->size=0;
-        dbg(lvl_debug,"size="LONGLONG_FMT"", file->size);
+            file->size = 0;
+        dbg(lvl_debug, "size=" LONGLONG_FMT "", file->size);
         file->name_id = (long)atom(name);
     }
 #ifdef CACHE_SIZE
-    if (!options || !(attr=attr_search(options, attr_cache)) || attr->u.num)
-        file->cache=1;
+    if (!options || !(attr = attr_search(options, attr_cache)) || attr->u.num)
+        file->cache = 1;
 #endif
     dbg_assert(file != NULL);
     return file;
@@ -224,10 +230,10 @@ file_create_url(char *url) {
 #endif
 
 #ifndef S_ISDIR
-#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+#    define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 #ifndef S_ISREG
-#define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+#    define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
 #endif
 
 /**
@@ -238,11 +244,10 @@ file_create_url(char *url) {
  */
 int file_is_dir(const char *name) {
     struct stat buf;
-    if (! stat(name, &buf)) {
+    if (!stat(name, &buf)) {
         return S_ISDIR(buf.st_mode);
     }
     return 0;
-
 }
 
 /**
@@ -253,7 +258,7 @@ int file_is_dir(const char *name) {
  */
 int file_is_reg(const char *name) {
     struct stat buf;
-    if (! stat(name, &buf)) {
+    if (!stat(name, &buf)) {
         return S_ISREG(buf.st_mode);
     }
     return 0;
@@ -264,10 +269,10 @@ long long file_size(struct file *file) {
 }
 
 int file_mkdir(char *name, int pflag) {
-    char *buffer=g_alloca(sizeof(char)*(strlen(name)+1));
+    char *buffer = g_alloca(sizeof(char) * (strlen(name) + 1));
     int ret;
     char *next;
-    dbg(lvl_debug,"enter %s %d",name,pflag);
+    dbg(lvl_debug, "enter %s %d", name, pflag);
     if (!pflag) {
         if (file_is_dir(name))
             return 0;
@@ -278,15 +283,15 @@ int file_mkdir(char *name, int pflag) {
 #endif
     }
     strcpy(buffer, name);
-    next=buffer;
-    while ((next=strchr(next, '/'))) {
-        *next='\0';
+    next = buffer;
+    while ((next = strchr(next, '/'))) {
+        *next = '\0';
         if (*buffer) {
-            ret=file_mkdir(buffer, 0);
+            ret = file_mkdir(buffer, 0);
             if (ret)
                 return ret;
         }
-        *next++='/';
+        *next++ = '/';
     }
     if (pflag == 2)
         return 0;
@@ -297,12 +302,12 @@ int file_mmap(struct file *file) {
 #if 0
     int mmap_size=file->size+1024*1024;
 #else
-    int mmap_size=file->size;
+    int mmap_size = file->size;
 #endif
 #ifdef HAVE_API_WIN32_BASE
-    file->begin = (unsigned char*)mmap_readonly_win32( file->name, &file->map_handle, &file->map_file );
+    file->begin = (unsigned char *)mmap_readonly_win32(file->name, &file->map_handle, &file->map_file);
 #else
-    file->begin=mmap(NULL, mmap_size, PROT_READ|PROT_WRITE, MAP_PRIVATE, file->fd, 0);
+    file->begin = mmap(NULL, mmap_size, PROT_READ | PROT_WRITE, MAP_PRIVATE, file->fd, 0);
     dbg_assert(file->begin != NULL);
     if (file->begin == (void *)0xffffffff) {
         perror("mmap");
@@ -310,8 +315,8 @@ int file_mmap(struct file *file) {
     }
 #endif
     dbg_assert(file->begin != (void *)0xffffffff);
-    file->mmap_end=file->begin+mmap_size;
-    file->end=file->begin+file->size;
+    file->mmap_end = file->begin + mmap_size;
+    file->end = file->begin + file->size;
 
     return 1;
 }
@@ -321,22 +326,21 @@ unsigned char *file_data_read(struct file *file, long long offset, int size) {
     if (file->special)
         return NULL;
     if (file->begin)
-        return file->begin+offset;
+        return file->begin + offset;
     if (file->cache) {
-        struct file_cache_id id= {offset,size,file->name_id,0};
-        ret=cache_lookup(file_cache,&id);
+        struct file_cache_id id = {offset, size, file->name_id, 0};
+        ret = cache_lookup(file_cache, &id);
         if (ret)
             return ret;
-        ret=cache_insert_new(file_cache,&id,size);
+        ret = cache_insert_new(file_cache, &id, size);
     } else
-        ret=g_malloc(size);
+        ret = g_malloc(size);
     lseek(file->fd, offset, SEEK_SET);
     if (read(file->fd, ret, size) != size) {
         file_data_free(file, ret);
-        ret=NULL;
+        ret = NULL;
     }
     return ret;
-
 }
 
 static void file_process_headers(struct file *file, unsigned char *headers) {
@@ -344,83 +348,83 @@ static void file_process_headers(struct file *file, unsigned char *headers) {
     char *cl;
     if (file->headers)
         g_hash_table_destroy(file->headers);
-    file->headers=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-    while ((tok=strtok((char*)headers, "\r\n"))) {
+    file->headers = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+    while ((tok = strtok((char *)headers, "\r\n"))) {
         char *sep;
-        tok=g_strdup(tok);
-        sep=strchr(tok,':');
+        tok = g_strdup(tok);
+        sep = strchr(tok, ':');
         if (!sep)
-            sep=strchr(tok,'/');
+            sep = strchr(tok, '/');
         if (!sep) {
             g_free(tok);
             continue;
         }
-        *sep++='\0';
+        *sep++ = '\0';
         if (*sep == ' ')
             sep++;
         strtolower(tok, tok);
-        dbg(lvl_debug,"header '%s'='%s'",tok,sep);
+        dbg(lvl_debug, "header '%s'='%s'", tok, sep);
         g_hash_table_insert(file->headers, tok, sep);
-        headers=NULL;
+        headers = NULL;
     }
-    cl=g_hash_table_lookup(file->headers, "content-length");
+    cl = g_hash_table_lookup(file->headers, "content-length");
     if (cl)
 #ifdef HAVE__ATOI64
-        file->size=_atoi64(cl);
+        file->size = _atoi64(cl);
 #else
-        file->size=atoll(cl);
+        file->size = atoll(cl);
 #endif
 }
 
 static void file_shift_buffer(struct file *file, int amount) {
-    memmove(file->buffer, file->buffer+amount, file->buffer_len-amount);
-    file->buffer_len-=amount;
+    memmove(file->buffer, file->buffer + amount, file->buffer_len - amount);
+    file->buffer_len -= amount;
 }
 
 unsigned char *file_data_read_special(struct file *file, int size, int *size_ret) {
-    unsigned char *ret,*hdr;
-    int rets=0,rd;
-    int buffer_size=8192;
-    int eof=0;
+    unsigned char *ret, *hdr;
+    int rets = 0, rd;
+    int buffer_size = 8192;
+    int eof = 0;
     if (!file->special)
         return NULL;
     if (!file->buffer)
-        file->buffer=g_malloc(buffer_size);
-    ret=g_malloc(size);
+        file->buffer = g_malloc(buffer_size);
+    ret = g_malloc(size);
     while ((size > 0 || file->requests) && (!eof || file->buffer_len)) {
-        int toread=buffer_size-file->buffer_len;
+        int toread = buffer_size - file->buffer_len;
         if (toread >= 4096 && !eof) {
             if (!file->requests && toread > size)
-                toread=size;
-            rd=read(file->fd, file->buffer+file->buffer_len, toread);
+                toread = size;
+            rd = read(file->fd, file->buffer + file->buffer_len, toread);
             if (rd > 0) {
-                file->buffer_len+=rd;
+                file->buffer_len += rd;
             } else
-                eof=1;
+                eof = 1;
         }
         if (file->requests) {
-            dbg(lvl_debug,"checking header");
-            if ((hdr=file_http_header_end(file->buffer, file->buffer_len))) {
-                hdr[-1]='\0';
-                dbg(lvl_debug,"found %s",file->buffer);
+            dbg(lvl_debug, "checking header");
+            if ((hdr = file_http_header_end(file->buffer, file->buffer_len))) {
+                hdr[-1] = '\0';
+                dbg(lvl_debug, "found %s", file->buffer);
                 file_process_headers(file, file->buffer);
-                file_shift_buffer(file, hdr-file->buffer);
+                file_shift_buffer(file, hdr - file->buffer);
                 file->requests--;
                 if (file_http_header(file, "location"))
                     break;
             }
         }
         if (!file->requests) {
-            rd=file->buffer_len;
+            rd = file->buffer_len;
             if (rd > size)
-                rd=size;
-            memcpy(ret+rets, file->buffer, rd);
+                rd = size;
+            memcpy(ret + rets, file->buffer, rd);
             file_shift_buffer(file, rd);
-            rets+=rd;
-            size-=rd;
+            rets += rd;
+            size -= rd;
         }
     }
-    *size_ret=rets;
+    *size_ret = rets;
     return ret;
 }
 
@@ -430,9 +434,9 @@ unsigned char *file_data_read_all(struct file *file) {
 
 void file_data_flush(struct file *file, long long offset, int size) {
     if (file->cache) {
-        struct file_cache_id id= {offset,size,file->name_id,0};
-        cache_flush(file_cache,&id);
-        dbg(lvl_debug,"Flushing "LONGLONG_FMT" %d bytes",offset,size);
+        struct file_cache_id id = {offset, size, file->name_id, 0};
+        cache_flush(file_cache, &id);
+        dbg(lvl_debug, "Flushing " LONGLONG_FMT " %d bytes", offset, size);
     }
 }
 
@@ -441,29 +445,28 @@ int file_data_write(struct file *file, long long offset, int size, const void *d
     lseek(file->fd, offset, SEEK_SET);
     if (write(file->fd, data, size) != size)
         return 0;
-    if (file->size < offset+size)
-        file->size=offset+size;
+    if (file->size < offset + size)
+        file->size = offset + size;
     return 1;
 }
 
 int file_get_contents(char *name, unsigned char **buffer, int *size) {
     struct file *file;
-    file=file_create(name, 0);
+    file = file_create(name, 0);
     if (!file)
         return 0;
-    file->cache=0;
-    *size=file_size(file);
-    *buffer=file_data_read_all(file);
+    file->cache = 0;
+    *size = file_size(file);
+    *buffer = file_data_read_all(file);
     file_destroy(file);
     return 1;
 }
-
 
 static int uncompress_int(Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLen) {
     z_stream stream;
     int err;
 
-    stream.next_in = (Bytef*)source;
+    stream.next_in = (Bytef *)source;
     stream.avail_in = (uInt)sourceLen;
     stream.next_out = dest;
     stream.avail_out = (uInt)*destLen;
@@ -472,7 +475,8 @@ static int uncompress_int(Bytef *dest, uLongf *destLen, const Bytef *source, uLo
     stream.zfree = (free_func)0;
 
     err = inflateInit2(&stream, -MAX_WBITS);
-    if (err != Z_OK) return err;
+    if (err != Z_OK)
+        return err;
 
     err = inflate(&stream, Z_FINISH);
     if (err != Z_STREAM_END) {
@@ -490,27 +494,27 @@ static int uncompress_int(Bytef *dest, uLongf *destLen, const Bytef *source, uLo
 unsigned char *file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp) {
     void *ret;
     char *buffer = 0;
-    uLongf destLen=size_uncomp;
+    uLongf destLen = size_uncomp;
 
     if (file->cache) {
-        struct file_cache_id id= {offset,size,file->name_id,1};
-        ret=cache_lookup(file_cache,&id);
+        struct file_cache_id id = {offset, size, file->name_id, 1};
+        ret = cache_lookup(file_cache, &id);
         if (ret)
             return ret;
-        ret=cache_insert_new(file_cache,&id,size_uncomp);
+        ret = cache_insert_new(file_cache, &id, size_uncomp);
     } else
-        ret=g_malloc(size_uncomp);
+        ret = g_malloc(size_uncomp);
     lseek(file->fd, offset, SEEK_SET);
 
     buffer = (char *)g_malloc(size);
     if (read(file->fd, buffer, size) != size) {
         g_free(ret);
-        ret=NULL;
+        ret = NULL;
     } else {
         if (uncompress_int(ret, &destLen, (Bytef *)buffer, size) != Z_OK) {
-            dbg(lvl_error,"uncompress failed");
+            dbg(lvl_error, "uncompress failed");
             g_free(ret);
-            ret=NULL;
+            ret = NULL;
         }
     }
     g_free(buffer);
@@ -546,7 +550,7 @@ void file_data_remove(struct file *file, unsigned char *data) {
 
 int file_exists(char const *name) {
     struct stat buf;
-    if (! stat(name, &buf))
+    if (!stat(name, &buf))
         return 1;
     return 0;
 }
@@ -556,7 +560,7 @@ void file_remap_readonly(struct file *f) {
 #else
     void *begin;
     munmap(f->begin, f->size);
-    begin=mmap(f->begin, f->size, PROT_READ, MAP_PRIVATE, f->fd, 0);
+    begin = mmap(f->begin, f->size, PROT_READ, MAP_PRIVATE, f->fd, 0);
     if (f->begin != begin)
         printf("remap failed\n");
 #endif
@@ -564,7 +568,7 @@ void file_remap_readonly(struct file *f) {
 
 void file_unmap(struct file *f) {
 #if defined(_WIN32) || defined(__CEGCC__)
-    mmap_unmap_win32( f->begin, f->map_handle, f->map_file );
+    mmap_unmap_win32(f->begin, f->map_handle, f->map_file);
 #else
     munmap(f->begin, f->size);
 #endif
@@ -578,9 +582,9 @@ void *file_opendir(char *dir) {
 void *file_opendir(char *dir) {
     WIN32_FIND_DATAA FindFileData;
     HANDLE hFind = INVALID_HANDLE_VALUE;
-#undef UNICODE         // we need FindFirstFileA() which takes an 8-bit c-string
-    char* fname=g_alloca(sizeof(char)*(strlen(dir)+4));
-    sprintf(fname,"%s\\*",dir);
+#    undef UNICODE  // we need FindFirstFileA() which takes an 8-bit c-string
+    char *fname = g_alloca(sizeof(char) * (strlen(dir) + 4));
+    sprintf(fname, "%s\\*", dir);
     hFind = FindFirstFileA(fname, &FindFileData);
     return hFind;
 }
@@ -590,8 +594,8 @@ void *file_opendir(char *dir) {
 char *file_readdir(void *hnd) {
     struct dirent *ent;
 
-    ent=readdir(hnd);
-    if (! ent)
+    ent = readdir(hnd);
+    if (!ent)
         return NULL;
     return ent->d_name;
 }
@@ -599,7 +603,7 @@ char *file_readdir(void *hnd) {
 char *file_readdir(void *hnd) {
     WIN32_FIND_DATA FindFileData;
 
-    if (FindNextFile(hnd, &FindFileData) ) {
+    if (FindNextFile(hnd, &FindFileData)) {
         return FindFileData.cFileName;
     } else {
         return NULL;
@@ -617,33 +621,32 @@ void file_closedir(void *hnd) {
 }
 #endif /* _MSC_VER */
 
-struct file *
-file_create_caseinsensitive(char *name, struct attr **options) {
-    char *dirname=g_alloca(sizeof(char)*(strlen(name)+1));
+struct file *file_create_caseinsensitive(char *name, struct attr **options) {
+    char *dirname = g_alloca(sizeof(char) * (strlen(name) + 1));
     char *filename;
     char *p;
     void *d;
     struct file *ret;
 
-    ret=file_create(name, options);
+    ret = file_create(name, options);
     if (ret)
         return ret;
 
     strcpy(dirname, name);
-    p=dirname+strlen(name);
+    p = dirname + strlen(name);
     while (p > dirname) {
         if (*p == '/')
             break;
         p--;
     }
-    *p=0;
-    d=file_opendir(dirname);
+    *p = 0;
+    d = file_opendir(dirname);
     if (d) {
-        *p++='/';
-        while ((filename=file_readdir(d))) {
+        *p++ = '/';
+        while ((filename = file_readdir(d))) {
             if (!g_ascii_strcasecmp(filename, p)) {
                 strcpy(p, filename);
-                ret=file_create(dirname, options);
+                ret = file_create(dirname, options);
                 if (ret)
                     break;
             }
@@ -669,8 +672,8 @@ void file_destroy(struct file *f) {
         break;
     }
 
-    if ( f->begin != NULL ) {
-        file_unmap( f );
+    if (f->begin != NULL) {
+        file_unmap(f);
     }
 
     g_free(f->buffer);
@@ -684,14 +687,13 @@ struct file_wordexp {
     wordexp_t we;
 };
 
-struct file_wordexp *
-file_wordexp_new(const char *pattern) {
-    struct file_wordexp *ret=g_new0(struct file_wordexp, 1);
+struct file_wordexp *file_wordexp_new(const char *pattern) {
+    struct file_wordexp *ret = g_new0(struct file_wordexp, 1);
 
-    ret->pattern=g_strdup(pattern);
-    ret->err=wordexp(pattern, &ret->we, 0);
+    ret->pattern = g_strdup(pattern);
+    ret->err = wordexp(pattern, &ret->we, 0);
     if (ret->err)
-        dbg(lvl_debug,"wordexp('%s') returned %d", pattern, ret->err);
+        dbg(lvl_debug, "wordexp('%s') returned %d", pattern, ret->err);
     return ret;
 }
 
@@ -701,43 +703,42 @@ int file_wordexp_get_count(struct file_wordexp *wexp) {
     return wexp->we.we_wordc;
 }
 
-char ** file_wordexp_get_array(struct file_wordexp *wexp) {
+char **file_wordexp_get_array(struct file_wordexp *wexp) {
     if (wexp->err)
         return &wexp->pattern;
     return wexp->we.we_wordv;
 }
 
 void file_wordexp_destroy(struct file_wordexp *wexp) {
-    if (! wexp->err)
+    if (!wexp->err)
         wordfree(&wexp->we);
     g_free(wexp->pattern);
     g_free(wexp);
 }
-
 
 int file_version(struct file *file, int mode) {
 #ifndef HAVE_API_WIN32_BASE
     struct stat st;
     int error;
     if (mode == 3) {
-        long long size=lseek(file->fd, 0, SEEK_END);
-        if (file->begin && file->begin+size > file->mmap_end) {
+        long long size = lseek(file->fd, 0, SEEK_END);
+        if (file->begin && file->begin + size > file->mmap_end) {
             file->version++;
         } else {
-            file->size=size;
+            file->size = size;
             if (file->begin)
-                file->end=file->begin+file->size;
+                file->end = file->begin + file->size;
         }
     } else {
         if (mode == 2)
-            error=stat(file->name, &st);
+            error = stat(file->name, &st);
         else
-            error=fstat(file->fd, &st);
+            error = fstat(file->fd, &st);
         if (error || !file->version || file->mtime != st.st_mtime || file->ctime != st.st_ctime) {
-            file->mtime=st.st_mtime;
-            file->ctime=st.st_ctime;
+            file->mtime = st.st_mtime;
+            file->ctime = st.st_ctime;
             file->version++;
-            dbg(lvl_debug,"%s now version %d", file->name, file->version);
+            dbg(lvl_debug, "%s now version %d", file->name, file->version);
         }
     }
     return file->version;
@@ -761,10 +762,9 @@ int file_set_cache_size(int cache_size) {
 
 void file_init(void) {
 #ifdef CACHE_SIZE
-    file_name_hash=g_hash_table_new(g_str_hash, g_str_equal);
-    file_cache=cache_new(sizeof(struct file_cache_id), CACHE_SIZE);
+    file_name_hash = g_hash_table_new(g_str_hash, g_str_equal);
+    file_cache = cache_new(sizeof(struct file_cache_id), CACHE_SIZE);
 #endif
-    if(sizeof(off_t)<8)
-        dbg(lvl_error,"Maps larger than 2GB are not supported by this binary, sizeof(off_t)=%zu",sizeof(off_t));
+    if (sizeof(off_t) < 8)
+        dbg(lvl_error, "Maps larger than 2GB are not supported by this binary, sizeof(off_t)=%zu", sizeof(off_t));
 }
-

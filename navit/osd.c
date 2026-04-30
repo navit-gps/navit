@@ -17,19 +17,19 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <glib.h>
-#include "debug.h"
-#include "plugin.h"
-#include "item.h"
-#include "xmlconfig.h"
-#include "color.h"
-#include "point.h"
-#include "navit.h"
-#include "graphics.h"
-#include "command.h"
-#include "callback.h"
 #include "osd.h"
-
+#include "attr.h"
+#include "callback.h"
+#include "color.h"
+#include "command.h"
+#include "debug.h"
+#include "graphics.h"
+#include "navit.h"
+#include "plugin.h"
+#include "point.h"
+#include "xmlconfig.h"
+#include <glib.h>
+#include <string.h>
 
 struct osd {
     NAVIT_OBJECT
@@ -41,43 +41,42 @@ int osd_set_methods(struct osd_methods *in, int in_size, struct osd_methods *out
     return navit_object_set_methods(in, in_size, out, sizeof(struct osd_methods));
 }
 
-struct osd *
-osd_new(struct attr *parent, struct attr **attrs) {
+struct osd *osd_new(struct attr *parent, struct attr **attrs) {
     struct osd *o;
     struct osd_priv *(*new)(struct navit *nav, struct osd_methods *meth, struct attr **attrs);
-    struct attr *type=attr_search(attrs, attr_type),cbl;
+    struct attr *type = attr_search(attrs, attr_type), cbl;
 
-    if (! type)
+    if (!type)
         return NULL;
-    new=plugin_get_category_osd(type->u.str);
-    if (! new) {
+    new = plugin_get_category_osd(type->u.str);
+    if (!new) {
         dbg(lvl_error, "invalid OSD type '%s'", type->u.str);
         return NULL;
     }
-    o=g_new0(struct osd, 1);
-    o->attrs=attr_list_dup(attrs);
-    cbl.type=attr_callback_list;
-    cbl.u.callback_list=callback_list_new();
-    o->attrs=attr_generic_prepend_attr(o->attrs, &cbl);
+    o = g_new0(struct osd, 1);
+    o->attrs = attr_list_dup(attrs);
+    cbl.type = attr_callback_list;
+    cbl.u.callback_list = callback_list_new();
+    o->attrs = attr_generic_prepend_attr(o->attrs, &cbl);
 
-    o->priv=new(parent->u.navit, &o->meth, o->attrs);
+    o->priv = new (parent->u.navit, &o->meth, o->attrs);
     if (o->priv) {
-        o->func=&osd_func;
+        o->func = &osd_func;
         navit_object_ref((struct navit_object *)o);
     } else {
         attr_list_free(o->attrs);
         g_free(o);
-        o=NULL;
+        o = NULL;
     }
-    dbg(lvl_debug,"new osd %p",o);
+    dbg(lvl_debug, "new osd %p", o);
     return o;
 }
 
 int osd_get_attr(struct osd *osd, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
-    int ret=0;
-    if(osd && osd->meth.get_attr)
+    int ret = 0;
+    if (osd && osd->meth.get_attr)
         /* values for ret: -1: Not possible, 0: Ignored by driver, 1 valid */
-        ret=osd->meth.get_attr(osd->priv, type, attr);
+        ret = osd->meth.get_attr(osd->priv, type, attr);
     if (ret == -1)
         return 0;
     if (ret > 0)
@@ -85,11 +84,11 @@ int osd_get_attr(struct osd *osd, enum attr_type type, struct attr *attr, struct
     return navit_object_get_attr((struct navit_object *)osd, type, attr, iter);
 }
 
-int osd_set_attr(struct osd *osd, struct attr* attr) {
-    int ret=0;
-    if(osd && osd->meth.set_attr)
+int osd_set_attr(struct osd *osd, struct attr *attr) {
+    int ret = 0;
+    if (osd && osd->meth.set_attr)
         /* values for ret: -1: Not possible, 0: Ignored by driver, 1 set and store, 2 set, don't store */
-        ret=osd->meth.set_attr(osd->priv, attr);
+        ret = osd->meth.set_attr(osd->priv, attr);
     if (ret == -1)
         return 0;
     if (ret == 2)
@@ -111,13 +110,12 @@ void osd_wrap_point(struct point *p, struct navit *nav) {
         p->x += navit_get_width(nav);
     if (p->y < 0)
         p->y += navit_get_height(nav);
-
 }
 
 static void osd_evaluate_command(struct osd_item *this, struct navit *nav) {
     struct attr navit;
-    navit.type=attr_navit;
-    navit.u.navit=nav;
+    navit.type = attr_navit;
+    navit.u.navit = nav;
     dbg(lvl_debug, "calling command '%s'", this->command);
     command_evaluate(&navit, this->command);
 }
@@ -173,11 +171,10 @@ void osd_std_calculate_sizes(struct osd_item *item, int w, int h) {
     if (item->gr) {
         padding = graphics_get_data(item->gr, "padding");
         if (padding) {
-            dbg(lvl_debug, "Got padding=%p for item=%p (item->gr=%p): left=%d top=%d right=%d bottom=%d",
-                padding, item, item->gr, padding->left, padding->top, padding->right, padding->bottom);
+            dbg(lvl_debug, "Got padding=%p for item=%p (item->gr=%p): left=%d top=%d right=%d bottom=%d", padding, item,
+                item->gr, padding->left, padding->top, padding->right, padding->bottom);
         } else {
-            dbg(lvl_debug, "Got padding=%p for item=%p (item->gr=%p)",
-                padding, item, item->gr);
+            dbg(lvl_debug, "Got padding=%p for item=%p (item->gr=%p)", padding, item, item->gr);
         }
     } else
         dbg(lvl_warning, "cannot get padding for item=%p: item->gr is NULL", item);
@@ -188,16 +185,16 @@ void osd_std_calculate_sizes(struct osd_item *item, int w, int h) {
         h -= (padding->top + padding->bottom);
     }
 
-    if(item->rel_w!=ATTR_REL_RELSHIFT)
-        item->w=attr_rel2real(item->rel_w, w, 1);
-    if(item->w<0)
-        item->w=0;
-    if(item->rel_h!=ATTR_REL_RELSHIFT)
-        item->h=attr_rel2real(item->rel_h, h, 1);
-    if(item->h<0)
-        item->h=0;
-    item->p.x=attr_rel2real(item->rel_x, w, 1);
-    item->p.y=attr_rel2real(item->rel_y, h, 1);
+    if (item->rel_w != ATTR_REL_RELSHIFT)
+        item->w = attr_rel2real(item->rel_w, w, 1);
+    if (item->w < 0)
+        item->w = 0;
+    if (item->rel_h != ATTR_REL_RELSHIFT)
+        item->h = attr_rel2real(item->rel_h, h, 1);
+    if (item->h < 0)
+        item->h = 0;
+    item->p.x = attr_rel2real(item->rel_x, w, 1);
+    item->p.y = attr_rel2real(item->rel_y, h, 1);
 
     /* add left and top padding to item->p */
     if (padding) {
@@ -225,11 +222,11 @@ static void osd_std_calculate_sizes_and_redraw(struct osd_item *item, struct osd
     osd_std_calculate_sizes(item, w, h);
 
     osd_std_resize(item);
-    item->do_draw=1;
+    item->do_draw = 1;
     if (item->meth.draw) {
         if (navit_get_attr(item->navit, attr_vehicle, &vehicle_attr, NULL)) {
             item->meth.draw(priv, item->navit, vehicle_attr.u.vehicle);
-            item->do_draw=0;
+            item->do_draw = 0;
         }
     }
 }
@@ -245,7 +242,7 @@ static void osd_std_keypress(struct osd_item *item, struct navit *nav, char *key
         dbg(lvl_debug,"accesskey:0x%02x",item->accesskey[i]);
     }
 #endif
-    if ( ! graphics_is_disabled(item->gr) && item->accesskey && key && !strcmp(key, item->accesskey))
+    if (!graphics_is_disabled(item->gr) && item->accesskey && key && !strcmp(key, item->accesskey))
         osd_evaluate_command(item, nav);
 }
 
@@ -262,11 +259,11 @@ static void osd_std_keypress(struct osd_item *item, struct navit *nav, char *key
  * @param cs The command to evaluate
  */
 static void osd_std_reconfigure(struct osd_item *item, struct command_saved *cs) {
-    char *err = NULL;	/* Error description */
+    char *err = NULL; /* Error description */
 
     dbg(lvl_debug, "enter, item=%p, cs=%p", item, cs);
     if (!command_saved_error(cs)) {
-        item->configured = !! command_saved_get_int(cs);
+        item->configured = !!command_saved_get_int(cs);
         if (item->gr && !(item->flags & DISABLE_OVERLAY))
             graphics_overlay_disable(item->gr, !item->configured);
     } else {
@@ -278,8 +275,8 @@ static void osd_std_reconfigure(struct osd_item *item, struct command_saved *cs)
 
 void osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags) {
     struct attr *attr;
-    item->flags=flags;
-    item->osd_configuration=-1;
+    item->flags = flags;
+    item->osd_configuration = -1;
     item->color_fg.r = 0xffff;
     item->color_fg.g = 0xffff;
     item->color_fg.b = 0xffff;
@@ -301,11 +298,11 @@ void osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags) {
         item->color_bg.a = 0x9fff;
     }
 
-    attr=attr_search(attrs, attr_osd_configuration);
+    attr = attr_search(attrs, attr_osd_configuration);
     if (attr)
         item->osd_configuration = attr->u.num;
 
-    attr=attr_search(attrs, attr_enable_expression);
+    attr = attr_search(attrs, attr_enable_expression);
     if (attr) {
         item->enable_cs = command_saved_new(attr->u.str, item->navit, NULL, 0);
     }
@@ -334,29 +331,28 @@ void osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags) {
     if (attr)
         item->font_size = attr->u.num;
 
-    attr=attr_search(attrs, attr_background_color);
+    attr = attr_search(attrs, attr_background_color);
     if (attr)
-        item->color_bg=*attr->u.color;
+        item->color_bg = *attr->u.color;
     attr = attr_search(attrs, attr_command);
     if (attr)
         item->command = g_strdup(attr->u.str);
-    attr=attr_search(attrs, attr_text_color);
+    attr = attr_search(attrs, attr_text_color);
     if (attr)
-        item->text_color=*attr->u.color;
-    attr=attr_search(attrs, attr_foreground_color);
+        item->text_color = *attr->u.color;
+    attr = attr_search(attrs, attr_foreground_color);
     if (attr)
-        item->color_fg=*attr->u.color;
-    attr=attr_search(attrs, attr_accesskey);
+        item->color_fg = *attr->u.color;
+    attr = attr_search(attrs, attr_accesskey);
     if (attr)
         item->accesskey = g_strdup(attr->u.str);
-    attr=attr_search(attrs, attr_font);
+    attr = attr_search(attrs, attr_font);
     if (attr)
         item->font_name = g_strdup(attr->u.str);
-
 }
 void osd_std_config(struct osd_item *item, struct navit *navit) {
     struct attr attr;
-    char *err = NULL;	/* Error description */
+    char *err = NULL; /* Error description */
 
     dbg(lvl_debug, "enter, item=%p, enable_cs=%p", item, item->enable_cs);
     if (item->enable_cs) {
@@ -364,7 +360,7 @@ void osd_std_config(struct osd_item *item, struct navit *navit) {
         command_saved_set_cb(item->enable_cs, item->reconfig_cb);
 
         if (!command_saved_error(item->enable_cs)) {
-            item->configured = !! command_saved_get_int(item->enable_cs);
+            item->configured = !!command_saved_get_int(item->enable_cs);
         } else {
             err = command_error_to_text(command_saved_error(item->enable_cs));
             dbg(lvl_error, "Error in saved command: %s, item=%p.", err, item);
@@ -372,7 +368,7 @@ void osd_std_config(struct osd_item *item, struct navit *navit) {
         }
     } else {
         if (!navit_get_attr(navit, attr_osd_configuration, &attr, NULL))
-            attr.u.num=-1;
+            attr.u.num = -1;
         item->configured = !!(attr.u.num & item->osd_configuration);
     }
 
@@ -389,9 +385,9 @@ void osd_set_std_config(struct navit *nav, struct osd_item *item) {
 
 void osd_set_keypress(struct navit *nav, struct osd_item *item) {
     struct graphics *navit_gr = navit_get_graphics(nav);
-    dbg(lvl_info,"accesskey %s",item->accesskey);
+    dbg(lvl_info, "accesskey %s", item->accesskey);
     if (item->accesskey) {
-        item->keypress_cb=callback_new_attr_2(callback_cast(osd_std_keypress), attr_keypress, item, nav);
+        item->keypress_cb = callback_new_attr_2(callback_cast(osd_std_keypress), attr_keypress, item, nav);
         graphics_add_callback(navit_gr, item->keypress_cb);
     }
 }
@@ -418,8 +414,8 @@ void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_pr
     padding = graphics_get_data(navit_gr, "padding");
 
     if (padding) {
-        dbg(lvl_debug, "Got padding=%p for item=%p: left=%d top=%d right=%d bottom=%d",
-            padding, item, padding->left, padding->top, padding->right, padding->bottom);
+        dbg(lvl_debug, "Got padding=%p for item=%p: left=%d top=%d right=%d bottom=%d", padding, item, padding->left,
+            padding->top, padding->right, padding->bottom);
         w -= (padding->left + padding->right);
         h -= (padding->top + padding->bottom);
     } else
@@ -457,8 +453,8 @@ void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_pr
 void osd_fill_with_bgcolor(struct osd_item *item) {
     struct point p[1];
     graphics_draw_mode(item->gr, draw_mode_begin);
-    p[0].x=0;
-    p[0].y=0;
+    p[0].x = 0;
+    p[0].y = 0;
     graphics_draw_rectangle(item->gr, item->graphic_bg, p, item->w, item->h);
 }
 

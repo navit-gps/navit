@@ -5,20 +5,21 @@ Programming guidelines
 NAVIT is a team-project, thus a lot of coders are working on it's development and code base.
 To get a unified coding style and make it easier for everybody to work with parts, that someone else wrote, we tried to specify the formatting of our source and how we deal with third party modules as following.
 
-Enforced guidelines via CircleCI
-================================
+Enforced guidelines via CI
+==========================
 
 The 1st step of the checks enforced after a PR is created or updated is what we call "sanity checks".
 Those enforce the coding style for our C and Java files. During this phase we have several steps:
- * verification that the modified files don't contain trailing spaces.
-   You can use `sed 's/\s*$//' -i "$f"` if you want to clean your files before pushing your PR.
- * verification that the style of our C and C++  code is respected using `astyle`
-   (to the exception of the following folders: `navit/support/`, `navit/traffic/permanentrestrictions/`).
-   You can use the following command on the files you are modifying (replacing `$f` by your file name):
-   `astyle --indent=spaces=4 --style=attach -n --max-code-length=120 -xf -xh "${f}"`
- * check for compliance with the DTD using xmllint on the modified files. You can check this locally by using:
-   `xmllint --noout --dtdvalid navit/navit.dtd "$f"`
- * verification that the style of our Java code follows our standards using `./gradlew checkstyleMain`
+
+* verification that the modified files don't contain trailing spaces.
+  You can use `sed 's/\s*$//' -i "$f"` if you want to clean your files before pushing your PR.
+* verification that the style of our C and C++ code is respected using `clang-format`
+  (to the exception of the following folders: `navit/support/`, `navit/traffic/permanentrestrictions/`).
+  You can format your files before pushing by running:
+  `clang-format -i "${f}"`
+* check for compliance with the DTD using xmllint on the modified files. You can check this locally by using:
+  `xmllint --noout --dtdvalid navit/navit.dtd "$f"`
+* verification that the style of our Java code follows our standards using `./gradlew checkstyleMain`
 
 .. note::
 
@@ -34,18 +35,11 @@ We try to follow those simple rules:
  * the open brackets should be at the end of the line (on the same line as the function name or the if/for/while statement)
  * out line length is of 120 characters
 
-To help us keeping a coherent indentation, we use astyle on C, C++ and java files. Usage example:
+To help us keeping a coherent indentation, we use ``clang-format`` on C and C++ files. You can format a file by running:
 
-.. code-block:: C
+.. code-block:: bash
 
-  astyle --indent=spaces=4 --style=attach -n --max-code-length=120 -xf -xh my_file.c
-
-
-.. note::
-
-  Because of the bug: [https://sourceforge.net/p/astyle/bugs/230/](https://sourceforge.net/p/astyle/bugs/230/) on astyle,
-  we cannot rely on astyle to handle properly the line length of 120 characters that we choose.
-  It would be recommended to set that line length in the editor you are using.
+  clang-format -i my_file.c
 
 Character encoding and line breaks
 ----------------------------------
@@ -109,22 +103,22 @@ use
 
   struct mystruct m={0,};
 
-* Use `/*` and `*/` for comments instead of `//`
+* Use ``/*`` and ``*/`` for comments instead of ``//``
 
 .. note::
 
-  The restriction to C95 exists mainly to help the [[WinCE]] port, which uses a compiler without full support for C99. Once all platforms supported by Navit use a compiler capable of C99, this decision may be reconsidered.
+  The restriction to C95 exists mainly to help the `WinCE` port, which uses a compiler without full support for C99. Once all platforms supported by Navit use a compiler capable of C99, this decision may be reconsidered.
 
 
 Use of libraries
 ----------------
 
  * Navit uses `GLIB <http://developer.gnome.org/glib/>`_ extensively. In general, code should use GLib's functions in preference to functions from libc.
-   For example, use `g_new()` / `g_free()` / `g_realloc()`, rather than `malloc()` / `free()` / `realloc()`, `g_strdup()` rather than `strdup()`, `g_strcmp0()` rather than `strcmp()` etc.
+   For example, use ``g_new()`` / ``g_free()`` / ``g_realloc()``, rather than ``malloc()`` / ``free()`` / ``realloc()``, ``g_strdup()`` rather than ``strdup()``, ``g_strcmp0()`` rather than ``strcmp()`` etc.
  * Unfortunately, not all platforms that Navit runs on have a native GLib version.
    For these platforms, there is code replacing these libraries under `navit/support/`.
    Take care to only use functions from GLib (or other libraries), that is also present under `navit/support/`.
-   If you need something that is not present there, please discuss it on IRC - it may be possible to add it to the support code.
+   If you need something that is not present there, please discuss it: :ref:`Contact`  - it may be possible to add it to the support code.
 
 Comments
 --------

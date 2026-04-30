@@ -16,20 +16,22 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-#include "navit_lfs.h"
-#ifndef _MSC_VER
-#include <unistd.h>
-#endif
-#include <sys/stat.h>
-#include "maptool.h"
 #include "debug.h"
+#include "maptool.h"
+#include <glib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#ifndef _MSC_VER
+#    include <unistd.h>
+#endif
 
 char *tempfile_obtain_prefix() {
     static char *tmpfile_prefix = NULL;
 
     if (!tmpfile_prefix) {
 #define tmpfile_prefix_size 64
-        tmpfile_prefix=calloc(tmpfile_prefix_size, 1);
+        tmpfile_prefix = calloc(tmpfile_prefix_size, 1);
 
         snprintf(tmpfile_prefix, tmpfile_prefix_size, "maptool_%d.tmp", getpid());
         if (mkdir(tmpfile_prefix, 0755)) {
@@ -48,17 +50,17 @@ char *tempfile_name(char *suffix, char *name) {
     return g_strdup_printf("%s/%s_%s.tmp", tempfile_obtain_prefix(), name, suffix);
 }
 FILE *tempfile(char *suffix, char *name, int mode) {
-    char *buffer=tempfile_name(suffix, name);
-    FILE *ret=NULL;
+    char *buffer = tempfile_name(suffix, name);
+    FILE *ret = NULL;
     switch (mode) {
     case 0:
-        ret=fopen(buffer, "rb");
+        ret = fopen(buffer, "rb");
         break;
     case 1:
-        ret=fopen(buffer, "wb+");
+        ret = fopen(buffer, "wb+");
         break;
     case 2:
-        ret=fopen(buffer, "ab");
+        ret = fopen(buffer, "ab");
         break;
     }
     g_free(buffer);
@@ -67,14 +69,13 @@ FILE *tempfile(char *suffix, char *name, int mode) {
 
 void tempfile_unlink(char *suffix, char *name) {
     char buffer[4096];
-    sprintf(buffer,"%s/%s_%s.tmp",tempfile_obtain_prefix(), name, suffix);
+    sprintf(buffer, "%s/%s_%s.tmp", tempfile_obtain_prefix(), name, suffix);
     unlink(buffer);
 }
 
 void tempfile_rename(char *suffix, char *from, char *to) {
-    char buffer_from[4096],buffer_to[4096];
-    sprintf(buffer_from,"%s/%s_%s.tmp",tempfile_obtain_prefix(),from,suffix);
-    sprintf(buffer_to,"%s/%s_%s.tmp",tempfile_obtain_prefix(),to,suffix);
+    char buffer_from[4096], buffer_to[4096];
+    sprintf(buffer_from, "%s/%s_%s.tmp", tempfile_obtain_prefix(), from, suffix);
+    sprintf(buffer_to, "%s/%s_%s.tmp", tempfile_obtain_prefix(), to, suffix);
     dbg_assert(rename(buffer_from, buffer_to) == 0);
-
 }

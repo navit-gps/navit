@@ -4,18 +4,26 @@
 class NGQProxyVehicle : public NGQProxy {
     Q_OBJECT;
 
-public:
-	NGQProxyVehicle(struct gui_priv* object, QObject* parent) : NGQProxy(object,parent) { };
+  public:
+    NGQProxyVehicle(struct gui_priv *object, QObject *parent) : NGQProxy(object, parent) {};
 
-public slots:
+  public slots:
 
-protected:
-	int getAttrFunc(enum attr_type type, struct attr* attr, struct attr_iter* iter) { return vehicle_get_attr(this->object->currVehicle, type, attr, iter); }
-	int setAttrFunc(struct attr* attr) {return vehicle_set_attr(this->object->currVehicle,attr); }
-	struct attr_iter* getIterFunc() { return vehicle_attr_iter_new(NULL); };
-	void dropIterFunc(struct attr_iter* iter) { vehicle_attr_iter_destroy(iter); };
+  protected:
+    int getAttrFunc(enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+        return vehicle_get_attr(this->object->currVehicle, type, attr, iter);
+    }
+    int setAttrFunc(struct attr *attr) {
+        return vehicle_set_attr(this->object->currVehicle, attr);
+    }
+    struct attr_iter *getIterFunc() {
+        return vehicle_attr_iter_new(NULL);
+    };
+    void dropIterFunc(struct attr_iter *iter) {
+        vehicle_attr_iter_destroy(iter);
+    };
 
-private:
+  private:
 };
 
 #include "vehicleProxy.moc"

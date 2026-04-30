@@ -17,8 +17,15 @@
  * Boston, MA  02110-1301, USA.
  */
 
-struct announcement * announcement_new(struct attr *parent, struct attr **attrs);
+#ifndef __NAVIT_ANNOUNCEMENT_H_
+#define __NAVIT_ANNOUNCEMENT_H_
+
+#include "attr.h"
+
+struct announcement *announcement_new(struct attr *parent, struct attr **attrs);
 int announcement_get_attr(struct announcement *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int announcement_set_attr(struct announcement *this_, struct attr *attr);
 int announcement_add_attr(struct announcement *this_, struct attr *attr);
 int announcement_remove_attr(struct announcement *this_, struct attr *attr);
+
+#endif  // __NAVIT_ANNOUNCEMENT_H_
