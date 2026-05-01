@@ -25,38 +25,40 @@ extern "C" {
 #endif
 
 #ifndef PATH_MAX
-#define PATH_MAX 4096
+#    define PATH_MAX 4096
 #endif
 #ifndef __CEGCC__
-#include <time.h>
+#    include <time.h>
 #endif
 #include "param.h"
 #include <stdio.h>
 
+#include "glib.h"
+
 struct file {
-	struct file *next;
-	unsigned char *begin;
-	unsigned char *end;
-	unsigned char *mmap_end;
-	long long size;
-	int name_id;
-	int fd;
+    struct file *next;
+    unsigned char *begin;
+    unsigned char *end;
+    unsigned char *mmap_end;
+    long long size;
+    int name_id;
+    int fd;
 #ifndef __CEGCC__
-	time_t mtime;
-	time_t ctime;
-	int version;
+    time_t mtime;
+    time_t ctime;
+    int version;
 #endif
 #if defined(_WIN32) || defined(__CEGCC__)
-	long map_handle;
-	long map_file;
+    long map_handle;
+    long map_file;
 #endif
-	char *name;
-	int special;
-	int cache;
-	int requests;
-	unsigned char *buffer;
-	int buffer_len;
-	GHashTable *headers;
+    char *name;
+    int special;
+    int cache;
+    int requests;
+    unsigned char *buffer;
+    int buffer_len;
+    GHashTable *headers;
 };
 
 struct attr;

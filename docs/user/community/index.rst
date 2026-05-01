@@ -11,7 +11,7 @@ TBD
 
    contacts
    feedback
-   Reporting Bugs
+   Reporting_Bugs
    Translations
    donate
    logo

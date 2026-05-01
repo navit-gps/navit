@@ -37,8 +37,7 @@ task clean(type: Delete) {
 */
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
-    ndkVersion "23.0.7599858"
+    ndkVersion "25.2.9519653"
     signingConfigs {
         release {
             // We can leave these in environment variables
@@ -49,9 +48,11 @@ android {
         }
     }
     defaultConfig {
+        compileSdk 33
+        compileSdkVersion 33
         applicationId "org.navitproject.navit"
         minSdkVersion 10
-        targetSdkVersion 29
+        targetSdkVersion 33
         versionCode gitVersionCode
         versionName gitVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -60,7 +61,7 @@ android {
         }
         externalNativeBuild {
             cmake {
-                arguments '-DDISABLE_CXX=y', '-DUSE_PLUGINS=n', '-DBUILD_MAPTOOL=n', '-DXSL_PROCESSING=n', '-DSAMPLE_MAP=n', '-DCMAKE_SYSROOT='+android.ndkDirectory+'/sysroot'
+                arguments '-DDISABLE_CXX=y', '-DUSE_PLUGINS=n', '-DBUILD_MAPTOOL=n', '-DXSL_PROCESSING=y', '-DSAMPLE_MAP=n', '-DGRADLE_BUILD_DIR='+layout.buildDirectory.file('generated/navit_generated').get().getAsFile()
             }
         }
     }
@@ -83,8 +84,9 @@ android {
             java.srcDirs = ["navit/android/src"]
             resources.srcDirs = ["navit/android/src"]
             renderscript.srcDirs = ["navit/android/src"]
-            res.srcDirs = ["navit/android/res", "android-builddir/android/res"]
-            assets.srcDirs = ["navit/android/assets", "android-builddir/android/assets"]
+            res.srcDirs = ["navit/android/res", layout.buildDirectory.file('generated/navit_generated/android/res').get().getAsFile()]
+            assets.srcDirs =  ["navit/android/assets", layout.buildDirectory.file('generated/navit_generated/android/assets').get().getAsFile()]
+
             }
     }
     externalNativeBuild {
@@ -104,8 +106,8 @@ android {
         classpath = files()
         reports {
             include ('**/*.java')
-            xml.enabled = true
-            html.enabled = true
+            xml.required = true
+            html.required = true
             xml {
                 destination file("checkstyle/checkstyleMain.xml")
             }
@@ -115,7 +117,7 @@ android {
         }
 
         checkstyle {
-            toolVersion = '8.26'
+            toolVersion = '13.2.0'
         }
     }
     applicationVariants.all { variant ->
@@ -134,9 +136,23 @@ android {
     }
 
 }
+
+afterEvaluate {
+    android.applicationVariants.all { variant ->
+        def cap = variant.name.capitalize()
+
+        tasks.matching { it.name.endsWith("Assets") ||it.name.endsWith("Resources") }
+            .configureEach {
+                dependsOn(tasks.matching { t ->
+                    t.name.startsWith("externalNativeBuild${cap}")
+            })
+        }
+    }
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'navit/android/libs')
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testImplementation 'junit:junit:4.12'

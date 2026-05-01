@@ -28,9 +28,9 @@ extern "C" {
 struct navit;
 struct iter;
 struct attr;
-struct iter * main_iter_new(void);
+struct iter *main_iter_new(void);
 void main_iter_destroy(struct iter *iter);
-struct navit * main_get_navit(struct iter *iter);
+struct navit *main_get_navit(struct iter *iter);
 void main_add_navit(struct navit *nav);
 void main_remove_navit(struct navit *nav);
 int main_add_attr(struct attr *attr);

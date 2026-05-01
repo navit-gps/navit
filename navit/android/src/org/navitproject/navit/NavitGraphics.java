@@ -646,7 +646,7 @@ class NavitGraphics {
 
     private native void motionCallback(long id, int x, int y);
 
-    private native String getCoordForPoint(int x, int y, boolean absoluteCoord);
+    private static native String getCoordForPoint(int x, int y, boolean absoluteCoord);
 
     static native String[][] getAllCountries();
 

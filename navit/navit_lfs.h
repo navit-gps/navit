@@ -18,55 +18,54 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#ifdef BUFSIZ
-#error "Don't #include stdio.h directly if you later #include navit_lfs.h"
+#    ifdef BUFSIZ
+#        error "Don't #include stdio.h directly if you later #include navit_lfs.h"
+#    endif
+#    ifdef F_OK
+#        error "Don't #include unistd.h directly if you later #include navit_lfs.h"
+#    endif
+#    ifdef O_RDWR
+#        error "Don't #include unistd.h directly if you later #include navit_lfs.h"
+#    endif
+
+#    define _LARGEFILE_SOURCE
+#    define _FILE_OFFSET_BITS 64
+#    ifdef __MSVCRT__
+#        define __USE_MINGW_FSEEK
+#    endif
+
+#    include <fcntl.h>
+#    include <stdio.h>
+#    include <unistd.h>
+
+#    ifdef __MSVCRT__
+
+#        undef lseek
+#        define lseek(fd, offset, whence) _lseeki64(fd, offset, whence)
+
+#        undef ftello
+#        define ftello(f) ftello64(f)
+
+#        undef fseeko
+#        define fseeko(f, offset, whence) fseeko64(f, offset, whence)
+
+#        undef off_t
+#        define off_t long long
+
+#    endif
+
+#    ifdef HAVE_API_ANDROID
+#        undef lseek
+#        define lseek lseek64
+#    endif
+
+#    ifndef O_LARGEFILE
+#        define O_LARGEFILE 0
+#    endif
+
+#    ifndef O_BINARY
+#        define O_BINARY 0
+#    endif
+
+#    define __NAVIT_LFS_H__
 #endif
-#ifdef F_OK
-#error "Don't #include unistd.h directly if you later #include navit_lfs.h"
-#endif
-#ifdef O_RDWR
-#error "Don't #include unistd.h directly if you later #include navit_lfs.h"
-#endif
-
-#define _LARGEFILE_SOURCE
-#define _FILE_OFFSET_BITS 64
-#ifdef __MSVCRT__
-#define __USE_MINGW_FSEEK
-#endif
-
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-
-#ifdef __MSVCRT__
-
-#undef lseek
-#define lseek(fd,offset,whence) _lseeki64(fd,offset,whence)
-
-#undef ftello
-#define ftello(f) ftello64(f)
-
-#undef fseeko
-#define fseeko(f,offset,whence) fseeko64(f,offset,whence)
-
-#undef off_t
-#define off_t long long
-
-#endif
-
-#ifdef HAVE_API_ANDROID
-#undef lseek
-#define lseek lseek64
-#endif
-
-#ifndef O_LARGEFILE
-#define O_LARGEFILE 0
-#endif
-
-#ifndef O_BINARY
-#define O_BINARY 0
-#endif
-
-#define __NAVIT_LFS_H__
-#endif
-

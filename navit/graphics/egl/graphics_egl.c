@@ -17,45 +17,43 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <glib.h>
-#include <unistd.h>
-#include <math.h>
-#include <stdio.h>
-
-#include <time.h>
-
-#include "item.h"
 #include "attr.h"
-#include "config.h"
-#include "point.h"
-#include "graphics.h"
-#include "color.h"
-#include "plugin.h"
-#include "event.h"
-#include "debug.h"
 #include "callback.h"
+#include "color.h"
+#include "config.h"
+#include "debug.h"
+#include "event.h"
+#include "graphics.h"
+#include "item.h"
 #include "keys.h"
-#include "window.h"
 #include "navit/font/freetype/font_freetype.h"
+#include "plugin.h"
+#include "point.h"
+#include "window.h"
 
 #include "SDL_image.h"
-#include <GLES2/gl2.h>
 #include <EGL/egl.h>
+#include <GLES2/gl2.h>
+#include <glib.h>
+#include <math.h>
+#include <stdio.h>
+#include <time.h>
+#include <unistd.h>
 
 /*
-    * This is work in progress *
-    * Remainng issues :
-    * - SDL mouse cursor sometimes raise an SDL assertion
-    * - Dashed lines to implement
-    * - Full Keyboard handling
-*/
+ * This is work in progress *
+ * Remainng issues :
+ * - SDL mouse cursor sometimes raise an SDL assertion
+ * - Dashed lines to implement
+ * - Full Keyboard handling
+ */
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
-#define glF(x)  x
-#define glD(x)  x
-#define GL_F    GL_FLOAT
+#define glF(x) x
+#define glD(x) x
+#define GL_F GL_FLOAT
 typedef GLfloat GLf;
 
 struct graphics_gc_priv {
@@ -89,16 +87,16 @@ struct graphics_priv {
     enum draw_mode_num mode;
     GLuint program;
     GLint mvp_location, position_location, color_location, texture_position_location, use_texture_location,
-          texture_location;
+        texture_location;
     struct callback_list *cbl;
     struct font_freetype_methods freetype_methods;
     struct navit *nav;
     int timeout;
     int delay;
     struct window window;
-    int dirty;		//display needs to be redrawn (draw on root graphics or overlay is done)
-    int force_redraw;	//display needs to be redrawn (draw on root graphics or overlay is done)
-    time_t last_refresh_time;	//last display refresh time
+    int dirty;                 // display needs to be redrawn (draw on root graphics or overlay is done)
+    int force_redraw;          // display needs to be redrawn (draw on root graphics or overlay is done)
+    time_t last_refresh_time;  // last display refresh time
     struct graphics_opengl_platform *platform;
     struct graphics_opengl_platform_methods *platform_methods;
 };
@@ -107,9 +105,8 @@ struct graphics_image_priv {
     SDL_Surface *img;
 } graphics_image_priv;
 
-
 struct graphics_opengl_platform {
-    SDL_Window* eglwindow;
+    SDL_Window *eglwindow;
     SDL_GLContext eglcontext;
     EGLDisplay egldisplay;
     EGLConfig config[1];
@@ -121,66 +118,59 @@ struct contour {
 };
 
 static GHashTable *hImageData;
-static int      USERWANTSTOQUIT = 0;
-static struct   graphics_priv *graphics_priv_root;
-static struct   graphics_priv *graphics_opengl_new_helper(struct
-        graphics_methods
-        *meth);
+static int USERWANTSTOQUIT = 0;
+static struct graphics_priv *graphics_priv_root;
+static struct graphics_priv *graphics_opengl_new_helper(struct graphics_methods *meth);
 
 /*
  * GLES 2 Compatible vertex and fragment shaders
  * Taken from opengl driver
  */
-const char vertex_src [] =
-    "                                        \
-   attribute vec2        position;       \
-   attribute vec2        texture_position;       \
-   uniform mat4          mvp;             \
-   varying vec2          v_texture_position; \
-                                         \
-   void main()                           \
-   {                                     \
-      v_texture_position=texture_position; \
-      gl_Position = mvp*vec4(position, 0.0, 1.0);   \
-   }                                     \
+const char vertex_src[] = "                       \
+   attribute vec2        position;                \
+   attribute vec2        texture_position;        \
+   uniform mat4          mvp;                     \
+   varying vec2          v_texture_position;      \
+                                                  \
+   void main()                                    \
+   {                                              \
+      v_texture_position=texture_position;        \
+      gl_Position = mvp*vec4(position, 0.0, 1.0); \
+   }                                              \
 ";
 
-const char fragment_src [] =
-    "                                                      \
-   uniform lowp vec4    avcolor;                        \
-   uniform sampler2D    texture; \
-   uniform bool         use_texture; \
-   varying vec2         v_texture_position; \
-   void  main()                                        \
-   {                                                   \
-      if (use_texture) { \
-         gl_FragColor = texture2D(texture, v_texture_position);     \
-      } else { \
-         gl_FragColor = avcolor; \
-      } \
-   }                                                   \
+const char fragment_src[] = "                                   \
+   uniform lowp vec4    avcolor;                                \
+   uniform sampler2D    texture;                                \
+   uniform bool         use_texture;                            \
+   varying vec2         v_texture_position;                     \
+   void  main()                                                 \
+   {                                                            \
+      if (use_texture) {                                        \
+         gl_FragColor = texture2D(texture, v_texture_position); \
+      } else {                                                  \
+         gl_FragColor = avcolor;                                \
+      }                                                         \
+   }                                                            \
 ";
 
 /*
-* C conversion of Efficient Polygon Triangulation
-* Found at http://www.flipcode.com/archives/Efficient_Polygon_Triangulation.shtml
-* Adapted and debugged for this use
-*/
-float area(const struct contour* contour) {
+ * C conversion of Efficient Polygon Triangulation
+ * Found at http://www.flipcode.com/archives/Efficient_Polygon_Triangulation.shtml
+ * Adapted and debugged for this use
+ */
+float area(const struct contour *contour) {
     int p, q;
     int n = contour->count - 1;
     float A = 0.f;
 
-    for (p=n-1, q=0; q < n; p=q++) {
+    for (p = n - 1, q = 0; q < n; p = q++) {
         A += contour->p[p].x * contour->p[q].y - contour->p[q].x * contour->p[p].y;
     }
     return A * .5f;
 }
 
-int inside_triangle(float Ax, float Ay,
-                    float Bx, float By,
-                    float Cx, float Cy,
-                    float Px, float Py) {
+int inside_triangle(float Ax, float Ay, float Bx, float By, float Cx, float Cy, float Px, float Py) {
     float ax, ay, bx, by, cx, cy, apx, apy, bpx, bpy, cpx, cpy;
     float cCROSSap, bCROSScp, aCROSSbp;
 
@@ -190,21 +180,21 @@ int inside_triangle(float Ax, float Ay,
     by = Ay - Cy;
     cx = Bx - Ax;
     cy = By - Ay;
-    apx= Px - Ax;
-    apy= Py - Ay;
-    bpx= Px - Bx;
-    bpy= Py - By;
-    cpx= Px - Cx;
-    cpy= Py - Cy;
+    apx = Px - Ax;
+    apy = Py - Ay;
+    bpx = Px - Bx;
+    bpy = Py - By;
+    cpx = Px - Cx;
+    cpy = Py - Cy;
 
-    aCROSSbp = ax*bpy - ay*bpx;
-    cCROSSap = cx*apy - cy*apx;
-    bCROSScp = bx*cpy - by*cpx;
+    aCROSSbp = ax * bpy - ay * bpx;
+    cCROSSap = cx * apy - cy * apx;
+    bCROSScp = bx * cpy - by * cpx;
 
     return ((aCROSSbp >= 0.0f) && (bCROSScp >= 0.0f) && (cCROSSap >= 0.0f));
 }
 
-int snip(const struct point* pnt,int u,int v,int w,int n,int *V) {
+int snip(const struct point *pnt, int u, int v, int w, int n, int *V) {
     int p;
     float Ax, Ay, Bx, By, Cx, Cy, Px, Py;
 
@@ -217,22 +207,22 @@ int snip(const struct point* pnt,int u,int v,int w,int n,int *V) {
     Cx = pnt[V[w]].x;
     Cy = pnt[V[w]].y;
 
-    if ( (((Bx-Ax)*(Cy-Ay)) - ((By-Ay)*(Cx-Ax))) < 0.f )
+    if ((((Bx - Ax) * (Cy - Ay)) - ((By - Ay) * (Cx - Ax))) < 0.f)
         return 0;
 
-    for (p=0; p<n; p++) {
-        if( (p == u) || (p == v) || (p == w) )
+    for (p = 0; p < n; p++) {
+        if ((p == u) || (p == v) || (p == w))
             continue;
         Px = pnt[V[p]].x;
         Py = pnt[V[p]].y;
-        if (inside_triangle(Ax,Ay,Bx,By,Cx,Cy,Px,Py))
+        if (inside_triangle(Ax, Ay, Bx, By, Cx, Cy, Px, Py))
             return 0;
     }
 
     return 1;
 }
 
-int process_triangles(const struct contour* contour, struct contour* result) {
+int process_triangles(const struct contour *contour, struct contour *result) {
     int v;
     int contour_size = contour->count - 1;
     int polygon_temp_size = contour_size * 80;
@@ -240,20 +230,23 @@ int process_triangles(const struct contour* contour, struct contour* result) {
     result->p = malloc(sizeof(struct point) * polygon_temp_size);
 
     int n = contour_size;
-    if ( n < 3 ) return 0;
+    if (n < 3)
+        return 0;
 
-    int *V = alloca(sizeof(int)*n);
+    int *V = alloca(sizeof(int) * n);
 
-    if ( 0.0f < area(contour) )
-        for (v=0; v<n; v++) V[v] = v;
+    if (0.0f < area(contour))
+        for (v = 0; v < n; v++)
+            V[v] = v;
     else
-        for(v=0; v<n; v++) V[v] = (n-1)-v;
+        for (v = 0; v < n; v++)
+            V[v] = (n - 1) - v;
 
     int nv = n;
 
-    int count = 2*nv;
+    int count = 2 * nv;
 
-    for(v=nv-1; nv>2; ) {
+    for (v = nv - 1; nv > 2;) {
         /* if we loop, it is probably a non-simple polygon */
         if (0 >= (count--)) {
             //** Triangulate: ERROR - probable bad polygon!
@@ -261,15 +254,18 @@ int process_triangles(const struct contour* contour, struct contour* result) {
         }
 
         /* three consecutive vertices in current polygon, <u,v,w> */
-        int u = v  ;
-        if (nv <= u) u = 0;     /* previous */
-        v = u+1;
-        if (nv <= v) v = 0;         /* new v    */
-        int w = v+1;
-        if (nv <= w) w = 0;     /* next     */
+        int u = v;
+        if (nv <= u)
+            u = 0; /* previous */
+        v = u + 1;
+        if (nv <= v)
+            v = 0; /* new v    */
+        int w = v + 1;
+        if (nv <= w)
+            w = 0; /* next     */
 
-        if ( snip(contour->p,u,v,w,nv,V) ) {
-            int a,b,c,s,t;
+        if (snip(contour->p, u, v, w, nv, V)) {
+            int a, b, c, s, t;
 
             /* true names of the vertices */
             a = V[u];
@@ -287,12 +283,12 @@ int process_triangles(const struct contour* contour, struct contour* result) {
             }
 
             /* remove v from remaining polygon */
-            for(s=v,t=v+1; t<nv; s++,t++)
+            for (s = v, t = v + 1; t < nv; s++, t++)
                 V[s] = V[t];
             nv--;
 
             /* resest error detection counter */
-            count = 2*nv;
+            count = 2 * nv;
         }
     }
 
@@ -355,8 +351,8 @@ static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, un
         }
     } else if (1 < n) {
         unsigned char *curr = dash_list;
-        int cnt = 0;	//dot counter
-        int dcnt = 0;	//dash element counter
+        int cnt = 0;   // dot counter
+        int dcnt = 0;  // dash element counter
         int sum_dash = 0;
         gc->dash_mask = 0;
 
@@ -364,23 +360,22 @@ static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, un
             sum_dash += dash_list[i];
         }
 
-        //scale dashlist elements to max size
+        // scale dashlist elements to max size
         if (sum_dash > cOpenglMaskBits) {
-            int num_error[2] = { 0, 0 };	//count elements rounded to 0 for odd(drawn) and even(masked) for compensation
+            int num_error[2] = {0, 0};  // count elements rounded to 0 for odd(drawn) and even(masked) for compensation
             double factor = (1.0 * cOpenglMaskBits) / sum_dash;
-            for (i = 0; i < n; ++i) {	//calculate dashlist max and largest common denomiator for scaling
+            for (i = 0; i < n; ++i) {  // calculate dashlist max and largest common denomiator for scaling
                 dash_list[i] *= factor;
                 if (dash_list[i] == 0) {
                     ++dash_list[i];
                     ++num_error[i % 2];
-                } else if (0 < num_error[i % 2]
-                           && 2 < dash_list[i]) {
+                } else if (0 < num_error[i % 2] && 2 < dash_list[i]) {
                     ++dash_list[i];
                     --num_error[i % 2];
                 }
             }
         }
-        //calculate mask
+        // calculate mask
         for (i = 0; i < cOpenglMaskBits; ++i) {
             gc->dash_mask <<= 1;
             gc->dash_mask |= 1 - dcnt % 2;
@@ -397,7 +392,6 @@ static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, un
     }
 }
 
-
 static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c) {
     gc->fr = c->r / 65535.0;
     gc->fg = c->g / 65535.0;
@@ -413,11 +407,11 @@ static void gc_set_background(struct graphics_gc_priv *gc, struct color *c) {
 }
 
 static struct graphics_gc_methods gc_methods = {
-    gc_destroy,
-    gc_set_linewidth,
-    gc_set_dashes,
-    gc_set_foreground,
-    gc_set_background
+    .gc_destroy = gc_destroy,
+    .gc_set_linewidth = gc_set_linewidth,
+    .gc_set_dashes = gc_set_dashes,
+    .gc_set_foreground = gc_set_foreground,
+    .gc_set_background = gc_set_background,
 };
 
 static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth) {
@@ -432,19 +426,18 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 static struct graphics_image_priv image_error;
 
 static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name,
-        int *w, int *h, struct point *hot, int rotation) {
+                                             int *w, int *h, struct point *hot, int rotation) {
     struct graphics_image_priv *gi;
 
     /* FIXME: meth is not used yet.. so gi leaks. at least xpm is small */
 
-    struct graphics_image_priv *curr_elem =
-        g_hash_table_lookup(hImageData, name);
+    struct graphics_image_priv *curr_elem = g_hash_table_lookup(hImageData, name);
 
     if (curr_elem == &image_error) {
-        //found but couldn't be loaded
+        // found but couldn't be loaded
         return NULL;
     } else if (curr_elem) {
-        //found and OK -> use hastable entry
+        // found and OK -> use hastable entry
         *w = curr_elem->img->w;
         *h = curr_elem->img->h;
         hot->x = *w / 2;
@@ -459,14 +452,14 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
 
     gi = g_new0(struct graphics_image_priv, 1);
     gi->img = IMG_Load(name);
-    if(gi->img) {
-        *w=gi->img->w;
-        *h=gi->img->h;
-        hot->x=*w/2;
-        hot->y=*h/2;
+    if (gi->img) {
+        *w = gi->img->w;
+        *h = gi->img->h;
+        hot->x = *w / 2;
+        hot->y = *h / 2;
     } else {
         /* TODO: debug "colour parse errors" on xpm */
-        dbg(lvl_error,"image_new on '%s' failed: %s", name, IMG_GetError());
+        dbg(lvl_error, "image_new on '%s' failed: %s", name, IMG_GetError());
         g_free(gi);
         gi = NULL;
         g_hash_table_insert(hImageData, g_strdup(name), &image_error);
@@ -477,43 +470,42 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
     return gi;
 }
 
-static void image_free(struct graphics_priv *gr, struct graphics_image_priv * gi) {
-//    SDL_FreeSurface(gi->img);
-//    g_free(gi);
+static void image_free(struct graphics_priv *gr, struct graphics_image_priv *gi) {
+    //    SDL_FreeSurface(gi->img);
+    //    g_free(gi);
 }
 
 static void set_color(struct graphics_priv *gr, struct graphics_gc_priv *gc) {
     GLfloat col[4];
-    col[0]=gc->fr;
-    col[1]=gc->fg;
-    col[2]=gc->fb;
-    col[3]=gc->fa;
+    col[0] = gc->fr;
+    col[1] = gc->fg;
+    col[2] = gc->fb;
+    col[3] = gc->fa;
     glUniform4fv(gr->color_location, 1, col);
 }
 
 static void draw_array(struct graphics_priv *gr, struct point *p, int count, GLenum mode) {
     int i;
-    GLf *x;//[count*2];
-    x = alloca(sizeof(GLf)*count*2);
-    for (i = 0 ; i < count ; i++) {
-        x[i*2]=glF(p[i].x);
-        x[i*2+1]=glF(p[i].y);
+    GLf *x;  //[count*2];
+    x = alloca(sizeof(GLf) * count * 2);
+    for (i = 0; i < count; i++) {
+        x[i * 2] = glF(p[i].x);
+        x[i * 2 + 1] = glF(p[i].y);
     }
 
-    glVertexAttribPointer (gr->position_location, 2, GL_FLOAT, 0, 0, x );
+    glVertexAttribPointer(gr->position_location, 2, GL_FLOAT, 0, 0, x);
     glDrawArrays(mode, 0, count);
 }
 
 static void draw_rectangle_do(struct graphics_priv *gr, struct point *p, int w, int h) {
     struct point pa[4];
-    pa[0]=pa[1]=pa[2]=pa[3]=*p;
-    pa[0].x+=w;
-    pa[1].x+=w;
-    pa[1].y+=h;
-    pa[3].y+=h;
+    pa[0] = pa[1] = pa[2] = pa[3] = *p;
+    pa[0].x += w;
+    pa[1].x += w;
+    pa[1].y += h;
+    pa[3].y += h;
     draw_array(gr, pa, 4, GL_TRIANGLE_STRIP);
 }
-
 
 static void draw_image_es(struct graphics_priv *gr, struct point *p, int w, int h, unsigned char *data) {
     GLf x[8];
@@ -530,13 +522,13 @@ static void draw_image_es(struct graphics_priv *gr, struct point *p, int w, int 
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
-    x[0]+=glF(1);
-    x[2]+=glF(1);
-    x[3]+=glF(1);
-    x[7]+=glF(1);
+    x[0] += glF(1);
+    x[2] += glF(1);
+    x[3] += glF(1);
+    x[7] += glF(1);
     glUniform1i(gr->use_texture_location, 1);
     glEnableVertexAttribArray(gr->texture_position_location);
-    glVertexAttribPointer (gr->texture_position_location, 2, GL_FLOAT, 0, 0, x );
+    glVertexAttribPointer(gr->texture_position_location, 2, GL_FLOAT, 0, 0, x);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -572,15 +564,15 @@ inline void draw_overlay(struct graphics_priv *gr) {
 
     get_overlay_pos(gr, &p_eff);
 
-    memset(x, 0, 8*sizeof(GLf));
-    x[0]+=glF(1);
-    x[1]+=glF(1);
-    x[2]+=glF(1);
-    x[5]+=glF(1);
+    memset(x, 0, 8 * sizeof(GLf));
+    x[0] += glF(1);
+    x[1] += glF(1);
+    x[2] += glF(1);
+    x[5] += glF(1);
 
     glUniform1i(gr->use_texture_location, 1);
     glEnableVertexAttribArray(gr->texture_position_location);
-    glVertexAttribPointer (gr->texture_position_location, 2, GL_FLOAT, 0, 0, x);
+    glVertexAttribPointer(gr->texture_position_location, 2, GL_FLOAT, 0, 0, x);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -596,8 +588,7 @@ inline void draw_overlay(struct graphics_priv *gr) {
 
 static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     if ((gr->parent && !gr->parent->overlay_enabled)
-            || (gr->parent && gr->parent->overlay_enabled
-                && !gr->overlay_enabled)) {
+        || (gr->parent && gr->parent->overlay_enabled && !gr->overlay_enabled)) {
         return;
     }
 
@@ -609,12 +600,10 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
     draw_array(gr, p, count, GL_LINE_STRIP);
 }
 
-
 static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     int ok;
     if ((gr->parent && !gr->parent->overlay_enabled)
-            || (gr->parent && gr->parent->overlay_enabled
-                && !gr->overlay_enabled)) {
+        || (gr->parent && gr->parent->overlay_enabled && !gr->overlay_enabled)) {
         return;
     }
     set_color(gr, gc);
@@ -633,8 +622,7 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
 
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h) {
     if ((gr->parent && !gr->parent->overlay_enabled)
-            || (gr->parent && gr->parent->overlay_enabled
-                && !gr->overlay_enabled)) {
+        || (gr->parent && gr->parent->overlay_enabled && !gr->overlay_enabled)) {
         return;
     }
     set_color(gr, gc);
@@ -647,12 +635,9 @@ static void display_text_draw(struct font_freetype_text *text, struct graphics_p
     int i, x, y, stride;
     struct font_freetype_glyph *g, **gp;
     unsigned char *shadow, *glyph;
-    struct color transparent = { 0x0000, 0x0000, 0x0000, 0x0000 };
-    struct color black = {
-        fg->fr * 65535, fg->fg * 65535, fg->fb * 65535,
-        fg->fa * 65535
-    };
-    struct color white = { 0xffff, 0xffff, 0xffff, 0xffff };
+    struct color transparent = {0x0000, 0x0000, 0x0000, 0x0000};
+    struct color black = {fg->fr * 65535, fg->fg * 65535, fg->fb * 65535, fg->fa * 65535};
+    struct color white = {0xffff, 0xffff, 0xffff, 0xffff};
 
     if (bg) {
         if (COLOR_IS_WHITE(black) && COLOR_IS_BLACK(white)) {
@@ -701,9 +686,9 @@ static void display_text_draw(struct font_freetype_text *text, struct graphics_p
                 gr->freetype_methods.get_shadow(g, shadow, stride, &white, &transparent);
 
                 struct point p;
-                p.x=((x + g->x) >> 6)-1;
-                p.y=((y + g->y) >> 6)-1;
-                draw_image_es(gr, &p, g->w+2, g->h+2, shadow);
+                p.x = ((x + g->x) >> 6) - 1;
+                p.y = ((y + g->y) >> 6) - 1;
+                draw_image_es(gr, &p, g->w + 2, g->h + 2, shadow);
 
                 g_free(shadow);
             }
@@ -722,12 +707,11 @@ static void display_text_draw(struct font_freetype_text *text, struct graphics_p
             if (color) {
                 stride = g->w;
                 if (bg) {
-                    glyph =
-                        g_malloc(stride * g->h * 4);
+                    glyph = g_malloc(stride * g->h * 4);
                     gr->freetype_methods.get_glyph(g, glyph, stride * 4, &black, &white, &transparent);
                     struct point p;
-                    p.x=(x + g->x) >> 6;
-                    p.y=(y + g->y) >> 6;
+                    p.x = (x + g->x) >> 6;
+                    p.y = (y + g->y) >> 6;
                     draw_image_es(gr, &p, g->w, g->h, glyph);
 
                     g_free(glyph);
@@ -736,8 +720,8 @@ static void display_text_draw(struct font_freetype_text *text, struct graphics_p
                 glyph = g_malloc(stride * g->h);
                 gr->freetype_methods.get_glyph(g, glyph, stride, &black, &white, &transparent);
                 struct point p;
-                p.x=(x + g->x) >> 6;
-                p.y=(y + g->y) >> 6;
+                p.x = (x + g->x) >> 6;
+                p.y = (y + g->y) >> 6;
                 draw_image_es(gr, &p, g->w, g->h, glyph);
 
                 g_free(glyph);
@@ -751,8 +735,7 @@ static void display_text_draw(struct font_freetype_text *text, struct graphics_p
 static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg,
                       struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy) {
     if ((gr->parent && !gr->parent->overlay_enabled)
-            || (gr->parent && gr->parent->overlay_enabled
-                && !gr->overlay_enabled)) {
+        || (gr->parent && gr->parent->overlay_enabled && !gr->overlay_enabled)) {
         return;
     }
 
@@ -765,7 +748,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
     }
     graphics_priv_root->dirty = 1;
 
-    t = gr->freetype_methods.text_new(text, (struct font_freetype_font *) font, dx, dy);
+    t = gr->freetype_methods.text_new(text, (struct font_freetype_font *)font, dx, dy);
 
     struct point p_eff;
     p_eff.x = p->x;
@@ -774,7 +757,6 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
     display_text_draw(t, gr, fg, bg, color, &p_eff);
     gr->freetype_methods.text_destroy(t);
 }
-
 
 static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p,
                        struct graphics_image_priv *img) {
@@ -801,19 +783,19 @@ static void draw_background(struct graphics_priv *gr) {
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, gr->width, gr->height);
-    //get_overlay_pos(gr, &p_eff);
+    // get_overlay_pos(gr, &p_eff);
     p_eff.x = gr->p.x;
     p_eff.y = gr->p.y;
 
-    memset(x, 0, 8*sizeof(GLf));
-    x[0]+=glF(1);
-    x[1]+=glF(1);
-    x[2]+=glF(1);
-    x[5]+=glF(1);
+    memset(x, 0, 8 * sizeof(GLf));
+    x[0] += glF(1);
+    x[1] += glF(1);
+    x[2] += glF(1);
+    x[5] += glF(1);
 
     glUniform1i(gr->use_texture_location, 1);
     glEnableVertexAttribArray(gr->texture_position_location);
-    glVertexAttribPointer (gr->texture_position_location, 2, GL_FLOAT, 0, 0, x);
+    glVertexAttribPointer(gr->texture_position_location, 2, GL_FLOAT, 0, 0, x);
 
     glDisable(GL_BLEND);
     glBindTexture(GL_TEXTURE_2D, gr->overlay_texture);
@@ -845,20 +827,20 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
         }
 
         // Need to setup appropriate projection matrix
-        for (i = 0; i < 16 ; i++) {
+        for (i = 0; i < 16; i++) {
             matrix[i] = 0.0;
         }
 
-        matrix[0]=2.0 / gr->width;
-        matrix[5]=-2.0 / gr->height;
-        matrix[10]=1;
-        matrix[12]=-1;
-        matrix[13]=1;
-        matrix[15]=1;
+        matrix[0] = 2.0 / gr->width;
+        matrix[5] = -2.0 / gr->height;
+        matrix[10] = 1;
+        matrix[12] = -1;
+        matrix[13] = 1;
+        matrix[15] = 1;
         glUniformMatrix4fv(gr->mvp_location, 1, GL_FALSE, matrix);
 
         glBindFramebuffer(GL_FRAMEBUFFER, gr->framebuffer_name);
-        glViewport(0,0,gr->width,gr->height);
+        glViewport(0, 0, gr->width, gr->height);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -867,7 +849,7 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
     if (mode == draw_mode_end && gr->parent == NULL) {
         overlay = gr->overlays;
         draw_background(gr);
-        while(overlay) {
+        while (overlay) {
             if (gr->overlay_enabled)
                 draw_overlay(overlay);
             overlay = overlay->next;
@@ -886,7 +868,6 @@ static void graphics_opengl_disable_suspend(struct window *w) {
     // No op
 }
 
-
 static GLuint load_shader(const char *shader_source, GLenum type) {
     GLuint shader = glCreateShader(type);
 
@@ -899,7 +880,7 @@ static GLuint load_shader(const char *shader_source, GLenum type) {
 static void *get_data(struct graphics_priv *this, const char *type) {
     GLuint vertexShader;
     GLuint fragmentShader;
-    struct window* win;
+    struct window *win;
     int i;
 
     if (!strcmp(type, "gtk_widget")) {
@@ -907,17 +888,17 @@ static void *get_data(struct graphics_priv *this, const char *type) {
         return NULL;
     }
 
-    if(strcmp(type, "window") == 0) {
+    if (strcmp(type, "window") == 0) {
         SDL_GL_MakeCurrent(this->platform->eglwindow, this->platform->eglcontext);
 
-        glClearColor ( 0, 0, 0, 1);
-        glClear ( GL_COLOR_BUFFER_BIT );
+        glClearColor(0, 0, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         callback_list_call_attr_2(graphics_priv_root->cbl, attr_resize, GINT_TO_POINTER(this->width),
                                   GINT_TO_POINTER(this->height));
 
-        this->program  = glCreateProgram();
-        vertexShader   = load_shader(vertex_src, GL_VERTEX_SHADER);
+        this->program = glCreateProgram();
+        vertexShader = load_shader(vertex_src, GL_VERTEX_SHADER);
         fragmentShader = load_shader(fragment_src, GL_FRAGMENT_SHADER);
 
         glAttachShader(this->program, vertexShader);
@@ -925,27 +906,26 @@ static void *get_data(struct graphics_priv *this, const char *type) {
         glLinkProgram(this->program);
         glUseProgram(this->program);
 
-        this->mvp_location          = glGetUniformLocation(this->program, "mvp");
-        this->position_location     = glGetAttribLocation(this->program, "position");
+        this->mvp_location = glGetUniformLocation(this->program, "mvp");
+        this->position_location = glGetAttribLocation(this->program, "position");
         glEnableVertexAttribArray(this->position_location);
         this->texture_position_location = glGetAttribLocation(this->program, "texture_position");
-        this->color_location            = glGetUniformLocation(this->program, "avcolor");
-        this->texture_location          = glGetUniformLocation(this->program, "texture");
-        this->use_texture_location      = glGetUniformLocation(this->program, "use_texture");
+        this->color_location = glGetUniformLocation(this->program, "avcolor");
+        this->texture_location = glGetUniformLocation(this->program, "texture");
+        this->use_texture_location = glGetUniformLocation(this->program, "use_texture");
 
         glUniform1i(this->use_texture_location, 0);
         glUniform1i(this->texture_location, 0);
 
-        win=g_new(struct window, 1);
-        win->priv=this;
-        win->disable_suspend=NULL;
+        win = g_new(struct window, 1);
+        win->priv = this;
+        win->disable_suspend = NULL;
         win->fullscreen = graphics_opengl_fullscreen;
         win->disable_suspend = graphics_opengl_disable_suspend;
         return win;
     }
 
     return NULL;
-
 }
 
 static void overlay_disable(struct graphics_priv *gr, int disable) {
@@ -992,8 +972,8 @@ static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int
             // Reset overlay texture
             glDeleteTextures(1, &gr->overlay_texture);
             glGenTextures(1, &gr->overlay_texture);
-            glBindTexture(GL_TEXTURE_2D,  gr->overlay_texture);
-            glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA, gr->width, gr->height, 0,GL_RGBA, GL_UNSIGNED_BYTE, 0);
+            glBindTexture(GL_TEXTURE_2D, gr->overlay_texture);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, gr->width, gr->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gr->overlay_texture, 0);
@@ -1003,11 +983,8 @@ static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int
     }
 }
 
-
-static struct graphics_priv *overlay_new(struct graphics_priv *gr,
-        struct graphics_methods *meth,
-        struct point *p, int w, int h,
-        int wraparound);
+static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
+                                         int w, int h, int wraparound);
 
 static struct graphics_methods graphics_methods = {
     graphics_destroy,
@@ -1036,7 +1013,7 @@ static struct graphics_methods graphics_methods = {
 };
 
 static struct graphics_priv *graphics_opengl_new_helper(struct graphics_methods *meth) {
-    struct font_priv *(*font_freetype_new) (void *meth);
+    struct font_priv *(*font_freetype_new)(void *meth);
     font_freetype_new = plugin_get_category_font("freetype");
 
     if (!font_freetype_new) {
@@ -1048,13 +1025,11 @@ static struct graphics_priv *graphics_opengl_new_helper(struct graphics_methods 
     font_freetype_new(&this->freetype_methods);
     *meth = graphics_methods;
 
-    meth->font_new =
-        (struct graphics_font_priv *
-         (*)(struct graphics_priv *, struct graphics_font_methods *,
-             char *, int, int)) this->freetype_methods.font_new;
-    meth->get_text_bbox =
-        (void (*) (struct graphics_priv *, struct graphics_font_priv *,
-                   char *, int, int, struct point*, int)) this->freetype_methods.get_text_bbox;
+    meth->font_new = (struct graphics_font_priv
+                      * (*)(struct graphics_priv *, struct graphics_font_methods *, char *, int,
+                            int)) this->freetype_methods.font_new;
+    meth->get_text_bbox = (void (*)(struct graphics_priv *, struct graphics_font_priv *, char *, int, int,
+                                    struct point *, int))this->freetype_methods.get_text_bbox;
     return this;
 }
 
@@ -1065,8 +1040,8 @@ static void create_framebuffer_texture(struct graphics_priv *gr) {
     glBindFramebuffer(GL_FRAMEBUFFER, gr->framebuffer_name);
 
     glGenTextures(1, &gr->overlay_texture);
-    glBindTexture(GL_TEXTURE_2D,  gr->overlay_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA, gr->width, gr->height, 0,GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glBindTexture(GL_TEXTURE_2D, gr->overlay_texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, gr->width, gr->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gr->overlay_texture, 0);
@@ -1080,7 +1055,7 @@ static void create_framebuffer_texture(struct graphics_priv *gr) {
 }
 
 static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p,
-        int w, int h, int wraparound) {
+                                         int w, int h, int wraparound) {
     struct graphics_priv *this = graphics_opengl_new_helper(meth);
 
     this->p.x = p->x;
@@ -1093,12 +1068,12 @@ static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphi
     this->fill_poly = 1;
 
     // Copy shader locations parameters
-    this->mvp_location              = graphics_priv_root->mvp_location;
-    this->position_location         = graphics_priv_root->position_location;
+    this->mvp_location = graphics_priv_root->mvp_location;
+    this->position_location = graphics_priv_root->position_location;
     this->texture_position_location = graphics_priv_root->texture_position_location;
-    this->color_location            = graphics_priv_root->color_location;
-    this->texture_location          = graphics_priv_root->texture_location;
-    this->use_texture_location      = graphics_priv_root->use_texture_location;
+    this->color_location = graphics_priv_root->color_location;
+    this->texture_location = graphics_priv_root->texture_location;
+    this->use_texture_location = graphics_priv_root->use_texture_location;
 
     if ((w == 0) || (h == 0)) {
         this->overlay_autodisabled = 1;
@@ -1115,7 +1090,6 @@ static struct graphics_priv *overlay_new(struct graphics_priv *gr, struct graphi
     return this;
 }
 
-
 static gboolean graphics_sdl_idle(void *data) {
     struct graphics_priv *gr = (struct graphics_priv *)data;
     struct point p;
@@ -1126,24 +1100,24 @@ static gboolean graphics_sdl_idle(void *data) {
     char keycode;
 
     // Process SDL events (KEYS + MOUSE)
-    while(1) {
+    while (1) {
         ret = SDL_PollEvent(&ev);
 
-        if(!ret)
+        if (!ret)
             break;
 
-        switch(ev.type) {
+        switch (ev.type) {
         case SDL_MOUSEMOTION: {
             p.x = ev.motion.x;
             p.y = ev.motion.y;
-            //gr->force_redraw = 1;
+            // gr->force_redraw = 1;
             callback_list_call_attr_1(gr->cbl, attr_motion, (void *)&p);
             break;
         }
 
         case SDL_KEYDOWN: {
             memset(keybuf, 0, sizeof(keybuf));
-            switch(ev.key.keysym.sym) {
+            switch (ev.key.keysym.sym) {
             case SDLK_F1:
                 graphics_priv_root->fill_poly = !graphics_priv_root->fill_poly;
                 break;
@@ -1206,14 +1180,16 @@ static gboolean graphics_sdl_idle(void *data) {
             p.x = ev.button.x;
             p.y = ev.button.y;
             graphics_priv_root->force_redraw = 1;
-            callback_list_call_attr_3(gr->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER((int)ev.button.button), (void *)&p);
+            callback_list_call_attr_3(gr->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER((int)ev.button.button),
+                                      (void *)&p);
             break;
         }
 
         case SDL_MOUSEBUTTONUP: {
             p.x = ev.button.x;
             p.y = ev.button.y;
-            callback_list_call_attr_3(gr->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER((int)ev.button.button), (void *)&p);
+            callback_list_call_attr_3(gr->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER((int)ev.button.button),
+                                      (void *)&p);
             break;
         }
 
@@ -1234,9 +1210,8 @@ static gboolean graphics_sdl_idle(void *data) {
     return TRUE;
 }
 
-
 static struct graphics_priv *graphics_opengl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs,
-        struct callback_list *cbl) {
+                                                 struct callback_list *cbl) {
     struct attr *attr;
     if (!event_request_system("glib", "graphics_opengl_new"))
         return NULL;
@@ -1273,13 +1248,13 @@ static struct graphics_priv *graphics_opengl_new(struct navit *nav, struct graph
     graphics_priv_root->width = this->width;
     graphics_priv_root->height = this->height;
 
-    struct graphics_opengl_platform *ret=g_new0(struct graphics_opengl_platform,1);
+    struct graphics_opengl_platform *ret = g_new0(struct graphics_opengl_platform, 1);
 
     // SDL Init
-    int sdl_status =  SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS);
+    int sdl_status = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 
     if (sdl_status != 0) {
-        fprintf(stderr, "\nUnable to initialize SDL: %i %s\n", sdl_status, SDL_GetError() );
+        fprintf(stderr, "\nUnable to initialize SDL: %i %s\n", sdl_status, SDL_GetError());
         exit(1);
     }
 
@@ -1294,17 +1269,15 @@ static struct graphics_priv *graphics_opengl_new(struct navit *nav, struct graph
     // I think it's not necessary to sync vblank, update is quite slow
     SDL_GL_SetSwapInterval(0);
 
-    ret->eglwindow = SDL_CreateWindow(
-                         "Navit EGL",                       // window title
-                         SDL_WINDOWPOS_UNDEFINED,           // initial x position
-                         SDL_WINDOWPOS_UNDEFINED,           // initial y position
-                         this->width,                       // width, in pixels
-                         this->height,                      // height, in pixels
-                         flags
-                     );
+    ret->eglwindow = SDL_CreateWindow("Navit EGL",              // window title
+                                      SDL_WINDOWPOS_UNDEFINED,  // initial x position
+                                      SDL_WINDOWPOS_UNDEFINED,  // initial y position
+                                      this->width,              // width, in pixels
+                                      this->height,             // height, in pixels
+                                      flags);
 
     if (ret->eglwindow == NULL) {
-        fprintf(stderr, "\nUnable to initialize SDL window: %s\n", SDL_GetError() );
+        fprintf(stderr, "\nUnable to initialize SDL window: %s\n", SDL_GetError());
         goto error;
     }
 
@@ -1316,7 +1289,7 @@ static struct graphics_priv *graphics_opengl_new(struct navit *nav, struct graph
 
     this->platform = ret;
     create_framebuffer_texture(this);
-    g_timeout_add(G_PRIORITY_DEFAULT+10, graphics_sdl_idle, this);
+    g_timeout_add(G_PRIORITY_DEFAULT + 10, graphics_sdl_idle, this);
     glDisable(GL_DEPTH_TEST);
     return this;
 error:

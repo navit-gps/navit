@@ -9,7 +9,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/THIS_IS_THE_NAVIT_WORKING_DIR "\r\nOnly D
 # navit core
 set(NAVIT_SRC announcement.c atom.c attr.c cache.c callback.c command.c config_.c coord.c country.c data_window.c debug.c
 	event.c file.c geom.c graphics.c gui.c item.c layout.c log.c main.c map.c maps.c
-	linguistics.c mapset.c maptype.c menu.c messages.c bookmarks.c navit.c navit_nls.c navigation.c osd.c param.c phrase.c plugin.c popup.c
+	linguistics.c mapset.c maptype.c menu.c messages.c bookmarks.c navit.c navit_nls.c navigation.c osd.c param.c plugin.c popup.c
 	profile.c profile_option.c projection.c roadprofile.c route.c script.c search.c speech.c start_real.c sunriset.c transform.c track.c
 	search_houseno_interpol.c traffic.c util.c vehicle.c vehicleprofile.c xmlconfig.c )
 
@@ -63,6 +63,7 @@ foreach (CURRENT_MODULE ${ALL_PLUGINS} ${ALL_MODULE_PLUGINS} ${ALL_MODULES})
 	endif()
 endforeach()
 
+
 if(NOT ANDROID)
 	set(NAVIT_START_SRC start.c)
 	if(WIN32 OR WINCE AND NOT WIN_OMIT_RESOURCES)
@@ -95,6 +96,10 @@ endif()
 
 if (SHARED_LIBNAVIT)
 	add_library (${NAVIT_LIBNAME} SHARED ${NAVIT_SRC} )
+	install(TARGETS ${NAVIT_LIBNAME}
+		DESTINATION ${LIB_DIR}
+		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
 else(SHARED_LIBNAVIT)
 	add_library (${NAVIT_LIBNAME} STATIC ${NAVIT_SRC} )
 endif(SHARED_LIBNAVIT)
@@ -218,6 +223,9 @@ add_subdirectory (textures)
 add_subdirectory (maps)
 if(ANDROID)
 	add_subdirectory (android)
+    if(DEFINED GRADLE_BUILD_DIR)
+        add_dependencies(${PROJECT_NAME} copy_to_gradle)
+    endif(DEFINED GRADLE_BUILD_DIR)
 endif()
 
 install(TARGETS navit

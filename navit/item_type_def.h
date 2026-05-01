@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 enum item_type {
-#define ITEM2(x,y) type_##y=x,
+#define ITEM2(x, y) type_##y = x,
 #define ITEM(x) type_##x,
 #include "item_def.h"
 #undef ITEM2

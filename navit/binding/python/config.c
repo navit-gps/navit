@@ -18,8 +18,8 @@
  */
 
 #include "common.h"
-#include "item.h"
 #include "config_.h"
+#include "item.h"
 
 typedef struct {
     PyObject_HEAD
@@ -32,13 +32,10 @@ static PyObject *config_navit(PyObject *self, PyObject *args) {
     return NULL;
 }
 
-
-
 static PyMethodDef config_methods[] = {
-    {"navit",	(PyCFunction) config_navit, METH_VARARGS },
-    {NULL, NULL },
+    {"navit", (PyCFunction)config_navit, METH_VARARGS},
+    {NULL, NULL},
 };
-
 
 static PyObject *config_getattr_py(PyObject *self, char *name) {
     return Py_FindMethod(config_methods, self, name);
@@ -48,18 +45,17 @@ static void config_destroy_py(configObject *self) {
 }
 
 PyTypeObject config_Type = {
-    Obj_HEAD
-    .tp_name="config",
-    .tp_basicsize=sizeof(configObject),
-    .tp_dealloc=(destructor)config_destroy_py,
-    .tp_getattr=config_getattr_py,
+    Obj_HEAD,
+    .tp_name = "config",
+    .tp_basicsize = sizeof(configObject),
+    .tp_dealloc = (destructor)config_destroy_py,
+    .tp_getattr = config_getattr_py,
 };
 
 PyObject *config_py(PyObject *self, PyObject *args) {
     configObject *ret;
 
-    dbg(lvl_debug,"enter");
-    ret=PyObject_NEW(configObject, &config_Type);
+    dbg(lvl_debug, "enter");
+    ret = PyObject_NEW(configObject, &config_Type);
     return (PyObject *)ret;
 }
-

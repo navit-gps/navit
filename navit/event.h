@@ -29,23 +29,22 @@ struct callback_list;
 struct file;
 
 enum event_watch_cond {
-	event_watch_cond_read=1,
-	event_watch_cond_write,
-	event_watch_cond_except,
+    event_watch_cond_read = 1,
+    event_watch_cond_write,
+    event_watch_cond_except,
 };
 
 struct event_methods {
-	void (*main_loop_run)(void);
-	void (*main_loop_quit)(void);
-	struct event_watch *(*add_watch)(int fd, enum event_watch_cond cond, struct callback *cb);
-	void (*remove_watch)(struct event_watch *ev);
-	struct event_timeout *(*add_timeout)(int timeout, int multi, struct callback *cb);
-	void (*remove_timeout)(struct event_timeout *ev);
-	struct event_idle *(*add_idle)(int priority, struct callback *cb);
-	void (*remove_idle)(struct event_idle *ev);
-	void (*call_callback)(struct callback_list *cb);
+    void (*main_loop_run)(void);
+    void (*main_loop_quit)(void);
+    struct event_watch *(*add_watch)(int fd, enum event_watch_cond cond, struct callback *cb);
+    void (*remove_watch)(struct event_watch *ev);
+    struct event_timeout *(*add_timeout)(int timeout, int multi, struct callback *cb);
+    void (*remove_timeout)(struct event_timeout *ev);
+    struct event_idle *(*add_idle)(int priority, struct callback *cb);
+    void (*remove_idle)(struct event_idle *ev);
+    void (*call_callback)(struct callback_list *cb);
 };
-
 
 /* prototypes */
 enum event_watch_cond;

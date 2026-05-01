@@ -24,9 +24,11 @@
 extern "C" {
 #endif
 
+#include "attr.h"
+
 struct command_table {
-	const char *command;
-	int (*func)(void *data, char *cmd, struct attr **in, struct attr ***out);
+    const char *command;
+    int (*func)(void *data, char *cmd, struct attr **in, struct attr ***out);
 };
 
 #define command_cast(x) (int (*)(void *, char *, struct attr **, struct attr ***))(x)
@@ -60,4 +62,4 @@ void command_saved_destroy(struct command_saved *cs);
 }
 #endif
 
- #endif /* NAVIT_COMMAND_H */
+#endif /* NAVIT_COMMAND_H */

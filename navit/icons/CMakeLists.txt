@@ -43,12 +43,16 @@ macro(convert_to_png IMAGE_INPUT IMAGE_OUTPUT SCALE)
 endmacro()
 
 macro(add_scale_targets IMAGE_SRC IMAGE_NAME)
+    if (ANDROID)
+        string(TOLOWER ${IMAGE_NAME} IMAGE_NAME)
+    endif ()
 	string(REPLACE "," ";" SCALES "${ARGN}")
 	set(add_scale_targets_is_first_scale 1)
 	foreach (CURRENT_SCALE ${SCALES})
 		if(add_scale_targets_is_first_scale EQUAL 1)
 			set (IMAGE_DST ${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_NAME}.png)
 			set(add_scale_targets_is_first_scale 0)
+
 		elseif (${CURRENT_SCALE} EQUAL 0)
 			set (IMAGE_DST ${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_NAME}.png)
 			message_error( "Image size value of 0 to leave image unscaled can only be given as the first value in row, e.g. -D svg2png_scaling=0,16,32 " )
@@ -68,7 +72,7 @@ macro(add_scale_targets IMAGE_SRC IMAGE_NAME)
 endmacro()
 
 if(NOT DEFINED NAVIT_BINARY)
-	set(NAVIT_BINARY navit CACHE STRING "Navit binary name  not defined")
+	set(NAVIT_BINARY navit CACHE STRING "Navit binary name not defined")
 endif()
 #patch binary name in desktop file
 configure_file(desktop_icons/navit.desktop.in desktop_icons/${PACKAGE}.desktop)
@@ -129,12 +133,19 @@ endforeach()
 
 if (NOT ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR} )
 foreach (IMAGE_FILE ${IMAGES_TO_COPY})
-	add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}"
-		DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_FILE}"
-		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_FILE}"
-		"${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}"
+	if ( ANDROID )
+		add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}"
+			DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_FILE}"
+			COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_FILE}"
+			"${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}"
 		)
-	list(APPEND IMAGE_TARGETS "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}")
+	else()
+		add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}"
+			DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_FILE}"
+			COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_FILE}" "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}"
+		)
+		list(APPEND IMAGE_TARGETS "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_FILE}")
+	endif ( ANDROID )
 endforeach()
 endif()
 

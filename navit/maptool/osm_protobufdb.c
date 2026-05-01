@@ -16,20 +16,20 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-#include <string.h>
-#include <stdlib.h>
-#include <math.h>
-#include <unistd.h>
-#include <time.h>
-#include <zlib.h>
-#include "maptool.h"
 #include "debug.h"
-#include "linguistics.h"
 #include "file.h"
 #include "fileformat.pb-c.h"
+#include "linguistics.h"
+#include "maptool.h"
 #include "osmformat.pb-c.h"
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <unistd.h>
+#include <zlib.h>
 
-static double latlon_scale=10000000.0;
+static double latlon_scale = 10000000.0;
 
 struct db_config {
     int node_ids_per_file;
@@ -42,9 +42,7 @@ struct db_config {
     int relation_ids_per_blob;
     int relation_ids_per_group;
 } db_config = {
-    200000, 30000, 500,
-    40000,  1000,  30,
-    10000,   500,  20,
+    200000, 30000, 500, 40000, 1000, 30, 10000, 500, 20,
 };
 
 struct osm_protobufdb_context {
@@ -65,27 +63,25 @@ struct osm_protobufdb_context {
 
 static int osm_protobufdb_write_blob(OSMPBF__Blob *blob, FILE *out) {
     unsigned char lenb[4];
-    int len,blen;
+    int len, blen;
     unsigned char *buffer;
-    OSMPBF__BlobHeader header=OSMPBF__BLOB_HEADER__INIT;
+    OSMPBF__BlobHeader header = OSMPBF__BLOB_HEADER__INIT;
 
-
-
-    blen=osmpbf__blob__get_packed_size(blob);
-    header.type="OSMData";
-    header.datasize=blen;
-    len=osmpbf__blob_header__get_packed_size(&header);
-    buffer=alloca(len);
-    lenb[0]=len>>24;
-    lenb[1]=len>>16;
-    lenb[2]=len>>8;
-    lenb[3]=len;
+    blen = osmpbf__blob__get_packed_size(blob);
+    header.type = "OSMData";
+    header.datasize = blen;
+    len = osmpbf__blob_header__get_packed_size(&header);
+    buffer = alloca(len);
+    lenb[0] = len >> 24;
+    lenb[1] = len >> 16;
+    lenb[2] = len >> 8;
+    lenb[3] = len;
     osmpbf__blob_header__pack(&header, buffer);
     if (fwrite(lenb, sizeof(lenb), 1, out) != 1)
         return 0;
     if (fwrite(buffer, len, 1, out) != 1)
         return 0;
-    buffer=alloca(blen);
+    buffer = alloca(blen);
     osmpbf__blob__pack(blob, buffer);
     if (fwrite(buffer, blen, 1, out) != 1)
         return 0;
@@ -106,63 +102,64 @@ void dump_block(OSMPBF__PrimitiveBlock *pb) {
 #endif
 
 static int osm_protobufdb_finish_block(struct osm_protobufdb_context *ctx) {
-    OSMPBF__Blob *blob,empty_blob=OSMPBF__BLOB__INIT;
+    OSMPBF__Blob *blob, empty_blob = OSMPBF__BLOB__INIT;
     int len;
     if (!ctx->pb)
         return 0;
-    len=osmpbf__primitive_block__get_packed_size(ctx->pb);
+    len = osmpbf__primitive_block__get_packed_size(ctx->pb);
 
-    while  (ctx->current_block < ctx->active_block) {
+    while (ctx->current_block < ctx->active_block) {
         osm_protobufdb_write_blob(&empty_blob, ctx->f);
         ctx->current_block++;
     }
-    blob=g_malloc(sizeof(*blob));
-    *blob=empty_blob;
-    blob->has_raw=1;
-    blob->has_raw_size=1;
-    blob->raw.data=g_malloc(len);
+    blob = g_malloc(sizeof(*blob));
+    *blob = empty_blob;
+    blob->has_raw = 1;
+    blob->has_raw_size = 1;
+    blob->raw.data = g_malloc(len);
     osmpbf__primitive_block__pack(ctx->pb, blob->raw.data);
-    blob->raw.len=len;
-    blob->raw_size=len;
+    blob->raw.len = len;
+    blob->raw_size = len;
     osm_protobufdb_write_blob(blob, ctx->f);
     osmpbf__blob__free_unpacked(blob, NULL);
     osmpbf__primitive_block__free_unpacked(ctx->pb, NULL);
-    ctx->pb=NULL;
+    ctx->pb = NULL;
     ctx->current_block++;
     return 1;
 }
 
 static int osm_protobufdb_start_block(struct osm_protobufdb_context *ctx, int blocknum) {
-    OSMPBF__PrimitiveBlock pb=OSMPBF__PRIMITIVE_BLOCK__INIT;
-    OSMPBF__StringTable st=OSMPBF__STRING_TABLE__INIT;
+    OSMPBF__PrimitiveBlock pb = OSMPBF__PRIMITIVE_BLOCK__INIT;
+    OSMPBF__StringTable st = OSMPBF__STRING_TABLE__INIT;
     if (ctx->active_block == blocknum)
         return 0;
     osm_protobufdb_finish_block(ctx);
-    ctx->active_block=blocknum;
-    ctx->pb=g_malloc(sizeof(*ctx->pb));
-    *ctx->pb=pb;
-    ctx->pb->stringtable=g_malloc(sizeof(*ctx->pb->stringtable));
-    *ctx->pb->stringtable=st;
-    ctx->st=ctx->pb->stringtable;
+    ctx->active_block = blocknum;
+    ctx->pb = g_malloc(sizeof(*ctx->pb));
+    *ctx->pb = pb;
+    ctx->pb->stringtable = g_malloc(sizeof(*ctx->pb->stringtable));
+    *ctx->pb->stringtable = st;
+    ctx->st = ctx->pb->stringtable;
     return 1;
 }
 
 static int osm_protobufdb_start_group(struct osm_protobufdb_context *ctx, int groupnum) {
-    OSMPBF__PrimitiveGroup pg=OSMPBF__PRIMITIVE_GROUP__INIT;
+    OSMPBF__PrimitiveGroup pg = OSMPBF__PRIMITIVE_GROUP__INIT;
     if (ctx->pb->n_primitivegroup <= groupnum) {
-        ctx->pb->primitivegroup=g_realloc(ctx->pb->primitivegroup, (groupnum+1)*sizeof(ctx->pb->primitivegroup[0]));
+        ctx->pb->primitivegroup =
+            g_realloc(ctx->pb->primitivegroup, (groupnum + 1) * sizeof(ctx->pb->primitivegroup[0]));
         while (ctx->pb->n_primitivegroup <= groupnum) {
-            ctx->pb->primitivegroup[ctx->pb->n_primitivegroup]=g_malloc(sizeof(*context.pg));
-            *ctx->pb->primitivegroup[ctx->pb->n_primitivegroup++]=pg;
+            ctx->pb->primitivegroup[ctx->pb->n_primitivegroup] = g_malloc(sizeof(*context.pg));
+            *ctx->pb->primitivegroup[ctx->pb->n_primitivegroup++] = pg;
         }
         g_hash_table_destroy(ctx->string_hash);
-        ctx->string_hash=g_hash_table_new(g_str_hash, g_str_equal);
+        ctx->string_hash = g_hash_table_new(g_str_hash, g_str_equal);
     }
-    ctx->pg=ctx->pb->primitivegroup[groupnum];
+    ctx->pg = ctx->pb->primitivegroup[groupnum];
     if (!ctx->pg) {
-        ctx->pg=g_malloc(sizeof(*context.pg));
-        *ctx->pg=pg;
-        ctx->pb->primitivegroup[groupnum]=ctx->pg;
+        ctx->pg = g_malloc(sizeof(*context.pg));
+        *ctx->pg = pg;
+        ctx->pb->primitivegroup[groupnum] = ctx->pg;
     }
     return 1;
 }
@@ -193,15 +190,15 @@ static void osm_protobufdb_write_primitive_group(OSMPBF__PrimitiveGroup *pg, OSM
 }
 #endif
 
-
-#define insert(struct, member, pos) {\
-	int n=struct->n_##member; \
-	int s=sizeof(struct->member[0]); \
-	struct->member=g_realloc(struct->member, (n+1)*s); \
-	memmove(&struct->member[n+1], &struct->member[n], (pos-n)*s); \
-	memset(&struct->member[n], 0, s); \
-	struct->n_##member++;\
-}
+#define insert(struct, member, pos)                                                                                    \
+    {                                                                                                                  \
+        int n = struct->n_##member;                                                                                    \
+        int s = sizeof(struct->member[0]);                                                                             \
+        struct->member = g_realloc(struct->member, (n + 1) * s);                                                       \
+        memmove(&struct->member[n + 1], &struct->member[n], (pos - n) * s);                                            \
+        memset(&struct->member[n], 0, s);                                                                              \
+        struct->n_##member++;                                                                                          \
+    }
 
 #if 0
 static int osm_protobufdb_insert_densenode(long long id, OSMPBF__Node *offset, OSMPBF__Info *offseti,
@@ -265,124 +262,121 @@ static void osm_protobufdb_modify_densenode(OSMPBF__Node *node, OSMPBF__Info *in
 #endif
 
 static int osm_protobufdb_insert_node(long long id, OSMPBF__PrimitiveGroup *pg) {
-    int l,p;
-    OSMPBF__Node node=OSMPBF__NODE__INIT;
-    l=pg->n_nodes;
-    p=l;
+    int l, p;
+    OSMPBF__Node node = OSMPBF__NODE__INIT;
+    l = pg->n_nodes;
+    p = l;
     insert(pg, nodes, p);
-    pg->nodes[p]=g_malloc(sizeof(*pg->nodes[0]));
-    *pg->nodes[p]=node;
+    pg->nodes[p] = g_malloc(sizeof(*pg->nodes[0]));
+    *pg->nodes[p] = node;
     return p;
 }
 
 static void osm_protobufdb_modify_node(OSMPBF__Node *node, OSMPBF__Info *info, int pos, OSMPBF__PrimitiveGroup *pg) {
-    OSMPBF__Node *n=pg->nodes[pos];
+    OSMPBF__Node *n = pg->nodes[pos];
     OSMPBF__Info *old_info;
 
     g_free(n->keys);
     g_free(n->vals);
-    old_info=n->info;
-    *n=*node;
+    old_info = n->info;
+    *n = *node;
     if (!info) {
         if (old_info)
             osmpbf__info__free_unpacked(old_info, NULL);
-        n->info=NULL;
+        n->info = NULL;
     } else {
         if (old_info)
-            n->info=old_info;
+            n->info = old_info;
         else
-            n->info=g_malloc(sizeof(*info));
-        *n->info=*info;
+            n->info = g_malloc(sizeof(*info));
+        *n->info = *info;
     }
-
 }
 
 static int osm_protobufdb_insert_way(long long id, OSMPBF__PrimitiveGroup *pg) {
-    int l,p;
-    OSMPBF__Way way=OSMPBF__WAY__INIT;
-    l=pg->n_ways;
-    p=l;
+    int l, p;
+    OSMPBF__Way way = OSMPBF__WAY__INIT;
+    l = pg->n_ways;
+    p = l;
     insert(pg, ways, p);
-    pg->ways[p]=g_malloc(sizeof(*pg->ways[0]));
-    *pg->ways[p]=way;
+    pg->ways[p] = g_malloc(sizeof(*pg->ways[0]));
+    *pg->ways[p] = way;
     return p;
 }
 
 static void osm_protobufdb_modify_way(OSMPBF__Way *way, OSMPBF__Info *info, int pos, OSMPBF__PrimitiveGroup *pg) {
-    OSMPBF__Way *w=pg->ways[pos];
+    OSMPBF__Way *w = pg->ways[pos];
     OSMPBF__Info *old_info;
     int i;
-    long long ref=0;
+    long long ref = 0;
 
     g_free(w->keys);
     g_free(w->vals);
     g_free(w->refs);
-    old_info=w->info;
-    *w=*way;
-    for (i = 0 ; i < w->n_refs ; i++) {
-        w->refs[i]-=ref;
-        ref+=w->refs[i];
+    old_info = w->info;
+    *w = *way;
+    for (i = 0; i < w->n_refs; i++) {
+        w->refs[i] -= ref;
+        ref += w->refs[i];
     }
     if (!info) {
         if (old_info)
             osmpbf__info__free_unpacked(old_info, NULL);
-        w->info=NULL;
+        w->info = NULL;
     } else {
         if (old_info)
-            w->info=old_info;
+            w->info = old_info;
         else
-            w->info=g_malloc(sizeof(*info));
-        *w->info=*info;
+            w->info = g_malloc(sizeof(*info));
+        *w->info = *info;
     }
-
 }
 
 static int osm_protobufdb_insert_relation(long long id, OSMPBF__PrimitiveGroup *pg) {
-    int l,p;
-    OSMPBF__Relation relation=OSMPBF__RELATION__INIT;
-    l=pg->n_relations;
-    p=l;
+    int l, p;
+    OSMPBF__Relation relation = OSMPBF__RELATION__INIT;
+    l = pg->n_relations;
+    p = l;
     insert(pg, relations, p);
-    pg->relations[p]=g_malloc(sizeof(*pg->relations[0]));
-    *pg->relations[p]=relation;
+    pg->relations[p] = g_malloc(sizeof(*pg->relations[0]));
+    *pg->relations[p] = relation;
     return p;
 }
 
 static void osm_protobufdb_modify_relation(OSMPBF__Relation *relation, OSMPBF__Info *info, int pos,
-        OSMPBF__PrimitiveGroup *pg) {
-    OSMPBF__Relation *r=pg->relations[pos];
+                                           OSMPBF__PrimitiveGroup *pg) {
+    OSMPBF__Relation *r = pg->relations[pos];
     OSMPBF__Info *old_info;
     int i;
-    long long ref=0;
+    long long ref = 0;
 
     g_free(r->keys);
     g_free(r->vals);
     g_free(r->roles_sid);
     g_free(r->memids);
     g_free(r->types);
-    old_info=r->info;
-    *r=*relation;
-    for (i = 0 ; i < r->n_memids ; i++) {
-        r->memids[i]-=ref;
-        ref+=r->memids[i];
+    old_info = r->info;
+    *r = *relation;
+    for (i = 0; i < r->n_memids; i++) {
+        r->memids[i] -= ref;
+        ref += r->memids[i];
     }
     if (!info) {
         if (old_info)
             osmpbf__info__free_unpacked(old_info, NULL);
-        r->info=NULL;
+        r->info = NULL;
     } else {
         if (old_info)
-            r->info=old_info;
+            r->info = old_info;
         else
-            r->info=g_malloc(sizeof(*info));
-        *r->info=*info;
+            r->info = g_malloc(sizeof(*info));
+        *r->info = *info;
     }
-
 }
 
 static int osm_protobufdb_string(struct osm_protobufdb_context *ctx, char *str) {
     char *strd;
-    OSMPBF__StringTable *st=ctx->st;
+    OSMPBF__StringTable *st = ctx->st;
 
     gpointer value;
     assert(ctx->string_hash != NULL);
@@ -392,45 +386,43 @@ static int osm_protobufdb_string(struct osm_protobufdb_context *ctx, char *str) 
     if (!st->n_s) {
         st->n_s++;
     }
-    strd=g_strdup(str);
-    st->s=g_realloc(st->s, sizeof(st->s[0])*(st->n_s+1));
+    strd = g_strdup(str);
+    st->s = g_realloc(st->s, sizeof(st->s[0]) * (st->n_s + 1));
     if (st->n_s == 1) {
-        st->s[0].data=NULL;
-        st->s[0].len=0;
+        st->s[0].data = NULL;
+        st->s[0].len = 0;
     }
-    st->s[st->n_s].data=(unsigned char *)strd;
-    st->s[st->n_s].len=strlen(strd);
+    st->s[st->n_s].data = (unsigned char *)strd;
+    st->s[st->n_s].len = strlen(strd);
     g_hash_table_insert(ctx->string_hash, strd, (gpointer)st->n_s);
     return st->n_s++;
 }
-
 
 static int osm_protobufdb_finish_file(struct osm_protobufdb_context *ctx) {
     osm_protobufdb_finish_block(ctx);
     if (ctx->f) {
         fclose(ctx->f);
-        ctx->f=NULL;
+        ctx->f = NULL;
     }
-    ctx->current_file=-1;
+    ctx->current_file = -1;
     return 1;
 }
-
 
 static int osm_protobufdb_start_file(struct osm_protobufdb_context *ctx, int type, int num) {
     char name[1024];
     if (ctx->current_file == num)
         return 0;
     osm_protobufdb_finish_file(ctx);
-    sprintf(name,"tst/%d-%08d",type,num);
-    ctx->f=fopen(name,"w");
-    ctx->current_file=num;
-    ctx->current_block=0;
-    ctx->active_block=-1;
+    sprintf(name, "tst/%d-%08d", type, num);
+    ctx->f = fopen(name, "w");
+    ctx->current_file = num;
+    ctx->current_block = 0;
+    ctx->active_block = -1;
     return 1;
 }
 
 static void test(void) {
-    context.current_file=-1;
+    context.current_file = -1;
 }
 
 static void finish(void) {
@@ -439,11 +431,12 @@ static void finish(void) {
 
 static long long osm_protobufdb_timestamp(char *str) {
     struct tm tm;
-    int res=sscanf(str,"%d-%d-%dT%d:%d:%dZ",&tm.tm_year,&tm.tm_mon,&tm.tm_mday,&tm.tm_hour,&tm.tm_min,&tm.tm_sec);
+    int res =
+        sscanf(str, "%d-%d-%dT%d:%d:%dZ", &tm.tm_year, &tm.tm_mon, &tm.tm_mday, &tm.tm_hour, &tm.tm_min, &tm.tm_sec);
     if (res != 6)
         return 0;
-    tm.tm_year-=1900;
-    tm.tm_mon-=1;
+    tm.tm_year -= 1900;
+    tm.tm_mon -= 1;
 #if defined(HAVE_API_WIN32_BASE) || defined(ANDROID)
     return 0;
 #else
@@ -458,28 +451,28 @@ static void osm_protobufdb_parse_info(struct osm_protobufdb_context *ctx, char *
     char uid[1024];
     char timestamp[1024];
 
-    OSMPBF__Info *i=&ctx->i, ii=OSMPBF__INFO__INIT;
-    *i=ii;
+    OSMPBF__Info *i = &ctx->i, ii = OSMPBF__INFO__INIT;
+    *i = ii;
     if (osm_xml_get_attribute(str, "version", version, sizeof(version))) {
-        i->version=atoi(version);
-        i->has_version=1;
+        i->version = atoi(version);
+        i->has_version = 1;
     }
     if (osm_xml_get_attribute(str, "changeset", changeset, sizeof(changeset))) {
-        i->changeset=atoll(changeset);
-        i->has_changeset=1;
+        i->changeset = atoll(changeset);
+        i->has_changeset = 1;
     }
     if (osm_xml_get_attribute(str, "user", user, sizeof(user))) {
         osm_xml_decode_entities(user);
-        i->user_sid=osm_protobufdb_string(ctx, user);
-        i->has_user_sid=1;
+        i->user_sid = osm_protobufdb_string(ctx, user);
+        i->has_user_sid = 1;
     }
     if (osm_xml_get_attribute(str, "uid", uid, sizeof(uid))) {
-        i->uid=atoi(uid);
-        i->has_uid=1;
+        i->uid = atoi(uid);
+        i->has_uid = 1;
     }
     if (osm_xml_get_attribute(str, "timestamp", timestamp, sizeof(timestamp))) {
-        i->timestamp=osm_protobufdb_timestamp(timestamp);
-        i->has_timestamp=1;
+        i->timestamp = osm_protobufdb_timestamp(timestamp);
+        i->has_timestamp = 1;
     }
 }
 
@@ -487,105 +480,104 @@ static int osm_protobufdb_parse_node(struct osm_protobufdb_context *ctx, char *s
     char id[1024];
     char lat[1024];
     char lon[1024];
-    OSMPBF__Node *n=&ctx->n, ni=OSMPBF__NODE__INIT;
+    OSMPBF__Node *n = &ctx->n, ni = OSMPBF__NODE__INIT;
 
-    *n=ni;
+    *n = ni;
     if (!osm_xml_get_attribute(str, "id", id, sizeof(id)))
         return 0;
     if (!osm_xml_get_attribute(str, "lat", lat, sizeof(lat)))
         return 0;
     if (!osm_xml_get_attribute(str, "lon", lon, sizeof(lon)))
         return 0;
-    n->id=atoll(id);
-    n->lat=atof(lat)*latlon_scale+0.5;
-    n->lon=atof(lon)*latlon_scale+0.5;
-    int file=n->id/db_config.node_ids_per_file;
-    int fileo=n->id%db_config.node_ids_per_file;
-    int blob=fileo/db_config.node_ids_per_blob;
-    int blobo=fileo%db_config.node_ids_per_blob;
-    int group=blobo/db_config.node_ids_per_group;
+    n->id = atoll(id);
+    n->lat = atof(lat) * latlon_scale + 0.5;
+    n->lon = atof(lon) * latlon_scale + 0.5;
+    int file = n->id / db_config.node_ids_per_file;
+    int fileo = n->id % db_config.node_ids_per_file;
+    int blob = fileo / db_config.node_ids_per_blob;
+    int blobo = fileo % db_config.node_ids_per_blob;
+    int group = blobo / db_config.node_ids_per_group;
 
     osm_protobufdb_start_file(ctx, 1, file);
     osm_protobufdb_start_block(ctx, blob);
     osm_protobufdb_start_group(ctx, group);
     osm_protobufdb_parse_info(ctx, str);
-    ctx->in_node=1;
+    ctx->in_node = 1;
     return 1;
 }
 
 static int osm_protobufdb_end_node(struct osm_protobufdb_context *ctx) {
     int p;
-    p=osm_protobufdb_insert_node(ctx->n.id, ctx->pg);
+    p = osm_protobufdb_insert_node(ctx->n.id, ctx->pg);
     osm_protobufdb_modify_node(&ctx->n, &ctx->i, p, ctx->pg);
-    ctx->in_node=0;
+    ctx->in_node = 0;
     return 1;
 }
 
-
 static int osm_protobufdb_parse_way(struct osm_protobufdb_context *ctx, char *str) {
     char id[1024];
-    OSMPBF__Way *w=&ctx->w, wi=OSMPBF__WAY__INIT;
+    OSMPBF__Way *w = &ctx->w, wi = OSMPBF__WAY__INIT;
 
-    *w=wi;
+    *w = wi;
     if (!osm_xml_get_attribute(str, "id", id, sizeof(id)))
         return 0;
-    w->id=atoll(id);
-    int file=w->id/db_config.way_ids_per_file;
-    int fileo=w->id%db_config.way_ids_per_file;
-    int blob=fileo/db_config.way_ids_per_blob;
-    int blobo=fileo%db_config.way_ids_per_blob;
-    int group=blobo/db_config.way_ids_per_group;
+    w->id = atoll(id);
+    int file = w->id / db_config.way_ids_per_file;
+    int fileo = w->id % db_config.way_ids_per_file;
+    int blob = fileo / db_config.way_ids_per_blob;
+    int blobo = fileo % db_config.way_ids_per_blob;
+    int group = blobo / db_config.way_ids_per_group;
 
     osm_protobufdb_start_file(ctx, 2, file);
     osm_protobufdb_start_block(ctx, blob);
     osm_protobufdb_start_group(ctx, group);
     osm_protobufdb_parse_info(ctx, str);
-    ctx->in_way=1;
+    ctx->in_way = 1;
     return 1;
 }
 
 static int osm_protobufdb_end_way(struct osm_protobufdb_context *ctx) {
     int p;
-    p=osm_protobufdb_insert_way(ctx->w.id, ctx->pg);
+    p = osm_protobufdb_insert_way(ctx->w.id, ctx->pg);
     osm_protobufdb_modify_way(&ctx->w, &ctx->i, p, ctx->pg);
-    ctx->in_way=0;
+    ctx->in_way = 0;
     return 1;
 }
 
 static int osm_protobufdb_parse_relation(struct osm_protobufdb_context *ctx, char *str) {
     char id[1024];
-    OSMPBF__Relation *r=&ctx->r, ri=OSMPBF__RELATION__INIT;
+    OSMPBF__Relation *r = &ctx->r, ri = OSMPBF__RELATION__INIT;
 
-    *r=ri;
+    *r = ri;
     if (!osm_xml_get_attribute(str, "id", id, sizeof(id)))
         return 0;
-    r->id=atoll(id);
-    int file=r->id/db_config.relation_ids_per_file;
-    int fileo=r->id%db_config.relation_ids_per_file;
-    int blob=fileo/db_config.relation_ids_per_blob;
-    int blobo=fileo%db_config.relation_ids_per_blob;
-    int group=blobo/db_config.relation_ids_per_group;
+    r->id = atoll(id);
+    int file = r->id / db_config.relation_ids_per_file;
+    int fileo = r->id % db_config.relation_ids_per_file;
+    int blob = fileo / db_config.relation_ids_per_blob;
+    int blobo = fileo % db_config.relation_ids_per_blob;
+    int group = blobo / db_config.relation_ids_per_group;
 
     osm_protobufdb_start_file(ctx, 3, file);
     osm_protobufdb_start_block(ctx, blob);
     osm_protobufdb_start_group(ctx, group);
     osm_protobufdb_parse_info(ctx, str);
-    ctx->in_relation=1;
+    ctx->in_relation = 1;
     return 1;
 }
 
 static int osm_protobufdb_end_relation(struct osm_protobufdb_context *ctx) {
     int p;
-    p=osm_protobufdb_insert_relation(ctx->r.id, ctx->pg);
+    p = osm_protobufdb_insert_relation(ctx->r.id, ctx->pg);
     osm_protobufdb_modify_relation(&ctx->r, &ctx->i, p, ctx->pg);
-    ctx->in_node=0;
+    ctx->in_node = 0;
     return 1;
 }
 
 static int osm_protobufdb_parse_tag(struct osm_protobufdb_context *ctx, char *str) {
-    OSMPBF__Node *n=&ctx->n;
-    OSMPBF__Way *w=&ctx->w;
-    OSMPBF__Relation *r=&ctx->r;
+    OSMPBF__Node *n = &ctx->n;
+    OSMPBF__Way *w = &ctx->w;
+    OSMPBF__Relation *r = &ctx->r;
     char k_buffer[BUFFER_SIZE];
     char v_buffer[BUFFER_SIZE];
     if (!osm_xml_get_attribute(str, "k", k_buffer, BUFFER_SIZE))
@@ -594,119 +586,117 @@ static int osm_protobufdb_parse_tag(struct osm_protobufdb_context *ctx, char *st
         return 0;
     osm_xml_decode_entities(v_buffer);
     if (ctx->in_node) {
-        n->keys=g_realloc(n->keys, (n->n_keys+1)*sizeof(n->keys[0]));
-        n->vals=g_realloc(n->vals, (n->n_vals+1)*sizeof(n->vals[0]));
-        n->keys[n->n_keys++]=osm_protobufdb_string(ctx, k_buffer);
-        n->vals[n->n_vals++]=osm_protobufdb_string(ctx, v_buffer);
+        n->keys = g_realloc(n->keys, (n->n_keys + 1) * sizeof(n->keys[0]));
+        n->vals = g_realloc(n->vals, (n->n_vals + 1) * sizeof(n->vals[0]));
+        n->keys[n->n_keys++] = osm_protobufdb_string(ctx, k_buffer);
+        n->vals[n->n_vals++] = osm_protobufdb_string(ctx, v_buffer);
     }
     if (ctx->in_way) {
-        w->keys=g_realloc(w->keys, (w->n_keys+1)*sizeof(w->keys[0]));
-        w->vals=g_realloc(w->vals, (w->n_vals+1)*sizeof(w->vals[0]));
-        w->keys[w->n_keys++]=osm_protobufdb_string(ctx, k_buffer);
-        w->vals[w->n_vals++]=osm_protobufdb_string(ctx, v_buffer);
+        w->keys = g_realloc(w->keys, (w->n_keys + 1) * sizeof(w->keys[0]));
+        w->vals = g_realloc(w->vals, (w->n_vals + 1) * sizeof(w->vals[0]));
+        w->keys[w->n_keys++] = osm_protobufdb_string(ctx, k_buffer);
+        w->vals[w->n_vals++] = osm_protobufdb_string(ctx, v_buffer);
     }
     if (ctx->in_relation) {
-        r->keys=g_realloc(r->keys, (r->n_keys+1)*sizeof(r->keys[0]));
-        r->vals=g_realloc(r->vals, (r->n_vals+1)*sizeof(r->vals[0]));
-        r->keys[r->n_keys++]=osm_protobufdb_string(ctx, k_buffer);
-        r->vals[r->n_vals++]=osm_protobufdb_string(ctx, v_buffer);
+        r->keys = g_realloc(r->keys, (r->n_keys + 1) * sizeof(r->keys[0]));
+        r->vals = g_realloc(r->vals, (r->n_vals + 1) * sizeof(r->vals[0]));
+        r->keys[r->n_keys++] = osm_protobufdb_string(ctx, k_buffer);
+        r->vals[r->n_vals++] = osm_protobufdb_string(ctx, v_buffer);
     }
     return 1;
 }
 
 static int osm_protobufdb_parse_nd(struct osm_protobufdb_context *ctx, char *str) {
-    OSMPBF__Way *w=&ctx->w;
+    OSMPBF__Way *w = &ctx->w;
     char ref_buffer[BUFFER_SIZE];
     if (!osm_xml_get_attribute(str, "ref", ref_buffer, BUFFER_SIZE))
         return 0;
     if (ctx->in_way) {
-        w->refs=g_realloc(w->refs, (w->n_refs+1)*sizeof(w->refs[0]));
-        w->refs[w->n_refs++]=atoll(ref_buffer);
+        w->refs = g_realloc(w->refs, (w->n_refs + 1) * sizeof(w->refs[0]));
+        w->refs[w->n_refs++] = atoll(ref_buffer);
     }
     return 1;
 }
 
 static int osm_protobufdb_parse_member(struct osm_protobufdb_context *ctx, char *str) {
-    OSMPBF__Relation *r=&ctx->r;
+    OSMPBF__Relation *r = &ctx->r;
     char type_buffer[BUFFER_SIZE];
     char ref_buffer[BUFFER_SIZE];
     char role_buffer[BUFFER_SIZE];
-    int type=0;
+    int type = 0;
     if (!osm_xml_get_attribute(str, "type", type_buffer, BUFFER_SIZE))
         return 0;
     if (!osm_xml_get_attribute(str, "ref", ref_buffer, BUFFER_SIZE))
         return 0;
     if (!osm_xml_get_attribute(str, "role", role_buffer, BUFFER_SIZE))
         return 0;
-    if (!g_strcmp0(type_buffer,"node"))
-        type=0;
-    else if (!g_strcmp0(type_buffer,"way"))
-        type=1;
-    else if (!g_strcmp0(type_buffer,"relation"))
-        type=2;
+    if (!g_strcmp0(type_buffer, "node"))
+        type = 0;
+    else if (!g_strcmp0(type_buffer, "way"))
+        type = 1;
+    else if (!g_strcmp0(type_buffer, "relation"))
+        type = 2;
     if (ctx->in_relation) {
-        r->roles_sid=g_realloc(r->roles_sid, (r->n_roles_sid+1)*sizeof(r->roles_sid[0]));
-        r->roles_sid[r->n_roles_sid++]=osm_protobufdb_string(ctx, role_buffer);
-        r->memids=g_realloc(r->memids, (r->n_memids+1)*sizeof(r->memids[0]));
-        r->memids[r->n_memids++]=atoll(ref_buffer);
-        r->types=g_realloc(r->types, (r->n_types+1)*sizeof(r->types[0]));
-        r->types[r->n_types++]=type;
+        r->roles_sid = g_realloc(r->roles_sid, (r->n_roles_sid + 1) * sizeof(r->roles_sid[0]));
+        r->roles_sid[r->n_roles_sid++] = osm_protobufdb_string(ctx, role_buffer);
+        r->memids = g_realloc(r->memids, (r->n_memids + 1) * sizeof(r->memids[0]));
+        r->memids[r->n_memids++] = atoll(ref_buffer);
+        r->types = g_realloc(r->types, (r->n_types + 1) * sizeof(r->types[0]));
+        r->types[r->n_types++] = type;
     }
     return 1;
 }
 
-
-
 int osm_protobufdb_load(FILE *in, char *dir) {
-    int size=BUFFER_SIZE;
+    int size = BUFFER_SIZE;
     char buffer[size];
     char *p;
     sig_alrm(0);
     test();
     while (fgets(buffer, size, in)) {
-        int closed=strstr(buffer,"/>")?1:0;
-        p=strchr(buffer,'<');
-        if (! p) {
-            fprintf(stderr,"WARNING: wrong line %s\n", buffer);
+        int closed = strstr(buffer, "/>") ? 1 : 0;
+        p = strchr(buffer, '<');
+        if (!p) {
+            fprintf(stderr, "WARNING: wrong line %s\n", buffer);
             continue;
         }
-        if (!strncmp(p, "<?xml ",6)) {
-        } else if (!strncmp(p, "<osm ",5)) {
-        } else if (!strncmp(p, "<bound ",7)) {
-        } else if (!strncmp(p, "<node ",6)) {
+        if (!strncmp(p, "<?xml ", 6)) {
+        } else if (!strncmp(p, "<osm ", 5)) {
+        } else if (!strncmp(p, "<bound ", 7)) {
+        } else if (!strncmp(p, "<node ", 6)) {
             if (!osm_protobufdb_parse_node(&context, p))
-                fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
+                fprintf(stderr, "WARNING: failed to parse %s\n", buffer);
             if (closed)
                 osm_protobufdb_end_node(&context);
             processed_nodes++;
-        } else if (!strncmp(p, "<tag ",5)) {
+        } else if (!strncmp(p, "<tag ", 5)) {
             if (!osm_protobufdb_parse_tag(&context, p))
-                fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
-        } else if (!strncmp(p, "<way ",5)) {
+                fprintf(stderr, "WARNING: failed to parse %s\n", buffer);
+        } else if (!strncmp(p, "<way ", 5)) {
             if (!osm_protobufdb_parse_way(&context, p))
-                fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
+                fprintf(stderr, "WARNING: failed to parse %s\n", buffer);
             if (closed)
                 osm_protobufdb_end_way(&context);
             processed_ways++;
-        } else if (!strncmp(p, "<nd ",4)) {
+        } else if (!strncmp(p, "<nd ", 4)) {
             if (!osm_protobufdb_parse_nd(&context, p))
-                fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
-        } else if (!strncmp(p, "<relation ",10)) {
+                fprintf(stderr, "WARNING: failed to parse %s\n", buffer);
+        } else if (!strncmp(p, "<relation ", 10)) {
             if (!osm_protobufdb_parse_relation(&context, p))
-                fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
+                fprintf(stderr, "WARNING: failed to parse %s\n", buffer);
             processed_relations++;
-        } else if (!strncmp(p, "<member ",8)) {
+        } else if (!strncmp(p, "<member ", 8)) {
             if (!osm_protobufdb_parse_member(&context, p))
-                fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
-        } else if (!strncmp(p, "</node>",7)) {
+                fprintf(stderr, "WARNING: failed to parse %s\n", buffer);
+        } else if (!strncmp(p, "</node>", 7)) {
             osm_protobufdb_end_node(&context);
-        } else if (!strncmp(p, "</way>",6)) {
+        } else if (!strncmp(p, "</way>", 6)) {
             osm_protobufdb_end_way(&context);
-        } else if (!strncmp(p, "</relation>",11)) {
+        } else if (!strncmp(p, "</relation>", 11)) {
             osm_protobufdb_end_relation(&context);
-        } else if (!strncmp(p, "</osm>",6)) {
+        } else if (!strncmp(p, "</osm>", 6)) {
         } else {
-            fprintf(stderr,"WARNING: unknown tag in %s\n", buffer);
+            fprintf(stderr, "WARNING: unknown tag in %s\n", buffer);
         }
     }
     finish();

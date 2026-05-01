@@ -233,7 +233,7 @@ public class Navit extends Activity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface arg0, int arg1) {
                             Log.d(TAG, "user wants more info, show the website");
-                            String url = "http://wiki.navit-project.org/index.php/Navit_on_Android";
+                            String url = "https://navit.readthedocs.io/en/latest/user/platforms/maintained/android.html";
                             Intent i = new Intent(Intent.ACTION_VIEW);
                             i.setData(Uri.parse(url));
                             startActivity(i);
@@ -373,7 +373,7 @@ public class Navit extends Activity {
             } else if (naviScheme.equals("geo")
                     && intent.getAction().equals("android.intent.action.VIEW")) {
                 invokeCallbackOnGeo(intent.getData().getSchemeSpecificPart(),
-                        NavitCallbackHandler.MsgType.CLB_SET_DESTINATION, "");
+                        NavitCallbackHandler.MsgType.CLB_COORD_ACTIONS, "");
             }
         }
     }
@@ -405,7 +405,7 @@ public class Navit extends Activity {
 
     private void buildNotification() {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        PendingIntent appIntent = PendingIntent.getActivity(getApplicationContext(), 0, getIntent(), 0);
+        PendingIntent appIntent = PendingIntent.getActivity(getApplicationContext(), 0, getIntent(), PendingIntent.FLAG_MUTABLE);
 
         Notification navitNotification;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

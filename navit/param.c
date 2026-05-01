@@ -17,26 +17,25 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include "param.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 void param_add_string(const char *name, const char *value, struct param_list **param, int *count) {
     char *param_name;
     char *param_value;
     if (*count > 0) {
-        param_name=malloc(strlen(value)+strlen(name)+2);
-        param_value=param_name+strlen(name)+1;
+        param_name = malloc(strlen(value) + strlen(name) + 2);
+        param_value = param_name + strlen(name) + 1;
         strcpy(param_name, name);
         strcpy(param_value, value);
-        (*param)->name=param_name;
-        (*param)->value=param_value;
+        (*param)->name = param_name;
+        (*param)->value = param_value;
 
         (*count)--;
         (*param)++;
     }
-
 }
 
 void param_add_dec(const char *name, unsigned long value, struct param_list **param, int *count) {
@@ -44,7 +43,6 @@ void param_add_dec(const char *name, unsigned long value, struct param_list **pa
     sprintf(buffer, "%ld", value);
     param_add_string(name, buffer, param, count);
 }
-
 
 void param_add_hex(const char *name, unsigned long value, struct param_list **param, int *count) {
     char buffer[1024];

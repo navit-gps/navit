@@ -25,30 +25,31 @@
  * This plugin receives TraFF feeds via Android broadcasts and content providers.
  */
 
+#include "config.h"
+
+#include "android.h"
+#include "attr.h"
+#include "callback.h"
+#include "coord.h"
+#include "debug.h"
+#include "glib_slice.h"
+#include "item.h"
+#include "map.h"
+#include "navit.h"
+#include "plugin.h"
+#include "route.h"
+#include "route_protected.h"
+#include "traffic.h"
+#include "transform.h"
+#include "util.h"
+#include "vehicle.h"
+#include "xmlconfig.h"
 #include <string.h>
 #include <time.h>
 
 #ifdef _POSIX_C_SOURCE
-#include <sys/types.h>
+#    include <sys/types.h>
 #endif
-#include "glib_slice.h"
-#include "config.h"
-#include "item.h"
-#include "attr.h"
-#include "coord.h"
-#include "map.h"
-#include "route_protected.h"
-#include "route.h"
-#include "transform.h"
-#include "xmlconfig.h"
-#include "android.h"
-#include "traffic.h"
-#include "plugin.h"
-#include "callback.h"
-#include "vehicle.h"
-#include "debug.h"
-#include "navit.h"
-#include "util.h"
 
 /**
  * @brief Minimum area around the current position for which to retrieve traffic updates.
@@ -66,27 +67,27 @@
  * @brief Stores information about the plugin instance.
  */
 struct traffic_priv {
-    struct navit * nav;         /**< The navit instance */
-    struct callback * cbid;     /**< The callback function for TraFF feeds **/
-    int position_valid;         /**< Whether Navit currently has a valid position */
-    struct coord_rect * position_rect; /**< Rectangle around last known vehicle position (in `projection_mg`) */
-    struct map_selection * route_map_sel; /**< Map selection for the current route */
-    jclass NavitTraffClass;     /**< The `NavitTraff` class */
-    jobject NavitTraff;         /**< An instance of `NavitTraff` */
+    struct navit *nav;                   /**< The navit instance */
+    struct callback *cbid;               /**< The callback function for TraFF feeds **/
+    int position_valid;                  /**< Whether Navit currently has a valid position */
+    struct coord_rect *position_rect;    /**< Rectangle around last known vehicle position (in `projection_mg`) */
+    struct map_selection *route_map_sel; /**< Map selection for the current route */
+    jclass NavitTraffClass;              /**< The `NavitTraff` class */
+    jobject NavitTraff;                  /**< An instance of `NavitTraff` */
 };
 
-void traffic_traff_android_destroy(struct traffic_priv * this_);
-struct traffic_message ** traffic_traff_android_get_messages(struct traffic_priv * this_);
+void traffic_traff_android_destroy(struct traffic_priv *this_);
+struct traffic_message **traffic_traff_android_get_messages(struct traffic_priv *this_);
 
 /**
  * @brief Destructor.
  */
-void traffic_traff_android_destroy(struct traffic_priv * this_) {
+void traffic_traff_android_destroy(struct traffic_priv *this_) {
     jmethodID cid;
 
     cid = (*jnienv)->GetMethodID(jnienv, this_->NavitTraffClass, "close", "()V");
     if (cid == NULL) {
-        dbg(lvl_error,"no method found");
+        dbg(lvl_error, "no method found");
         return; /* exception thrown */
     }
     (*jnienv)->CallVoidMethod(jnienv, this_->NavitTraff, cid);
@@ -104,7 +105,7 @@ void traffic_traff_android_destroy(struct traffic_priv * this_) {
  *
  * @return Always `NULL`
  */
-struct traffic_message ** traffic_traff_android_get_messages(struct traffic_priv * this_) {
+struct traffic_message **traffic_traff_android_get_messages(struct traffic_priv *this_) {
     return NULL;
 }
 
@@ -116,24 +117,23 @@ static struct traffic_methods traffic_traff_android_meth = {
     traffic_traff_android_destroy,
 };
 
-
 /**
  * @brief Called when a new TraFF feed is received.
  *
  * @param this_ Private data for the module instance
  * @param feed Feed data in string form
  */
-static void traffic_traff_android_on_feed_received(struct traffic_priv * this_, char * feed) {
-    struct attr * attr;
-    struct attr_iter * a_iter;
-    struct traffic * traffic = NULL;
-    struct traffic_message ** messages;
+static void traffic_traff_android_on_feed_received(struct traffic_priv *this_, char *feed) {
+    struct attr *attr;
+    struct attr_iter *a_iter;
+    struct traffic *traffic = NULL;
+    struct traffic_message **messages;
 
     dbg(lvl_debug, "enter");
     attr = g_new0(struct attr, 1);
     a_iter = navit_attr_iter_new(NULL);
     if (navit_get_attr(this_->nav, attr_traffic, attr, a_iter))
-        traffic = (struct traffic *) attr->u.navit_object;
+        traffic = (struct traffic *)attr->u.navit_object;
     navit_attr_iter_destroy(a_iter);
     g_free(attr);
 
@@ -151,14 +151,13 @@ static void traffic_traff_android_on_feed_received(struct traffic_priv * this_, 
     }
 }
 
-
 /**
  * @brief Sets the route map selection
  *
  * @param this_ The instance which will handle the selection update
  */
-static void traffic_traff_android_set_selection(struct traffic_priv * this_) {
-    struct route * route;
+static void traffic_traff_android_set_selection(struct traffic_priv *this_) {
+    struct route *route;
     struct coord_geo lu, rl;
     gchar *filter_list;
     jstring j_filter_list;
@@ -176,18 +175,19 @@ static void traffic_traff_android_set_selection(struct traffic_priv * this_) {
     if (this_->position_rect) {
         transform_to_geo(projection_mg, &this_->position_rect->lu, &lu);
         transform_to_geo(projection_mg, &this_->position_rect->rl, &rl);
-        filter_list = g_strconcat_printf(filter_list, "    <filter bbox=\"%.5f %.5f %.5f %.5f\"/>\n",
-                                         rl.lat, lu.lng, lu.lat, rl.lng);
+        filter_list = g_strconcat_printf(filter_list, "    <filter bbox=\"%.5f %.5f %.5f %.5f\"/>\n", rl.lat, lu.lng,
+                                         lu.lat, rl.lng);
     }
-    for (struct map_selection * sel = this_->route_map_sel; sel; sel = sel->next) {
+    for (struct map_selection *sel = this_->route_map_sel; sel; sel = sel->next) {
         transform_to_geo(projection_mg, &sel->u.c_rect.lu, &lu);
         transform_to_geo(projection_mg, &sel->u.c_rect.rl, &rl);
         min_road_class = order_to_min_road_class(sel->order);
         if (!min_road_class)
-            filter_list = g_strconcat_printf(filter_list, "    <filter bbox=\"%.5f %.5f %.5f %.5f\"/>\n",
-                                             rl.lat, lu.lng, lu.lat, rl.lng);
+            filter_list = g_strconcat_printf(filter_list, "    <filter bbox=\"%.5f %.5f %.5f %.5f\"/>\n", rl.lat,
+                                             lu.lng, lu.lat, rl.lng);
         else
-            filter_list = g_strconcat_printf(filter_list, "    <filter min_road_class=\"%s\" bbox=\"%.5f %.5f %.5f %.5f\"/>\n",
+            filter_list = g_strconcat_printf(filter_list,
+                                             "    <filter min_road_class=\"%s\" bbox=\"%.5f %.5f %.5f %.5f\"/>\n",
                                              min_road_class, rl.lat, lu.lng, lu.lat, rl.lng);
     }
     /* the trailing \0 is required for NewStringUTF */
@@ -199,16 +199,14 @@ static void traffic_traff_android_set_selection(struct traffic_priv * this_) {
     g_free(filter_list);
 }
 
-
 /**
  * @brief Callback for destination changes
  *
  * @param this_ The instance which will handle the destination update
  */
-static void traffic_traff_android_destination_callback(struct traffic_priv * this_) {
+static void traffic_traff_android_destination_callback(struct traffic_priv *this_) {
     traffic_traff_android_set_selection(this_);
 }
-
 
 /**
  * @brief Callback for navigation status changes
@@ -220,7 +218,7 @@ static void traffic_traff_android_destination_callback(struct traffic_priv * thi
  * @param this_ The instance which will handle the navigation status update
  * @param status The status of the navigation engine (the value of the {@code nav_status} attribute)
  */
-static void traffic_traff_android_status_callback(struct traffic_priv * this_, int status) {
+static void traffic_traff_android_status_callback(struct traffic_priv *this_, int status) {
     int new_position_valid = (status != 1);
     if (new_position_valid && !this_->position_valid) {
         this_->position_valid = new_position_valid;
@@ -228,7 +226,6 @@ static void traffic_traff_android_status_callback(struct traffic_priv * this_, i
     } else if (new_position_valid != this_->position_valid)
         this_->position_valid = new_position_valid;
 }
-
 
 /**
  * @brief Callback for position changes
@@ -242,8 +239,8 @@ static void traffic_traff_android_status_callback(struct traffic_priv * this_, i
  * @param navit The Navit instance
  * @param vehicle The vehicle which delivered the position update and from which the position can be queried
  */
-static void traffic_traff_android_position_callback(struct traffic_priv * this_, struct navit *navit,
-        struct vehicle *vehicle) {
+static void traffic_traff_android_position_callback(struct traffic_priv *this_, struct navit *navit,
+                                                    struct vehicle *vehicle) {
     struct attr attr;
     struct coord c;
     struct coord_rect cr;
@@ -269,28 +266,26 @@ static void traffic_traff_android_position_callback(struct traffic_priv * this_,
     }
 }
 
-
 /**
  * @brief Initializes a traff_android plugin
  *
  * @return True on success, false on failure
  */
-static int traffic_traff_android_init(struct traffic_priv * this_) {
+static int traffic_traff_android_init(struct traffic_priv *this_) {
     jmethodID cid;
-    struct route * route;
+    struct route *route;
     struct attr attr;
-    struct navigation * navigation;
+    struct navigation *navigation;
 
     if (!android_find_class_global("org/navitproject/navit/NavitTraff", &this_->NavitTraffClass))
         return 0;
     cid = (*jnienv)->GetMethodID(jnienv, this_->NavitTraffClass, "<init>", "(Landroid/content/Context;J)V");
     if (cid == NULL) {
-        dbg(lvl_error,"no method found");
+        dbg(lvl_error, "no method found");
         return 0; /* exception thrown */
     }
-    this_->NavitTraff=(*jnienv)->NewObject(jnienv, this_->NavitTraffClass, cid, android_activity,
-                                           (jlong) this_->cbid);
-    dbg(lvl_debug,"result=%p", this_->NavitTraff);
+    this_->NavitTraff = (*jnienv)->NewObject(jnienv, this_->NavitTraffClass, cid, android_activity, (jlong)this_->cbid);
+    dbg(lvl_debug, "result=%p", this_->NavitTraff);
     if (!this_->NavitTraff)
         return 0;
     if (this_->NavitTraff)
@@ -298,16 +293,16 @@ static int traffic_traff_android_init(struct traffic_priv * this_) {
 
     /* register callbacks for position and destination changes */
     navit_add_callback(this_->nav, callback_new_attr_1(callback_cast(traffic_traff_android_position_callback),
-                       attr_position_coord_geo, this_));
+                                                       attr_position_coord_geo, this_));
     navit_add_callback(this_->nav, callback_new_attr_1(callback_cast(traffic_traff_android_destination_callback),
-                       attr_destination, this_));
+                                                       attr_destination, this_));
     if ((navigation = navit_get_navigation(this_->nav)))
-        navigation_register_callback(navigation, attr_nav_status,
-                                     callback_new_attr_1(callback_cast(traffic_traff_android_status_callback), attr_nav_status, this_));
+        navigation_register_callback(
+            navigation, attr_nav_status,
+            callback_new_attr_1(callback_cast(traffic_traff_android_status_callback), attr_nav_status, this_));
 
     return 1;
 }
-
 
 /**
  * @brief Registers a new traff_android traffic plugin
@@ -319,8 +314,8 @@ static int traffic_traff_android_init(struct traffic_priv * this_) {
  *
  * @return A pointer to a `traffic_priv` structure for the plugin instance
  */
-static struct traffic_priv * traffic_traff_android_new(struct navit *nav, struct traffic_methods *meth,
-        struct attr **attrs, struct callback_list *cbl) {
+static struct traffic_priv *traffic_traff_android_new(struct navit *nav, struct traffic_methods *meth,
+                                                      struct attr **attrs, struct callback_list *cbl) {
     struct traffic_priv *ret;
 
     dbg(lvl_debug, "enter");

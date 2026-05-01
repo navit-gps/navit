@@ -33,7 +33,6 @@ extern "C" {
 #include "command.h"
 #include "config.h"
 #include "coord.h"
-#include "coord.h"
 #include "country.h"
 #include "debug.h"
 #include "event.h"
@@ -58,36 +57,36 @@ extern "C" {
 }
 struct gui_priv {
     /* navit internal handle */
-    struct navit* nav;
+    struct navit *nav;
     /* gui handle */
-    struct gui* gui;
+    struct gui *gui;
 
     /* attributes given to us */
     struct attr attributes;
 
     /* list of callbacks to navit */
-    struct callback_list* callbacks;
+    struct callback_list *callbacks;
     /* own callbacks *
      * TODO: Why do we need them as members? */
-    struct callback* button_cb;
-    struct callback* motion_cb;
-    struct callback* resize_cb;
-    struct callback* keypress_cb;
-    struct callback* window_closed_cb;
+    struct callback *button_cb;
+    struct callback *motion_cb;
+    struct callback *resize_cb;
+    struct callback *keypress_cb;
+    struct callback *window_closed_cb;
 
     /* current graphics */
-    struct graphics* gra;
+    struct graphics *gra;
     /* root window */
-    struct window* win;
+    struct window *win;
     /* navit root widget dimesnions */
     int w;
     int h;
 
     /* Qt application instance */
-    QQmlApplicationEngine* engine;
-    QObject* loader; /* Loader QML component to load our QML parts to the QML engine */
+    QQmlApplicationEngine *engine;
+    QObject *loader; /* Loader QML component to load our QML parts to the QML engine */
 
-    class Backend* backend;
+    class Backend *backend;
 
     /* configuration */
     int menu_on_map_click;
@@ -95,8 +94,8 @@ struct gui_priv {
 
 #include "backend.h"
 
-static void gui_qt5_qml_button(void* data, int pressed, int button, struct point* p) {
-    struct gui_priv* gui_priv = (struct gui_priv*)data;
+static void gui_qt5_qml_button(void *data, int pressed, int button, struct point *p) {
+    struct gui_priv *gui_priv = (struct gui_priv *)data;
 
     /* check if navit wants to handle this */
     if (!navit_handle_button(gui_priv->nav, pressed, button, p, NULL)) {
@@ -113,22 +112,22 @@ static void gui_qt5_qml_button(void* data, int pressed, int button, struct point
     }
 }
 
-static void gui_qt5_qml_motion(void* data, struct point* p) {
-    struct gui_priv* gui_priv = (struct gui_priv*)data;
+static void gui_qt5_qml_motion(void *data, struct point *p) {
+    struct gui_priv *gui_priv = (struct gui_priv *)data;
     dbg(lvl_debug, "enter (%d, %d)", p->x, p->y);
     /* forward this to navit  */
     navit_handle_motion(gui_priv->nav, p);
 }
 
-static void gui_qt5_qml_resize(void* data, int w, int h) {
-    struct gui_priv* gui_priv = (struct gui_priv*)data;
+static void gui_qt5_qml_resize(void *data, int w, int h) {
+    struct gui_priv *gui_priv = (struct gui_priv *)data;
     dbg(lvl_debug, "enter");
     /* forward this to navit */
     navit_handle_resize(gui_priv->nav, w, h);
 }
 
-static void gui_qml_keypress(void* data, char* key) {
-    struct gui_priv* this_ = (struct gui_priv*)data;
+static void gui_qml_keypress(void *data, char *key) {
+    struct gui_priv *this_ = (struct gui_priv *)data;
     int w, h;
     struct point p;
     transform_get_size(navit_get_trans(this_->nav), &w, &h);
@@ -171,8 +170,8 @@ static void gui_qml_keypress(void* data, char* key) {
     return;
 }
 
-static int gui_qt5_qml_set_graphics(struct gui_priv* gui_priv, struct graphics* gra) {
-    struct transformation* trans;
+static int gui_qt5_qml_set_graphics(struct gui_priv *gui_priv, struct graphics *gra) {
+    struct transformation *trans;
     dbg(lvl_debug, "enter");
 
     /* get navit transition */
@@ -200,14 +199,14 @@ static int gui_qt5_qml_set_graphics(struct gui_priv* gui_priv, struct graphics* 
     graphics_add_callback(gra, gui_priv->resize_cb);
 
     /* get main navit window */
-    gui_priv->win = (struct window*)graphics_get_data(gra, "window");
+    gui_priv->win = (struct window *)graphics_get_data(gra, "window");
     if (!gui_priv->win) {
         dbg(lvl_error, "failed to obtain window from graphics plugin, cannot set graphics");
         return 1;
     }
 
     /* expect to have qt5 graphics. So get the qml engine prepared by graphics */
-    gui_priv->engine = (QQmlApplicationEngine*)graphics_get_data(gra, "engine");
+    gui_priv->engine = (QQmlApplicationEngine *)graphics_get_data(gra, "engine");
     if (gui_priv->engine == NULL) {
         dbg(lvl_error, "Graphics doesn't seem to be qt5, or doesn't have QML. Cannot set graphics");
         return 1;
@@ -221,7 +220,7 @@ static int gui_qt5_qml_set_graphics(struct gui_priv* gui_priv, struct graphics* 
     // gui_priv->engine->rootContext()->setContextProperty("myModel", QVariant::fromValue(dataList));
 
     /* find the loader component */
-    gui_priv->loader = gui_priv->engine->rootObjects().value(0)->findChild<QObject*>("navit_loader");
+    gui_priv->loader = gui_priv->engine->rootObjects().value(0)->findChild<QObject *>("navit_loader");
     if (gui_priv->loader != NULL) {
         dbg(lvl_debug, "navit_loader found");
         /* load our root window into the loader component */
@@ -241,12 +240,12 @@ static int gui_qt5_qml_set_graphics(struct gui_priv* gui_priv, struct graphics* 
     return 0;
 }
 
-static int gui_qt5_qml_get_attr(struct gui_priv* gui_priv, enum attr_type type, struct attr* attr) {
+static int gui_qt5_qml_get_attr(struct gui_priv *gui_priv, enum attr_type type, struct attr *attr) {
     dbg(lvl_debug, "enter");
     return 1;
 }
 
-static int gui_qt5_qml_set_attr(struct gui_priv* gui_priv, struct attr* attr) {
+static int gui_qt5_qml_set_attr(struct gui_priv *gui_priv, struct attr *attr) {
     dbg(lvl_debug, "enter");
     return 1;
 }
@@ -258,16 +257,17 @@ struct gui_methods gui_qt5_qml_methods = {
     NULL,
     NULL,
     NULL,
+    NULL,  // gui_qt5_qml_show_coord_actions
     NULL,
     gui_qt5_qml_get_attr,
     NULL,
     gui_qt5_qml_set_attr,
 };
 
-static struct gui_priv* gui_qt5_qml_new(struct navit* nav, struct gui_methods* meth, struct attr** attrs,
-                                        struct gui* gui) {
-    struct gui_priv* gui_priv;
-    struct attr* attr;
+static struct gui_priv *gui_qt5_qml_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs,
+                                        struct gui *gui) {
+    struct gui_priv *gui_priv;
+    struct attr *attr;
 
     dbg(lvl_debug, "enter");
 

@@ -25,13 +25,13 @@
 #define NAVIT_BINDING_W32_VERSION 1
 
 struct navit_binding_w32_msg {
-	/* Structure version number, should be equal to NAVIT_BINDING_W32_VERSION */
-	int version;
-	/* Magic code to filter out packets directed to other applications and [mistakely] sent to us or broadcasted.
-	 * should be equal to NAVIT_BINDING_W32_MAGIC  */
-	char magic[6];
-	/* Command to be executed by Navit */
-	char text[1];
+    /* Structure version number, should be equal to NAVIT_BINDING_W32_VERSION */
+    int version;
+    /* Magic code to filter out packets directed to other applications and [mistakely] sent to us or broadcasted.
+     * should be equal to NAVIT_BINDING_W32_MAGIC  */
+    char magic[6];
+    /* Command to be executed by Navit */
+    char text[1];
 };
 
 #endif

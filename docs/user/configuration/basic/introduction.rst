@@ -3,12 +3,13 @@ Introduction
 ************
 
 The ideal Navit setups consists of some basic things.
+
 1) A device running Navit itself. This can be nearly everything, just take a look at :doc:`../../platforms/index` if you haven't already.
 2) A display to show you the map and what to do to get to your destination.
-3) A GPS to lat navit know where you are
+3) A GPS to let navit know where you are
 
 Additionally we need to tell Navit about how our setup looks like.
-There are 
+There are
 
 Get a supported map package
 ---------------------------

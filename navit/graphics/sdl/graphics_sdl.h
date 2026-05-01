@@ -5,7 +5,7 @@
 #include <glib.h>
 
 #ifdef USE_WEBOS
-# define USE_WEBOS_ACCELEROMETER
+#    define USE_WEBOS_ACCELEROMETER
 #endif
 
 gboolean graphics_sdl_idle(void *);

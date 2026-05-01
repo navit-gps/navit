@@ -25,17 +25,17 @@ Map + Route                    EU       > 4y
    binfile
    Binfile
    Csv
-   Custom POIs
-   Garmin maps
-   Map + Route
+   Custom_POIs
+   Garmin_maps
+   Map_Route
    Maps
-   Marco Polo Grosser Reiseplaner
+   Marco_Polo_Grosser_Reiseplaner
    OpenStreetMap_countries
    OpenStreetMap
    osm
    Shapefiles
    Textfile
-   US_Tiger maps
-   Other maps
+   US_Tiger_maps
+   Other_maps
 
 

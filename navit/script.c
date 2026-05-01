@@ -17,13 +17,13 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <glib.h>
-#include "item.h"
-#include "debug.h"
-#include "event.h"
 #include "callback.h"
 #include "command.h"
+#include "debug.h"
+#include "event.h"
+#include "item.h"
 #include "xmlconfig.h"
+#include <glib.h>
 
 struct script {
     NAVIT_OBJECT
@@ -34,28 +34,28 @@ struct script {
 };
 
 static void script_run(struct script *scr) {
-    struct attr *xml_text=attr_search(scr->attrs, attr_xml_text);
+    struct attr *xml_text = attr_search(scr->attrs, attr_xml_text);
     int error;
     if (!xml_text || !xml_text->u.str) {
-        dbg(lvl_error,"no text");
+        dbg(lvl_error, "no text");
         return;
     }
-    dbg(lvl_debug,"running '%s'",xml_text->u.str);
+    dbg(lvl_debug, "running '%s'", xml_text->u.str);
     command_evaluate_to_void(&scr->parent, xml_text->u.str, &error);
 }
 
 static int script_set_attr_int(struct script *scr, struct attr *attr) {
     switch (attr->type) {
     case attr_refresh_cond:
-        dbg(lvl_debug,"refresh_cond");
+        dbg(lvl_debug, "refresh_cond");
         if (scr->cs)
             command_saved_destroy(scr->cs);
-        scr->cs=command_saved_attr_new(attr->u.str, &scr->parent, scr->cb, 0);
+        scr->cs = command_saved_attr_new(attr->u.str, &scr->parent, scr->cb, 0);
         return 1;
     case attr_update_period:
         if (scr->timeout)
             event_remove_timeout(scr->timeout);
-        scr->timeout=event_add_timeout(attr->u.num, 1, scr->cb);
+        scr->timeout = event_add_timeout(attr->u.num, 1, scr->cb);
         return 1;
     default:
         return 0;
@@ -63,21 +63,21 @@ static int script_set_attr_int(struct script *scr, struct attr *attr) {
 }
 
 static struct script *script_new(struct attr *parent, struct attr **attrs) {
-    struct script *scr=g_new0(struct script, 1);
-    scr->func=&script_func;
+    struct script *scr = g_new0(struct script, 1);
+    scr->func = &script_func;
     navit_object_ref((struct navit_object *)scr);
-    scr->attrs=attr_list_dup(attrs);
-    attrs=scr->attrs;
-    scr->cb=callback_new_1(callback_cast(script_run), scr);
-    scr->parent=*parent;
+    scr->attrs = attr_list_dup(attrs);
+    attrs = scr->attrs;
+    scr->cb = callback_new_1(callback_cast(script_run), scr);
+    scr->parent = *parent;
     while (attrs && *attrs)
         script_set_attr_int(scr, *attrs++);
-    dbg(lvl_debug,"return %p",scr);
+    dbg(lvl_debug, "return %p", scr);
     return scr;
 }
 
 static void script_destroy(struct script *scr) {
-    dbg(lvl_debug,"enter %p",scr);
+    dbg(lvl_debug, "enter %p", scr);
     if (scr->timeout)
         event_remove_timeout(scr->timeout);
     if (scr->cs)

@@ -7,6 +7,7 @@
 #include "country.h"
 #include "debug.h"
 #include "event.h"
+#include "gui.h"
 #include "map.h"
 #include "mapset.h"
 #include "navit.h"
@@ -489,28 +490,30 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
         dbg(lvl_debug, "Setting destination to %s", coord_str);
         // start navigation asynchronous
         navit_set_destination(attr.u.navit, &pc, coord_str, 1);
-    } break;
-    case 3: {
-        // navigate to geo position
         char *name;
+        ret = 1;
+    } break;
+    case 8:   /* Show contextual actions for a geo position */
+    case 3: { /* Navigate to geo position */
         s = (*env)->GetStringUTFChars(env, str, NULL);
+        char *name;
         char parse_str[strlen(s) + 1];
         strcpy(parse_str, s);
         (*env)->ReleaseStringUTFChars(env, str, s);
         dbg(lvl_debug, "*****string=%s", s);
 
-        // set destination to (lat#lon#title)
+        /* Parse coordinates from argument string (lat#lon#title) */
         struct coord_geo g;
         char *p;
         char *stopstring;
 
-        // latitude
+        // extract latitude
         p = strtok(parse_str, "#");
         g.lat = strtof(p, &stopstring);
-        // longitude
+        // extract longitude
         p = strtok(NULL, "#");
         g.lng = strtof(p, &stopstring);
-        // description/name of the place identified by lat and long
+        // extract description/name of the place identified by lat and long (if any)
         name = strtok(NULL, "#");
 
         dbg(lvl_debug, "lat=%f", g.lat);
@@ -520,17 +523,29 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
         struct coord c;
         transform_from_geo(projection_mg, &g, &c);
 
-        struct pcoord pc;
+        static struct pcoord pc;
         pc.x = c.x;
         pc.y = c.y;
         pc.pro = projection_mg;
         char coord_str[32];
+        if (name && *name == '\0') /* Force name to NULL if no str1 has been provided */
+            name = NULL;
+
+        if (channel == 8) {
+            if (gui_show_coord_actions(navit_get_gui(attr.u.navit), NULL, NULL) == -1) {
+                gui_show_coord_actions(navit_get_gui(attr.u.navit), &pc, name);
+                break; /* -1 indicates that this feature is supported but coord is NULL (probe mode), which is expected
+                        */
+            }
+            /* If previous gui_show_coord_actions() probe failed, then fall back to channel=3 block below */
+            dbg(lvl_warning, "No contextual coord actions available, starting default action: navigate to destination");
+        }
         if (!name || *name == '\0') { /* When name is an empty string, use the geo coord instead */
             pcoord_format_degree_short(&pc, coord_str, sizeof(coord_str), " ");
             name = coord_str;
         }
-        // start navigation asynchronous
         navit_set_destination(attr.u.navit, &pc, name, 1);
+        ret = 1;
     } break;
     default:
         dbg(lvl_error, "Unknown command: %d", channel);

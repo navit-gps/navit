@@ -24,15 +24,14 @@
 extern "C" {
 #endif
 
-#include <stdio.h>
 #include "item_type_def.h"
+#include <stdio.h>
 
 #define route_item_first type_street_0
 #define route_item_last type_street_parking_lane
 extern int default_flags[];
 
 #include "attr.h"
-
 
 /* NOTE: we treat districts as towns for now, since
    a) navit does not implement district search yet
@@ -46,33 +45,32 @@ extern int default_flags[];
 #define item_is_poly_place(item) ((item).type >= type_poly_place1 && (item).type <= type_poly_place6)
 #define item_is_point(item) ((item).type < type_line)
 #define item_is_custom_poi(item) ((item).type >= type_poi_customg && (item).type < type_line)
-#define item_is_street(item) (((item).type >= type_street_nopass && (item).type <= type_roundabout) \
-                               ||  (item).type == type_street_service \
-                               || ((item).type >= type_street_pedestrian && (item).type <= type_track_grass) \
-                               ||  (item).type == type_living_street  \
-                               ||  (item).type == type_street_construction  \
-                               ||  (item).type == type_path \
-                               ||  (item).type == type_street_parking_lane \
-                               ||  (item).type == type_footway )
+#define item_is_street(item)                                                                                           \
+    (((item).type >= type_street_nopass && (item).type <= type_roundabout)                                             \
+     || ((item).type >= type_street_pedestrian && (item).type <= type_track_grass)                                     \
+     || (item).type == type_street_service || (item).type == type_living_street                                        \
+     || (item).type == type_street_construction || (item).type == type_path || (item).type == type_street_parking_lane \
+     || (item).type == type_footway)
 /**
  * @brief Determines if the given item's type is a POI or not
  *
  * @param item The struct item
  * @return Returns true if the item is a POI type otherwise returns false
  */
-#define item_is_poi(item)  (((item).type >= type_poi_lake && (item).type <= type_poi) \
-                        || ((item).type >= type_poi_land_feature && (item).type <= type_poi_zoo) \
-                        || ((item).type >= type_poi_gc_multi && (item).type <= type_poi_cafe) \
-                        || ((item).type >= type_poi_peak && (item).type <= type_poi_image) \
-                        || ((item).type >= type_poi_townhall && (item).type <= type_poi_ruins) \
-                        || ((item).type >= type_poi_post_box && (item).type <= type_poi_tennis) \
-                        || ((item).type >= type_poi_vending_machine && (item).type <= type_poi_shop_shoes) \
-                        || ((item).type >= type_poi_tree && (item).type <= type_poi_shop_photo) \
-                        || ((item).type >= type_poi_pub && (item).type <= type_poi_bahai) \
-                        || ((item).type >= type_poi_customh && (item).type <= type_poi_customf))
+#define item_is_poi(item)                                                                                              \
+    (((item).type >= type_poi_lake && (item).type <= type_poi)                                                         \
+     || ((item).type >= type_poi_land_feature && (item).type <= type_poi_zoo)                                          \
+     || ((item).type >= type_poi_gc_multi && (item).type <= type_poi_cafe)                                             \
+     || ((item).type >= type_poi_peak && (item).type <= type_poi_image)                                                \
+     || ((item).type >= type_poi_townhall && (item).type <= type_poi_ruins)                                            \
+     || ((item).type >= type_poi_post_box && (item).type <= type_poi_tennis)                                           \
+     || ((item).type >= type_poi_vending_machine && (item).type <= type_poi_shop_shoes)                                \
+     || ((item).type >= type_poi_tree && (item).type <= type_poi_shop_photo)                                           \
+     || ((item).type >= type_poi_pub && (item).type <= type_poi_bahai)                                                 \
+     || ((item).type >= type_poi_customh && (item).type <= type_poi_customf))
 
-#define item_is_equal_id(a,b) ((a).id_hi == (b).id_hi && (a).id_lo == (b).id_lo)
-#define item_is_equal(a,b) (item_is_equal_id(a,b) && (a).map == (b).map)
+#define item_is_equal_id(a, b) ((a).id_hi == (b).id_hi && (a).id_lo == (b).id_lo)
+#define item_is_equal(a, b) (item_is_equal_id(a, b) && (a).map == (b).map)
 
 struct coord;
 
@@ -101,7 +99,7 @@ struct item_id {
 };
 
 #define ITEM_ID_FMT "(0x%x,0x%x)"
-#define ITEM_ID_ARGS(x) (x).id_hi,(x).id_lo
+#define ITEM_ID_ARGS(x) (x).id_hi, (x).id_lo
 
 /**
  * @brief Represents an object on a map.
@@ -122,16 +120,16 @@ struct item_id {
  * map (typically inside a map implementation).
  */
 struct item {
-    enum item_type type; /**< Type of the item.*/
-    int id_hi;  /**< First part of the ID of the item (item IDs have two parts).*/
-    int id_lo; /**< Second part of the ID of the item.*/
-    struct map *map; /**< The map this items belongs to.*/
+    enum item_type type;       /**< Type of the item.*/
+    int id_hi;                 /**< First part of the ID of the item (item IDs have two parts).*/
+    int id_lo;                 /**< Second part of the ID of the item.*/
+    struct map *map;           /**< The map this items belongs to.*/
     struct item_methods *meth; /**< Methods to manipulate this item.*/
-    void *priv_data; /**< Private item data, only used by the map plugin which supplied this item.*/
+    void *priv_data;           /**< Private item data, only used by the map plugin which supplied this item.*/
 };
 
 extern struct item_range {
-    enum item_type min,max;
+    enum item_type min, max;
 } item_range_all;
 
 /**
@@ -158,7 +156,7 @@ void item_create_hash(void);
 void item_destroy_hash(void);
 int *item_get_default_flags(enum item_type type);
 void item_coord_rewind(struct item *it);
-int item_coords_left(struct item * it);
+int item_coords_left(struct item *it);
 int item_coord_get(struct item *it, struct coord *c, int count);
 int item_coord_set(struct item *it, struct coord *c, int count, enum change_mode mode);
 int item_coord_get_within_selection(struct item *it, struct coord *c, int count, struct map_selection *sel);
@@ -187,7 +185,6 @@ void item_dump_filedesc(struct item *item, struct map *map, FILE *out);
 void item_cleanup(void);
 
 /* end of prototypes */
-
 
 #ifdef __cplusplus
 }

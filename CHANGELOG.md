@@ -2,31 +2,159 @@
 
 All notable changes to this project will be documented in this file.
 
-Changes and documentation about Navit can be found in the wiki at:
-  http://wiki.navit-project.org
-A timeline of opened and closed issue tickets can be found at our trac instance:
-  http://trac.navit-project.org and on our github project:
-  https://github.com/navit-gps/navit/issues
+Changes and documentation about Navit can be found in the docs:
+https://navit.readthedocs.io/en/latest/index.html
+Please Report Bugs on our github project:
+https://github.com/navit-gps/navit/issues
 
+
+## semantic versioning
 Navit follows the semantic versioning:
-* `x.y.Z` (patch): only bug fixes or refactoring, no changes in functionality
-* `x.Y.z` (minor): added or changed functionality but can be used as a drop-in
-  replacement for the previous version (all data formats and interfaces are still
-  supported); minor UI changes (such as moving individual menu items) are also
-  allowed
-* X.y.z (major): at least one of the following:
-  * Major new functionality (such as Augmented Reality, inertial navigation or
-    support for live traffic services): de-facto standard for end-user apps
-  * New user interface (such as moving from the old pulldown menu UI to the Internal
-    GUI): this is definitely the UI equivalent of a breaking API change
-  * Dropped support for a data format or interface: also a breaking change and
-    usually tends to occur along with larger changes which would warrant a new major
-    version anyway
 
-## [Unreleased](https://github.com/navit-gps/navit/compare/v0.5.6...HEAD)
+### major
+`X.y.z` (major): at least one of the following:
 
-To get the list of all the unreleased commits, see:
-[Full Changelog](https://github.com/navit-gps/navit/compare/v0.5.6...HEAD)
+* Major new functionality (such as Augmented Reality, inertial navigation or
+support for live traffic services): de-facto standard for end-user apps
+* New user interface (such as moving from the old pulldown menu UI to the Internal
+GUI): this is definitely the UI equivalent of a breaking API change
+* Dropped support for a data format or interface: also a breaking change and
+usually tends to occur along with larger changes which would warrant a new major
+version anyway
+
+### minor
+`x.Y.z` (minor): added or changed functionality but can be used as a drop-in
+replacement for the previous version (all data formats and interfaces are still
+supported); minor UI changes (such as moving individual menu items) are also
+allowed
+
+### patch
+`x.y.Z` (patch): only bug fixes or refactoring, no changes in functionality
+
+## [0.5.7] - 2026-01-30
+
+### 🚀 Features
+
+- Maptool: Allow to run multiple instances concurrently
+- Maptool: circular junctions allow oneway to be specified
+- Routing: Consider one-way property of circular junctions
+- Routing: Improve Time of Arrival Estimation
+
+### ⚡ Breaking Changes
+
+- navit.xml: roadprofile: route_weight parameter removed
+- navit.xml: vehicleprofile: maxspeed_handling attribute removed
+
+### 🐛 Bug Fixes
+
+- Geoclue: speed conversion from mps to kph
+- Core Do not crash if center has no coordinates
+- Core Correctly parse coordinates from string
+- Core:Do not crash on recursive navit_add_attr
+- Core:Redraw map when the orientation attribute is changed
+- Python_bindings: Try to build if python 2 only.
+- Build:Fix build warnings
+- Build:Add Target scopes
+- Build:tomtom:Update tomtom image to our github image which was updated to debian bookworm
+- Unterminated strings avoided, compiler warnings mitigated
+- Traffic:Fix error on missing error message
+- Memory: Corruption fix on homedir edge case
+- Search_houseno_interpol: Ensure distance is allocated to desired size
+- CI Artefacts fixed to contain all necessary resources
+- DTD: polygon: missing attributes src, w, h added
+
+### 🌏 Translations
+
+- I18n: break build on outdated msgid on ci_sanity_checks
+- I18n: Update PO files to current strings
+- Translation updates for:
+  - Basque
+  - Dutch
+  - English
+  - German
+  - Hindi
+  - Italian
+  - Odia
+  - Polish
+  - Portuguese
+  - Romanian
+  - Russian
+  - Spanish
+  - Tamil
+
+### 📚 Documentation
+
+- Piper-tts, speech2wave install and configuration instructions added
+- Vehicle: GUI vehicle activating procedure added
+- Vehicle: Give example for activated, enabled demo vehicle
+- Fix Formatting of Commands Table
+- Remove outdated reference to slow script
+- Fix Links to Contact info
+- Rename files with whitespace
+- Remove old backup file
+- Automatically convert svg to png to avoid problems with latex
+- Only show gif's in html
+- Remove Layout's from doc as those are better suited as xml files
+- Update Link to the old wiki to point to the doc's
+- Migrate all wiki link to the docs for non doc files
+- def files are not generated from wiki any more
+
+### ⚙️ Miscellaneous Tasks
+
+- Core Print stacktrace on SIG11 without gdb
+- Convert gif to jpg because of errors with gif
+- clang-format introduced and CI check implemented
+- Debug: Switch ASAN introduced
+- Command: dangling pointer ctx.attr resolved
+- Main: compiler warning about ifdef AND ifdef fixed
+- Linux: Dead Code removal for CircleCI icon logic
+- Build: ci_sanity_check fail with exit code on error
+- Build:Introduce GitHub actions (#1162)
+- Build: cmake upgraded to 3.18
+- Build: On CMAKE_BUILDE_TYPE=Debug set gdb-friendly compiler options
+- Container:Added wget to container image so mapserver can download mapfiles
+- Core:cmake correctly detect protbuf-c
+- Core:Add missing import
+- Missing includes added
+- Qt5 Allow to disable QML rotation.
+- Qt5 allow to set source from outside
+- Glib Fix compile warning
+- Build: Plugin loading fixed
+- Generate_contributors speed up
+- Migrate from circleCI to GHA
+- Build Fdroid fixed by switching buildserver to bookworm
+- Warning on String Truncation resolved
+- Build:Dockerfile: Add Dockerfile for maptool Container
+- Improve CI_sanity_check (speedup, provide patch on formatting errors, provide
+  summary)
+- Ci_sanity_check: check xml for validity towards dtd always
+- Map_Textfile: Error message unable to get line clarified
+
+#### Sailfish
+
+- Sailfish version bump
+- Sailfish speed up build
+- Sailfish use newer sdk
+
+#### Ubuntu Touch
+
+- Ubuntutouch First working build.
+- Qt5 fix ubtouch loader. This now disables screensaver
+- Ubuntutouch Prevent screen saver if application runs
+
+#### Android
+
+- Fix ci build
+- Build Android/F-droid libnavit.so added to apk
+- do not update containers prior build
+- Android: NDK upgraded to 25.2.9519653
+- Permissions fixed
+- Android/F-Droid: Warning about buildToolsVersion resolved
+- Android intent export flag specified for upgrade to android 12
+- Android:GUI/Internal: Show contextual GUI menu when receiving geo intent
+- Fdroid: compileSdkVersion increased to satisfy linter
+- Build: Ninja conditions removed from Android-builds
+
 
 ## [v0.5.6](https://github.com/navit-gps/navit/compare/v0.5.5...v0.5.6) - 2021-03-06
 
