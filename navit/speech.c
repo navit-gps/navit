@@ -72,8 +72,10 @@ int speech_say(struct speech *this_, const char *text) {
     return (this_->meth.say)(this_->priv, text);
 }
 
+struct attr name = ATTR_STRING(name, "Voice name");
 struct attr active = ATTR_INT(active, 1);
 struct attr *speech_default_attrs[] = {
+    &name,
     &active,
     NULL,
 };

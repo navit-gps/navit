@@ -195,6 +195,11 @@ static int gui_internal_cmd2_town(struct gui_priv *this, char *function, struct 
     return 0;
 }
 
+static int gui_internal_cmd2_setting_voice(struct gui_priv *this, char *function, struct attr **in, struct attr ***out) {
+    gui_internal_menu_voice_settings(this);
+    return 0;
+}
+
 static int gui_internal_cmd2_setting_vehicle(struct gui_priv *this, char *function, struct attr **in,
                                              struct attr ***out) {
     struct attr attr, attr2, vattr;
@@ -1161,7 +1166,9 @@ static int gui_internal_cmd2(struct gui_priv *this, char *function, struct attr 
         gui_internal_cmd2_setting_maps(this, function, in, out);
     else if (!strcmp(function, "setting_rules"))
         gui_internal_cmd2_setting_rules(this, function, in, out);
-    else if (!strcmp(function, "setting_vehicle"))
+    else if (!strcmp(function, "setting_voice"))
+        gui_internal_cmd2_setting_voice(this, function, in, out);
+    else if(!strcmp(function, "setting_vehicle"))
         gui_internal_cmd2_setting_vehicle(this, function, in, out);
     else if (!strcmp(function, "town"))
         gui_internal_cmd2_town(this, function, in, out);

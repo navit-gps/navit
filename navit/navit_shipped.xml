@@ -108,6 +108,7 @@ Navigation</text></img>
 				<a href='#Settings Display'><img src='gui_display'><text>Display</text></img></a>
 				<img src='gui_maps' onclick='setting_maps()'><text>Maps</text></img>
 				<!-- <a href='#Settings Maps'><img src='gui_maps'><text>Maps</text></img></a> -->
+				<img src='gui_voice' onclick='setting_voice()'><text>Voice</text></img>
 				<img src='gui_vehicle' onclick='setting_vehicle()'><text>Vehicle</text></img>
 				<!-- <a href='#Settings Vehicles'><img src='gui_vehicle'><text>Vehicle</text></img></a> -->
 				<img src='gui_rules' onclick='setting_rules()'><text>Rules</text></img>
@@ -418,15 +419,21 @@ Waypoint</text></img>
 		If you have a speech synthesizer like festival lite installed, you can get turn by turn directions out of navit. Please set the "cps"-value to how many characters your tts engine approximately speaks per second.
 		The default is text output to the shell
 		-->
-		<speech type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" cps="15"/>
+		<speech name="Dummy Text output" type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" cps="15"/>
 		<!--
+                <speech name="Dutch female" type="cmdline" name="Dutch female" data="espeak-ng -v dutch-mbrola-3 -s 130 %s" vocabulary_name="1" vocabulary_name_systematic="1" vocabulary_distances="1" active="1" />
+
 		Instead of using a speech synthesizer, navit can also play pre-recorded samples for each word.
+		See https://navit.readthedocs.io/en/latest/user/configuration/advanced/introduction.html#prerecorded-samples
+		<speech name="Sample" type="cmdline" data="aplay -q %s"
 		See https://navit.readthedocs.io/en/latest/user/configuration/advanced/options.html#prerecorded-samples for details.
 
 		<speech type="cmdline" data="aplay -q %s"
 		sample_dir="/path/to/sampledir" sample_suffix=".wav" flags="1"
 		vocabulary_name="0" vocabulary_name_systematic="0" vocabulary_distances="0"/>
 		-->
+                <speech name="Dutch female" type="cmdline" data="espeak-ng -v dutch-mbrola-3 -s 130 %s" vocabulary_name="1" vocabulary_name_systematic="1" vocabulary_distances="1" active="1" />
+                <speech name="Dutch male" type="cmdline" data="espeak-ng -v dutch-mbrola-1 -s 130 %s" vocabulary_name="1" vocabulary_name_systematic="1" vocabulary_distances="0" active="0" />
 
 		<!-- You can only have enabled only one mapset at time, but with as much maps enabled as you want -->
 
