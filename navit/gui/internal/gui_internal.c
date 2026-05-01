@@ -44,13 +44,10 @@
 #endif /* _MSC_VER */
 #include "bookmarks.h"
 #include "callback.h"
-#include "speech.h"
-#include "vehicle.h"
-#include "vehicleprofile.h"
-#include "window.h"
 #include "color.h"
 #include "command.h"
 #include "config.h"
+#include "speech.h"
 #include "config_.h"
 #include "coord.h"
 #include "country.h"
@@ -2094,7 +2091,7 @@ static void gui_internal_add_voice_profile(struct gui_priv *this, struct widget 
 }
 
 /**
- * Adds the vehicle profile to the GUI, allowing the user to pick a
+ * Adds one vehicle profile to the GUI, allowing the user to pick a
  * profile for the currently selected vehicle.
  */
 static void gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget *parent, struct vehicle *v,
