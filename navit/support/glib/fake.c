@@ -30,6 +30,8 @@ char* g_convert (const char  *in,
 
 
 #if USE_POSIX_THREADS
+static pthread_key_t key;
+
 pthread_mutex_t* g_mutex_new_navit(void)
 {
 	pthread_mutex_t *ret = malloc(sizeof(pthread_mutex_t));
@@ -61,7 +63,6 @@ g_private_new_navit (void)
 	printf("return dwTlsIndex = 0x%x\n",dwTlsIndex);
 	return dwTlsIndex;
 #else
-	pthread_key_t key;
 	if (pthread_key_create(&key, NULL)) {
 		fprintf(stderr,"pthread_key_create failed\n");
 	}
