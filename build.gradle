@@ -117,7 +117,7 @@ android {
         }
 
         checkstyle {
-            toolVersion = '13.2.0'
+            toolVersion = '13.4.2'
         }
     }
     applicationVariants.all { variant ->
