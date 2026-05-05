@@ -25,6 +25,7 @@
 #include "thread.h"
 #include <glib.h>
 #include <math.h>
+#include <stdlib.h>
 #ifdef HAVE_API_WIN32_BASE
 #    include <windows.h>
 #else
