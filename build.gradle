@@ -107,13 +107,7 @@ android {
         disable 'UnusedResources'
     }
     buildFeatures {
-        renderScript = true
-    }
-    lint {
-        abortOnError = true
-        disable 'UnusedResources'
-    }
-    buildFeatures {
+        prefab = true
         renderScript = true
     }
 
