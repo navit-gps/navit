@@ -1,6 +1,5 @@
 var NAVTREEINDEX44 =
 {
-"structtracking__line.html#a9a49d39326dc5d41dbeb6a01160e9d36":[2,0,392,1],
 "structtracking__line.html#af43f6242f697f8d62758343ae9ed1342":[2,0,392,0],
 "structtraffic.html":[2,0,393],
 "structtraffic.html#a1ce8bbc4ef67e64610e8be61a9d8a0a2":[2,0,393,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX44 =
 "structvehicle__priv.html#a30aba06d6cefb4e7437772bf161bfdd8":[0,2,0,4,0,54],
 "structvehicle__priv.html#a30aba06d6cefb4e7437772bf161bfdd8":[0,2,0,5,0,54],
 "structvehicle__priv.html#a30aba06d6cefb4e7437772bf161bfdd8":[0,2,0,7,0,54],
-"structvehicle__priv.html#a30aba06d6cefb4e7437772bf161bfdd8":[0,2,0,2,1,54]
+"structvehicle__priv.html#a30aba06d6cefb4e7437772bf161bfdd8":[0,2,0,2,1,54],
+"structvehicle__priv.html#a30aba06d6cefb4e7437772bf161bfdd8":[0,2,0,3,0,54]
 };

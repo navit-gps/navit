@@ -105,7 +105,6 @@ var gui__internal_8c =
     [ "line_intersection", "gui__internal_8c.html#a6e806d703f0dc9338d5abe1d75d77e3f", null ],
     [ "plugin_init", "gui__internal_8c.html#a1eaae939034896b436dffbf5e93c0da1", null ],
     [ "removecase", "gui__internal_8c.html#ab5d962656e8b8b94f20b1318f56d7e4c", null ],
-    [ "save_vehicle_xml", "gui__internal_8c.html#aa532cc06603a8d87299e917f577e59c1", null ],
     [ "config_profiles", "gui__internal_8c.html#a66964d0c3bf3da7cc54ec6fed3d3a17c", null ],
     [ "gui_internal_methods", "gui__internal_8c.html#ac9d00d26da542d6f2f096f8f49e28e91", null ],
     [ "gui_internal_methods_ext", "gui__internal_8c.html#af17219d956a10dad10b77c3db823a289", null ],
