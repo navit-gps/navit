@@ -35,6 +35,7 @@
 #include "glib_slice.h"
 #include "item.h"
 #include "map.h"
+#include "navigation.h"
 #include "navit.h"
 #include "plugin.h"
 #include "route.h"

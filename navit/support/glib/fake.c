@@ -18,11 +18,11 @@
 #include <stdio.h>              /* fputs/fprintf */
 
 char* g_convert (const char  *in,
-	int        len,            
+	int        len,
 	const char  *to_codeset,
 	const char  *from_codeset,
-	int        *bytes_read,     
-	int        *bytes_written,  
+	int        *bytes_read,
+	int        *bytes_written,
 	void      **error)
 {
 	return g_strdup(in);
@@ -30,6 +30,8 @@ char* g_convert (const char  *in,
 
 
 #if USE_POSIX_THREADS
+static pthread_key_t key;
+
 pthread_mutex_t* g_mutex_new_navit(void)
 {
 	pthread_mutex_t *ret = malloc(sizeof(pthread_mutex_t));
@@ -47,7 +49,8 @@ CRITICAL_SECTION* g_mutex_new_navit(void)
 #endif
 #endif
 
-GPrivate
+
+GPrivate*
 g_private_new_navit (void)
 {
 #if HAVE_API_WIN32_BASE
@@ -61,11 +64,10 @@ g_private_new_navit (void)
 	printf("return dwTlsIndex = 0x%x\n",dwTlsIndex);
 	return dwTlsIndex;
 #else
-	pthread_key_t key;
 	if (pthread_key_create(&key, NULL)) {
 		fprintf(stderr,"pthread_key_create failed\n");
 	}
-	return key;	
+	return &key;
 #endif
 }
 
@@ -113,7 +115,7 @@ g_get_current_time (GTimeVal *result)
 }
 
 // FIXME: should use real utf8-aware function
-gchar * g_utf8_casefold(const gchar *s, gssize len) 
+gchar * g_utf8_casefold(const gchar *s, gssize len)
 {
   return g_ascii_strdown(s,len);
 }
