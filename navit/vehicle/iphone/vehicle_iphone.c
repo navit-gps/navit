@@ -65,10 +65,10 @@ static void vehicle_iphone_destroy(struct vehicle_priv *priv) {
 static int vehicle_iphone_position_attr_get(struct vehicle_priv *priv, enum attr_type type, struct attr *attr) {
     switch (type) {
     case attr_position_speed:
-        attr->u.numd = &priv->speed;
+        attr->u.numd = priv->speed;
         break;
     case attr_position_direction:
-        attr->u.numd = &priv->direction;
+        attr->u.numd = priv->direction;
         break;
     case attr_position_coord_geo:
         attr->u.coord_geo = &priv->geo;
@@ -77,7 +77,7 @@ static int vehicle_iphone_position_attr_get(struct vehicle_priv *priv, enum attr
         attr->u.str = priv->str_time;
         break;
     case attr_position_radius:
-        attr->u.numd = &priv->radius;
+        attr->u.numd = priv->radius;
         break;
     case attr_position_nmea:
         return 0;

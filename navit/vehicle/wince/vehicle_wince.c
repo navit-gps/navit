@@ -772,19 +772,19 @@ static int vehicle_wince_position_attr_get(struct vehicle_priv *priv, enum attr_
         attr->u.num = priv->status;
         break;
     case attr_position_height:
-        attr->u.numd = &priv->height;
+        attr->u.numd = priv->height;
         break;
     case attr_position_speed:
-        attr->u.numd = &priv->speed;
+        attr->u.numd = priv->speed;
         break;
     case attr_position_direction:
-        attr->u.numd = &priv->direction;
+        attr->u.numd = priv->direction;
         break;
     case attr_position_magnetic_direction:
         attr->u.num = priv->magnetic_direction;
         break;
     case attr_position_hdop:
-        attr->u.numd = &priv->hdop;
+        attr->u.numd = priv->hdop;
         break;
     case attr_position_qual:
         attr->u.num = priv->sats_visible;

@@ -114,7 +114,7 @@ static void save_map_csv(struct map_priv *m) {
                         if (ATTR_IS_INT(*at)) {
                             tmpstr = g_strdup_printf("%d", (int)found_attr->u.num);
                         } else if (ATTR_IS_DOUBLE(*at)) {
-                            tmpstr = g_strdup_printf("%lf", *found_attr->u.numd);
+                            tmpstr = g_strdup_printf("%lf", found_attr->u.numd);
                         } else if (ATTR_IS_STRING(*at)) {
                             tmpstr = g_strdup(found_attr->u.str);
                         } else {
@@ -764,14 +764,12 @@ static struct map_priv *map_new_csv(struct map_methods *meth, struct attr **attr
                             } else if (ATTR_IS_INT(attr_types->u.attr_types[cnt])) {
                                 curr_attr->u.num = atoi(tok);
                             } else if (ATTR_IS_DOUBLE(attr_types->u.attr_types[cnt])) {
-                                double *d = g_new(double, 1);
-                                *d = atof(tok);
-                                curr_attr->u.numd = d;
+                                curr_attr->u.numd = atof(tok);
                                 if (attr_types->u.attr_types[cnt] == attr_position_longitude) {
-                                    longitude = *d;
+                                    longitude = curr_attr->u.num;
                                 }
                                 if (attr_types->u.attr_types[cnt] == attr_position_latitude) {
-                                    latitude = *d;
+                                    latitude = curr_attr->u.num;
                                 }
                             } else {
                                 /*unknown attribute*/

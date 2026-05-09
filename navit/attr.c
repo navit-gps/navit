@@ -457,7 +457,7 @@ char *attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum 
     if (type >= attr_type_int64_begin && type <= attr_type_int64_end)
         return g_strdup_printf(LONGLONG_FMT, *attr->u.num64);
     if (type >= attr_type_double_begin && type <= attr_type_double_end)
-        return g_strdup_printf("%f", *attr->u.numd);
+        return g_strdup_printf("%f", attr->u.numd);
     if (type >= attr_type_object_begin && type <= attr_type_object_end)
         return g_strdup_printf("(object[%s])", attr_to_name(type));
     if (type >= attr_type_color_begin && type <= attr_type_color_end) {
@@ -792,7 +792,7 @@ int attr_data_size(struct attr *attr) {
     if (attr->type == attr_order)
         return sizeof(attr->u.range);
     if (attr->type >= attr_type_double_begin && attr->type <= attr_type_double_end)
-        return sizeof(*attr->u.numd);
+        return sizeof(attr->u.numd);
     if (attr->type == attr_item_types) {
         int i = 0;
         while (attr->u.item_types[i++] != type_none)

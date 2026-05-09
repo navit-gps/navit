@@ -429,7 +429,7 @@ static int get_int_bool(struct context *ctx, int is_bool, struct result *res) {
         return res->attr.u.num;
     }
     if (res->attr.type >= attr_type_double_begin && res->attr.type <= attr_type_double_end) {
-        return (int)(*res->attr.u.numd);
+        return (int)(res->attr.u.numd);
     }
     if (is_bool && ATTR_IS_OBJECT(res->attr.type))
         return res->attr.u.data != NULL;
@@ -468,7 +468,7 @@ static char *get_string(struct context *ctx, struct result *res) {
 static void set_double(struct result *res, double val) {
     result_free(res);
     res->attr.type = attr_type_double_begin;
-    res->attr.u.numd = &res->val;
+    res->attr.u.numd = res->val;
     res->val = val;
 }
 
@@ -609,7 +609,7 @@ static void result_set(struct context *ctx, enum set_type set_type, const char *
     case set_type_float:
         out->val = strtod(ctx->expr, NULL);
         out->attr.type = attr_type_double_begin;
-        out->attr.u.numd = &out->val;
+        out->attr.u.numd = out->val;
         return;
     case set_type_string:
         if (len >= 2) {

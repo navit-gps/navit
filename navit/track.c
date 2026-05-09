@@ -331,13 +331,13 @@ int tracking_get_attr(struct tracking *_this, enum attr_type type, struct attr *
         attr->u.num = _this->valid;
         return 1;
     case attr_position_direction:
-        attr->u.numd = &_this->direction;
+        attr->u.numd = _this->direction;
         return 1;
     case attr_position_direction_matched:
-        attr->u.numd = &_this->direction_matched;
+        attr->u.numd = _this->direction_matched;
         return 1;
     case attr_position_speed:
-        attr->u.numd = &_this->speed;
+        attr->u.numd = _this->speed;
         return 1;
     case attr_directed:
         attr->u.num = _this->street_direction;
@@ -655,8 +655,8 @@ void tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofi
         dbg(lvl_debug, "Using defaults for static position detection");
     }
     dbg(lvl_info, "Static speed: %ld, static distance: %ld", static_speed.u.num, static_distance.u.num);
-    speed = *speed_attr.u.numd;
-    direction = *direction_attr.u.numd;
+    speed = speed_attr.u.numd;
+    direction = direction_attr.u.numd;
     tr->valid = attr_position_valid_valid;
     transform_from_geo(pro, coord_geo.u.coord_geo, &tr->curr_in);
     if ((speed < static_speed.u.num && transform_distance(pro, &tr->last_in, &tr->curr_in) < static_distance.u.num)) {

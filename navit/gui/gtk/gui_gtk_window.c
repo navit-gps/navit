@@ -127,12 +127,12 @@ static gboolean keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv 
         break;
     case 'w':
         t = navit_get_trans(this->nav);
-        transform_set_pitch(t, (transform_get_pitch(t) + 5) % 360);
+        transform_set_pitch(t, ((long)(100 * (transform_get_pitch(t) + 5)) % 36000) / 100);
         navit_draw(this->nav);
         break;
     case 'x':
         t = navit_get_trans(this->nav);
-        transform_set_pitch(t, (transform_get_pitch(t) - 5) % 360);
+        transform_set_pitch(t, ((long)(100 * (transform_get_pitch(t) - 5)) % 36000) / 100);
         navit_draw(this->nav);
         break;
     case 'r':

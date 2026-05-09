@@ -135,18 +135,18 @@ static void statusbar_route_update(struct statusbar_priv *this, struct navit *na
     if (vehicle_get_attr(v, attr_position_fix_type, &attr, NULL))
         status = attr.u.num;
     if (vehicle_get_attr(v, attr_position_direction, &attr, NULL))
-        direction = *(attr.u.numd);
+        direction = attr.u.numd;
     direction = fmod(direction, 360);
     if (direction < 0)
         direction += 360;
     dir_idx = (direction + 22.5) / 45;
     dir = dirs[dir_idx];
     if (vehicle_get_attr(v, attr_position_height, &attr, NULL))
-        height = *(attr.u.numd);
+        height = attr.u.numd;
     if (vehicle_get_attr(v, attr_position_hdop, &attr, NULL))
-        hdop = *(attr.u.numd);
+        hdop = attr.u.numd;
     if (vehicle_get_attr(v, attr_position_speed, &attr, NULL))
-        speed = *(attr.u.numd);
+        speed = attr.u.numd;
     if (vehicle_get_attr(v, attr_position_sats_used, &attr, NULL))
         sats = attr.u.num;
     if (vehicle_get_attr(v, attr_position_qual, &attr, NULL))

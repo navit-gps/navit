@@ -170,16 +170,16 @@ static int vehicle_qt5_position_attr_get(struct vehicle_priv *priv, enum attr_ty
         attr->u.num = priv->fix_type;
         break;
     case attr_position_height:
-        attr->u.numd = &priv->height;
+        attr->u.numd = priv->height;
         break;
     case attr_position_speed:
-        attr->u.numd = &priv->speed;
+        attr->u.numd = priv->speed;
         break;
     case attr_position_direction:
-        attr->u.numd = &priv->direction;
+        attr->u.numd = priv->direction;
         break;
     case attr_position_radius:
-        attr->u.numd = &priv->radius;
+        attr->u.numd = priv->radius;
         break;
     case attr_position_qual:
         attr->u.num = priv->sats;
@@ -229,10 +229,10 @@ static int vehicle_qt5_position_attr_get(struct vehicle_priv *priv, enum attr_ty
 static int vehicle_qt5_set_attr(struct vehicle_priv *priv, struct attr *attr) {
     switch (attr->type) {
     case attr_position_speed:
-        priv->speed = *attr->u.numd;
+        priv->speed = attr->u.numd;
         break;
     case attr_position_direction:
-        priv->direction = *attr->u.numd;
+        priv->direction = attr->u.numd;
         break;
     case attr_position_coord_geo:
         priv->geo = *attr->u.coord_geo;

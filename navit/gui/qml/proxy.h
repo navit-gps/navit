@@ -49,7 +49,7 @@ class NGQProxy : public QObject {
             ret.setNum(attr.u.num);
         }
         if (ATTR_IS_DOUBLE(attr.type)) {
-            ret.setNum(*attr.u.numd);
+            ret.setNum(attr.u.numd);
         }
         if (ATTR_IS_STRING(attr.type)) {
             ret = attr.u.str;
@@ -61,7 +61,6 @@ class NGQProxy : public QObject {
     }
     void setAttr(const QString &attr_name, const QString &attr_string) {
         struct attr attr_value;
-        double *helper;
 
         dbg(lvl_debug, "Setting %s to %s", attr_name.toStdString().c_str(), attr_string.toStdString().c_str());
         getAttrFunc(attr_from_name(attr_name.toStdString().c_str()), &attr_value, NULL);
@@ -77,9 +76,7 @@ class NGQProxy : public QObject {
             }
         }
         if (ATTR_IS_DOUBLE(attr_value.type)) {
-            helper = g_new0(double, 1);
-            *helper = attr_string.toDouble();
-            attr_value.u.numd = helper;
+            attr_value.u.numd = attr_string.toDouble();
         }
         if (ATTR_IS_STRING(attr_value.type)) {
             attr_value.u.str = (char *)attr_string.toStdString().c_str();
