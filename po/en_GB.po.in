@@ -14,13 +14,13 @@
 # jan https://launchpad.net/~jandegr1
 # lopho https://launchpad.net/~lopho
 # "J. Lavoie" <j.lavoie@net-c.ca>, 2024.
-# Andi Chandler <andi@gowling.com>, 2025.
+# Andi Chandler <andi@gowling.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-16 19:22+0100\n"
-"PO-Revision-Date: 2025-02-06 18:34+0000\n"
+"PO-Revision-Date: 2026-04-16 18:09+0000\n"
 "Last-Translator: Andi Chandler <andi@gowling.com>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "navit/navit-core/en_GB/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 5.17.1-dev\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -1997,7 +1997,7 @@ msgid " Elevation "
 msgstr " Elevation "
 
 msgid " Azimuth "
-msgstr " Azimuth "
+msgstr "Azimuth"
 
 msgid "Show NMEA Data"
 msgstr "Show NMEA data"

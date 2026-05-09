@@ -130,7 +130,7 @@ jobs:
       - name: Setup Keystore and Playstore Keys
         run: scripts/setup_publish_keys.sh
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
       - name: Install NDK
         run: sdkmanager "ndk;25.2.9519653"
       - name: Build and upload Android
@@ -169,7 +169,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: sanity_check
     container:
-        image: ubuntu:24.04
+        image: ubuntu:26.04
     steps:
       - run: |
           apt-get update && apt-get install -y git

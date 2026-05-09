@@ -1864,28 +1864,6 @@ static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle 
     return active_vehicle.u.vehicle == vehicle;
 }
 
-static void save_vehicle_xml(struct vehicle *v) {
-    struct attr attr;
-    struct attr_iter *iter = vehicle_attr_iter_new(NULL);
-    int childs = 0;
-    printf("<vehicle");
-    while (vehicle_get_attr(v, attr_any_xml, &attr, iter)) {
-        if (ATTR_IS_OBJECT(attr.type))
-            childs = 1;
-        else {
-            char *attrtxt;
-            printf(" %s=\"%s\"", attr_to_name(attr.type), attrtxt = attr_to_text(&attr, NULL, 1));
-            g_free(attrtxt);
-        }
-    }
-    if (childs) {
-        printf(">\n");
-        printf("</vehicle>\n");
-    } else
-        printf(" />\n");
-    vehicle_attr_iter_destroy(iter);
-}
-
 /**
  * Reacts to a button press that changes a vehicle's active profile.
  *
@@ -1914,8 +1892,6 @@ static void gui_internal_cmd_set_active_profile(struct gui_priv *this, struct wi
     }
 
     navit_set_vehicleprofile_name(this->nav, profilename);
-
-    save_vehicle_xml(v);
 
     // Notify Navit that the routing should be re-done if this is the
     // active vehicle.

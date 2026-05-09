@@ -1,7 +1,6 @@
 #include "qml_search.h"
 
-SearchObject::SearchObject(QObject *parent)
-    : QObject(parent) {
+SearchObject::SearchObject(QObject *parent) : QObject(parent) {
 }
 
 SearchObject::SearchObject(const QString &name, const QString &icon, struct pcoord *c, QObject *parent)
@@ -30,6 +29,6 @@ void SearchObject::setIcon(const QString &icon) {
     }
 }
 
-struct pcoord * SearchObject::getCoords() const {
+struct pcoord *SearchObject::getCoords() const {
     return m_c;
 }
