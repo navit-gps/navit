@@ -3016,6 +3016,15 @@ msgstr ""
 msgid "Guyane Francaise"
 msgstr ""
 
+msgid "destination"
+msgstr ""
+
+msgid "set to"
+msgstr ""
+
+msgid "no destination"
+msgstr ""
+
 #, c-format
 #~ msgid "%d m"
 #~ msgstr "%d m"
