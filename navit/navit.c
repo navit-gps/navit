@@ -67,9 +67,8 @@
 struct log;
 struct vehicle;
 #ifdef HAVE_API_WIN32_BASE
-#    include <windows.h>
-
 #    include "util.h"
+#    include <windows.h>
 #endif
 #ifdef HAVE_API_WIN32_CE
 #    include "libc.h"
@@ -152,11 +151,13 @@ struct navit {
     struct log *textfile_debug_log;
     struct pcoord destination;
     int destination_valid;
+    char *destination_description;
+
     int blocked; /**< Whether draw operations are currently blocked. This can be a combination of the
                                       following flags:
                                       1: draw operations are blocked
                                       2: draw operations are pending, requiring a redraw once draw operations are
-                    unblocked */
+                                         unblocked */
     int w, h;
     int drag_bitmap;
     int use_mousewheel;
@@ -1605,9 +1606,17 @@ static void navit_mark_navigation_stopped(char *former_destination_file) {
 void navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async) {
     char *destination_file;
     destination_file = bookmarks_get_destination_file(TRUE);
+    char *destination_announcement;
+
     if (c) {
         this_->destination = *c;
         this_->destination_valid = 1;
+        this_->destination_description = g_strdup(description);
+
+        // Announce destination description
+        destination_announcement =
+            g_strdup_printf("%s %s %s", _("destination"), _("set to"), this_->destination_description);
+        navit_say(this_, g_strdup(destination_announcement));
 
         dbg(lvl_debug, "c=(%i,%i)", c->x, c->y);
         bookmarks_append_destinations(this_->former_destination, destination_file, c, 1, type_former_destination,
@@ -1824,11 +1833,14 @@ struct map *read_former_destinations_from_file() {
 }
 
 static void navit_add_former_destinations_from_file(struct navit *this_) {
+    struct attr attr;
     struct item *item;
     int i, valid = 0, count = 0, maxcount = 1;
     struct coord *c = g_new(struct coord, maxcount);
     struct pcoord *pc;
     struct map_rect *mr;
+    char *active_destination_description = NULL;
+    char *destination_announcement = NULL;
 
     this_->former_destination = read_former_destinations_from_file();
     if (!this_->route || !navit_former_destinations_active(this_) || !this_->vehicle)
@@ -1844,6 +1856,9 @@ static void navit_add_former_destinations_from_file(struct navit *this_) {
             }
             if (count)
                 valid = 1;
+            // Get destination description
+            item_attr_get(item, attr_label, &attr);
+            active_destination_description = g_strdup(attr.u.str);
         }
     }
     map_rect_destroy(mr);
@@ -1860,6 +1875,13 @@ static void navit_add_former_destinations_from_file(struct navit *this_) {
             route_set_destinations(this_->route, pc, count, 1);
         this_->destination = pc[count - 1];
         this_->destination_valid = 1;
+        this_->destination_description = g_strdup(active_destination_description);
+
+        // Announce destination description
+        destination_announcement =
+            g_strdup_printf("%s %s %s", _("destination"), _("set to"), this_->destination_description);
+        navit_say(this_, g_strdup(destination_announcement));
+
         g_free(pc);
     }
     g_free(c);
