@@ -45,6 +45,7 @@
 #include "popup.h"
 #include "profile.h"
 #include "projection.h"
+#include "pthread.h"
 #include "route.h"
 #include "speech.h"
 #include "sunriset.h"
@@ -64,12 +65,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef struct {
+    struct navit *this_;
+    char *destination_announcement;
+} thread_args_t;
+
 struct log;
 struct vehicle;
 #ifdef HAVE_API_WIN32_BASE
-#    include <windows.h>
-
 #    include "util.h"
+#    include <windows.h>
 #endif
 #ifdef HAVE_API_WIN32_CE
 #    include "libc.h"
@@ -157,11 +162,13 @@ struct navit {
     struct log *textfile_debug_log;
     struct pcoord destination;
     int destination_valid;
+    char *destination_description;
+
     int blocked; /**< Whether draw operations are currently blocked. This can be a combination of the
                                       following flags:
                                       1: draw operations are blocked
                                       2: draw operations are pending, requiring a redraw once draw operations are
-                    unblocked */
+                                         unblocked */
     int w, h;
     int drag_bitmap;
     int use_mousewheel;
@@ -1614,6 +1621,17 @@ static void navit_mark_navigation_stopped(char *former_destination_file) {
 }
 
 /**
+ * using navit_say async
+ */
+void *navit_say_async(void *args) {
+    thread_args_t *arguments = (thread_args_t *)args;
+    dbg(lvl_debug, "this_: %s", arguments->this_);
+    dbg(lvl_debug, "destination_announcement: '%s'", arguments->destination_announcement);
+    navit_say(arguments->this_, g_strdup(arguments->destination_announcement));
+    return NULL;
+}
+
+/**
  * Start or add a given set of coordinates for route computing
  *
  * @param navit The navit instance
@@ -1626,9 +1644,31 @@ static void navit_mark_navigation_stopped(char *former_destination_file) {
 void navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async) {
     char *destination_file;
     destination_file = bookmarks_get_destination_file(TRUE);
+    char *destination_announcement;
+    pthread_t tid;
+    int ret = -1;
+    thread_args_t args;
+
     if (c) {
         this_->destination = *c;
         this_->destination_valid = 1;
+        this_->destination_description = g_strdup(description);
+
+        // Announce destination description
+        args.this_ = this_;
+        args.destination_announcement =
+            g_strdup_printf("%s %s", _("destination set to"), this_->destination_description);
+        dbg(lvl_debug, "creating thread for audio after setting destination");
+        dbg(lvl_debug, "this_: %s", args.this_);
+        dbg(lvl_debug, "destination_announcement: '%s'", args.destination_announcement);
+        ret = pthread_create(&tid, NULL, navit_say_async, (void *)&args);
+        if (ret == 0) {
+            pthread_detach(tid);
+        } else {
+            dbg(lvl_warning, "Could not announce destination");
+            dbg(lvl_debug, "Could not create thread to play audio");
+        }
+        g_free(destination_announcement);
 
         dbg(lvl_debug, "c=(%i,%i)", c->x, c->y);
         bookmarks_append_destinations(this_->former_destination, destination_file, c, 1, type_former_destination,
@@ -1845,11 +1885,17 @@ struct map *read_former_destinations_from_file() {
 }
 
 static void navit_add_former_destinations_from_file(struct navit *this_) {
+    struct attr attr;
     struct item *item;
     int i, valid = 0, count = 0, maxcount = 1;
     struct coord *c = g_new(struct coord, maxcount);
     struct pcoord *pc;
     struct map_rect *mr;
+    char *active_destination_description = NULL;
+    char *destination_announcement = NULL;
+    pthread_t tid;
+    int ret = -1;
+    thread_args_t args;
 
     this_->former_destination = read_former_destinations_from_file();
     if (!this_->route || !navit_former_destinations_active(this_) || !this_->vehicle) {
@@ -1867,9 +1913,13 @@ static void navit_add_former_destinations_from_file(struct navit *this_) {
             }
             if (count)
                 valid = 1;
+            // Get destination description
+            item_attr_get(item, attr_label, &attr);
+            active_destination_description = g_strdup(attr.u.str);
         }
     }
     map_rect_destroy(mr);
+
     if (valid && count > 0) {
         pc = g_new(struct pcoord, count);
         for (i = 0; i < count; i++) {
@@ -1881,10 +1931,31 @@ static void navit_add_former_destinations_from_file(struct navit *this_) {
             route_set_destination(this_->route, &pc[0], 1);
         else
             route_set_destinations(this_->route, pc, count, 1);
+
+        // Get destination description
         this_->destination = pc[count - 1];
         this_->destination_valid = 1;
+        this_->destination_description = g_strdup(active_destination_description);
+
+        // Announce destination description
+        args.this_ = this_;
+        args.destination_announcement =
+            g_strdup_printf("%s %s", _("destination set to"), this_->destination_description);
+        dbg(lvl_debug, "this_: %s", args.this_);
+        dbg(lvl_debug, "destination_announcement: '%s'", args.destination_announcement);
+        dbg(lvl_debug, "creating thread for audio for previous destination");
+        // TODO: Create thread for audio
+        // ret = pthread_create(&tid, NULL, navit_say_async, (void *)&args);
+        if (ret == 0) {
+            pthread_detach(tid);
+        } else {
+            dbg(lvl_warning, "Could not announce destination");
+            dbg(lvl_debug, "Could not create thread to play audio");
+        }
+        g_free(destination_announcement);
         g_free(pc);
     }
+    g_free(active_destination_description);
     g_free(c);
 }
 
@@ -1925,6 +1996,9 @@ void navit_say(struct navit *this_, const char *text) {
         dbg(lvl_debug, "this_.speech->active %ld", attr.u.num);
         if (attr.u.num)
             speech_say(this_->speech, text);
+
+    } else {
+        dbg(lvl_warning, "The navit object has no speech object. No text will be spoken.");
     }
 }
 
