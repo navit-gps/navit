@@ -332,7 +332,7 @@ var searchData=
   ['itemgra_5fnew_329',['itemgra_new',['../layout_8c.html#ab0a0f9098827ccb63b980330d6af57df',1,'itemgra_new(struct attr *parent, struct attr **attrs):&#160;layout.c'],['../layout_8h.html#ab0a0f9098827ccb63b980330d6af57df',1,'itemgra_new(struct attr *parent, struct attr **attrs):&#160;layout.c']]],
   ['itemgras_330',['itemgras',['../structlayer.html#ae3318e3e33977dcec896b5f920ce96b2',1,'layer']]],
   ['itemicon_331',['ItemIcon',['../classNGQStandardItemModel.html#aa24a4f0461295cf063a43f505c079eaea4563a7cb33892fe6a07ee85700517575',1,'NGQStandardItemModel']]],
-  ['itemid_332',['itemid',['../classNGQProxy.html#a5c7550f127a909ac315d1755a122be85',1,'NGQProxy::itemId'],['../classNGQProxy.html#a0a0de2089b347ceaed93c2aa8c7b478d',1,'NGQProxy::itemId()'],['../classNGQStandardItemModel.html#aa24a4f0461295cf063a43f505c079eaea9bb3c10d2c2e1b7becc7be961d74e00b',1,'NGQStandardItemModel::ItemId']]],
+  ['itemid_332',['itemid',['../classNGQStandardItemModel.html#aa24a4f0461295cf063a43f505c079eaea9bb3c10d2c2e1b7becc7be961d74e00b',1,'NGQStandardItemModel::ItemId'],['../classNGQProxy.html#a5c7550f127a909ac315d1755a122be85',1,'NGQProxy::itemId'],['../classNGQProxy.html#a0a0de2089b347ceaed93c2aa8c7b478d',1,'NGQProxy::itemId()']]],
   ['itemidsignal_333',['itemIdSignal',['../classNGQProxy.html#a79205b24aa5cd619be3d0bc38c6b71a1',1,'NGQProxy']]],
   ['itemname_334',['ItemName',['../classNGQStandardItemModel.html#aa24a4f0461295cf063a43f505c079eaea0fcb976d16fd4f16bf271097a21ffbac',1,'NGQStandardItemModel']]],
   ['itempath_335',['ItemPath',['../classNGQStandardItemModel.html#aa24a4f0461295cf063a43f505c079eaea05b6dc8499a00b790e1726012c89c4a2',1,'NGQStandardItemModel']]],

@@ -1,6 +1,5 @@
 var NAVTREEINDEX27 =
 {
-"osm__protobuf_8c.html#a9c91141f3fa09ea725ff8d234289a3f9":[3,0,7,12,6],
 "osm__protobuf_8c.html#ab9f348f643d2193e69fe166151549361":[3,0,7,12,3],
 "osm__protobuf_8c.html#abd261421fb0139c2522c6adda9445a0d":[3,0,7,12,9],
 "osm__protobuf_8c.html#aded80fa3c8d425add909ca94aabbc302":[3,0,7,12,12],
@@ -249,5 +248,6 @@ var NAVTREEINDEX27 =
 "qml_2proxy_8h.html":[3,0,4,2,5],
 "qml_2proxy_8h_source.html":[3,0,4,2,5],
 "qml__bookmark_8cpp.html":[3,0,4,3,6],
-"qml__bookmark_8h.html":[3,0,4,3,7]
+"qml__bookmark_8h.html":[3,0,4,3,7],
+"qml__bookmark_8h_source.html":[3,0,4,3,7]
 };

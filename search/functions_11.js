@@ -20,7 +20,7 @@ var searchData=
   ['parse_5fmember_17',['parse_member',['../osm__xml_8c.html#ad6d4c1c613b190b0e817ac2cbe8bdda4',1,'osm_xml.c']]],
   ['parse_5fnd_18',['parse_nd',['../osm__xml_8c.html#a4f4ba21bfebe48ecf5d36eca919235db',1,'osm_xml.c']]],
   ['parse_5fnode_19',['parse_node',['../osm__xml_8c.html#a819711c1412395433d88e38558bb61d8',1,'parse_node(char *p):&#160;osm_xml.c'],['../xmlconfig_8c.html#ae378c00c35dd6b9bcdf690bc5385a630',1,'parse_node(struct xmldocument *document, ezxml_t node):&#160;xmlconfig.c']]],
-  ['parse_5fnode_5ftext_20',['parse_node_text',['../xmlconfig_8c.html#adea6ff320e569af1a06b71198191c219',1,'xmlconfig.c']]],
+  ['parse_5fnode_5ftext_20',['parse_node_text',['../xmlconfig_8c.html#ab862bdf0a88ab837a9aff751e09f7658',1,'xmlconfig.c']]],
   ['parse_5foption_21',['parse_option',['../maptool_8c.html#ade40f66edac4fc4c13a21785ddbf7d8c',1,'maptool.c']]],
   ['parse_5fpixel_5fline_5fvalues_22',['parse_pixel_line_values',['../xpm2bmp_8c.html#ad195a582e2dc3e94bfb3d9a27d97cc3e',1,'xpm2bmp.c']]],
   ['parse_5frelation_23',['parse_relation',['../osm__xml_8c.html#a77eefeea6644ee04a38ce38b531d41b4',1,'osm_xml.c']]],

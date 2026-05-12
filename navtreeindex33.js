@@ -1,6 +1,5 @@
 var NAVTREEINDEX33 =
 {
-"structelement__func.html#aeca7a1c6689603970de7f92ca4e5541a":[2,0,90,0],
 "structentity.html":[2,0,92],
 "structentity.html#a33b63b68a018ced450c5cf9cd37340bd":[2,0,92,1],
 "structentity.html#ae086521915a44ed7174a91f636608ef1":[2,0,92,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX33 =
 "structgeom__poly__segment.html#a5bba65a6c8c16287968a881bac0afc16":[2,0,120,2],
 "structgeom__poly__segment.html#a79eeb717775ae026a6fa6964537bf8f4":[2,0,120,1],
 "structgps__sat.html":[0,2,0,9,0],
-"structgps__sat.html":[0,2,0,2,0]
+"structgps__sat.html":[0,2,0,2,0],
+"structgps__status.html":[2,0,122]
 };

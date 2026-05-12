@@ -36,7 +36,7 @@ var xmlconfig_8c =
     [ "object_func_lookup", "xmlconfig_8c.html#a06f475790d5f616c22dac8eb856dc73a", null ],
     [ "parse_file", "xmlconfig_8c.html#a9de8347241db6908beeefca1c0c9c0b7", null ],
     [ "parse_node", "xmlconfig_8c.html#ae378c00c35dd6b9bcdf690bc5385a630", null ],
-    [ "parse_node_text", "xmlconfig_8c.html#adea6ff320e569af1a06b71198191c219", null ],
+    [ "parse_node_text", "xmlconfig_8c.html#ab862bdf0a88ab837a9aff751e09f7658", null ],
     [ "start_element", "xmlconfig_8c.html#a97fa668572045e41cfdbdf925b568807", null ],
     [ "strncmp_len", "xmlconfig_8c.html#a59ded78f7d1a930051c2671735b46066", null ],
     [ "xi_end_element", "xmlconfig_8c.html#a0cb6addd9d64ab16953fcc66e1cee803", null ],

@@ -1,6 +1,5 @@
 var NAVTREEINDEX43 =
 {
-"structstatusbar__priv.html#a22ab0f7420aba9d0821e51af230045b0":[2,0,361,0],
 "structstatusbar__priv.html#a35281bf0639e24edd50a89e3ac2b00fa":[2,0,361,4],
 "structstatusbar__priv.html#a421331a67e3afd3d6cdac8e1d92efb0f":[2,0,361,6],
 "structstatusbar__priv.html#a9363a05bdcf37f0b3be5bff04c80f189":[2,0,361,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX43 =
 "structtracking.html#affb9fd5df71839de68289b1864a3fb63":[2,0,391,14],
 "structtracking__line.html":[2,0,392],
 "structtracking__line.html#a0b3bbb9c898ef4e8de905c0345c7f30d":[2,0,392,2],
-"structtracking__line.html#a9a49d39326dc5d41dbeb6a01160e9d36":[2,0,392,1]
+"structtracking__line.html#a9a49d39326dc5d41dbeb6a01160e9d36":[2,0,392,1],
+"structtracking__line.html#af43f6242f697f8d62758343ae9ed1342":[2,0,392,0]
 };

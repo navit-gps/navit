@@ -42,7 +42,6 @@ var classorg_1_1navitproject_1_1navit_1_1Navit =
     [ "mIsFullscreen", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a37caf1d3629b83e4b7d47422a317918d", null ],
     [ "mWakeLock", "classorg_1_1navitproject_1_1navit_1_1Navit.html#ae8b3c549e0afa3f4260a4273070a3564", null ],
     [ "MY_PERMISSIONS_REQ_FINE_LOC", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a2661ba2798367de0b048f40bd1b4f64a", null ],
-    [ "NAVIT_PACKAGE_NAME", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a6392cb03ab4377c31ab23478c47ec7ff", null ],
     [ "NavitAddressSearch_id", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a026ba92188b43082acac93b863961630", null ],
     [ "NavitDownloaderSelectMap_id", "classorg_1_1navitproject_1_1navit_1_1Navit.html#a9d6a39fb68dcafd9255885a4fa37f61d", null ],
     [ "NavitSelectStorage_id", "classorg_1_1navitproject_1_1navit_1_1Navit.html#ae0d970d580af3fe902b17912e65c745d", null ],

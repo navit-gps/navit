@@ -1,6 +1,5 @@
 var NAVTREEINDEX17 =
 {
-"group__vehicle-file.html#ga9847b71967f0e1daf55c9585c07a91f7":[0,2,0,2,62],
 "group__vehicle-file.html#ga9854817baeee3048d02df5f8a6276fe2":[0,2,0,2,71],
 "group__vehicle-file.html#gaa199819f8e3d2ef056d97a7b68e79d3c":[0,2,0,2,40],
 "group__vehicle-file.html#gaa2fd274bea96efab7eb0dec36ee8e0b5":[0,2,0,2,11],
@@ -249,5 +248,6 @@ var NAVTREEINDEX17 =
 "gui_8h_source.html":[3,0,65],
 "gui__gtk_8h.html":[3,0,4,0,2],
 "gui__gtk_8h.html#a14874c5d341b7924479899e09559282b":[3,0,4,0,2,5],
-"gui__gtk_8h.html#a405697f9ed86d14921b6a65e4d5f3ed3":[3,0,4,0,2,7]
+"gui__gtk_8h.html#a405697f9ed86d14921b6a65e4d5f3ed3":[3,0,4,0,2,7],
+"gui__gtk_8h.html#a43fe02c6ef068a9f2c896716360eafbb":[3,0,4,0,2,3]
 };

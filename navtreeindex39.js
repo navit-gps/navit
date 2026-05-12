@@ -1,6 +1,5 @@
 var NAVTREEINDEX39 =
 {
-"structmaptool__params.html#aff1c4aa53c5815019ed996d81942ca94":[2,0,211,6],
 "structmaptype.html":[2,0,212],
 "structmaptype.html#acf822ef2abccc7de9a8d3b23ae8feda0":[2,0,212,0],
 "structmaptype.html#ae3bd9b2167738459e6ca6ec27ec8add6":[2,0,212,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX39 =
 "structnavitObject.html":[2,0,236],
 "structnavitObject.html#a526e8c5ae5b513f3cd24b6f79cc4f1dd":[2,0,236,0],
 "structnavitObject.html#ad59b92fbdd012c216d83b94c8bde04d7":[2,0,236,1],
-"structnavit__binding__w32__msg.html":[2,0,232]
+"structnavit__binding__w32__msg.html":[2,0,232],
+"structnavit__binding__w32__msg.html#a1239222bc8d52976eab363d875047a4f":[2,0,232,1]
 };

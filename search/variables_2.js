@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['a_0',['a',['../structgraphics__gc__priv.html#aadaf900ac8323c6c70d6d32a6306eb5e',1,'graphics_gc_priv::a'],['../structcolor.html#ada88c609a801744faf4f35601733f96f',1,'color::a'],['../structgeodesic.html#abb18bc2f6c729fb67c920475c228f6c1',1,'geodesic::A'],['../structrocket.html#abc9095519f83d67dd515389e0a2b89ae',1,'rocket::a']]],
+  ['a_0',['a',['../structcolor.html#ada88c609a801744faf4f35601733f96f',1,'color::a'],['../structgeodesic.html#abb18bc2f6c729fb67c920475c228f6c1',1,'geodesic::A'],['../structrocket.html#abc9095519f83d67dd515389e0a2b89ae',1,'rocket::a'],['../structgraphics__gc__priv.html#aadaf900ac8323c6c70d6d32a6306eb5e',1,'graphics_gc_priv::a']]],
   ['aa_1',['aa',['../structgraphics__priv.html#a2d572fa6bb305bf1870e38eb5e457f05',1,'graphics_priv::aa'],['../structquadtree__node.html#a035b4a5aa2c54fcad185239f96ea77dd',1,'quadtree_node::aa']]],
   ['ab_2',['ab',['../structquadtree__node.html#a38ac2ccd8c4939bbbd48726d83e7257b',1,'quadtree_node']]],
   ['abbrev_3',['abbrev',['../structsuffix.html#aabcb0e5f45639f364e597e9c6baa7111',1,'suffix']]],
