@@ -30,8 +30,11 @@
 
 #include "config.h"
 
-#include "glib.h"
 #include "galias.h"
+#include "gatomic.h"
+#include "ghash.h"
+#include "gmessages.h"
+#include "gprimes.h"
 
 
 #define HASH_TABLE_MIN_SIZE 11

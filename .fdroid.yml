@@ -36,13 +36,10 @@ Builds:
       - apt-get install -y build-essential cmake gettext libpng-dev librsvg2-bin libsaxonb-java rename zlib1g-dev
     gradle:
       - yes
-    output: build/outputs/apk/release/navit-release.apk
+    output: build/outputs/apk/release/navit-*.apk
     rm:
       - navit/support/espeak/espeak-data/*
-    prebuild:
-      - sed -i -e '/gradlew/d' scripts/build_android.sh
-    build: scripts/build_android.sh
-    ndk: r25c
+    ndk: 27.3.13750724
 
 MaintainerNotes: |-
     Found JAR file at navit/android/libs/TTS_library_stub.jar, removed as of v0.5.3-442-g96d9c41.

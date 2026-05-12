@@ -1016,9 +1016,10 @@ static void xi_text(xml_context *context, const gchar *text, gsize text_len, gpo
 
 #if USE_EZXML
 static void parse_node_text(ezxml_t node, void *data,
-                            void (*start)(void *, const char *, const char **, const char **, void *, void *),
-                            void (*end)(void *, const char *, void *, void *),
-                            void (*text)(void *, const char *, int, void *, void *)) {
+                            void (*start)(xml_context *, const char *, const char **, const char **, void *,
+                                          xmlerror **),
+                            void (*end)(xml_context *, const char *, void *, xmlerror **),
+                            void (*text)(xml_context *, const char *, gsize, void *, xmlerror **)) {
     while (node) {
         if (start)
             start(NULL, node->name, (const char **)node->attr, (const char **)(node->attr + 1), data, NULL);
