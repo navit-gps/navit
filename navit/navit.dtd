@@ -93,6 +93,9 @@
 <!ATTLIST speech type CDATA #REQUIRED>
 <!ATTLIST speech data CDATA #REQUIRED>
 <!ATTLIST speech cps CDATA #IMPLIED>
+<!ATTLIST speech vocabulary_name CDATA #IMPLIED>
+<!ATTLIST speech vocabulary_name_systematic CDATA #IMPLIED>
+<!ATTLIST speech vocabulary_distances CDATA #IMPLIED>
 <!ELEMENT mapset (map*,xi:include*)>
 <!ATTLIST mapset enabled CDATA #IMPLIED>
 <!ELEMENT map EMPTY>
