@@ -51,11 +51,6 @@ struct callback_list;
  *
  * Generates navigation messages for a calculated route.
  */
-static int roundabout_extra_length = 50;
-
-/* TODO: find out if this is being used elsewhere and, if so, move this definition somewhere more generic */
-static int invalid_angle = 361;
-
 /** Minimum absolute delta for a turn.
  * Maneuvers whose absolute delta is less than this will be considered straight */
 static int min_turn_limit = 25;
@@ -1083,7 +1078,7 @@ static void navigation_way_init(struct navigation_way *w) {
     struct map_rect *mr;
     struct attr attr;
 
-    w->angle2 = invalid_angle;
+    w->angle2 = INVALID_ANGLE;
     mr = map_rect_new(w->item.map, NULL);
     if (!mr)
         return;
@@ -1173,7 +1168,7 @@ static void navigation_way_init(struct navigation_way *w) {
 static int navigation_way_get_max_delta(struct navigation_way *w, enum projection pro, int angle, double dist,
                                         int dir) {
     double dist_left = dist; /* distance from last examined point */
-    int ret = invalid_angle;
+    int ret = INVALID_ANGLE;
     int tmp_delta;
     int eff_dir = dir * w->dir; /* effective direction: +1 to examine section from start of way, -1 from end of way  */
     struct coord cbuf[2];
@@ -1238,7 +1233,7 @@ static int navigation_way_get_max_delta(struct navigation_way *w, enum projectio
         if ((eff_dir < 0) && (dist_left > 0))
             continue;
         tmp_delta = angle_delta(angle, road_angle(&cbuf[0], &cbuf[1], w->dir));
-        if ((ret == invalid_angle) || (abs(ret) < abs(tmp_delta)) || ((abs(ret) == abs(tmp_delta)) && (eff_dir < 0)))
+        if ((ret == INVALID_ANGLE) || (abs(ret) < abs(tmp_delta)) || ((abs(ret) == abs(tmp_delta)) && (eff_dir < 0)))
             ret = tmp_delta;
     }
 
@@ -2441,7 +2436,7 @@ static void navigation_analyze_roundabout(struct navigation *this_, struct navig
                 }
                 d = navigation_way_get_max_delta(&(itm3->way), map_projection(this_->map), itm2->prev->angle_end,
                                                  dist_left, -1);
-                if ((d != invalid_angle) && (abs(d) > abs(dmax)))
+                if ((d != INVALID_ANGLE) && (abs(d) > abs(dmax)))
                     dmax = d;
                 w2 = itm3->way.next;
                 while (w2) {
@@ -2475,7 +2470,7 @@ static void navigation_analyze_roundabout(struct navigation *this_, struct navig
                  * - or dist_left == itm3->length, this saves a few CPU cycles over the above */
                 d = angle_delta(itm2->prev->angle_end, itm3->way.angle2);
             }
-            if ((d != invalid_angle) && (abs(d) > abs(dmax)))
+            if ((d != INVALID_ANGLE) && (abs(d) > abs(dmax)))
                 dmax = d;
             entry_road_angle = (itm2->prev->angle_end + dmax) % 360;
             dbg(lvl_debug, "entry_road_angle %d (%d + %d)", entry_road_angle, itm2->prev->angle_end, dmax);
@@ -2499,7 +2494,7 @@ static void navigation_analyze_roundabout(struct navigation *this_, struct navig
                 }
                 d = navigation_way_get_max_delta(&(itm3->way), map_projection(this_->map), itm->way.angle2, dist_left,
                                                  1);
-                if ((d != invalid_angle) && (abs(d) > abs(dmax)))
+                if ((d != INVALID_ANGLE) && (abs(d) > abs(dmax)))
                     dmax = d;
                 w2 = itm3->next->way.next;
                 while (w2) {
@@ -2533,7 +2528,7 @@ static void navigation_analyze_roundabout(struct navigation *this_, struct navig
                  * - or dist_left == itm3->length, this saves a few CPU cycles over the above */
                 d = angle_delta(itm->way.angle2, itm3->angle_end);
             }
-            if ((d != invalid_angle) && (abs(d) > abs(dmax)))
+            if ((d != INVALID_ANGLE) && (abs(d) > abs(dmax)))
                 dmax = d;
 
             exit_road_angle = (itm->way.angle2 + dmax) % 360;
@@ -2550,7 +2545,7 @@ static void navigation_analyze_roundabout(struct navigation *this_, struct navig
             /* we don't know where we entered the roundabout, so we can't calculate delta1 */
             cmd->roundabout_delta = delta2;
         } /* endif itm2->prev */
-        cmd->length = len + roundabout_extra_length;
+        cmd->length = len + ROUNDABOUT_EXTRA_LENGTH;
     } /* if w */
 
     /* set cmd->maneuver->type */

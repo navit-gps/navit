@@ -299,7 +299,7 @@ struct attr *attr_new_from_text(const char *name, const char *value) {
             transform_to_geo(projection_mg, &c, g);
             break;
         }
-        dbg(lvl_debug, "unknown attribute");
+        dbg(lvl_warning, "unknown attribute: type='%s', name='%s', value='%s'", attr_to_name(attr), name, value);
         g_free(ret);
         ret = NULL;
     }
