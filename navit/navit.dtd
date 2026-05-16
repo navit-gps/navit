@@ -93,6 +93,8 @@
 <!ATTLIST speech active CDATA #REQUIRED>
 <!ATTLIST speech type CDATA #REQUIRED>
 <!ATTLIST speech data CDATA #REQUIRED>
+<!ATTLIST speech data_tts CDATA #IMPLIED>
+<!ATTLIST speech play_multiple_samples CDATA #IMPLIED>
 <!ATTLIST speech cps CDATA #IMPLIED>
 <!ATTLIST speech vocabulary_name CDATA #IMPLIED>
 <!ATTLIST speech vocabulary_name_systematic CDATA #IMPLIED>
