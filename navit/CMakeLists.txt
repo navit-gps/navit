@@ -13,6 +13,10 @@ set(NAVIT_SRC announcement.c atom.c attr.c cache.c callback.c command.c config_.
 	profile.c profile_option.c projection.c roadprofile.c route.c script.c search.c speech.c start_real.c sunriset.c transform.c track.c
 	search_houseno_interpol.c traffic.c util.c vehicle.c vehicleprofile.c xmlconfig.c )
 
+if(USE_DOWNLOAD)
+  list(APPEND NAVIT_SRC network.c)
+endif(USE_DOWNLOAD)
+
 if(NOT USE_PLUGINS)
 	list(APPEND NAVIT_SRC  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c)
 endif(NOT USE_PLUGINS)
@@ -75,8 +79,8 @@ if(NOT ANDROID)
 	endif()
 	if (BUILD_BUNDLE)
 		list(APPEND NAVIT_START_SRC resources/share resources/Icon.png resources/Default.png)
-		add_custom_command(OUTPUT resources/Icon.png COMMAND convert -scale 79x79 -crop 60x60+8+19 ${CMAKE_CURRENT_SOURCE_DIR}/icons/desktop_icons/128x128/navit.png resources/Icon.png)
-		add_custom_command(OUTPUT resources/Default.png COMMAND convert -scale 79x79 -crop 60x60+8+19 ${CMAKE_CURRENT_SOURCE_DIR}/icons/desktop_icons/128x128/navit.png resources/Default.png)
+		add_custom_command(OUTPUT resources/Icon.png COMMAND magick -scale 79x79 -crop 60x60+8+19 ${CMAKE_CURRENT_SOURCE_DIR}/icons/desktop_icons/128x128/navit.png resources/Icon.png)
+		add_custom_command(OUTPUT resources/Default.png COMMAND magick -scale 79x79 -crop 60x60+8+19 ${CMAKE_CURRENT_SOURCE_DIR}/icons/desktop_icons/128x128/navit.png resources/Default.png)
 	endif()
 	add_executable(navit ${NAVIT_START_SRC})
 	target_link_libraries (navit PUBLIC ${NAVIT_LIBNAME})
