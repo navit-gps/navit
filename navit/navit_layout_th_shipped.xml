@@ -517,6 +517,11 @@
 			<icon src="fuel.png"/>
 			<circle color="#000000" radius="3" text_size="7"/>
 		</itemgra>
+		<!-- amenity=charging_station -->
+		<itemgra item_types="poi_charging_station" order="14-">
+			<icon src="charging_station.png"/>
+			<circle color="#000000" radius="3" text_size="7"/>
+		</itemgra>
 		<!-- amenity=hospitalg -->
 		<itemgra item_types="poi_hospital" order="14-">
 			<icon src="hospital.png"/>
