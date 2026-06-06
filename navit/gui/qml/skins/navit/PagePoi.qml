@@ -20,6 +20,9 @@ Rectangle {
 		page.poiFilter+='type="poi_autoservice" or ';
 		page.poiFilter+='type="poi_repair_service" or ';
 	}
+	if (chargingBtn.state=="on") {
+		page.poiFilter+='type="poi_charging_station" or ';
+	}
 	if (hotelBtn.state=="on") {
 		page.poiFilter+='type="poi_hotel" or ';
 		page.poiFilter+='type="poi_camp_rv" or ';
@@ -82,6 +85,7 @@ Rectangle {
 
         ToggleButton {	id: bankBtn; text: "Bank"; icon: "bank.svg";stOn: "true"; onChanged: calculateFilter(); }
 	ToggleButton {	id: fuelBtn; text: "Fuel"; icon: "fuel.svg";stOn: "true"; onChanged: calculateFilter(); }
+	ToggleButton {	id: chargingBtn; text: "Charging Station"; icon: "charging_station.svg";stOn: "true"; onChanged: calculateFilter(); }
 	ToggleButton {	id: hotelBtn; text: "Hotel"; icon: "bar.svg";stOn: "true"; onChanged: calculateFilter(); }
 	ToggleButton {	id: foodBtn; text: "Food"; icon: "fastfood.svg";stOn: "true"; onChanged: calculateFilter(); }
 	ToggleButton {	id: shopBtn; text: "Shop"; icon: "shopping.svg";stOn: "true"; onChanged: calculateFilter(); }
