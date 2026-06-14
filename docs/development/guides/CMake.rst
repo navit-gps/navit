@@ -22,7 +22,10 @@ and then type
       cmake /path/to/navit/source
       make
 
-with cmake -i you'll be able to configure various build aspects
+with cmake -i you'll be able to configure various build aspects.
+The build requires an internet connection as a sample map is being
+downloaded as part of the build. If no connection is available, this
+feature needs to be disabled by specifying: `-DSAMPLE_MAP=n`
 
 .. _building_on_windows:
 
