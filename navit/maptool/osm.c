@@ -1312,7 +1312,7 @@ void osm_add_tag(char *k, char *v) {
         level = 5;
     }
     if ((!g_strcmp0(k, "de:amtlicher_gemeindeschluessel")) || (!g_strcmp0(k, "de:regionalschluessel"))) {
-        g_strlcpy(is_in_buffer, "Deutschland", sizeof(is_in_buffer));
+        g_strlcpy(is_in_buffer, "Germany", sizeof(is_in_buffer));
         level = 5;
     }
     if (!g_strcmp0(k, "place_county")) {
@@ -1794,7 +1794,7 @@ static void relation_add_tag(char *k, char *v) {
             boundary = 1;
         }
     } else if (!g_strcmp0(k, "de:amtlicher_gemeindeschluessel") || !g_strcmp0(k, "de:regionalschluessel")) {
-        g_strlcpy(iso_code, "DE", 3);
+        g_strlcpy(iso_code, "DE", sizeof(iso_code));
     } else if (!g_strcmp0(k, "ISO3166-1") || !g_strcmp0(k, "ISO3166-1:alpha2")) {
         g_strlcpy(iso_code, v, sizeof(iso_code));
     } else if (!g_strcmp0(k, "name")) {

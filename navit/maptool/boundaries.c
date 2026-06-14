@@ -85,6 +85,13 @@ static GList *process_boundaries_setup(FILE *boundaries, struct relations *relat
                 if (!g_strcmp0(int_name, "France"))
                     iso = "FR";
             }
+            if (!boundary->country) {
+                char *ags = osm_tag_value(ib, "de:amtlicher_gemeindeschluessel");
+                char *rs  = osm_tag_value(ib, "de:regionalschluessel");
+                if (ags || rs) {
+                    boundary->country = country_from_iso2("DE");
+                }
+            }
             if (iso) {
                 struct country_table *country = country_from_iso2(iso);
                 if (!country)
