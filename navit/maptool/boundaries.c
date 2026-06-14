@@ -60,6 +60,21 @@ static void process_boundaries_member(void *func_priv, void *relation_priv, stru
         b->segments = g_list_prepend(b->segments, item_bin_to_poly_segment(member, role));
 }
 
+/* Propagate country from parent to children that don't have one set */
+static void boundary_propagate_country(GList *boundaries, struct country_table *parent_country) {
+    while (boundaries) {
+        struct boundary *b = boundaries->data;
+        /* Don't assign country to postal_code boundaries - they are not administrative
+         * units and must not appear as country matches for town assignment */
+        char *boundary_type = osm_tag_value(b->ib, "boundary");
+        int is_postal = !g_strcmp0(boundary_type, "postal_code");
+        if (!b->country && parent_country && !is_postal)
+            b->country = parent_country;
+        boundary_propagate_country(b->children, is_postal ? NULL : b->country);
+        boundaries = g_list_next(boundaries);
+    }
+}
+
 static GList *process_boundaries_setup(FILE *boundaries, struct relations *relations) {
     struct item_bin *ib;
     GList *boundaries_list = NULL;
@@ -99,6 +114,19 @@ static GList *process_boundaries_setup(FILE *boundaries, struct relations *relat
                 osm_warning("relation", item_bin_get_relationid(ib), 0,
                             "Country Boundary doesn't contain an ISO3166-1 tag\n");
         }
+        if (!boundary->country) {
+            char *iso2 = osm_tag_value(ib, "ISO3166-2");
+            if (iso2 && !strncmp(iso2, "DE-", 3))
+                boundary->country = country_from_iso2("DE");
+        }
+        if (!boundary->country) {
+            char *ags = osm_tag_value(ib, "de:amtlicher_gemeindeschluessel");
+            char *rs  = osm_tag_value(ib, "de:regionalschluessel");
+            if (ags || rs) {
+                boundary->country = country_from_iso2("DE");
+            }
+        }
+
         while ((member = item_bin_get_attr(ib, attr_osm_member, member))) {
             long long osm_id;
             int read = 0;
@@ -303,7 +331,9 @@ GList *process_boundaries(FILE *boundaries, FILE *ways) {
     boundaries_list = process_boundaries_setup(boundaries, relations);
     relations_process(relations, NULL, ways);
     relations_destroy(relations);
-    return process_boundaries_finish(boundaries_list);
+    boundaries_list = process_boundaries_finish(boundaries_list);
+    boundary_propagate_country(boundaries_list, NULL);
+    return boundaries_list;
 }
 
 void free_boundaries(GList *bl) {
