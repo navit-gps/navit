@@ -1312,7 +1312,8 @@ void osm_add_tag(char *k, char *v) {
         level = 5;
     }
     if ((!g_strcmp0(k, "de:amtlicher_gemeindeschluessel")) || (!g_strcmp0(k, "de:regionalschluessel"))) {
-        g_strlcpy(is_in_buffer, "Germany", sizeof(is_in_buffer));
+        if (!is_in_buffer[0])
+            g_strlcpy(is_in_buffer, "Deutschland", sizeof(is_in_buffer));
         level = 5;
     }
     if (!g_strcmp0(k, "place_county")) {
