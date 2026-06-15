@@ -2134,8 +2134,12 @@ static void osm_process_town_by_boundary_update_attrs(struct item_bin *town, str
     for (l = matches; l; l = g_list_next(l)) {
         struct boundary *b = l->data;
         char *boundary_admin_level_string;
-        char *name;
-        char *postal = osm_tag_value(b->ib, "postal_code");
+        char *name, *postal;
+
+        if (!g_strcmp0(osm_tag_value(b->ib, "boundary"), "postal_code"))
+            continue;
+
+        postal = osm_tag_value(b->ib, "postal_code");
 
         if (postal) {
             tc->attrs[0].type = attr_town_postal;
