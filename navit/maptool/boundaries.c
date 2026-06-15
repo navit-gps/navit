@@ -99,6 +99,19 @@ static GList *process_boundaries_setup(FILE *boundaries, struct relations *relat
                 osm_warning("relation", item_bin_get_relationid(ib), 0,
                             "Country Boundary doesn't contain an ISO3166-1 tag\n");
         }
+        if (!boundary->country) {
+            char *iso2 = osm_tag_value(ib, "ISO3166-2");
+            if (iso2 && !strncmp(iso2, "DE-", 3))
+                boundary->country = country_from_iso2("DE");
+        }
+        if (!boundary->country) {
+            char *ags = osm_tag_value(ib, "de:amtlicher_gemeindeschluessel");
+            char *rs = osm_tag_value(ib, "de:regionalschluessel");
+            if (ags || rs) {
+                boundary->country = country_from_iso2("DE");
+            }
+        }
+
         while ((member = item_bin_get_attr(ib, attr_osm_member, member))) {
             long long osm_id;
             int read = 0;
