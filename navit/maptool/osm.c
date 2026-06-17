@@ -2656,6 +2656,7 @@ static void process_associated_streets_setup(FILE *in, struct relations *relatio
 
     fseek(in, 0, SEEK_SET);
     relations_func = relations_func_new(process_associated_street_member, fp);
+    relations_add_func(relations, relations_func);
     while ((ib = read_item(in))) {
         char *name = osm_tag_value(ib, "name");
         int namelen = name ? strlen(name) + 1 : 0;
@@ -2685,6 +2686,7 @@ static void process_associated_streets_setup(FILE *in, struct relations *relatio
         }
     }
     relations_func = relations_func_new(relation_func_writethrough, &fp->out);
+    relations_add_func(relations, relations_func);
     relations_add_relation_default_entry(relations, relations_func);
 }
 
@@ -2730,6 +2732,7 @@ static void process_house_number_interpolations_setup(FILE *in, struct relations
 
     fseek(in, 0, SEEK_SET);
     relations_func_process_hn_interpol = relations_func_new(process_house_number_interpolation_member, fp);
+    relations_add_func(relations, relations_func_process_hn_interpol);
     while ((ib = read_item(in))) {
         struct house_number_interpolation *hn_interpol = g_malloc0(sizeof(struct house_number_interpolation));
         hn_interpol->wayid = item_bin_get_wayid(ib);
@@ -2743,7 +2746,9 @@ static void process_house_number_interpolations_setup(FILE *in, struct relations
         relations_add_relation_member_entry(relations, relations_func_process_hn_interpol, hn_interpol, NULL,
                                             rel_member_way, hn_interpol->wayid);
     }
-    relations_add_relation_default_entry(relations, relations_func_new(relation_func_writethrough, &fp->out));
+    struct relations_func *rf = relations_func_new(relation_func_writethrough, &fp->out);
+    relations_add_func(relations, rf);
+    relations_add_relation_default_entry(relations, rf);
 }
 
 void process_house_number_interpolations(FILE *in, struct files_relation_processing *files_relproc) {
@@ -3289,7 +3294,6 @@ static GList **process_multipolygons_setup(FILE *in, int thread_count, struct re
     struct process_multipolygon_setup_thread *sthread;
 
     struct item_bin *ib;
-    struct relations_func *relations_func;
     int i;
     GList **multipolygons = NULL;
     /* allocate and reference async queue */
@@ -3298,13 +3302,13 @@ static GList **process_multipolygons_setup(FILE *in, int thread_count, struct re
     sthread = g_malloc0(sizeof(struct process_multipolygon_setup_thread) * thread_count);
 
     fseek(in, 0, SEEK_SET);
-    relations_func = relations_func_new(process_multipolygons_member, NULL);
 
     /* start the threads */
     for (i = 0; i < thread_count; i++) {
+        sthread[i].relations_func = relations_func_new(process_multipolygons_member, NULL);
+        relations_add_func(relations[i], sthread[i].relations_func);
         sthread[i].number = i;
         sthread[i].queue = ib_queue;
-        sthread[i].relations_func = relations_func;
         sthread[i].relations = relations[i];
         sthread[i].multipolygons = NULL;
         sthread[i].thread =
@@ -3645,7 +3649,6 @@ static GList **process_turn_restrictions_setup(FILE *in, int thread_count, struc
     struct process_turn_restrictions_setup_thread *sthread;
 
     struct item_bin *ib;
-    struct relations_func *relations_func;
     int i;
     GList **turn_restrictions = NULL;
     /* allocate and reference async queue */
@@ -3654,13 +3657,13 @@ static GList **process_turn_restrictions_setup(FILE *in, int thread_count, struc
     sthread = g_malloc0(sizeof(struct process_turn_restrictions_setup_thread) * thread_count);
 
     fseek(in, 0, SEEK_SET);
-    relations_func = relations_func_new(process_turn_restrictions_member, NULL);
 
     /* start the threads */
     for (i = 0; i < thread_count; i++) {
+        sthread[i].relations_func = relations_func_new(process_turn_restrictions_member, NULL);
+        relations_add_func(relations[i], sthread[i].relations_func);
         sthread[i].number = i;
         sthread[i].queue = ib_queue;
-        sthread[i].relations_func = relations_func;
         sthread[i].relations = relations[i];
         sthread[i].turn_restrictions = NULL;
         sthread[i].thread = g_thread_new("process_turn_restrictions_setup_worker",
