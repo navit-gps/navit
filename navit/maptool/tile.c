@@ -422,6 +422,8 @@ int create_tile_hash(void) {
     struct tile_head *th;
     int len, maxnamelen = 0;
 
+    if (tile_hash2)
+        g_hash_table_destroy(tile_hash2);
     tile_hash2 = g_hash_table_new(g_str_hash, g_str_equal);
     th = tile_head_root;
     while (th) {
@@ -437,6 +439,8 @@ static void create_tile_hash_list(GList *list) {
     GList *next;
     struct tile_head *th;
 
+    if (tile_hash2)
+        g_hash_table_destroy(tile_hash2);
     tile_hash2 = g_hash_table_new(g_str_hash, g_str_equal);
 
     next = g_list_first(list);
