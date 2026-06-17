@@ -781,11 +781,9 @@ static void maptool_generate_tiles(struct maptool_params *p, char *suffix, char 
     FILE *tilesdir;
     FILE *files[10];
     int zipnum, f;
-    if (first) {
-        zip_info = zip_new();
-        zip_set_zip64(zip_info, p->zip64);
-        zip_set_timestamp(zip_info, p->timestamp);
-    }
+    zip_info = zip_new();
+    zip_set_zip64(zip_info, p->zip64);
+    zip_set_timestamp(zip_info, p->timestamp);
     zipnum = zip_get_zipnum(zip_info);
     tilesdir = tempfile(suffix, "tilesdir", 1);
     if (!g_strcmp0(suffix, ch_suffix)) { /* Makes compiler happy due to bug 35903 in gcc */
@@ -801,6 +799,7 @@ static void maptool_generate_tiles(struct maptool_params *p, char *suffix, char 
     }
     fclose(tilesdir);
     zip_set_zipnum(zip_info, zipnum);
+    zip_destroy(zip_info);
 }
 
 static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **filenames, char **referencenames,
