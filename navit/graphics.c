@@ -2998,6 +2998,12 @@ static void displayitem_draw(struct displayitem *di, struct layout *l, struct di
                                         width);
         else
             count = transform_point_buf(dc->trans, dc->pro, di->c, pa, pa_buf_size, count, mindist, 0, NULL);
+        if (count < 0) {
+            dbg(lvl_error, "transform_point_buf failed for %s", item_to_name(di->item.type));
+            displayitem_free_holes(&t_holes);
+            di = di->next;
+            continue;
+        }
         switch (e->type) {
         case element_polygon:
             displayitem_draw_polygon(dc, gra, pa, count, &t_holes);
