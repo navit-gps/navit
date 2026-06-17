@@ -30,6 +30,8 @@ struct relations {
     GHashTable *member_hash[3];
     /** Default entries for processing items which are not a member of any relation. */
     GList *default_members;
+    /** relations_func pointers owned by this collection, freed on destroy. */
+    GList *funcs;
 };
 
 struct relations_func {
@@ -70,6 +72,10 @@ struct relations_func *relations_func_new(void (*func)(void *func_priv, void *re
     relations_func->func = func;
     relations_func->func_priv = func_priv;
     return relations_func;
+}
+
+void relations_add_func(struct relations *rel, struct relations_func *func) {
+    rel->funcs = g_list_prepend(rel->funcs, func);
 }
 
 static struct relations_member *relations_member_new(struct relations_func *func, void *relation_priv,
@@ -252,5 +258,6 @@ void relations_destroy(struct relations *relations) {
         }
         g_list_free(relations->default_members);
     }
+    g_list_free_full(relations->funcs, g_free);
     g_free(relations);
 }

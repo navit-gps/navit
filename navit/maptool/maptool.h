@@ -348,6 +348,7 @@ struct relations_func *relations_func_new(void (*func)(void *func_priv, void *re
                                           void *func_priv);
 void relations_add_relation_member_entry(struct relations *rel, struct relations_func *func, void *relation_priv,
                                          void *member_priv, enum relation_member_type type, osmid id);
+void relations_add_func(struct relations *rel, struct relations_func *func);
 void relations_add_relation_default_entry(struct relations *rel, struct relations_func *func);
 void relations_process(struct relations *rel, FILE *nodes, FILE *ways);
 void relations_process_multi(struct relations **rel, int count, FILE *nodes, FILE *ways);

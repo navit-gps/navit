@@ -66,6 +66,7 @@ static GList *process_boundaries_setup(FILE *boundaries, struct relations *relat
     struct relations_func *relations_func;
 
     relations_func = relations_func_new(process_boundaries_member, NULL);
+    relations_add_func(relations, relations_func);
     while ((ib = read_item(boundaries))) {
         char *member = NULL;
         struct boundary *boundary = g_new0(struct boundary, 1);
