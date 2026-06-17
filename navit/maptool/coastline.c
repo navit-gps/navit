@@ -188,6 +188,8 @@ static void tile_collector_process_tile(char *tile, int *tile_data, struct coast
         item_bin_add_attr_longlong(ib, attr_osm_wayid, ct->wayid);
         item_bin_write_to_sink(ib, out, NULL);
         g_hash_table_insert(data->tile_edges, g_strdup(tile), ct);
+        g_list_foreach(sorted_segments, (GFunc)geom_poly_segment_destroy, NULL);
+        g_list_free(sorted_segments);
         return;
     }
     end = bbox.l;
@@ -461,6 +463,7 @@ static int tile_collector_finish(struct item_bin_sink_func *tile_collector) {
         foreach_tile(&data, tile_collector_add_siblings2);
         fprintf(stderr, "*\n");
     }
+    g_hash_table_destroy(data.tile_edges);
     item_bin_sink_func_destroy(tile_collector);
     fprintf(stderr, "tile_collector_finish done\n");
     return 0;
