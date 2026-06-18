@@ -2939,6 +2939,38 @@ static void gui_internal_disable_suspend(struct gui_priv *this) {
         this->win->disable_suspend(this->win);
 }
 
+static void gui_internal_destroy(struct gui_priv *this) {
+    g_free(this->on_map_click);
+    g_free(this->font_name);
+    g_free(this->html_text);
+    g_free(this->href);
+    g_free(this->country_iso2);
+    int i;
+    for (i = 0; i < 10; i++) {
+        g_free(this->html[i].command);
+        g_free(this->html[i].name);
+        g_free(this->html[i].href);
+        g_free(this->html[i].refresh_cond);
+        g_free(this->html[i].class);
+    }
+    for (i = 0; i < 3; i++) {
+        if (this->fonts[i])
+            graphics_font_destroy(this->fonts[i]);
+    }
+    if (this->gra) {
+        graphics_gc_destroy(this->background);
+        graphics_gc_destroy(this->background2);
+        graphics_gc_destroy(this->highlight_background);
+        graphics_gc_destroy(this->foreground);
+        graphics_gc_destroy(this->text_foreground);
+        graphics_gc_destroy(this->text_background);
+    }
+    attr_free(this->click_coord_geo);
+    attr_free(this->position_coord_geo);
+    callback_list_destroy(this->cbl);
+    g_free(this);
+}
+
 // ##############################################################################################################
 // # Description:
 // # Comment:
@@ -2956,6 +2988,7 @@ struct gui_methods gui_internal_methods = {
     gui_internal_get_attr,
     gui_internal_add_attr,
     gui_internal_set_attr,
+    gui_internal_destroy,
 };
 
 static void gui_internal_add_callback(struct gui_priv *priv, struct callback *cb) {
