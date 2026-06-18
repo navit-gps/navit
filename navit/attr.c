@@ -164,6 +164,8 @@ struct attr *attr_new_from_text(const char *name, const char *value) {
             }
             str = NULL;
         }
+        if (count == 0 && ret->u.item_types)
+            ret->u.item_types[0] = type_none;
         g_free(type_str);
         break;
     case attr_attr_types:
@@ -789,7 +791,10 @@ int attr_data_size(struct attr *attr) {
         return sizeof(struct item);
     if (attr->type >= attr_type_int64_begin && attr->type <= attr_type_int64_end)
         return sizeof(*attr->u.num64);
-    if (attr->type == attr_order)
+    if (attr->type == attr_order              //
+        || attr->type == attr_sequence_range  //
+        || attr->type == attr_angle_range     //
+        || attr->type == attr_speed_range)
         return sizeof(attr->u.range);
     if (attr->type >= attr_type_double_begin && attr->type <= attr_type_double_end)
         return sizeof(*attr->u.numd);
@@ -845,6 +850,23 @@ void attr_data_set_le(struct attr *attr, void *data) {
         attr->u.data = data;
 }
 
+static int attr_type_is_inline(enum attr_type type) {
+    if (type >= attr_type_int_begin  //
+        && type <= attr_type_int_end)
+        return 1;
+    if (type >= attr_type_object_begin  //
+        && type <= attr_type_object_end)
+        return 1;
+    if (type == attr_item_type)
+        return 1;
+    if (type == attr_order              //
+        || type == attr_sequence_range  //
+        || type == attr_angle_range     //
+        || type == attr_speed_range)
+        return 1;
+    return 0;
+}
+
 static void attr_free_content_do(struct attr *attr) {
     if (!attr)
         return;
@@ -853,9 +875,7 @@ static void attr_free_content_do(struct attr *attr) {
         if (obj && obj->func && obj->func->unref)
             obj->func->unref(obj);
     }
-    if (!(attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end)
-        && !(attr->type >= attr_type_object_begin && attr->type <= attr_type_object_end)
-        && attr->type != attr_item_type)
+    if (!attr_type_is_inline(attr->type))
         g_free(attr->u.data);
 }
 
