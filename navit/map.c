@@ -415,6 +415,8 @@ struct map_search *map_search_new(struct map *m, struct item *item, struct attr 
                     g_convert(this_->search_attr.u.str, -1, m->meth.charset, "utf-8", NULL, NULL, NULL);
             this_->priv = m->meth.map_search_new(m->priv, item, &this_->search_attr, partial);
             if (!this_->priv) {
+                if (m->meth.charset)
+                    g_free(this_->search_attr.u.str);
                 g_free(this_);
                 this_ = NULL;
             }
