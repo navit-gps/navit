@@ -173,3 +173,20 @@ int gui_run_main_loop(struct gui *this_) {
         return 1;
     return this_->meth.run_main_loop(this_->priv);
 }
+
+void gui_destroy(struct gui *this_) {
+    if (!this_)
+        return;
+    if (this_->meth.destroy)
+        this_->meth.destroy(this_->priv);
+    if (this_->attrs) {
+        struct attr **a = this_->attrs;
+        while (a && *a) {
+            if ((*a)->type == attr_callback_list)
+                callback_list_destroy((*a)->u.callback_list);
+            a++;
+        }
+    }
+    attr_list_free(this_->attrs);
+    g_free(this_);
+}
