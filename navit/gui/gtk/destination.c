@@ -184,8 +184,10 @@ static void row_activated(GtkWidget *widget, GtkTreePath *p1, GtkTreeViewColumn 
     gtk_tree_view_get_cursor(GTK_TREE_VIEW(search->treeview), &path, &focus_column);
     if (!path)
         return;
-    if (!gtk_tree_model_get_iter(search->liststore2, &iter, path))
+    if (!gtk_tree_model_get_iter(search->liststore2, &iter, path)) {
+        gtk_tree_path_free(path);
         return;
+    }
     switch (search->attr.type) {
     case attr_country_all:
         entry_widget = search->entry_country;
@@ -201,12 +203,14 @@ static void row_activated(GtkWidget *widget, GtkTreePath *p1, GtkTreeViewColumn 
         break;
     default:
         dbg(lvl_debug, "Unknown mode");
+        gtk_tree_path_free(path);
         return;
     }
     gtk_tree_model_get(search->liststore2, &iter, column, &str, -1);
     dbg(lvl_debug, "str=%s", str);
     search->partial = 0;
     gtk_entry_set_text(GTK_ENTRY(entry_widget), str);
+    gtk_tree_path_free(path);
 }
 
 static void tree_view_button_release(GtkWidget *widget, GdkEventButton *event, struct search_param *search) {
