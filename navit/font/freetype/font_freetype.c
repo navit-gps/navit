@@ -353,6 +353,7 @@ static FT_Error face_requester(FTC_FaceID face_id, FT_Library library, FT_Pointe
     *fontindex++ = '\0';
     dbg(lvl_debug, "new face %s %d", fontfile, atoi(fontindex));
     ret = FT_New_Face(library, fontfile, atoi(fontindex), aface);
+    g_free(fontfile);
     if (ret) {
         dbg(lvl_error, "Error while creating freetype face: %d", ret);
         return ret;
