@@ -497,9 +497,6 @@ struct widget *gui_internal_top_bar(struct gui_priv *this) {
         wcn->flags = gravity_right_center | flags_expand;
         gui_internal_widget_append(w, wcn);
     }
-#if 0
-    if (dots)
-        gui_internal_widget_destroy(this, dots);
-#endif
+    g_list_free(res);
     return w;
 }
