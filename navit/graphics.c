@@ -590,6 +590,8 @@ void graphics_free(struct graphics *gra) {
         g_hash_table_destroy(gra->image_cache_hash);
     }
 
+    gra->meth.graphics_destroy(gra->priv);
+    callback_list_destroy(gra->cbl);
     attr_list_free(gra->attrs);
     graphics_gc_destroy(gra->gc[0]);
     graphics_gc_destroy(gra->gc[1]);
@@ -597,7 +599,6 @@ void graphics_free(struct graphics *gra) {
     g_free(gra->default_font);
     graphics_font_destroy_all(gra);
     g_free(gra->font);
-    gra->meth.graphics_destroy(gra->priv);
     g_free(gra);
 }
 
@@ -1107,6 +1108,9 @@ void graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, str
 static void graphics_draw_polygon(struct graphics *gra, struct graphics_gc *gc, struct point *pin, int count_in) {
     if (!gra->meth.draw_polygon) {
         return;
+    }
+    if (count_in < 1) {
+        return;
     } else {
         struct point *pin_scaled;
         int a;
@@ -1137,6 +1141,9 @@ static void graphics_draw_polygon(struct graphics *gra, struct graphics_gc *gc, 
  */
 static void graphics_draw_polygon_with_holes(struct graphics *gra, struct graphics_gc *gc, struct point *pin,
                                              int count_in, int hole_count, int *ccount, struct point **holes) {
+    if (count_in < 1) {
+        return;
+    }
     if (!gra->meth.draw_polygon_with_holes) {
         /* TODO: add attr to configure if polygons with holes should be drawn without
          *       the holes if no graphics support for this is present.
@@ -3465,6 +3472,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
         callback_list_call_attr_0(gra->cbl, attr_postdraw);
     if (!(flags & 4))
         graphics_draw_mode(gra, draw_mode_end);
+    display_context_free(&displaylist->dc);
 }
 
 static void graphics_load_mapset(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset,
@@ -3601,6 +3609,7 @@ struct displaylist *graphics_displaylist_new(void) {
 void graphics_displaylist_destroy(struct displaylist *displaylist) {
     if (displaylist->dc.trans)
         transform_destroy(displaylist->dc.trans);
+    xdisplay_free(displaylist);
     g_free(displaylist);
 }
 
