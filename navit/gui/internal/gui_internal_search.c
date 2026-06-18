@@ -173,10 +173,11 @@ static char *town_display_label(struct search_list_result *res, int level, int f
 
 static void gui_internal_find_next_possible_key(char *search_text, char *wm_name, char *possible_keys,
                                                 char *item_name) {
-    gchar *trunk_name;
+    gchar *trunk_name, *expanded_name;
     if (item_name) {
 
-        trunk_name = linguistics_expand_special(item_name, 1);
+        expanded_name = linguistics_expand_special(item_name, 1);
+        trunk_name = expanded_name;
         if (!trunk_name) {
             trunk_name = g_strrstr(item_name, search_text);
         }
@@ -197,6 +198,7 @@ static void gui_internal_find_next_possible_key(char *search_text, char *wm_name
             dbg(lvl_info, "searching for %s, found: %s, currently possible_keys: %s ", search_text, item_name,
                 possible_keys);
         }
+        g_free(expanded_name);
     }
 }
 
