@@ -1167,14 +1167,10 @@ static DBusHandlerResult request_navit_set_layout(DBusConnection *connection, DB
  */
 static DBusHandlerResult request_navit_quit(DBusConnection *connection, DBusMessage *message) {
     dbg(lvl_debug, "Got a quit request from DBUS");
-    struct attr navit;
-    navit.type = attr_navit;
     struct navit *nav;
     nav = object_get_from_message(message, "navit");
     if (!nav)
         return dbus_error_invalid_object_path(connection, message);
-    navit.u.navit = nav;
-    config_remove_attr(config, &navit);
 
     struct callback *callback;
     callback = callback_new_1(callback_cast(event_main_loop_quit), NULL);

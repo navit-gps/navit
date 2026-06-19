@@ -237,7 +237,12 @@ int main_real(int argc, char *const *argv) {
      * above.
      */
 #ifndef HAVE_API_ANDROID
+    config_clear_attrs();
+    navit_destroy(navit.u.navit);
+    config_destroy(config_get());
+
     linguistics_free();
+    file_deinit();
     debug_finished();
 #endif
     return 0;

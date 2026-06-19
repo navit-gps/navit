@@ -283,8 +283,7 @@ struct gui_methods gui_gtk_methods = {
 
 static gboolean gui_gtk_delete(GtkWidget *widget, GdkEvent *event, struct navit *nav) {
     /* FIXME remove attr_navit callback */
-    navit_destroy(nav);
-    exit(0);
+    event_main_loop_quit();
 
     return TRUE;
 }
