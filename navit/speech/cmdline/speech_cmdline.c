@@ -186,14 +186,10 @@ static int speechd_say(struct speech_priv *this, const char *text) {
 }
 
 static void speechd_destroy(struct speech_priv *this) {
-    GList *l = this->samples;
     g_free(this->cmdline);
     g_free(this->sample_dir);
     g_free(this->sample_suffix);
-    while (l) {
-        g_free(l->data);
-    }
-    g_list_free(this->samples);
+    g_list_free_full(this->samples, g_free);
     if (this->spi)
         spawn_process_info_free(this->spi);
     g_free(this);
@@ -222,6 +218,10 @@ static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr 
         void *handle = file_opendir(this->sample_dir);
         if (!handle) {
             dbg(lvl_error, "Cannot read sample directory contents: %s", this->sample_dir);
+            g_free(this->cmdline);
+            g_free(this->sample_dir);
+            g_free(this->sample_suffix);
+            g_free(this);
             return NULL;
         }
         char *name;
