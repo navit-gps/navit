@@ -670,12 +670,10 @@ static void search_list_search_free(struct search_list *sl, int level) {
         mapset_search_destroy(le->search);
         le->search = NULL;
     }
-#if 0 /* FIXME */
     if (le->hash) {
         g_hash_table_destroy(le->hash);
-        le->hash=NULL;
+        le->hash = NULL;
     }
-#endif
     curr = le->list;
     while (curr) {
         search_list_result_destroy(level, curr->data);
@@ -934,6 +932,7 @@ struct search_list_result *search_list_get_result(struct search_list *this_) {
             mapset_search_destroy(le->search);
             le->search = NULL;
             g_hash_table_destroy(le->hash);
+            le->hash = NULL;
             if (!level)
                 break;
         }
