@@ -968,10 +968,12 @@ static int gui_internal_cmd_write(struct gui_priv *this, char *function, struct 
         in++;
     }
     if (str) {
+        char *tmp = str;
         str = g_strdup_printf("<html>%s</html>\n", str);
 #if 0
         dbg(lvl_debug,"%s",str);
 #endif
+        g_free(tmp);
         gui_internal_html_parse_text(this, str);
     }
     g_free(str);
