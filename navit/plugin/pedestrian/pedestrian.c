@@ -235,11 +235,6 @@ static void osd_marker_init(struct marker *this, struct navit *nav) {
     };
     itemgra = (struct attr){attr_itemgra, {(void *)itemgra_new(&cursor, (struct attr *[]){NULL})}};
     cursor_add_attr(cursor.u.cursor, &itemgra);
-    polygoncoord1 = (struct attr){
-        attr_coord,
-        {(void *)coord_new_from_attrs(&polygon, (struct attr *[]){&(struct attr){attr_x, {(void *)-7}},
-                                                                  &(struct attr){attr_y, {(void *)-10}}, NULL})}
-    };
     itemgra_add_attr(itemgra.u.itemgra, &polygon);
     polygoncoord1 = (struct attr){
         attr_coord,
