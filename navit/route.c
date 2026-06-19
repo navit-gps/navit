@@ -4322,6 +4322,8 @@ void route_destroy(struct route *this_) {
     route_graph_destroy(this_->graph);
     route_clear_destinations(this_);
     route_info_free(this_->pos);
+    callback_list_destroy(this_->cbl2);
+    callback_destroy(this_->route_graph_done_cb);
     map_destroy(this_->map);
     map_destroy(this_->graph_map);
     g_free(this_);
