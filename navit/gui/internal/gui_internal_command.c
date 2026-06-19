@@ -936,11 +936,7 @@ static int gui_internal_cmd2_set(struct gui_priv *this, char *function, struct a
 }
 
 int gui_internal_cmd2_quit(struct gui_priv *this, char *function, struct attr **in, struct attr ***out) {
-    struct attr navit;
     gui_internal_prune_menu(this, NULL);
-    navit.type = attr_navit;
-    navit.u.navit = this->nav;
-    config_remove_attr(config, &navit);
     event_main_loop_quit();
     return 0;
 }
