@@ -373,6 +373,7 @@ static void vehicle_gpsd_destroy(struct vehicle_priv *priv) {
 #if GPSD_API_MAJOR_VERSION >= 5
     g_free(priv->gps);
 #endif
+    attr_list_free(priv->attrs);
     g_free(priv);
 }
 

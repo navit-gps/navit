@@ -799,6 +799,7 @@ static void vehicle_file_destroy(struct vehicle_priv *priv) {
         g_free(priv->source);
     if (priv->buffer)
         g_free(priv->buffer);
+    attr_list_free(priv->attrs);
     g_free(priv);
 }
 

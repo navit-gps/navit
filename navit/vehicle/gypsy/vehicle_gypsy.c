@@ -324,6 +324,7 @@ static void vehicle_gypsy_destroy(struct vehicle_priv *priv) {
     vehicle_gypsy_close(priv);
     if (priv->source)
         g_free(priv->source);
+    attr_list_free(priv->attrs);
     g_free(priv);
 }
 
