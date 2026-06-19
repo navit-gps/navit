@@ -271,6 +271,15 @@ static int vehicleprofile_init(struct vehicleprofile *this_) {
     return 0;
 }
 
+static void vehicleprofile_destroy(struct vehicleprofile *this_) {
+    vehicleprofile_free_hash(this_);
+    callback_destroy(this_->active_callback.u.callback);
+    attr_list_free(this_->attrs);
+    g_free(this_->name);
+    g_free(this_->route_depth);
+    g_free(this_);
+}
+
 struct object_func vehicleprofile_func = {
     attr_vehicleprofile,
     (object_func_new)vehicleprofile_new,
@@ -281,7 +290,7 @@ struct object_func vehicleprofile_func = {
     (object_func_add_attr)vehicleprofile_add_attr,
     (object_func_remove_attr)vehicleprofile_remove_attr,
     (object_func_init)vehicleprofile_init,
-    (object_func_destroy)NULL,
+    (object_func_destroy)vehicleprofile_destroy,
     (object_func_dup)NULL,
     (object_func_ref)navit_object_ref,
     (object_func_unref)navit_object_unref,
