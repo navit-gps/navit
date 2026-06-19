@@ -871,6 +871,14 @@ void tracking_destroy(struct tracking *tr) {
         attr_free(tr->attr);
     tracking_flush(tr);
     callback_list_destroy(tr->callback_list);
+    g_free(tr->cdf.pos_hist);
+    g_free(tr->cdf.dir_hist);
+    struct cdf_speed *sp = tr->cdf.speed_hist;
+    while (sp) {
+        struct cdf_speed *next = sp->next;
+        g_free(sp);
+        sp = next;
+    }
     g_free(tr);
 }
 
