@@ -112,8 +112,21 @@ static void set_drawing_color(cairo_t *cairo, struct color c) {
 }
 
 static void graphics_destroy(struct graphics_priv *gr) {
+    struct graphics_priv **pp;
     dbg(lvl_debug, "enter parent %p", gr->parent);
+    if (gr->parent) {
+        pp = &gr->parent->overlays;
+        while (*pp) {
+            if (*pp == gr) {
+                *pp = gr->next;
+                break;
+            }
+            pp = &(*pp)->next;
+        }
+    }
     gr->freetype_methods.destroy();
+    if (gr->cairo)
+        cairo_destroy(gr->cairo);
     if (!gr->parent) {
         dbg(lvl_debug, "enter win %p", gr->win);
         if (gr->win)
@@ -122,6 +135,14 @@ static void graphics_destroy(struct graphics_priv *gr) {
         if (gr->widget)
             gtk_widget_destroy(gr->widget);
         g_free(gr->window_title);
+        while (gr->overlays) {
+            struct graphics_priv *overlay = gr->overlays;
+            gr->overlays = overlay->next;
+            if (overlay->cairo)
+                cairo_destroy(overlay->cairo);
+            overlay->freetype_methods.destroy();
+            g_free(overlay);
+        }
     }
     g_free(gr);
 }
@@ -129,6 +150,7 @@ static void graphics_destroy(struct graphics_priv *gr) {
 static void gc_destroy(struct graphics_gc_priv *gc) {
     if (gc->texture != NULL)
         cairo_surface_destroy(gc->texture);
+    g_free(gc->dashes);
     g_free(gc);
 }
 
@@ -303,6 +325,8 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
 
 static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     int i;
+    if (count < 1)
+        return;
     set_drawing_color(gr->cairo, gc->c);
     if (gc->texture != NULL) {
         cairo_set_source_surface(gr->cairo, gc->texture, 0, 0);
