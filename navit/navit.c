@@ -3080,6 +3080,7 @@ static int navit_add_layout(struct navit *this_, struct layout *layout) {
     struct attr active;
     int is_default = 0;
     int is_active = 0;
+    navit_object_ref((struct navit_object *)layout);
     this_->layouts = g_list_append(this_->layouts, layout);
     /** check if we want to immediately activate this layout.
      * Unfortunately we have concurring conditions about when to activate

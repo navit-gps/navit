@@ -28,6 +28,8 @@
 #include <glib/gtypes.h>
 #include <string.h>
 
+static void itemgra_destroy(struct itemgra *itemgra);
+
 /**
  * @brief Create a new layout object and attach it to a navit parent
  *
@@ -156,6 +158,7 @@ int layout_add_attr(struct layout *layout, struct attr *attr) {
         layout->cursors = g_list_append(layout->cursors, attr->u.cursor);
         break;
     case attr_layer:
+        navit_object_ref((struct navit_object *)attr->u.layer);
         layout->layers = g_list_append(layout->layers, attr->u.layer);
         break;
     default:
@@ -226,6 +229,16 @@ void cursor_destroy(struct cursor *this_) {
         g_free(this_->sequence_range);
     if (this_->name) {
         g_free(this_->name);
+    }
+    if (this_->attrs) {
+        struct attr **a = this_->attrs;
+        while (*a) {
+            if ((*a)->type == attr_itemgra)
+                itemgra_destroy((*a)->u.itemgra);
+            g_free(*a);
+            a++;
+        }
+        g_free(this_->attrs);
     }
     g_free(this_);
 }
@@ -337,7 +350,24 @@ int layer_set_attr(struct layer *layer, struct attr *attr) {
     return layer_set_attr_do(layer, attr, 0);
 }
 
+static void element_destroy(struct element *e) {
+    if (!e)
+        return;
+    g_free(e->coord);
+    g_free(e);
+}
+
+static void itemgra_destroy(struct itemgra *itm) {
+    if (!itm)
+        return;
+    g_list_free(itm->type);
+    g_list_free_full(itm->elements, (GDestroyNotify)element_destroy);
+    g_free(itm);
+}
+
 static void layer_destroy(struct layer *layer) {
+    navit_object_unref((struct navit_object *)layer->ref);
+    g_list_free_full(layer->itemgras, (GDestroyNotify)itemgra_destroy);
     attr_list_free(layer->attrs);
     g_free(layer->name);
     g_free(layer);
@@ -671,10 +701,22 @@ int element_add_attr(struct element *e, struct attr *attr) {
     case attr_coord:
         e->coord = g_realloc(e->coord, (e->coord_count + 1) * sizeof(struct coord));
         e->coord[e->coord_count++] = *attr->u.coord;
+        g_free(attr->u.coord);
         return 1;
     default:
         return 0;
     }
+}
+
+static void layout_destroy(struct layout *this_) {
+    attr_list_free(this_->attrs);
+    g_list_free_full(this_->layers, (GDestroyNotify)navit_object_unref);
+    g_list_free_full(this_->cursors, (GDestroyNotify)cursor_destroy);
+    g_free(this_->name);
+    g_free(this_->dayname);
+    g_free(this_->nightname);
+    g_free(this_->font);
+    g_free(this_);
 }
 
 struct object_func layout_func = {
@@ -687,7 +729,7 @@ struct object_func layout_func = {
     (object_func_add_attr)layout_add_attr,
     (object_func_remove_attr)NULL,
     (object_func_init)NULL,
-    (object_func_destroy)NULL,
+    (object_func_destroy)layout_destroy,
     (object_func_dup)NULL,
     (object_func_ref)navit_object_ref,
     (object_func_unref)navit_object_unref,
