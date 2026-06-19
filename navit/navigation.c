@@ -3902,6 +3902,14 @@ void navigation_unregister_callback(struct navigation *this_, enum attr_type typ
         callback_list_remove(attr_cbl.u.callback_list, cb);
 }
 
+void navigation_destroy_map(struct navigation *this_) {
+    if (this_->map) {
+        struct map *m = this_->map;
+        this_->map = NULL;
+        map_destroy(m);
+    }
+}
+
 struct map *navigation_get_map(struct navigation *this_) {
     struct attr *attrs[5];
     struct attr type, navigation, data, description;

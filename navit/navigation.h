@@ -72,6 +72,7 @@ int navigation_set_attr(struct navigation *this_, struct attr *attr);
 struct navigation *navigation_new(struct attr *parent, struct attr **attrs);
 int navigation_set_announce(struct navigation *this_, enum item_type type, int *level);
 void navigation_destroy(struct navigation *this_);
+void navigation_destroy_map(struct navigation *this_);
 int navigation_register_callback(struct navigation *this_, enum attr_type type, struct callback *cb);
 void navigation_unregister_callback(struct navigation *this_, enum attr_type type, struct callback *cb);
 struct map *navigation_get_map(struct navigation *this_);

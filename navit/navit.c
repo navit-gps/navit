@@ -305,9 +305,11 @@ struct map *navit_get_search_results_map(struct navit *this_) {
  * @return The number of results actually added to the map
  */
 int navit_populate_search_results_map(struct navit *this_, GList *search_results, struct coord_rect *r) {
+    struct mapset *ms;
     struct map *map;
     struct map_rect *mr;
     struct item *item;
+    struct attr attr;
     GList *curr_result = search_results;
     int count;
     char *name_label;
@@ -315,6 +317,8 @@ int navit_populate_search_results_map(struct navit *this_, GList *search_results
     map = navit_get_search_results_map(this_);
     if (!map)
         return 0;
+
+    ms = navit_get_mapset(this_);
 
     mr = map_rect_new(map, NULL);
 
@@ -328,7 +332,10 @@ int navit_populate_search_results_map(struct navit *this_, GList *search_results
 
     if (!search_results) {
         map_rect_destroy(mr);
-        dbg(lvl_warning, "NULL result table - only map clean up is done.");
+        attr.type = attr_map;
+        attr.u.map = map;
+        mapset_remove_attr(ms, &attr);
+        map_destroy(map);
         return 0;
     }
 
@@ -3822,7 +3829,6 @@ int navit_get_blocked(struct navit *this_) {
 }
 
 void navit_destroy(struct navit *this_) {
-    dbg(lvl_debug, "enter %p", this_);
     GList *mapsets;
     struct map *map;
     struct attr attr;
@@ -3854,7 +3860,50 @@ void navit_destroy(struct navit *this_) {
     }
 
     callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);
+    callback_list_destroy(this_->attr_cbl);
+
+    if (this_->mapsets) {
+        struct mapset *sr_ms = this_->mapsets->data;
+        map = mapset_get_map_by_name(sr_ms, "search_results");
+        if (map) {
+            attr.type = attr_map;
+            attr.u.map = map;
+            mapset_remove_attr(sr_ms, &attr);
+            map_destroy(map);
+        }
+    }
+
+    if (this_->layouts) {
+        g_list_free_full(this_->layouts, (GDestroyNotify)navit_object_unref);
+        this_->layouts = NULL;
+    }
+
+    if (this_->mapsets) {
+        struct mapset *ms = this_->mapsets->data;
+        struct attr map_a;
+        map_a.type = attr_map;
+        if (this_->navigation) {
+            struct map *nav_map = navigation_get_map(this_->navigation);
+            if (nav_map) {
+                map_a.u.map = nav_map;
+                mapset_remove_attr(ms, &map_a);
+            }
+        }
+        if (this_->tracking) {
+            struct map *trk_map = tracking_get_map(this_->tracking);
+            if (trk_map) {
+                map_a.u.map = trk_map;
+                mapset_remove_attr(ms, &map_a);
+            }
+        }
+    }
+    navigation_destroy_map(this_->navigation);
+    tracking_destroy_map(this_->tracking);
+
     attr_list_free(this_->attrs);
+    this_->navigation = NULL;
+    this_->speech = NULL;
+    this_->tracking = NULL;
 
     if (cmd_int_var_hash) {
         g_hash_table_destroy(cmd_int_var_hash);
@@ -3870,6 +3919,7 @@ void navit_destroy(struct navit *this_) {
         cmd_int_var_stack = NULL;
     }
 
+
     if (this_->bookmarks) {
         char *center_file = bookmarks_get_center_file(TRUE);
         bookmarks_write_center_to_file(this_->bookmarks, center_file);
@@ -3877,8 +3927,11 @@ void navit_destroy(struct navit *this_) {
         bookmarks_destroy(this_->bookmarks);
     }
 
-    callback_destroy(this_->nav_speech_cb);
-    callback_destroy(this_->roadbook_callback);
+    if (this_->route) {
+        route_destroy(this_->route);
+    }
+    this_->route_cb = NULL;
+
     callback_destroy(this_->popup_callback);
     callback_destroy(this_->motion_timeout_callback);
     callback_destroy(this_->progress_cb);
@@ -3891,19 +3944,38 @@ void navit_destroy(struct navit *this_) {
     }
 
     callback_destroy(this_->resize_callback);
+    callback_destroy(this_->button_callback);
     callback_destroy(this_->motion_callback);
     callback_destroy(this_->predraw_callback);
 
     callback_destroy(this_->route_cb);
-    if (this_->route)
-        route_destroy(this_->route);
 
     map_destroy(this_->former_destination);
 
     graphics_displaylist_destroy(this_->displaylist);
 
+    gui_destroy(this_->gui);
     graphics_free(this_->gra);
 
+    if (this_->trans)
+        transform_destroy(this_->trans);
+    if (this_->trans_cursor)
+        transform_destroy(this_->trans_cursor);
+
+    if (this_->vehicles) {
+        g_list_free_full(this_->vehicles, g_free);
+        this_->vehicles = NULL;
+    }
+    if (this_->mapsets) {
+        g_list_free(this_->mapsets);
+        this_->mapsets = NULL;
+    }
+    if (this_->vehicleprofiles) {
+        g_list_free(this_->vehicleprofiles);
+        this_->vehicleprofiles = NULL;
+    }
+
+    g_free(this_->default_layout_name);
     g_free(this_);
 }
 
