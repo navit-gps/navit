@@ -1483,6 +1483,8 @@ void clear_node_item_buffer(void) {
 static long long node_item_find_index_in_ordered_list(osmid id) {
     struct node_item *node_buffer_base = (struct node_item *)(node_buffer.base);
     long long node_count = node_buffer.size / sizeof(struct node_item);
+    if (node_count == 0)
+        return -1;
     long long search_step = node_count > 4 ? node_count / 4 : 1;
     long long search_index = node_count / 2;
     if (node_buffer_base[0].nd_id > id)
