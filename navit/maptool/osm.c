@@ -2735,6 +2735,7 @@ static void process_house_number_interpolations_setup(FILE *in, struct relations
     relations_add_func(relations, relations_func_process_hn_interpol);
     while ((ib = read_item(in))) {
         struct house_number_interpolation *hn_interpol = g_malloc0(sizeof(struct house_number_interpolation));
+        fp->allocations = g_list_prepend(fp->allocations, hn_interpol);
         hn_interpol->wayid = item_bin_get_wayid(ib);
         hn_interpol->nodeid_first_node = item_bin_get_nodeid_from_attr(ib, attr_osm_nodeid_first_node);
         hn_interpol->nodeid_last_node = item_bin_get_nodeid_from_attr(ib, attr_osm_nodeid_last_node);

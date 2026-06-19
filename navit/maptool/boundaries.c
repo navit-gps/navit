@@ -317,7 +317,9 @@ GList *process_boundaries(FILE *boundaries, FILE *ways) {
     boundaries_list = process_boundaries_setup(boundaries, relations);
     relations_process(relations, NULL, ways);
     relations_destroy(relations);
-    return process_boundaries_finish(boundaries_list);
+    GList *ret = process_boundaries_finish(boundaries_list);
+    g_list_free(boundaries_list);
+    return ret;
 }
 
 void free_boundaries(GList *bl) {
