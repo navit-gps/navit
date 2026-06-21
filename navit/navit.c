@@ -3813,7 +3813,7 @@ int navit_get_blocked(struct navit *this_) {
 }
 
 void navit_destroy(struct navit *this_) {
-    GList *mapsets;
+    GList *mapsets, *m;
     struct map *map;
     struct attr attr;
     graphics_draw_cancel(this_->gra, this_->displaylist);
@@ -3830,16 +3830,13 @@ void navit_destroy(struct navit *this_) {
         }
         mapset_close(msh);
 
-        /* Remove traffic maps, if any */
-        while (maps) {
+        for (m = maps; m; m = m->next) {
             attr.type = attr_map;
-            attr.u.map = maps->data;
+            attr.u.map = m->data;
             mapset_remove_attr(mapsets->data, &attr);
             attr_free_content(&attr);
-            maps = g_list_next(maps);
         }
-        if (maps)
-            g_list_free(maps);
+        g_list_free(maps);
         mapsets = g_list_next(mapsets);
     }
 
@@ -3857,10 +3854,8 @@ void navit_destroy(struct navit *this_) {
         }
     }
 
-    if (this_->layouts) {
-        g_list_free_full(this_->layouts, (GDestroyNotify)navit_object_unref);
-        this_->layouts = NULL;
-    }
+    g_list_free_full(this_->layouts, (GDestroyNotify)navit_object_unref);
+    this_->layouts = NULL;
 
     if (this_->mapsets) {
         struct mapset *ms = this_->mapsets->data;
@@ -3889,19 +3884,13 @@ void navit_destroy(struct navit *this_) {
     this_->speech = NULL;
     this_->tracking = NULL;
 
-    if (cmd_int_var_hash) {
-        g_hash_table_destroy(cmd_int_var_hash);
-        cmd_int_var_hash = NULL;
-    }
-    if (cmd_attr_var_hash) {
-        g_hash_table_destroy(cmd_attr_var_hash);
-        cmd_attr_var_hash = NULL;
-    }
-    if (cmd_int_var_stack) {
-        g_list_foreach(cmd_int_var_stack, (GFunc)attr_free_g, NULL);
-        g_list_free(cmd_int_var_stack);
-        cmd_int_var_stack = NULL;
-    }
+    g_hash_table_destroy(cmd_int_var_hash);
+    cmd_int_var_hash = NULL;
+    g_hash_table_destroy(cmd_attr_var_hash);
+    cmd_attr_var_hash = NULL;
+    g_list_foreach(cmd_int_var_stack, (GFunc)attr_free_g, NULL);
+    g_list_free(cmd_int_var_stack);
+    cmd_int_var_stack = NULL;
 
 
     if (this_->bookmarks) {
@@ -3946,18 +3935,12 @@ void navit_destroy(struct navit *this_) {
     if (this_->trans_cursor)
         transform_destroy(this_->trans_cursor);
 
-    if (this_->vehicles) {
-        g_list_free_full(this_->vehicles, g_free);
-        this_->vehicles = NULL;
-    }
-    if (this_->mapsets) {
-        g_list_free(this_->mapsets);
-        this_->mapsets = NULL;
-    }
-    if (this_->vehicleprofiles) {
-        g_list_free(this_->vehicleprofiles);
-        this_->vehicleprofiles = NULL;
-    }
+    g_list_free_full(this_->vehicles, g_free);
+    this_->vehicles = NULL;
+    g_list_free(this_->mapsets);
+    this_->mapsets = NULL;
+    g_list_free(this_->vehicleprofiles);
+    this_->vehicleprofiles = NULL;
 
     g_free(this_->default_layout_name);
     g_free(this_);
