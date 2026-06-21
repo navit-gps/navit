@@ -62,6 +62,8 @@ g_list_alloc (void)
 void
 g_list_free (GList *list)
 {
+  if (!list)
+    return;
   g_slice_free_chain (GList, list, next);
 }
 
@@ -76,6 +78,14 @@ void
 g_list_free_1 (GList *list)
 {
   _g_list_free1 (list);
+}
+
+void
+g_list_free_full (GList *list,
+                  GDestroyNotify free_func)
+{
+  g_list_foreach (list, (GFunc) free_func, NULL);
+  g_list_free (list);
 }
 
 /**
