@@ -462,6 +462,7 @@ static void search_list_common_dup(struct search_list_common *src, struct search
 
 static void search_list_common_destroy(struct search_list_common *common) {
     g_free(common->c);
+    g_free(common->postal_mask);
     attr_list_free(common->attrs);
 
     common->town_name = NULL;
