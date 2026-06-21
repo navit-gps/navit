@@ -21,6 +21,10 @@ if (${HAVE_GLIB})
 	list(APPEND NAVIT_SRC event_glib.c)
 endif()
 
+if(HAVE_GLIB AND NOT HAVE_G_LIST_FREE_FULL)
+	list(APPEND NAVIT_SRC glib_compat.c)
+endif()
+
 if(ANDROID)
 	list(APPEND NAVIT_SRC android.c)
 	set(NAVIT_LIBNAME navit)
