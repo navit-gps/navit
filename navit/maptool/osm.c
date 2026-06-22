@@ -2663,6 +2663,7 @@ static void process_associated_streets_setup(FILE *in, struct relations *relatio
         char *name = osm_tag_value(ib, "name");
         int namelen = name ? strlen(name) + 1 : 0;
         struct associated_street *rel = g_malloc0(sizeof(struct associated_street) + namelen);
+        fp->allocations = g_list_prepend(fp->allocations, rel);
         relid = item_bin_get_relationid(ib);
         rel->relid = relid;
         if (name) {
