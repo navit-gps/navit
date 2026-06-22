@@ -2691,7 +2691,10 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
         this_->recentdest_count = attr->u.num;
         break;
     case attr_speech:
-        if (this_->speech && this_->speech != attr->u.speech) {
+        if (this_->speech != attr->u.speech) {
+            if (this_->speech) {
+                navit_object_unref((struct navit_object *)this_->speech);
+            }
             attr_updated = 1;
             this_->speech = attr->u.speech;
         }
