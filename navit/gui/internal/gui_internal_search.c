@@ -184,16 +184,19 @@ static void gui_internal_find_next_possible_key(char *search_text, char *wm_name
 
         if (trunk_name) {
             int next_char_pos = strlen(search_text);
-            char next_char = trunk_name[next_char_pos];
-            int i;
-            int len = strlen(possible_keys);
+            int trunk_len = strlen(trunk_name);
+            if (next_char_pos < trunk_len && !strncmp(trunk_name, search_text, next_char_pos)) {
+                char next_char = trunk_name[next_char_pos];
+                int i;
+                int len = strlen(possible_keys);
 
-            for (i = 0; (i < len) && (possible_keys[i] != next_char); i++)
-                ;
+                for (i = 0; (i < len) && (possible_keys[i] != next_char); i++)
+                    ;
 
-            if ((i == len || !len) && !strncmp(trunk_name, search_text, next_char_pos)) {
-                possible_keys[len] = trunk_name[next_char_pos];
-                possible_keys[len + 1] = '\0';
+                if (i == len) {
+                    possible_keys[len] = trunk_name[next_char_pos];
+                    possible_keys[len + 1] = '\0';
+                }
             }
             dbg(lvl_info, "searching for %s, found: %s, currently possible_keys: %s ", search_text, item_name,
                 possible_keys);
