@@ -768,3 +768,12 @@ void file_init(void) {
     if (sizeof(off_t) < 8)
         dbg(lvl_error, "Maps larger than 2GB are not supported by this binary, sizeof(off_t)=%zu", sizeof(off_t));
 }
+
+void file_deinit(void) {
+#ifdef CACHE_SIZE
+    if (file_name_hash)
+        g_hash_table_destroy(file_name_hash);
+    if (file_cache)
+        cache_destroy(file_cache);
+#endif
+}
