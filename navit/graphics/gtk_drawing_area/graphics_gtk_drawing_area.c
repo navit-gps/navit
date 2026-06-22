@@ -128,12 +128,12 @@ static void graphics_destroy(struct graphics_priv *gr) {
     if (gr->cairo)
         cairo_destroy(gr->cairo);
     if (!gr->parent) {
-        dbg(lvl_debug, "enter win %p", gr->win);
-        if (gr->win)
-            gtk_widget_destroy(gr->win);
         dbg(lvl_debug, "widget %p", gr->widget);
         if (gr->widget)
             gtk_widget_destroy(gr->widget);
+        dbg(lvl_debug, "enter win %p", gr->win);
+        if (gr->win)
+            gtk_widget_destroy(gr->win);
         g_free(gr->window_title);
         while (gr->overlays) {
             struct graphics_priv *overlay = gr->overlays;
