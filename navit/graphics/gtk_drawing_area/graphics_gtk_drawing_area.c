@@ -919,8 +919,6 @@ static void get_data_window(struct graphics_priv *this, unsigned int xid) {
         this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     else
         this->win = gtk_plug_new(xid);
-    if (!gtk_widget_get_parent(this->widget))
-        gtk_widget_ref(this->widget);
     gtk_window_set_default_size(GTK_WINDOW(this->win), this->win_w, this->win_h);
     dbg(lvl_debug, "h= %i, w= %i", this->win_h, this->win_w);
     gtk_window_set_title(GTK_WINDOW(this->win), this->window_title);
