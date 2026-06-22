@@ -942,6 +942,10 @@ struct search_list_result *search_list_get_result(struct search_list *this_) {
 }
 
 void search_list_destroy(struct search_list *this_) {
+    int i;
+    for (i = 0; i < 4; i++)
+        search_list_search_free(this_, i);
+    search_address_results_free(this_);
     g_free(this_->postal);
     g_free(this_);
 }
