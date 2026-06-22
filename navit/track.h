@@ -57,6 +57,7 @@ struct tracking *tracking_new(struct attr *parent, struct attr **attrs);
 void tracking_set_mapset(struct tracking *this_, struct mapset *ms);
 void tracking_set_route(struct tracking *this_, struct route *rt);
 void tracking_destroy(struct tracking *tr);
+void tracking_destroy_map(struct tracking *this_);
 struct map *tracking_get_map(struct tracking *this_);
 int tracking_add_attr(struct tracking *this_, struct attr *attr);
 int tracking_remove_attr(struct tracking *this_, struct attr *attr);

@@ -882,6 +882,14 @@ void tracking_destroy(struct tracking *tr) {
     g_free(tr);
 }
 
+void tracking_destroy_map(struct tracking *this_) {
+    if (this_->map) {
+        struct map *m = this_->map;
+        this_->map = NULL;
+        map_destroy(m);
+    }
+}
+
 struct map *tracking_get_map(struct tracking *this_) {
     struct attr *attrs[5];
     struct attr type, navigation, data, description;
