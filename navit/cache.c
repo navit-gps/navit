@@ -340,6 +340,13 @@ static void cache_stats(struct cache *cache) {
     cache->misses = 0;
 }
 
+void cache_destroy(struct cache *cache) {
+    if (!cache)
+        return;
+    g_hash_table_destroy(cache->hash);
+    g_free(cache);
+}
+
 void cache_dump(struct cache *cache) {
     cache_stats(cache);
     cache_list_dump("T1", cache, &cache->t1);

@@ -11,4 +11,5 @@ void *cache_insert_new(struct cache *cache, void *id, int size);
 void cache_flush(struct cache *cache, void *id);
 void cache_dump(struct cache *cache);
 void cache_flush_data(struct cache *cache, void *data);
+void cache_destroy(struct cache *cache);
 /* end of prototypes */
