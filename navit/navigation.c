@@ -3903,6 +3903,8 @@ void navigation_unregister_callback(struct navigation *this_, enum attr_type typ
 }
 
 void navigation_destroy_map(struct navigation *this_) {
+    if (!this_)
+        return;
     if (this_->map) {
         struct map *m = this_->map;
         this_->map = NULL;

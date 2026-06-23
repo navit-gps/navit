@@ -883,6 +883,8 @@ void tracking_destroy(struct tracking *tr) {
 }
 
 void tracking_destroy_map(struct tracking *this_) {
+    if (!this_)
+        return;
     if (this_->map) {
         struct map *m = this_->map;
         this_->map = NULL;
