@@ -3815,11 +3815,11 @@ int navit_get_blocked(struct navit *this_) {
     return this_->blocked;
 }
 
-void navit_destroy(struct navit *this_) {
-    GList *mapsets, *m;
+static void navit_destroy_traffic_maps(struct navit *this_) {
+    GList *mapsets;
+    GList *m;
     struct map *map;
     struct attr attr;
-    graphics_draw_cancel(this_->gra, this_->displaylist);
 
     mapsets = this_->mapsets;
     while (mapsets) {
@@ -3827,7 +3827,6 @@ void navit_destroy(struct navit *this_) {
         struct mapset_handle *msh;
         msh = mapset_open(mapsets->data);
         while (msh && (map = mapset_next(msh, 0))) {
-            /* Add traffic map (identified by the `attr_traffic` attribute) to list of maps to remove */
             if (map_get_attr(map, attr_traffic, &attr, NULL))
                 maps = g_list_append(maps, map);
         }
@@ -3842,43 +3841,86 @@ void navit_destroy(struct navit *this_) {
         g_list_free(maps);
         mapsets = g_list_next(mapsets);
     }
+}
+
+static void navit_destroy_mapset_maps(struct navit *this_) {
+    struct mapset *ms;
+    struct map *map;
+    struct attr attr;
+
+    if (!this_->mapsets)
+        return;
+
+    ms = this_->mapsets->data;
+
+    map = mapset_get_map_by_name(ms, "search_results");
+    if (map) {
+        attr.type = attr_map;
+        attr.u.map = map;
+        mapset_remove_attr(ms, &attr);
+        map_destroy(map);
+    }
+
+    if (this_->navigation) {
+        map = navigation_get_map(this_->navigation);
+        if (map) {
+            attr.type = attr_map;
+            attr.u.map = map;
+            mapset_remove_attr(ms, &attr);
+        }
+    }
+    if (this_->tracking) {
+        map = tracking_get_map(this_->tracking);
+        if (map) {
+            attr.type = attr_map;
+            attr.u.map = map;
+            mapset_remove_attr(ms, &attr);
+        }
+    }
+}
+
+static void navit_destroy_graphics_callbacks(struct navit *this_) {
+    if (!this_->gra)
+        return;
+
+    graphics_remove_callback(this_->gra, this_->resize_callback);
+    graphics_remove_callback(this_->gra, this_->button_callback);
+    graphics_remove_callback(this_->gra, this_->motion_callback);
+    graphics_remove_callback(this_->gra, this_->predraw_callback);
+
+    callback_destroy(this_->resize_callback);
+    callback_destroy(this_->button_callback);
+    callback_destroy(this_->motion_callback);
+    callback_destroy(this_->predraw_callback);
+}
+
+static void navit_destroy_global_cmd_state(void) {
+    if (cmd_int_var_hash) {
+        g_hash_table_destroy(cmd_int_var_hash);
+        cmd_int_var_hash = NULL;
+    }
+    if (cmd_attr_var_hash) {
+        g_hash_table_destroy(cmd_attr_var_hash);
+        cmd_attr_var_hash = NULL;
+    }
+    g_list_foreach(cmd_int_var_stack, (GFunc)attr_free_g, NULL);
+    g_list_free(cmd_int_var_stack);
+    cmd_int_var_stack = NULL;
+}
+
+void navit_destroy(struct navit *this_) {
+    graphics_draw_cancel(this_->gra, this_->displaylist);
+
+    navit_destroy_traffic_maps(this_);
 
     callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);
     callback_list_destroy(this_->attr_cbl);
 
-    if (this_->mapsets) {
-        struct mapset *sr_ms = this_->mapsets->data;
-        map = mapset_get_map_by_name(sr_ms, "search_results");
-        if (map) {
-            attr.type = attr_map;
-            attr.u.map = map;
-            mapset_remove_attr(sr_ms, &attr);
-            map_destroy(map);
-        }
-    }
+    navit_destroy_mapset_maps(this_);
 
     g_list_free_full(this_->layouts, (GDestroyNotify)navit_object_unref);
     this_->layouts = NULL;
 
-    if (this_->mapsets) {
-        struct mapset *ms = this_->mapsets->data;
-        struct attr map_a;
-        map_a.type = attr_map;
-        if (this_->navigation) {
-            struct map *nav_map = navigation_get_map(this_->navigation);
-            if (nav_map) {
-                map_a.u.map = nav_map;
-                mapset_remove_attr(ms, &map_a);
-            }
-        }
-        if (this_->tracking) {
-            struct map *trk_map = tracking_get_map(this_->tracking);
-            if (trk_map) {
-                map_a.u.map = trk_map;
-                mapset_remove_attr(ms, &map_a);
-            }
-        }
-    }
     navigation_destroy_map(this_->navigation);
     tracking_destroy_map(this_->tracking);
 
@@ -3887,13 +3929,7 @@ void navit_destroy(struct navit *this_) {
     this_->speech = NULL;
     this_->tracking = NULL;
 
-    g_hash_table_destroy(cmd_int_var_hash);
-    cmd_int_var_hash = NULL;
-    g_hash_table_destroy(cmd_attr_var_hash);
-    cmd_attr_var_hash = NULL;
-    g_list_foreach(cmd_int_var_stack, (GFunc)attr_free_g, NULL);
-    g_list_free(cmd_int_var_stack);
-    cmd_int_var_stack = NULL;
+    navit_destroy_global_cmd_state();
 
 
     if (this_->bookmarks) {
@@ -3905,24 +3941,14 @@ void navit_destroy(struct navit *this_) {
 
     if (this_->route) {
         route_destroy(this_->route);
+        this_->route_cb = NULL;
     }
-    this_->route_cb = NULL;
 
     callback_destroy(this_->popup_callback);
     callback_destroy(this_->motion_timeout_callback);
     callback_destroy(this_->progress_cb);
 
-    if (this_->gra) {
-        graphics_remove_callback(this_->gra, this_->resize_callback);
-        graphics_remove_callback(this_->gra, this_->button_callback);
-        graphics_remove_callback(this_->gra, this_->motion_callback);
-        graphics_remove_callback(this_->gra, this_->predraw_callback);
-    }
-
-    callback_destroy(this_->resize_callback);
-    callback_destroy(this_->button_callback);
-    callback_destroy(this_->motion_callback);
-    callback_destroy(this_->predraw_callback);
+    navit_destroy_graphics_callbacks(this_);
 
     callback_destroy(this_->route_cb);
 
