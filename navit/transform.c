@@ -929,6 +929,32 @@ void transform_setup_source_rect(struct transformation *t) {
     }
 }
 
+void transform_setup_source_rect_scale(struct transformation *t, int scale_factor) {
+    struct map_selection *ms;
+
+    if (scale_factor < 1)
+        scale_factor = 1;
+
+    transform_setup_source_rect(t);
+
+    if (scale_factor == 1)
+        return;
+
+    ms = t->map_sel;
+    while (ms) {
+        int cx, cy, hw, hh;
+        cx = (ms->u.c_rect.lu.x + ms->u.c_rect.rl.x) / 2;
+        cy = (ms->u.c_rect.lu.y + ms->u.c_rect.rl.y) / 2;
+        hw = (ms->u.c_rect.rl.x - ms->u.c_rect.lu.x) / 2;
+        hh = (ms->u.c_rect.lu.y - ms->u.c_rect.rl.y) / 2;
+        ms->u.c_rect.lu.x = cx - hw * scale_factor;
+        ms->u.c_rect.rl.x = cx + hw * scale_factor;
+        ms->u.c_rect.lu.y = cy + hh * scale_factor;
+        ms->u.c_rect.rl.y = cy - hh * scale_factor;
+        ms = ms->next;
+    }
+}
+
 long transform_get_scale(struct transformation *t) {
     return (int)(t->scale * 16);
 }
