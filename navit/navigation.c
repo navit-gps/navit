@@ -3806,6 +3806,11 @@ static void navigation_update(struct navigation *this_, struct route *route, str
     map = route_get_map(this_->route);
     if (!map)
         return;
+    if (this_->route_mr) {
+        struct map_rect *old_mr = this_->route_mr;
+        this_->route_mr = NULL;
+        map_rect_destroy(old_mr);
+    }
     this_->route_mr = map_rect_new(map, NULL);
     if (!this_->route_mr)
         return;
@@ -3836,6 +3841,7 @@ void navigation_destroy(struct navigation *this_) {
     item_hash_destroy(this_->hash);
     callback_list_destroy(this_->callback);
     callback_list_destroy(this_->callback_speech);
+    attr_list_free(this_->attrs);
     g_free(this_);
 }
 
