@@ -426,7 +426,7 @@ static int vehicle_gpsd_position_attr_get(struct vehicle_priv *priv, enum attr_t
             return 0;
     } break;
     case attr_active:
-        active = attr_search(priv->attrs, attr_active);
+        active = priv->attrs ? attr_search(priv->attrs, attr_active) : NULL;
         if (active != NULL) {
             attr->u.num = active->u.num;
             return 1;
