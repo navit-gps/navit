@@ -2612,13 +2612,16 @@ static void map_binfile_close(struct map_priv *m) {
     file_data_free(m->fi, (unsigned char *)m->eoc);
     file_data_free(m->fi, (unsigned char *)m->eoc64);
     g_free(m->cachedir);
+    m->cachedir = NULL;
     g_free(m->map_release);
+    m->map_release = NULL;
     if (m->fis) {
         for (i = 0; i < m->eoc->zipedsk; i++) {
             file_destroy(m->fis[i]);
         }
     } else
         file_destroy(m->fi);
+    m->fi = NULL;
 }
 
 static void map_binfile_destroy(struct map_priv *m) {
