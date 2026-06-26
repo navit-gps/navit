@@ -47,6 +47,7 @@
 
 static struct vehicle_priv {
     char *source;
+    char *gpsd_host;
     char *gpsd_query;
     struct callback_list *cbl;
     struct callback *cb, *cbt;
@@ -246,8 +247,6 @@ static int vehicle_gpsd_try_open(struct vehicle_priv *priv) {
         g_free(source);
         return TRUE;
     }
-    g_free(source);
-
 #ifdef HAVE_LIBGPS19
     if (strchr(priv->gpsd_query, 'r'))
         gps_stream(priv->gps, WATCH_ENABLE | WATCH_NMEA | WATCH_JSON, NULL);
@@ -256,6 +255,7 @@ static int vehicle_gpsd_try_open(struct vehicle_priv *priv) {
 #else
     gps_query(priv->gps, priv->gpsd_query);
 #endif
+    priv->gpsd_host = source;
 
 #if GPSD_API_MAJOR_VERSION < 5
     gps_set_raw_hook(priv->gps, vehicle_gpsd_callback);
@@ -368,6 +368,8 @@ static void vehicle_gpsd_destroy(struct vehicle_priv *priv) {
     vehicle_gpsd_close(priv);
     if (priv->source)
         g_free(priv->source);
+    if (priv->gpsd_host)
+        g_free(priv->gpsd_host);
     if (priv->gpsd_query)
         g_free(priv->gpsd_query);
 #if GPSD_API_MAJOR_VERSION >= 5
