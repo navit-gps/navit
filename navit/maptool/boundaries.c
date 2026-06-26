@@ -251,10 +251,10 @@ static GList *process_boundaries_finish(GList *boundaries_list) {
         struct boundary *boundary = l->data;
         int first = 1;
         FILE *f = NULL, *fu = NULL;
-        if (boundary->country) {
-            char *name = g_strdup_printf("country_%s_poly", boundary->iso2);
-            f = tempfile("", name, 1);
-            g_free(name);
+        char *poly_name = NULL;
+        if (boundary->country && boundary->iso2) {
+            poly_name = g_strdup_printf("country_%s_poly", boundary->iso2);
+            f = tempfile("", poly_name, 1);
         }
         boundary->sorted_segments = geom_poly_segments_sort(boundary->segments, geom_poly_segment_type_way_right_side);
         sl = boundary->sorted_segments;
@@ -277,13 +277,13 @@ static GList *process_boundaries_finish(GList *boundaries_list) {
                 item_bin_add_coord(ib, gs->first, gs->last - gs->first + 1);
                 item_bin_write(ib, f);
             }
-            if (boundary->country) {
+            if (boundary->country && boundary->iso2) {
                 if (!coord_is_equal(*gs->first, *gs->last)) {
                     struct item_bin *ib;
                     if (!fu) {
-                        char *name = g_strdup_printf("country_%s_broken", boundary->iso2);
-                        fu = tempfile("", name, 1);
-                        g_free(name);
+                        char *broken_name = g_strdup_printf("country_%s_broken", boundary->iso2);
+                        fu = tempfile("", broken_name, 1);
+                        g_free(broken_name);
                     }
                     ib = tmp_item_bin;
                     item_bin_init(ib, type_selected_point);
@@ -298,13 +298,24 @@ static GList *process_boundaries_finish(GList *boundaries_list) {
         }
         ret = process_boundaries_insert(ret, boundary);
         l = g_list_next(l);
-        if (f)
+        if (f) {
             fclose(f);
+            if (poly_name) {
+                tempfile_unlink("", poly_name);
+                g_free(poly_name);
+                poly_name = NULL;
+            }
+        }
         if (fu) {
-            if (boundary->country)
+            if (boundary->country && boundary->iso2)
                 osm_warning("relation", item_bin_get_relationid(boundary->ib), 0, "Broken country polygon '%s'\n",
                             boundary->iso2);
             fclose(fu);
+            if (boundary->iso2) {
+                char *broken_name = g_strdup_printf("country_%s_broken", boundary->iso2);
+                tempfile_unlink("", broken_name);
+                g_free(broken_name);
+            }
         }
     }
     return ret;
