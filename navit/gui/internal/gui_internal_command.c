@@ -40,6 +40,9 @@
 #    include <arpa/inet.h>
 #    include <ifaddrs.h>
 #endif
+#ifdef USE_DOWNLOAD
+#include "gui_internal_map_downloader.h"
+#endif
 
 static int gui_internal_cmd_escape(struct gui_priv *this, char *function, struct attr **in, struct attr ***out) {
     struct attr escaped;
@@ -1210,6 +1213,7 @@ static struct command_table commands[] = {
 #if HAS_IFADDRS
     {"network_info",         command_cast(gui_internal_cmd2)                 },
 #endif
+    {"map_downloader", command_cast (gui_internal_cmd_map_download)},
 };
 
 void gui_internal_command_init(struct gui_priv *this, struct attr **attrs) {
