@@ -3477,6 +3477,7 @@ static int navit_add_vehicle(struct navit *this_, struct vehicle *v) {
     if ((vehicle_get_attr(v, attr_follow, &follow, NULL)))
         nv->follow = follow.u.num;
     nv->follow_curr = nv->follow;
+    navit_object_ref((struct navit_object *)v);
     this_->vehicles = g_list_append(this_->vehicles, nv);
     if ((vehicle_get_attr(v, attr_active, &active, NULL)) && active.u.num)
         navit_set_vehicle(this_, nv);
@@ -3908,6 +3909,11 @@ static void navit_destroy_global_cmd_state(void) {
     cmd_int_var_stack = NULL;
 }
 
+static void navit_vehicle_destroy(struct navit_vehicle *nv) {
+    if (nv->vehicle)
+        navit_object_unref((struct navit_object *)nv->vehicle);
+    g_free(nv);
+}
 void navit_destroy(struct navit *this_) {
     graphics_draw_cancel(this_->gra, this_->displaylist);
 
@@ -3956,6 +3962,9 @@ void navit_destroy(struct navit *this_) {
 
     graphics_displaylist_destroy(this_->displaylist);
 
+    g_list_free_full(this_->vehicles, (GDestroyNotify)navit_vehicle_destroy);
+    this_->vehicles = NULL;
+
     gui_destroy(this_->gui);
     graphics_free(this_->gra);
 
@@ -3964,8 +3973,6 @@ void navit_destroy(struct navit *this_) {
     if (this_->trans_cursor)
         transform_destroy(this_->trans_cursor);
 
-    g_list_free_full(this_->vehicles, g_free);
-    this_->vehicles = NULL;
     g_list_free(this_->mapsets);
     this_->mapsets = NULL;
     g_list_free(this_->vehicleprofiles);
