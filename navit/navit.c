@@ -3937,7 +3937,6 @@ void navit_destroy(struct navit *this_) {
 
     navit_destroy_global_cmd_state();
 
-
     if (this_->bookmarks) {
         char *center_file = bookmarks_get_center_file(TRUE);
         bookmarks_write_center_to_file(this_->bookmarks, center_file);
