@@ -40,6 +40,9 @@ add_executable(test_driver_break_finder
     ../driver_break_finder.c
     ../driver_break_poi.c
     ../driver_break_glacier.c
+    ../driver_break_energy_route.c
+    ../driver_break_energy.c
+    ../driver_break_srtm.c
 )
 
 target_link_libraries(test_driver_break_finder
@@ -86,6 +89,9 @@ add_executable(test_driver_break_routing
     test_driver_break_routing.c
     ../driver_break_route_validator.c
     ../driver_break_poi_map.c
+    ../driver_break_energy_route.c
+    ../driver_break_energy.c
+    ../driver_break_srtm.c
 )
 
 target_link_libraries(test_driver_break_routing
@@ -109,6 +115,8 @@ add_executable(test_driver_break_integration
     ../driver_break_poi_map.c
     ../driver_break_route_validator.c
     ../driver_break_srtm.c
+    ../driver_break_energy_route.c
+    ../driver_break_energy.c
 )
 
 target_link_libraries(test_driver_break_integration
@@ -132,6 +140,8 @@ add_executable(test_driver_break_route_integration
     ../driver_break_poi_map.c
     ../driver_break_route_validator.c
     ../driver_break_srtm.c
+    ../driver_break_energy_route.c
+    ../driver_break_energy.c
 )
 
 target_link_libraries(test_driver_break_route_integration PRIVATE
@@ -150,6 +160,15 @@ target_include_directories(test_driver_break_route_integration PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../..
     ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
+
+# POI/map tests: map_data lives next to this CMakeLists.txt; binfile driver is built as target map_binfile.
+target_compile_definitions(test_driver_break_route_integration PRIVATE
+    "DRIVER_BREAK_TEST_MAP_DATA_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/map_data\"")
+if(USE_PLUGINS AND TARGET map_binfile)
+    add_dependencies(test_driver_break_route_integration map_binfile)
+    target_compile_definitions(test_driver_break_route_integration PRIVATE
+        "DRIVER_BREAK_TEST_BINFILE_SO=\"$<TARGET_FILE:map_binfile>\"")
+endif()
 
 # OBD-II and J1939 backend tests (pure logic, no hardware required)
 add_executable(test_driver_break_obd_j1939

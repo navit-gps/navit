@@ -3,7 +3,8 @@ Driver Break Plugin Tests
 
 This document describes the test suite for the Driver Break plugin. The tests live in
 ``navit/plugin/driver_break/tests/`` and are built when the plugin is enabled (SQLite3
-found). See :doc:`index` for plugin feature documentation.
+found). See :doc:`index` for plugin feature documentation. A captured stdout/CTest log from
+one successful run is in :doc:`test-results`.
 
 Test executables
 ----------------
@@ -32,6 +33,8 @@ All executables are built under the Navit build directory as
 +-----------------------------------+------------------------------------------------------------------+
 | test_driver_break_megasquirt      | MegaSquirt backend logic: injector-based fuel rate, malformed data handling. |
 +-----------------------------------+------------------------------------------------------------------+
+
+There are **nine** executables in total (config, db, finder, routing, SRTM, two integration binaries, OBD/J1939, MegaSquirt).
 
 SRTM and elevation tests (test_driver_break_srtm)
 ------------------------------------------------
@@ -104,6 +107,8 @@ Or use CTest from the build directory:
 .. code-block:: bash
 
    ctest -R driver_break --output-on-failure
+
+CTest only runs tests whose executables already exist. Build all nine targets first (for example ``cmake --build <builddir> --target test_driver_break_config test_driver_break_db`` ... or a full build), or CTest may report **Not Run** for missing binaries.
 
 The CTest names (if registered from the plugin subdirectory) are:
 ``driver_break_config_test``, ``driver_break_db_test``, ``driver_break_finder_test``,
@@ -181,12 +186,17 @@ All test executables exit with code 0 when all tests pass. Typical output:
   into the ``driver_break_fuel_stops`` table.
 - **test_driver_break_finder:** ``All finder tests passed!``
 - **test_driver_break_routing:** ``All routing tests passed!``
+  Covers hiking/car/cycling highway helpers, pilgrimage NULL item, allocation/free of
+  ``route_validation_result``, coordinate sanity checks, ``route_validator_validate_cycling(NULL)``
+  (invalid with warning), and ``driver_break_poi_map_search_place_of_worship`` with NULL center,
+  NULL mapset, or non-positive radius (returns NULL).
 - **test_driver_break_srtm:** ``All SRTM HGT file handling tests passed!``
   If Copernicus download ran: ``Copernicus GLO-30: tiles read correctly at 3 OSM locations (62.09,7.14 / 61.59,9.70 / 61.36,9.67).``
   If HGT download ran: ``SRTM HGT: tiles downloaded and read correctly at 3 OSM locations ...``
 - **test_driver_break_integration:** ``All integration tests passed!``
 - **test_driver_break_route_integration:** ``All integration tests passed!`` with
-  rest interval and POI counts (may be 0 without map data).
+  rest interval and POI counts (may be 0 without map data). Test 6 exercises core
+  route-validator helpers and ``route_validator_validate_cycling(NULL)`` (invalid result, non-empty warnings).
 - **test_driver_break_obd_j1939:** ``All OBD-II/J1939 backend tests passed!`` exercising:
 
   - MAF-based fuel rate estimation for:
@@ -203,7 +213,7 @@ All test executables exit with code 0 when all tests pass. Typical output:
     - PGN 65276 (FEF4) fuel level scaling (0.4 % per bit) tested with representative
       levels for heavy trucks (e.g. raw=50 -> 20 % of a 400 L tank).
 
-- **test_driver_break_megasquirt:** ``All MegaSquirt backend tests passed!`` covering:
+- **test_driver_break_megasquirt:** ``All MegaSquirt backend tests passed.`` covering:
 
   - Injector-based fuel rate formula from pulse width, RPM and injector flow.
   - Parsing of the MegaSquirt realtime block (RPM and injector PW fields).
@@ -216,7 +226,7 @@ with a non-zero code.
 Test results
 ------------
 
-Sample output from a full run of all seven test executables with map data and
+Sample output from a full run of all nine test executables with map data and
 elevation tiles present (after running ``download_test_map_data.sh`` and
 ``download_test_srtm_data.sh``). All tests passed (exit code 0).
 
@@ -235,6 +245,9 @@ elevation tiles present (after running ``download_test_map_data.sh`` and
    All routing tests passed!
 
    Running SRTM HGT file handling tests...
+     Downloading HGT tiles (Viewfinder Panoramas / NASA SRTM)...
+   SRTM HGT: tile download failed or unzip failed (network/unavailable). Skip read test.
+     Downloading Copernicus GLO-30 GeoTIFF from AWS S3...
    Copernicus GLO-30: tiles read correctly at 3 OSM locations (62.09,7.14 / 61.59,9.70 / 61.36,9.67).
    All SRTM HGT file handling tests passed!
 
@@ -270,9 +283,9 @@ elevation tiles present (after running ``download_test_map_data.sh`` and
      map_new succeeded, map=...
      Map loaded successfully (Rondanestien bbox)
      Using map-based POI search (map data loaded)
-     Found 375 POIs near Moelv (map data)
-     Found 401 POIs near Aukrustsenteret (map data)
-     Total POIs found along car route: 776
+     Found 376 POIs near Moelv (map data)
+     Found 402 POIs near Aukrustsenteret (map data)
+     Total POIs found along car route: 778
 
    Test 4: SRTM elevation along hiking route
      Using elevation data from: /tmp/test_srtm_hgt_download
@@ -285,6 +298,7 @@ elevation tiles present (after running ``download_test_map_data.sh`` and
      Created 3 rest intervals for 100 km cycling route
 
    Test 6: Route validation functions
+     (includes ``route_validator_validate_cycling(NULL)``: invalid, warning list non-empty)
 
    All integration tests passed!
 
@@ -292,12 +306,21 @@ elevation tiles present (after running ``download_test_map_data.sh`` and
    This is expected - tests verify functions execute correctly.
    For full testing, ensure map data and HGT files are available.
 
+   Running Driver Break OBD-II and J1939 backend tests...
+   All OBD-II/J1939 backend tests passed!
+
+   Running Driver Break MegaSquirt backend tests...
+   All MegaSquirt backend tests passed.
+
 Without map data or elevation tiles, Test 2 and Test 3 report 0 POIs and Test 4
-reports ``no data (elevation tiles not present)``; the tests still pass. The
-route integration test uses **Rondanestien** (OSM relation 1572954, Målia–Hjerkinn)
-as the hiking route. When Copernicus or HGT tiles N61E009, N61E010, N62E009 are
-present in the elevation data directory, Test 4 reports elevations at south/mid/north
-waypoints (typically in the range 200–1800 m for the Rondane/Hjerkinn area).
+reports ``no data (elevation tiles not present)``; the tests still pass. CTest runs
+``test_driver_break_srtm`` before ``test_driver_break_route_integration``, so Copernicus
+tiles downloaded to ``/tmp/test_srtm_hgt_download`` (including Rondanestien tiles
+**N61E010** and **N62E009**) are available for Test 4 in a typical full run with network
+and libcurl; see :doc:`test-results`. The route integration test uses **Rondanestien**
+(OSM relation 1572954, Målia–Hjerkinn) as the hiking route. When Copernicus or HGT tiles
+for those cells are present, Test 4 reports elevations at south/mid/north waypoints
+(typically in the range 200–1800 m for the Rondane/Hjerkinn area).
 
 GeoTIFF and SRTM HGT download test results
 ------------------------------------------

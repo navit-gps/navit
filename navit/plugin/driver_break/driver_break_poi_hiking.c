@@ -18,16 +18,19 @@
  */
 
 #include "driver_break_poi_hiking.h"
-#include "config.h"
-#include "debug.h"
-#include "driver_break_poi.h"
-#include "driver_break_poi_map.h"
-#include "mapset.h"
-#include "navit.h"
+
 #include <glib.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "config.h"
+#include "driver_break.h"
+#include "driver_break_energy_route.h"
+#include "driver_break_poi.h"
+#include "driver_break_poi_map.h"
+
+struct mapset;
 
 /* Forward declaration - navit_get_default may not be exported */
 struct navit *navit_get_default(void);
@@ -60,19 +63,6 @@ static int poi_compare_cabin_distance(const struct cabin_hut *a, const struct ca
     return 0;
 }
 
-/* Calculate distance between two coordinates in meters */
-static double coord_distance_poi(struct coord_geo *c1, struct coord_geo *c2) {
-    double lat1 = c1->lat * M_PI / 180.0;
-    double lat2 = c2->lat * M_PI / 180.0;
-    double dlat = (c2->lat - c1->lat) * M_PI / 180.0;
-    double dlng = (c2->lng - c1->lng) * M_PI / 180.0;
-
-    double a = sin(dlat / 2) * sin(dlat / 2) + cos(lat1) * cos(lat2) * sin(dlng / 2) * sin(dlng / 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-
-    return 6371000.0 * c; /* Earth radius in meters */
-}
-
 /* Search for water points using Overpass API */
 GList *poi_search_water_points(struct coord_geo *driver_break_stop, double radius_km) {
     GList *water_points = NULL;
@@ -97,7 +87,7 @@ GList *poi_search_water_points(struct coord_geo *driver_break_stop, double radiu
                 wp->coord = poi->coord;
                 wp->name = poi->name ? g_strdup(poi->name) : NULL;
                 wp->type = poi->category ? g_strdup(poi->category) : NULL;
-                wp->distance_from_driver_break_stop = coord_distance_poi(driver_break_stop, &poi->coord);
+                wp->distance_from_driver_break_stop = driver_break_coord_distance_geo(driver_break_stop, &poi->coord);
                 wp->is_spring = (poi->category && strstr(poi->category, "spring")) ? 1 : 0;
 
                 if (wp->is_spring) {
@@ -137,7 +127,7 @@ GList *poi_search_water_points_map(struct coord_geo *driver_break_stop, double r
                 wp->coord = poi->coord;
                 wp->name = poi->name ? g_strdup(poi->name) : NULL;
                 wp->type = poi->category ? g_strdup(poi->category) : NULL;
-                wp->distance_from_driver_break_stop = coord_distance_poi(driver_break_stop, &poi->coord);
+                wp->distance_from_driver_break_stop = driver_break_coord_distance_geo(driver_break_stop, &poi->coord);
 
                 /* Check if it's a spring (may need treatment) */
                 if (poi->category && strstr(poi->category, "spring")) {
@@ -184,7 +174,8 @@ GList *poi_search_cabins(struct coord_geo *driver_break_stop, double radius_km) 
                 cabin->coord = poi->coord;
                 cabin->name = poi->name ? g_strdup(poi->name) : NULL;
                 cabin->type = poi->category ? g_strdup(poi->category) : NULL;
-                cabin->distance_from_driver_break_stop = coord_distance_poi(driver_break_stop, &poi->coord);
+                cabin->distance_from_driver_break_stop =
+                    driver_break_coord_distance_geo(driver_break_stop, &poi->coord);
 
                 /* Check for DNT/network cabins from name (limited detection) */
                 if (poi->name && (strstr(poi->name, "DNT") || strstr(poi->name, "dnt"))) {
@@ -236,7 +227,8 @@ GList *poi_search_cabins_map(struct coord_geo *driver_break_stop, double radius_
                 cabin->coord = poi->coord;
                 cabin->name = poi->name ? g_strdup(poi->name) : NULL;
                 cabin->type = poi->category ? g_strdup(poi->category) : NULL;
-                cabin->distance_from_driver_break_stop = coord_distance_poi(driver_break_stop, &poi->coord);
+                cabin->distance_from_driver_break_stop =
+                    driver_break_coord_distance_geo(driver_break_stop, &poi->coord);
 
                 /* Check for DNT/network in name (network detection done during map search) */
                 if (poi->name) {

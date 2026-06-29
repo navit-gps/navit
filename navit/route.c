@@ -116,8 +116,6 @@ struct map_priv {
     struct route *route;
 };
 
-int debug_route = 0;
-
 #define RSD_OFFSET(x) *((int *)route_segment_data_field_pos((x), attr_offset))
 #define RSD_SIZE_WEIGHT(x) *((struct size_weight_limit *)route_segment_data_field_pos((x), attr_vehicle_width))
 #define RSD_DANGEROUS_GOODS(x) *((int *)route_segment_data_field_pos((x), attr_vehicle_dangerous_goods))
@@ -1381,8 +1379,7 @@ static struct route_graph_point *route_graph_point_new(struct route_graph *this,
     struct route_graph_point *p;
 
     hashval = HASHCOORD(f);
-    if (debug_route)
-        printf("p (0x%x,0x%x)\n", f->x, f->y);
+    dbg(lvl_debug, "p (0x%x,0x%x)", f->x, f->y);
     p = g_slice_new0(struct route_graph_point);
     p->hash_next = this->hash[hashval];
     this->hash[hashval] = p;
@@ -1640,8 +1637,7 @@ void route_graph_add_segment(struct route_graph *this, struct route_graph_point 
 
     s->next = this->route_segments;
     this->route_segments = s;
-    if (debug_route)
-        printf("l (0x%x,0x%x)-(0x%x,0x%x)\n", start->c.x, start->c.y, end->c.x, end->c.y);
+    dbg(lvl_debug, "l (0x%x,0x%x)-(0x%x,0x%x)\n", start->c.x, start->c.y, end->c.x, end->c.y);
 }
 
 /**

@@ -17,9 +17,9 @@
 #define NAVIT_PLUGIN_DRIVER_BREAK_OBD_H
 
 #include "config.h"
-#include "driver_break.h"
 
 struct driver_break_obd;
+struct driver_break_priv;
 
 /**
  * @brief Create and start an OBD-II backend for the given plugin instance.

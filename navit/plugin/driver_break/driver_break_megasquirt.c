@@ -15,18 +15,20 @@
  */
 
 #include "driver_break_megasquirt.h"
+
+#include <errno.h>
+#include <fcntl.h>
+#include <glib.h>
+#include <string.h>
+#include <termios.h>
+#include <unistd.h>
+
 #include "callback.h"
 #include "debug.h"
 #include "driver_break.h"
 #include "event.h"
-#include <errno.h>
-#include <fcntl.h>
-#include <glib.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <termios.h>
-#include <unistd.h>
+
+struct event_timeout;
 
 /* Default serial device and protocol parameters */
 #define MS_DEFAULT_DEVICE "/dev/ttyUSB0"

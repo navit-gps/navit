@@ -5,17 +5,17 @@
  * Unit tests for Driver Break plugin SRTM HGT file handling
  */
 
-#include "../../debug.h"
-#include "../../navit.h"
-#include "../driver_break.h"
-#include "../driver_break_srtm.h"
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
+
+#include "../../debug.h"
+#include "../../navit.h"
+#include "../driver_break_srtm.h"
+#include "coord.h"
 
 #ifdef HAVE_CURL
 #    include <curl/curl.h>
@@ -80,8 +80,6 @@ char *navit_get_user_data_directory(int create) {
     return g_strdup("/tmp");
 }
 
-/* Forward declarations for stubs */
-struct event_idle;
 struct callback;
 
 /* Stub for event_add_idle (not needed for file tests) */
@@ -265,8 +263,10 @@ static int test_hgt_corrupt_data(void) {
     coord.lat = 60.5;
     coord.lng = 9.5;
     int elevation = srtm_get_elevation(&coord);
-    /* Should return void value or handle gracefully */
-    TEST_ASSERT(elevation == -32768 || elevation >= -32768, "Invalid data not handled correctly");
+    /* Should return the void sentinel or a value within a sane elevation band;
+     * the previous `elevation >= -32768` clause was always true for an int and
+     * never actually validated the result. */
+    TEST_ASSERT(elevation == -32768 || (elevation >= -500 && elevation <= 9000), "Invalid data not handled correctly");
 
     g_free(filepath);
     g_free(test_dir);
@@ -594,11 +594,21 @@ static int download_copernicus_tile(const char *url, const char *filepath) {
 }
 #    endif
 
+/* Shared elevation cache: same default as download_test_srtm_data.sh and route integration Test 4. */
+static char *driver_break_srtm_shared_data_dir(void) {
+    const char *e = g_getenv("SRTM_TEST_DIR");
+    if (e && e[0])
+        return g_strdup(e);
+    return g_strdup("/tmp/test_srtm_hgt_download");
+}
+
 /* Test Copernicus GLO-30: download tiles for three OSM map locations (Norway) and verify read.
  * Locations: map=12/62.0937/7.1433, map=12/61.5919/9.7018, map=15/61.36012/9.66941
- * Tiles: N62E007, N61E009. */
+ * Tiles for those points: N62E007, N61E009.
+ * Also downloads N61E010 and N62E009 when CURL is available so test_driver_break_route_integration
+ * Test 4 (Rondanestien) can read elevation from the same directory after ctest. */
 static int test_copernicus_glo30_download_and_read(void) {
-    char *test_dir = g_strdup("/tmp/test_copernicus_glo30");
+    char *test_dir = driver_break_srtm_shared_data_dir();
     g_mkdir_with_parents(test_dir, 0755);
 
 #    ifdef HAVE_CURL
@@ -625,6 +635,25 @@ static int test_copernicus_glo30_download_and_read(void) {
         g_free(test_dir);
         return 0;
     }
+
+    /* Rondanestien route integration uses tiles N61E010 (south/mid) and N62E009 (north); not the same as
+     * N62E007/N61E009. */
+    {
+        const char *tile_61_10 = "Copernicus_DSM_COG_10_N61_00_E010_00_DEM";
+        const char *tile_62_9 = "Copernicus_DSM_COG_10_N62_00_E009_00_DEM";
+        char *url = g_strdup_printf("%s%s/%s.tif", base, tile_61_10, tile_61_10);
+        char *path = g_build_filename(test_dir, "Copernicus_DSM_COG_10_N61_00_E010_00_DEM.tif", NULL);
+        if (!download_copernicus_tile(url, path))
+            printf("  Copernicus GLO-30: optional N61E010 tile for route integration Test 4 not downloaded.\n");
+        g_free(url);
+        g_free(path);
+        url = g_strdup_printf("%s%s/%s.tif", base, tile_62_9, tile_62_9);
+        path = g_build_filename(test_dir, "Copernicus_DSM_COG_10_N62_00_E009_00_DEM.tif", NULL);
+        if (!download_copernicus_tile(url, path))
+            printf("  Copernicus GLO-30: optional N62E009 tile for route integration Test 4 not downloaded.\n");
+        g_free(url);
+        g_free(path);
+    }
 #    else
     /* Without CURL we only run if tiles are already present and valid (e.g. from a previous run) */
     char *path_62_7 = g_build_filename(test_dir, "Copernicus_DSM_COG_10_N62_00_E007_00_DEM.tif", NULL);
@@ -634,7 +663,9 @@ static int test_copernicus_glo30_download_and_read(void) {
     g_free(path_62_7);
     g_free(path_61_9);
     if (!got_62_7 || !got_61_9) {
-        printf("Copernicus GLO-30: tiles not present or invalid (no CURL). Skip test.\n");
+        printf("Copernicus GLO-30: no valid GeoTIFF tiles in %s (test built without libcurl, so tiles cannot be "
+               "downloaded; install libcurl and rebuild, or place Copernicus *.tif files there). Skip test.\n",
+               test_dir);
         g_free(test_dir);
         return 0;
     }
@@ -675,6 +706,23 @@ static int test_copernicus_glo30_download_and_read(void) {
 }
 #endif
 
+static int test_srtm_bbox_coverage(void) {
+    int total = 0;
+    int missing;
+    struct srtm_region *region;
+
+    missing = srtm_bbox_missing_tile_count(9.0, 61.0, 10.0, 62.0, &total);
+    TEST_ASSERT(total >= 1, "bbox should require at least one tile");
+    TEST_ASSERT(missing >= 0 && missing <= total, "missing tile count in range");
+
+    region = srtm_region_from_bbox("test_bbox", 9.0, 61.0, 10.0, 62.0);
+    TEST_ASSERT(region != NULL, "srtm_region_from_bbox should succeed");
+    TEST_ASSERT(region->tile_count == total, "region tile count matches bbox list");
+    g_free(region->name);
+    g_free(region);
+    return 0;
+}
+
 int main(void) {
     int failures = 0;
 
@@ -695,6 +743,8 @@ int main(void) {
 #ifdef HAVE_GEOTIFF
     failures += test_copernicus_glo30_download_and_read();
 #endif
+
+    failures += test_srtm_bbox_coverage();
 
     if (failures == 0) {
         printf("All SRTM HGT file handling tests passed!\n");

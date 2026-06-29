@@ -18,12 +18,13 @@
  */
 
 #include "driver_break_cycling.h"
-#include "config.h"
-#include "debug.h"
+
 #include <glib.h>
+#include <glib/gtypes.h>
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
+
+#include "config.h"
 
 /* Compare function for sorting rest stops by position */
 static int cycling_compare_position(const struct cycling_driver_break_stop *a,

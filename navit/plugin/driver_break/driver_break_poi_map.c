@@ -18,32 +18,27 @@
  */
 
 #include "driver_break_poi_map.h"
-#include "attr.h"
-#include "config.h"
-#include "debug.h"
-#include "driver_break_poi.h"
-#include "item.h"
-#include "map.h"
-#include "projection.h"
-#include "transform.h"
+
 #include <glib.h>
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "attr.h"
+#include "attr_type_def.h"
+#include "config.h"
+#include "coord.h"
+#include "driver_break_energy_route.h"
+#include "item.h"
+#include "map.h"
+#include "mapset.h"
+#include "projection.h"
+#include "transform.h"
+
+struct map;
+struct mapset;
 /* item_def.h included via item.h */
-
-/* Calculate distance between two coordinates in meters */
-static double coord_distance_geo(struct coord_geo *c1, struct coord_geo *c2) {
-    double lat1 = c1->lat * M_PI / 180.0;
-    double lat2 = c2->lat * M_PI / 180.0;
-    double dlat = (c2->lat - c1->lat) * M_PI / 180.0;
-    double dlng = (c2->lng - c1->lng) * M_PI / 180.0;
-
-    double a = sin(dlat / 2) * sin(dlat / 2) + cos(lat1) * cos(lat2) * sin(dlng / 2) * sin(dlng / 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-
-    return 6371000.0 * c; /* Earth radius in meters */
-}
 
 /* Sort helper for fuel POIs by distance */
 static gint driver_break_poi_compare_distance(gconstpointer a, gconstpointer b) {
@@ -163,6 +158,38 @@ int driver_break_route_is_pilgrimage_hiking(struct item *item) {
     return 0;
 }
 
+/* Way tags: signed bicycle/MTB routes or national/regional/local cycle networks */
+int driver_break_route_is_cycle_network_way(struct item *item) {
+    if (!item) {
+        return 0;
+    }
+
+    char *route = get_osm_tag_value(item, "route");
+    if (route) {
+        char *rl = g_ascii_strdown(route, -1);
+        int hit = (strcmp(rl, "bicycle") == 0 || strcmp(rl, "mtb") == 0);
+        g_free(rl);
+        g_free(route);
+        if (hit) {
+            return 1;
+        }
+    }
+
+    char *network = get_osm_tag_value(item, "network");
+    if (network) {
+        char *nl = g_ascii_strdown(network, -1);
+        int hit =
+            (strcmp(nl, "ncn") == 0 || strcmp(nl, "rcn") == 0 || strcmp(nl, "lcn") == 0 || strcmp(nl, "icn") == 0);
+        g_free(nl);
+        g_free(network);
+        if (hit) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 /* Return 1 if item type is in the list */
 static int item_type_matches(struct item *item, enum item_type *poi_types, int num_types) {
     int i;
@@ -215,7 +242,7 @@ static GList *collect_pois_from_map(struct map *map, struct map_selection *sel, 
             continue;
         struct coord_geo item_geo;
         transform_to_geo(projection_mg, &item_coord, &item_geo);
-        double distance = coord_distance_geo(center, &item_geo);
+        double distance = driver_break_coord_distance_geo(center, &item_geo);
         if (distance > radius_m)
             continue;
         struct driver_break_poi *poi = poi_from_map_item(item, &item_geo, distance);
@@ -285,7 +312,7 @@ static void process_cabin_item(struct item *item, struct coord_geo *center, doub
     struct coord_geo item_geo;
     transform_to_geo(projection_mg, &item_coord, &item_geo);
 
-    double distance = coord_distance_geo(center, &item_geo);
+    double distance = driver_break_coord_distance_geo(center, &item_geo);
     if (distance > radius_m) {
         return;
     }
@@ -403,6 +430,36 @@ GList *driver_break_poi_map_search_car_pois(struct coord_geo *center, double rad
     return driver_break_poi_map_search(center, radius_km, car_poi_types, 12, ms);
 }
 
+/* Search for motorcycle POIs: same as car (cafe, restaurant, viewpoint, picnic, repair, shops); motorcycle_repair and
+ * shop=motorcycle when mapped to repair/shop types */
+GList *driver_break_poi_map_search_motorcycle_pois(struct coord_geo *center, double radius_km, struct mapset *ms) {
+    enum item_type mc_poi_types[] = {type_poi_cafe,
+                                     type_poi_restaurant,
+                                     type_poi_museum_history,
+                                     type_poi_viewpoint,
+                                     type_poi_picnic,
+                                     type_poi_attraction,
+                                     type_poi_shop_grocery,
+                                     type_poi_shopping,
+                                     type_poi_mall,
+                                     type_poi_repair_service,
+                                     type_none};
+    return driver_break_poi_map_search(center, radius_km, mc_poi_types, 10, ms);
+}
+
+GList *driver_break_poi_map_search_cycling_service_pois(struct coord_geo *center, double radius_km, struct mapset *ms) {
+    enum item_type cycling_types[] = {type_poi_shop_bicycle, type_poi_repair_service, type_poi_bicycle_rental,
+                                      type_poi_bicycle_parking, type_none};
+
+    return driver_break_poi_map_search(center, radius_km, cycling_types, 4, ms);
+}
+
+GList *driver_break_poi_map_search_place_of_worship(struct coord_geo *center, double radius_km, struct mapset *ms) {
+    enum item_type worship_types[] = {type_poi_worship, type_poi_church, type_none};
+
+    return driver_break_poi_map_search(center, radius_km, worship_types, 2, ms);
+}
+
 /* Check if item has any of the given OSM fuel:* tag keys (presence only). */
 static int fuel_has_any_tag(struct item *it, const char **keys) {
     int i;
@@ -459,6 +516,9 @@ static const struct fuel_profile_row fuel_profile_table[] = {
 static int fuel_station_matches_profile(struct item *item, enum driver_break_vehicle_type vehicle_type, int fuel_type) {
     if (!item)
         return 0;
+    /* Motorcycle uses same fuel profiles as car (petrol, etc.) */
+    if (vehicle_type == DRIVER_BREAK_VEHICLE_MOTORCYCLE)
+        vehicle_type = DRIVER_BREAK_VEHICLE_CAR;
 
     /* Optional amenity=fuel check; some maps still map as fuel POI without it. */
     {
@@ -541,7 +601,7 @@ GList *driver_break_poi_map_search_fuel(struct coord_geo *center, double radius_
 
             struct coord_geo item_geo;
             transform_to_geo(projection_mg, &item_coord, &item_geo);
-            double distance = coord_distance_geo(center, &item_geo);
+            double distance = driver_break_coord_distance_geo(center, &item_geo);
             if (distance > radius_m) {
                 continue;
             }

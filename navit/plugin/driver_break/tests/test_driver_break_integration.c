@@ -5,24 +5,19 @@
  * Integration tests for Driver Break plugin using actual Navit and plugin functions
  */
 
+#include <glib.h>
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
+
 #include "../../debug.h"
-#include "../../mapset.h"
-#include "../../navit.h"
-#include "../../projection.h"
-#include "../../route.h"
-#include "../../transform.h"
-#include "../../vehicleprofile.h"
-#include "../driver_break.h"
 #include "../driver_break_cycling.h"
 #include "../driver_break_hiking.h"
 #include "../driver_break_poi.h"
 #include "../driver_break_poi_hiking.h"
 #include "../driver_break_route_validator.h"
 #include "../driver_break_srtm.h"
-#include <glib.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "coord.h"
 
 /* Stub for debug_printf and max_debug_level for unit tests */
 dbg_level max_debug_level = lvl_error;

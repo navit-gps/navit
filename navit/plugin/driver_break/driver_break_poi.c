@@ -18,13 +18,18 @@
  */
 
 #include "driver_break_poi.h"
+#include "driver_break_energy_route.h"
+
+#include <glib.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "config.h"
 #include "coord.h"
 #include "debug.h"
-#include <glib.h>
-#include <math.h>
-#include <stdlib.h>
-#include <string.h>
+#include "driver_break.h"
 
 #ifdef HAVE_CURL
 #    include <curl/curl.h>
@@ -161,7 +166,7 @@ static struct driver_break_poi *parse_overpass_node(const char *obj_start, struc
     if (!poi->category) {
         poi->category = g_strdup("unknown");
     }
-    poi->distance_from_driver_break_stop = coord_distance(&poi->coord, center);
+    poi->distance_from_driver_break_stop = driver_break_coord_distance_geo(&poi->coord, center);
     return poi;
 }
 
@@ -288,6 +293,7 @@ static GList *driver_break_poi_overpass_search(struct coord_geo *center, int rad
     return pois;
 }
 #    endif /* HAVE_CURL */
+#endif     /* HAVE_CURL */
 
 /* Discover POIs using map data (preferred) or Overpass API (fallback) */
 GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const char **poi_categories,
@@ -307,41 +313,34 @@ GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const 
 
     /* If poi_categories is NULL, search for general POIs */
     if (!poi_categories || num_categories == 0) {
-#    ifdef HAVE_CURL
+#ifdef HAVE_CURL
         /* General POIs: cafes, shops, bike, etc. */
-        const char *general_categories[] = {"amenity=cafe",     "amenity=restaurant",
-                                            "tourism=museum",   "tourism=viewpoint",
-                                            "shop=convenience", "shop=farm",
-                                            "shop=supermarket", "shop=mall",
-                                            "shop=bicycle",     "amenity=bicycle_repair_station"};
+        const char *general_categories[] = {"amenity=cafe",
+                                            "amenity=restaurant",
+                                            "tourism=museum",
+                                            "tourism=viewpoint",
+                                            "shop=convenience",
+                                            "shop=farm",
+                                            "shop=supermarket",
+                                            "shop=mall",
+                                            "shop=bicycle",
+                                            "amenity=bicycle_repair_station",
+                                            "amenity=charging_station"};
         pois = driver_break_poi_overpass_search(center, radius_km, general_categories,
                                                 sizeof(general_categories) / sizeof(general_categories[0]), 1);
-#    else
+#else
         dbg(lvl_warning, "Driver Break plugin: libcurl not available, POI discovery disabled");
-#    endif
+#endif
     } else {
         /* Use Overpass API for specific categories */
-#    ifdef HAVE_CURL
+#ifdef HAVE_CURL
         pois = driver_break_poi_overpass_search(center, radius_km, poi_categories, num_categories, 0);
-#    else
+#else
         dbg(lvl_warning, "Driver Break plugin: libcurl not available, POI discovery disabled");
-#    endif
+#endif
     }
 
     return pois;
-}
-
-/* Calculate distance between two coordinates */
-static double coord_distance(struct coord_geo *c1, struct coord_geo *c2) {
-    double lat1 = c1->lat * M_PI / 180.0;
-    double lat2 = c2->lat * M_PI / 180.0;
-    double dlat = (c2->lat - c1->lat) * M_PI / 180.0;
-    double dlng = (c2->lng - c1->lng) * M_PI / 180.0;
-
-    double a = sin(dlat / 2) * sin(dlat / 2) + cos(lat1) * cos(lat2) * sin(dlng / 2) * sin(dlng / 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-
-    return 6371000.0 * c; /* Earth radius in meters */
 }
 
 /* Compare function for sorting POIs by distance */
@@ -358,19 +357,21 @@ static int driver_break_poi_compare_distance(gconstpointer a, gconstpointer b) {
     return 0;
 }
 
-/* Rank POIs by distance and other factors */
-void driver_break_poi_rank(GList *pois, struct coord_geo *driver_break_stop, struct driver_break_config *config) {
+/* Rank POIs by distance and other factors. Returns sorted list head (may differ from input). */
+GList *driver_break_poi_rank(GList *pois, struct coord_geo *driver_break_stop, struct driver_break_config *config) {
     GList *l;
 
+    (void)config;
+
     if (!pois || !driver_break_stop) {
-        return;
+        return pois;
     }
 
     for (l = pois; l; l = g_list_next(l)) {
         struct driver_break_poi *poi = (struct driver_break_poi *)l->data;
         if (poi) {
             /* Calculate distance from rest stop */
-            poi->distance_from_driver_break_stop = coord_distance(&poi->coord, driver_break_stop);
+            poi->distance_from_driver_break_stop = driver_break_coord_distance_geo(&poi->coord, driver_break_stop);
 
             /* Simple ranking: prefer closer POIs */
             /* Full implementation would consider:
@@ -383,7 +384,7 @@ void driver_break_poi_rank(GList *pois, struct coord_geo *driver_break_stop, str
     }
 
     /* Sort by distance (closest first) */
-    g_list_sort(pois, driver_break_poi_compare_distance);
+    return g_list_sort(pois, driver_break_poi_compare_distance);
 }
 
 void driver_break_poi_free_list(GList *pois) {

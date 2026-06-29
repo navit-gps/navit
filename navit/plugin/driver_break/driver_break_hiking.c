@@ -18,12 +18,12 @@
  */
 
 #include "driver_break_hiking.h"
-#include "config.h"
-#include "debug.h"
+
 #include <glib.h>
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
+
+#include "config.h"
 
 /* Calculate hiking rest stops */
 GList *hiking_calculate_driver_break_stops(double total_distance, int use_alternative) {

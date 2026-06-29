@@ -16,9 +16,9 @@
 #define NAVIT_PLUGIN_DRIVER_BREAK_J1939_H
 
 #include "config.h"
-#include "driver_break.h"
 
 struct driver_break_j1939;
+struct driver_break_priv;
 
 struct driver_break_j1939 *driver_break_j1939_start(struct driver_break_priv *priv);
 

@@ -40,7 +40,7 @@ check_po() {
 	cd build-locale
 	cmake .. >/dev/null
 	cd po
-	make -j5 locales >/dev/null
+	make -j5 locales >/dev/null || return 1
 
 	for po in *.po
 	do
@@ -56,7 +56,7 @@ check_po() {
 }
 
 check_po || {
-	echo "[ERROR] found outdated po-files. Please check the differences in the current source tree for po/*.po" >&2
+	echo "[ERROR] found incorrect or outdated po-files. Please check the differences in the current source tree for po/*.po" >&2
 	exit 2
 }
 

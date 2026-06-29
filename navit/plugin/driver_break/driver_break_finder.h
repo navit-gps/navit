@@ -27,10 +27,15 @@
 #ifndef NAVIT_PLUGIN_DRIVER_BREAK_FINDER_H
 #define NAVIT_PLUGIN_DRIVER_BREAK_FINDER_H
 
+#include <glib.h>
+
 #include "config.h"
-#include "coord.h"
-#include "driver_break.h"
-#include "route.h"
+
+struct coord_geo;
+struct driver_break_config;
+struct driver_break_stop;
+struct mapset;
+struct route;
 
 /**
  * @brief Find rest stops along a route

@@ -1,0 +1,11 @@
+Navit Androidile on avatud lähtekoodiga (GPL) autonavigatsioonisüsteem.
+See kuvab GPS-andmete põhjal sinu asukoha kaardil (linnulennulise vaate või 3D-visualiseeringuna), pakub täpset teekonna koostamist, puutetundlikku ekraani ja toetab huvipunkte (POI).
+
+Erinevalt teistest navigatsioonisüsteemidest genereeritakse Naviti kaardid reaalajas dünaamiliselt vektoriandmete põhjal.
+Navit töötab täielikult vallasrežiimis ega internetiühendust. Navit austab sinu privaatsust ega jälgi sinu asukohta.
+
+Funktsionaalsus:
+*) Tee juhatamine sihtkohta Google Mapsi abil
+*) töötab vallasrežiimis (ilma võrguühenduseta)
+*) hääljuhtimine paljudes keeltes
+*) ajakohased Openstreetmapi kaardid

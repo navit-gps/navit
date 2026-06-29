@@ -5,14 +5,15 @@
  * Unit tests for Driver Break plugin rest stop finder
  */
 
-#include "../../debug.h"
-#include "../driver_break.h"
-#include "../driver_break_finder.h"
 #include <glib.h>
 #include <math.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+
+#include "../../debug.h"
+#include "../driver_break.h"
+#include "../driver_break_finder.h"
+#include "coord.h"
 
 /* Stub for debug_printf and max_debug_level for unit tests */
 dbg_level max_debug_level = lvl_error;

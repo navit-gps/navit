@@ -10,7 +10,7 @@ Name: harbour-navit
 Summary: Open Source car navigation system
 #Version: %{navit_version}_%{git_version}
 Version: 0.5.7
-Release: 4
+Release: 5
 License: GPL
 Group: Applications/Productivity
 URL: http://navit-project.org/
@@ -87,6 +87,7 @@ cmake  -DCMAKE_INSTALL_PREFIX:PATH=/usr \
        -DHOMECONFIG_DIR:PATH=.config/org.navitproject/navit \
        -DLIB_DIR:PATH=share/harbour-navit/lib \
        -DBUILD_MAPTOOL:BOOL=FALSE \
+       -DSAMPLE_MAP=n \
        -Dfont/freetype:BOOL=FALSE \
        -Dbinding/dbus:BOOL=FALSE \
        -Dgraphics/gtk_drawing_area:BOOL=FALSE \
@@ -128,7 +129,6 @@ for a in $(find %{buildroot} -name "*.a"); do rm $a; done;
 %{_datadir}/harbour-navit/navit_layout_th.xml
 %{_datadir}/harbour-navit/icons/
 %{_datadir}/harbour-navit/textures/
-%{_datadir}/harbour-navit/maps/osm_bbox_11.3,47.9,11.7,48.2.bin
 %{_datadir}/harbour-navit/espeak-data/
 %{_datadir}/applications/harbour-navit.desktop
 %{_datadir}/icons/hicolor/256x256/apps/harbour-navit.png
@@ -143,6 +143,9 @@ for a in $(find %{buildroot} -name "*.a"); do rm $a; done;
 
 
 %changelog
+*Sun Apr 05 2026 packaging 0.5.7-5
+- Disable SAMPLE_MAP: Sailfish SDK/CI often has no DNS; bundled map download broke %%build.
+
 *Sun Feb 08 2026 jkoan 0.5.7-4
 - Release 0.5.7
 

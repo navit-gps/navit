@@ -18,12 +18,7 @@
  */
 
 #include "driver_break_srtm.h"
-#include "callback.h"
-#include "config.h"
-#include "debug.h"
-#include "event.h"
-#include "file.h"
-#include "navit.h"
+
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <math.h>
@@ -33,6 +28,16 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "callback.h"
+#include "config.h"
+#include "coord.h"
+#include "debug.h"
+#include "event.h"
+#include "file.h"
+#include "navit.h"
+
+struct callback;
+
 #ifdef HAVE_CURL
 #    include <curl/curl.h>
 #endif
@@ -40,6 +45,7 @@
 #ifdef HAVE_GEOTIFF
 #    include <stdarg.h>
 #    include <tiffio.h>
+
 /* No-op warning handler to suppress "Unknown field" for GeoTIFF tags (33550, 33922, 34735, etc.) */
 static void srtm_tiff_warning_suppress(const char *module, const char *fmt, va_list ap) {
     (void)module;
@@ -847,6 +853,67 @@ int srtm_download_cancel(struct srtm_download_context *ctx) {
     }
     ctx->status = SRTM_DOWNLOAD_IDLE;
     return 1;
+}
+
+int srtm_bbox_missing_tile_count(double min_lon, double min_lat, double max_lon, double max_lat, int *total_tiles) {
+    GList *tiles;
+    int missing = 0;
+    int total = 0;
+    GList *l;
+
+    if (total_tiles)
+        *total_tiles = 0;
+
+    tiles = srtm_calculate_tiles(min_lon, min_lat, max_lon, max_lat);
+    for (l = tiles; l; l = l->next) {
+        struct srtm_tile *tile = (struct srtm_tile *)l->data;
+        if (!tile)
+            continue;
+        total++;
+        if (!srtm_tile_exists(tile->lon, tile->lat))
+            missing++;
+    }
+    srtm_free_tiles(tiles);
+    if (total_tiles)
+        *total_tiles = total;
+    return missing;
+}
+
+struct srtm_region *srtm_region_from_bbox(const char *name, double min_lon, double min_lat, double max_lon,
+                                          double max_lat) {
+    struct srtm_region *region = g_new0(struct srtm_region, 1);
+    GList *tiles;
+
+    region->name = g_strdup(name ? name : "custom");
+    region->bbox_min_lon = min_lon;
+    region->bbox_min_lat = min_lat;
+    region->bbox_max_lon = max_lon;
+    region->bbox_max_lat = max_lat;
+
+    tiles = srtm_calculate_tiles(min_lon, min_lat, max_lon, max_lat);
+    region->tile_count = g_list_length(tiles);
+    {
+        GList *t = tiles;
+        while (t) {
+            struct srtm_tile *tl = (struct srtm_tile *)t->data;
+            region->size_bytes += tl->size_bytes;
+            t = g_list_next(t);
+        }
+    }
+    {
+        int downloaded_count = 0;
+        GList *t = tiles;
+        while (t) {
+            struct srtm_tile *tile = (struct srtm_tile *)t->data;
+            if (tile && tile->downloaded)
+                downloaded_count++;
+            t = g_list_next(t);
+        }
+        region->downloaded = (region->tile_count > 0 && downloaded_count == region->tile_count) ? 1 : 0;
+        region->progress_percent = region->tile_count > 0 ? (downloaded_count * 100 / region->tile_count) : 0;
+    }
+    srtm_free_tiles(tiles);
+    return region;
 }
 
 /* Free region list */

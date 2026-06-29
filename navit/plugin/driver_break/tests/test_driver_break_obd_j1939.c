@@ -10,16 +10,10 @@
  *   - J1939 PGNs 65266 (FEEA) and 65276 (FEF4).
  */
 
-#include "../../debug.h"
-#include "../driver_break.h"
-#include "../driver_break_db.h"
-#include "../driver_break_j1939.h"
-#include "../driver_break_obd.h"
-#include <glib.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <time.h>
+
+#include "../driver_break.h"
 
 #define TEST_ASSERT(cond, msg)                                                                                         \
     do {                                                                                                               \

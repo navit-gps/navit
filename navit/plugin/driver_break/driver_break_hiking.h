@@ -20,9 +20,10 @@
 #ifndef NAVIT_PLUGIN_DRIVER_BREAK_HIKING_H
 #define NAVIT_PLUGIN_DRIVER_BREAK_HIKING_H
 
+#include <glib.h>
+
 #include "config.h"
 #include "coord.h"
-#include "driver_break.h"
 
 /* Hiking rest constants */
 #define HIKING_DRIVER_BREAK_DISTANCE_MAIN 11295.0 /* 11.295 km */

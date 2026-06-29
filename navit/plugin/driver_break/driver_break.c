@@ -17,16 +17,24 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include <glib.h>
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+
 #include "attr.h"
+#include "attr_type_def.h"
 #include "callback.h"
 #include "config.h"
 #include "coord.h"
 #include "debug.h"
+#include "driver_break.h"
 #include "driver_break_cycling.h"
 #include "driver_break_db.h"
 #include "driver_break_energy.h"
+#include "driver_break_energy_route.h"
 #include "driver_break_finder.h"
-#include "driver_break_glacier.h"
 #include "driver_break_hiking.h"
 #include "driver_break_j1939.h"
 #include "driver_break_megasquirt.h"
@@ -40,29 +48,17 @@
 #include "driver_break_srtm_osd.h"
 #include "event.h"
 #include "file.h"
-#include "item.h"
-#include "map.h"
-#include "mapset.h"
-#include "plugin.h"
-#include "projection.h"
-#include "transform.h"
-#include <glib.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-/* item_def.h included via item.h */
-#include "color.h"
-#include "command.h"
-#include "mapset.h"
-#include "menu.h"
-#include "navigation.h"
 #include "navit.h"
 #include "osd.h"
-#include "popup.h"
+#include "plugin.h"
+#include "projection.h"
 #include "route.h"
-#include "vehicle.h"
+#include "transform.h"
+
+struct event_timeout;
+struct mapset;
+struct navit;
+struct osd_priv;
 
 /* Get database path from attributes or use default */
 static char *driver_break_get_database_path(struct attr **attrs) {
@@ -127,6 +123,7 @@ void driver_break_config_default(struct driver_break_config *config) {
     config->poi_search_radius_km = 15;
     config->poi_water_search_radius_km = 2;    /* 2 km for water */
     config->poi_cabin_search_radius_km = 5;    /* 5 km for cabins */
+    config->enable_water_pois_remote_arid = 0; /* off by default */
     config->network_hut_search_radius_km = 25; /* 25 km for network huts (DNT, STF) */
 
     /* Network and route priority defaults */
@@ -139,7 +136,10 @@ void driver_break_config_default(struct driver_break_config *config) {
 
     /* Energy routing defaults */
     config->use_energy_routing = 0; /* Disabled by default */
-    config->total_weight = 80.0;    /* 80 kg default (person + gear) */
+    config->use_ecu_route_cost = 0;
+    config->total_weight = 80.0; /* 80 kg default (person + gear) */
+    config->energy_drag_cd = 0.30;
+    config->energy_frontal_area_sqm = 2.2; /* Typical passenger car; adjust per vehicle */
 
     /* Fuel profile defaults */
     config->fuel_type = DRIVER_BREAK_FUEL_PETROL;
@@ -150,9 +150,19 @@ void driver_break_config_default(struct driver_break_config *config) {
     config->fuel_megasquirt_available = 0;
     config->fuel_injector_flow_cc_min = 0;
     config->fuel_ethanol_manual_pct = 0;
-    config->fuel_low_warning_km = 80;      /* warn when <80 km remaining */
-    config->fuel_search_buffer_km = 20;    /* default buffer for fuel search */
-    config->fuel_high_load_threshold = 25; /* 25% above baseline */
+    config->fuel_low_warning_km = 80;           /* warn when <80 km remaining */
+    config->fuel_search_buffer_km = 20;         /* default buffer for fuel search */
+    config->fuel_high_load_threshold = 25;      /* 25% above baseline */
+    config->fuel_adaptive_learning_enabled = 1; /* Adaptive fuel learning enabled by default */
+
+    /* Motorcycle defaults: soft 2 h, mandatory 3.5 h, duration 20 min, road terrain, weight 250 kg */
+    config->motorcycle_soft_limit_minutes = 120;
+    config->motorcycle_mandatory_break_after_minutes = 210; /* 3.5 h */
+    config->motorcycle_break_duration_min = 20;
+    config->motorcycle_terrain_subtype = DRIVER_BREAK_MC_TERRAIN_ROAD;
+    config->motorcycle_adventure_max_smoothness = 3; /* bad */
+    config->motorcycle_adventure_max_tracktype = 3;  /* grade3 */
+    config->motorcycle_default_weight_kg = 250;
 
     config->vehicle_type = DRIVER_BREAK_VEHICLE_CAR; /* Default to car */
 
@@ -187,6 +197,10 @@ static void driver_break_check_driving_time(struct driver_break_priv *priv) {
             /* Recommended break, not mandatory for cars */
             mandatory_break = 0;
         }
+    } else if (config->vehicle_type == DRIVER_BREAK_VEHICLE_MOTORCYCLE) {
+        if (priv->session.continuous_driving_minutes >= config->motorcycle_mandatory_break_after_minutes) {
+            mandatory_break = 1;
+        }
     } else if (config->vehicle_type == DRIVER_BREAK_VEHICLE_HIKING
                || config->vehicle_type == DRIVER_BREAK_VEHICLE_CYCLING) {
         /* For hiking/cycling, breaks are suggested based on distance, not time */
@@ -200,19 +214,6 @@ static void driver_break_check_driving_time(struct driver_break_priv *priv) {
         dbg(lvl_info, "Driver Break plugin: Mandatory break required after %d minutes of driving",
             priv->session.continuous_driving_minutes);
     }
-}
-
-/* Calculate distance between two coordinates in meters (Haversine) */
-static double driver_break_coord_distance_geo(struct coord_geo *c1, struct coord_geo *c2) {
-    double lat1 = c1->lat * M_PI / 180.0;
-    double lat2 = c2->lat * M_PI / 180.0;
-    double dlat = (c2->lat - c1->lat) * M_PI / 180.0;
-    double dlng = (c2->lng - c1->lng) * M_PI / 180.0;
-
-    double a = sin(dlat / 2) * sin(dlat / 2) + cos(lat1) * cos(lat2) * sin(dlng / 2) * sin(dlng / 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-
-    return 6371000.0 * c;
 }
 
 /* Update rolling windows and trip totals from a single sample. */
@@ -326,10 +327,38 @@ static void driver_break_vehicle_callback_wrapper(void *priv_data) {
             /* Vehicle is moving, update driving time */
             driver_break_check_driving_time(priv);
 
-            /* Update adaptive fuel learning using GPS distance and current fuel rate */
-            driver_break_update_fuel_learning(priv, attr.u.coord_geo, time(NULL));
+            /* Update adaptive fuel learning when enabled (GPS distance and current fuel rate) */
+            if (priv->config.fuel_adaptive_learning_enabled)
+                driver_break_update_fuel_learning(priv, attr.u.coord_geo, time(NULL));
         }
     }
+}
+
+/* Pilgrimage / hiking-cycling intervals: churches and worship (pilgrim services) near rest stops when enabled */
+static void driver_break_append_pilgrimage_worship_pois(struct driver_break_priv *priv, struct coord_geo *coord,
+                                                        struct driver_break_stop *stop, struct mapset *ms) {
+    double r_km;
+
+    if (!priv || !coord || !stop || !priv->config.enable_hiking_pilgrimage_priority)
+        return;
+
+    r_km = priv->config.poi_search_radius_km;
+    if (r_km <= 0)
+        r_km = 15.0;
+
+    if (ms) {
+        GList *w = driver_break_poi_map_search_place_of_worship(coord, r_km, ms);
+        if (w)
+            stop->pois = g_list_concat(stop->pois, w);
+    }
+#ifdef HAVE_CURL
+    {
+        static const char *pow_tags[] = {"amenity=place_of_worship"};
+        GList *ov = driver_break_poi_discover(coord, (int)r_km, pow_tags, 1);
+        if (ov)
+            stop->pois = g_list_concat(stop->pois, ov);
+    }
+#endif
 }
 
 /* Route callback wrapper */
@@ -394,6 +423,8 @@ static void process_hiking_stops(struct driver_break_priv *priv, GList *hiking_s
                 stop->pois = driver_break_poi_discover(&h_stop->coord, priv->config.poi_search_radius_km, NULL, 0);
             }
 
+            driver_break_append_pilgrimage_worship_pois(priv, &h_stop->coord, stop, ms);
+
             priv->suggested_stops = g_list_append(priv->suggested_stops, stop);
         }
         l = g_list_next(l);
@@ -457,9 +488,27 @@ static void process_cycling_stops(struct driver_break_priv *priv, GList *cycling
 
                 poi_free_water_points(water_pois_list);
                 poi_free_cabins(cabin_pois_list);
+
+                GList *cyc_svc = driver_break_poi_map_search_cycling_service_pois(
+                    &c_stop->coord, priv->config.poi_search_radius_km, ms);
+                if (cyc_svc)
+                    stop->pois = g_list_concat(stop->pois, cyc_svc);
+#ifdef HAVE_CURL
+                {
+                    static const char *cycling_ov[] = {"amenity=charging_station", "shop=bicycle",
+                                                       "amenity=bicycle_repair_station"};
+                    GList *ov = driver_break_poi_discover(&c_stop->coord, (int)priv->config.poi_search_radius_km,
+                                                          cycling_ov,
+                                                          (int)(sizeof(cycling_ov) / sizeof(cycling_ov[0])));
+                    if (ov)
+                        stop->pois = g_list_concat(stop->pois, ov);
+                }
+#endif
             } else {
                 stop->pois = driver_break_poi_discover(&c_stop->coord, priv->config.poi_search_radius_km, NULL, 0);
             }
+
+            driver_break_append_pilgrimage_worship_pois(priv, &c_stop->coord, stop, ms);
 
             priv->suggested_stops = g_list_append(priv->suggested_stops, stop);
         }
@@ -492,6 +541,24 @@ static void driver_break_handle_hiking_route(struct driver_break_priv *priv) {
             total_distance, max_daily, priv->config.enable_dnt_priority);
 
         GList *hiking_stops = hiking_calculate_driver_break_stops_with_max(total_distance, 0, max_daily);
+        GList *daily_segments = hiking_calculate_daily_segments(total_distance, max_daily / 1000.0);
+        struct route_validation_result *validation;
+
+        if (daily_segments) {
+            char msg[128];
+            snprintf(msg, sizeof(msg), "Driver Break: hiking route planned as %u day(s)",
+                     (unsigned)g_list_length(daily_segments));
+            navit_add_message(priv->nav, msg);
+            hiking_free_daily_segments(daily_segments);
+        }
+
+        validation = route_validator_validate_hiking_with_priority(priv->current_route,
+                                                                   priv->config.enable_hiking_pilgrimage_priority);
+        if (validation) {
+            driver_break_post_validation_warnings(priv->nav, validation);
+            route_validator_free_result(validation);
+        }
+
         if (hiking_stops) {
             process_hiking_stops(priv, hiking_stops);
             hiking_free_driver_break_stops(hiking_stops);
@@ -518,6 +585,23 @@ static void driver_break_handle_cycling_route(struct driver_break_priv *priv) {
     if (total_distance > 0) {
         dbg(lvl_info, "Driver Break plugin: Cycling route length=%.0f m", total_distance);
         GList *cycling_stops = cycling_calculate_driver_break_stops(total_distance, 0);
+        GList *daily_segments = cycling_calculate_daily_segments(total_distance);
+        struct route_validation_result *validation;
+
+        if (daily_segments) {
+            char msg[128];
+            snprintf(msg, sizeof(msg), "Driver Break: cycling route planned as %u day(s)",
+                     (unsigned)g_list_length(daily_segments));
+            navit_add_message(priv->nav, msg);
+            cycling_free_daily_segments(daily_segments);
+        }
+
+        validation = route_validator_validate_cycling(priv->current_route);
+        if (validation) {
+            driver_break_post_validation_warnings(priv->nav, validation);
+            route_validator_free_result(validation);
+        }
+
         if (cycling_stops) {
             process_cycling_stops(priv, cycling_stops);
             cycling_free_driver_break_stops(cycling_stops);
@@ -528,12 +612,33 @@ static void driver_break_handle_cycling_route(struct driver_break_priv *priv) {
 }
 
 static void driver_break_handle_motor_route(struct driver_break_priv *priv) {
-    if (!priv->current_route || !priv->session.mandatory_break_required) {
+    struct route_validation_result *validation;
+
+    if (!priv->current_route)
         return;
+
+    if (priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_MOTORCYCLE) {
+        validation = route_validator_validate_motorcycle(priv->current_route);
+        if (validation) {
+            driver_break_post_validation_warnings(priv->nav, validation);
+            route_validator_free_result(validation);
+        }
     }
+
+    if (!priv->session.mandatory_break_required)
+        return;
 
     priv->suggested_stops = driver_break_finder_find_along_route(priv->current_route, &priv->config,
                                                                  priv->session.mandatory_break_required);
+    if (!priv->suggested_stops) {
+        struct attr pos_attr;
+        if (navit_get_attr(priv->nav, attr_position_coord_geo, &pos_attr, NULL) && pos_attr.u.coord_geo) {
+            double radius_km = priv->config.poi_search_radius_km > 0 ? priv->config.poi_search_radius_km : 15.0;
+            priv->suggested_stops = driver_break_finder_find_near(pos_attr.u.coord_geo, radius_km, &priv->config);
+            if (priv->suggested_stops)
+                navit_add_message(priv->nav, "Driver Break: using nearby rest stops (none found along route)");
+        }
+    }
 }
 
 static void driver_break_route_callback_wrapper(void *priv_data) {
@@ -565,10 +670,16 @@ static void driver_break_route_callback_wrapper(void *priv_data) {
         break;
     case DRIVER_BREAK_VEHICLE_CAR:
     case DRIVER_BREAK_VEHICLE_TRUCK:
+    case DRIVER_BREAK_VEHICLE_MOTORCYCLE:
         driver_break_handle_motor_route(priv);
         break;
     default:
         break;
+    }
+
+    if (priv->config.use_energy_routing) {
+        driver_break_check_srtm_coverage(priv);
+        driver_break_compute_route_energy(priv);
     }
 }
 
@@ -628,8 +739,8 @@ static void driver_break_check_timeout(struct event_timeout *ev, void *data) {
     if (priv->session.mandatory_break_required && priv->current_route)
         dbg(lvl_debug, "Driver Break plugin: Checking for rest stops");
 
-    if (priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_CAR
-        || priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_TRUCK)
+    if (priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_CAR || priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_TRUCK
+        || priv->config.vehicle_type == DRIVER_BREAK_VEHICLE_MOTORCYCLE)
         driver_break_check_fuel_low_range(priv);
 }
 
@@ -668,8 +779,9 @@ static void driver_break_osd_destroy(struct osd_priv *osd) {
     }
 
     if (priv->db) {
-        /* Write a simple trip summary if we have collected any distance and fuel samples */
-        if (priv->trip_start_time > 0 && priv->trip_total_distance_m > 0.0 && priv->trip_total_fuel > 0.0) {
+        /* Write trip summary for adaptive learning only when enabled */
+        if (priv->config.fuel_adaptive_learning_enabled && priv->trip_start_time > 0
+            && priv->trip_total_distance_m > 0.0 && priv->trip_total_fuel > 0.0) {
             time_t now = time(NULL);
             double distance_km = priv->trip_total_distance_m / 1000.0;
             double avg_l_per_100 = (priv->trip_total_fuel / distance_km) * 100.0;
@@ -687,14 +799,39 @@ static void driver_break_osd_destroy(struct osd_priv *osd) {
 }
 
 static int driver_break_osd_set_attr(struct osd_priv *osd, struct attr *attr) {
+    struct driver_break_priv *priv = (struct driver_break_priv *)osd;
+
+    if (!priv || !attr)
+        return 0;
+
+    if (attr->type == attr_eco_mode_fuel_enabled) {
+        priv->config.fuel_adaptive_learning_enabled = attr->u.num ? 1 : 0;
+        if (priv->db)
+            driver_break_db_save_config(priv->db, &priv->config);
+        return 1;
+    }
+
     return 0;
+}
+
+/* Return eco_mode_fuel_enabled for DBus/attribute queries: true when ECU data is available
+ * (OBD-II, J1939, or MegaSquirt backend running) or adaptive fuel learning is enabled. */
+static int driver_break_osd_get_attr(struct osd_priv *osd, enum attr_type type, struct attr *attr) {
+    struct driver_break_priv *priv = (struct driver_break_priv *)osd;
+    if (!priv || type != attr_eco_mode_fuel_enabled)
+        return 0;
+    int ecu_available = (priv->obd_backend != NULL || priv->j1939_backend != NULL || priv->megasquirt_backend != NULL);
+    int enabled = ecu_available || priv->config.fuel_adaptive_learning_enabled;
+    attr->type = attr_eco_mode_fuel_enabled;
+    attr->u.num = enabled ? 1 : 0;
+    return 1;
 }
 
 static struct osd_methods driver_break_osd_meth = {
     driver_break_osd_destroy,
     driver_break_osd_set_attr,
     driver_break_osd_destroy,
-    NULL,
+    driver_break_osd_get_attr,
 };
 
 /* OSD constructor */
@@ -749,6 +886,8 @@ static struct osd_priv *driver_break_osd_new(struct navit *nav, struct osd_metho
             priv->config.vehicle_type = DRIVER_BREAK_VEHICLE_HIKING;
         } else if (!strcmp(vehicle_type_attr->u.str, "cycling")) {
             priv->config.vehicle_type = DRIVER_BREAK_VEHICLE_CYCLING;
+        } else if (!strcmp(vehicle_type_attr->u.str, "motorcycle")) {
+            priv->config.vehicle_type = DRIVER_BREAK_VEHICLE_MOTORCYCLE;
         }
     }
 

@@ -27,9 +27,13 @@
 #ifndef NAVIT_PLUGIN_DRIVER_BREAK_POI_H
 #define NAVIT_PLUGIN_DRIVER_BREAK_POI_H
 
+#include <glib.h>
+
 #include "config.h"
-#include "coord.h"
-#include "driver_break.h"
+
+struct coord_geo;
+struct driver_break_config;
+struct driver_break_poi;
 
 /**
  * @brief Discover POIs near a location
@@ -50,7 +54,7 @@ GList *driver_break_poi_discover(struct coord_geo *center, int radius_km, const 
  * @param driver_break_stop Rest stop location for distance calculation
  * @param config Rest configuration
  */
-void driver_break_poi_rank(GList *pois, struct coord_geo *driver_break_stop, struct driver_break_config *config);
+GList *driver_break_poi_rank(GList *pois, struct coord_geo *driver_break_stop, struct driver_break_config *config);
 
 /**
  * @brief Free a list of POIs

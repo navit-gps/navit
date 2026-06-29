@@ -6,13 +6,11 @@
  */
 
 #define DRIVER_BREAK_SKIP_CONFIG_DEFAULT 1
+#include <stdio.h>
+#include <string.h>
+
 #include "../../debug.h"
 #include "../driver_break.h"
-#include <glib.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
 
 /* Stub for debug_printf and max_debug_level for unit tests */
 dbg_level max_debug_level = lvl_error;

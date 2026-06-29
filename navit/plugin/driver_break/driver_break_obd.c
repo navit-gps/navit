@@ -26,19 +26,21 @@
  */
 
 #include "driver_break_obd.h"
-#include "debug.h"
-#include "event.h"
-#include "file.h"
+
 #include <errno.h>
 #include <fcntl.h>
 #include <glib.h>
-#include <math.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <termios.h>
-#include <time.h>
 #include <unistd.h>
+
+#include "callback.h"
+#include "debug.h"
+#include "driver_break.h"
+#include "event.h"
+
+struct event_timeout;
 
 struct driver_break_obd {
     struct driver_break_priv *priv;
@@ -189,16 +191,17 @@ static void obd_detect_supported_pids(struct driver_break_obd *obd) {
 }
 
 static int obd_pid_supported(struct driver_break_obd *obd, int pid) {
-    if (pid < 0x01 || pid > 0x5F)
+    /* Each 0100/0120/0140 response holds a 32-bit mask whose MSB (bit 31)
+     * corresponds to the first PID of the group and whose LSB (bit 0)
+     * corresponds to the last (0x20, 0x40, 0x60). PIDs are grouped as
+     * 0x01-0x20, 0x21-0x40, 0x41-0x60, so the group index and the 1..32
+     * position within the group are derived from (pid - 1). */
+    if (pid < 0x01 || pid > 0x60)
         return 0;
-    int idx = pid / 0x20;
-    int bit = 0x20 - (pid % 0x20);
-    if (pid % 0x20 == 0)
-        bit = 0;
+    int idx = (pid - 1) / 0x20;   /* 0:0x01-0x20, 1:0x21-0x40, 2:0x41-0x60 */
+    int local = pid - idx * 0x20; /* 1..32 within the group */
     unsigned int mask = obd->supported_pids[idx];
-    if (pid % 0x20 == 0)
-        return (mask & 0x80000000U) != 0;
-    return (mask & (1U << (bit - 1))) != 0;
+    return (mask & (1U << (32 - local))) != 0;
 }
 
 /* Compute fuel rate from MAF when PID 0x5E is unavailable.
@@ -324,9 +327,6 @@ static void obd_poll(struct driver_break_obd *obd) {
     }
 
     struct driver_break_priv *priv = obd->priv;
-    char resp[128];
-    unsigned char bytes[8];
-    int n;
 
     double fuel_rate_l_h = priv->fuel_rate_l_h;
     double maf_g_s = 0.0;

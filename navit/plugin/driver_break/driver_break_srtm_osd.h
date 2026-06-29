@@ -21,7 +21,8 @@
 #define NAVIT_PLUGIN_DRIVER_BREAK_SRTM_OSD_H
 
 #include "config.h"
-#include "navit.h"
+
+struct navit;
 
 /* Register SRTM download commands */
 void driver_break_srtm_register_commands(struct navit *nav);

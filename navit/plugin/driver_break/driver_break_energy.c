@@ -18,11 +18,12 @@
  */
 
 #include "driver_break_energy.h"
+
+#include <string.h>
+
 #include "config.h"
 #include "debug.h"
-#include "driver_break_srtm.h"
-#include <math.h>
-#include <string.h>
+#include "driver_break.h"
 
 /* Initialize energy model with default or custom parameters */
 void energy_model_init(struct energy_model *model, double totalweight, double f_roll, double f_air, double p_standby) {
@@ -119,9 +120,23 @@ struct energy_result energy_calculate_segment(struct energy_model *model, double
     result.energy = work + standby_energy;
     result.time = time;
 
-    /* Cost = (power * time + energy) / cost0 */
+    /* Cost = (power * time + energy) / cost0. Guard against a non-positive
+     * normalization factor (e.g. zero mass and zero drag) which would yield
+     * inf/nan. */
     double power_cost = model->pw * time;
-    result.cost = (power_cost + result.energy) / model->cost0;
+    if (model->cost0 > 0.0) {
+        result.cost = (power_cost + result.energy) / model->cost0;
+    } else {
+        result.cost = 1e9;
+    }
+
+    /* A route segment can never have negative routing cost. On steep downhill
+     * grades the gravity term (fh < 0) and recuperation can drive
+     * (power_cost + energy) below zero; floor the cost at zero so the router
+     * never receives a negative segment cost for valid physical inputs. */
+    if (result.cost < 0.0) {
+        result.cost = 0.0;
+    }
 
     dbg(lvl_info,
         "Driver Break plugin: Energy segment dist=%.1f m delta_h=%.1f m elev=%.1f m speed=%.1f m/s "
@@ -129,10 +144,26 @@ struct energy_result energy_calculate_segment(struct energy_model *model, double
         distance, delta_h, elevation, v, f_roll_force, f_air_force, fh, f_recup_force, work, standby_energy,
         result.cost);
 
-    if (result.cost < 0.0) {
-        dbg(lvl_warning, "Driver Break plugin: Energy segment cost negative (%.4f), check recuperation parameters",
-            result.cost);
-    }
-
     return result;
+}
+
+double driver_break_energy_f_air_from_drag(double cd, double frontal_area_sqm) {
+    const double rho0 = 1.225;
+
+    if (cd <= 0.0 || frontal_area_sqm <= 0.0)
+        return 0.0;
+    return 0.5 * rho0 * cd * frontal_area_sqm;
+}
+
+void driver_break_energy_model_from_config(struct energy_model *model, const struct driver_break_config *cfg) {
+    double f_air;
+    double f_roll;
+    const double crr = 0.015;
+
+    if (!model || !cfg)
+        return;
+
+    f_air = driver_break_energy_f_air_from_drag(cfg->energy_drag_cd, cfg->energy_frontal_area_sqm);
+    f_roll = crr * cfg->total_weight * 9.81;
+    energy_model_init(model, cfg->total_weight, f_roll, f_air, 0.0);
 }

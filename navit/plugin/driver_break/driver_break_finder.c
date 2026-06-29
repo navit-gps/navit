@@ -18,36 +18,32 @@
  */
 
 #include "driver_break_finder.h"
+#include "driver_break_energy_route.h"
+
+#include <glib.h>
+#include <math.h>
+#include <stdlib.h>
+
+#include "attr.h"
+#include "attr_type_def.h"
 #include "config.h"
 #include "coord.h"
 #include "debug.h"
+#include "driver_break.h"
 #include "driver_break_glacier.h"
 #include "driver_break_poi.h"
 #include "item.h"
+#include "item_type_def.h"
 #include "map.h"
 #include "mapset.h"
 #include "projection.h"
 #include "route.h"
 #include "transform.h"
-#include <glib.h>
-#include <math.h>
-#include <stdlib.h>
-#include <string.h>
+
+struct mapset;
+struct route;
 
 /* Calculate distance between two coordinates in meters */
-static double coord_distance(struct coord_geo *c1, struct coord_geo *c2) {
-    double lat1 = c1->lat * M_PI / 180.0;
-    double lat2 = c2->lat * M_PI / 180.0;
-    double dlat = (c2->lat - c1->lat) * M_PI / 180.0;
-    double dlng = (c2->lng - c1->lng) * M_PI / 180.0;
-
-    double a = sin(dlat / 2) * sin(dlat / 2) + cos(lat1) * cos(lat2) * sin(dlng / 2) * sin(dlng / 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-
-    return 6371000.0 * c; /* Earth radius in meters */
-}
-
-/* Create map selection from coord_rect */
 static struct map_selection *create_map_selection_from_rect(struct coord_rect *rect) {
     struct map_selection *sel = g_new0(struct map_selection, 1);
     sel->u.c_rect = *rect;
@@ -150,7 +146,7 @@ static int check_distance_from_buildings(struct coord_geo *coord, int min_distan
                 struct coord item_coord;
                 if (item_coord_get(item, &item_coord, 1) > 0) {
                     transform_to_geo(projection_mg, &item_coord, &item_geo);
-                    distance = coord_distance(coord, &item_geo);
+                    distance = driver_break_coord_distance_geo(coord, &item_geo);
                     if (distance < min_distance) {
                         map_rect_destroy(mr);
                         map_selection_destroy(sel);
@@ -246,6 +242,9 @@ static char *highway_type_name_from_item(struct item *street_item) {
     return g_strdup("tertiary");
 }
 
+/* Water POI categories for remote/arid/hot mode (car, truck, motorcycle) */
+static const char *water_poi_categories[] = {"amenity=drinking_water", "amenity=fountain", "natural=spring"};
+
 /* Create one rest stop at the given coordinate. Caller frees stop. */
 static struct driver_break_stop *create_rest_stop_at(struct coord_geo *coord_geo, double accumulated_km,
                                                      struct item *street_item, struct driver_break_config *config) {
@@ -255,6 +254,12 @@ static struct driver_break_stop *create_rest_stop_at(struct coord_geo *coord_geo
     stop->name = g_strdup_printf("Rest stop at %.1f km", accumulated_km);
     stop->highway_type = highway_type_name_from_item(street_item);
     stop->pois = driver_break_poi_discover(coord_geo, config->poi_search_radius_km, NULL, 0);
+    if (config->enable_water_pois_remote_arid && config->poi_water_search_radius_km > 0) {
+        GList *water =
+            driver_break_poi_discover(coord_geo, config->poi_water_search_radius_km, water_poi_categories, 3);
+        if (water)
+            stop->pois = g_list_concat(stop->pois, water);
+    }
     dbg(lvl_info, "Driver Break plugin: Rest stop created at lat=%.5f lon=%.5f distance=%.1f km", coord_geo->lat,
         coord_geo->lng, accumulated_km);
     return stop;
@@ -374,6 +379,12 @@ GList *driver_break_finder_find_near(struct coord_geo *center, double distance_k
 
                     /* Discover additional POIs */
                     stop->pois = driver_break_poi_discover(&candidate->coord, config->poi_search_radius_km, NULL, 0);
+                    if (config->enable_water_pois_remote_arid && config->poi_water_search_radius_km > 0) {
+                        GList *water = driver_break_poi_discover(&candidate->coord, config->poi_water_search_radius_km,
+                                                                 water_poi_categories, 3);
+                        if (water)
+                            stop->pois = g_list_concat(stop->pois, water);
+                    }
 
                     stops = g_list_append(stops, stop);
                     count++;

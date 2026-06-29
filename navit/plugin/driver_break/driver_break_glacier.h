@@ -20,9 +20,12 @@
 #ifndef NAVIT_PLUGIN_DRIVER_BREAK_GLACIER_H
 #define NAVIT_PLUGIN_DRIVER_BREAK_GLACIER_H
 
+#include <glib.h>
+
 #include "config.h"
-#include "coord.h"
-#include "driver_break.h"
+
+struct coord_geo;
+struct mapset;
 
 /* Minimum distance from glaciers for nightly camping (meters) */
 #define GLACIER_MIN_CAMPING_DISTANCE 300.0 /* 300 meters */

@@ -18,29 +18,24 @@
  */
 
 #include "driver_break_glacier.h"
-#include "config.h"
-#include "debug.h"
-#include "item.h"
-#include "map.h"
-#include "mapset.h"
-#include "transform.h"
+#include "driver_break_energy_route.h"
+
 #include <glib.h>
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
-/* Calculate distance between two coordinates */
-static double coord_distance(struct coord_geo *c1, struct coord_geo *c2) {
-    double lat1 = c1->lat * M_PI / 180.0;
-    double lat2 = c2->lat * M_PI / 180.0;
-    double dlat = (c2->lat - c1->lat) * M_PI / 180.0;
-    double dlng = (c2->lng - c1->lng) * M_PI / 180.0;
+#include "attr.h"
+#include "attr_type_def.h"
+#include "config.h"
+#include "coord.h"
+#include "item.h"
+#include "item_type_def.h"
+#include "map.h"
+#include "mapset.h"
+#include "projection.h"
+#include "transform.h"
 
-    double a = sin(dlat / 2) * sin(dlat / 2) + cos(lat1) * cos(lat2) * sin(dlng / 2) * sin(dlng / 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-
-    return 6371000.0 * c; /* Earth radius in meters */
-}
+struct mapset;
 
 /* Glacier location */
 struct glacier_location {
@@ -103,7 +98,7 @@ GList *glacier_find_nearby(struct coord_geo *position, double radius_km, struct 
                     transform_to_geo(projection_mg, &c, &g);
 
                     /* Calculate distance from position */
-                    double distance = coord_distance(position, &g);
+                    double distance = driver_break_coord_distance_geo(position, &g);
 
                     if (distance <= radius_m) {
                         struct glacier_location *glacier = g_new0(struct glacier_location, 1);

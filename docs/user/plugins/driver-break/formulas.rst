@@ -150,6 +150,8 @@ where:
 - ``g`` is gravitational acceleration.
 - ``Δh`` is height difference.
 
+You can set **drag coefficient** ``Cd``, **frontal area** (m\ :sup:`2`\ ), and **total mass** (kg) via OSD commands (see :doc:`osd_commands`): ``driver_break_set_drag_cd``, ``driver_break_set_frontal_area``, and ``driver_break_set_total_weight``. The implementation maps ``Cd`` and frontal area to the internal air-resistance term using sea-level air density :math:`\rho \approx 1.225\,\mathrm{kg/m^3}` as :math:`F_\text{drag} \propto \frac{1}{2}\rho\,C_d A\,v^2` (temperature and elevation still adjust the coefficient inside each segment in the energy module). Rolling resistance uses a fixed rolling-resistance coefficient times weight in the model initializer.
+
 When live fuel data is available, the plugin can relate this energy cost to
 actual fuel usage by comparing:
 

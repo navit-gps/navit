@@ -89,7 +89,6 @@
 <!ATTLIST announce unit CDATA #REQUIRED>
 <!ELEMENT announcement EMPTY>
 <!ATTLIST announcement level CDATA #REQUIRED>
-<!ATTLIST announcement distance_metric CDATA #REQUIRED>
 <!ELEMENT speech EMPTY>
 <!ATTLIST speech type CDATA #REQUIRED>
 <!ATTLIST speech data CDATA #REQUIRED>

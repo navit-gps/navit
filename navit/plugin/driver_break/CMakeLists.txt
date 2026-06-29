@@ -32,6 +32,7 @@ module_add_library(plugin_driver_break
     driver_break_poi.c
     driver_break_osd.c
     driver_break_energy.c
+    driver_break_energy_route.c
     driver_break_hiking.c
     driver_break_cycling.c
     driver_break_poi_hiking.c
@@ -57,6 +58,10 @@ set_target_properties(plugin_driver_break PROPERTIES
 
 if(LIBTIFF_FOUND)
     target_compile_definitions(plugin_driver_break PRIVATE HAVE_GEOTIFF)
+endif()
+
+if(CURL_FOUND)
+    target_compile_definitions(plugin_driver_break PRIVATE HAVE_CURL)
 endif()
 
 # Add unit tests if enabled

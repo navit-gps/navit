@@ -18,9 +18,7 @@
  */
 
 #include "driver_break_db.h"
-#include "config.h"
-#include "debug.h"
-#include "file.h"
+
 #include <glib.h>
 #include <sqlite3.h>
 #include <stddef.h>
@@ -28,10 +26,20 @@
 #include <string.h>
 #include <time.h>
 
+#include "config.h"
+#include "coord.h"
+#include "debug.h"
+#include "driver_break.h"
+#include "file.h"
+
 /* Constants for validation bounds */
 #define MAX_HOURS_PER_DAY 12
 #define MAX_BREAK_DURATION_MIN 120
-#define MAX_VEHICLE_TYPE 3
+#define MAX_VEHICLE_TYPE 4
+#define MAX_MOTORCYCLE_MINUTES 720 /* 12 h */
+#define MAX_SMOOTHNESS 4
+#define MAX_TRACKTYPE 5
+#define MAX_MOTORCYCLE_WEIGHT_KG 500
 #define SQLITE_COLUMN_INDEX_WAS_MANDATORY 5
 #define MAX_DISTANCE_METERS 10000
 #define MAX_POI_SEARCH_RADIUS_KM 1000
@@ -39,6 +47,12 @@
 #define MAX_HOURS_PER_DAY_24 24
 #define MAX_CONFIG_VALUE 1000000
 #define DECIMAL_BASE 10
+#define MIN_DRAG_CD 0.01
+#define MAX_DRAG_CD 1.5
+#define MIN_FRONTAL_AREA_SQM 0.05
+#define MAX_FRONTAL_AREA_SQM 20.0
+#define MIN_TOTAL_WEIGHT_KG 1.0
+#define MAX_TOTAL_WEIGHT_KG 50000.0
 
 struct driver_break_db {
     sqlite3 *db;
@@ -99,6 +113,7 @@ static int driver_break_db_load_config_value(const char *key, int value, struct 
          MAX_POI_WATER_CABIN_RADIUS_KM, 0},
         {"poi_cabin_search_radius_km", offsetof(struct driver_break_config, poi_cabin_search_radius_km), 0,
          MAX_POI_WATER_CABIN_RADIUS_KM, 0},
+        {"enable_water_pois_remote_arid", offsetof(struct driver_break_config, enable_water_pois_remote_arid), 0, 1, 1},
         {"min_distance_from_glaciers", offsetof(struct driver_break_config, min_distance_from_glaciers), 0,
          MAX_DISTANCE_METERS, 0},
         {"driver_break_interval_min_hours", offsetof(struct driver_break_config, driver_break_interval_min_hours), 0,
@@ -119,6 +134,24 @@ static int driver_break_db_load_config_value(const char *key, int value, struct 
         {"fuel_low_warning_km", offsetof(struct driver_break_config, fuel_low_warning_km), 0, MAX_CONFIG_VALUE, 0},
         {"fuel_search_buffer_km", offsetof(struct driver_break_config, fuel_search_buffer_km), 0, MAX_CONFIG_VALUE, 0},
         {"fuel_high_load_threshold", offsetof(struct driver_break_config, fuel_high_load_threshold), 0, 100, 0},
+        {"fuel_adaptive_learning_enabled", offsetof(struct driver_break_config, fuel_adaptive_learning_enabled), 0, 1,
+         1},
+        {"use_energy_routing", offsetof(struct driver_break_config, use_energy_routing), 0, 1, 1},
+        {"use_ecu_route_cost", offsetof(struct driver_break_config, use_ecu_route_cost), 0, 1, 1},
+        /* Motorcycle */
+        {"motorcycle_soft_limit_minutes", offsetof(struct driver_break_config, motorcycle_soft_limit_minutes), 60,
+         MAX_MOTORCYCLE_MINUTES, 0},
+        {"motorcycle_mandatory_break_after_minutes",
+         offsetof(struct driver_break_config, motorcycle_mandatory_break_after_minutes), 60, MAX_MOTORCYCLE_MINUTES, 0},
+        {"motorcycle_break_duration_min", offsetof(struct driver_break_config, motorcycle_break_duration_min), 5, 60,
+         0},
+        {"motorcycle_terrain_subtype", offsetof(struct driver_break_config, motorcycle_terrain_subtype), 0, 1, 1},
+        {"motorcycle_adventure_max_smoothness",
+         offsetof(struct driver_break_config, motorcycle_adventure_max_smoothness), 0, MAX_SMOOTHNESS, 1},
+        {"motorcycle_adventure_max_tracktype", offsetof(struct driver_break_config, motorcycle_adventure_max_tracktype),
+         1, MAX_TRACKTYPE, 0},
+        {"motorcycle_default_weight_kg", offsetof(struct driver_break_config, motorcycle_default_weight_kg), 50,
+         MAX_MOTORCYCLE_WEIGHT_KG, 0},
         {NULL, 0, 0, 0, 0},
     };
 
@@ -130,6 +163,70 @@ static int driver_break_db_load_config_value(const char *key, int value, struct 
     }
 
     return -1;
+}
+
+static void driver_break_db_save_config_double(struct driver_break_db *db, const char *key, double value) {
+    char *sql;
+    char *err_msg = NULL;
+    int rc;
+
+    if (!db || !db->db || !key) {
+        return;
+    }
+
+    sql = sqlite3_mprintf("INSERT OR REPLACE INTO driver_break_config (key, value) VALUES (%Q, %.9g);", key, value);
+    rc = sqlite3_exec(db->db, sql, NULL, 0, &err_msg);
+    sqlite3_free(sql);
+
+    if (rc != SQLITE_OK) {
+        dbg(lvl_error, "Driver Break plugin: SQL error saving config %s: %s", key, err_msg);
+        sqlite3_free(err_msg);
+    }
+}
+
+/* Return 1 if key matched (consumed); 0 if key is not want_key. */
+static int driver_break_db_load_double_key_if_match(const char *key, const char *value_str, const char *want_key,
+                                                    double min_v, double max_v, double *field, int *loaded_count,
+                                                    const char *log_name) {
+    char *endptr;
+    double v;
+
+    if (strcmp(key, want_key) != 0) {
+        return 0;
+    }
+
+    v = g_ascii_strtod(value_str, &endptr);
+    if (endptr == value_str || *endptr != '\0') {
+        dbg(lvl_warning, "Driver Break plugin: Invalid %s: %s", log_name, value_str);
+        return 1;
+    }
+    if (v >= min_v && v <= max_v) {
+        *field = v;
+        (*loaded_count)++;
+    } else {
+        dbg(lvl_warning, "Driver Break plugin: %s out of range: %g", log_name, v);
+    }
+    return 1;
+}
+
+/* Return 1 if key is a known floating-point config key (consumed). */
+static int driver_break_db_try_load_double(const char *key, const char *value_str, struct driver_break_config *config,
+                                           int *loaded_count) {
+    if (driver_break_db_load_double_key_if_match(key, value_str, "energy_drag_cd", MIN_DRAG_CD, MAX_DRAG_CD,
+                                                 &config->energy_drag_cd, loaded_count, "energy_drag_cd")) {
+        return 1;
+    }
+    if (driver_break_db_load_double_key_if_match(key, value_str, "energy_frontal_area_sqm", MIN_FRONTAL_AREA_SQM,
+                                                 MAX_FRONTAL_AREA_SQM, &config->energy_frontal_area_sqm, loaded_count,
+                                                 "energy_frontal_area_sqm")) {
+        return 1;
+    }
+    if (driver_break_db_load_double_key_if_match(key, value_str, "total_weight", MIN_TOTAL_WEIGHT_KG,
+                                                 MAX_TOTAL_WEIGHT_KG, &config->total_weight, loaded_count,
+                                                 "total_weight")) {
+        return 1;
+    }
+    return 0;
 }
 
 /* Clean up corrupted config entries from database */
@@ -382,38 +479,81 @@ int driver_break_db_clear_history(struct driver_break_db *db, time_t before) {
     return 1;
 }
 
-int driver_break_db_save_config(struct driver_break_db *db, struct driver_break_config *config) {
+static void driver_break_db_save_config_integer_pairs(struct driver_break_db *db, struct driver_break_config *config) {
     char *sql;
     char *err_msg = NULL;
     int rc;
-
-    if (!db || !config) {
-        return 0;
-    }
-
-    /* Save configuration as key-value pairs */
-    const char *keys[] = {"vehicle_type", "car_soft_limit_hours", "car_max_hours", "car_break_interval_hours",
-                          "car_break_duration_min", "truck_mandatory_break_after_hours",
-                          "truck_mandatory_break_duration_min", "truck_max_daily_hours", "min_distance_from_buildings",
-                          "poi_search_radius_km", "driver_break_interval_min_hours", "driver_break_interval_max_hours",
-                          /* Fuel configuration keys */
-                          "fuel_type", "fuel_tank_capacity_l", "fuel_avg_consumption_x10", "fuel_obd_available",
-                          "fuel_j1939_available", "fuel_megasquirt_available", "fuel_injector_flow_cc_min",
-                          "fuel_ethanol_manual_pct", "fuel_low_warning_km", "fuel_search_buffer_km",
-                          "fuel_high_load_threshold"};
-
-    int values[] = {config->vehicle_type, config->car_soft_limit_hours, config->car_max_hours,
-                    config->car_break_interval_hours, config->car_break_duration_min,
-                    config->truck_mandatory_break_after_hours, config->truck_mandatory_break_duration_min,
-                    config->truck_max_daily_hours, config->min_distance_from_buildings, config->poi_search_radius_km,
-                    config->driver_break_interval_min_hours, config->driver_break_interval_max_hours,
-                    /* Fuel configuration values */
-                    config->fuel_type, config->fuel_tank_capacity_l, config->fuel_avg_consumption_x10,
-                    config->fuel_obd_available, config->fuel_j1939_available, config->fuel_megasquirt_available,
-                    config->fuel_injector_flow_cc_min, config->fuel_ethanol_manual_pct, config->fuel_low_warning_km,
-                    config->fuel_search_buffer_km, config->fuel_high_load_threshold};
-
     int i;
+    const char *keys[] = {"vehicle_type",
+                          "car_soft_limit_hours",
+                          "car_max_hours",
+                          "car_break_interval_hours",
+                          "car_break_duration_min",
+                          "truck_mandatory_break_after_hours",
+                          "truck_mandatory_break_duration_min",
+                          "truck_max_daily_hours",
+                          "min_distance_from_buildings",
+                          "poi_search_radius_km",
+                          "driver_break_interval_min_hours",
+                          "driver_break_interval_max_hours",
+                          "fuel_type",
+                          "fuel_tank_capacity_l",
+                          "fuel_avg_consumption_x10",
+                          "fuel_obd_available",
+                          "fuel_j1939_available",
+                          "fuel_megasquirt_available",
+                          "fuel_injector_flow_cc_min",
+                          "fuel_ethanol_manual_pct",
+                          "fuel_low_warning_km",
+                          "fuel_search_buffer_km",
+                          "fuel_high_load_threshold",
+                          "fuel_adaptive_learning_enabled",
+                          "use_energy_routing",
+                          "use_ecu_route_cost",
+                          "motorcycle_soft_limit_minutes",
+                          "motorcycle_mandatory_break_after_minutes",
+                          "motorcycle_break_duration_min",
+                          "motorcycle_terrain_subtype",
+                          "motorcycle_adventure_max_smoothness",
+                          "motorcycle_adventure_max_tracktype",
+                          "motorcycle_default_weight_kg",
+                          "enable_water_pois_remote_arid"};
+
+    int values[] = {config->vehicle_type,
+                    config->car_soft_limit_hours,
+                    config->car_max_hours,
+                    config->car_break_interval_hours,
+                    config->car_break_duration_min,
+                    config->truck_mandatory_break_after_hours,
+                    config->truck_mandatory_break_duration_min,
+                    config->truck_max_daily_hours,
+                    config->min_distance_from_buildings,
+                    config->poi_search_radius_km,
+                    config->driver_break_interval_min_hours,
+                    config->driver_break_interval_max_hours,
+                    config->fuel_type,
+                    config->fuel_tank_capacity_l,
+                    config->fuel_avg_consumption_x10,
+                    config->fuel_obd_available,
+                    config->fuel_j1939_available,
+                    config->fuel_megasquirt_available,
+                    config->fuel_injector_flow_cc_min,
+                    config->fuel_ethanol_manual_pct,
+                    config->fuel_low_warning_km,
+                    config->fuel_search_buffer_km,
+                    config->fuel_high_load_threshold,
+                    config->fuel_adaptive_learning_enabled,
+                    config->use_energy_routing,
+                    config->use_ecu_route_cost,
+                    config->motorcycle_soft_limit_minutes,
+                    config->motorcycle_mandatory_break_after_minutes,
+                    config->motorcycle_break_duration_min,
+                    config->motorcycle_terrain_subtype,
+                    config->motorcycle_adventure_max_smoothness,
+                    config->motorcycle_adventure_max_tracktype,
+                    config->motorcycle_default_weight_kg,
+                    config->enable_water_pois_remote_arid};
+
     for (i = 0; i < G_N_ELEMENTS(keys); i++) {
         sql = sqlite3_mprintf("INSERT OR REPLACE INTO driver_break_config (key, value) VALUES (%Q, %d);", keys[i],
                               values[i]);
@@ -426,8 +566,49 @@ int driver_break_db_save_config(struct driver_break_db *db, struct driver_break_
             sqlite3_free(err_msg);
         }
     }
+}
+
+int driver_break_db_save_config(struct driver_break_db *db, struct driver_break_config *config) {
+    if (!db || !config) {
+        return 0;
+    }
+
+    driver_break_db_save_config_integer_pairs(db, config);
+
+    driver_break_db_save_config_double(db, "energy_drag_cd", config->energy_drag_cd);
+    driver_break_db_save_config_double(db, "energy_frontal_area_sqm", config->energy_frontal_area_sqm);
+    driver_break_db_save_config_double(db, "total_weight", config->total_weight);
 
     return 1;
+}
+
+static void driver_break_db_load_config_process_row(const char *key, const char *value_str,
+                                                    struct driver_break_config *config, int *loaded_count) {
+    int value;
+    char *endptr;
+
+    if (!key || !value_str) {
+        return;
+    }
+
+    if (driver_break_db_try_load_double(key, value_str, config, loaded_count)) {
+        return;
+    }
+
+    value = (int)strtol(value_str, &endptr, DECIMAL_BASE);
+    if (*endptr != '\0' && *endptr != '\n') {
+        dbg(lvl_warning, "Driver Break plugin: Invalid numeric value for %s: '%s', skipping", key, value_str);
+        return;
+    }
+
+    if (value_str[0] == '\0' || (value == 0 && value_str[0] != '0')) {
+        dbg(lvl_warning, "Driver Break plugin: Invalid numeric value for %s: '%s', skipping", key, value_str);
+        return;
+    }
+
+    if (driver_break_db_load_config_value(key, value, config, loaded_count) != 0) {
+        dbg(lvl_debug, "Driver Break plugin: Unknown config key in database: %s", key);
+    }
 }
 
 int driver_break_db_load_config(struct driver_break_db *db, struct driver_break_config *config) {
@@ -440,7 +621,6 @@ int driver_break_db_load_config(struct driver_break_db *db, struct driver_break_
         return 0;
     }
 
-    /* Clean up any corrupted entries first */
     driver_break_db_clean_corrupted_config(db);
 
     sql = "SELECT key, value FROM driver_break_config WHERE value IS NOT NULL AND value != '';";
@@ -454,31 +634,8 @@ int driver_break_db_load_config(struct driver_break_db *db, struct driver_break_
     while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
         const char *key = (const char *)sqlite3_column_text(stmt, 0);
         const char *value_str = (const char *)sqlite3_column_text(stmt, 1);
-        int value;
 
-        if (!key || !value_str) {
-            continue;
-        }
-
-        /* Convert text to integer with validation - use strtol for better error handling */
-        char *endptr;
-        value = (int)strtol(value_str, &endptr, DECIMAL_BASE);
-        if (*endptr != '\0' && *endptr != '\n') {
-            dbg(lvl_warning, "Driver Break plugin: Invalid numeric value for %s: '%s', skipping", key, value_str);
-            continue;
-        }
-
-        /* Check if conversion was successful (atoi returns 0 for invalid, but 0 might be valid) */
-        /* So we check if the string represents a valid number */
-        if (value_str[0] == '\0' || (value == 0 && value_str[0] != '0')) {
-            dbg(lvl_warning, "Driver Break plugin: Invalid numeric value for %s: '%s', skipping", key, value_str);
-            continue;
-        }
-
-        /* Only load non-zero values within reasonable bounds to preserve defaults */
-        if (driver_break_db_load_config_value(key, value, config, &loaded_count) != 0) {
-            dbg(lvl_debug, "Driver Break plugin: Unknown config key in database: %s", key);
-        }
+        driver_break_db_load_config_process_row(key, value_str, config, &loaded_count);
     }
 
     sqlite3_finalize(stmt);
@@ -486,10 +643,9 @@ int driver_break_db_load_config(struct driver_break_db *db, struct driver_break_
     if (loaded_count > 0) {
         dbg(lvl_debug, "Driver Break plugin: Loaded %d configuration values from database", loaded_count);
         return 1;
-    } else {
-        dbg(lvl_debug, "Driver Break plugin: No valid configuration values found in database, using defaults");
-        return 0;
     }
+    dbg(lvl_debug, "Driver Break plugin: No valid configuration values found in database, using defaults");
+    return 0;
 }
 
 void driver_break_free_history_entry(struct driver_break_stop_history *entry) {

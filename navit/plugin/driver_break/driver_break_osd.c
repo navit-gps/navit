@@ -18,40 +18,39 @@
  */
 
 #include "driver_break_osd.h"
-#include "attr.h"
-#include "color.h"
-#include "command.h"
-#include "config.h"
-#include "debug.h"
-#include "driver_break_db.h"
-#include "driver_break_finder.h"
-#include "driver_break_poi.h"
-#include "graphics.h"
-#include "gui.h"
-#include "item.h"
-#include "map.h"
-#include "mapset.h"
-#include "navit.h"
-#include "osd.h"
-#include "plugin.h"
-#include "point.h"
-#include "popup.h"
-#include "vehicleprofile.h"
+
 #include <glib.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
+#include "attr.h"
+#include "attr_type_def.h"
+#include "command.h"
+#include "config.h"
+#include "coord.h"
+#include "debug.h"
+#include "driver_break.h"
+#include "driver_break_db.h"
+#include "driver_break_energy.h"
+#include "driver_break_energy_route.h"
+#include "driver_break_finder.h"
+#include "graphics.h"
+#include "gui.h"
+#include "navit.h"
+
+struct navit;
+struct point;
+struct widget;
 
 /* Internal GUI includes - needed for dialog creation */
 #ifdef HAVE_API_ANDROID
 /* Android doesn't use internal GUI */
 #else
-#    include "gui/internal/gui_internal.h"
-#    include "gui/internal/gui_internal_menu.h"
-#    include "gui/internal/gui_internal_priv.h"
-#    include "gui/internal/gui_internal_widget.h"
 #    include <dlfcn.h>
+
+#    include "gui/internal/gui_internal.h"
+#    include "gui/internal/gui_internal_priv.h"
 
 /* Runtime resolution of all gui_internal functions since gui_internal is a MODULE library */
 /* Function pointers for all gui_internal functions we need */
@@ -213,12 +212,40 @@ int driver_break_cmd_start_break(struct navit *nav, char *function, struct attr 
 int driver_break_cmd_end_break(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_configure_intervals(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_configure_overnight(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+int driver_break_cmd_open_settings(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+int driver_break_cmd_set_mode(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+int driver_break_cmd_toggle(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_set_fuel_level(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_log_fuel_stop(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 int driver_break_cmd_configure_fuel(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+int driver_break_cmd_set_drag_cd(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+int driver_break_cmd_set_frontal_area(struct navit *nav, char *function, struct attr **in, struct attr ***out);
+int driver_break_cmd_set_total_weight(struct navit *nav, char *function, struct attr **in, struct attr ***out);
 
 /* Forward declaration for config save callback used by multiple dialogs. */
 static void driver_break_save_config_callback(struct gui_priv *gui_priv, struct widget *widget, void *data);
+static void driver_break_toggle_adaptive_learning_callback(struct gui_priv *gui_priv, struct widget *widget,
+                                                           void *data);
+static void driver_break_toggle_live_ecu_callback(struct gui_priv *gui_priv, struct widget *widget, void *data);
+static void driver_break_show_motorcycle_intervals_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv);
+static void driver_break_toggle_motorcycle_terrain_callback(struct gui_priv *gui_priv, struct widget *widget,
+                                                            void *data);
+static void driver_break_toggle_water_remote_arid_callback(struct gui_priv *gui_priv, struct widget *widget,
+                                                           void *data);
+static void driver_break_show_overnight_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv,
+                                               const char *profile_name);
+static void driver_break_overnight_append_buildings_row(struct gui_priv *gui_priv, struct widget *box,
+                                                        struct driver_break_priv *priv);
+static void driver_break_overnight_append_glacier_row(struct gui_priv *gui_priv, struct widget *box,
+                                                      struct driver_break_priv *priv, const char *profile_name);
+static void driver_break_overnight_append_clamped_km_row(struct gui_priv *gui_priv, struct widget *box, int *field_km,
+                                                         int max_km, int def_km, const char *key_name,
+                                                         const char *label_fmt);
+static void driver_break_overnight_append_water_remote_section(struct gui_priv *gui_priv, struct widget *box,
+                                                               struct driver_break_priv *priv);
+
+/* Profile name used when reopening overnight dialog from toggle (e.g. water remote/arid) */
+static const char *s_overnight_profile_name;
 
 static struct command_table driver_break_commands[] = {
     {"driver_break_suggest_stop",        command_cast(driver_break_cmd_suggest_stop)       },
@@ -228,9 +255,15 @@ static struct command_table driver_break_commands[] = {
     {"driver_break_end_break",           command_cast(driver_break_cmd_end_break)          },
     {"driver_break_configure_intervals", command_cast(driver_break_cmd_configure_intervals)},
     {"driver_break_configure_overnight", command_cast(driver_break_cmd_configure_overnight)},
+    {"driver_break_open_settings",       command_cast(driver_break_cmd_open_settings)      },
+    {"driver_break_set_mode",            command_cast(driver_break_cmd_set_mode)           },
+    {"driver_break_toggle",              command_cast(driver_break_cmd_toggle)             },
     {"driver_break_set_fuel_level",      command_cast(driver_break_cmd_set_fuel_level)     },
     {"driver_break_log_fuel_stop",       command_cast(driver_break_cmd_log_fuel_stop)      },
     {"driver_break_configure_fuel",      command_cast(driver_break_cmd_configure_fuel)     },
+    {"driver_break_set_drag_cd",         command_cast(driver_break_cmd_set_drag_cd)        },
+    {"driver_break_set_frontal_area",    command_cast(driver_break_cmd_set_frontal_area)   },
+    {"driver_break_set_total_weight",    command_cast(driver_break_cmd_set_total_weight)   },
     /* Backward compatibility aliases */
     {"rest_suggest_stop",                command_cast(driver_break_cmd_suggest_stop)       },
     {"rest_show_history",                command_cast(driver_break_cmd_show_history)       },
@@ -274,7 +307,7 @@ struct gui_local {
 };
 
 /* Get internal GUI priv from navit - returns NULL if not internal GUI */
-static struct gui_priv *driver_break_get_internal_gui_priv(struct navit *nav) {
+struct gui_priv *driver_break_get_internal_gui_priv(struct navit *nav) {
     struct gui *gui;
     struct gui_local *gui_local;
     struct attr type_attr;
@@ -387,6 +420,15 @@ int driver_break_cmd_suggest_stop(struct navit *nav, char *function, struct attr
 
         /* Find rest stops along route */
         stops = driver_break_finder_find_along_route(route, &priv->config, priv->session.mandatory_break_required);
+        if (!stops) {
+            struct attr pos_attr;
+            if (navit_get_attr(nav, attr_position_coord_geo, &pos_attr, NULL) && pos_attr.u.coord_geo) {
+                double radius_km = priv->config.poi_search_radius_km > 0 ? priv->config.poi_search_radius_km : 15.0;
+                stops = driver_break_finder_find_near(pos_attr.u.coord_geo, radius_km, &priv->config);
+                if (stops)
+                    navit_add_message(nav, "Driver Break: using nearby rest stops (none found along route)");
+            }
+        }
     }
 
     /* Get internal GUI priv */
@@ -530,14 +572,14 @@ int driver_break_cmd_show_history(struct navit *nav, char *function, struct attr
 /* Configure command */
 int driver_break_cmd_configure(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
     dbg(lvl_info, "Driver Break plugin: Configure command");
-    /* Placeholder for future global configuration menu (rest + fuel). */
-    return 1;
+    return driver_break_cmd_open_settings(nav, function, in, out);
 }
 
 /* Show fuel configuration summary dialog */
 static void driver_break_show_fuel_config_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv) {
     struct widget *menu, *box, *label, *button;
     char buffer[256];
+    int live_ecu_on;
 
     if (!priv) {
         dbg(lvl_error, "Driver Break plugin: driver_break_show_fuel_config_dialog called with NULL priv");
@@ -577,17 +619,53 @@ static void driver_break_show_fuel_config_dialog(struct gui_priv *gui_priv, stru
     label = gui_internal_label_new(gui_priv, buffer);
     gui_internal_widget_append(box, label);
 
-    snprintf(buffer, sizeof(buffer), "OBD-II available: %s", priv->config.fuel_obd_available ? "yes" : "no");
+    snprintf(buffer, sizeof(buffer), "Kinetic model: total mass %.1f kg", priv->config.total_weight);
     label = gui_internal_label_new(gui_priv, buffer);
     gui_internal_widget_append(box, label);
 
-    snprintf(buffer, sizeof(buffer), "J1939 available: %s", priv->config.fuel_j1939_available ? "yes" : "no");
+    snprintf(buffer, sizeof(buffer), "Drag Cd: %.3f, frontal area: %.2f m2", priv->config.energy_drag_cd,
+             priv->config.energy_frontal_area_sqm);
     label = gui_internal_label_new(gui_priv, buffer);
     gui_internal_widget_append(box, label);
 
-    snprintf(buffer, sizeof(buffer), "MegaSquirt available: %s", priv->config.fuel_megasquirt_available ? "yes" : "no");
+    snprintf(buffer, sizeof(buffer), "Air coeff f_air: %.5f (0.5*rho*Cd*A at sea level)",
+             driver_break_energy_f_air_from_drag(priv->config.energy_drag_cd, priv->config.energy_frontal_area_sqm));
     label = gui_internal_label_new(gui_priv, buffer);
     gui_internal_widget_append(box, label);
+
+    live_ecu_on = priv->config.fuel_obd_available || priv->config.fuel_j1939_available
+                  || priv->config.fuel_megasquirt_available;
+    snprintf(buffer, sizeof(buffer), "Live ECU (OBD-II, J1939, MegaSquirt): %s", live_ecu_on ? "on" : "off");
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+    button = gui_internal_button_new_with_callback(gui_priv, "Toggle live ECU", NULL, gravity_center | flags_fill,
+                                                   driver_break_toggle_live_ecu_callback, priv);
+    gui_internal_widget_append(box, button);
+
+    snprintf(buffer, sizeof(buffer), "Adaptive fuel learning: %s",
+             priv->config.fuel_adaptive_learning_enabled ? "on" : "off");
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "Kinetic routing: %s", priv->config.use_energy_routing ? "on" : "off");
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "ECU-weighted route cost: %s", priv->config.use_ecu_route_cost ? "on" : "off");
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    if (priv->route_energy_valid) {
+        snprintf(buffer, sizeof(buffer), "Last route kinetic: %.1f km, cost %.1f, est. %.1f L",
+                 priv->route_energy_distance_m / 1000.0, priv->route_energy_cost, priv->route_energy_est_l);
+        label = gui_internal_label_new(gui_priv, buffer);
+        gui_internal_widget_append(box, label);
+    }
+
+    button = gui_internal_button_new_with_callback(gui_priv, "Toggle adaptive learning", NULL,
+                                                   gravity_center | flags_fill,
+                                                   driver_break_toggle_adaptive_learning_callback, priv);
+    gui_internal_widget_append(box, button);
 
     if (priv->config.fuel_injector_flow_cc_min > 0) {
         snprintf(buffer, sizeof(buffer), "Injector flow: %d cc/min", priv->config.fuel_injector_flow_cc_min);
@@ -777,6 +855,114 @@ int driver_break_cmd_log_fuel_stop(struct navit *nav, char *function, struct att
     return 1;
 }
 
+static void driver_break_persist_config_if_db(struct driver_break_priv *priv) {
+    if (priv && priv->db) {
+        driver_break_db_save_config(priv->db, &priv->config);
+    }
+}
+
+/* Set aerodynamic drag coefficient Cd for kinetic (energy) model */
+int driver_break_cmd_set_drag_cd(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+    double v;
+
+    (void)in;
+    (void)out;
+
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
+    }
+    priv = (struct driver_break_priv *)plugin;
+
+    if (!function || *function == '\0') {
+        navit_add_message(nav, "Driver Break plugin: drag Cd requires a numeric argument");
+        return 0;
+    }
+    if (!driver_break_parse_fuel_value(function, &v, "Driver Break plugin: Invalid drag Cd value")) {
+        return 0;
+    }
+    if (v < 0.01 || v > 1.5) {
+        navit_add_message(nav, "Driver Break plugin: drag Cd must be between 0.01 and 1.5");
+        return 0;
+    }
+    priv->config.energy_drag_cd = v;
+    driver_break_persist_config_if_db(priv);
+    navit_add_message(nav, "Driver Break plugin: Drag Cd updated");
+    dbg(lvl_info, "Driver Break plugin: energy_drag_cd=%.4f", priv->config.energy_drag_cd);
+    return 1;
+}
+
+/* Set frontal area (m^2) for kinetic air drag: uses 0.5 * rho * Cd * A * v^2 */
+int driver_break_cmd_set_frontal_area(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+    double v;
+
+    (void)in;
+    (void)out;
+
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
+    }
+    priv = (struct driver_break_priv *)plugin;
+
+    if (!function || *function == '\0') {
+        navit_add_message(nav, "Driver Break plugin: frontal area requires a numeric argument (m^2)");
+        return 0;
+    }
+    if (!driver_break_parse_fuel_value(function, &v, "Driver Break plugin: Invalid frontal area value")) {
+        return 0;
+    }
+    if (v < 0.05 || v > 20.0) {
+        navit_add_message(nav, "Driver Break plugin: frontal area must be between 0.05 and 20 m^2");
+        return 0;
+    }
+    priv->config.energy_frontal_area_sqm = v;
+    driver_break_persist_config_if_db(priv);
+    navit_add_message(nav, "Driver Break plugin: Frontal area updated");
+    dbg(lvl_info, "Driver Break plugin: energy_frontal_area_sqm=%.4f", priv->config.energy_frontal_area_sqm);
+    return 1;
+}
+
+/* Set total mass (kg) for kinetic / energy model */
+int driver_break_cmd_set_total_weight(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+    double v;
+
+    (void)in;
+    (void)out;
+
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
+    }
+    priv = (struct driver_break_priv *)plugin;
+
+    if (!function || *function == '\0') {
+        navit_add_message(nav, "Driver Break plugin: total weight requires a numeric argument (kg)");
+        return 0;
+    }
+    if (!driver_break_parse_fuel_value(function, &v, "Driver Break plugin: Invalid total weight value")) {
+        return 0;
+    }
+    if (v < 1.0 || v > 50000.0) {
+        navit_add_message(nav, "Driver Break plugin: total weight must be between 1 and 50000 kg");
+        return 0;
+    }
+    priv->config.total_weight = v;
+    driver_break_persist_config_if_db(priv);
+    navit_add_message(nav, "Driver Break plugin: Total weight updated");
+    dbg(lvl_info, "Driver Break plugin: total_weight=%.2f kg", priv->config.total_weight);
+    return 1;
+}
+
 /* Start break command */
 int driver_break_cmd_start_break(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
     struct driver_break_priv *priv;
@@ -895,7 +1081,31 @@ int driver_break_cmd_end_break(struct navit *nav, char *function, struct attr **
     return 1;
 }
 
-/* Callback to save configuration after dialog interaction */
+/* Callback: one toggle for live ECU (OBD-II, J1939, MegaSquirt) - all on or all off */
+static void driver_break_toggle_live_ecu_callback(struct gui_priv *gui_priv, struct widget *widget, void *data) {
+    struct driver_break_priv *priv = (struct driver_break_priv *)data;
+    int any_on;
+    if (!priv)
+        return;
+    any_on = priv->config.fuel_obd_available || priv->config.fuel_j1939_available
+             || priv->config.fuel_megasquirt_available;
+    priv->config.fuel_obd_available = any_on ? 0 : 1;
+    priv->config.fuel_j1939_available = any_on ? 0 : 1;
+    priv->config.fuel_megasquirt_available = any_on ? 0 : 1;
+    gui_internal_back(gui_priv, NULL, NULL);
+    driver_break_show_fuel_config_dialog(gui_priv, priv);
+}
+
+static void driver_break_toggle_adaptive_learning_callback(struct gui_priv *gui_priv, struct widget *widget,
+                                                           void *data) {
+    struct driver_break_priv *priv = (struct driver_break_priv *)data;
+    if (!priv)
+        return;
+    priv->config.fuel_adaptive_learning_enabled = !priv->config.fuel_adaptive_learning_enabled;
+    gui_internal_back(gui_priv, NULL, NULL);
+    driver_break_show_fuel_config_dialog(gui_priv, priv);
+}
+
 static void driver_break_save_config_callback(struct gui_priv *gui_priv, struct widget *widget, void *data) {
     struct driver_break_priv *priv = (struct driver_break_priv *)data;
     if (priv && priv->db) {
@@ -1126,42 +1336,269 @@ static void driver_break_show_cycling_intervals_dialog(struct gui_priv *gui_priv
     graphics_draw_mode(gui_priv->gra, draw_mode_end);
 }
 
-/* Configure rest stop intervals command */
-int driver_break_cmd_configure_intervals(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
-    struct driver_break_priv *priv;
-    struct vehicleprofile *profile;
-    struct attr profile_attr;
-    char *profile_name;
-    void *plugin;
-    struct gui_priv *gui_priv;
+static void driver_break_toggle_motorcycle_terrain_callback(struct gui_priv *gui_priv, struct widget *widget,
+                                                            void *data) {
+    struct driver_break_priv *priv = (struct driver_break_priv *)data;
+    if (!priv)
+        return;
+    priv->config.motorcycle_terrain_subtype = !priv->config.motorcycle_terrain_subtype;
+    gui_internal_back(gui_priv, NULL, NULL);
+    driver_break_show_motorcycle_intervals_dialog(gui_priv, priv);
+}
 
-    dbg(lvl_info, "Driver Break plugin: driver_break_cmd_configure_intervals called");
+static void driver_break_toggle_water_remote_arid_callback(struct gui_priv *gui_priv, struct widget *widget,
+                                                           void *data) {
+    struct driver_break_priv *priv = (struct driver_break_priv *)data;
+    if (!priv)
+        return;
+    priv->config.enable_water_pois_remote_arid = !priv->config.enable_water_pois_remote_arid;
+    gui_internal_back(gui_priv, NULL, NULL);
+    driver_break_show_overnight_dialog(gui_priv, priv, s_overnight_profile_name ? s_overnight_profile_name : "car");
+}
+
+/* Show motorcycle interval configuration dialog */
+static void driver_break_show_motorcycle_intervals_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv) {
+    struct widget *menu, *box, *label, *button;
+    char buffer[256];
+
+    if (!priv) {
+        dbg(lvl_error, "Driver Break plugin: driver_break_show_motorcycle_intervals_dialog called with NULL priv");
+        return;
+    }
+
+    graphics_draw_mode(gui_priv->gra, draw_mode_begin);
+    gui_internal_enter(gui_priv, 1);
+    gui_internal_set_click_coord(gui_priv, NULL);
+    gui_internal_enter_setup(gui_priv);
+
+    menu = gui_internal_menu(gui_priv, "Motorcycle Rest Intervals");
+    box = gui_internal_box_new(gui_priv, gravity_left_top | orientation_vertical | flags_expand | flags_fill);
+    gui_internal_widget_append(menu, box);
+
+    snprintf(buffer, sizeof(buffer), "Soft limit: %d min", priv->config.motorcycle_soft_limit_minutes);
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "Mandatory break after: %d min",
+             priv->config.motorcycle_mandatory_break_after_minutes);
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "Break duration: %d min", priv->config.motorcycle_break_duration_min);
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    snprintf(buffer, sizeof(buffer), "Terrain: %s", priv->config.motorcycle_terrain_subtype ? "Adventure" : "Road");
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+
+    button = gui_internal_button_new_with_callback(gui_priv, "Toggle terrain (Road/Adventure)", NULL,
+                                                   gravity_center | flags_fill,
+                                                   driver_break_toggle_motorcycle_terrain_callback, priv);
+    gui_internal_widget_append(box, button);
+
+    if (priv->config.motorcycle_terrain_subtype) {
+        label = gui_internal_label_new(gui_priv,
+                                       "Adventure mode: Off-road motor traffic on uncultivated land is prohibited by "
+                                       "law in many countries (e.g. Norway, Sweden, Finland). Use only ways with "
+                                       "explicit access. Permits may be required.");
+        gui_internal_widget_append(box, label);
+    }
+
+    button = gui_internal_button_new_with_callback(gui_priv, "OK", NULL, gravity_center | flags_fill,
+                                                   driver_break_save_config_callback, priv);
+    gui_internal_widget_append(box, button);
+
+    gui_internal_menu_render(gui_priv);
+    gui_internal_leave(gui_priv);
+    graphics_draw_mode(gui_priv->gra, draw_mode_end);
+}
+
+/* osd_configuration bitmask for layered Driver Break OSD menus (see docs example navit.xml). */
+static int driver_break_osd_flag_for_vehicle_type(int vehicle_type) {
+    switch ((enum driver_break_vehicle_type)vehicle_type) {
+    case DRIVER_BREAK_VEHICLE_CAR:
+        return 4;
+    case DRIVER_BREAK_VEHICLE_HIKING:
+        return 8;
+    case DRIVER_BREAK_VEHICLE_TRUCK:
+        return 16;
+    case DRIVER_BREAK_VEHICLE_CYCLING:
+        return 32;
+    case DRIVER_BREAK_VEHICLE_MOTORCYCLE:
+        return 128;
+    default:
+        return 4;
+    }
+}
+
+static const char *driver_break_profile_label_for_vehicle_type(int vehicle_type) {
+    switch ((enum driver_break_vehicle_type)vehicle_type) {
+    case DRIVER_BREAK_VEHICLE_TRUCK:
+        return "truck";
+    case DRIVER_BREAK_VEHICLE_HIKING:
+        return "hiking";
+    case DRIVER_BREAK_VEHICLE_CYCLING:
+        return "cycling";
+    case DRIVER_BREAK_VEHICLE_MOTORCYCLE:
+        return "motorcycle";
+    case DRIVER_BREAK_VEHICLE_CAR:
+    default:
+        return "car";
+    }
+}
+
+/* Set navit osd_configuration to the break-settings layer for the active plugin travel mode. */
+int driver_break_cmd_open_settings(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+    struct attr a;
+
+    (void)function;
+    (void)in;
+    (void)out;
+
+    if (!nav) {
+        return 0;
+    }
+
     plugin = driver_break_get_plugin(nav);
     if (!plugin) {
-        dbg(lvl_error, "Driver Break plugin: Plugin not found - OSD may not be instantiated. Check if <osd "
-                       "type=\"rest\" enabled=\"yes\"/> is in config.");
-        navit_add_message(nav, "Driver Break plugin: Plugin not loaded. Please check configuration.");
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
+    }
+
+    priv = (struct driver_break_priv *)plugin;
+    a.type = attr_osd_configuration;
+    a.u.num = driver_break_osd_flag_for_vehicle_type(priv->config.vehicle_type);
+    navit_set_attr(nav, &a);
+    return 1;
+}
+
+/* Set plugin travel mode: function argument car|truck|hiking|cycling|motorcycle */
+int driver_break_cmd_set_mode(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+
+    (void)in;
+    (void)out;
+
+    if (!nav) {
+        return 0;
+    }
+
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
         return 0;
     }
 
     priv = (struct driver_break_priv *)plugin;
 
-    /* Get current vehicle profile */
-    profile = navit_get_vehicleprofile(nav);
-    if (!profile) {
-        dbg(lvl_warning, "Driver Break plugin: No vehicle profile found");
-        navit_add_message(nav, "Driver Break plugin: No vehicle profile selected");
+    if (!function || !*function) {
+        navit_add_message(
+            nav, "Driver Break plugin: driver_break_set_mode needs an argument (car|truck|hiking|cycling|motorcycle)");
         return 0;
     }
 
-    if (!vehicleprofile_get_attr(profile, attr_name, &profile_attr, NULL)) {
-        dbg(lvl_warning, "Driver Break plugin: Could not get profile name");
-        navit_add_message(nav, "Driver Break plugin: Could not get profile name");
+    if (!g_ascii_strcasecmp(function, "car")) {
+        priv->config.vehicle_type = DRIVER_BREAK_VEHICLE_CAR;
+    } else if (!g_ascii_strcasecmp(function, "truck")) {
+        priv->config.vehicle_type = DRIVER_BREAK_VEHICLE_TRUCK;
+    } else if (!g_ascii_strcasecmp(function, "hiking")) {
+        priv->config.vehicle_type = DRIVER_BREAK_VEHICLE_HIKING;
+    } else if (!g_ascii_strcasecmp(function, "cycling")) {
+        priv->config.vehicle_type = DRIVER_BREAK_VEHICLE_CYCLING;
+    } else if (!g_ascii_strcasecmp(function, "motorcycle")) {
+        priv->config.vehicle_type = DRIVER_BREAK_VEHICLE_MOTORCYCLE;
+    } else {
+        navit_add_message(nav, "Driver Break plugin: unknown mode (use car, truck, hiking, cycling, motorcycle)");
         return 0;
     }
 
-    profile_name = profile_attr.u.str;
-    dbg(lvl_info, "Driver Break plugin: Configure intervals for profile: %s", profile_name);
+    if (priv->db) {
+        driver_break_db_save_config(priv->db, &priv->config);
+    }
+
+    dbg(lvl_info, "Driver Break plugin: travel mode set to vehicle_type=%d", priv->config.vehicle_type);
+    return 1;
+}
+
+/* Toggle kinetic (energy routing) or eco (ECU-weighted route cost). */
+int driver_break_cmd_toggle(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+
+    (void)in;
+    (void)out;
+
+    if (!nav) {
+        return 0;
+    }
+
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded");
+        return 0;
+    }
+
+    priv = (struct driver_break_priv *)plugin;
+
+    if (!function || !*function) {
+        navit_add_message(nav, "Driver Break plugin: driver_break_toggle needs kinetic or eco");
+        return 0;
+    }
+
+    if (!g_ascii_strcasecmp(function, "kinetic")) {
+        priv->config.use_energy_routing = !priv->config.use_energy_routing;
+        dbg(lvl_info, "Driver Break plugin: use_energy_routing=%d", priv->config.use_energy_routing);
+        if (priv->config.use_energy_routing) {
+            driver_break_check_srtm_coverage(priv);
+            if (priv->current_route)
+                driver_break_compute_route_energy(priv);
+            navit_add_message(nav, "Driver Break: kinetic routing enabled");
+        } else {
+            navit_add_message(nav, "Driver Break: kinetic routing disabled");
+        }
+    } else if (!g_ascii_strcasecmp(function, "eco")) {
+        priv->config.use_ecu_route_cost = !priv->config.use_ecu_route_cost;
+        dbg(lvl_info, "Driver Break plugin: use_ecu_route_cost=%d", priv->config.use_ecu_route_cost);
+        navit_add_message(nav, priv->config.use_ecu_route_cost ? "Driver Break: ECU-weighted route cost enabled"
+                                                               : "Driver Break: ECU-weighted route cost disabled");
+        if (priv->config.use_energy_routing && priv->current_route)
+            driver_break_compute_route_energy(priv);
+    } else {
+        navit_add_message(nav, "Driver Break plugin: driver_break_toggle: use kinetic or eco");
+        return 0;
+    }
+
+    if (priv->db) {
+        driver_break_db_save_config(priv->db, &priv->config);
+    }
+
+    return 1;
+}
+
+/* Configure rest stop intervals command */
+int driver_break_cmd_configure_intervals(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
+    struct driver_break_priv *priv;
+    void *plugin;
+    struct gui_priv *gui_priv;
+
+    (void)function;
+    (void)in;
+    (void)out;
+
+    dbg(lvl_info, "Driver Break plugin: driver_break_cmd_configure_intervals called");
+    plugin = driver_break_get_plugin(nav);
+    if (!plugin) {
+        dbg(lvl_error, "Driver Break plugin: Plugin not found - OSD may not be instantiated. Check if <osd "
+                       "type=\"driver_break\" enabled=\"yes\"/> is in config.");
+        navit_add_message(nav, "Driver Break plugin: Plugin not loaded. Please check configuration.");
+        return 0;
+    }
+
+    priv = (struct driver_break_priv *)plugin;
 
     /* Get internal GUI priv - if not available, show message */
     gui_priv = driver_break_get_internal_gui_priv(nav);
@@ -1171,31 +1608,102 @@ int driver_break_cmd_configure_intervals(struct navit *nav, char *function, stru
         return 0;
     }
 
-    /* Show configuration dialog based on profile */
-    if (!g_ascii_strcasecmp(profile_name, "car")) {
+    /* Dialog follows plugin travel mode (driver_break_set_mode), not only Navit vehicle profile name */
+    switch ((enum driver_break_vehicle_type)priv->config.vehicle_type) {
+    case DRIVER_BREAK_VEHICLE_CAR:
         driver_break_show_car_intervals_dialog(gui_priv, priv);
-    } else if (!g_ascii_strcasecmp(profile_name, "truck") || !g_ascii_strcasecmp(profile_name, "Truck")) {
+        break;
+    case DRIVER_BREAK_VEHICLE_TRUCK:
         driver_break_show_truck_intervals_dialog(gui_priv, priv);
-    } else if (!g_ascii_strcasecmp(profile_name, "hiking") || !g_ascii_strcasecmp(profile_name, "pedestrian")) {
+        break;
+    case DRIVER_BREAK_VEHICLE_HIKING:
         driver_break_show_hiking_intervals_dialog(gui_priv, priv);
-    } else if (!g_ascii_strcasecmp(profile_name, "bike") || !g_ascii_strcasecmp(profile_name, "cycling")) {
+        break;
+    case DRIVER_BREAK_VEHICLE_CYCLING:
         driver_break_show_cycling_intervals_dialog(gui_priv, priv);
-    } else {
-        dbg(lvl_warning, "Driver Break plugin: Unknown profile type: %s", profile_name);
-        navit_add_message(nav, "Driver Break plugin: Configuration not available for this profile");
-        return 0;
+        break;
+    case DRIVER_BREAK_VEHICLE_MOTORCYCLE:
+        driver_break_show_motorcycle_intervals_dialog(gui_priv, priv);
+        break;
+    default:
+        driver_break_show_car_intervals_dialog(gui_priv, priv);
+        break;
     }
 
     return 1;
+}
+
+static void driver_break_overnight_append_buildings_row(struct gui_priv *gui_priv, struct widget *box,
+                                                        struct driver_break_priv *priv) {
+    char buffer[256];
+    int val = priv->config.min_distance_from_buildings;
+
+    if (val < 0 || val > 10000) {
+        dbg(lvl_error, "Driver Break plugin: Invalid min_distance_from_buildings value: %d, using default 150", val);
+        val = 150;
+        priv->config.min_distance_from_buildings = val;
+    }
+    snprintf(buffer, sizeof(buffer), "Min distance from buildings: %d m", val);
+    gui_internal_widget_append(box, gui_internal_label_new(gui_priv, buffer));
+}
+
+static void driver_break_overnight_append_glacier_row(struct gui_priv *gui_priv, struct widget *box,
+                                                      struct driver_break_priv *priv, const char *profile_name) {
+    char buffer[256];
+    int val;
+
+    if (g_ascii_strcasecmp(profile_name, "hiking") && g_ascii_strcasecmp(profile_name, "pedestrian")
+        && g_ascii_strcasecmp(profile_name, "motorcycle")) {
+        return;
+    }
+    val = priv->config.min_distance_from_glaciers;
+    if (val < 0 || val > 10000) {
+        dbg(lvl_error, "Driver Break plugin: Invalid min_distance_from_glaciers value: %d, using default 300", val);
+        val = 300;
+        priv->config.min_distance_from_glaciers = val;
+    }
+    snprintf(buffer, sizeof(buffer), "Min distance from glaciers: %d m", val);
+    gui_internal_widget_append(box, gui_internal_label_new(gui_priv, buffer));
+}
+
+static void driver_break_overnight_append_clamped_km_row(struct gui_priv *gui_priv, struct widget *box, int *field_km,
+                                                         int max_km, int def_km, const char *key_name,
+                                                         const char *label_fmt) {
+    char buffer[256];
+    int val = *field_km;
+
+    if (val < 0 || val > max_km) {
+        dbg(lvl_error, "Driver Break plugin: Invalid %s value: %d, using default %d", key_name, val, def_km);
+        val = def_km;
+        *field_km = val;
+    }
+    snprintf(buffer, sizeof(buffer), label_fmt, val);
+    gui_internal_widget_append(box, gui_internal_label_new(gui_priv, buffer));
+}
+
+static void driver_break_overnight_append_water_remote_section(struct gui_priv *gui_priv, struct widget *box,
+                                                               struct driver_break_priv *priv) {
+    char buffer[256];
+    struct widget *label;
+    struct widget *button;
+
+    snprintf(buffer, sizeof(buffer), "Water POIs at rest stops (car/truck/motorcycle): %s",
+             priv->config.enable_water_pois_remote_arid ? "on" : "off");
+    label = gui_internal_label_new(gui_priv, buffer);
+    gui_internal_widget_append(box, label);
+    button = gui_internal_button_new_with_callback(gui_priv, "Toggle water POIs (remote/arid/hot)", NULL,
+                                                   gravity_center | flags_fill,
+                                                   driver_break_toggle_water_remote_arid_callback, priv);
+    gui_internal_widget_append(box, button);
 }
 
 /* Show overnight stops configuration dialog */
 static void driver_break_show_overnight_dialog(struct gui_priv *gui_priv, struct driver_break_priv *priv,
                                                const char *profile_name) {
     struct widget *menu, *box, *label, *button;
-    char buffer[256];
     char title[128];
 
+    s_overnight_profile_name = profile_name;
     if (!priv) {
         dbg(lvl_error, "Driver Break plugin: driver_break_show_overnight_dialog called with NULL priv");
         return;
@@ -1219,77 +1727,19 @@ static void driver_break_show_overnight_dialog(struct gui_priv *gui_priv, struct
     box = gui_internal_box_new(gui_priv, gravity_left_top | orientation_vertical | flags_expand | flags_fill);
     gui_internal_widget_append(menu, box);
 
-    /* Min distance from buildings - validate before displaying */
-    {
-        int val = priv->config.min_distance_from_buildings;
-        if (val < 0 || val > 10000) {
-            dbg(lvl_error, "Driver Break plugin: Invalid min_distance_from_buildings value: %d, using default 150",
-                val);
-            val = 150;
-            priv->config.min_distance_from_buildings = val;
-        }
-        snprintf(buffer, sizeof(buffer), "Min distance from buildings: %d m", val);
-        label = gui_internal_label_new(gui_priv, buffer);
-        gui_internal_widget_append(box, label);
-    }
+    driver_break_overnight_append_buildings_row(gui_priv, box, priv);
+    driver_break_overnight_append_glacier_row(gui_priv, box, priv, profile_name);
+    driver_break_overnight_append_clamped_km_row(gui_priv, box, &priv->config.poi_search_radius_km, 1000, 15,
+                                                 "poi_search_radius_km", "POI search radius: %d km");
+    driver_break_overnight_append_clamped_km_row(gui_priv, box, &priv->config.poi_water_search_radius_km, 100, 2,
+                                                 "poi_water_search_radius_km", "Water search radius: %d km");
+    driver_break_overnight_append_clamped_km_row(gui_priv, box, &priv->config.poi_cabin_search_radius_km, 100, 5,
+                                                 "poi_cabin_search_radius_km", "Cabin search radius: %d km");
+    driver_break_overnight_append_water_remote_section(gui_priv, box, priv);
 
-    /* Min distance from glaciers (for hiking) */
-    if (!g_ascii_strcasecmp(profile_name, "hiking") || !g_ascii_strcasecmp(profile_name, "pedestrian")) {
-        int val = priv->config.min_distance_from_glaciers;
-        if (val < 0 || val > 10000) {
-            dbg(lvl_error, "Driver Break plugin: Invalid min_distance_from_glaciers value: %d, using default 300", val);
-            val = 300;
-            priv->config.min_distance_from_glaciers = val;
-        }
-        snprintf(buffer, sizeof(buffer), "Min distance from glaciers: %d m", val);
-        label = gui_internal_label_new(gui_priv, buffer);
-        gui_internal_widget_append(box, label);
-    }
-
-    /* POI search radius - validate before displaying */
-    {
-        int val = priv->config.poi_search_radius_km;
-        if (val < 0 || val > 1000) {
-            dbg(lvl_error, "Driver Break plugin: Invalid poi_search_radius_km value: %d, using default 15", val);
-            val = 15;
-            priv->config.poi_search_radius_km = val;
-        }
-        snprintf(buffer, sizeof(buffer), "POI search radius: %d km", val);
-        label = gui_internal_label_new(gui_priv, buffer);
-        gui_internal_widget_append(box, label);
-    }
-
-    /* Water search radius - validate before displaying */
-    {
-        int val = priv->config.poi_water_search_radius_km;
-        if (val < 0 || val > 100) {
-            dbg(lvl_error, "Driver Break plugin: Invalid poi_water_search_radius_km value: %d, using default 2", val);
-            val = 2;
-            priv->config.poi_water_search_radius_km = val;
-        }
-        snprintf(buffer, sizeof(buffer), "Water search radius: %d km", val);
-        label = gui_internal_label_new(gui_priv, buffer);
-        gui_internal_widget_append(box, label);
-    }
-
-    /* Cabin search radius - validate before displaying */
-    {
-        int val = priv->config.poi_cabin_search_radius_km;
-        if (val < 0 || val > 100) {
-            dbg(lvl_error, "Driver Break plugin: Invalid poi_cabin_search_radius_km value: %d, using default 5", val);
-            val = 5;
-            priv->config.poi_cabin_search_radius_km = val;
-        }
-        snprintf(buffer, sizeof(buffer), "Cabin search radius: %d km", val);
-        label = gui_internal_label_new(gui_priv, buffer);
-        gui_internal_widget_append(box, label);
-    }
-
-    /* Note about editing */
     label = gui_internal_label_new(gui_priv, "Note: Advanced editing coming soon");
     gui_internal_widget_append(box, label);
 
-    /* Save button */
     button = gui_internal_button_new_with_callback(gui_priv, "OK", NULL, gravity_center | flags_fill,
                                                    driver_break_save_config_callback, priv);
     gui_internal_widget_append(box, button);
@@ -1302,39 +1752,26 @@ static void driver_break_show_overnight_dialog(struct gui_priv *gui_priv, struct
 /* Configure overnight stops command */
 int driver_break_cmd_configure_overnight(struct navit *nav, char *function, struct attr **in, struct attr ***out) {
     struct driver_break_priv *priv;
-    struct vehicleprofile *profile;
-    struct attr profile_attr;
-    char *profile_name;
     void *plugin;
     struct gui_priv *gui_priv;
+    const char *profile_name;
+
+    (void)function;
+    (void)in;
+    (void)out;
 
     dbg(lvl_info, "Driver Break plugin: driver_break_cmd_configure_overnight called");
     plugin = driver_break_get_plugin(nav);
     if (!plugin) {
         dbg(lvl_error, "Driver Break plugin: Plugin not found - OSD may not be instantiated. Check if <osd "
-                       "type=\"rest\" enabled=\"yes\"/> is in config.");
+                       "type=\"driver_break\" enabled=\"yes\"/> is in config.");
         navit_add_message(nav, "Driver Break plugin: Plugin not loaded. Please check configuration.");
         return 0;
     }
 
     priv = (struct driver_break_priv *)plugin;
-
-    /* Get current vehicle profile */
-    profile = navit_get_vehicleprofile(nav);
-    if (!profile) {
-        dbg(lvl_warning, "Driver Break plugin: No vehicle profile found");
-        navit_add_message(nav, "Driver Break plugin: No vehicle profile selected");
-        return 0;
-    }
-
-    if (!vehicleprofile_get_attr(profile, attr_name, &profile_attr, NULL)) {
-        dbg(lvl_warning, "Driver Break plugin: Could not get profile name");
-        navit_add_message(nav, "Driver Break plugin: Could not get profile name");
-        return 0;
-    }
-
-    profile_name = profile_attr.u.str;
-    dbg(lvl_info, "Driver Break plugin: Configure overnight stops for profile: %s", profile_name);
+    profile_name = driver_break_profile_label_for_vehicle_type(priv->config.vehicle_type);
+    dbg(lvl_info, "Driver Break plugin: Configure overnight stops for travel mode: %s", profile_name);
 
     /* Get internal GUI priv - if not available, show message */
     gui_priv = driver_break_get_internal_gui_priv(nav);

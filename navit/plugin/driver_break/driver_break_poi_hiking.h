@@ -20,9 +20,12 @@
 #ifndef NAVIT_PLUGIN_DRIVER_BREAK_POI_HIKING_H
 #define NAVIT_PLUGIN_DRIVER_BREAK_POI_HIKING_H
 
+#include <glib.h>
+
 #include "config.h"
 #include "coord.h"
-#include "driver_break.h"
+
+struct mapset;
 
 /* POI search radius constants */
 #define POI_WATER_SEARCH_RADIUS 2000.0 /* 2 km for water points */

@@ -20,10 +20,11 @@
 #ifndef NAVIT_PLUGIN_DRIVER_BREAK_SRTM_H
 #define NAVIT_PLUGIN_DRIVER_BREAK_SRTM_H
 
-#include "config.h"
-#include "coord.h"
-#include "driver_break.h"
 #include <glib.h>
+
+#include "config.h"
+
+struct coord_geo;
 
 /* SRTM region definition */
 struct srtm_region {
@@ -120,5 +121,12 @@ void srtm_free_tiles(GList *tiles);
 
 /* Free download context */
 void srtm_free_download_context(struct srtm_download_context *ctx);
+
+/* Count tiles in bbox that are not present locally; total_tiles receives list length. */
+int srtm_bbox_missing_tile_count(double min_lon, double min_lat, double max_lon, double max_lat, int *total_tiles);
+
+/* Allocate a synthetic region for an arbitrary bbox (caller owns; pass to srtm_download_region). */
+struct srtm_region *srtm_region_from_bbox(const char *name, double min_lon, double min_lat, double max_lon,
+                                          double max_lat);
 
 #endif /* NAVIT_PLUGIN_DRIVER_BREAK_SRTM_H */

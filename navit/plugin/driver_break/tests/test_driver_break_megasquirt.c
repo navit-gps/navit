@@ -8,9 +8,7 @@
  * do not produce bogus fuel rates. No real hardware or serial I/O is used.
  */
 
-#include "../driver_break.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #define TEST_ASSERT(cond, msg)                                                                                         \

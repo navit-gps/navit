@@ -26,11 +26,15 @@
 #ifndef NAVIT_PLUGIN_DRIVER_BREAK_DB_H
 #define NAVIT_PLUGIN_DRIVER_BREAK_DB_H
 
+#include <glib.h>
+#include <time.h>
+
 #include "config.h"
-#include "coord.h"
-#include "driver_break.h"
 
 struct driver_break_db;
+struct driver_break_config;
+struct driver_break_fuel_stop;
+struct driver_break_stop_history;
 
 /**
  * @brief Create a new database connection
