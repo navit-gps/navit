@@ -41,8 +41,6 @@
  */
 
 struct vehicle_priv {
-    GClueLocation *location;
-    char *bla;
     struct callback_list *cbl;
     double speed;
     double direction;
@@ -61,8 +59,16 @@ GClueClient *client = NULL;
  * @returns nothing
  */
 static void vehicle_geoclue_destroy(struct vehicle_priv *priv) {
-    g_clear_object(&client);
-    g_clear_object(&priv->simple);
+    if (priv->simple) {
+        g_signal_handlers_disconnect_by_data(priv->simple, priv);
+        g_clear_object(&priv->simple);
+    }
+    if (client) {
+        g_signal_handlers_disconnect_by_data(client, NULL);
+        g_clear_object(&client);
+    }
+    g_free(priv->time_str);
+    g_free(priv);
 }
 
 static void print_location(GClueSimple *simple, GParamSpec *pspec, gpointer user_data) {
@@ -94,13 +100,17 @@ static void print_location(GClueSimple *simple, GParamSpec *pspec, gpointer user
     timestamp = gclue_location_get_timestamp(location);
     if (timestamp) {
         GDateTime *date_time;
+        GDateTime *utc_time;
         glong second_since_epoch;
 
         g_variant_get(timestamp, "(tt)", &second_since_epoch, NULL);
 
         date_time = g_date_time_new_from_unix_local(second_since_epoch);
-
-        priv->time_str = g_date_time_format_iso8601(g_date_time_to_utc(date_time));
+        utc_time = g_date_time_to_utc(date_time);
+        g_free(priv->time_str);
+        priv->time_str = g_date_time_format_iso8601(utc_time);
+        g_date_time_unref(utc_time);
+        g_date_time_unref(date_time);
     }
     callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 }
@@ -121,7 +131,7 @@ static void on_simple_ready(GObject *source_object, GAsyncResult *res, gpointer 
     priv->simple = gclue_simple_new_finish(res, &error);
     if (error != NULL) {
         dbg(lvl_error, "Failed to connect to GeoClue2 service: %s", error->message);
-
+        g_error_free(error);
         exit(-1);
     }
     client = gclue_simple_get_client(priv->simple);
