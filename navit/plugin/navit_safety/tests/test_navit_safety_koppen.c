@@ -4,9 +4,9 @@
  * Unit tests for Navit Safety Koppen classification.
  */
 
+#include "navit_safety_koppen.h"
 #include <stdio.h>
 #include <string.h>
-#include "navit_safety_koppen.h"
 
 #define TEST_ASSERT(cond, message)                                                                                     \
     do {                                                                                                               \
@@ -31,8 +31,7 @@ static int test_zone_predicates(void) {
 
 static int test_lookup_arid(void) {
     /* Central Sahara (Libya). */
-    TEST_ASSERT(navit_safety_koppen_is_arid(navit_safety_koppen_lookup(25.0, 15.0)),
-                "Central Sahara should be desert");
+    TEST_ASSERT(navit_safety_koppen_is_arid(navit_safety_koppen_lookup(25.0, 15.0)), "Central Sahara should be desert");
     /* Empty Quarter, Arabian Peninsula. */
     TEST_ASSERT(navit_safety_koppen_is_arid(navit_safety_koppen_lookup(20.0, 48.0)),
                 "Arabian Peninsula should be desert");

@@ -18,20 +18,20 @@
 #include <string.h>
 #include <time.h>
 #if NAVIT_SAFETY_WITH_OSD
-#include <glib.h>
-#include "attr.h"
-#include "callback.h"
-#include "coord.h"
-#include "debug.h"
-#include "item.h"
-#include "map.h"
-#include "mapset.h"
-#include "navit.h"
-#include "route.h"
-#include "transform.h"
-#if NAVIT_SAFETY_WITH_SQLITE
-#include "navit_safety_cache.h"
-#endif
+#    include "attr.h"
+#    include "callback.h"
+#    include "coord.h"
+#    include "debug.h"
+#    include "item.h"
+#    include "map.h"
+#    include "mapset.h"
+#    include "navit.h"
+#    include "route.h"
+#    include "transform.h"
+#    include <glib.h>
+#    if NAVIT_SAFETY_WITH_SQLITE
+#        include "navit_safety_cache.h"
+#    endif
 #endif /* NAVIT_SAFETY_WITH_OSD */
 #include "navit_safety.h"
 #include "navit_safety_confidence.h"
@@ -80,12 +80,44 @@ void navit_safety_build_plan_stops(const struct navit_safety_poi_entry *pois, in
     *n_stops = out;
 }
 
-void navit_safety_format_status(const struct navit_safety_route_state *state,
-                                const struct navit_safety_config *config,
+static const char *remote_mode_label(int remote_mode) {
+    switch (remote_mode) {
+    case NAVIT_SAFETY_REMOTE_ALWAYS:
+        return "Always";
+    case NAVIT_SAFETY_REMOTE_OFF:
+        return "Off";
+    case NAVIT_SAFETY_REMOTE_AUTO:
+    default:
+        return "Auto";
+    }
+}
+
+static const char *heat_level_suffix(enum navit_safety_heat_level level) {
+    switch (level) {
+    case NAVIT_SAFETY_HEAT_CAUTION:
+        return "  Heat: caution";
+    case NAVIT_SAFETY_HEAT_WARNING:
+        return "  Heat: warning";
+    case NAVIT_SAFETY_HEAT_DANGER:
+        return "  Heat: danger";
+    default:
+        return "";
+    }
+}
+
+static void append_foot_travel_status(const struct navit_safety_route_state *state, char *out, int out_len) {
+    char extra[128];
+
+    snprintf(extra, sizeof(extra), "\nWater: %d ml/h%s", state->heat.water_ml_per_hour,
+             heat_level_suffix(state->heat.level));
+    strncat(out, extra, out_len - (int)strlen(out) - 1);
+}
+
+void navit_safety_format_status(const struct navit_safety_route_state *state, const struct navit_safety_config *config,
                                 char *out, int out_len) {
     const struct navit_safety_plan_result *plan;
-    const char *remote;
     const char *mode;
+    const char *remote;
 
     if (!out || out_len <= 0)
         return;
@@ -99,45 +131,15 @@ void navit_safety_format_status(const struct navit_safety_route_state *state,
     }
 
     plan = &state->fuel_plan;
-    switch (config->remote_mode) {
-    case NAVIT_SAFETY_REMOTE_ALWAYS:
-        mode = "Always";
-        break;
-    case NAVIT_SAFETY_REMOTE_OFF:
-        mode = "Off";
-        break;
-    case NAVIT_SAFETY_REMOTE_AUTO:
-    default:
-        mode = "Auto";
-        break;
-    }
+    mode = remote_mode_label(config->remote_mode);
     remote = plan->remote_active ? "active" : "inactive";
 
-    snprintf(out, out_len,
-             "Navit Safety\nRemote: %s (%s)\nBuffer: %d km  Range: %d km\nGap: %d km%s%s",
-             mode, remote, plan->buffer_km, plan->usable_range_km, plan->gap.max_gap_km,
-             plan->gap.warning ? "  WARN" : "",
+    snprintf(out, out_len, "Navit Safety\nRemote: %s (%s)\nBuffer: %d km  Range: %d km\nGap: %d km%s%s", mode, remote,
+             plan->buffer_km, plan->usable_range_km, plan->gap.max_gap_km, plan->gap.warning ? "  WARN" : "",
              plan->desert_warning ? "\nDesert: higher consumption likely" : "");
 
-    if (config->foot_travel_mode) {
-        char extra[128];
-        const char *heat = "";
-        switch (state->heat.level) {
-        case NAVIT_SAFETY_HEAT_CAUTION:
-            heat = "  Heat: caution";
-            break;
-        case NAVIT_SAFETY_HEAT_WARNING:
-            heat = "  Heat: warning";
-            break;
-        case NAVIT_SAFETY_HEAT_DANGER:
-            heat = "  Heat: danger";
-            break;
-        default:
-            break;
-        }
-        snprintf(extra, sizeof(extra), "\nWater: %d ml/h%s", state->heat.water_ml_per_hour, heat);
-        strncat(out, extra, out_len - (int)strlen(out) - 1);
-    }
+    if (config->foot_travel_mode)
+        append_foot_travel_status(state, out, out_len);
 }
 
 #if NAVIT_SAFETY_WITH_OSD
@@ -192,19 +194,20 @@ static void poi_label_from_item(struct item *item, char *out, int out_len) {
 }
 
 static enum navit_safety_confidence score_poi_entry(const struct navit_safety_config *config,
-        struct navit_safety_cache *cache, const char *trip_id, const char *poi_id, int denied) {
+                                                    struct navit_safety_cache *cache, const char *trip_id,
+                                                    const char *poi_id, int denied) {
     struct navit_safety_poi poi;
 
     if (denied)
         return NAVIT_SAFETY_CONFIDENCE_LOW;
 
-#if NAVIT_SAFETY_WITH_SQLITE
+#    if NAVIT_SAFETY_WITH_SQLITE
     if (cache && trip_id && poi_id[0] && navit_safety_cache_is_confirmed(cache, poi_id, trip_id))
         return NAVIT_SAFETY_CONFIDENCE_HIGH;
-#else
+#    else
     (void)cache;
     (void)trip_id;
-#endif
+#    endif
 
     (void)config;
     memset(&poi, 0, sizeof(poi));
@@ -230,11 +233,11 @@ static void route_run_plan(struct navit_safety_route_state *state, const struct 
     int n_stops;
 
     navit_safety_build_plan_stops(state->pois, state->n_pois, stops, &n_stops);
-    navit_safety_plan(config, NAVIT_SAFETY_RESOURCE_FUEL, state->mid_lat, state->mid_lon,
-                      stops, n_stops, state->route_length_km, full_range_km, &state->fuel_plan);
+    navit_safety_plan(config, NAVIT_SAFETY_RESOURCE_FUEL, state->mid_lat, state->mid_lon, stops, n_stops,
+                      state->route_length_km, full_range_km, &state->fuel_plan);
     if (config->foot_travel_mode) {
-        navit_safety_plan(config, NAVIT_SAFETY_RESOURCE_WATER, state->mid_lat, state->mid_lon,
-                          stops, n_stops, state->route_length_km, full_range_km, &state->water_plan);
+        navit_safety_plan(config, NAVIT_SAFETY_RESOURCE_WATER, state->mid_lat, state->mid_lon, stops, n_stops,
+                          state->route_length_km, full_range_km, &state->water_plan);
         navit_safety_heat_plan(config, wbgt_c, 1, &state->heat);
     } else {
         memset(&state->water_plan, 0, sizeof(state->water_plan));
@@ -289,8 +292,7 @@ static struct route *route_from_navit(struct navit *nav) {
         return NULL;
     if (!route_get_attr(route_attr.u.route, attr_route_status, &route_status, NULL))
         return NULL;
-    if (route_status.u.num != route_status_path_done_new
-        && route_status.u.num != route_status_path_done_incremental)
+    if (route_status.u.num != route_status_path_done_new && route_status.u.num != route_status_path_done_incremental)
         return NULL;
     return route_attr.u.route;
 }
@@ -386,8 +388,8 @@ static void route_collect_pois(struct navit_safety_route_state *state, struct na
 
 void navit_safety_route_refresh(struct navit_safety_route_state *state, struct navit *nav,
                                 const struct navit_safety_config *config, struct navit_safety_cache *cache,
-                                const char *trip_id, int full_range_km, double wbgt_c,
-                                double vehicle_lat, double vehicle_lon) {
+                                const char *trip_id, int full_range_km, double wbgt_c, double vehicle_lat,
+                                double vehicle_lon) {
     struct route *route;
     struct attr length_attr;
     struct coord mid_coord;
@@ -430,8 +432,8 @@ void navit_safety_route_refresh(struct navit_safety_route_state *state, struct n
 
 int navit_safety_route_confirm_nearest(struct navit_safety_route_state *state, struct navit *nav,
                                        const struct navit_safety_config *config, struct navit_safety_cache *cache,
-                                       const char *trip_id, int full_range_km, double wbgt_c,
-                                       double vehicle_lat, double vehicle_lon) {
+                                       const char *trip_id, int full_range_km, double wbgt_c, double vehicle_lat,
+                                       double vehicle_lon) {
     struct navit_safety_poi_entry *entry;
 
     (void)nav;
@@ -439,15 +441,15 @@ int navit_safety_route_confirm_nearest(struct navit_safety_route_state *state, s
         return -1;
 
     entry = &state->pois[state->nearest_idx];
-#if NAVIT_SAFETY_WITH_SQLITE
+#    if NAVIT_SAFETY_WITH_SQLITE
     if (cache && trip_id) {
         time_t now = time(NULL);
         navit_safety_cache_confirm(cache, entry->poi_id, trip_id, (long)now);
     }
-#else
+#    else
     (void)cache;
     (void)trip_id;
-#endif
+#    endif
     entry->denied = 0;
     entry->confidence = NAVIT_SAFETY_CONFIDENCE_HIGH;
     route_run_plan(state, config, full_range_km, wbgt_c);
@@ -457,8 +459,8 @@ int navit_safety_route_confirm_nearest(struct navit_safety_route_state *state, s
 
 int navit_safety_route_deny_nearest(struct navit_safety_route_state *state, struct navit *nav,
                                     const struct navit_safety_config *config, struct navit_safety_cache *cache,
-                                    const char *trip_id, int full_range_km, double wbgt_c,
-                                    double vehicle_lat, double vehicle_lon) {
+                                    const char *trip_id, int full_range_km, double wbgt_c, double vehicle_lat,
+                                    double vehicle_lon) {
     struct navit_safety_poi_entry *entry;
 
     (void)nav;

@@ -4,12 +4,12 @@
  * Unit tests for Navit Safety route-state helpers (no Navit core dependency).
  */
 
-#include <stdio.h>
-#include <string.h>
 #include "navit_safety.h"
 #include "navit_safety_confidence.h"
 #include "navit_safety_lookahead.h"
 #include "navit_safety_route.h"
+#include <stdio.h>
+#include <string.h>
 
 #define TEST_ASSERT(cond, message)                                                                                     \
     do {                                                                                                               \
@@ -21,9 +21,9 @@
 
 static int test_build_plan_stops_skips_denied(void) {
     const struct navit_safety_poi_entry pois[] = {
-        {"a", "A", 0.0, 0.0, 10, NAVIT_SAFETY_CONFIDENCE_HIGH, 0},
+        {"a", "A", 0.0, 0.0, 10, NAVIT_SAFETY_CONFIDENCE_HIGH,   0},
         {"b", "B", 0.0, 0.0, 50, NAVIT_SAFETY_CONFIDENCE_MEDIUM, 1},
-        {"c", "C", 0.0, 0.0, 90, NAVIT_SAFETY_CONFIDENCE_LOW, 0},
+        {"c", "C", 0.0, 0.0, 90, NAVIT_SAFETY_CONFIDENCE_LOW,    0},
     };
     struct navit_safety_stop stops[4];
     int n_stops = 0;

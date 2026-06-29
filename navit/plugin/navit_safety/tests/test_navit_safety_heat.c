@@ -4,9 +4,9 @@
  * Unit tests for the Navit Safety heat-stress and water-requirement engine.
  */
 
-#include <stdio.h>
 #include "navit_safety.h"
 #include "navit_safety_heat.h"
+#include <stdio.h>
 
 #define TEST_ASSERT(cond, message)                                                                                     \
     do {                                                                                                               \

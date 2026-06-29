@@ -4,10 +4,10 @@
  * Unit tests for Navit Safety plugin configuration defaults.
  */
 
-#include <stdio.h>
-#include <string.h>
 #include "debug.h"
 #include "navit_safety.h"
+#include <stdio.h>
+#include <string.h>
 
 /* Stub for debug_printf and max_debug_level for unit tests */
 dbg_level max_debug_level = lvl_error;

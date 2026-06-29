@@ -4,9 +4,9 @@
  * Unit tests for Navit Safety lookahead gap detection.
  */
 
-#include <stdio.h>
 #include "navit_safety_confidence.h"
 #include "navit_safety_lookahead.h"
+#include <stdio.h>
 
 #define TEST_ASSERT(cond, message)                                                                                     \
     do {                                                                                                               \

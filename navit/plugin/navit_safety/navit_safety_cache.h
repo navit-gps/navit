@@ -43,8 +43,8 @@ void navit_safety_cache_close(struct navit_safety_cache *cache);
  * @param timestamp Confirmation time (e.g. Unix seconds).
  * @return Nonzero on success, zero on failure.
  */
-int navit_safety_cache_confirm(struct navit_safety_cache *cache, const char *poi_id,
-                               const char *trip_id, long timestamp);
+int navit_safety_cache_confirm(struct navit_safety_cache *cache, const char *poi_id, const char *trip_id,
+                               long timestamp);
 
 /**
  * @brief Test whether a POI is confirmed for a trip.
@@ -53,7 +53,6 @@ int navit_safety_cache_confirm(struct navit_safety_cache *cache, const char *poi
  * @param trip_id Trip identifier.
  * @return Nonzero if a confirmation exists, zero otherwise.
  */
-int navit_safety_cache_is_confirmed(struct navit_safety_cache *cache, const char *poi_id,
-                                    const char *trip_id);
+int navit_safety_cache_is_confirmed(struct navit_safety_cache *cache, const char *poi_id, const char *trip_id);
 
 #endif /* NAVIT_PLUGIN_NAVIT_SAFETY_CACHE_H */

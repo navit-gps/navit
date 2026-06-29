@@ -4,12 +4,12 @@
  * Unit tests for the Navit Safety resource-planning orchestrator.
  */
 
-#include <stdio.h>
 #include "navit_safety.h"
 #include "navit_safety_confidence.h"
 #include "navit_safety_koppen.h"
 #include "navit_safety_lookahead.h"
 #include "navit_safety_plan.h"
+#include <stdio.h>
 
 #define TEST_ASSERT(cond, message)                                                                                     \
     do {                                                                                                               \

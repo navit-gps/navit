@@ -29,14 +29,14 @@ enum navit_safety_confidence {
 
 /** @brief Data source a POI was obtained from, used for source ranking. */
 enum navit_safety_poi_source {
-    NAVIT_SAFETY_SRC_UNKNOWN = 0,       /**< Source not known. */
-    NAVIT_SAFETY_SRC_CHAIN_API,         /**< Live chain operator API (Shell, Circle K). */
-    NAVIT_SAFETY_SRC_NREL,              /**< NREL Alternative Fuel Stations. */
-    NAVIT_SAFETY_SRC_OSM_NREL_MATCH,    /**< OSM cross-referenced with NREL. */
-    NAVIT_SAFETY_SRC_IOVERLANDER,       /**< iOverlander CSV import (offline). */
-    NAVIT_SAFETY_SRC_OSM_CHAIN,         /**< OSM with a known chain operator tag. */
-    NAVIT_SAFETY_SRC_OSM_INDEPENDENT,   /**< OSM independent operator. */
-    NAVIT_SAFETY_SRC_USER_CONFIRMED     /**< Confirmed by the user on the current trip. */
+    NAVIT_SAFETY_SRC_UNKNOWN = 0,     /**< Source not known. */
+    NAVIT_SAFETY_SRC_CHAIN_API,       /**< Live chain operator API (Shell, Circle K). */
+    NAVIT_SAFETY_SRC_NREL,            /**< NREL Alternative Fuel Stations. */
+    NAVIT_SAFETY_SRC_OSM_NREL_MATCH,  /**< OSM cross-referenced with NREL. */
+    NAVIT_SAFETY_SRC_IOVERLANDER,     /**< iOverlander CSV import (offline). */
+    NAVIT_SAFETY_SRC_OSM_CHAIN,       /**< OSM with a known chain operator tag. */
+    NAVIT_SAFETY_SRC_OSM_INDEPENDENT, /**< OSM independent operator. */
+    NAVIT_SAFETY_SRC_USER_CONFIRMED   /**< Confirmed by the user on the current trip. */
 };
 
 /** @brief A POI candidate to be scored. */

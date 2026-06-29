@@ -13,8 +13,8 @@
  * as published by the Free Software Foundation.
  */
 
-#include <string.h>
 #include "navit_safety.h"
+#include <string.h>
 
 /**
  * @brief Set configuration to spec defaults.
@@ -46,32 +46,32 @@ void navit_safety_config_default(struct navit_safety_config *config) {
  * Unit tests for configuration defaults link only against navit_safety_config_default. */
 #if NAVIT_SAFETY_WITH_OSD
 
-#include <math.h>
-#include <stdio.h>
-#include <sys/time.h>
-#include <glib.h>
-#include "attr.h"
-#include "callback.h"
-#include "color.h"
-#include "command.h"
-#include "coord.h"
-#include "debug.h"
-#include "graphics.h"
-#include "navit.h"
-#include "navit_nls.h"
-#include "osd.h"
-#include "plugin.h"
-#include "point.h"
-#include "vehicle.h"
-#include "xmlconfig.h"
-#include "navit_safety_route.h"
-#if NAVIT_SAFETY_WITH_SQLITE
-#include "navit_safety_cache.h"
-#endif
+#    include "attr.h"
+#    include "callback.h"
+#    include "color.h"
+#    include "command.h"
+#    include "coord.h"
+#    include "debug.h"
+#    include "graphics.h"
+#    include "navit.h"
+#    include "navit_nls.h"
+#    include "navit_safety_route.h"
+#    include "osd.h"
+#    include "plugin.h"
+#    include "point.h"
+#    include "vehicle.h"
+#    include "xmlconfig.h"
+#    include <glib.h>
+#    include <math.h>
+#    include <stdio.h>
+#    include <sys/time.h>
+#    if NAVIT_SAFETY_WITH_SQLITE
+#        include "navit_safety_cache.h"
+#    endif
 
-#define NAVIT_SAFETY_DEFAULT_RANGE_KM 600
-#define NAVIT_SAFETY_DEFAULT_UPDATE_S 30
-#define NAVIT_SAFETY_DEFAULT_WBGT_C 28.0
+#    define NAVIT_SAFETY_DEFAULT_RANGE_KM 600
+#    define NAVIT_SAFETY_DEFAULT_UPDATE_S 30
+#    define NAVIT_SAFETY_DEFAULT_WBGT_C 28.0
 
 /** @brief OSD private data; @p item must remain the first member. */
 struct navit_safety_priv {
@@ -87,15 +87,15 @@ struct navit_safety_priv {
     int width;
     struct graphics_gc *warn_gc;
     char trip_id[64];
-#if NAVIT_SAFETY_WITH_SQLITE
+#    if NAVIT_SAFETY_WITH_SQLITE
     struct navit_safety_cache *cache;
-#endif
+#    endif
 };
 
 static GList *navit_safety_instances;
 static int navit_safety_commands_registered;
 
-#if NAVIT_SAFETY_WITH_SQLITE
+#    if NAVIT_SAFETY_WITH_SQLITE
 static struct navit_safety_cache *navit_safety_open_cache(void) {
     struct navit_safety_cache *cache;
     char *path;
@@ -107,7 +107,7 @@ static struct navit_safety_cache *navit_safety_open_cache(void) {
     g_free(path);
     return cache;
 }
-#endif
+#    endif
 
 static double navit_safety_now(void) {
     struct timeval tv;
@@ -139,17 +139,16 @@ static void navit_safety_refresh(struct navit_safety_priv *priv, struct vehicle 
         return;
     navit_safety_vehicle_geo(v, &lat, &lon);
     navit_safety_route_refresh(&priv->route_state, priv->nav, &priv->config,
-#if NAVIT_SAFETY_WITH_SQLITE
+#    if NAVIT_SAFETY_WITH_SQLITE
                                priv->cache,
-#else
+#    else
                                NULL,
-#endif
+#    endif
                                priv->trip_id, priv->full_range_km, priv->wbgt_c, lat, lon);
     priv->last_refresh = now;
 }
 
-static void navit_safety_draw_text_lines(struct navit_safety_priv *priv, const char *text,
-                                         struct graphics_gc *gc) {
+static void navit_safety_draw_text_lines(struct navit_safety_priv *priv, const char *text, struct graphics_gc *gc) {
     char *copy;
     char *line;
     char *save;
@@ -251,10 +250,10 @@ static void navit_safety_osd_destroy(struct osd_priv *osd) {
     priv->active = 0;
     navit_safety_instances = g_list_remove(navit_safety_instances, priv);
     navit_safety_route_state_clear(&priv->route_state);
-#if NAVIT_SAFETY_WITH_SQLITE
+#    if NAVIT_SAFETY_WITH_SQLITE
     navit_safety_cache_close(priv->cache);
     priv->cache = NULL;
-#endif
+#    endif
     g_free(priv);
 }
 
@@ -304,12 +303,13 @@ static int navit_safety_cmd_confirm_poi(void *data, char *cmd, struct attr **in,
         v = vehicle_attr.u.vehicle;
     navit_safety_vehicle_geo(v, &lat, &lon);
     if (navit_safety_route_confirm_nearest(&priv->route_state, priv->nav, &priv->config,
-#if NAVIT_SAFETY_WITH_SQLITE
+#    if NAVIT_SAFETY_WITH_SQLITE
                                            priv->cache,
-#else
+#    else
                                            NULL,
-#endif
-                                           priv->trip_id, priv->full_range_km, priv->wbgt_c, lat, lon) != 0) {
+#    endif
+                                           priv->trip_id, priv->full_range_km, priv->wbgt_c, lat, lon)
+        != 0) {
         navit_say(priv->nav, _("No POI to confirm"));
         return -1;
     }
@@ -332,12 +332,13 @@ static int navit_safety_cmd_deny_poi(void *data, char *cmd, struct attr **in, st
         v = vehicle_attr.u.vehicle;
     navit_safety_vehicle_geo(v, &lat, &lon);
     if (navit_safety_route_deny_nearest(&priv->route_state, priv->nav, &priv->config,
-#if NAVIT_SAFETY_WITH_SQLITE
+#    if NAVIT_SAFETY_WITH_SQLITE
                                         priv->cache,
-#else
+#    else
                                         NULL,
-#endif
-                                        priv->trip_id, priv->full_range_km, priv->wbgt_c, lat, lon) != 0) {
+#    endif
+                                        priv->trip_id, priv->full_range_km, priv->wbgt_c, lat, lon)
+        != 0) {
         navit_say(priv->nav, _("No POI to deny"));
         return -1;
     }
@@ -405,9 +406,9 @@ static struct osd_priv *navit_safety_osd_new(struct navit *nav, struct osd_metho
     priv->active = 1;
     navit_safety_config_default(&priv->config);
     navit_safety_parse_attrs(priv, attrs);
-#if NAVIT_SAFETY_WITH_SQLITE
+#    if NAVIT_SAFETY_WITH_SQLITE
     priv->cache = navit_safety_open_cache();
-#endif
+#    endif
 
     navit_safety_osd_meth.osd_destroy = navit_safety_osd_destroy;
     navit_safety_osd_meth.set_attr = navit_safety_osd_set_attr;
@@ -416,7 +417,8 @@ static struct osd_priv *navit_safety_osd_new(struct navit *nav, struct osd_metho
     *meth = navit_safety_osd_meth;
 
     if (!navit_safety_commands_registered) {
-        navit_command_add_table(nav, navit_safety_commands, sizeof(navit_safety_commands) / sizeof(struct command_table));
+        navit_command_add_table(nav, navit_safety_commands,
+                                sizeof(navit_safety_commands) / sizeof(struct command_table));
         navit_safety_commands_registered = 1;
     }
     navit_safety_instances = g_list_append(navit_safety_instances, priv);

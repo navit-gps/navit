@@ -11,16 +11,16 @@
  * as published by the Free Software Foundation.
  */
 
+#include "navit_safety_plan.h"
 #include "navit_safety.h"
 #include "navit_safety_confidence.h"
-#include "navit_safety_plan.h"
 
 /* Average spacing between confirmed (Medium-or-higher) stops over the route,
  * counting the legs from the start to the first stop and from the last stop to
  * the destination. Returns nonzero when that spacing exceeds threshold_km,
  * which is the POI-density signal for automatic remote mode. */
-static int density_is_sparse(const struct navit_safety_stop *stops, int n_stops,
-                             int route_length_km, int threshold_km) {
+static int density_is_sparse(const struct navit_safety_stop *stops, int n_stops, int route_length_km,
+                             int threshold_km) {
     int reliable = 0;
     int i;
 
@@ -40,8 +40,7 @@ static int density_is_sparse(const struct navit_safety_stop *stops, int n_stops,
 
 /* Pick the buffer for the conditions: arid zones use the arid buffer, other
  * remote terrain uses the remote buffer, populated terrain the standard one. */
-static int select_buffer(const struct navit_safety_config *config,
-                         enum navit_safety_resource resource,
+static int select_buffer(const struct navit_safety_config *config, enum navit_safety_resource resource,
                          int remote_active, int arid) {
     if (resource == NAVIT_SAFETY_RESOURCE_WATER) {
         if (arid)
@@ -57,12 +56,9 @@ static int select_buffer(const struct navit_safety_config *config,
     return config->fuel_buffer_standard_km;
 }
 
-void navit_safety_plan(const struct navit_safety_config *config,
-                       enum navit_safety_resource resource,
-                       double mid_lat, double mid_lon,
-                       const struct navit_safety_stop *stops, int n_stops,
-                       int route_length_km, int full_range_km,
-                       struct navit_safety_plan_result *out) {
+void navit_safety_plan(const struct navit_safety_config *config, enum navit_safety_resource resource, double mid_lat,
+                       double mid_lon, const struct navit_safety_stop *stops, int n_stops, int route_length_km,
+                       int full_range_km, struct navit_safety_plan_result *out) {
     enum navit_safety_koppen zone;
     int koppen_remote;
     int density_threshold;

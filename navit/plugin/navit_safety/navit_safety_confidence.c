@@ -25,8 +25,34 @@ int navit_safety_confidence_counts_as_resupply(enum navit_safety_confidence conf
 
 /* Clamp a confidence so it never exceeds a ceiling (used for downgrades). */
 static enum navit_safety_confidence cap_confidence(enum navit_safety_confidence value,
-        enum navit_safety_confidence ceiling) {
+                                                   enum navit_safety_confidence ceiling) {
     return value > ceiling ? ceiling : value;
+}
+
+/* Map source and age to a base confidence before global downgrades. */
+static enum navit_safety_confidence score_by_source(enum navit_safety_poi_source source, int age) {
+    switch (source) {
+    case NAVIT_SAFETY_SRC_CHAIN_API:
+    case NAVIT_SAFETY_SRC_NREL:
+        return NAVIT_SAFETY_CONFIDENCE_HIGH;
+    case NAVIT_SAFETY_SRC_OSM_NREL_MATCH:
+        return (age >= 0 && age <= NAVIT_SAFETY_AGE_30_DAYS) ? NAVIT_SAFETY_CONFIDENCE_HIGH
+                                                             : NAVIT_SAFETY_CONFIDENCE_MEDIUM;
+    case NAVIT_SAFETY_SRC_IOVERLANDER:
+        return (age >= 0 && age <= NAVIT_SAFETY_AGE_60_DAYS) ? NAVIT_SAFETY_CONFIDENCE_MEDIUM
+                                                             : NAVIT_SAFETY_CONFIDENCE_LOW;
+    case NAVIT_SAFETY_SRC_OSM_CHAIN:
+        return NAVIT_SAFETY_CONFIDENCE_MEDIUM;
+    case NAVIT_SAFETY_SRC_OSM_INDEPENDENT:
+        if (age < 0 || age > NAVIT_SAFETY_AGE_3_YEARS)
+            return NAVIT_SAFETY_CONFIDENCE_LOW;
+        if (age <= NAVIT_SAFETY_AGE_12_MONTHS)
+            return NAVIT_SAFETY_CONFIDENCE_MEDIUM;
+        return NAVIT_SAFETY_CONFIDENCE_LOW;
+    case NAVIT_SAFETY_SRC_UNKNOWN:
+    default:
+        return NAVIT_SAFETY_CONFIDENCE_UNKNOWN;
+    }
 }
 
 enum navit_safety_confidence navit_safety_score_poi(const struct navit_safety_poi *poi) {
@@ -36,40 +62,11 @@ enum navit_safety_confidence navit_safety_score_poi(const struct navit_safety_po
     if (!poi)
         return NAVIT_SAFETY_CONFIDENCE_UNKNOWN;
 
-    age = poi->age_days;
-
-    switch (poi->source) {
-    case NAVIT_SAFETY_SRC_USER_CONFIRMED:
-        /* User confirmation on the current trip overrides everything. */
+    if (poi->source == NAVIT_SAFETY_SRC_USER_CONFIRMED)
         return NAVIT_SAFETY_CONFIDENCE_HIGH;
-    case NAVIT_SAFETY_SRC_CHAIN_API:
-    case NAVIT_SAFETY_SRC_NREL:
-        result = NAVIT_SAFETY_CONFIDENCE_HIGH;
-        break;
-    case NAVIT_SAFETY_SRC_OSM_NREL_MATCH:
-        result = (age >= 0 && age <= NAVIT_SAFETY_AGE_30_DAYS)
-                 ? NAVIT_SAFETY_CONFIDENCE_HIGH : NAVIT_SAFETY_CONFIDENCE_MEDIUM;
-        break;
-    case NAVIT_SAFETY_SRC_IOVERLANDER:
-        result = (age >= 0 && age <= NAVIT_SAFETY_AGE_60_DAYS)
-                 ? NAVIT_SAFETY_CONFIDENCE_MEDIUM : NAVIT_SAFETY_CONFIDENCE_LOW;
-        break;
-    case NAVIT_SAFETY_SRC_OSM_CHAIN:
-        result = NAVIT_SAFETY_CONFIDENCE_MEDIUM;
-        break;
-    case NAVIT_SAFETY_SRC_OSM_INDEPENDENT:
-        if (age < 0 || age > NAVIT_SAFETY_AGE_3_YEARS)
-            result = NAVIT_SAFETY_CONFIDENCE_LOW;
-        else if (age <= NAVIT_SAFETY_AGE_12_MONTHS)
-            result = NAVIT_SAFETY_CONFIDENCE_MEDIUM;
-        else
-            result = NAVIT_SAFETY_CONFIDENCE_LOW;
-        break;
-    case NAVIT_SAFETY_SRC_UNKNOWN:
-    default:
-        result = NAVIT_SAFETY_CONFIDENCE_UNKNOWN;
-        break;
-    }
+
+    age = poi->age_days;
+    result = score_by_source(poi->source, age);
 
     /* Data older than three years has a high closure risk regardless of source
      * (except the live/authoritative and user-confirmed sources handled above). */

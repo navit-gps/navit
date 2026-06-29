@@ -31,10 +31,10 @@ struct navit_safety_stop {
 
 /** @brief Result of a lookahead scan. */
 struct navit_safety_gap_result {
-    int max_gap_km;     /**< Largest gap between reliable stops (and the route ends). */
-    int gap_start_km;   /**< Distance from start where the worst gap begins. */
-    int warning;        /**< Nonzero if max_gap_km exceeds the usable range. */
-    int shortfall_km;   /**< How far max_gap_km exceeds the usable range (0 if none). */
+    int max_gap_km;   /**< Largest gap between reliable stops (and the route ends). */
+    int gap_start_km; /**< Distance from start where the worst gap begins. */
+    int warning;      /**< Nonzero if max_gap_km exceeds the usable range. */
+    int shortfall_km; /**< How far max_gap_km exceeds the usable range (0 if none). */
 };
 
 /**
@@ -51,8 +51,7 @@ struct navit_safety_gap_result {
  * @param usable_range_km Usable range with the applicable buffer already removed.
  * @param out Result, filled on return (must not be NULL).
  */
-void navit_safety_lookahead_plan(const struct navit_safety_stop *stops, int n_stops,
-                                 int route_length_km, int usable_range_km,
-                                 struct navit_safety_gap_result *out);
+void navit_safety_lookahead_plan(const struct navit_safety_stop *stops, int n_stops, int route_length_km,
+                                 int usable_range_km, struct navit_safety_gap_result *out);
 
 #endif /* NAVIT_PLUGIN_NAVIT_SAFETY_LOOKAHEAD_H */

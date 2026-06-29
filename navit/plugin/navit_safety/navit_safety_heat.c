@@ -11,8 +11,8 @@
  * as published by the Free Software Foundation.
  */
 
-#include "navit_safety.h"
 #include "navit_safety_heat.h"
+#include "navit_safety.h"
 
 /* WBGT thresholds (degrees Celsius) for heat-illness risk, per the spec. */
 #define NAVIT_SAFETY_WBGT_CAUTION 28.0
@@ -20,10 +20,10 @@
 #define NAVIT_SAFETY_WBGT_DANGER 35.0
 
 /* Water model constants. */
-#define NAVIT_SAFETY_WATER_REST_ML_PER_KG 1   /* resting maintenance, ml/kg/hr */
+#define NAVIT_SAFETY_WATER_REST_ML_PER_KG 1     /* resting maintenance, ml/kg/hr */
 #define NAVIT_SAFETY_WATER_EXERTION_ML_PER_KG 4 /* added when strenuous, ml/kg/hr */
-#define NAVIT_SAFETY_WATER_HEAT_BASE_C 25.0   /* heat term starts above this WBGT */
-#define NAVIT_SAFETY_WATER_HEAT_ML_PER_C 20.0 /* added per degree above the base */
+#define NAVIT_SAFETY_WATER_HEAT_BASE_C 25.0     /* heat term starts above this WBGT */
+#define NAVIT_SAFETY_WATER_HEAT_ML_PER_C 20.0   /* added per degree above the base */
 
 enum navit_safety_heat_level navit_safety_heat_assess(double wbgt_c) {
     if (wbgt_c >= NAVIT_SAFETY_WBGT_DANGER)

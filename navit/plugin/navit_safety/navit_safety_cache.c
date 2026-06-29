@@ -11,21 +11,20 @@
  * as published by the Free Software Foundation.
  */
 
-#include <stdlib.h>
-#include <sqlite3.h>
 #include "navit_safety_cache.h"
+#include <sqlite3.h>
+#include <stdlib.h>
 
 struct navit_safety_cache {
     sqlite3 *db;
 };
 
 static int cache_create_schema(sqlite3 *db) {
-    static const char *sql =
-        "CREATE TABLE IF NOT EXISTS poi_confirmations ("
-        "poi_id TEXT NOT NULL,"
-        "trip_id TEXT NOT NULL,"
-        "confirmed_at INTEGER NOT NULL,"
-        "PRIMARY KEY (poi_id, trip_id));";
+    static const char *sql = "CREATE TABLE IF NOT EXISTS poi_confirmations ("
+                             "poi_id TEXT NOT NULL,"
+                             "trip_id TEXT NOT NULL,"
+                             "confirmed_at INTEGER NOT NULL,"
+                             "PRIMARY KEY (poi_id, trip_id));";
     return sqlite3_exec(db, sql, NULL, NULL, NULL) == SQLITE_OK;
 }
 
@@ -60,11 +59,10 @@ void navit_safety_cache_close(struct navit_safety_cache *cache) {
     free(cache);
 }
 
-int navit_safety_cache_confirm(struct navit_safety_cache *cache, const char *poi_id,
-                               const char *trip_id, long timestamp) {
-    static const char *sql =
-        "INSERT OR REPLACE INTO poi_confirmations (poi_id, trip_id, confirmed_at) "
-        "VALUES (?, ?, ?);";
+int navit_safety_cache_confirm(struct navit_safety_cache *cache, const char *poi_id, const char *trip_id,
+                               long timestamp) {
+    static const char *sql = "INSERT OR REPLACE INTO poi_confirmations (poi_id, trip_id, confirmed_at) "
+                             "VALUES (?, ?, ?);";
     sqlite3_stmt *stmt = NULL;
     int ok = 0;
 
@@ -74,9 +72,9 @@ int navit_safety_cache_confirm(struct navit_safety_cache *cache, const char *poi
     if (sqlite3_prepare_v2(cache->db, sql, -1, &stmt, NULL) != SQLITE_OK)
         return 0;
 
-    if (sqlite3_bind_text(stmt, 1, poi_id, -1, SQLITE_TRANSIENT) == SQLITE_OK &&
-            sqlite3_bind_text(stmt, 2, trip_id, -1, SQLITE_TRANSIENT) == SQLITE_OK &&
-            sqlite3_bind_int64(stmt, 3, (sqlite3_int64)timestamp) == SQLITE_OK) {
+    if (sqlite3_bind_text(stmt, 1, poi_id, -1, SQLITE_TRANSIENT) == SQLITE_OK
+        && sqlite3_bind_text(stmt, 2, trip_id, -1, SQLITE_TRANSIENT) == SQLITE_OK
+        && sqlite3_bind_int64(stmt, 3, (sqlite3_int64)timestamp) == SQLITE_OK) {
         ok = sqlite3_step(stmt) == SQLITE_DONE;
     }
 
@@ -84,10 +82,8 @@ int navit_safety_cache_confirm(struct navit_safety_cache *cache, const char *poi
     return ok;
 }
 
-int navit_safety_cache_is_confirmed(struct navit_safety_cache *cache, const char *poi_id,
-                                    const char *trip_id) {
-    static const char *sql =
-        "SELECT 1 FROM poi_confirmations WHERE poi_id = ? AND trip_id = ? LIMIT 1;";
+int navit_safety_cache_is_confirmed(struct navit_safety_cache *cache, const char *poi_id, const char *trip_id) {
+    static const char *sql = "SELECT 1 FROM poi_confirmations WHERE poi_id = ? AND trip_id = ? LIMIT 1;";
     sqlite3_stmt *stmt = NULL;
     int confirmed = 0;
 
@@ -97,8 +93,8 @@ int navit_safety_cache_is_confirmed(struct navit_safety_cache *cache, const char
     if (sqlite3_prepare_v2(cache->db, sql, -1, &stmt, NULL) != SQLITE_OK)
         return 0;
 
-    if (sqlite3_bind_text(stmt, 1, poi_id, -1, SQLITE_TRANSIENT) == SQLITE_OK &&
-            sqlite3_bind_text(stmt, 2, trip_id, -1, SQLITE_TRANSIENT) == SQLITE_OK) {
+    if (sqlite3_bind_text(stmt, 1, poi_id, -1, SQLITE_TRANSIENT) == SQLITE_OK
+        && sqlite3_bind_text(stmt, 2, trip_id, -1, SQLITE_TRANSIENT) == SQLITE_OK) {
         confirmed = sqlite3_step(stmt) == SQLITE_ROW;
     }
 

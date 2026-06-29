@@ -34,29 +34,29 @@ struct koppen_box {
  * earlier entries win when boxes overlap. */
 static const struct koppen_box koppen_boxes[] = {
     /* Sahara and Sahel. */
-    { 15.0, 31.0, -17.0, 38.0, NAVIT_SAFETY_KOPPEN_BWH },
-    { 11.0, 15.0, -17.0, 38.0, NAVIT_SAFETY_KOPPEN_BSH },
+    {15.0,  31.0,  -17.0,  38.0,   NAVIT_SAFETY_KOPPEN_BWH},
+    {11.0,  15.0,  -17.0,  38.0,   NAVIT_SAFETY_KOPPEN_BSH},
     /* Arabian Peninsula. */
-    { 15.0, 31.0, 34.0, 60.0, NAVIT_SAFETY_KOPPEN_BWH },
+    {15.0,  31.0,  34.0,   60.0,   NAVIT_SAFETY_KOPPEN_BWH},
     /* Iran, Thar and Central Asia deserts. */
-    { 27.0, 40.0, 44.0, 78.0, NAVIT_SAFETY_KOPPEN_BWK },
+    {27.0,  40.0,  44.0,   78.0,   NAVIT_SAFETY_KOPPEN_BWK},
     /* Gobi and Taklamakan. */
-    { 36.0, 48.0, 78.0, 116.0, NAVIT_SAFETY_KOPPEN_BWK },
+    {36.0,  48.0,  78.0,   116.0,  NAVIT_SAFETY_KOPPEN_BWK},
     /* Australian interior. */
-    { -33.0, -19.0, 117.0, 142.0, NAVIT_SAFETY_KOPPEN_BWH },
-    { -28.0, -19.0, 142.0, 148.0, NAVIT_SAFETY_KOPPEN_BSH },
+    {-33.0, -19.0, 117.0,  142.0,  NAVIT_SAFETY_KOPPEN_BWH},
+    {-28.0, -19.0, 142.0,  148.0,  NAVIT_SAFETY_KOPPEN_BSH},
     /* Kalahari and Namib. */
-    { -29.0, -18.0, 12.0, 25.0, NAVIT_SAFETY_KOPPEN_BWH },
+    {-29.0, -18.0, 12.0,   25.0,   NAVIT_SAFETY_KOPPEN_BWH},
     /* Karoo. */
-    { -33.0, -29.0, 18.0, 26.0, NAVIT_SAFETY_KOPPEN_BSK },
+    {-33.0, -29.0, 18.0,   26.0,   NAVIT_SAFETY_KOPPEN_BSK},
     /* North American south-west deserts. */
-    { 28.0, 42.0, -120.0, -103.0, NAVIT_SAFETY_KOPPEN_BWK },
+    {28.0,  42.0,  -120.0, -103.0, NAVIT_SAFETY_KOPPEN_BWK},
     /* US Great Plains (cold semi-arid). */
-    { 32.0, 49.0, -103.0, -97.0, NAVIT_SAFETY_KOPPEN_BSK },
+    {32.0,  49.0,  -103.0, -97.0,  NAVIT_SAFETY_KOPPEN_BSK},
     /* Atacama and Peruvian coast. */
-    { -30.0, -5.0, -76.0, -69.0, NAVIT_SAFETY_KOPPEN_BWK },
+    {-30.0, -5.0,  -76.0,  -69.0,  NAVIT_SAFETY_KOPPEN_BWK},
     /* Patagonian steppe. */
-    { -52.0, -38.0, -72.0, -65.0, NAVIT_SAFETY_KOPPEN_BWK }
+    {-52.0, -38.0, -72.0,  -65.0,  NAVIT_SAFETY_KOPPEN_BWK}
 };
 
 #define NAVIT_SAFETY_KOPPEN_BOX_COUNT (sizeof(koppen_boxes) / sizeof(koppen_boxes[0]))
@@ -76,14 +76,13 @@ int navit_safety_koppen_triggers_remote(enum navit_safety_koppen zone) {
 enum navit_safety_koppen navit_safety_koppen_lookup(double lat, double lon) {
     unsigned int i;
 
-    if (lat < -NAVIT_SAFETY_LAT_MAX || lat > NAVIT_SAFETY_LAT_MAX ||
-            lon < -NAVIT_SAFETY_LON_MAX || lon > NAVIT_SAFETY_LON_MAX)
+    if (lat < -NAVIT_SAFETY_LAT_MAX || lat > NAVIT_SAFETY_LAT_MAX || lon < -NAVIT_SAFETY_LON_MAX
+        || lon > NAVIT_SAFETY_LON_MAX)
         return NAVIT_SAFETY_KOPPEN_UNKNOWN;
 
     for (i = 0; i < NAVIT_SAFETY_KOPPEN_BOX_COUNT; i++) {
         const struct koppen_box *box = &koppen_boxes[i];
-        if (lat >= box->lat_min && lat <= box->lat_max &&
-                lon >= box->lon_min && lon <= box->lon_max)
+        if (lat >= box->lat_min && lat <= box->lat_max && lon >= box->lon_min && lon <= box->lon_max)
             return box->zone;
     }
 

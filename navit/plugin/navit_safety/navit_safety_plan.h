@@ -33,13 +33,13 @@ enum navit_safety_resource {
 
 /** @brief Outcome of a resource plan over a route. */
 struct navit_safety_plan_result {
-    enum navit_safety_koppen zone;        /**< Terrain zone at the sampled midpoint. */
-    int remote_active;                    /**< Nonzero if remote-mode planning applies. */
-    int density_sparse;                   /**< Nonzero if confirmed-POI spacing exceeded the density threshold. */
-    int desert_warning;                   /**< Nonzero if arid conditions warrant a higher-consumption warning. */
-    int buffer_km;                        /**< Buffer selected for the conditions. */
-    int usable_range_km;                  /**< Range after the buffer is removed. */
-    struct navit_safety_gap_result gap;   /**< Lookahead gap result. */
+    enum navit_safety_koppen zone;      /**< Terrain zone at the sampled midpoint. */
+    int remote_active;                  /**< Nonzero if remote-mode planning applies. */
+    int density_sparse;                 /**< Nonzero if confirmed-POI spacing exceeded the density threshold. */
+    int desert_warning;                 /**< Nonzero if arid conditions warrant a higher-consumption warning. */
+    int buffer_km;                      /**< Buffer selected for the conditions. */
+    int usable_range_km;                /**< Range after the buffer is removed. */
+    struct navit_safety_gap_result gap; /**< Lookahead gap result. */
 };
 
 /**
@@ -63,11 +63,8 @@ struct navit_safety_plan_result {
  * @param full_range_km Range on a full tank/water load before any buffer.
  * @param out Result, filled on return (must not be NULL).
  */
-void navit_safety_plan(const struct navit_safety_config *config,
-                       enum navit_safety_resource resource,
-                       double mid_lat, double mid_lon,
-                       const struct navit_safety_stop *stops, int n_stops,
-                       int route_length_km, int full_range_km,
-                       struct navit_safety_plan_result *out);
+void navit_safety_plan(const struct navit_safety_config *config, enum navit_safety_resource resource, double mid_lat,
+                       double mid_lon, const struct navit_safety_stop *stops, int n_stops, int route_length_km,
+                       int full_range_km, struct navit_safety_plan_result *out);
 
 #endif /* NAVIT_PLUGIN_NAVIT_SAFETY_PLAN_H */

@@ -13,9 +13,8 @@
 
 #include "navit_safety_lookahead.h"
 
-void navit_safety_lookahead_plan(const struct navit_safety_stop *stops, int n_stops,
-                                 int route_length_km, int usable_range_km,
-                                 struct navit_safety_gap_result *out) {
+void navit_safety_lookahead_plan(const struct navit_safety_stop *stops, int n_stops, int route_length_km,
+                                 int usable_range_km, struct navit_safety_gap_result *out) {
     int previous_km;
     int i;
 
