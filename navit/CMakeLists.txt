@@ -63,6 +63,12 @@ foreach (CURRENT_MODULE ${ALL_PLUGINS} ${ALL_MODULE_PLUGINS} ${ALL_MODULES})
 	endif()
 endforeach()
 
+# Cross-plugin integration tests (aprs <-> aprs_sdr seam). Built whenever the
+# APRS plugin tests are enabled; this directory is not a loadable module.
+if (BUILD_APRS_TESTS)
+	add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/plugin/tests_integration/aprs_sdr")
+endif()
+
 
 if(NOT ANDROID)
 	set(NAVIT_START_SRC start.c)
