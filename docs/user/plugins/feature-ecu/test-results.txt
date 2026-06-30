@@ -1,0 +1,15 @@
+Branch: feature-ecu
+Commit: 92978586
+Date: 2026-06-29T22:11:16Z
+Build dir: /tmp/build-phase-docs-feature-ecu
+
+=== test_ecu_obd_j1939 ===
+Running ECU OBD-II and J1939 backend tests...
+All OBD-II/J1939 backend tests passed!
+exit=0
+
+=== test_ecu_megasquirt ===
+Running ECU MegaSquirt backend tests...
+All MegaSquirt backend tests passed.
+exit=0
+
