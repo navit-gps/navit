@@ -1,0 +1,17 @@
+Branch: feature-poi
+Commit: 55352cd4
+Date: 2026-06-29T22:11:50Z
+Build dir: /tmp/build-phase-docs-feature-poi
+
+=== test_driver_break_finder ===
+Running Driver Break plugin finder tests...
+All finder tests passed!
+exit=0
+
+=== test_driver_break_integration ===
+Running Driver Break plugin integration tests (using actual Navit/plugin functions)...
+All integration tests passed!
+Note: Some tests may return empty results if map/HGT data not available.
+This is expected - tests verify functions execute correctly.
+exit=0
+
