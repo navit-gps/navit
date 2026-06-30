@@ -1,0 +1,14 @@
+Branch: feature-srtm
+Commit: 0418ead8
+Date: 2026-06-29T22:11:34Z
+Build dir: /tmp/build-phase-docs-feature-srtm
+
+=== test_driver_break_srtm ===
+Running SRTM HGT file handling tests...
+  Downloading HGT tiles (Viewfinder Panoramas / NASA SRTM)...
+SRTM HGT: tile download failed or unzip failed (network/unavailable). Skip read test.
+  Downloading Copernicus GLO-30 GeoTIFF from AWS S3...
+Copernicus GLO-30: tiles read correctly at 3 OSM locations (62.09,7.14 / 61.59,9.70 / 61.36,9.67).
+All SRTM HGT file handling tests passed!
+exit=0
+

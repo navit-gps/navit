@@ -1,0 +1,134 @@
+# Driver Break Plugin — Essential Logging Guide
+
+## navit.xml — Debug Configuration
+
+Add these lines inside the `<config>` block, before `<navit ...>`:
+
+```xml
+<debug name="global"     level="0"/>
+<debug name="timestamps" level="1"/>
+<debug name="driver_break" level="info"/>
+```
+
+---
+
+## dbg() Calls to Add
+
+All paths are relative to `navit/plugin/driver_break/`.
+
+### Routing — `driver_break.c`, `driver_break_finder.c`, `driver_break_hiking.c`, `driver_break_cycling.c`
+
+```c
+/* driver_break_route_callback_wrapper */
+dbg(lvl_info,    "Route changed: mode=%d total_length=%.0f m\n", mode, route_length);
+dbg(lvl_error,   "Route callback: failed to get attr_destination_length\n");
+
+/* driver_break_handle_motor_route */
+dbg(lvl_info,    "Candidate stop at lat=%.5f lon=%.5f highway_type=%d\n", lat, lon, type);
+dbg(lvl_warning, "Candidate rejected: unsuitable highway type=%d\n", type);
+dbg(lvl_error,   "No valid rest stops found along route\n");
+
+/* driver_break_finder_is_valid_location */
+dbg(lvl_warning, "Location rejected: building too close (%.0f m, min=%.0f m) at lat=%.5f lon=%.5f\n",
+    dist, min_dist, lat, lon);
+dbg(lvl_warning, "Location rejected: glacier too close (%.0f m, min=%.0f m)\n",
+    glacier_dist, min_glacier_dist);
+dbg(lvl_info,    "Location valid at lat=%.5f lon=%.5f\n", lat, lon);
+
+/* create_rest_stop_at */
+dbg(lvl_info,    "Rest stop created at lat=%.5f lon=%.5f\n", lat, lon);
+
+/* hiking_calculate_driver_break_stops_with_max */
+dbg(lvl_info,    "Hiking: total=%.0f m main_interval=%.0f m alt_interval=%.0f m daily_max=%.0f m\n",
+    total, main_dist, alt_dist, daily_max);
+dbg(lvl_info,    "Hiking stop %d at distance=%.0f m\n", stop_idx, dist_along);
+dbg(lvl_error,   "Hiking: failed to place any stops\n");
+
+/* cycling_calculate_driver_break_stops */
+dbg(lvl_info,    "Cycling: total=%.0f m main_interval=%.0f m daily_max=%.0f m\n",
+    total, main_dist, daily_max);
+dbg(lvl_info,    "Cycling stop %d at distance=%.0f m\n", stop_idx, dist_along);
+dbg(lvl_error,   "Cycling: failed to place any stops\n");
+```
+
+---
+
+### Energy Routing — `driver_break_energy.c`
+
+```c
+/* energy_model_init */
+dbg(lvl_info,    "Energy model: weight=%.1f kg crr=%.4f cda=%.4f standby=%.1f W recup=%.2f\n",
+    weight, crr, cda, standby, recup);
+dbg(lvl_error,   "Energy model init failed: invalid parameters\n");
+
+/* energy_calculate_gradient */
+dbg(lvl_warning, "SRTM void (-32768) for segment, gradient=0 assumed\n");
+dbg(lvl_info,    "Gradient: delta_h=%.1f m dist=%.1f m gradient=%.4f\n",
+    delta_h, distance, gradient);
+
+/* energy_calculate_segment */
+dbg(lvl_info,    "Segment: dist=%.1f m delta_h=%.1f m speed=%.1f m/s "
+    "rolling=%.1f J aero=%.1f J gravity=%.1f J recup=%.1f J total=%.1f J\n",
+    dist, delta_h, speed,
+    rolling_work, aero_work, gravity_work, recup_work, total_cost);
+dbg(lvl_warning, "Segment cost negative (%.1f J) — downhill recuperation capped\n", total_cost);
+```
+
+---
+
+### POI Discovery — `driver_break_poi.c`, `driver_break_poi_map.c`, `driver_break_poi_hiking.c`
+
+```c
+/* driver_break_poi_discover */
+dbg(lvl_info,    "POI discovery: lat=%.5f lon=%.5f mode=%d\n", lat, lon, mode);
+dbg(lvl_info,    "POI: using map-based search\n");
+dbg(lvl_warning, "POI: no mapset, falling back to Overpass API\n");
+dbg(lvl_error,   "POI: Overpass API request failed\n");
+dbg(lvl_warning, "POI: 0 results at lat=%.5f lon=%.5f\n", lat, lon);
+dbg(lvl_info,    "POI: found %d results\n", result_count);
+
+/* driver_break_poi_map_search */
+dbg(lvl_info,    "Map search: lat=%.5f lon=%.5f radius=%.0f m type=%s\n",
+    lat, lon, radius, poi_type_name);
+dbg(lvl_warning, "Map search: 0 items in radius=%.0f m\n", radius);
+
+/* driver_break_poi_map_search_fuel */
+dbg(lvl_info,    "Fuel POI: lat=%.5f lon=%.5f name=%s\n", lat, lon, name ? name : "(unnamed)");
+dbg(lvl_warning, "Fuel POI: type mismatch (want=%s)\n", fuel_type);
+
+/* poi_search_water_points */
+dbg(lvl_info,    "Water search: radius=%.0f m found=%d\n", radius, count);
+
+/* poi_search_cabins */
+dbg(lvl_info,    "Cabin search: radius=%.0f m network_priority=%d found=%d\n",
+    radius, network_priority, count);
+dbg(lvl_warning, "Cabin search: 0 network cabins in radius=%.0f m\n", radius);
+
+/* build_overpass_query / parse_overpass_response */
+dbg(lvl_info,    "Overpass query: %s\n", query_string);
+dbg(lvl_error,   "Overpass parse error: %s\n", error_msg);
+dbg(lvl_info,    "Overpass: %d elements returned\n", element_count);
+```
+
+---
+
+## Run and Capture — One Command
+
+```bash
+./navit 2> driver_break.log
+```
+
+---
+
+## Filter the Log Later
+
+```bash
+# Routing decisions
+grep -E "(Route changed|stop at|stop created|rejected|No valid)" driver_break.log
+
+# Energy routing
+grep -E "(Energy model|Segment:|Gradient:|void|recuperation)" driver_break.log
+
+# POI discovery
+grep -E "(POI|Map search|Fuel POI|Water search|Cabin|Overpass)" driver_break.log
+```

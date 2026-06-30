@@ -1,0 +1,63 @@
+================================================
+  NLOC    CCN   token  PARAM  length  location
+------------------------------------------------
+       5      1     32      3       5 srtm_tiff_warning_suppress@23-27@navit/plugin/driver_break/driver_break_srtm_tiles.c
+      32      8    162      1      39 srtm_init@32-70@navit/plugin/driver_break/driver_break_srtm_tiles.c
+       6      2     24      0       6 srtm_get_data_directory@72-77@navit/plugin/driver_break/driver_break_srtm_tiles.c
+       7      3     66      2       8 srtm_get_tile_filename@79-86@navit/plugin/driver_break/driver_break_srtm_tiles.c
+       5      5     34      2       5 srtm_viewfinder_zone@88-92@navit/plugin/driver_break/driver_break_srtm_tiles.c
+       7      3     66      2       8 srtm_get_geotiff_tile_filename@95-102@navit/plugin/driver_break/driver_break_srtm_tiles.c
+      17      3    110      2      19 srtm_tile_exists@105-123@navit/plugin/driver_break/driver_break_srtm_tiles.c
+      31      7    260      2      35 srtm_tile_new@125-159@navit/plugin/driver_break/driver_break_srtm_tiles.c
+      10      4     67      3      10 srtm_tile_list_contains@161-170@navit/plugin/driver_break/driver_break_srtm_tiles.c
+      16      4    131      4      18 srtm_calculate_tiles@172-189@navit/plugin/driver_break/driver_break_srtm_tiles.c
+      18      5    145      1      20 srtm_region_fill_stats@207-226@navit/plugin/driver_break/driver_break_srtm_tiles.c
+      15      2    121      0      17 srtm_get_regions@228-244@navit/plugin/driver_break/driver_break_srtm_tiles.c
+      17      3    110      1      19 srtm_get_region@246-264@navit/plugin/driver_break/driver_break_srtm_tiles.c
+      12      3     64      1      12 srtm_free_regions@266-277@navit/plugin/driver_break/driver_break_srtm_tiles.c
+      17      3     99      1      17 srtm_free_tiles@279-295@navit/plugin/driver_break/driver_break_srtm_tiles.c
+       7      2     34      1       7 srtm_free_download_context@297-303@navit/plugin/driver_break/driver_break_srtm_tiles.c
+      14      5    106      4      15 read_hgt_clamp_coord@21-35@navit/plugin/driver_break/driver_break_srtm_io.c
+      14      5    124      6      15 read_hgt_pixel_indices@37-51@navit/plugin/driver_break/driver_break_srtm_io.c
+      26      5    202      5      32 read_hgt_elevation@53-84@navit/plugin/driver_break/driver_break_srtm_io.c
+      14      8    129      4      14 geotiff_elev_from_pixel@87-100@navit/plugin/driver_break/driver_break_srtm_io.c
+      28      5    195      7      30 read_geotiff_tiled_at@102-131@navit/plugin/driver_break/driver_break_srtm_io.c
+      10      3     87      5      11 read_geotiff_scanline_at@133-143@navit/plugin/driver_break/driver_break_srtm_io.c
+      37      7    268      5      43 read_geotiff_elevation@145-187@navit/plugin/driver_break/driver_break_srtm_io.c
+      31      6    206      1      38 srtm_get_elevation@190-227@navit/plugin/driver_break/driver_break_srtm_io.c
+       4      1     40      4       4 srtm_write_callback@25-28@navit/plugin/driver_break/driver_break_srtm_download.c
+      10      6     97      1      11 srtm_geotiff_magic_valid@30-40@navit/plugin/driver_break/driver_break_srtm_download.c
+      38     10    265      4      46 srtm_try_download_copernicus@42-87@navit/plugin/driver_break/driver_break_srtm_download.c
+      22      9    179      3      26 srtm_download_zip_with_fallbacks@89-114@navit/plugin/driver_break/driver_break_srtm_download.c
+       4      3     35      1       4 srtm_hgt_size_valid@116-119@navit/plugin/driver_break/driver_break_srtm_download.c
+      16      5    109      3      17 srtm_extract_primary_hgt@121-137@navit/plugin/driver_break/driver_break_srtm_download.c
+      31      8    230      3      33 srtm_extract_nasa_hgt@139-171@navit/plugin/driver_break/driver_break_srtm_download.c
+      43      9    288      2      51 srtm_download_tile@173-223@navit/plugin/driver_break/driver_break_srtm_download.c
+       4      2     26      1       4 srtm_download_notify@225-228@navit/plugin/driver_break/driver_break_srtm_download.c
+      29      7    181      1      33 srtm_download_progress_callback@230-262@navit/plugin/driver_break/driver_break_srtm_download.c
+      27      3    190      2      34 srtm_download_region@265-298@navit/plugin/driver_break/driver_break_srtm_download.c
+       6      3     32      1       6 srtm_download_pause@300-305@navit/plugin/driver_break/driver_break_srtm_download.c
+       6      3     32      1       6 srtm_download_resume@307-312@navit/plugin/driver_break/driver_break_srtm_download.c
+       6      2     26      1       6 srtm_download_cancel@314-319@navit/plugin/driver_break/driver_break_srtm_download.c
+      19      4    128      4      22 driver_break_cmd_srtm_download_menu@28-49@navit/plugin/driver_break/driver_break_srtm_osd.c
+      29      6    207      4      41 driver_break_cmd_srtm_download_region@52-92@navit/plugin/driver_break/driver_break_srtm_osd.c
+      24      6    188      4      30 driver_break_cmd_srtm_get_elevation@95-124@navit/plugin/driver_break/driver_break_srtm_osd.c
+       5      1     38      1       5 driver_break_srtm_register_commands@135-139@navit/plugin/driver_break/driver_break_srtm_osd.c
+      64      8    488      0      70 driver_break_gui_shim_resolve@33-102@navit/plugin/driver_break/driver_break_gui_shim.c
+6 file analyzed.
+==============================================================
+NLOC    Avg.NLOC  AvgCCN  Avg.token  function_cnt    file
+--------------------------------------------------------------
+    250      13.9     3.6       95.3        16     navit/plugin/driver_break/driver_break_srtm_tiles.c
+    183      21.8     5.5      164.6         8     navit/plugin/driver_break/driver_break_srtm_io.c
+    259      17.6     5.1      123.6        14     navit/plugin/driver_break/driver_break_srtm_download.c
+     89      19.2     4.2      140.2         4     navit/plugin/driver_break/driver_break_srtm_osd.c
+     83      64.0     8.0      488.0         1     navit/plugin/driver_break/driver_break_gui_shim.c
+     62       0.0     0.0        0.0         0     navit/plugin/driver_break/driver_break_srtm.h
+
+===============================================================================================================
+No thresholds exceeded (cyclomatic_complexity > 10 or length > 1000 or nloc > 1000000 or parameter_count > 100)
+==========================================================================================
+Total nloc   Avg.NLOC  AvgCCN  Avg.token   Fun Cnt  Warning cnt   Fun Rt   nloc Rt
+------------------------------------------------------------------------------------------
+       926      18.2     4.6      130.7       43            0      0.00    0.00
