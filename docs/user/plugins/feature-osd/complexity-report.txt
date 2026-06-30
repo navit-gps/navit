@@ -1,0 +1,74 @@
+================================================
+  NLOC    CCN   token  PARAM  length  location
+------------------------------------------------
+      23      2    184      2      26 driver_break_show_car_intervals_dialog@11-36@navit/plugin/driver_break/driver_break_osd_car.c
+       7      2     31      1       7 driver_break_osd_get_plugin@25-31@navit/plugin/driver_break/driver_break_osd_common.c
+      20      5    104      1      25 driver_break_osd_get_internal_gui_priv@40-64@navit/plugin/driver_break/driver_break_osd_common.c
+      11      2     58      2      13 driver_break_osd_require_plugin@66-78@navit/plugin/driver_break/driver_break_osd_common.c
+       9      2     44      2      11 driver_break_osd_require_gui@80-90@navit/plugin/driver_break/driver_break_osd_common.c
+      12      4     85      3      15 driver_break_osd_save_config_callback@94-108@navit/plugin/driver_break/driver_break_osd_common.c
+      22      9    136      3      22 osd_dialog_begin@110-131@navit/plugin/driver_break/driver_break_osd_common.c
+       9      3     46      1       9 osd_dialog_end@133-141@navit/plugin/driver_break/driver_break_osd_common.c
+      11      4     68      2      12 osd_dialog_end_with_save@143-154@navit/plugin/driver_break/driver_break_osd_common.c
+      10      4     56      2      12 osd_append_label@156-167@navit/plugin/driver_break/driver_break_osd_common.c
+       8      1     58      2       9 osd_append_label_printf@169-177@navit/plugin/driver_break/driver_break_osd_common.c
+       8      3     75      7       8 osd_append_validated_int_label@179-186@navit/plugin/driver_break/driver_break_osd_common.c
+       9      3     71      3      11 driver_break_osd_save_config_callback@190-200@navit/plugin/driver_break/driver_break_osd_common.c
+       9      2     61      1       9 driver_break_register_commands@38-46@navit/plugin/driver_break/driver_break_osd_core.c
+      10      2     85      3      11 suggestions_append_stop@50-60@navit/plugin/driver_break/driver_break_osd_core.c
+      16      4     90      2      18 suggestions_append_stops@62-79@navit/plugin/driver_break/driver_break_osd_core.c
+      10      2     62      3      12 driver_break_show_suggestions_dialog@81-92@navit/plugin/driver_break/driver_break_osd_core.c
+      22      5    199      4      24 format_history_entry@94-117@navit/plugin/driver_break/driver_break_osd_core.c
+      18      4    108      2      20 history_append_entries@119-138@navit/plugin/driver_break/driver_break_osd_core.c
+      10      2     62      3      12 driver_break_show_history_dialog@140-151@navit/plugin/driver_break/driver_break_osd_core.c
+      19      4    119      2      23 driver_break_suggest_stops_for_nav@155-177@navit/plugin/driver_break/driver_break_osd_core.c
+      28      9    169      4      38 driver_break_cmd_suggest_stop@179-216@navit/plugin/driver_break/driver_break_osd_core.c
+      29      6    173      4      39 driver_break_cmd_show_history@218-256@navit/plugin/driver_break/driver_break_osd_core.c
+       8      1     54      4       9 driver_break_cmd_configure@258-266@navit/plugin/driver_break/driver_break_osd_core.c
+      14      2     78      2      16 driver_break_build_history_entry@268-283@navit/plugin/driver_break/driver_break_osd_core.c
+      13      3     78      3      14 driver_break_save_history_entry@285-298@navit/plugin/driver_break/driver_break_osd_core.c
+       7      1     49      2       7 driver_break_reset_break_session@300-306@navit/plugin/driver_break/driver_break_osd_core.c
+      25      5    169      4      32 driver_break_cmd_start_break@308-339@navit/plugin/driver_break/driver_break_osd_core.c
+      36      5    220      4      44 driver_break_cmd_end_break@341-384@navit/plugin/driver_break/driver_break_osd_core.c
+      17      3     99      2      20 driver_break_osd_profile_name@386-405@navit/plugin/driver_break/driver_break_osd_core.c
+      21      8    143      3      22 driver_break_osd_show_intervals_for_profile@407-428@navit/plugin/driver_break/driver_break_osd_core.c
+      27      5    165      4      37 driver_break_cmd_configure_intervals@430-466@navit/plugin/driver_break/driver_break_osd_core.c
+       9      1     86      2      10 driver_break_show_cycling_intervals_dialog@10-19@navit/plugin/driver_break/driver_break_osd_cycling.c
+       8      1     82      2       8 fuel_dialog_append_profile@19-26@navit/plugin/driver_break/driver_break_osd_fuel.c
+       8      5     80      2       8 fuel_dialog_append_adapters@28-35@navit/plugin/driver_break/driver_break_osd_fuel.c
+      13      2     82      2      15 driver_break_show_fuel_config_dialog@37-51@navit/plugin/driver_break/driver_break_osd_fuel.c
+      19      7    117      3      23 driver_break_parse_fuel_value@55-77@navit/plugin/driver_break/driver_break_osd_fuel.c
+       8      2     55      1       8 driver_break_update_remaining_range@79-86@navit/plugin/driver_break/driver_break_osd_fuel.c
+      17      3    105      4      25 driver_break_cmd_configure_fuel@88-112@navit/plugin/driver_break/driver_break_osd_fuel.c
+      21      4    139      4      28 driver_break_cmd_set_fuel_level@114-141@navit/plugin/driver_break/driver_break_osd_fuel.c
+       6      3     50      2       6 driver_break_apply_fuel_added@143-148@navit/plugin/driver_break/driver_break_osd_fuel.c
+      14      3    117      4      16 driver_break_fill_fuel_stop@150-165@navit/plugin/driver_break/driver_break_osd_fuel.c
+      31      8    201      4      40 driver_break_cmd_log_fuel_stop@167-206@navit/plugin/driver_break/driver_break_osd_fuel.c
+       9      1     86      2      10 driver_break_show_hiking_intervals_dialog@10-19@navit/plugin/driver_break/driver_break_osd_hiking.c
+       4      1     36      2       4 overnight_append_building_distance@17-20@navit/plugin/driver_break/driver_break_osd_overnight.c
+       4      1     36      2       4 overnight_append_glacier_distance@22-25@navit/plugin/driver_break/driver_break_osd_overnight.c
+       8      1     80      2       8 overnight_append_poi_radii@27-34@navit/plugin/driver_break/driver_break_osd_overnight.c
+      24      4    167      3      29 driver_break_show_overnight_dialog@36-64@navit/plugin/driver_break/driver_break_osd_overnight.c
+      35      5    216      4      46 driver_break_cmd_configure_overnight@68-113@navit/plugin/driver_break/driver_break_osd_overnight.c
+      10      1     89      2      11 driver_break_show_truck_intervals_dialog@10-20@navit/plugin/driver_break/driver_break_osd_truck.c
+      63      8    488      0      69 driver_break_gui_shim_resolve@31-99@navit/plugin/driver_break/driver_break_gui_shim.c
+9 file analyzed.
+==============================================================
+NLOC    Avg.NLOC  AvgCCN  Avg.token  function_cnt    file
+--------------------------------------------------------------
+     25      23.0     2.0      184.0         1     navit/plugin/driver_break/driver_break_osd_car.c
+    156      11.3     3.5       69.3        12     navit/plugin/driver_break/driver_break_osd_common.c
+    369      17.8     3.8      114.9        19     navit/plugin/driver_break/driver_break_osd_core.c
+     10       9.0     1.0       86.0         1     navit/plugin/driver_break/driver_break_osd_cycling.c
+    155      14.5     3.8      102.8        10     navit/plugin/driver_break/driver_break_osd_fuel.c
+     10       9.0     1.0       86.0         1     navit/plugin/driver_break/driver_break_osd_hiking.c
+     83      15.0     2.4      107.0         5     navit/plugin/driver_break/driver_break_osd_overnight.c
+     11      10.0     1.0       89.0         1     navit/plugin/driver_break/driver_break_osd_truck.c
+     80      63.0     8.0      488.0         1     navit/plugin/driver_break/driver_break_gui_shim.c
+
+===============================================================================================================
+No thresholds exceeded (cyclomatic_complexity > 10 or length > 1000 or nloc > 1000000 or parameter_count > 100)
+==========================================================================================
+Total nloc   Avg.NLOC  AvgCCN  Avg.token   Fun Cnt  Warning cnt   Fun Rt   nloc Rt
+------------------------------------------------------------------------------------------
+       899      15.9     3.5      108.1       51            0      0.00    0.00

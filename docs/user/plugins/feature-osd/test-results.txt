@@ -1,0 +1,19 @@
+Branch: feature-osd
+Commit: 8b51e033
+Date: 2026-06-29T22:12:01Z
+Build dir: /tmp/build-phase-docs-feature-osd
+
+=== target: plugin_driver_break (build only) ===
+Built libosd_driver_break.so successfully.
+exit=0
+
+=== test_driver_break_config ===
+Running Driver Break plugin configuration tests...
+All configuration tests passed!
+exit=0
+
+=== test_driver_break_db ===
+Running Driver Break plugin database tests...
+All database tests passed!
+exit=0
+

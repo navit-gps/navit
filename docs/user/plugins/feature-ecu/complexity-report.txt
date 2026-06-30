@@ -1,0 +1,56 @@
+================================================
+  NLOC    CCN   token  PARAM  length  location
+------------------------------------------------
+       5      1     31      1       5 j1939_get_pgn@34-38@navit/plugin/driver_ecu/driver_ecu_j1939.c
+      13      5     88      2      13 j1939_handle_fuel_rate@40-52@navit/plugin/driver_ecu/driver_ecu_j1939.c
+      13      4     91      3      13 j1939_handle_fuel_level@54-66@navit/plugin/driver_ecu/driver_ecu_j1939.c
+      19      8    136      1      22 j1939_idle@68-89@navit/plugin/driver_ecu/driver_ecu_j1939.c
+      37      7    280      2      43 driver_ecu_j1939_start@91-133@navit/plugin/driver_ecu/driver_ecu_j1939.c
+      11      4     53      1      11 driver_ecu_j1939_stop@135-145@navit/plugin/driver_ecu/driver_ecu_j1939.c
+      33      4    231      1      40 obd_open_serial@42-81@navit/plugin/driver_ecu/driver_ecu_obd.c
+       9      3     67      2       9 obd_write_line@83-91@navit/plugin/driver_ecu/driver_ecu_obd.c
+      18      7    102      3      18 obd_read_line@93-110@navit/plugin/driver_ecu/driver_ecu_obd.c
+      12      4     80      4      14 obd_send_query@112-125@navit/plugin/driver_ecu/driver_ecu_obd.c
+      17      6    117      3      17 obd_parse_hex_bytes@127-143@navit/plugin/driver_ecu/driver_ecu_obd.c
+      13      5    144      4      15 obd_query_pid_mask@145-159@navit/plugin/driver_ecu/driver_ecu_obd.c
+       8      1     86      1      10 obd_detect_supported_pids@161-170@navit/plugin/driver_ecu/driver_ecu_obd.c
+       8      3     74      2       8 obd_pid_supported@172-179@navit/plugin/driver_ecu/driver_ecu_obd.c
+      16      7    125      3      19 obd_maf_to_fuel_rate@181-199@navit/plugin/driver_ecu/driver_ecu_obd.c
+       5      1     35      2       5 obd_poll_timeout@203-207@navit/plugin/driver_ecu/driver_ecu_obd.c
+      17      6    130      2      21 obd_read_fuel_rate_pid@209-229@navit/plugin/driver_ecu/driver_ecu_obd.c
+      18      6    136      2      20 obd_read_maf@231-250@navit/plugin/driver_ecu/driver_ecu_obd.c
+      20      8    148      2      22 obd_read_ethanol@252-273@navit/plugin/driver_ecu/driver_ecu_obd.c
+       5      1     37      3       5 obd_read_maf_and_ethanol@275-279@navit/plugin/driver_ecu/driver_ecu_obd.c
+      18      9    154      1      21 obd_update_tank_level@281-301@navit/plugin/driver_ecu/driver_ecu_obd.c
+      20      9    163      1      27 obd_poll@303-329@navit/plugin/driver_ecu/driver_ecu_obd.c
+      34      5    334      2      41 driver_ecu_obd_start@331-371@navit/plugin/driver_ecu/driver_ecu_obd.c
+      11      4     53      1      11 driver_ecu_obd_stop@373-383@navit/plugin/driver_ecu/driver_ecu_obd.c
+      25      4    172      1      29 ms_open_serial@37-65@navit/plugin/driver_ecu/driver_ecu_megasquirt.c
+       9      2     63      2       9 ms_write_line@67-75@navit/plugin/driver_ecu/driver_ecu_megasquirt.c
+       8      2     52      3       8 ms_read_response@77-84@navit/plugin/driver_ecu/driver_ecu_megasquirt.c
+       7      2     44      3       7 ms_read_realtime_block@86-92@navit/plugin/driver_ecu/driver_ecu_megasquirt.c
+      15      4     85      1      16 ms_detect_version@94-109@navit/plugin/driver_ecu/driver_ecu_megasquirt.c
+      10      7     80      4      12 ms_injector_to_fuel_rate@111-122@navit/plugin/driver_ecu/driver_ecu_megasquirt.c
+       5      1     35      2       5 ms_poll_timeout@126-130@navit/plugin/driver_ecu/driver_ecu_megasquirt.c
+      25      8    218      3      30 ms_apply_realtime_block@132-161@navit/plugin/driver_ecu/driver_ecu_megasquirt.c
+      15      5    114      1      19 ms_poll@163-181@navit/plugin/driver_ecu/driver_ecu_megasquirt.c
+      24      6    160      2      30 driver_ecu_megasquirt_start@183-212@navit/plugin/driver_ecu/driver_ecu_megasquirt.c
+      13      4     66      1      16 driver_ecu_megasquirt_stop@214-229@navit/plugin/driver_ecu/driver_ecu_megasquirt.c
+7 file analyzed.
+==============================================================
+NLOC    Avg.NLOC  AvgCCN  Avg.token  function_cnt    file
+--------------------------------------------------------------
+      1       0.0     0.0        0.0         0     navit/plugin/driver_ecu/driver_ecu_megasquirt.h
+    117      16.3     4.8      113.2         6     navit/plugin/driver_ecu/driver_ecu_j1939.c
+    303      15.7     4.9      123.1        18     navit/plugin/driver_ecu/driver_ecu_obd.c
+     33       0.0     0.0        0.0         0     navit/plugin/driver_ecu/driver_ecu.h
+    176      14.2     4.1       99.0        11     navit/plugin/driver_ecu/driver_ecu_megasquirt.c
+      1       0.0     0.0        0.0         0     navit/plugin/driver_ecu/driver_ecu_j1939.h
+      1       0.0     0.0        0.0         0     navit/plugin/driver_ecu/driver_ecu_obd.h
+
+===============================================================================================================
+No thresholds exceeded (cyclomatic_complexity > 15 or length > 1000 or nloc > 1000000 or parameter_count > 100)
+==========================================================================================
+Total nloc   Avg.NLOC  AvgCCN  Avg.token   Fun Cnt  Warning cnt   Fun Rt   nloc Rt
+------------------------------------------------------------------------------------------
+       632      15.3     4.7      113.8       35            0      0.00    0.00
