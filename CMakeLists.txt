@@ -50,6 +50,11 @@ set(PACKAGE_STRING "${PACKAGE} ${PACKAGE_VERSION}")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 include("${PROJECT_SOURCE_DIR}/cmake/navit_macros.cmake")
 
+# Enable CTest integration so that tests added from subdirectories (including
+# the Driver Break plugin tests) are visible when running `ctest` from the
+# build root.
+enable_testing()
+
 IF(NOT CMAKE_BUILD_TYPE)
 	SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
 ENDIF(NOT CMAKE_BUILD_TYPE)
@@ -531,6 +536,19 @@ if (GETTEXT_FOUND)
 	set_with_reason(USE_NATIVE_LANGUAGE_SUPPORT "Gettext found" TRUE)
 endif(GETTEXT_FOUND)
 
+# Check SQLite3 for APRS and Driver Break plugins
+find_package(PkgConfig QUIET)
+if(PkgConfig_FOUND)
+	pkg_check_modules(SQLITE3 sqlite3)
+endif()
+if(NOT SQLITE3_FOUND)
+	find_library(SQLITE3_LIBRARIES NAMES sqlite3)
+	find_path(SQLITE3_INCLUDE_DIRS NAMES sqlite3.h)
+	if(SQLITE3_LIBRARIES AND SQLITE3_INCLUDE_DIRS)
+		set(SQLITE3_FOUND TRUE)
+	endif()
+endif()
+
 #Independent modules
 add_module(graphics/null "Default" TRUE)
 add_module(osd/core "Default" TRUE)
@@ -862,6 +880,16 @@ CHECK_FUNCTION_EXISTS (posix_memalign HAVE_POSIX_MEMALIGN)
 CHECK_FUNCTION_EXISTS (popen HAVE_POPEN)
 CHECK_FUNCTION_EXISTS (_atoi64 HAVE__ATOI64)
 
+# Check for pthread support
+if(CMAKE_USE_PTHREADS_INIT)
+	set(HAVE_PTHREAD 1)
+endif()
+
+# Check for SQLite3 (already checked above, set HAVE_SQLITE3)
+if(SQLITE3_FOUND)
+	set(HAVE_SQLITE3 1)
+endif()
+
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in"
 			   "${CMAKE_CURRENT_BINARY_DIR}/config.h" )
 
@@ -879,7 +907,6 @@ add_compiler_flag_if_available("-Wno-missing-field-initializers")
 add_compiler_flag_if_available("-Wundef")
 add_compiler_flag_if_available("-Wcast-align")
 add_compiler_flag_if_available("-Wpointer-arith")
-add_compiler_flag_if_available("-Wextra")
 add_compiler_flag_if_available("-Wdate-time")
 add_compiler_flag_if_available("-Wmissing-prototypes")
 add_compiler_flag_if_available("-Wstrict-prototypes")
@@ -959,6 +986,14 @@ endif(NOT NAVIT_DEPENDENCY_ERROR)
 add_subdirectory (navit)
 add_subdirectory (man)
 
+# Driver Break core slice (skipped when USE_PLUGINS=n or SQLite3 missing)
+if(USE_PLUGINS AND SQLITE3_FOUND)
+	add_subdirectory(navit/plugin/driver_break_core)
+	option(BUILD_DRIVER_BREAK_CORE_TESTS "Build Driver Break core unit tests" ON)
+	if(BUILD_DRIVER_BREAK_CORE_TESTS)
+		add_subdirectory(tests/core)
+	endif()
+endif()
 
 if (USE_NATIVE_LANGUAGE_SUPPORT)
 	add_subdirectory (po)
