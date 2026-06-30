@@ -1,0 +1,113 @@
+Driver Break plugin -- notes for maintainers merging the split PRs
+====================================================================
+
+Author: Supermagnum
+Parent work: https://github.com/navit-gps/navit/pull/1419
+Open PRs: #1568 #1569 #1570 #1571 #1572 #1573
+
+This file lives on the feature-core branch (PR #1573). Read it before reviewing
+any single PR in this series.
+
+
+What this series is
+-------------------
+
+The Driver Break plugin started as one large tree under navit/plugin/driver_break/.
+I split it into six reviewable units that still become a single Navit OSD plugin
+(libosd_driver_break.so) once they are all on trunk in the right order.
+
+Each PR branch carries three commits: the plugin slice and tests, the docs for
+that unit, and the shared Qt5/po/workflow formatting that upstream CI expects.
+The commit list is intentionally short; review the diff against trunk rather than
+counting commits.
+
+
+Merge order
+-----------
+
+  Order  PR     Branch            Directory                       Role
+  -----  ----   ----------------  ------------------------------  ------------------
+  1      #1568  feature-ecu       navit/plugin/driver_ecu/        OBD/J1939/MegaSquirt
+  2      #1569  feature-geo-util  navit/plugin/driver_break_geo/  Geodesy, route bbox
+  3      #1570  feature-srtm      navit/plugin/driver_break_srtm/ Elevation tiles
+  4      #1571  feature-poi       navit/plugin/driver_poi/        POI discovery (+ geo)
+  5      #1572  feature-osd       navit/plugin/driver_break_osd/  Commands, dialogs
+  6      #1573  feature-core      navit/plugin/driver_break_core/ Core, DB, lifecycle
+
+Core holds the split driver_break_db_*.c sources, fuel_core, osd_lifecycle,
+route/finder/hiking/cycling/energy modules, and plugin_init().
+
+OSD holds driver_break_osd_{core,car,truck,motorcycle,hiking,cycling,fuel,
+overnight}.c plus driver_break_gui_shim.c.
+
+Core must merge after OSD: lifecycle in core calls driver_break_register_commands(),
+which is defined in driver_break_osd_core.c on the OSD branch.
+
+
+Branch isolation vs trunk
+-------------------------
+
+Each PR branch is built to compile its slice alone on CI:
+
+  - Stubs stand in for symbols from other units (for example
+    driver_break_slice_stubs.c on core).
+  - USE_PLUGINS=n skips plugin slices on Sailfish harbour builds.
+  - feature-core also requires SQLITE3_FOUND.
+
+Those stubs are scaffolding for review builds, not the long-term layout. After
+the sequential merge, drop the stubs and link one plugin_driver_break target from
+all units. When the first PR lands the shared Qt5/po formatting, later PRs can
+drop duplicate formatting hunks during conflict resolution.
+
+
+PR size (vs navit-gps/trunk)
+----------------------------
+
+Squashing commit history does not change these line counts; only commit boundaries
+moved.
+
+  PR     Commits  Additions  Deletions  Total    Files
+  ----   -------  ---------  ---------  -------  -----
+  #1568      3      5,107      1,241   6,348    130
+  #1569      3      4,642      1,241   5,883    133
+  #1570      3      6,657      1,241   7,898    144
+  #1571      3      6,330      1,241   7,571    146
+  #1572      3      7,387      1,241   8,628    145
+  #1573      3      9,298      1,241  10,539    163
+
+The 1,241 deletions are identical on all six PRs (98 files): Qt5 reformatting and
+po/*.po.in touch-ups, not Driver Break slice removals. Compare additions between
+PRs for slice size.
+
+Total diff on #1573 is 10,539 lines (539 above 10k) because of that shared
+formatting overhead. Slice-only additions on core are 9,298 (under 10k).
+
+
+What to review on each PR
+-------------------------
+
+  #1568  navit/plugin/driver_ecu/, tests/ecu/
+  #1569  navit/plugin/driver_break_geo/, tests/geo/
+  #1570  navit/plugin/driver_break_srtm/, tests/srtm/
+  #1571  navit/plugin/driver_poi/, tests/poi/ (+ driver_break_geo)
+  #1572  navit/plugin/driver_break_osd/, tests/osd/
+  #1573  navit/plugin/driver_break_core/, tests/core/, this file
+
+Per-unit gate docs: docs/user/plugins/feature-<unit>/ (README, code-map, tests.md,
+test-results.txt, complexity-report.txt).
+
+
+Tests
+-----
+
+  cmake -S . -B build -DUSE_PLUGINS=y
+  cmake --build build --target <slice_test_target> -j$(nproc)
+  ctest -R 'ecu_|driver_break_geo|driver_break_srtm|driver_break_poi|
+           driver_break_config|driver_break_db' --output-on-failure
+
+
+Contact
+-------
+
+Comment on the relevant PR or reach out to Supermagnum. I am happy to walk through
+driver_break_osd_lifecycle.c and driver_break_osd_core.c linkage in one session.

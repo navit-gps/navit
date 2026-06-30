@@ -1,0 +1,94 @@
+================================================
+  NLOC    CCN   token  PARAM  length  location
+------------------------------------------------
+      25      7    177      1      30 driver_break_check_driving_time@39-68@navit/plugin/driver_break/driver_break.c
+      11      4     78      1      13 driver_break_vehicle_callback_wrapper@70-82@navit/plugin/driver_break/driver_break.c
+      28      6    159      1      34 driver_break_handle_hiking_route@84-117@navit/plugin/driver_break/driver_break.c
+      23      5    126      1      27 driver_break_handle_cycling_route@119-145@navit/plugin/driver_break/driver_break.c
+       7      3     49      1       8 driver_break_handle_motor_route@147-154@navit/plugin/driver_break/driver_break.c
+      29      8    135      1      34 driver_break_route_callback_wrapper@156-189@navit/plugin/driver_break/driver_break.c
+      11      5     76      2      14 driver_break_check_timeout@191-204@navit/plugin/driver_break/driver_break.c
+       4      1     20      0       4 plugin_init@206-209@navit/plugin/driver_break/driver_break.c
+      44      1    271      1      55 driver_break_config_default@11-65@navit/plugin/driver_break/driver_break_config.c
+      17      5    124      4      20 driver_break_db_set_config_value@11-30@navit/plugin/driver_break/driver_break_db_config.c
+      52      3    572      4      54 driver_break_db_load_config_value@32-85@navit/plugin/driver_break/driver_break_db_config.c
+      20      4     95      1      23 driver_break_db_clean_corrupted_config@87-109@navit/plugin/driver_break/driver_break_db_config.c
+      18      8    127      3      22 driver_break_db_parse_config_int@111-132@navit/plugin/driver_break/driver_break_db_config.c
+      11      3     73      4      14 driver_break_db_load_config_row@134-147@navit/plugin/driver_break/driver_break_db_config.c
+      36      5    286      2      43 driver_break_db_save_config@149-191@navit/plugin/driver_break/driver_break_db_config.c
+      28      6    186      2      37 driver_break_db_load_config@193-229@navit/plugin/driver_break/driver_break_db_config.c
+      21      5    145      2      26 driver_break_db_add_fuel_stop@9-34@navit/plugin/driver_break/driver_break_db_fuel.c
+      21      3    125      7      26 driver_break_db_add_fuel_sample@36-61@navit/plugin/driver_break/driver_break_db_fuel.c
+      24      4    137      8      29 driver_break_db_add_trip_summary@63-91@navit/plugin/driver_break/driver_break_db_fuel.c
+      21      5    136      2      26 driver_break_db_add_history@10-35@navit/plugin/driver_break/driver_break_db_history.c
+      32      5    240      2      42 driver_break_db_get_history@37-78@navit/plugin/driver_break/driver_break_db_history.c
+      17      3     98      2      22 driver_break_db_clear_history@80-101@navit/plugin/driver_break/driver_break_db_history.c
+       9      3     38      1      11 driver_break_free_history_entry@103-113@navit/plugin/driver_break/driver_break_db_history.c
+      11      2     73      3      13 driver_break_db_exec_sql@12-24@navit/plugin/driver_break/driver_break_db_schema.c
+      68      4    171      1      70 driver_break_db_create_tables@26-95@navit/plugin/driver_break/driver_break_db_schema.c
+      11      4     62      1      12 driver_break_db_ensure_directory@97-108@navit/plugin/driver_break/driver_break_db_schema.c
+      21      3    127      1      25 driver_break_db_new@110-134@navit/plugin/driver_break/driver_break_db_schema.c
+       9      3     38      1      10 driver_break_db_destroy@136-145@navit/plugin/driver_break/driver_break_db_schema.c
+       9      1    136      2      10 driver_break_coord_distance_geo@19-28@navit/plugin/driver_break/driver_break_fuel_core.c
+      22      4    136      4      22 driver_break_rolling_update@30-51@navit/plugin/driver_break/driver_break_fuel_core.c
+       9      3     47      2       9 driver_break_fuel_baseline@53-61@navit/plugin/driver_break/driver_break_fuel_core.c
+       7      1     59      3       8 driver_break_notify_high_load@63-70@navit/plugin/driver_break/driver_break_fuel_core.c
+      23     10    153      3      26 driver_break_apply_baseline_and_high_load@72-97@navit/plugin/driver_break/driver_break_fuel_core.c
+      23      5    127      4      27 driver_break_fuel_sample_distance@99-125@navit/plugin/driver_break/driver_break_fuel_core.c
+      10      5     97      3      11 driver_break_fuel_compute_averages@127-137@navit/plugin/driver_break/driver_break_fuel_core.c
+      26      4    148      7      30 driver_break_fuel_compute_sample@139-168@navit/plugin/driver_break/driver_break_fuel_core.c
+      22      6    153      3      27 driver_break_update_fuel_learning@170-196@navit/plugin/driver_break/driver_break_fuel_core.c
+      15      5     77      3      17 driver_break_fuel_range_below_threshold@198-214@navit/plugin/driver_break/driver_break_fuel_core.c
+      16      5    117      2      19 driver_break_fuel_search_stations@216-234@navit/plugin/driver_break/driver_break_fuel_core.c
+      30      6    197      1      37 driver_break_check_fuel_low_range@236-272@navit/plugin/driver_break/driver_break_fuel_core.c
+      24      7    161      1      27 driver_break_get_database_path@28-54@navit/plugin/driver_break/driver_break_osd_lifecycle.c
+       6      2     27      1       7 driver_break_osd_clear_instance@56-62@navit/plugin/driver_break/driver_break_osd_lifecycle.c
+      11      4     54      1      11 driver_break_osd_destroy_callbacks@64-74@navit/plugin/driver_break/driver_break_osd_lifecycle.c
+      14      4     87      1      14 driver_break_osd_stop_backends@76-89@navit/plugin/driver_break/driver_break_osd_lifecycle.c
+      12      6    113      1      14 driver_break_osd_save_trip_summary@91-104@navit/plugin/driver_break/driver_break_osd_lifecycle.c
+      11      2     61      1      14 driver_break_osd_destroy@106-119@navit/plugin/driver_break/driver_break_osd_lifecycle.c
+       3      1     17      2       3 driver_break_osd_set_attr@121-123@navit/plugin/driver_break/driver_break_osd_lifecycle.c
+      13      6    116      2      15 driver_break_osd_apply_vehicle_type@132-146@navit/plugin/driver_break/driver_break_osd_lifecycle.c
+      12      3     79      2      13 driver_break_osd_init_database@148-160@navit/plugin/driver_break/driver_break_osd_lifecycle.c
+       8      1     84      1      10 driver_break_osd_register_callbacks@162-171@navit/plugin/driver_break/driver_break_osd_lifecycle.c
+       7      2     45      1       7 driver_break_osd_start_backends@173-179@navit/plugin/driver_break/driver_break_osd_lifecycle.c
+      35      2    243      3      45 driver_break_osd_new@181-225@navit/plugin/driver_break/driver_break_osd_lifecycle.c
+      13      4     96      1      15 driver_break_poi_from_water_point@17-31@navit/plugin/driver_break/driver_break_route_stops.c
+      13      4     96      1      15 driver_break_poi_from_cabin@33-47@navit/plugin/driver_break/driver_break_route_stops.c
+       9      3     70      2      10 driver_break_stop_append_water_pois@49-58@navit/plugin/driver_break/driver_break_route_stops.c
+       9      3     70      2      10 driver_break_stop_append_cabin_pois@60-69@navit/plugin/driver_break/driver_break_route_stops.c
+      15      2    122      3      18 driver_break_stop_populate_pois@71-88@navit/plugin/driver_break/driver_break_route_stops.c
+      15      2    108      3      17 driver_break_stop_from_route_position@90-106@navit/plugin/driver_break/driver_break_route_stops.c
+      15      4    105      2      18 driver_break_process_hiking_stops@108-125@navit/plugin/driver_break/driver_break_route_stops.c
+      15      4    105      2      18 driver_break_process_cycling_stops@127-144@navit/plugin/driver_break/driver_break_route_stops.c
+       8      3     46      2       8 cycling_compare_position@29-36@navit/plugin/driver_break/driver_break_cycling.c
+       8      3     58      2       9 cycling_new_stop@38-46@navit/plugin/driver_break/driver_break_cycling.c
+      14      2     84      2      17 cycling_add_main_stops@48-64@navit/plugin/driver_break/driver_break_cycling.c
+      10      3     64      2      11 cycling_too_close_to_main@66-76@navit/plugin/driver_break/driver_break_cycling.c
+      10      3     67      2      11 cycling_stop_exists_at@78-88@navit/plugin/driver_break/driver_break_cycling.c
+      12      4     77      3      14 cycling_add_alternative_stops@90-103@navit/plugin/driver_break/driver_break_cycling.c
+      13      3     66      2      17 cycling_calculate_driver_break_stops@106-122@navit/plugin/driver_break/driver_break_cycling.c
+      27      3    163      1      34 cycling_calculate_daily_segments@125-158@navit/plugin/driver_break/driver_break_cycling.c
+      17      5     91      1      17 cycling_free_driver_break_stops@160-176@navit/plugin/driver_break/driver_break_cycling.c
+       8      2     39      1       8 cycling_free_daily_segments@178-185@navit/plugin/driver_break/driver_break_cycling.c
+10 file analyzed.
+==============================================================
+NLOC    Avg.NLOC  AvgCCN  Avg.token  function_cnt    file
+--------------------------------------------------------------
+    156      17.2     4.9      102.5         8     navit/plugin/driver_break/driver_break.c
+     48      44.0     1.0      271.0         1     navit/plugin/driver_break/driver_break_config.c
+    186      26.0     4.9      209.0         7     navit/plugin/driver_break/driver_break_db_config.c
+     68      22.0     4.0      135.7         3     navit/plugin/driver_break/driver_break_db_fuel.c
+     82      19.8     4.0      128.0         4     navit/plugin/driver_break/driver_break_db_history.c
+    125      24.0     3.2       94.2         5     navit/plugin/driver_break/driver_break_db_schema.c
+    224      17.7     4.6      120.6        12     navit/plugin/driver_break/driver_break_fuel_core.c
+    182      13.0     3.3       90.6        12     navit/plugin/driver_break/driver_break_osd_lifecycle.c
+    114      13.0     3.2       96.5         8     navit/plugin/driver_break/driver_break_route_stops.c
+    134      12.7     3.1       75.5        10     navit/plugin/driver_break/driver_break_cycling.c
+
+===============================================================================================================
+No thresholds exceeded (cyclomatic_complexity > 10 or length > 1000 or nloc > 1000000 or parameter_count > 100)
+==========================================================================================
+Total nloc   Avg.NLOC  AvgCCN  Avg.token   Fun Cnt  Warning cnt   Fun Rt   nloc Rt
+------------------------------------------------------------------------------------------
+      1319      17.5     3.9      114.4       70            0      0.00    0.00

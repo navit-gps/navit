@@ -1,0 +1,29 @@
+Branch: feature-core
+Commit: (pending Step 4 isolation commit)
+Date: 2026-06-30T04:18:00Z
+Build dir: build-core-step4
+
+=== test_driver_break_db ===
+Running Driver Break plugin database tests...
+All database tests passed!
+exit=0
+
+=== test_driver_break_config ===
+Running Driver Break plugin configuration tests...
+All configuration tests passed!
+exit=0
+
+=== target: plugin_driver_break (build only) ===
+Built libosd_driver_break.so successfully.
+exit=0
+
+=== ctest -R driver_break ===
+2/2 tests passed (driver_break_db_test, driver_break_config_test)
+exit=0
+
+=== sanity_check (Docker) ===
+RC=0
+
+=== lizard -C 10 (phase sources) ===
+No thresholds exceeded
+exit=0
