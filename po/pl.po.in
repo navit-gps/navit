@@ -19,9 +19,9 @@
 # Mr Mati <mati7042@users.noreply.hosted.weblate.org>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.5.6\n"
+"Project-Id-Version: navit 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:22+0100\n"
+"POT-Creation-Date: 2026-02-11 01:49+0100\n"
 "PO-Revision-Date: 2025-07-23 08:05+0000\n"
 "Last-Translator: Mr Mati <mati7042@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/navit/navit-core/"
@@ -2224,6 +2224,12 @@ msgstr ""
 msgid ""
 "Drop next\n"
 "Waypoint"
+msgstr ""
+
+msgid "Configure Driver Break Intervals"
+msgstr ""
+
+msgid "Configure Overnight Stops"
 msgstr ""
 
 msgid "Satellite Status"
