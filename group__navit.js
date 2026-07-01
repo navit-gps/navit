@@ -58,6 +58,7 @@ var group__navit =
       [ "navigation", "structnavit.html#ac1a6575b9f934abe386a4e1d1f5dcbef", null ],
       [ "orientation", "structnavit.html#abb775bb5cf5e8adaff076a3bea27fead", null ],
       [ "osd_configuration", "structnavit.html#ab96d32cd395b8a7e928f78b11fab6b25", null ],
+      [ "pan_prefetch", "structnavit.html#aed05c51ed6724d3b7224d6a3cc0ed760", null ],
       [ "pitch", "structnavit.html#ad079cdf7cef1a2de70f8f80a7f4a9338", null ],
       [ "popped", "structnavit.html#abba25a6de1be9ed3c3918212f5e7b043", null ],
       [ "popup_callback", "structnavit.html#a41e039860ded30639c34ffb642f5db41", null ],

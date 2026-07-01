@@ -77,6 +77,7 @@ var transform_8c =
     [ "transform_set_yaw", "transform_8c.html#a7b8915f7e30c6aead73ab2fda929b48c", null ],
     [ "transform_setup_matrix", "transform_8c.html#a062690349dcd99d30741a4f4c9581d46", null ],
     [ "transform_setup_source_rect", "transform_8c.html#ab18da629c0d3677cc417a08813a63fe4", null ],
+    [ "transform_setup_source_rect_scale", "transform_8c.html#a8450154f23abc1436397d771b30d1b50", null ],
     [ "transform_shift_by_center_and_scale", "transform_8c.html#a5091bc785066545d6c281bf7c450780c", null ],
     [ "transform_to_geo", "transform_8c.html#a25bc1227373c93717d0350e1fe0130dd", null ],
     [ "transform_utm_to_geo", "transform_8c.html#acc9ea9d8b6cb2d53d35907d55c2a52ee", null ],

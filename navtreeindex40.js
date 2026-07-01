@@ -1,5 +1,7 @@
 var NAVTREEINDEX40 =
 {
+"structnavit__binding__w32__msg.html":[2,0,232],
+"structnavit__binding__w32__msg.html#a1239222bc8d52976eab363d875047a4f":[2,0,232,1],
 "structnavit__binding__w32__msg.html#af3d22b6627ad5fa76b7fb4ae2f178065":[2,0,232,2],
 "structnavit__binding__w32__msg.html#af60e3ad74a683e6f171bd06911f5f13f":[2,0,232,0],
 "structnavit__object.html":[2,0,233],
@@ -247,7 +249,5 @@ var NAVTREEINDEX40 =
 "structparsedata.html#af5a8f145440ff6d9ec60096d515cbfac":[2,0,276,2],
 "structpathattr.html":[2,0,277],
 "structpathattr.html#a3be73715e7e57a38df9b908e866fad68":[2,0,277,3],
-"structpathattr.html#a488e7439e0ac35b69093e0a94500cb51":[2,0,277,11],
-"structpathattr.html#a5c1d09eeccd9ee69b51b86b865b1ca2d":[2,0,277,5],
-"structpathattr.html#a63dd3cc95357c4dbd48d7a300ce35e22":[2,0,277,0]
+"structpathattr.html#a488e7439e0ac35b69093e0a94500cb51":[2,0,277,11]
 };

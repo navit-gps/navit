@@ -254,6 +254,8 @@ Functions</h2></td></tr>
 <tr class="separator:a14c0f80f525cbd3d44bba0ea859bbb8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab18da629c0d3677cc417a08813a63fe4" id="r_ab18da629c0d3677cc417a08813a63fe4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#ab18da629c0d3677cc417a08813a63fe4">transform_setup_source_rect</a> (struct <a class="el" href="structtransformation.html">transformation</a> *t)</td></tr>
 <tr class="separator:ab18da629c0d3677cc417a08813a63fe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8450154f23abc1436397d771b30d1b50" id="r_a8450154f23abc1436397d771b30d1b50"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#a8450154f23abc1436397d771b30d1b50">transform_setup_source_rect_scale</a> (struct <a class="el" href="structtransformation.html">transformation</a> *t, int scale_factor)</td></tr>
+<tr class="separator:a8450154f23abc1436397d771b30d1b50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad28a3e5f7f730e35bd5f582a4cac89bb" id="r_ad28a3e5f7f730e35bd5f582a4cac89bb"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#ad28a3e5f7f730e35bd5f582a4cac89bb">transform_get_scale</a> (struct <a class="el" href="structtransformation.html">transformation</a> *t)</td></tr>
 <tr class="separator:ad28a3e5f7f730e35bd5f582a4cac89bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82dd549a3e2370f027c13b0b04b4ae0d" id="r_a82dd549a3e2370f027c13b0b04b4ae0d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="transform_8c.html#a82dd549a3e2370f027c13b0b04b4ae0d">transform_set_scale</a> (struct <a class="el" href="structtransformation.html">transformation</a> *t, long scale)</td></tr>
@@ -2943,7 +2945,39 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, <a class="el" href="structmap__selection.html#ae00c4fb58fffa37688d33f864310a7b5">map_selection::c_rect</a>, <a class="el" href="group__coord.html#ga2c6d628b067bab6c56eb6504207e6feb">coord_rect_extend()</a>, <a class="el" href="debug_8h.html#aba3c0ccefe6daa8941b173073268729e">dbg</a>, <a class="el" href="structtransformation.html#a518054aef93ffdc5600d67b31729bb29">transformation::ddd</a>, <a class="el" href="transform_8c.html#a21c9763d0694cbf3dd25e7b780434144">HOG</a>, <a class="el" href="structcoord__rect.html#a8da493b41946d949510bada53c32667a">coord_rect::lu</a>, <a class="el" href="structpoint__rect.html#a75cfbb317f6427b2026305f46fabb864">point_rect::lu</a>, <a class="el" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25aa4a22485b46e3407434f1093e42867d4">lvl_debug</a>, <a class="el" href="structtransformation.html#aabf3c50db9a800502938f84a6b51598c">transformation::map_center</a>, <a class="el" href="structtransformation.html#a9fb070c634cade77f69f0eae5017a62e">transformation::map_sel</a>, <a class="el" href="transform_8c.html#a99cf63bf297b3975a4ec76402420f971">max4()</a>, <a class="el" href="transform_8c.html#a40e6294521dd73742e045c8936f132e2">min4()</a>, <a class="el" href="structmap__selection.html#a1c83ff016741893133014d58cfc38e25">map_selection::next</a>, <a class="el" href="garmin__img_8c.html#a72b26dfab473b56b23271050c385bcf7">next</a>, <a class="el" href="structmap__selection.html#a44ee52f47e0e4fa0a0384985b0c0fa7d">map_selection::p_rect</a>, <a class="el" href="structcoord__rect.html#a0aa5ec921d6c01e81eea35f701962bd7">coord_rect::rl</a>, <a class="el" href="structpoint__rect.html#aadb42dad95a8cfc30121cf3f69032c66">point_rect::rl</a>, <a class="el" href="structtransformation.html#aaf882cb6fdadaa084795a41bf9d75bad">transformation::scale_shift</a>, <a class="el" href="structtransformation.html#a5503cac3f6ebfed45a8e61d925c4bd65">transformation::screen_sel</a>, <a class="el" href="transform_8c.html#aa9ecc1d5312ad35e89377ea7aeb6ead0">transform_apply_inverse_matrix()</a>, <a class="el" href="transform_8c.html#a5a40f38ebfbe5adacd7450e6bace9a29">transform_reverse()</a>, <a class="el" href="transform_8c.html#a3a55e2d97adfd1068d9481ed9b174e91">transform_screen_to_3d()</a>, <a class="el" href="transform_8c.html#a32757441ba85b986bc7219e86927e8d0">transform_zplane_intersection()</a>, <a class="el" href="structmap__selection.html#a5b353de282f55dbf0d908ec9d4755160">map_selection::u</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, <a class="el" href="structpcoord.html#a875f35249b19419eb6dfbad5ff18f268">pcoord::x</a>, <a class="el" href="structcoord__geo__cart.html#a8ad416e3cc04ee4e4c632426f1ca6e71">coord_geo_cart::x</a>, <a class="el" href="structpoint.html#ad679b07fb69d55f5ad454d0f1f2891d5">point::x</a>, <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>, <a class="el" href="structpcoord.html#a0e18858a037dadd7f64f0f139cac85d0">pcoord::y</a>, <a class="el" href="structcoord__geo__cart.html#a46084267efb2fd57b37048d0e2bbbef7">coord_geo_cart::y</a>, <a class="el" href="structpoint.html#a9a82ca9504acabb1e30569f89c805471">point::y</a>, <a class="el" href="structtransformation.html#adf0f2c46c551ae728cc6428b4ea1c1ef">transformation::zfar</a>, and <a class="el" href="structtransformation.html#a227f6d989101bcac74a0a0de922b34d1">transformation::znear</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="group__navit.html#gac2cfaeb1c9b6275b3a4d498119f68a44">navit_draw_async()</a>, <a class="el" href="group__navit.html#ga77d24c83e538be7d8e7a7d2bc20db7aa">navit_zoom_to_rect()</a>, <a class="el" href="osd__core_8c.html#ab13875a27a976a250b1ddb86d58e51fd">osd_auxmap_draw()</a>, and <a class="el" href="pedestrian_8c.html#a68e6d8c355a151e53b0a586ab086b057">pedestrian_cmd_pedestrian_rocket()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="group__navit.html#gac2cfaeb1c9b6275b3a4d498119f68a44">navit_draw_async()</a>, <a class="el" href="group__navit.html#ga77d24c83e538be7d8e7a7d2bc20db7aa">navit_zoom_to_rect()</a>, <a class="el" href="osd__core_8c.html#ab13875a27a976a250b1ddb86d58e51fd">osd_auxmap_draw()</a>, <a class="el" href="pedestrian_8c.html#a68e6d8c355a151e53b0a586ab086b057">pedestrian_cmd_pedestrian_rocket()</a>, and <a class="el" href="transform_8c.html#a8450154f23abc1436397d771b30d1b50">transform_setup_source_rect_scale()</a>.</p>
+
+</div>
+</div>
+<a id="a8450154f23abc1436397d771b30d1b50" name="a8450154f23abc1436397d771b30d1b50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8450154f23abc1436397d771b30d1b50">&#9670;&#160;</a></span>transform_setup_source_rect_scale()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void transform_setup_source_rect_scale </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structtransformation.html">transformation</a> *&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>scale_factor</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="structmap__selection.html#ae00c4fb58fffa37688d33f864310a7b5">map_selection::c_rect</a>, <a class="el" href="structcoord__rect.html#a8da493b41946d949510bada53c32667a">coord_rect::lu</a>, <a class="el" href="structtransformation.html#a9fb070c634cade77f69f0eae5017a62e">transformation::map_sel</a>, <a class="el" href="structmap__selection.html#a1c83ff016741893133014d58cfc38e25">map_selection::next</a>, <a class="el" href="structcoord__rect.html#a0aa5ec921d6c01e81eea35f701962bd7">coord_rect::rl</a>, <a class="el" href="transform_8c.html#ab18da629c0d3677cc417a08813a63fe4">transform_setup_source_rect()</a>, <a class="el" href="structmap__selection.html#a5b353de282f55dbf0d908ec9d4755160">map_selection::u</a>, <a class="el" href="structcoord.html#ac3e93ff628aa19d2888c5f6fa26f430d">coord::x</a>, and <a class="el" href="structcoord.html#a2b099692d87f98e4844b615136ca37fb">coord::y</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="group__navit.html#gac2cfaeb1c9b6275b3a4d498119f68a44">navit_draw_async()</a>.</p>
 
 </div>
 </div>

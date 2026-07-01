@@ -57,6 +57,7 @@ var transform_8h =
     [ "transform_set_yaw", "transform_8h.html#a7b8915f7e30c6aead73ab2fda929b48c", null ],
     [ "transform_setup", "transform_8h.html#a21813e8806ab85da414745d8eb2ced66", null ],
     [ "transform_setup_source_rect", "transform_8h.html#ab18da629c0d3677cc417a08813a63fe4", null ],
+    [ "transform_setup_source_rect_scale", "transform_8h.html#a8450154f23abc1436397d771b30d1b50", null ],
     [ "transform_to_geo", "transform_8h.html#a25bc1227373c93717d0350e1fe0130dd", null ],
     [ "transform_utm_to_geo", "transform_8h.html#acc9ea9d8b6cb2d53d35907d55c2a52ee", null ],
     [ "transform_within_border", "transform_8h.html#a8f20669829e65e806598f14318a551f9", null ],

@@ -1,6 +1,7 @@
 var navit_8c =
 [
     [ "_USE_MATH_DEFINES", "navit_8c.html#a525335710b53cb064ca56b936120431e", null ],
+    [ "PAN_PREFETCH_SCALE_FACTOR", "navit_8c.html#afb9c50852a9efd5f77fd60caf74c5501", null ],
     [ "TEXTFILE_COMMENT_NAVI_STOPPED", "navit_8c.html#ab750d14bf18269dc3a12b34d0e0dd037", null ],
     [ "coord_not_set", "group__navit.html#gadf129eade1d4b658671d71d9faa54eda", null ],
     [ "navit_add_attr", "group__navit.html#ga0ed08687cfc741b671608bc76b5bcebd", null ],
