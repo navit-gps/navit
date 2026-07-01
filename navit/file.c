@@ -202,8 +202,10 @@ struct file *file_create(char *name, struct attr **options) {
         } else
             open_flags |= O_RDONLY;
         file->name = g_strdup(name);
+        dbg(lvl_debug, "opening file: '%s' ...", name);
         file->fd = open(name, open_flags, 0666);
         if (file->fd == -1) {
+            dbg(lvl_debug, "FAILED");
             g_free(file->name);
             g_free(file);
             return NULL;
