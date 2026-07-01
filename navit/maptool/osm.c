@@ -830,7 +830,8 @@ static char *attrmap = {
     "w	barrier=fence	fence\n"
     "w	barrier=wall	wall\n"
     "w	barrier=retaining_wall	retaining_wall\n"
-    "w	barrier=city_wall	city_wall\n"};
+    "w	barrier=city_wall	city_wall\n"
+    "?	amenity=charging_station		poi_charging_station\n"};
 
 static void build_attrmap_line(char *line) {
     char *t = NULL, *kvl = NULL, *i = NULL, *p, *kv;
