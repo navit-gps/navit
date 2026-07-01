@@ -22,6 +22,7 @@
 #include "coord.h"
 #include "debug.h"
 #include "destination.h"
+#include "event.h"
 #include "gui_gtk.h"
 #include "gui_gtk_poi.h"
 #include "item.h"
@@ -187,8 +188,7 @@ static void destination_action(GtkWidget *w, struct gui_priv *gui, void *dummy) 
 }
 
 static void quit_action(GtkWidget *w, struct gui_priv *gui, void *dummy) {
-    navit_destroy(gui->nav);
-    exit(0);
+    event_main_loop_quit();
 }
 
 static GtkActionEntry entries[] = {

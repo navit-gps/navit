@@ -742,8 +742,11 @@ static void write_former_destinations(const GList *former_destinations, const ch
         for (currdest = former_destinations; currdest; currdest = g_list_next(currdest)) {
             dest = currdest->data;
             fprintf(f, "type=%s", item_to_name(dest->type));
-            if (dest->description)
-                fprintf(f, " label=\"%s\"", str_escape(escape_mode_quote, dest->description));
+            if (dest->description) {
+                char *escaped = str_escape(escape_mode_quote, dest->description);
+                fprintf(f, " label=\"%s\"", escaped);
+                g_free(escaped);
+            }
             fputc('\n', f);
             c_list = dest->c;
             do {

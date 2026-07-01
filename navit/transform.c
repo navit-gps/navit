@@ -1514,6 +1514,8 @@ int transform_within_dist_item(struct coord *ref, enum item_type type, struct co
 
 void transform_copy(struct transformation *src, struct transformation *dst) {
     memcpy(dst, src, sizeof(*src));
+    dst->map_sel = NULL;
+    dst->screen_sel = NULL;
 }
 
 void transform_destroy(struct transformation *t) {

@@ -334,6 +334,10 @@ static void gui_internal_html_end(xml_context *dummy, const char *tag_name, void
     g_free(html->href);
     g_free(html->class);
     g_free(html->refresh_cond);
+    html->name = NULL;
+    html->href = NULL;
+    html->class = NULL;
+    html->refresh_cond = NULL;
 }
 
 static void gui_internal_refresh_callback_called(struct gui_priv *this, struct menu_data *menu_data) {

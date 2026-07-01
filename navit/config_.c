@@ -20,6 +20,7 @@
 #include "config_.h"
 #include "attr.h"
 #include "debug.h"
+#include "event.h"
 #include "file.h"
 #include "navit.h"
 #include "xmlconfig.h"
@@ -49,12 +50,20 @@ struct attr_iter {
 void config_destroy(struct config *this_) {
     attr_list_free(this_->attrs);
     g_free(config);
-    exit(0);
+}
+
+void config_clear_attrs(void) {
+    struct attr **a = config->attrs;
+    while (a && *a) {
+        if ((*a)->type == attr_navit)
+            (*a)->u.data = NULL;
+        a++;
+    }
 }
 
 static void config_terminate(int sig) {
     dbg(lvl_debug, "terminating");
-    config_destroy(config);
+    event_main_loop_quit();
 }
 
 static void config_new_int(void) {

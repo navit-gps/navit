@@ -674,8 +674,10 @@ static void start_element(xml_context *context, const gchar *element_name, const
         else
             parent_attr = &new->parent->element_attr;
         new->element_attr.u.data = new->object_func->create(parent_attr, attrs);
-        if (!new->element_attr.u.data)
+        if (!new->element_attr.u.data) {
+            attr_list_free(attrs);
             return;
+        }
         new->element_attr.type = attr_from_name(element_name);
         if (new->element_attr.type == attr_none)
             dbg(lvl_error, "failed to create object of type '%s'", element_name);
@@ -974,6 +976,14 @@ static void xi_end_element(xml_context *context, const gchar *element_name, gpoi
         doc->last->child = NULL;
     if (doc->active > 0) {
         if (!g_ascii_strcasecmp("xi:include", element_name)) {
+            while (xistate->attribute_names[i]) {
+                g_free((char *)(xistate->attribute_names[i]));
+                g_free((char *)(xistate->attribute_values[i]));
+                i++;
+            }
+            g_free(xistate->attribute_names);
+            g_free(xistate->attribute_values);
+            g_free(xistate);
             return;
         }
         end_element(context, element_name, doc->user_data, error);

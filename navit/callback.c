@@ -36,6 +36,8 @@ struct callback_list {
     callback_patch patch;
     void *patch_context;
     GList *list;
+    int iterating;
+    int zombie;
 };
 
 struct callback_list *callback_list_new(void) {
@@ -197,7 +199,10 @@ void callback_list_call_attr(struct callback_list *l, enum attr_type type, int p
     }
     if (l->patch != NULL)
         l->patch(l, type, pcount, p, l->patch_context);
+    if (l->zombie)
+        return;
 
+    l->iterating++;
     cbi = l->list;
     /* do not use g_list_foreach and friends, as the callbacks could alter this
      * list. Do it the "traditional" way as proposed by glib manual. */
@@ -206,8 +211,13 @@ void callback_list_call_attr(struct callback_list *l, enum attr_type type, int p
         cb = cbi->data;
         if (type == attr_any || cb->type == attr_any || cb->type == type)
             callback_call(cb, pcount, p);
+        if (l->zombie)
+            break;
         cbi = next_item;
     }
+    l->iterating--;
+    if (l->zombie && !l->iterating)
+        g_free(l);
 }
 
 void callback_list_call_attr_args(struct callback_list *cbl, enum attr_type type, int count, ...) {
@@ -238,11 +248,20 @@ void callback_list_call_args(struct callback_list *cbl, int count, ...) {
 
 void callback_list_destroy(struct callback_list *l) {
     GList *cbi;
+    if (!l)
+        return;
+    if (l->zombie)
+        return;
+
+    l->zombie = 1;
     cbi = l->list;
+    l->list = NULL;
     while (cbi) {
+        GList *next = cbi->next;
         g_free(cbi->data);
-        cbi = g_list_next(cbi);
+        g_list_free_1(cbi);
+        cbi = next;
     }
-    g_list_free(l->list);
-    g_free(l);
+    if (!l->iterating)
+        g_free(l);
 }

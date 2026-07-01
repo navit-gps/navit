@@ -112,16 +112,37 @@ static void set_drawing_color(cairo_t *cairo, struct color c) {
 }
 
 static void graphics_destroy(struct graphics_priv *gr) {
+    struct graphics_priv **pp;
     dbg(lvl_debug, "enter parent %p", gr->parent);
+    if (gr->parent) {
+        pp = &gr->parent->overlays;
+        while (*pp) {
+            if (*pp == gr) {
+                *pp = gr->next;
+                break;
+            }
+            pp = &(*pp)->next;
+        }
+    }
     gr->freetype_methods.destroy();
+    if (gr->cairo)
+        cairo_destroy(gr->cairo);
     if (!gr->parent) {
-        dbg(lvl_debug, "enter win %p", gr->win);
-        if (gr->win)
-            gtk_widget_destroy(gr->win);
         dbg(lvl_debug, "widget %p", gr->widget);
         if (gr->widget)
             gtk_widget_destroy(gr->widget);
+        dbg(lvl_debug, "enter win %p", gr->win);
+        if (gr->win)
+            gtk_widget_destroy(gr->win);
         g_free(gr->window_title);
+        while (gr->overlays) {
+            struct graphics_priv *overlay = gr->overlays;
+            gr->overlays = overlay->next;
+            if (overlay->cairo)
+                cairo_destroy(overlay->cairo);
+            overlay->freetype_methods.destroy();
+            g_free(overlay);
+        }
     }
     g_free(gr);
 }
@@ -129,6 +150,7 @@ static void graphics_destroy(struct graphics_priv *gr) {
 static void gc_destroy(struct graphics_gc_priv *gc) {
     if (gc->texture != NULL)
         cairo_surface_destroy(gc->texture);
+    g_free(gc->dashes);
     g_free(gc);
 }
 
@@ -303,6 +325,8 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
 
 static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count) {
     int i;
+    if (count < 1)
+        return;
     set_drawing_color(gr->cairo, gc->c);
     if (gc->texture != NULL) {
         cairo_set_source_surface(gr->cairo, gc->texture, 0, 0);
@@ -895,8 +919,6 @@ static void get_data_window(struct graphics_priv *this, unsigned int xid) {
         this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     else
         this->win = gtk_plug_new(xid);
-    if (!gtk_widget_get_parent(this->widget))
-        gtk_widget_ref(this->widget);
     gtk_window_set_default_size(GTK_WINDOW(this->win), this->win_w, this->win_h);
     dbg(lvl_debug, "h= %i, w= %i", this->win_h, this->win_w);
     gtk_window_set_title(GTK_WINDOW(this->win), this->window_title);

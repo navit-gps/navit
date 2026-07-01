@@ -23,8 +23,10 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #ifndef _MSC_VER
+#    include <dirent.h>
 #    include <unistd.h>
 #endif
+#include <string.h>
 
 char *tempfile_obtain_prefix() {
     static char *tmpfile_prefix = NULL;
@@ -43,7 +45,20 @@ char *tempfile_obtain_prefix() {
 }
 
 void tempfile_cleanup() {
-    rmdir(tempfile_obtain_prefix());
+    char *prefix = tempfile_obtain_prefix();
+    DIR *dir = opendir(prefix);
+    if (dir) {
+        struct dirent *entry;
+        while ((entry = readdir(dir)) != NULL) {
+            if (entry->d_name[0] == '.')
+                continue;
+            char path[4096];
+            snprintf(path, sizeof(path), "%s/%s", prefix, entry->d_name);
+            unlink(path);
+        }
+        closedir(dir);
+    }
+    rmdir(prefix);
 }
 
 char *tempfile_name(char *suffix, char *name) {

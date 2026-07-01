@@ -66,6 +66,7 @@ static GList *process_boundaries_setup(FILE *boundaries, struct relations *relat
     struct relations_func *relations_func;
 
     relations_func = relations_func_new(process_boundaries_member, NULL);
+    relations_add_func(relations, relations_func);
     while ((ib = read_item(boundaries))) {
         char *member = NULL;
         struct boundary *boundary = g_new0(struct boundary, 1);
@@ -242,69 +243,87 @@ static GList *process_boundaries_insert(GList *list, struct boundary *boundary) 
     return g_list_prepend(list, boundary);
 }
 
+static void boundary_compute_bbox(struct boundary *b) {
+    GList *sl = b->sorted_segments;
+    int first = 1;
+    while (sl) {
+        struct geom_poly_segment *gs = sl->data;
+        struct coord *c = gs->first;
+        while (c <= gs->last) {
+            if (first) {
+                b->r.l = *c;
+                b->r.h = *c;
+                first = 0;
+            } else
+                bbox_extend(c, &b->r);
+            c++;
+        }
+        sl = g_list_next(sl);
+    }
+}
+
+static void boundary_write_debug(struct boundary *b) {
+    GList *sl;
+    FILE *f, *fu = NULL;
+    char *poly_name;
+
+    if (!b->country || !b->iso2)
+        return;
+
+    poly_name = g_strdup_printf("country_%s_poly", b->iso2);
+    f = tempfile("", poly_name, 1);
+
+    sl = b->sorted_segments;
+    while (sl) {
+        struct geom_poly_segment *gs = sl->data;
+        struct item_bin *ib;
+
+        ib = tmp_item_bin;
+        item_bin_init(ib, type_selected_line);
+        item_bin_add_coord(ib, gs->first, gs->last - gs->first + 1);
+        item_bin_write(ib, f);
+
+        if (!coord_is_equal(*gs->first, *gs->last)) {
+            if (!fu) {
+                char *broken_name = g_strdup_printf("country_%s_broken", b->iso2);
+                fu = tempfile("", broken_name, 1);
+                g_free(broken_name);
+            }
+            ib = tmp_item_bin;
+            item_bin_init(ib, type_selected_point);
+            item_bin_add_coord(ib, gs->first, 1);
+            item_bin_write(ib, fu);
+            item_bin_init(ib, type_selected_point);
+            item_bin_add_coord(ib, gs->last, 1);
+            item_bin_write(ib, fu);
+        }
+        sl = g_list_next(sl);
+    }
+
+    fclose(f);
+    tempfile_unlink("", poly_name);
+    g_free(poly_name);
+
+    if (fu) {
+        char *broken_name;
+        osm_warning("relation", item_bin_get_relationid(b->ib), 0, "Broken country polygon '%s'\n", b->iso2);
+        fclose(fu);
+        broken_name = g_strdup_printf("country_%s_broken", b->iso2);
+        tempfile_unlink("", broken_name);
+        g_free(broken_name);
+    }
+}
+
 static GList *process_boundaries_finish(GList *boundaries_list) {
-    GList *l, *sl;
-    GList *ret = NULL;
+    GList *l, *ret = NULL;
     l = boundaries_list;
     while (l) {
         struct boundary *boundary = l->data;
-        int first = 1;
-        FILE *f = NULL, *fu = NULL;
-        if (boundary->country) {
-            char *name = g_strdup_printf("country_%s_poly", boundary->iso2);
-            f = tempfile("", name, 1);
-            g_free(name);
-        }
         boundary->sorted_segments = geom_poly_segments_sort(boundary->segments, geom_poly_segment_type_way_right_side);
-        sl = boundary->sorted_segments;
-        while (sl) {
-            struct geom_poly_segment *gs = sl->data;
-            struct coord *c = gs->first;
-            while (c <= gs->last) {
-                if (first) {
-                    boundary->r.l = *c;
-                    boundary->r.h = *c;
-                    first = 0;
-                } else
-                    bbox_extend(c, &boundary->r);
-                c++;
-            }
-            if (f) {
-                struct item_bin *ib = tmp_item_bin;
-                item_bin_init(ib, type_selected_line);
-                /* FIXME check for overflow */
-                item_bin_add_coord(ib, gs->first, gs->last - gs->first + 1);
-                item_bin_write(ib, f);
-            }
-            if (boundary->country) {
-                if (!coord_is_equal(*gs->first, *gs->last)) {
-                    struct item_bin *ib;
-                    if (!fu) {
-                        char *name = g_strdup_printf("country_%s_broken", boundary->iso2);
-                        fu = tempfile("", name, 1);
-                        g_free(name);
-                    }
-                    ib = tmp_item_bin;
-                    item_bin_init(ib, type_selected_point);
-                    item_bin_add_coord(ib, gs->first, 1);
-                    item_bin_write(ib, fu);
-                    item_bin_init(ib, type_selected_point);
-                    item_bin_add_coord(ib, gs->last, 1);
-                    item_bin_write(ib, fu);
-                }
-            }
-            sl = g_list_next(sl);
-        }
+        boundary_compute_bbox(boundary);
+        boundary_write_debug(boundary);
         ret = process_boundaries_insert(ret, boundary);
         l = g_list_next(l);
-        if (f)
-            fclose(f);
-        if (fu) {
-            if (boundary->country)
-                osm_warning("relation", item_bin_get_relationid(boundary->ib), 0, "Broken country polygon '%s'\n",
-                            boundary->iso2);
-            fclose(fu);
-        }
     }
     return ret;
 }
@@ -316,7 +335,9 @@ GList *process_boundaries(FILE *boundaries, FILE *ways) {
     boundaries_list = process_boundaries_setup(boundaries, relations);
     relations_process(relations, NULL, ways);
     relations_destroy(relations);
-    return process_boundaries_finish(boundaries_list);
+    GList *ret = process_boundaries_finish(boundaries_list);
+    g_list_free(boundaries_list);
+    return ret;
 }
 
 void free_boundaries(GList *bl) {

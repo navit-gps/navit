@@ -936,11 +936,7 @@ static int gui_internal_cmd2_set(struct gui_priv *this, char *function, struct a
 }
 
 int gui_internal_cmd2_quit(struct gui_priv *this, char *function, struct attr **in, struct attr ***out) {
-    struct attr navit;
     gui_internal_prune_menu(this, NULL);
-    navit.type = attr_navit;
-    navit.u.navit = this->nav;
-    config_remove_attr(config, &navit);
     event_main_loop_quit();
     return 0;
 }
@@ -972,10 +968,12 @@ static int gui_internal_cmd_write(struct gui_priv *this, char *function, struct 
         in++;
     }
     if (str) {
+        char *tmp = str;
         str = g_strdup_printf("<html>%s</html>\n", str);
 #if 0
         dbg(lvl_debug,"%s",str);
 #endif
+        g_free(tmp);
         gui_internal_html_parse_text(this, str);
     }
     g_free(str);

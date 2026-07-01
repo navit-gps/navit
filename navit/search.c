@@ -462,6 +462,7 @@ static void search_list_common_dup(struct search_list_common *src, struct search
 
 static void search_list_common_destroy(struct search_list_common *common) {
     g_free(common->c);
+    g_free(common->postal_mask);
     attr_list_free(common->attrs);
 
     common->town_name = NULL;
@@ -670,12 +671,10 @@ static void search_list_search_free(struct search_list *sl, int level) {
         mapset_search_destroy(le->search);
         le->search = NULL;
     }
-#if 0 /* FIXME */
     if (le->hash) {
         g_hash_table_destroy(le->hash);
-        le->hash=NULL;
+        le->hash = NULL;
     }
-#endif
     curr = le->list;
     while (curr) {
         search_list_result_destroy(level, curr->data);
@@ -934,6 +933,7 @@ struct search_list_result *search_list_get_result(struct search_list *this_) {
             mapset_search_destroy(le->search);
             le->search = NULL;
             g_hash_table_destroy(le->hash);
+            le->hash = NULL;
             if (!level)
                 break;
         }
@@ -942,6 +942,10 @@ struct search_list_result *search_list_get_result(struct search_list *this_) {
 }
 
 void search_list_destroy(struct search_list *this_) {
+    int i;
+    for (i = 0; i < 4; i++)
+        search_list_search_free(this_, i);
+    search_address_results_free(this_);
     g_free(this_->postal);
     g_free(this_);
 }

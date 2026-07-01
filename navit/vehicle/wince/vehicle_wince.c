@@ -754,6 +754,7 @@ static void vehicle_wince_destroy(struct vehicle_priv *priv) {
         g_free(priv->buffer);
     if (priv->read_buffer)
         g_free(priv->read_buffer);
+    attr_list_free(priv->attrs);
     g_free(priv);
 }
 

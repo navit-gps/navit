@@ -173,6 +173,7 @@ void vehicle_destroy(struct vehicle *this_) {
         graphics_gc_destroy(this_->bg);
     if (this_->gra)
         graphics_free(this_->gra);
+    g_hash_table_destroy(this_->log_to_cb);
     g_free(this_);
 }
 

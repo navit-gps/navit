@@ -13,6 +13,7 @@ struct attr_iter;
 struct config;
 struct config *config_get(void);
 void config_destroy(struct config *this_);
+void config_clear_attrs(void);
 int config_get_attr(struct config *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int config_set_attr(struct config *this_, struct attr *attr);
 int config_add_attr(struct config *this_, struct attr *attr);

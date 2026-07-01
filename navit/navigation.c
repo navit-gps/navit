@@ -1344,6 +1344,8 @@ static void navigation_itm_ways_update(struct navigation_itm *itm, struct map *g
         h = l;
         while (h) {
             if (is_same_way(w, h)) {
+                map_convert_free(w->name);
+                map_convert_free(w->name_systematic);
                 g_free(w);
                 w = l;
                 dbg(lvl_debug, "  - way is already in list, discarding");
@@ -1473,7 +1475,6 @@ static struct navigation_itm *navigation_itm_new(struct navigation *this_, struc
 
         streetitem = street_item.u.item;
         ret->way.item = *streetitem;
-        item_hash_insert(this_->hash, streetitem, ret);
 
         mr = map_rect_new(streetitem->map, NULL);
         struct map *tmap = streetitem->map;
@@ -1483,6 +1484,7 @@ static struct navigation_itm *navigation_itm_new(struct navigation *this_, struc
             map_rect_destroy(mr);
             return NULL;
         }
+        item_hash_insert(this_->hash, streetitem, ret);
 
         if (item_attr_get(streetitem, attr_flags, &attr))
             ret->way.flags = attr.u.num;
@@ -2800,12 +2802,24 @@ static struct navigation_command *command_new(struct navigation *this_, struct n
  * @param this_ The navigation object for which to create turn instructions
  * @param route Not used
  */
+static void navigation_cmd_free(struct navigation *this_) {
+    struct navigation_command *cmd = this_->cmd_first;
+    while (cmd) {
+        struct navigation_command *next = cmd->next;
+        if (cmd->maneuver)
+            g_free(cmd->maneuver);
+        g_free(cmd);
+        cmd = next;
+    }
+    this_->cmd_first = NULL;
+    this_->cmd_last = NULL;
+}
+
 static void make_maneuvers(struct navigation *this_, struct route *route) {
     struct navigation_itm *itm, *last = NULL, *last_itm = NULL;
     struct navigation_maneuver *maneuver;
+    navigation_cmd_free(this_);
     itm = this_->first;
-    this_->cmd_last = NULL;
-    this_->cmd_first = NULL;
     while (itm) {
         if (last) {
             if (maneuver_required2(this_, last_itm, itm, &maneuver)) {
@@ -3792,6 +3806,11 @@ static void navigation_update(struct navigation *this_, struct route *route, str
     map = route_get_map(this_->route);
     if (!map)
         return;
+    if (this_->route_mr) {
+        struct map_rect *old_mr = this_->route_mr;
+        this_->route_mr = NULL;
+        map_rect_destroy(old_mr);
+    }
     this_->route_mr = map_rect_new(map, NULL);
     if (!this_->route_mr)
         return;
@@ -3822,6 +3841,7 @@ void navigation_destroy(struct navigation *this_) {
     item_hash_destroy(this_->hash);
     callback_list_destroy(this_->callback);
     callback_list_destroy(this_->callback_speech);
+    attr_list_free(this_->attrs);
     g_free(this_);
 }
 
@@ -3886,6 +3906,16 @@ void navigation_unregister_callback(struct navigation *this_, enum attr_type typ
         callback_list_remove(this_->callback, cb);
     else if (navigation_get_attr(this_, attr_callback_list, &attr_cbl, NULL))
         callback_list_remove(attr_cbl.u.callback_list, cb);
+}
+
+void navigation_destroy_map(struct navigation *this_) {
+    if (!this_)
+        return;
+    if (this_->map) {
+        struct map *m = this_->map;
+        this_->map = NULL;
+        map_destroy(m);
+    }
 }
 
 struct map *navigation_get_map(struct navigation *this_) {

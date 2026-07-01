@@ -299,19 +299,19 @@ static void vehicle_gypsy_close(struct vehicle_priv *priv) {
         g_free(priv->path);
 
     if (priv->position)
-        g_free(priv->position);
+        g_object_unref(priv->position);
 
     if (priv->satellite)
-        g_free(priv->satellite);
+        g_object_unref(priv->satellite);
 
     if (priv->course)
-        g_free(priv->course);
+        g_object_unref(priv->course);
 
     if (priv->device)
-        g_free(priv->device);
+        g_object_unref(priv->device);
 
     if (priv->control)
-        g_object_unref(G_OBJECT(priv->control));
+        g_object_unref(priv->control);
 }
 
 /**
@@ -324,6 +324,7 @@ static void vehicle_gypsy_destroy(struct vehicle_priv *priv) {
     vehicle_gypsy_close(priv);
     if (priv->source)
         g_free(priv->source);
+    attr_list_free(priv->attrs);
     g_free(priv);
 }
 

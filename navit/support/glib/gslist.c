@@ -170,6 +170,8 @@ g_slist_alloc (void)
 void
 g_slist_free (GSList *list)
 {
+  if (!list)
+    return;
   g_slice_free_chain (GSList, list, next);
 }
 
