@@ -3,6 +3,7 @@ var structgui__methods =
     [ "add_attr", "structgui__methods.html#a24713081da205a9a9d835b9db5d3a53f", null ],
     [ "add_bookmark", "structgui__methods.html#a8cd63422f5b2fe2ac806b61e273ad1b4", null ],
     [ "datawindow_new", "structgui__methods.html#ace2ce0b104e6fc15b211e098ba7180ba", null ],
+    [ "destroy", "structgui__methods.html#a466654518365adeed39739938a041040", null ],
     [ "disable_suspend", "structgui__methods.html#a3cf8fab98124f6dc0202900de3ec2845", null ],
     [ "get_attr", "structgui__methods.html#a0440569333d8d05fc7500de0fef5aa59", null ],
     [ "menubar_new", "structgui__methods.html#a1726c768b71f21a47c4b53783950a8fd", null ],

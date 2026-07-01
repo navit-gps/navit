@@ -4,6 +4,7 @@ var gui_8c =
     [ "gui_add_attr", "gui_8c.html#a1fea13a149f111aef85b5560181a6ead", null ],
     [ "gui_add_bookmark", "gui_8c.html#a48d15818926583f132a387da2fdab353", null ],
     [ "gui_datawindow_new", "gui_8c.html#aad92d7c59e2b634448b4edc00d3f7302", null ],
+    [ "gui_destroy", "gui_8c.html#a4404f6ff8d61c0de44fe13201e1c4e03", null ],
     [ "gui_disable_suspend", "gui_8c.html#a24beb14a860411b9e85b2d1358a5e9f9", null ],
     [ "gui_get_attr", "gui_8c.html#a5a1522548f59382880f17b0e05887817", null ],
     [ "gui_has_main_loop", "gui_8c.html#a6a01cf1260dbf2efe1e41c888faefb67", null ],

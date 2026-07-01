@@ -13,6 +13,7 @@ var file_8h =
     [ "file_data_read_special", "file_8h.html#af0a8d7044f804abc1bfb9d0bdc625d31", null ],
     [ "file_data_remove", "file_8h.html#a76031922f1260793df921314aedbafa8", null ],
     [ "file_data_write", "file_8h.html#a41a2651b3329580c4af8247ce5b0d3e7", null ],
+    [ "file_deinit", "file_8h.html#a993bb3507115904a16af758bb4088a1f", null ],
     [ "file_destroy", "file_8h.html#a0df2369129cd8812480d2247af8fba03", null ],
     [ "file_exists", "file_8h.html#a497daf06402ad45fba7d8a4390e69945", null ],
     [ "file_fsync", "file_8h.html#a3068215517adb9e5b8fda5b091338e07", null ],

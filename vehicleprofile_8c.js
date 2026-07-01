@@ -7,6 +7,7 @@ var vehicleprofile_8c =
     [ "vehicleprofile_attr_iter_new", "vehicleprofile_8c.html#a629a77e01e855dc0b5d4209ecccd9944", null ],
     [ "vehicleprofile_clear", "vehicleprofile_8c.html#a45ff12391aa01bf38d6ed3577aa915bc", null ],
     [ "vehicleprofile_debug_roadprofile", "vehicleprofile_8c.html#a3a5d0febcc0fd0fe055619b8d8b98842", null ],
+    [ "vehicleprofile_destroy", "vehicleprofile_8c.html#a1b973b891d73278c752ada21a2bc465d", null ],
     [ "vehicleprofile_free_hash", "vehicleprofile_8c.html#a70e6b1fd4f1ccfbf15c82f6550c12390", null ],
     [ "vehicleprofile_free_hash_item", "vehicleprofile_8c.html#a19e77e0ac24dbc8bfa98c340932ac523", null ],
     [ "vehicleprofile_get_attr", "vehicleprofile_8c.html#a6f051e3319e3fcf9b227dcafc66d23a8", null ],

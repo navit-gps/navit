@@ -144,6 +144,8 @@ Functions</h2></td></tr>
 <tr class="separator:a72e970d90a3451580b36ca10a7498de7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ab0d3be6005cd0daa143262c639bfe4" id="r_a5ab0d3be6005cd0daa143262c639bfe4"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicleprofile_8c.html#a5ab0d3be6005cd0daa143262c639bfe4">vehicleprofile_init</a> (struct <a class="el" href="structvehicleprofile.html">vehicleprofile</a> *this_)</td></tr>
 <tr class="separator:a5ab0d3be6005cd0daa143262c639bfe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b973b891d73278c752ada21a2bc465d" id="r_a1b973b891d73278c752ada21a2bc465d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicleprofile_8c.html#a1b973b891d73278c752ada21a2bc465d">vehicleprofile_destroy</a> (struct <a class="el" href="structvehicleprofile.html">vehicleprofile</a> *this_)</td></tr>
+<tr class="separator:a1b973b891d73278c752ada21a2bc465d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -391,6 +393,34 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a1b973b891d73278c752ada21a2bc465d" name="a1b973b891d73278c752ada21a2bc465d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b973b891d73278c752ada21a2bc465d">&#9670;&#160;</a></span>vehicleprofile_destroy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void vehicleprofile_destroy </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structvehicleprofile.html">vehicleprofile</a> *&#160;</td>
+          <td class="paramname"><em>this_</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="structvehicleprofile.html#abbad446c0de35cce19dad679a657b360">vehicleprofile::active_callback</a>, <a class="el" href="attr_8c.html#a703fe486d07cd5fb556899d3b988f052">attr_list_free()</a>, <a class="el" href="structattr.html#abb1262ecd4987c683edc8b1d1dff8f8a">attr::callback</a>, <a class="el" href="callback_8c.html#a00702c701fa5313aace16c0299536dd3">callback_destroy()</a>, <a class="el" href="structvehicleprofile.html#a045592a1186fa58546adce51b3c9c73c">vehicleprofile::name</a>, <a class="el" href="structvehicleprofile.html#ad0dfb3953f45c7e25f9908bd34e5f87c">vehicleprofile::route_depth</a>, <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>, and <a class="el" href="vehicleprofile_8c.html#a70e6b1fd4f1ccfbf15c82f6550c12390">vehicleprofile_free_hash()</a>.</p>
+
+</div>
+</div>
 <a id="a70e6b1fd4f1ccfbf15c82f6550c12390" name="a70e6b1fd4f1ccfbf15c82f6550c12390"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a70e6b1fd4f1ccfbf15c82f6550c12390">&#9670;&#160;</a></span>vehicleprofile_free_hash()</h2>
 
@@ -417,7 +447,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="structvehicleprofile.html#a62f0d40444ae2c3fcf6afb5166586f8b">vehicleprofile::roadprofile_hash</a>, and <a class="el" href="vehicleprofile_8c.html#a19e77e0ac24dbc8bfa98c340932ac523">vehicleprofile_free_hash_item()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="vehicleprofile_8c.html#a45ff12391aa01bf38d6ed3577aa915bc">vehicleprofile_clear()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="vehicleprofile_8c.html#a45ff12391aa01bf38d6ed3577aa915bc">vehicleprofile_clear()</a>, and <a class="el" href="vehicleprofile_8c.html#a1b973b891d73278c752ada21a2bc465d">vehicleprofile_destroy()</a>.</p>
 
 </div>
 </div>
@@ -781,11 +811,12 @@ Variables</h2></td></tr>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#a8dd474abdefe98704cc0858520a3c1d4">object_func_add_attr</a>)<a class="code hl_function" href="vehicleprofile_8c.html#ab03bcd4060b0f1184645978cccfed0cc">vehicleprofile_add_attr</a>,</div>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#a14949a117c8a06880b17d43b735f7897">object_func_remove_attr</a>)<a class="code hl_function" href="vehicleprofile_8c.html#ab7fed4b786cb2d58ba47e45d4d0df29e">vehicleprofile_remove_attr</a>,</div>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#a3371a924ef319f6e38f94fa0331575a4">object_func_init</a>)<a class="code hl_function" href="vehicleprofile_8c.html#a5ab0d3be6005cd0daa143262c639bfe4">vehicleprofile_init</a>,</div>
-<div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#aa85586360f85e1c2cec585478d517d78">object_func_destroy</a>)NULL,</div>
+<div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#aa85586360f85e1c2cec585478d517d78">object_func_destroy</a>)<a class="code hl_function" href="vehicleprofile_8c.html#a1b973b891d73278c752ada21a2bc465d">vehicleprofile_destroy</a>,</div>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#a791b726f50850219d37d7ee4fa16926b">object_func_dup</a>)NULL,</div>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#abbb9ed4adaef7076bdd82f67fca0fcfd">object_func_ref</a>)<a class="code hl_function" href="xmlconfig_8c.html#aaf5d0d4afa6fc99f63e55be0ca05cce8">navit_object_ref</a>,</div>
 <div class="line">    (<a class="code hl_typedef" href="xmlconfig_8h.html#a9930581a52d017db7539640ff6193a84">object_func_unref</a>)<a class="code hl_function" href="xmlconfig_8c.html#a66413cce5610bb877cc25f77803a2e9c">navit_object_unref</a>,</div>
 <div class="line">}</div>
+<div class="ttc" id="avehicleprofile_8c_html_a1b973b891d73278c752ada21a2bc465d"><div class="ttname"><a href="vehicleprofile_8c.html#a1b973b891d73278c752ada21a2bc465d">vehicleprofile_destroy</a></div><div class="ttdeci">static void vehicleprofile_destroy(struct vehicleprofile *this_)</div><div class="ttdef"><b>Definition</b> vehicleprofile.c:274</div></div>
 <div class="ttc" id="avehicleprofile_8c_html_a1d0a9f05b38ea8b39140ab892c3af574"><div class="ttname"><a href="vehicleprofile_8c.html#a1d0a9f05b38ea8b39140ab892c3af574">vehicleprofile_attr_iter_destroy</a></div><div class="ttdeci">void vehicleprofile_attr_iter_destroy(struct attr_iter *iter)</div><div class="ttdef"><b>Definition</b> vehicleprofile.c:226</div></div>
 <div class="ttc" id="avehicleprofile_8c_html_a5ab0d3be6005cd0daa143262c639bfe4"><div class="ttname"><a href="vehicleprofile_8c.html#a5ab0d3be6005cd0daa143262c639bfe4">vehicleprofile_init</a></div><div class="ttdeci">static int vehicleprofile_init(struct vehicleprofile *this_)</div><div class="ttdef"><b>Definition</b> vehicleprofile.c:269</div></div>
 <div class="ttc" id="avehicleprofile_8c_html_a629a77e01e855dc0b5d4209ecccd9944"><div class="ttname"><a href="vehicleprofile_8c.html#a629a77e01e855dc0b5d4209ecccd9944">vehicleprofile_attr_iter_new</a></div><div class="ttdeci">struct attr_iter * vehicleprofile_attr_iter_new(void *unused)</div><div class="ttdef"><b>Definition</b> vehicleprofile.c:222</div></div>
@@ -794,8 +825,8 @@ Variables</h2></td></tr>
 <div class="ttc" id="avehicleprofile_8c_html_ab03bcd4060b0f1184645978cccfed0cc"><div class="ttname"><a href="vehicleprofile_8c.html#ab03bcd4060b0f1184645978cccfed0cc">vehicleprofile_add_attr</a></div><div class="ttdeci">int vehicleprofile_add_attr(struct vehicleprofile *this_, struct attr *attr)</div><div class="ttdef"><b>Definition</b> vehicleprofile.c:241</div></div>
 <div class="ttc" id="avehicleprofile_8c_html_ab7fed4b786cb2d58ba47e45d4d0df29e"><div class="ttname"><a href="vehicleprofile_8c.html#ab7fed4b786cb2d58ba47e45d4d0df29e">vehicleprofile_remove_attr</a></div><div class="ttdeci">int vehicleprofile_remove_attr(struct vehicleprofile *this_, struct attr *attr)</div><div class="ttdef"><b>Definition</b> vehicleprofile.c:256</div></div>
 <div class="ttc" id="avehicleprofile_8c_html_ad81d6f99d22151fb8ba292dd36950c69"><div class="ttname"><a href="vehicleprofile_8c.html#ad81d6f99d22151fb8ba292dd36950c69">vehicleprofile_new</a></div><div class="ttdeci">struct vehicleprofile * vehicleprofile_new(struct attr *parent, struct attr **attrs)</div><div class="ttdef"><b>Definition</b> vehicleprofile.c:204</div></div>
-<div class="ttc" id="axmlconfig_8c_html_a66413cce5610bb877cc25f77803a2e9c"><div class="ttname"><a href="xmlconfig_8c.html#a66413cce5610bb877cc25f77803a2e9c">navit_object_unref</a></div><div class="ttdeci">void * navit_object_unref(struct navit_object *obj)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1290</div></div>
-<div class="ttc" id="axmlconfig_8c_html_aaf5d0d4afa6fc99f63e55be0ca05cce8"><div class="ttname"><a href="xmlconfig_8c.html#aaf5d0d4afa6fc99f63e55be0ca05cce8">navit_object_ref</a></div><div class="ttdeci">struct navit_object * navit_object_ref(struct navit_object *obj)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1284</div></div>
+<div class="ttc" id="axmlconfig_8c_html_a66413cce5610bb877cc25f77803a2e9c"><div class="ttname"><a href="xmlconfig_8c.html#a66413cce5610bb877cc25f77803a2e9c">navit_object_unref</a></div><div class="ttdeci">void * navit_object_unref(struct navit_object *obj)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1300</div></div>
+<div class="ttc" id="axmlconfig_8c_html_aaf5d0d4afa6fc99f63e55be0ca05cce8"><div class="ttname"><a href="xmlconfig_8c.html#aaf5d0d4afa6fc99f63e55be0ca05cce8">navit_object_ref</a></div><div class="ttdeci">struct navit_object * navit_object_ref(struct navit_object *obj)</div><div class="ttdef"><b>Definition</b> xmlconfig.c:1294</div></div>
 <div class="ttc" id="axmlconfig_8h_html_a080f3b0bde669c292c4256ac394b2cbe"><div class="ttname"><a href="xmlconfig_8h.html#a080f3b0bde669c292c4256ac394b2cbe">object_func_iter_new</a></div><div class="ttdeci">struct attr_iter *(* object_func_iter_new)(void *)</div><div class="ttdef"><b>Definition</b> xmlconfig.h:61</div></div>
 <div class="ttc" id="axmlconfig_8h_html_a0c9c8dc41426168af7eea75f43b75c8c"><div class="ttname"><a href="xmlconfig_8h.html#a0c9c8dc41426168af7eea75f43b75c8c">object_func_iter_destroy</a></div><div class="ttdeci">void(* object_func_iter_destroy)(struct attr_iter *)</div><div class="ttdef"><b>Definition</b> xmlconfig.h:62</div></div>
 <div class="ttc" id="axmlconfig_8h_html_a14949a117c8a06880b17d43b735f7897"><div class="ttname"><a href="xmlconfig_8h.html#a14949a117c8a06880b17d43b735f7897">object_func_remove_attr</a></div><div class="ttdeci">int(* object_func_remove_attr)(void *, struct attr *attr)</div><div class="ttdef"><b>Definition</b> xmlconfig.h:65</div></div>

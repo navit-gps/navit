@@ -142,6 +142,8 @@ Functions</h2></td></tr>
 <tr class="separator:ae35ea203f309dddf0f4177a292994a73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3dfa1aabdcb3ee153eddbb91d5c6782" id="r_ad3dfa1aabdcb3ee153eddbb91d5c6782"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="navigation_8h.html#ad3dfa1aabdcb3ee153eddbb91d5c6782">navigation_destroy</a> (struct <a class="el" href="structnavigation.html">navigation</a> *this_)</td></tr>
 <tr class="separator:ad3dfa1aabdcb3ee153eddbb91d5c6782"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b8ae077b27434412173b5639829eb53" id="r_a2b8ae077b27434412173b5639829eb53"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="navigation_8h.html#a2b8ae077b27434412173b5639829eb53">navigation_destroy_map</a> (struct <a class="el" href="structnavigation.html">navigation</a> *this_)</td></tr>
+<tr class="separator:a2b8ae077b27434412173b5639829eb53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a141e6722ebe071a7c2aa48ac2a16e888" id="r_a141e6722ebe071a7c2aa48ac2a16e888"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="navigation_8h.html#a141e6722ebe071a7c2aa48ac2a16e888">navigation_register_callback</a> (struct <a class="el" href="structnavigation.html">navigation</a> *this_, enum <a class="el" href="attr__type__def_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, struct <a class="el" href="structcallback.html">callback</a> *cb)</td></tr>
 <tr class="memdesc:a141e6722ebe071a7c2aa48ac2a16e888"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a new callback function.  <br /></td></tr>
 <tr class="separator:a141e6722ebe071a7c2aa48ac2a16e888"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -310,7 +312,29 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structnavigation.html#afa0345b5205e539024c81033eaaeb315">navigation::callback</a>, <a class="el" href="callback_8c.html#aeaefe3bee8fe757346872e563d1358a4">callback_list_destroy()</a>, <a class="el" href="structnavigation.html#a41dad16592fa0c25fa9f7cef5a5b1c76">navigation::callback_speech</a>, <a class="el" href="structnavigation.html#af3eaaff4e92ef71858608a23ac36be5c">navigation::hash</a>, <a class="el" href="item_8c.html#aa86dd5c691e5d0d7dae98db2f0017018">item_hash_destroy()</a>, and <a class="el" href="navigation_8c.html#a04b8b7a26b66c823ce96854c8d574c87">navigation_flush()</a>.</p>
+<p class="reference">References <a class="el" href="attr_8c.html#a703fe486d07cd5fb556899d3b988f052">attr_list_free()</a>, <a class="el" href="structnavigation.html#afa0345b5205e539024c81033eaaeb315">navigation::callback</a>, <a class="el" href="callback_8c.html#aeaefe3bee8fe757346872e563d1358a4">callback_list_destroy()</a>, <a class="el" href="structnavigation.html#a41dad16592fa0c25fa9f7cef5a5b1c76">navigation::callback_speech</a>, <a class="el" href="structnavigation.html#af3eaaff4e92ef71858608a23ac36be5c">navigation::hash</a>, <a class="el" href="item_8c.html#aa86dd5c691e5d0d7dae98db2f0017018">item_hash_destroy()</a>, and <a class="el" href="navigation_8c.html#a04b8b7a26b66c823ce96854c8d574c87">navigation_flush()</a>.</p>
+
+</div>
+</div>
+<a id="a2b8ae077b27434412173b5639829eb53" name="a2b8ae077b27434412173b5639829eb53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b8ae077b27434412173b5639829eb53">&#9670;&#160;</a></span>navigation_destroy_map()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void navigation_destroy_map </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structnavigation.html">navigation</a> *&#160;</td>
+          <td class="paramname"><em>this_</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="structnavigation.html#a79a1f780fc810880ac3291eb317b050a">navigation::map</a>, and <a class="el" href="map_8c.html#a06f624f20492c8e9e9f3c7eb43b70396">map_destroy()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="group__navit.html#ga573bc5a9c51fc9167ff9bd75f8b3a7eb">navit_destroy()</a>.</p>
 
 </div>
 </div>
@@ -376,7 +400,7 @@ Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="plugin__def_8h.html#a1e9137a65e787557962d1ff72828fa16">attrs</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="destination_8c.html#aad98f5b9c75ecce7814b8b3cd323232c">description()</a>, <a class="el" href="structnavigation.html#a79a1f780fc810880ac3291eb317b050a">navigation::map</a>, <a class="el" href="map_8c.html#a397a9ad42674f121ab88aaafb77a489b">map_new()</a>, <a class="el" href="structattr.html#a29f2bd8e2bb08429d7f319414c600bfc">attr::navigation</a>, and <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a256ca02bb66cea534b532813ec454cf8">gui_internal_populate_route_table()</a>, <a class="el" href="binding_2python_2navigation_8c.html#a9edb75427f922bf8ed82fe1abc4f21ac">navigation_get_map_py()</a>, <a class="el" href="group__navit.html#ga31c95e8cc4ef3f3eaf9719c755505582">navit_init()</a>, <a class="el" href="group__navit.html#gabba2aaa70e0a245d0bf4d84d0884e374">navit_speak()</a>, <a class="el" href="group__navit.html#ga9840d0a2ac5a308e1249fdda78e87dc0">navit_window_roadbook_update()</a>, <a class="el" href="osd__core_8c.html#a0c9ad7b4a3685122f1d9c384df3b9b1a">osd_nav_next_turn_draw()</a>, <a class="el" href="osd__core_8c.html#ad1b3aad9b6f3d02df61bea4c5759ebb4">osd_text_draw()</a>, <a class="el" href="binding__dbus_8c.html#a048f93e084c152c01ee24892e9c285b8">request_navit_route_export_geojson()</a>, <a class="el" href="binding__dbus_8c.html#abfa39940de8d6661f0e696a9a5d4f922">request_navit_route_export_gpx()</a>, and <a class="el" href="gui__gtk__statusbar_8c.html#a798ad4510fcf2ee073cf71d5b859a549">statusbar_route_update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="gui__internal_8c.html#a256ca02bb66cea534b532813ec454cf8">gui_internal_populate_route_table()</a>, <a class="el" href="binding_2python_2navigation_8c.html#a9edb75427f922bf8ed82fe1abc4f21ac">navigation_get_map_py()</a>, <a class="el" href="group__navit.html#ga90405101a56f03608063caeed473e216">navit_destroy_mapset_maps()</a>, <a class="el" href="group__navit.html#ga31c95e8cc4ef3f3eaf9719c755505582">navit_init()</a>, <a class="el" href="group__navit.html#gabba2aaa70e0a245d0bf4d84d0884e374">navit_speak()</a>, <a class="el" href="group__navit.html#ga9840d0a2ac5a308e1249fdda78e87dc0">navit_window_roadbook_update()</a>, <a class="el" href="osd__core_8c.html#a0c9ad7b4a3685122f1d9c384df3b9b1a">osd_nav_next_turn_draw()</a>, <a class="el" href="osd__core_8c.html#ad1b3aad9b6f3d02df61bea4c5759ebb4">osd_text_draw()</a>, <a class="el" href="binding__dbus_8c.html#a048f93e084c152c01ee24892e9c285b8">request_navit_route_export_geojson()</a>, <a class="el" href="binding__dbus_8c.html#abfa39940de8d6661f0e696a9a5d4f922">request_navit_route_export_gpx()</a>, and <a class="el" href="gui__gtk__statusbar_8c.html#a798ad4510fcf2ee073cf71d5b859a549">statusbar_route_update()</a>.</p>
 
 </div>
 </div>

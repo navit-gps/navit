@@ -104,6 +104,8 @@ Functions</h2></td></tr>
 <tr class="separator:a9037cfb1bfd7e7f7c42d3e07566efd92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab23d2d75bb20cb4bb8ff4a2b11d7617e" id="r_ab23d2d75bb20cb4bb8ff4a2b11d7617e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="config___8h.html#ab23d2d75bb20cb4bb8ff4a2b11d7617e">config_destroy</a> (struct <a class="el" href="structconfig.html">config</a> *this_)</td></tr>
 <tr class="separator:ab23d2d75bb20cb4bb8ff4a2b11d7617e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d8f725b176c5646ac6b1d6d8669a95c" id="r_a5d8f725b176c5646ac6b1d6d8669a95c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="config___8h.html#a5d8f725b176c5646ac6b1d6d8669a95c">config_clear_attrs</a> (void)</td></tr>
+<tr class="separator:a5d8f725b176c5646ac6b1d6d8669a95c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8094691848363321f9f7dfe55564cc05" id="r_a8094691848363321f9f7dfe55564cc05"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="config___8h.html#a8094691848363321f9f7dfe55564cc05">config_get_attr</a> (struct <a class="el" href="structconfig.html">config</a> *this_, enum <a class="el" href="attr__type__def_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>, struct <a class="el" href="structattr__iter.html">attr_iter</a> *iter)</td></tr>
 <tr class="separator:a8094691848363321f9f7dfe55564cc05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:accfe09d82a0aca9c394fb3eb0127554e" id="r_accfe09d82a0aca9c394fb3eb0127554e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="config___8h.html#accfe09d82a0aca9c394fb3eb0127554e">config_set_attr</a> (struct <a class="el" href="structconfig.html">config</a> *this_, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
@@ -159,7 +161,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="config___8c.html#a9f842f8dc3941ac6ee4893c131fa978c">config_new_int()</a>, and <a class="el" href="xmlconfig_8c.html#a7297412d2fdc39b25ff0350d72998558">navit_object_add_attr()</a>.</p>
+<p class="reference">References <a class="el" href="structattr.html#a01ceae1640de61b230328298671db012">attr::config</a>, <a class="el" href="config___8c.html#a9f842f8dc3941ac6ee4893c131fa978c">config_new_int()</a>, and <a class="el" href="xmlconfig_8c.html#a7297412d2fdc39b25ff0350d72998558">navit_object_add_attr()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="binding__dbus_8c.html#a1eaae939034896b436dffbf5e93c0da1">plugin_init()</a>.</p>
 
@@ -209,6 +211,26 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a5d8f725b176c5646ac6b1d6d8669a95c" name="a5d8f725b176c5646ac6b1d6d8669a95c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d8f725b176c5646ac6b1d6d8669a95c">&#9670;&#160;</a></span>config_clear_attrs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void config_clear_attrs </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="start__real_8c.html#ade1addd7471c6aa824c4f9fca7b2abba">main_real()</a>.</p>
+
+</div>
+</div>
 <a id="ab23d2d75bb20cb4bb8ff4a2b11d7617e" name="ab23d2d75bb20cb4bb8ff4a2b11d7617e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab23d2d75bb20cb4bb8ff4a2b11d7617e">&#9670;&#160;</a></span>config_destroy()</h2>
 
@@ -225,9 +247,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="attr_8c.html#a703fe486d07cd5fb556899d3b988f052">attr_list_free()</a>, and <a class="el" href="garmin__img_8c.html#a2ecc49066a3a7cc32866fdf53805dd1d">exit</a>.</p>
+<p class="reference">References <a class="el" href="attr_8c.html#a703fe486d07cd5fb556899d3b988f052">attr_list_free()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="config___8c.html#abcd5a6135b500ce018b5e56d2829967d">config_new()</a>, and <a class="el" href="config___8c.html#a18363ec6c557c346dd08a7525dc7331d">config_terminate()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="config___8c.html#abcd5a6135b500ce018b5e56d2829967d">config_new()</a>, and <a class="el" href="start__real_8c.html#ade1addd7471c6aa824c4f9fca7b2abba">main_real()</a>.</p>
 
 </div>
 </div>
@@ -247,7 +269,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="android_8c.html#a0fb15b4ce3ffd0c45b348d56045a63c2">Java_org_navitproject_navit_NavitAddressSearchActivity_callbackStartAddressSearch()</a>, <a class="el" href="android_8c.html#a2bbde9803ab52db3e0c69e05d7a7849d">Java_org_navitproject_navit_NavitCallbackHandler_callbackCmdChannel()</a>, <a class="el" href="android_8c.html#ab4eb36dc78a83609e5698a8472278da1">Java_org_navitproject_navit_NavitCallbackHandler_callbackMessageChannel()</a>, <a class="el" href="android_8c.html#a83086c7ef733cbac77c0fa77aaf44c7f">Java_org_navitproject_navit_NavitGraphics_getAllCountries()</a>, <a class="el" href="android_8c.html#ad353ed3cb130cacd6bafbd577a8737e7">Java_org_navitproject_navit_NavitGraphics_getCoordForPoint()</a>, and <a class="el" href="android_8c.html#ad692882d62681538674602cb8632bf17">Java_org_navitproject_navit_NavitGraphics_getDefaultCountry()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="android_8c.html#a0fb15b4ce3ffd0c45b348d56045a63c2">Java_org_navitproject_navit_NavitAddressSearchActivity_callbackStartAddressSearch()</a>, <a class="el" href="android_8c.html#a2bbde9803ab52db3e0c69e05d7a7849d">Java_org_navitproject_navit_NavitCallbackHandler_callbackCmdChannel()</a>, <a class="el" href="android_8c.html#ab4eb36dc78a83609e5698a8472278da1">Java_org_navitproject_navit_NavitCallbackHandler_callbackMessageChannel()</a>, <a class="el" href="android_8c.html#a83086c7ef733cbac77c0fa77aaf44c7f">Java_org_navitproject_navit_NavitGraphics_getAllCountries()</a>, <a class="el" href="android_8c.html#ad353ed3cb130cacd6bafbd577a8737e7">Java_org_navitproject_navit_NavitGraphics_getCoordForPoint()</a>, <a class="el" href="android_8c.html#ad692882d62681538674602cb8632bf17">Java_org_navitproject_navit_NavitGraphics_getDefaultCountry()</a>, and <a class="el" href="start__real_8c.html#ade1addd7471c6aa824c4f9fca7b2abba">main_real()</a>.</p>
 
 </div>
 </div>
@@ -352,8 +374,6 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="xmlconfig_8c.html#a0b92fc24021de74b6f392713a6990853">navit_object_remove_attr()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="gui__internal__command_8c.html#aa2fa227b0e3e36159493d4b6412be1b5">gui_internal_cmd2_quit()</a>, and <a class="el" href="binding__dbus_8c.html#a9d9fce6034800153b4f7f4e3a9d6bbac">request_navit_quit()</a>.</p>
 
 </div>
 </div>

@@ -3,6 +3,7 @@ var cache_8c =
     [ "cache_entry", "structcache__entry.html", "structcache__entry" ],
     [ "cache_entry_list", "structcache__entry__list.html", "structcache__entry__list" ],
     [ "cache", "structcache.html", "structcache" ],
+    [ "cache_destroy", "cache_8c.html#ac7a98b430a692a1d36da2923cae0833d", null ],
     [ "cache_dump", "cache_8c.html#aa83882c590eeb96f220e5a3be9b218a4", null ],
     [ "cache_entry_destroy", "cache_8c.html#a40ee1f3d58f894567aa201eb2f58e629", null ],
     [ "cache_entry_dump", "cache_8c.html#ac18a0003ff56b7b69c2cb003d6f12630", null ],

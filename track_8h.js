@@ -2,6 +2,7 @@ var track_8h =
 [
     [ "tracking_add_attr", "track_8h.html#a421f3130a5e07e262c3e76f473f14d9f", null ],
     [ "tracking_destroy", "track_8h.html#a267c0b490d6f0f0f87c4f48270b7ad49", null ],
+    [ "tracking_destroy_map", "track_8h.html#a15d86e51317f23107bf15f83c34b800e", null ],
     [ "tracking_flush", "track_8h.html#a0a23a1b07e73d8fa54862108f4194ca3", null ],
     [ "tracking_get_angle", "track_8h.html#a0264f5632bb8ae62e2cc67393109a1e2", null ],
     [ "tracking_get_attr", "track_8h.html#a947477c7269750bf7d88207ad972e8e5", null ],

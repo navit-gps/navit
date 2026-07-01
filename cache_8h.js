@@ -1,5 +1,6 @@
 var cache_8h =
 [
+    [ "cache_destroy", "cache_8h.html#ac7a98b430a692a1d36da2923cae0833d", null ],
     [ "cache_dump", "cache_8h.html#aa83882c590eeb96f220e5a3be9b218a4", null ],
     [ "cache_entry_destroy", "cache_8h.html#a40ee1f3d58f894567aa201eb2f58e629", null ],
     [ "cache_entry_new", "cache_8h.html#a9dbeac94c112d353d7553758dc884398", null ],

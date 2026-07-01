@@ -1,5 +1,14 @@
 var NAVTREEINDEX10 =
 {
+"font__freetype_8c.html#ab412c8d8a12a249c86117bd477d7a786":[3,0,2,0,0,9],
+"font__freetype_8c.html#ab4c3ba6a3ca91e710501bb96de5b775f":[3,0,2,0,0,19],
+"font__freetype_8c.html#ab4d76021030859eecd1bfe3cbf803551":[3,0,2,0,0,22],
+"font__freetype_8c.html#ab4f43f98d68d91cc6f13b99f7482e841":[3,0,2,0,0,4],
+"font__freetype_8c.html#abbe5149a3e3a0775661b68e3eba3293d":[3,0,2,0,0,10],
+"font__freetype_8c.html#aceb013fe8197cf382d5d66cf84451d83":[3,0,2,0,0,26],
+"font__freetype_8c.html#ad5a350ba30d102b3669f0fee6fb8fc4d":[3,0,2,0,0,5],
+"font__freetype_8c.html#adf2b252c802e3e338486eeb568f9f88b":[3,0,2,0,0,6],
+"font__freetype_8c.html#aff84206c5843ec0d30b642fc4fb68008":[3,0,2,0,0,27],
 "font__freetype_8h.html":[3,0,2,0,1],
 "font__freetype_8h_source.html":[3,0,2,0,1],
 "functions.html":[2,2,0],
@@ -57,8 +66,8 @@ var NAVTREEINDEX10 =
 "functions_t.html":[2,2,0,22],
 "functions_u.html":[2,2,0,23],
 "functions_v.html":[2,2,0,24],
-"functions_vars.html":[2,2,2,0],
 "functions_vars.html":[2,2,2],
+"functions_vars.html":[2,2,2,0],
 "functions_vars__.html":[2,2,2,1],
 "functions_vars_a.html":[2,2,2,2],
 "functions_vars_b.html":[2,2,2,3],
@@ -240,14 +249,5 @@ var NAVTREEINDEX10 =
 "garmin__img_8c.html#aa0474bcbed2aeb3b5d52b291df5dfeb2":[3,0,6,4,0,20],
 "garmin__img_8c.html#aa551afa92e4f5ffeea763315a754cb48":[3,0,6,4,0,128],
 "garmin__img_8c.html#aa83189c5c8075478b25cd19327cc0049":[3,0,6,4,0,36],
-"garmin__img_8c.html#aa8e4172ede7827e837ac528eae04c497":[3,0,6,4,0,86],
-"garmin__img_8c.html#aad667ffdb9449b95cf1bd1bf07160879":[3,0,6,4,0,108],
-"garmin__img_8c.html#ab1c7031731896d25c52c65fb512e740f":[3,0,6,4,0,124],
-"garmin__img_8c.html#ab5e55c8484d99c1cc55dfbd59902b09b":[3,0,6,4,0,111],
-"garmin__img_8c.html#ab6250f82286bfdbb1cbb15f26876d258":[3,0,6,4,0,64],
-"garmin__img_8c.html#ab73ef06961be00b68af099e9f1210d74":[3,0,6,4,0,65],
-"garmin__img_8c.html#ab840e4291cac2007b3daba2c44f1ee19":[3,0,6,4,0,68],
-"garmin__img_8c.html#abe2867ed103aed9cf25f8090c3db553f":[3,0,6,4,0,118],
-"garmin__img_8c.html#abe9831c764b0546872acd765a34d9ddf":[3,0,6,4,0,69],
-"garmin__img_8c.html#abf3d30798573437d324f6e867b748ac8":[3,0,6,4,0,98]
+"garmin__img_8c.html#aa8e4172ede7827e837ac528eae04c497":[3,0,6,4,0,86]
 };

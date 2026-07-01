@@ -15,6 +15,7 @@ var track_8c =
     [ "tracking_angle_delta", "track_8c.html#a6b90fc54725842a86f06eb666e3923e6", null ],
     [ "tracking_angle_diff", "track_8c.html#abbacd52706af77bac06fe04a81ffc0a4", null ],
     [ "tracking_destroy", "track_8c.html#a267c0b490d6f0f0f87c4f48270b7ad49", null ],
+    [ "tracking_destroy_map", "track_8c.html#a15d86e51317f23107bf15f83c34b800e", null ],
     [ "tracking_doupdate_lines", "track_8c.html#a96845cb46a48a91280e9eba32af32b9d", null ],
     [ "tracking_flush", "track_8c.html#a0a23a1b07e73d8fa54862108f4194ca3", null ],
     [ "tracking_get_angle", "track_8c.html#a0264f5632bb8ae62e2cc67393109a1e2", null ],

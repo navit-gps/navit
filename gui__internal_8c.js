@@ -51,6 +51,7 @@ var gui__internal_8c =
     [ "gui_internal_coordinate_parse", "gui__internal_8c.html#a0eb6bc4874e7ab710b26dc29104bd60c", null ],
     [ "gui_internal_dbus_signal", "gui__internal_8c.html#a89fda47eb3664b3a0194006059432f87", null ],
     [ "gui_internal_deferred_show_coord_actions", "gui__internal_8c.html#ad4563459cca1dbdb72dd52b860411ff9", null ],
+    [ "gui_internal_destroy", "gui__internal_8c.html#a427795f4ed70f6bdd75eecb6901d83e3", null ],
     [ "gui_internal_disable_suspend", "gui__internal_8c.html#a8a03d72c29bf13bf8ff111c80bcc3345", null ],
     [ "gui_internal_enter", "gui__internal_8c.html#a53b6431af49ec8203c72046e0512fec4", null ],
     [ "gui_internal_enter_setup", "gui__internal_8c.html#a8d3b3178c593c276855a5c1e1325d0f8", null ],

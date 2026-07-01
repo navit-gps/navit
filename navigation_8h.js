@@ -16,6 +16,7 @@ var navigation_8h =
     ] ],
     [ "nav_status_to_text", "navigation_8h.html#ae47ae3b7b6f9cdd586a407bdd68242a7", null ],
     [ "navigation_destroy", "navigation_8h.html#ad3dfa1aabdcb3ee153eddbb91d5c6782", null ],
+    [ "navigation_destroy_map", "navigation_8h.html#a2b8ae077b27434412173b5639829eb53", null ],
     [ "navigation_get_attr", "navigation_8h.html#af52411918a519cbfb8ee3dd4be14b178", null ],
     [ "navigation_get_map", "navigation_8h.html#a9520bdb482223ec077826ca0ee35ead2", null ],
     [ "navigation_init", "navigation_8h.html#a0365f749e045fe22436cb4418a7a96e4", null ],

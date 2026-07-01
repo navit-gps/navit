@@ -3,6 +3,7 @@ var osm__relations_8c =
     [ "relations", "structrelations.html", "structrelations" ],
     [ "relations_func", "structrelations__func.html", "structrelations__func" ],
     [ "relations_member", "structrelations__member.html", "structrelations__member" ],
+    [ "relations_add_func", "osm__relations_8c.html#a85852c414d57ae58be28536353c34a4d", null ],
     [ "relations_add_relation_default_entry", "osm__relations_8c.html#a64f4b76d6c0c19dcb155fdbc863a2fea", null ],
     [ "relations_add_relation_member_entry", "osm__relations_8c.html#a1c57b0d6bc2021c47bbbc29186e7a237", null ],
     [ "relations_destroy", "osm__relations_8c.html#a1091bf6b11d70013b1353d417907262e", null ],

@@ -147,6 +147,7 @@ var maptool_8h =
     [ "read_item_range", "maptool_8h.html#a4dbc2a0fc2d866a62a5e45b067f2d7f2", null ],
     [ "read_node_item", "maptool_8h.html#add420d8411da7c2b80c4c9d62ce67bfe", null ],
     [ "ref_ways", "maptool_8h.html#a27530aae490e62dfa4a0c400e9aec940", null ],
+    [ "relations_add_func", "maptool_8h.html#a85852c414d57ae58be28536353c34a4d", null ],
     [ "relations_add_relation_default_entry", "maptool_8h.html#a64f4b76d6c0c19dcb155fdbc863a2fea", null ],
     [ "relations_add_relation_member_entry", "maptool_8h.html#a1c57b0d6bc2021c47bbbc29186e7a237", null ],
     [ "relations_destroy", "maptool_8h.html#a00aad0f42a95c877201a8a33f5dcfc7d", null ],

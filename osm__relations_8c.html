@@ -121,6 +121,8 @@ Functions</h2></td></tr>
 <tr class="separator:a94aca7b954de10544e14a3c91bdd7e1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f924f5c4262596cd4bb97fe778e6d2c" id="r_a5f924f5c4262596cd4bb97fe778e6d2c"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structrelations__func.html">relations_func</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__relations_8c.html#a5f924f5c4262596cd4bb97fe778e6d2c">relations_func_new</a> (void(*func)(void *func_priv, void *relation_priv, struct <a class="el" href="structitem__bin.html">item_bin</a> *member, void *member_priv), void *func_priv)</td></tr>
 <tr class="separator:a5f924f5c4262596cd4bb97fe778e6d2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85852c414d57ae58be28536353c34a4d" id="r_a85852c414d57ae58be28536353c34a4d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__relations_8c.html#a85852c414d57ae58be28536353c34a4d">relations_add_func</a> (struct <a class="el" href="structrelations.html">relations</a> *rel, struct <a class="el" href="structrelations__func.html">relations_func</a> *func)</td></tr>
+<tr class="separator:a85852c414d57ae58be28536353c34a4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c9077ceeb969c042c208d9036951d5f" id="r_a2c9077ceeb969c042c208d9036951d5f"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structrelations__member.html">relations_member</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__relations_8c.html#a2c9077ceeb969c042c208d9036951d5f">relations_member_new</a> (struct <a class="el" href="structrelations__func.html">relations_func</a> *func, void *relation_priv, void *member_priv, <a class="el" href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a> id)</td></tr>
 <tr class="separator:a2c9077ceeb969c042c208d9036951d5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c57b0d6bc2021c47bbbc29186e7a237" id="r_a1c57b0d6bc2021c47bbbc29186e7a237"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="osm__relations_8c.html#a1c57b0d6bc2021c47bbbc29186e7a237">relations_add_relation_member_entry</a> (struct <a class="el" href="structrelations.html">relations</a> *rel, struct <a class="el" href="structrelations__func.html">relations_func</a> *func, void *relation_priv, void *member_priv, enum <a class="el" href="maptool_8h.html#a82df39d177b32b96c9685089921baa4a">relation_member_type</a> <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, <a class="el" href="maptool_8h.html#abe8b7806b2d8aaf7604b547999ebc45a">osmid</a> id)</td></tr>
@@ -137,6 +139,38 @@ Functions</h2></td></tr>
 <tr class="separator:a1091bf6b11d70013b1353d417907262e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a85852c414d57ae58be28536353c34a4d" name="a85852c414d57ae58be28536353c34a4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85852c414d57ae58be28536353c34a4d">&#9670;&#160;</a></span>relations_add_func()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void relations_add_func </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structrelations.html">relations</a> *&#160;</td>
+          <td class="paramname"><em>rel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structrelations__func.html">relations_func</a> *&#160;</td>
+          <td class="paramname"><em>func</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="structrelations__func.html#a5ef804d56462c7e94fe9b8e5da7ff661">relations_func::func</a>, and <a class="el" href="structrelations.html#ae9196f19e044ccef6bd78c805aeac6af">relations::funcs</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="osm_8c.html#a250b01a8963f4ca0127a95867a05f733">process_associated_streets_setup()</a>, <a class="el" href="boundaries_8c.html#afed8ef5dac6e9224aab9911a10504e84">process_boundaries_setup()</a>, <a class="el" href="osm_8c.html#aa3f820c336ce3c6775f4f5b5430a2f20">process_house_number_interpolations_setup()</a>, <a class="el" href="osm_8c.html#aabe36fe716957b221e33f793f3a2f768">process_multipolygons_setup()</a>, and <a class="el" href="osm_8c.html#a53e525e505526700290708dcf7caaa81">process_turn_restrictions_setup()</a>.</p>
+
+</div>
+</div>
 <a id="a64f4b76d6c0c19dcb155fdbc863a2fea" name="a64f4b76d6c0c19dcb155fdbc863a2fea"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a64f4b76d6c0c19dcb155fdbc863a2fea">&#9670;&#160;</a></span>relations_add_relation_default_entry()</h2>
 
@@ -241,7 +275,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structrelations.html#ab03a109c1dcf2f8d0b958de9697548d1">relations::default_members</a>, <a class="el" href="structrelations.html#a097bd66b09211b9a19240f10f5ba306c">relations::member_hash</a>, and <a class="el" href="osm__relations_8c.html#a440883dd69ddd72c9cce86788e49ab35">relations_destroy_func()</a>.</p>
+<p class="reference">References <a class="el" href="structrelations.html#ab03a109c1dcf2f8d0b958de9697548d1">relations::default_members</a>, <a class="el" href="structrelations.html#ae9196f19e044ccef6bd78c805aeac6af">relations::funcs</a>, <a class="el" href="glib__compat_8c.html#ace92504270cab23bc2ecec535e67c9f3">g_list_free_full()</a>, <a class="el" href="structrelations.html#a097bd66b09211b9a19240f10f5ba306c">relations::member_hash</a>, and <a class="el" href="osm__relations_8c.html#a440883dd69ddd72c9cce86788e49ab35">relations_destroy_func()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="maptool_8h.html#a7202c6f323289fda53d87bc84061d2a2">process_associated_streets()</a>, <a class="el" href="boundaries_8c.html#a2223eccf561b37af42749e9ec9ec4fb1">process_boundaries()</a>, <a class="el" href="maptool_8h.html#a9d91b709ccd9b8b7a220046966c9ebbd">process_house_number_interpolations()</a>, <a class="el" href="maptool_8h.html#a465f04a52855b018d626356754e2ed7f">process_multipolygons()</a>, and <a class="el" href="maptool_8h.html#a28d8c95e9b24f364eaf3e0918cbd620a">process_turn_restrictions()</a>.</p>
 

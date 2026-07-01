@@ -34,6 +34,7 @@ var attr_8c =
     [ "attr_to_text", "attr_8c.html#a0f28ebe3254c5862123c07e8207affe3", null ],
     [ "attr_to_text_ext", "attr_8c.html#a6f2161923aa1b6761384e2f09467aae5", null ],
     [ "attr_type_begin", "attr_8c.html#ac64bd30dd261e054d18af84cee82ea57", null ],
+    [ "attr_type_is_inline", "attr_8c.html#a79771ebf5d2aa5b4cb111e9813a67996", null ],
     [ "attr_types_contains", "attr_8c.html#a143c10e01d0d45f9f7f5579a3f0315d5", null ],
     [ "attr_types_contains_default", "attr_8c.html#a5f45fa0e9bf17325b3000c79f149fb40", null ],
     [ "flags_to_text", "attr_8c.html#a8bfaf002a0a57dc3b0b0e19831665078", null ],
