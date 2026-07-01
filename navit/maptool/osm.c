@@ -42,9 +42,16 @@
 #include "glib.h"
 #include "item.h"
 #include "item_type_def.h"
+#include "linguistics.h"
+#include "profile.h"
 #include "maptool.h"
 #include "projection.h"
 #include "transform.h"
+#include "types.h"
+#include <ctype.h>
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
 
 struct relations;
 struct relations_func;
@@ -117,6 +124,8 @@ enum attr_strings_type {
     attr_string_street_destination_backward,
     attr_string_house_number,
     attr_string_label,
+    attr_string_label_de,
+    attr_string_label_en,
     attr_string_postal,
     attr_string_population,
     attr_string_county_name,
@@ -1204,7 +1213,11 @@ void osm_add_tag(char *k, char *v) {
     }
     if (!g_strcmp0(k, "note"))
         level = 5;
-    if (!g_strcmp0(k, "name")) {
+    if (g_str_has_prefix(k, "name:")) {
+        if (g_str_has_suffix(k, "de"))
+            attr_strings_save(attr_string_label, v);
+        level = 5;
+    } else if (!g_strcmp0(k, "name")) {
         attr_strings_save(attr_string_label, v);
         level = 5;
     } else if (!g_strcmp0(k, "description")) {
@@ -1706,6 +1719,8 @@ static inline void osm_end_relation_multipolygon(struct maptool_osm *osm) {
             }
             // fprintf(stderr, "relation id "OSMID_FMT": got %d types\n", osmid_attr_value, count);
             item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
+            item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label_de]);
+            item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label_en]);
             for (a = 0; a < count; a++) {
                 /*Don't write out multipolygons that will result in unknown types if -n is given.
                  *So we don't process useless multipolygons. May save a lot of time.
