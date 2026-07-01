@@ -4259,8 +4259,8 @@ void remove_countryfiles(void) {
         }
         for (j = 0; j <= co->nparts; j++) {
             char partsuffix[32];
-            sprintf(filename, "%s/country_%d_p", tempfile_obtain_prefix(), co->countryid);
             sprintf(partsuffix, "%d", j);
+            sprintf(filename, "country_%d_p", co->countryid);
             tempfile_unlink(partsuffix, filename);
         }
     }
