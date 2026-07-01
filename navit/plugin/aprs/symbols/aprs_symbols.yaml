@@ -1,0 +1,738 @@
+---
+symbols:
+  -
+    code: '/!'
+    description: 'Police station'
+    tocall: BB
+  -
+    code: "/\""
+    tocall: BC
+    unused: 1
+  -
+    code: '/#'
+    description: Digipeater
+    tocall: BD
+  -
+    code: '/$'
+    description: Telephone
+    tocall: BE
+  -
+    code: '/%'
+    description: 'DX cluster'
+    tocall: BF
+  -
+    code: '/&'
+    description: 'HF gateway'
+    tocall: BG
+  -
+    code: "/'"
+    description: 'Small aircraft'
+    tocall: BH
+  -
+    code: '/('
+    description: 'Mobile satellite station'
+    tocall: BI
+  -
+    code: '/)'
+    description: 'Wheelchair, handicapped'
+    tocall: BJ
+  -
+    code: '/*'
+    description: Snowmobile
+    tocall: BK
+  -
+    code: '/+'
+    description: 'Red Cross'
+    tocall: BL
+  -
+    code: '/,'
+    description: 'Boy Scouts'
+    tocall: BM
+  -
+    code: '/-'
+    description: House
+    tocall: BN
+  -
+    code: '/.'
+    description: 'Red X'
+    tocall: BO
+  -
+    code: '//'
+    description: 'Red dot'
+    tocall: BP
+  -
+    code: '/0'
+    description: 'Numbered circle: 0'
+    tocall: P0
+  -
+    code: '/1'
+    description: 'Numbered circle: 1'
+    tocall: P1
+  -
+    code: '/2'
+    description: 'Numbered circle: 2'
+    tocall: P2
+  -
+    code: '/3'
+    description: 'Numbered circle: 3'
+    tocall: P3
+  -
+    code: '/4'
+    description: 'Numbered circle: 4'
+    tocall: P4
+  -
+    code: '/5'
+    description: 'Numbered circle: 5'
+    tocall: P5
+  -
+    code: '/6'
+    description: 'Numbered circle: 6'
+    tocall: P6
+  -
+    code: '/7'
+    description: 'Numbered circle: 7'
+    tocall: P7
+  -
+    code: '/8'
+    description: 'Numbered circle: 8'
+    tocall: P8
+  -
+    code: '/9'
+    description: 'Numbered circle: 9'
+    tocall: P9
+  -
+    code: '/:'
+    description: Fire
+    tocall: MR
+  -
+    code: '/;'
+    description: 'Campground, tent'
+    tocall: MS
+  -
+    code: '/<'
+    description: Motorcycle
+    tocall: MT
+  -
+    code: '/='
+    description: 'Railroad engine'
+    tocall: MU
+  -
+    code: '/>'
+    description: Car
+    tocall: MV
+  -
+    code: '/?'
+    description: 'File server'
+    tocall: MW
+  -
+    code: '/@'
+    description: 'Hurricane predicted path'
+    tocall: MX
+  -
+    code: '/A'
+    description: 'Aid station'
+    tocall: PA
+  -
+    code: '/B'
+    description: BBS
+    tocall: PB
+  -
+    code: '/C'
+    description: Canoe
+    tocall: PC
+  -
+    code: '/D'
+    tocall: PD
+    unused: 1
+  -
+    code: '/E'
+    description: Eyeball
+    tocall: PE
+  -
+    code: '/F'
+    description: 'Farm vehicle, tractor'
+    tocall: PF
+  -
+    code: '/G'
+    description: 'Grid square, 3 by 3'
+    tocall: PG
+  -
+    code: '/H'
+    description: Hotel
+    tocall: PH
+  -
+    code: '/I'
+    description: 'TCP/IP network station'
+    tocall: PI
+  -
+    code: '/J'
+    tocall: PJ
+    unused: 1
+  -
+    code: '/K'
+    description: School
+    tocall: PK
+  -
+    code: '/L'
+    description: 'PC user'
+    tocall: PL
+  -
+    code: '/M'
+    description: 'Mac apple'
+    tocall: PM
+  -
+    code: '/N'
+    description: 'NTS station'
+    tocall: PN
+  -
+    code: '/O'
+    description: Balloon
+    tocall: PO
+  -
+    code: '/P'
+    description: 'Police car'
+    tocall: PP
+  -
+    code: '/Q'
+    tocall: PQ
+    unused: 1
+  -
+    code: '/R'
+    description: 'Recreational vehicle'
+    tocall: PR
+  -
+    code: '/S'
+    description: 'Space Shuttle'
+    tocall: PS
+  -
+    code: '/T'
+    description: SSTV
+    tocall: PT
+  -
+    code: '/U'
+    description: Bus
+    tocall: PU
+  -
+    code: '/V'
+    description: 'ATV, Amateur Television'
+    tocall: PV
+  -
+    code: '/W'
+    description: 'Weather service site'
+    tocall: PW
+  -
+    code: '/X'
+    description: Helicopter
+    tocall: PX
+  -
+    code: '/Y'
+    description: Sailboat
+    tocall: PY
+  -
+    code: '/Z'
+    description: 'Windows flag'
+    tocall: PZ
+  -
+    code: '/['
+    description: Human
+    tocall: HS
+  -
+    code: '/\'
+    description: 'DF triangle'
+    tocall: HT
+  -
+    code: '/]'
+    description: 'Mailbox, post office'
+    tocall: HU
+  -
+    code: '/^'
+    description: 'Large aircraft'
+    tocall: HV
+  -
+    code: '/_'
+    description: 'Weather station'
+    tocall: HW
+  -
+    code: '/`'
+    description: 'Satellite dish antenna'
+    tocall: HX
+  -
+    code: '/a'
+    description: Ambulance
+    tocall: LA
+  -
+    code: '/b'
+    description: Bicycle
+    tocall: LB
+  -
+    code: '/c'
+    description: 'Incident command post'
+    tocall: LC
+  -
+    code: '/d'
+    description: 'Fire station'
+    tocall: LD
+  -
+    code: '/e'
+    description: 'Horse, equestrian'
+    tocall: LE
+  -
+    code: '/f'
+    description: 'Fire truck'
+    tocall: LF
+  -
+    code: '/g'
+    description: Glider
+    tocall: LG
+  -
+    code: '/h'
+    description: Hospital
+    tocall: LH
+  -
+    code: '/i'
+    description: 'IOTA, islands on the air'
+    tocall: LI
+  -
+    code: '/j'
+    description: Jeep
+    tocall: LJ
+  -
+    code: '/k'
+    description: Truck
+    tocall: LK
+  -
+    code: '/l'
+    description: Laptop
+    tocall: LL
+  -
+    code: '/m'
+    description: 'Mic-E repeater'
+    tocall: LM
+  -
+    code: '/n'
+    description: 'Node, black bulls-eye'
+    tocall: LN
+  -
+    code: '/o'
+    description: 'Emergency operations center'
+    tocall: LO
+  -
+    code: '/p'
+    description: Dog
+    tocall: LP
+  -
+    code: '/q'
+    description: 'Grid square, 2 by 2'
+    tocall: LQ
+  -
+    code: '/r'
+    description: 'Repeater tower'
+    tocall: LR
+  -
+    code: '/s'
+    description: 'Ship, power boat'
+    tocall: LS
+  -
+    code: '/t'
+    description: 'Truck stop'
+    tocall: LT
+  -
+    code: '/u'
+    description: 'Semi-trailer truck, 18-wheeler'
+    tocall: LU
+  -
+    code: '/v'
+    description: Van
+    tocall: LV
+  -
+    code: '/w'
+    description: 'Water station'
+    tocall: LW
+  -
+    code: '/x'
+    description: 'X / Unix'
+    tocall: LX
+  -
+    code: '/y'
+    description: 'House, yagi antenna'
+    tocall: LY
+  -
+    code: '/z'
+    description: Shelter
+    tocall: LZ
+  -
+    code: '/{'
+    tocall: J1
+    unused: 1
+  -
+    code: '/}'
+    tocall: J3
+    unused: 1
+  -
+    code: '\!'
+    description: Emergency
+    tocall: OB
+  -
+    code: "\\\""
+    tocall: OC
+    unused: 1
+  -
+    code: '\#'
+    description: 'Digipeater, green star'
+    tocall: OD
+  -
+    code: '\$'
+    description: 'Bank or ATM'
+    tocall: OE
+  -
+    code: '\%'
+    tocall: OF
+    unused: 1
+  -
+    code: '\&'
+    description: 'Gateway station'
+    tocall: OG
+  -
+    code: "\\'"
+    description: 'Crash / incident site'
+    tocall: OH
+  -
+    code: '\('
+    description: Cloudy
+    tocall: OI
+  -
+    code: '\)'
+    description: 'Firenet MEO, MODIS Earth Observation'
+    tocall: OJ
+  -
+    code: '\*'
+    description: Snow
+    tocall: OK
+  -
+    code: '\+'
+    description: Church
+    tocall: OL
+  -
+    code: '\,'
+    description: 'Girl Scouts'
+    tocall: OM
+  -
+    code: '\-'
+    description: 'House, HF antenna'
+    tocall: 'ON'
+  -
+    code: '\.'
+    description: 'Ambiguous, question mark inside circle'
+    tocall: OO
+  -
+    code: '\/'
+    description: 'Waypoint destination'
+    tocall: OP
+  -
+    code: '\0'
+    description: 'Circle, IRLP / Echolink/WIRES'
+    tocall: A0
+  -
+    code: '\1'
+    tocall: A1
+    unused: 1
+  -
+    code: '\2'
+    tocall: A2
+    unused: 1
+  -
+    code: '\3'
+    tocall: A3
+    unused: 1
+  -
+    code: '\4'
+    tocall: A4
+    unused: 1
+  -
+    code: '\5'
+    tocall: A5
+    unused: 1
+  -
+    code: '\6'
+    tocall: A6
+    unused: 1
+  -
+    code: '\7'
+    tocall: A7
+    unused: 1
+  -
+    code: '\8'
+    description: '802.11 WiFi or other network node'
+    tocall: A8
+  -
+    code: '\9'
+    description: 'Gas station'
+    tocall: A9
+  -
+    code: '\:'
+    description: Hail
+    tocall: NR
+  -
+    code: '\;'
+    description: 'Park, picnic area'
+    tocall: NS
+  -
+    code: '\<'
+    description: 'Advisory, single red flag'
+    tocall: NT
+  -
+    code: '\='
+    tocall: NU
+    unused: 1
+  -
+    code: '\>'
+    description: 'Red car'
+    tocall: NV
+  -
+    code: '\?'
+    description: 'Info kiosk'
+    tocall: NW
+  -
+    code: '\@'
+    description: 'Hurricane, Tropical storm'
+    tocall: NX
+  -
+    code: '\A'
+    description: 'White box'
+    tocall: AA
+  -
+    code: '\B'
+    description: 'Blowing snow'
+    tocall: AB
+  -
+    code: '\C'
+    description: 'Coast Guard'
+    tocall: AC
+  -
+    code: '\D'
+    description: 'Drizzling rain'
+    tocall: AD
+  -
+    code: '\E'
+    description: 'Smoke, Chimney'
+    tocall: AE
+  -
+    code: '\F'
+    description: 'Freezing rain'
+    tocall: AF
+  -
+    code: '\G'
+    description: 'Snow shower'
+    tocall: AG
+  -
+    code: '\H'
+    description: Haze
+    tocall: AH
+  -
+    code: '\I'
+    description: 'Rain shower'
+    tocall: AI
+  -
+    code: '\J'
+    description: Lightning
+    tocall: AJ
+  -
+    code: '\K'
+    description: 'Kenwood HT'
+    tocall: AK
+  -
+    code: '\L'
+    description: Lighthouse
+    tocall: AL
+  -
+    code: '\M'
+    tocall: AM
+    unused: 1
+  -
+    code: '\N'
+    description: 'Navigation buoy'
+    tocall: AN
+  -
+    code: '\O'
+    description: Rocket
+    tocall: AO
+  -
+    code: '\P'
+    description: Parking
+    tocall: AP
+  -
+    code: '\Q'
+    description: Earthquake
+    tocall: AQ
+  -
+    code: '\R'
+    description: Restaurant
+    tocall: AR
+  -
+    code: '\S'
+    description: Satellite
+    tocall: AS
+  -
+    code: '\T'
+    description: Thunderstorm
+    tocall: AT
+  -
+    code: '\U'
+    description: Sunny
+    tocall: AU
+  -
+    code: '\V'
+    description: 'VORTAC, Navigational aid'
+    tocall: AV
+  -
+    code: '\W'
+    description: 'NWS site'
+    tocall: AW
+  -
+    code: '\X'
+    description: Pharmacy
+    tocall: AX
+  -
+    code: '\Y'
+    tocall: AY
+    unused: 1
+  -
+    code: '\Z'
+    tocall: AZ
+    unused: 1
+  -
+    code: '\['
+    description: 'Wall Cloud'
+    tocall: DS
+  -
+    code: '\\'
+    tocall: DT
+    unused: 1
+  -
+    code: '\]'
+    tocall: DU
+    unused: 1
+  -
+    code: '\^'
+    description: Aircraft
+    tocall: DV
+  -
+    code: '\_'
+    description: 'Weather site'
+    tocall: DW
+  -
+    code: '\`'
+    description: Rain
+    tocall: DX
+  -
+    code: '\a'
+    description: 'Red diamond'
+    tocall: SA
+  -
+    code: '\b'
+    description: 'Blowing dust, sand'
+    tocall: SB
+  -
+    code: '\c'
+    description: 'CD triangle, RACES, CERTS, SATERN'
+    tocall: SC
+  -
+    code: '\d'
+    description: 'DX spot'
+    tocall: SD
+  -
+    code: '\e'
+    description: Sleet
+    tocall: SE
+  -
+    code: '\f'
+    description: 'Funnel cloud'
+    tocall: SF
+  -
+    code: '\g'
+    description: 'Gale, two red flags'
+    tocall: SG
+  -
+    code: '\h'
+    description: Store
+    tocall: SH
+  -
+    code: '\i'
+    description: 'Black box, point of interest'
+    tocall: SI
+  -
+    code: '\j'
+    description: 'Work zone, excavating machine'
+    tocall: SJ
+  -
+    code: '\k'
+    description: 'SUV, ATV'
+    tocall: SK
+  -
+    code: '\l'
+    tocall: SL
+    unused: 1
+  -
+    code: '\m'
+    description: 'Value sign, 3 digit display'
+    tocall: SM
+  -
+    code: '\n'
+    description: 'Red triangle'
+    tocall: SN
+  -
+    code: '\o'
+    description: 'Small circle'
+    tocall: SO
+  -
+    code: '\p'
+    description: 'Partly cloudy'
+    tocall: SP
+  -
+    code: '\q'
+    tocall: SQ
+    unused: 1
+  -
+    code: '\r'
+    description: Restrooms
+    tocall: SR
+  -
+    code: '\s'
+    description: 'Ship, boat'
+    tocall: SS
+  -
+    code: '\t'
+    description: Tornado
+    tocall: ST
+  -
+    code: '\u'
+    description: Truck
+    tocall: SU
+  -
+    code: '\v'
+    description: Van
+    tocall: SV
+  -
+    code: '\w'
+    description: Flooding
+    tocall: SW
+  -
+    code: '\x'
+    tocall: SX
+    unused: 1
+  -
+    code: '\y'
+    description: Skywarn
+    tocall: SY
+  -
+    code: '\z'
+    description: Shelter
+    tocall: SZ
+  -
+    code: '\{'
+    description: Fog
+    tocall: Q1
+  -
+    code: '\}'
+    tocall: Q3
+    unused: 1
