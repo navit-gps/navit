@@ -1578,6 +1578,17 @@ static int selection_contains(struct map_selection *sel, struct coord_rect *r, s
     return 0;
 }
 
+static int tile_index_covers(struct map_rect_priv *mr, const char *name) {
+    struct attr af, al;
+    if (binfile_attr_get(mr->item.priv_data, attr_first_key, &af))
+        if (linguistics_compare(af.u.str, name, linguistics_cmp_partial) > 0)
+            return 0;
+    if (binfile_attr_get(mr->item.priv_data, attr_last_key, &al))
+        if (linguistics_compare(al.u.str, name, linguistics_cmp_partial) < 0)
+            return 0;
+    return 1;
+}
+
 static void map_parse_country_binfile(struct map_rect_priv *mr) {
     struct attr at;
 
@@ -1590,31 +1601,14 @@ static void map_parse_country_binfile(struct map_rect_priv *mr) {
     if (!binfile_attr_get(mr->item.priv_data, attr_zipfile_ref, &at))
         return;
 
-    if (mr->msp) {
+    if (mr->msp && !tile_index_covers(mr, mr->msp->search.u.str)) {
         struct attr *search = &mr->msp->search;
         if (search->type == attr_town_name || search->type == attr_district_name
             || search->type == attr_town_or_district_name) {
-            struct attr af, al;
-            if (binfile_attr_get(mr->item.priv_data, attr_first_key, &af))
-                if (linguistics_compare(af.u.str, search->u.str, linguistics_cmp_partial) > 0)
-                    dbg(lvl_debug, "Town name '%s' outside first_key '%s', may match l10n", search->u.str, af.u.str);
-            if (binfile_attr_get(mr->item.priv_data, attr_last_key, &al))
-                if (linguistics_compare(al.u.str, search->u.str, linguistics_cmp_partial) < 0)
-                    dbg(lvl_debug, "Town name '%s' outside last_key '%s', may match l10n", search->u.str, al.u.str);
+            dbg(lvl_debug, "Town name '%s' outside key range, may match l10n", search->u.str);
         } else if (search->type == attr_street_name || search->type == attr_house_number) {
-            struct attr af, al;
-            if (binfile_attr_get(mr->item.priv_data, attr_first_key, &af)) {
-                if (linguistics_compare(af.u.str, search->u.str, linguistics_cmp_partial) > 0) {
-                    dbg(lvl_debug, "Skipping index item with first_key='%s'", af.u.str);
-                    return;
-                }
-            }
-            if (binfile_attr_get(mr->item.priv_data, attr_last_key, &al)) {
-                if (linguistics_compare(al.u.str, search->u.str, linguistics_cmp_partial) < 0) {
-                    dbg(lvl_debug, "Skipping index item with first_key='%s', last_key='%s'", af.u.str, al.u.str);
-                    return;
-                }
-            }
+            dbg(lvl_debug, "Skipping index item, name '%s' outside key range", search->u.str);
+            return;
         }
     }
 
