@@ -136,6 +136,7 @@ struct displaylist {
     struct event_idle *idle_ev;
     unsigned int seq;
     struct hash_entry hash_entries[HASH_SIZE];
+    struct navit *navit;
 };
 
 struct displaylist_icon_cache {
@@ -3267,7 +3268,7 @@ static void do_draw(struct displaylist *displaylist, int cancel, int flags) {
     int count, max = displaylist->dc.maxlen, workload = 0;
     int used = 0;
     struct coord *ca;
-    struct attr attr, attr2;
+    struct attr attr2;
     enum projection pro;
     int need_free = 0;
 
@@ -3373,12 +3374,12 @@ static void do_draw(struct displaylist *displaylist, int cancel, int flags) {
                     labels[1] = NULL;
                     label_count = 0;
                 }
-                if (item_attr_get(item, attr_label, &attr)) {
-                    labels[0] = attr.u.str;
-                    if (!label_count)
+                {
+                    const char *lbl = item_label_get(item, navit_get_lang_pref(displaylist->navit));
+                    labels[0] = (char *)lbl;
+                    if (lbl && !label_count)
                         label_count = 2;
-                } else
-                    labels[0] = NULL;
+                }
                 if (displaylist->conv && label_count) {
                     labels[0] = map_convert_string(displaylist->m, labels[0]);
                     display_add(entry, item, count, ca, labels, label_count);
@@ -3604,6 +3605,10 @@ struct displaylist *graphics_displaylist_new(void) {
     ret->dc.maxlen = ALLOCA_COORD_LIMIT;
 
     return ret;
+}
+
+void graphics_displaylist_set_navit(struct displaylist *displaylist, struct navit *navit) {
+    displaylist->navit = navit;
 }
 
 void graphics_displaylist_destroy(struct displaylist *displaylist) {

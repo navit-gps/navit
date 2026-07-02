@@ -218,6 +218,7 @@ struct displaylist;
 struct displaylist_handle;
 struct graphics;
 struct graphics_font;
+struct navit;
 struct graphics_gc;
 struct graphics_image;
 struct item;
@@ -282,6 +283,7 @@ struct displaylist_handle *graphics_displaylist_open(struct displaylist *display
 struct displayitem *graphics_displaylist_next(struct displaylist_handle *dlh);
 void graphics_displaylist_close(struct displaylist_handle *dlh);
 struct displaylist *graphics_displaylist_new(void);
+void graphics_displaylist_set_navit(struct displaylist *displaylist, struct navit *navit);
 void graphics_displaylist_destroy(struct displaylist *displaylist);
 struct map_selection *displaylist_get_selection(struct displaylist *displaylist);
 GList *displaylist_get_clicked_list(struct displaylist *displaylist, struct point *p, int radius);
