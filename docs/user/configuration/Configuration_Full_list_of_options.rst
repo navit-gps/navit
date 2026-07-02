@@ -2350,143 +2350,164 @@ speech
 .. table:: style="text-align:left;" \| Insert inbetween \ ``...``\
 tags.
 
-   +--------------+-------+--------------+--------------+--------------+
-   | Attribute    | Units | Values       | Notes        | Example      |
-   +==============+=======+==============+==============+==============+
-   | active       |       | ``0`` ``1``  | Whether      | ``           |
-   |              |       |              | speech       | active="0"`` |
-   |              |       |              | should be    |              |
-   |              |       |              | enabled on   |              |
-   |              |       |              | startup.     |              |
-   |              |       |              | (Speech can  |              |
-   |              |       |              | always be    |              |
-   |              |       |              | enabled or   |              |
-   |              |       |              | disabled via |              |
-   |              |       |              | `            |              |
-   |              |       |              | OSD <OSD>`__ |              |
-   |              |       |              | or a menu    |              |
-   |              |       |              | item.)       |              |
-   +--------------+-------+--------------+--------------+--------------+
-   | type         |       | android      | Types of     | ``type       |
-   |              |       | cmdline dbus | speech       | ="cmdline"`` |
-   |              |       | espeak       | output to    |              |
-   |              |       | iphone       | use          |              |
-   |              |       | speec        |              |              |
-   |              |       | h_dispatcher |              |              |
-   +--------------+-------+--------------+--------------+--------------+
-   | data         |       |              | Command for  | ``data="fl   |
-   |              |       |              | speech       | ite -t %s"`` |
-   |              |       |              | output.      |              |
-   |              |       |              | Navit        |              |
-   |              |       |              | sp           |              |
-   |              |       |              | eech_cmdline |              |
-   |              |       |              | interfce has |              |
-   |              |       |              | sufficient   |              |
-   |              |       |              | changes      |              |
-   |              |       |              | applied with |              |
-   |              |       |              | svn #4459.   |              |
-   |              |       |              | For examples |              |
-   |              |       |              | and          |              |
-   |              |       |              | discussion   |              |
-   |              |       |              | see          |              |
-   |              |       |              | `Configura   |              |
-   |              |       |              | tion <Config |              |
-   |              |       |              | uration>`__. |              |
-   +--------------+-------+--------------+--------------+--------------+
-   | cps          |       | 0 - ∞        | Speed at     | ``cps="15"`` |
-   |              |       |              | which Navit  |              |
-   |              |       |              | should speak |              |
-   |              |       |              | in           |              |
-   |              |       |              | characters   |              |
-   |              |       |              | -per-second. |              |
-   +--------------+-------+--------------+--------------+--------------+
-   | language     |       |              | The language | ``lan        |
-   |              |       |              | which        | guage="de"`` |
-   |              |       |              | **built-in** |              |
-   |              |       |              | espeak on    |              |
-   |              |       |              | WinCE        |              |
-   |              |       |              | devices      |              |
-   |              |       |              | should use.  |              |
-   +--------------+-------+--------------+--------------+--------------+
-   | path         |       |              | The path to  | ``path="/    |
-   |              |       |              | voices data  | home/user/es |
-   |              |       |              | directory to | peak-data"`` |
-   |              |       |              | be used by   |              |
-   |              |       |              | **built-in** |              |
-   |              |       |              | espeak.      |              |
-   +--------------+-------+--------------+--------------+--------------+
-   | voc          |       |              | 0 if street  | ``vocabular  |
-   | abulary_name |       |              | names should | y_name="0"`` |
-   |              |       |              | not be       |              |
-   |              |       |              | announced, 1 |              |
-   |              |       |              | is default   |              |
-   |              |       |              | (announce).  |              |
-   +--------------+-------+--------------+--------------+--------------+
-   | vo           |       |              | 0 if         | ``vocabula   |
-   | cabulary_nam |       |              | systematic   | ry_name_syst |
-   | e_systematic |       |              | street names | ematic="0"`` |
-   |              |       |              | should not   |              |
-   |              |       |              | be           |              |
-   |              |       |              | announced, 1 |              |
-   |              |       |              | is default   |              |
-   |              |       |              | (announce).  |              |
-   +--------------+-------+--------------+--------------+--------------+
-   | vocabula     |       |              | 0 if speech  | ``vo         |
-   | ry_distances |       |              | driver can   | cabulary_dis |
-   |              |       |              | pronounce    | tances="0"`` |
-   |              |       |              | only         |              |
-   |              |       |              | 1,2,3        |              |
-   |              |       |              | ,4,5,10,25,5 |              |
-   |              |       |              | 0,75,100,150 |              |
-   |              |       |              | ,200,250,300 |              |
-   |              |       |              | ,400,500,750 |              |
-   |              |       |              | as numbers,  |              |
-   |              |       |              | 1 is default |              |
-   |              |       |              | (speech is   |              |
-   |              |       |              | able to      |              |
-   |              |       |              | pronounce    |              |
-   |              |       |              | any number). |              |
-   +--------------+-------+--------------+--------------+--------------+
-   | sample_dir   |       |              | For          | ``sampl      |
-   |              |       |              | spe          | e_dir="/path |
-   |              |       |              | ech_cmdline, | /to/waves"`` |
-   |              |       |              | defines path |              |
-   |              |       |              | where        |              |
-   |              |       |              | pre-recorded |              |
-   |              |       |              | samples are  |              |
-   |              |       |              | stored. If   |              |
-   |              |       |              | you use      |              |
-   |              |       |              | this, it's   |              |
-   |              |       |              | expected     |              |
-   |              |       |              | that data    |              |
-   |              |       |              | attribute    |              |
-   |              |       |              | points to    |              |
-   |              |       |              | some program |              |
-   |              |       |              | able to play |              |
-   |              |       |              | sound file   |              |
-   |              |       |              | passed as    |              |
-   |              |       |              | its          |              |
-   |              |       |              | argument.    |              |
-   |              |       |              | See          |              |
-   |              |       |              | `Configura   |              |
-   |              |       |              | tion <Config |              |
-   |              |       |              | uration>`__. |              |
-   +--------------+-------+--------------+--------------+--------------+
-   | s            |       |              | For          | ``sample_suf |
-   | ample_suffix |       |              | spe          | fix=".wav"`` |
-   |              |       |              | ech_cmdline, |              |
-   |              |       |              | if           |              |
-   |              |       |              | sample_dir   |              |
-   |              |       |              | is defined,  |              |
-   |              |       |              | defines      |              |
-   |              |       |              | extension to |              |
-   |              |       |              | append to    |              |
-   |              |       |              | sentence     |              |
-   |              |       |              | part to get  |              |
-   |              |       |              | pre-recorded |              |
-   |              |       |              | sample file  |              |
-   |              |       |              | name.        |              |
-   +--------------+-------+--------------+--------------+--------------+
+   +----------------------------+-------+--------------+--------------+--------------+
+   | Attribute                  | Units | Values       | Notes        | Example      |
+   +============================+=======+==============+==============+==============+
+   | active                     |       | ``0`` ``1``  | Whether      | ``           |
+   |                            |       |              | speech       | active="0"`` |
+   |                            |       |              | should be    |              |
+   |                            |       |              | enabled on   |              |
+   |                            |       |              | startup.     |              |
+   |                            |       |              | (Speech can  |              |
+   |                            |       |              | always be    |              |
+   |                            |       |              | enabled or   |              |
+   |                            |       |              | disabled via |              |
+   |                            |       |              | `            |              |
+   |                            |       |              | OSD <OSD>`__ |              |
+   |                            |       |              | or a menu    |              |
+   |                            |       |              | item.)       |              |
+   +----------------------------+-------+--------------+--------------+--------------+
+   | type                       |       | android      | Types of     | ``type       |
+   |                            |       | cmdline dbus | speech       | ="cmdline"`` |
+   |                            |       | espeak       | output to    |              |
+   |                            |       | iphone       | use          |              |
+   |                            |       | speec        |              |              |
+   |                            |       | h_dispatcher |              |              |
+   +----------------------------+-------+--------------+--------------+--------------+
+   | data                       |       |              | Command for  | ``data="fl   |
+   |                            |       |              | speech       | ite -t %s"`` |
+   |                            |       |              | output.      |              |
+   |                            |       |              | Navit        |              |
+   |                            |       |              | sp           |              |
+   |                            |       |              | eech_cmdline |              |
+   |                            |       |              | interfce has |              |
+   |                            |       |              | sufficient   |              |
+   |                            |       |              | changes      |              |
+   |                            |       |              | applied with |              |
+   |                            |       |              | svn #4459.   |              |
+   |                            |       |              | For examples |              |
+   |                            |       |              | and          |              |
+   |                            |       |              | discussion   |              |
+   |                            |       |              | see          |              |
+   |                            |       |              | `Configura   |              |
+   |                            |       |              | tion <Config |              |
+   |                            |       |              | uration>`__. |              |
+   +----------------------------+-------+--------------+--------------+--------------+
+   | data-tts                   |       |              | Same as      | `            |
+   |                            |       |              | 'data'.      |            ` |
+   |                            |       |              | When using   |              |
+   |                            |       |              | sample files |              |
+   |                            |       |              | use this     |              |
+   |                            |       |              | option to    |              |
+   |                            |       |              | configure    |              |
+   |                            |       |              | TTS and use  |              |
+   |                            |       |              | 'data' to    |              |
+   |                            |       |              | configure    |              |
+   |                            |       |              | sample files.|              |
+   +----------------------------+-------+--------------+--------------+--------------+
+   | play_multiple_samples      |       | ``0`` ``1``  | When only 1  |              |
+   |                            |       |              | sample file  |              |
+   |                            |       |              | is played,   |              |
+   |                            |       |              | set this to  |              |
+   |                            |       |              | ``0``        |              |
+   |                            |       |              |              |              |
+   |                            |       |              |              |              |
+   |                            |       |              |              |              |
+   +----------------------------+-------+--------------+--------------+--------------+
+   | cps                        |       | 0 - ∞        | Speed at     | ``cps="15"`` |
+   |                            |       |              | which Navit  |              |
+   |                            |       |              | should speak |              |
+   |                            |       |              | in           |              |
+   |                            |       |              | characters   |              |
+   |                            |       |              | -per-second. |              |
+   +----------------------------+-------+--------------+--------------+--------------+
+   | language                   |       |              | The language | ``lan        |
+   |                            |       |              | which        | guage="de"`` |
+   |                            |       |              | **built-in** |              |
+   |                            |       |              | espeak on    |              |
+   |                            |       |              | WinCE        |              |
+   |                            |       |              | devices      |              |
+   |                            |       |              | should use.  |              |
+   +----------------------------+-------+--------------+--------------+--------------+
+   | path                       |       |              | The path to  | ``path="/    |
+   |                            |       |              | voices data  | home/user/es |
+   |                            |       |              | directory to | peak-data"`` |
+   |                            |       |              | be used by   |              |
+   |                            |       |              | **built-in** |              |
+   |                            |       |              | espeak.      |              |
+   +----------------------------+-------+--------------+--------------+--------------+
+   | vocabulary_name            |       | ``0`` ``1``  | 0 if street  | ``vocabular  |
+   |                            |       |              | names should | y_name="0"`` |
+   |                            |       |              | not be       |              |
+   |                            |       |              | announced, 1 |              |
+   |                            |       |              | is default   |              |
+   |                            |       |              | (announce).  |              |
+   +----------------------------+-------+--------------+--------------+--------------+
+   | vocabulary_name_systematic |       | ``0`` ``1``  | 0 if         | ``vocabula   |
+   |                            |       |              | systematic   | ry_name_syst |
+   |                            |       |              | street names | ematic="0"`` |
+   |                            |       |              | should not   |              |
+   |                            |       |              | be           |              |
+   |                            |       |              | announced, 1 |              |
+   |                            |       |              | is default   |              |
+   |                            |       |              | (announce).  |              |
+   +----------------------------+-------+--------------+--------------+--------------+
+   | vocabulary_distances       |       | ``0`` ``1``  | 0 if speech  | ``vo         |
+   |                            |       |              | driver can   | cabulary_dis |
+   |                            |       |              | pronounce    | tances="0"`` |
+   |                            |       |              | only         |              |
+   |                            |       |              | 1,2,3        |              |
+   |                            |       |              | ,4,5,10,25,5 |              |
+   |                            |       |              | 0,75,100,150 |              |
+   |                            |       |              | ,200,250,300 |              |
+   |                            |       |              | ,400,500,750 |              |
+   |                            |       |              | as numbers,  |              |
+   |                            |       |              | 1 is default |              |
+   |                            |       |              | (speech is   |              |
+   |                            |       |              | able to      |              |
+   |                            |       |              | pronounce    |              |
+   |                            |       |              | any number). |              |
+   +----------------------------+-------+--------------+--------------+--------------+
+   | sample_dir                 |       |              | For          | ``sampl      |
+   |                            |       |              | spe          | e_dir="/path |
+   |                            |       |              | ech_cmdline, | /to/waves"`` |
+   |                            |       |              | defines path |              |
+   |                            |       |              | where        |              |
+   |                            |       |              | pre-recorded |              |
+   |                            |       |              | samples are  |              |
+   |                            |       |              | stored. If   |              |
+   |                            |       |              | you use      |              |
+   |                            |       |              | this, it's   |              |
+   |                            |       |              | expected     |              |
+   |                            |       |              | that data    |              |
+   |                            |       |              | attribute    |              |
+   |                            |       |              | points to    |              |
+   |                            |       |              | some program |              |
+   |                            |       |              | able to play |              |
+   |                            |       |              | sound file   |              |
+   |                            |       |              | passed as    |              |
+   |                            |       |              | its          |              |
+   |                            |       |              | argument.    |              |
+   |                            |       |              | See          |              |
+   |                            |       |              | `Configura   |              |
+   |                            |       |              | tion <Config |              |
+   |                            |       |              | uration>`__. |              |
+   +----------------------------+-------+--------------+--------------+--------------+
+   | sample_suffix              |       |              | For          | ``sample_suf |
+   |                            |       |              | spe          | fix=".wav"`` |
+   |                            |       |              | ech_cmdline, |              |
+   |                            |       |              | if           |              |
+   |                            |       |              | sample_dir   |              |
+   |                            |       |              | is defined,  |              |
+   |                            |       |              | defines      |              |
+   |                            |       |              | extension to |              |
+   |                            |       |              | append to    |              |
+   |                            |       |              | sentence     |              |
+   |                            |       |              | part to get  |              |
+   |                            |       |              | pre-recorded |              |
+   |                            |       |              | sample file  |              |
+   |                            |       |              | name.        |              |
+   +----------------------------+-------+--------------+--------------+--------------+
 
 mapset
 ------

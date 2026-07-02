@@ -26,6 +26,7 @@
 #include "util.h"
 #include <glib.h>
 #include <limits.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #ifdef HAVE_API_WIN32_BASE
@@ -36,6 +37,23 @@
 #    include <sys/types.h>
 #    include <unistd.h>
 #endif
+
+struct speech_priv {
+    int active;
+    char *cmdline;
+    char *cmdline_tts;
+    char **play;
+    char **play_tts;
+    int play_text_argument_position;
+    int play_tts_text_argument_position;
+    int play_multiple_samples;
+    char *sample_dir;
+    char *sample_suffix;
+    int flags;
+    GList *samples;
+    int sample_count;
+    struct spawn_process_info *spi;
+};
 
 static char *urldecode(char *str) {
     char *ret = g_strdup(str);
@@ -56,137 +74,328 @@ static char *urldecode(char *str) {
     return ret;
 }
 
-static GList *speech_cmdline_search(GList *samples, int suffix_len, const char *text, int decode) {
-    GList *loop_samples = samples, *result = NULL, *recursion_result;
-    int shortest_result_length = INT_MAX;
+static gint get_longest_cmp(gconstpointer s1, gconstpointer s2) {
+    gint diff = strlen((char *)s1) - strlen((char *)s2);
+    return diff;
+}
+
+static GList *speech_cmdline_search(GList *samples, int sample_count, gchar *suffix, const char *text, int decode) {
+    GList *loop_samples = samples, *loop_samples_sorted = NULL, *result = NULL;
+    int sample_name_len;
+    int suffix_len = strlen(suffix);
+    int result_length_start;
+    int result_length_end;
+    int sample_index;
+    int sample_matched;
+    gchar *sample_missing = g_strdup("missing");
+    gchar *text_missing = g_strdup(sample_missing);
+    gchar *text_tts;
+    gchar text_first[2];
+    gchar text_next[2];
+
     dbg(lvl_debug, "searching samples for text: '%s'", text);
-    while (loop_samples) {
-        char *sample_name = loop_samples->data;
-        int sample_name_len;
-        if (decode)
-            sample_name = urldecode(sample_name);
-        sample_name_len = strlen(sample_name) - suffix_len;
-        // TODO: Here we compare UTF-8 text with a filename.
-        // It's unclear how a case-insensitive comparison should work
-        // in general, so for now we only do it for ASCII text.
-        if (!g_ascii_strncasecmp(text, sample_name, sample_name_len)) {
-            const char *remaining_text = text + sample_name_len;
-            while (*remaining_text == ' ' || *remaining_text == ',')
-                remaining_text++;
-            dbg(lvl_debug, "sample '%s' matched; remaining text: '%s'", sample_name, remaining_text);
-            if (*remaining_text) {
-                recursion_result = speech_cmdline_search(samples, suffix_len, remaining_text, decode);
-                if (recursion_result && g_list_length(recursion_result) < shortest_result_length) {
-                    g_list_free(result);
-                    result = recursion_result;
-                    result = g_list_prepend(result, loop_samples->data);
-                    shortest_result_length = g_list_length(result);
-                } else {
-                    dbg(lvl_debug,
-                        "no (shorter) result found for remaining text '%s', "
-                        "trying next sample\n",
-                        remaining_text);
-                    g_list_free(recursion_result);
-                }
-            } else {
-                g_list_free(result);
-                result = g_list_prepend(NULL, loop_samples->data);
-                break;
-            }
+
+    sample_missing = g_strconcat(sample_missing, suffix, NULL);
+
+    loop_samples_sorted = loop_samples;
+    loop_samples_sorted = g_list_first(loop_samples_sorted);
+    loop_samples_sorted = g_list_sort(loop_samples_sorted, get_longest_cmp);
+    loop_samples_sorted = g_list_first(loop_samples_sorted);
+    loop_samples_sorted = g_list_reverse(loop_samples_sorted);
+
+    result_length_start = 0;
+    result_length_end = 0;
+
+    while (*text) {
+
+        if (result) {
+            result_length_start = g_list_length(result);
+            result_length_end = result_length_start;
         }
-        if (decode)
-            g_free(sample_name);
-        loop_samples = g_list_next(loop_samples);
-    }
+
+        sample_index = 0;
+        loop_samples_sorted = g_list_first(loop_samples_sorted);
+        while (sample_index <= sample_count - 1) {
+            char *sample_name = loop_samples_sorted->data;
+
+            if (decode)
+                sample_name = urldecode(sample_name);
+            sample_name_len = strlen(sample_name) - suffix_len;
+            // TODO: Here we compare UTF-8 text with a filename.
+            // It's unclear how a case-insensitive comparison should work
+            // in general, so for now we only do it for ASCII text.
+            sample_matched = 0;
+            if (!g_ascii_strncasecmp(text, sample_name, sample_name_len)) {
+                if (sample_name_len == 1) {
+                    text++;
+                    g_strlcpy(text_next, text, 2);
+                    text--;
+                    if (!g_ascii_strncasecmp(text_next, "1", 1) || !g_ascii_strncasecmp(text_next, "2", 1)
+                        || !g_ascii_strncasecmp(text_next, "3", 1) || !g_ascii_strncasecmp(text_next, "4", 1)
+                        || !g_ascii_strncasecmp(text_next, "5", 1) || !g_ascii_strncasecmp(text_next, "6", 1)
+                        || !g_ascii_strncasecmp(text_next, "7", 1) || !g_ascii_strncasecmp(text_next, "8", 1)
+                        || !g_ascii_strncasecmp(text_next, "9", 1) || !g_ascii_strncasecmp(text_next, "0", 1)
+                        || !g_ascii_strncasecmp(text_next, " ", 1) || !g_ascii_strncasecmp(text_next, ",", 1)
+                        || !g_ascii_strncasecmp(text_next, ".", 1) || !g_ascii_strncasecmp(text_next, ";", 1)) {
+                        sample_matched = 1;
+                    }
+                } else {
+                    sample_matched = 1;
+                }
+
+                if (sample_matched == 1) {
+                    result = g_list_prepend(result, loop_samples_sorted->data);
+                    text = text + sample_name_len;
+
+                    dbg(lvl_debug, "sample '%s' matched", sample_name);
+                    break;
+                }
+            }  // if strncasecmp
+            if (decode)
+                g_free(sample_name);
+
+            if (sample_index < sample_count - 1)
+                loop_samples_sorted = g_list_next(loop_samples_sorted);
+            else
+                break;
+            sample_index++;
+
+        }  // sample_loop
+
+        if (result)
+            result_length_end = g_list_length(result);
+
+        if (result_length_start == result_length_end) {
+            text_tts = g_strdup(text_missing);
+            while (g_ascii_strncasecmp(text, " ", 1) && g_ascii_strncasecmp(text, ",", 1)
+                   && g_ascii_strncasecmp(text, "-", 1)) {
+                g_strlcpy(text_first, text, 2);
+                if (strlen(text_first) == 0)
+                    break;
+                text_tts = g_strconcat(text_tts, text_first, NULL);
+                text++;
+            }
+            result = g_list_prepend(result, g_strdup(text_tts));
+        }
+
+        while (!g_ascii_strncasecmp(text, " ", 1) || !g_ascii_strncasecmp(text, ",", 1)
+               || !g_ascii_strncasecmp(text, "-", 1)) {
+            text++;
+        }
+    }  // while text
+
+    g_free(sample_missing);
+    result = g_list_reverse(result);
+
     return result;
 }
 
-struct speech_priv {
-    char *cmdline;
-    char *sample_dir;
-    char *sample_suffix;
-    int flags;
-    GList *samples;
-    struct spawn_process_info *spi;
-};
-
 static int speechd_say(struct speech_priv *this, const char *text) {
-    char **cmdv = g_strsplit(this->cmdline, " ", -1);
-    int variable_arg_no = -1;
     GList *argl = NULL;
+    GList *samples = NULL;
+    char **play_multiple_samples = NULL;
     guint listlen;
     int samplesmode = 0;
     int i;
+    int index;
+    int speak_text;
+    int sample_index;
+    int speak_index_start;
+    int speak_index_end;
+    int sample_count;
+    int missing;
+    char *missing_text = "missing";
+    char *text_tts;
+    char *new_arg;
+    int sample_argument_position = 1;
 
-    for (i = 0; cmdv[i]; i++)
-        if (strchr(cmdv[i], '%')) {
-            variable_arg_no = i;
-            break;
+    dbg(lvl_debug, "Speaking text: '%s'", text);
+
+    // The text has to be an argument of a program
+    dbg(lvl_debug, "this->play_text_argument_position: %i", this->play_text_argument_position);
+    if (this->play_text_argument_position >= 1) {
+
+        // Play text //
+
+        // Samples and TTS has to be configured if samples are used
+        // (There are always texts without samples to use (i.e. town names))
+        if (this->sample_dir && this->sample_suffix && this->play_tts_text_argument_position >= 1) {
+            samplesmode = 1;
+            argl = speech_cmdline_search(this->samples, this->sample_count, this->sample_suffix, text,
+                                         !!(this->flags & 1));
+            samples = g_list_copy(argl);
+            listlen = g_list_length(argl);
+            dbg(lvl_debug, "For text: '%s', found %d samples.", text, listlen);
+
+            if (!listlen) {
+                dbg(lvl_error, "No matching samples found. Cannot speak text: '%s'", text);
+            }
+        } else {
+            listlen = 1;
         }
 
-    if (this->sample_dir && this->sample_suffix) {
-        argl = speech_cmdline_search(this->samples, strlen(this->sample_suffix), text, !!(this->flags & 1));
-        samplesmode = 1;
-        listlen = g_list_length(argl);
-        dbg(lvl_debug, "For text: '%s', found %d samples.", text, listlen);
-        if (!listlen) {
-            dbg(lvl_error, "No matching samples found. Cannot speak text: '%s'", text);
-        }
-    } else {
-        listlen = 1;
-    }
-    if (listlen > 0) {
-        dbg(lvl_debug, "Speaking text '%s'", text);
-        int argc;
-        char **argv;
-        int j;
-        int cmdvlen = g_strv_length(cmdv);
-        argc = cmdvlen + listlen - (variable_arg_no > 0 ? 1 : 0);
-        argv = g_new(char *, argc + 1);
-        if (variable_arg_no == -1) {
-            argv[cmdvlen] = g_strdup("%s");
-            variable_arg_no = cmdvlen;
-        }
+        if (listlen > 0) {
+            dbg(lvl_info, "Speaking text: '%s'", text);
 
-        for (i = 0, j = 0; j < argc;) {
-            if (i == variable_arg_no) {
+            speak_index_start = 0;
+            speak_index_end = 0;
+            sample_index = 0;
+            missing = 0;
+            argl = g_list_first(argl);
+
+            while (argl) {
+
                 if (samplesmode) {
-                    GList *l = argl;
-                    while (l) {
-                        char *new_arg;
-                        new_arg = g_strdup_printf("%s/%s", this->sample_dir, (char *)l->data);
-                        dbg(lvl_debug, "new_arg %s", new_arg);
-                        argv[j++] = g_strdup_printf(cmdv[i], new_arg);
-                        g_free(new_arg);
-                        l = g_list_next(l);
+                    if (!g_ascii_strncasecmp((char *)argl->data, missing_text, strlen(missing_text))) {
+                        missing = 1;
+                        speak_text = 1;
+                    }
+                    if (sample_index == listlen - 1) {
+                        speak_text = 1;
                     }
                 } else {
-                    argv[j++] = g_strdup_printf(cmdv[i], text);
+                    speak_text = 1;
+                    sample_count = listlen;
                 }
-                i++;
-            } else {
-                argv[j++] = g_strdup(cmdv[i++]);
-            }
-        }
-        argv[j] = NULL;
-        if (argl)
-            // No need to free data elements here as they are
-            // still referenced from this->samples
-            g_list_free(argl);
 
-        if (this->spi) {
-            spawn_process_check_status(this->spi, 1);  // Block until previous spawned speech process is terminated.
-            spawn_process_info_free(this->spi);
-        }
-        this->spi = spawn_process(argv);
-        g_strfreev(argv);
+                if (speak_text) {
+                    speak_text = 0;
+                    if (samplesmode) {
+                        if (missing) {
+                            speak_index_end = sample_index - 1;
+                        } else {
+                            speak_index_end = sample_index;
+                        }
+                        sample_count = speak_index_end - speak_index_start + 1;
+                    }
+
+                    if (sample_count > 0) {
+
+                        if (this->play_multiple_samples == 1) {
+                            // Create array of correct size to hold all samples
+                            dbg(lvl_debug, "sample_count: %i", sample_count);
+                            play_multiple_samples = g_new(char *, sample_count + 2);
+                            dbg(lvl_debug, "play_multiple_samples length: %i", g_strv_length(play_multiple_samples));
+
+                            // Set program to play sample files
+                            play_multiple_samples[0] = g_strdup(this->play[0]);
+                            dbg(lvl_debug, "play_multiple_samples[0]: %s", g_strdup(play_multiple_samples[0]));
+
+                            // There has to be a NULL argument at the end
+                            play_multiple_samples[sample_count + 1] = NULL;
+                            sample_argument_position = 1;
+                        }
+
+                        for (index = speak_index_start; index <= speak_index_end; index++) {
+
+                            dbg(lvl_debug, "samplesmode: %i", samplesmode);
+                            if (samplesmode == 1) {
+                                // Play samples with one command or play samples with multiple commands
+                                dbg(lvl_debug, "this->play_multiple_samples: %i", this->play_multiple_samples);
+                                new_arg =
+                                    g_strdup_printf("%s/%s", this->sample_dir, (char *)g_list_nth_data(samples, index));
+                                dbg(lvl_debug, "sample: %s", g_strdup(new_arg));
+
+                                if (this->play_multiple_samples == 1) {
+                                    // Add one sample to play later
+                                    dbg(lvl_debug, "sample_argument_position: %i", sample_argument_position);
+                                    play_multiple_samples[sample_argument_position] = g_strdup(new_arg);
+                                    sample_argument_position++;
+
+                                } else {
+                                    // Set one sample to play
+                                    this->play[this->play_text_argument_position] = g_strdup(new_arg);
+
+                                    // Execute cli speech command for one sample file
+                                    dbg(lvl_debug, "executing (sample): %s", g_strdup(this->play[0]));
+                                    if (this->spi) {
+                                        // Block until previous spawned speech process is terminated.
+                                        spawn_process_check_status(this->spi, 1);
+                                        spawn_process_info_free(this->spi);
+                                    }
+                                    this->spi = spawn_process(this->play);
+
+                                }  // if this->play_multiple_samples
+
+                            } else {
+                                // TTS
+                                new_arg = g_strdup_printf("\"%s\"", text);
+                                this->play_tts[this->play_tts_text_argument_position] = g_strdup(new_arg);
+
+                                // Execute cli speech command for TTS text
+                                dbg(lvl_debug, "executing (TTS): %s", g_strdup(this->play_tts[0]));
+                                dbg(lvl_debug, "text: %s",
+                                    g_strdup(this->play_tts[this->play_tts_text_argument_position]));
+                                if (this->spi) {
+                                    // Block until previous spawned speech process is terminated.
+                                    spawn_process_check_status(this->spi, 1);
+                                    spawn_process_info_free(this->spi);
+                                }
+                                this->spi = spawn_process(this->play_tts);
+                            }  // samplesmode
+                        }  // for sample index
+
+                        // Play all samples using one command
+                        if (this->play_multiple_samples == 1) {
+                            // Execute cli speech command for all sample file
+                            dbg(lvl_debug, "executing (samples): %s", g_strdup(play_multiple_samples[0]));
+                            dbg(lvl_debug, "sample_count: %i", sample_count);
+                            if (this->spi) {
+                                // Block until previous spawned speech process is terminated.
+                                spawn_process_check_status(this->spi, 1);
+                                spawn_process_info_free(this->spi);
+                            }
+                            this->spi = spawn_process(play_multiple_samples);
+                        }
+                    }  // if sample_count > 0
+
+                    if (samplesmode && missing) {
+                        missing = 0;
+                        speak_index_start = sample_index + 1;
+
+                        text_tts = g_strdup_printf("%s", (char *)g_list_nth_data(samples, sample_index));
+                        text_tts = g_strdup(&text_tts[strlen(missing_text)]);
+                        this->play_tts[this->play_tts_text_argument_position] = g_strdup_printf("\"%s\"", text_tts);
+
+                        // Execute cli speech command for TTS text
+                        dbg(lvl_debug, "executing (TTS): %s", g_strdup(this->play_tts[0]));
+                        dbg(lvl_info, "Missing sample(s) for text: '%s'",
+                            g_strdup(this->play_tts[this->play_tts_text_argument_position]));
+                        if (this->spi) {
+                            // Block until previous spawned speech process is terminated.
+                            spawn_process_check_status(this->spi, 1);
+                            spawn_process_info_free(this->spi);
+                        }
+                        this->spi = spawn_process(this->play_tts);
+
+                    }  // samplesmode && missing
+                }  // speak_text
+                sample_index++;
+                argl = g_list_next(argl);
+            }  // while argl
+        }  // if listlen
+    } else {
+        // the following line doesn't pass the sanity check script because of '%s' in the string without a second
+        // argument of type *char
+        // dbg(lvl_error, "Speech tag 'data' attribute is missing an '%s' argument in navit.xml.");
+        dbg(lvl_error,
+            "Speech tag 'data' attribute is missing an 'percent character followed by an s' argument in navit.xml.");
+    }  // if (this->play_text_argument_position >= 1) {
+
+    if (argl) {
+        // No need to free data elements here as they are
+        // still referenced from this->samples
+        g_list_free(argl);
+        g_list_free(samples);
     }
-    g_strfreev(cmdv);
+    g_free(new_arg);
+    g_strfreev(play_multiple_samples);
     return 0;
 }
 
 static void speechd_destroy(struct speech_priv *this) {
     g_free(this->cmdline);
+    g_free(this->cmdline_tts);
     g_free(this->sample_dir);
     g_free(this->sample_suffix);
     g_list_free_full(this->samples, g_free);
@@ -200,20 +409,125 @@ static struct speech_methods speechd_meth = {
     speechd_say,
 };
 
+/**
+ * @brief Sets commands used to play instructions
+ *
+ */
+static int set_play_commands(struct speech_priv *this_) {
+    char **cli;
+    char **cli_tts;
+    int cli_argument_count = -1;
+    int cli_tts_argument_count = -1;
+    int i = 0;
+    int ret = 0;
+
+    // Set default values in speech attribute
+    this_->play_text_argument_position = -1;
+    this_->play_tts_text_argument_position = -1;
+
+    if (this_->cmdline) {
+        cli = g_strsplit(this_->cmdline, " ", -1);
+        cli_argument_count = g_strv_length(cli);
+        dbg(lvl_debug, "cli_argument_count: %i", cli_argument_count);
+        this_->play = g_new(char *, cli_argument_count + 1);
+
+        // There has to be a NULL argument at the end
+        this_->play[cli_argument_count] = NULL;
+    }
+
+    if (this_->cmdline_tts) {
+        cli_tts = g_strsplit(this_->cmdline_tts, " ", -1);
+        cli_tts_argument_count = g_strv_length(cli_tts);
+        dbg(lvl_debug, "cli_tts_argument_count: %i", cli_tts_argument_count);
+        this_->play_tts = g_new(char *, cli_tts_argument_count + 1);
+
+        // There has to be a NULL argument at the end
+        this_->play_tts[cli_tts_argument_count] = NULL;
+    }
+
+    if (cli_argument_count > 0) {
+        for (i = 0; i <= cli_argument_count - 1; i++) {
+            dbg(lvl_debug, "i: %i", i);
+            this_->play[i] = g_strdup(cli[i]);
+            dbg(lvl_debug, "this_->play[i]: %s", g_strdup(this_->play[i]));
+            if (!g_ascii_strncasecmp(this_->play[i], "%s", 2)) {
+                this_->play_text_argument_position = i;
+                if (i >= 1)
+                    ret = 1;
+            }  // if %s
+        }  // for
+    }  // if (cli_argument_count > 0)
+    dbg(lvl_debug, "this_->play_text_argument_position: %i", this_->play_text_argument_position);
+
+    if (cli_tts_argument_count > 0) {
+        for (i = 0; i <= cli_tts_argument_count - 1; i++) {
+            dbg(lvl_debug, "i: %i", i);
+            this_->play_tts[i] = g_strdup(cli_tts[i]);
+            dbg(lvl_debug, "this_->play_tts[i]: %s", g_strdup(this_->play_tts[i]));
+            if (!g_ascii_strncasecmp(this_->play_tts[i], "%s", 2)) {
+                this_->play_tts_text_argument_position = i;
+                if (ret == 1) {
+                    if (i >= 1)
+                        ret = 1;
+                    else
+                        ret = 0;
+                }  // if ret
+            }  // if %s
+        }  // for
+    }  // if (cli_tts_argument_count > 0)
+    dbg(lvl_debug, "this_->play_tts_text_argument_position: %i", this_->play_tts_text_argument_position);
+    return ret;
+}
+
 static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
     struct speech_priv *this;
     struct attr *attr;
+    char *sample_filename;
+    int suffix_len = -1;
+    int play_multiple_samples = 1;
+    int len = -1;
+
+    attr = attr_search(attrs, attr_active);
+    if (!attr)
+        return NULL;
+
     attr = attr_search(attrs, attr_data);
     if (!attr)
         return NULL;
+
+    dbg(lvl_debug, "new speech");
     this = g_new0(struct speech_priv, 1);
+
+    // Set values
+    attr = attr_search(attrs, attr_data);
     this->cmdline = g_strdup(attr->u.str);
+
+    attr = attr_search(attrs, attr_active);
+    this->active = attr->u.num;
+
+    if ((attr = attr_search(attrs, attr_data_tts)))
+        this->cmdline_tts = g_strdup(attr->u.str);
+
     if ((attr = attr_search(attrs, attr_sample_dir)))
         this->sample_dir = g_strdup(attr->u.str);
+
     if ((attr = attr_search(attrs, attr_sample_suffix)))
         this->sample_suffix = g_strdup(attr->u.str);
+
     if ((attr = attr_search(attrs, attr_flags)))
         this->flags = attr->u.num;
+
+    this->play_multiple_samples = play_multiple_samples;
+    dbg(lvl_debug, "(default) this->play_multiple_samples: %i", this->play_multiple_samples);
+    if ((attr = attr_search(attrs, attr_play_multiple_samples)))
+        this->play_multiple_samples = attr->u.num;
+    dbg(lvl_debug, "this->play_multiple_samples: %i", this->play_multiple_samples);
+
+    if (this->cmdline)
+        set_play_commands(this);
+
+    // Set values end
+
     if (this->sample_dir && this->sample_suffix) {
         void *handle = file_opendir(this->sample_dir);
         if (!handle) {
@@ -224,20 +538,22 @@ static struct speech_priv *speechd_new(struct speech_methods *meth, struct attr 
             g_free(this);
             return NULL;
         }
-        char *name;
-        int suffix_len = strlen(this->sample_suffix);
-        while ((name = file_readdir(handle))) {
-            int len = strlen(name);
+        suffix_len = strlen(this->sample_suffix);
+        this->sample_count = 0;
+        while ((sample_filename = file_readdir(handle))) {
+            len = strlen(sample_filename);
             if (len > suffix_len) {
-                if (!strcmp(name + len - suffix_len, this->sample_suffix)) {
-                    dbg(lvl_debug, "found %s", name);
-                    this->samples = g_list_prepend(this->samples, g_strdup(name));
+                if (!strcmp(sample_filename + len - suffix_len, this->sample_suffix)) {
+                    dbg(lvl_debug, "found %s", sample_filename);
+                    this->samples = g_list_prepend(this->samples, g_strdup(sample_filename));
+                    this->sample_count++;
                 }
             }
-        }
+        }  // while sample_filename
         file_closedir(handle);
-    }
+    }  // if sampledir && suffix
     *meth = speechd_meth;
+
     return this;
 }
 
