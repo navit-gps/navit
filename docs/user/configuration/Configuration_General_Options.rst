@@ -135,3 +135,23 @@ navit tag allows to specify which layout to use as default;
 This string should match the ``name`` attribute of the required tag.
 
 See `layout options <Configuration/Layout_Options>`__ for more details.
+
+.. _language_preference:
+
+Language preference for labels
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Navit can display map labels in your preferred language using OSM
+``name:<lang>`` tags (e.g. ``name:en``, ``name:fr``). Add a
+``lang_pref`` attribute to the ``<navit>`` tag with a comma-separated
+list of language codes:
+
+.. code:: xml
+
+    lang_pref="de,en"
+
+The list is checked left-to-right. For each label, Navit looks for a
+matching ``name:<lang>`` tag and shows the first one found. If no
+translation matches any preferred language, the OSM ``name`` tag is
+shown as fallback. Absence of ``lang_pref`` is equivalent to
+showing the native ``name`` tag (backwards-compatible).

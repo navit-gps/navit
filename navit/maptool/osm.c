@@ -1042,7 +1042,6 @@ static void name_l10n_emit(struct item_bin *ib) {
     }
 }
 
-
 static void attr_strings_clear(void) {
     attr_strings_buffer_free_offset = 0;
     memset(attr_strings, 0, sizeof(attr_strings));

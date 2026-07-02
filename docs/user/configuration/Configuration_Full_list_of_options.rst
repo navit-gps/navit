@@ -645,6 +645,31 @@ navit
 |                   |             |             | et_center_c |                           |
 |                   |             |             | ursor()"``. |                           |
 +-------------------+-------------+-------------+-------------+---------------------------+
+| lang_pref         |             | comma-sep   |   Comma-    | ``lang_pref="de,en"``     |
+|                   |             | language    |   separated |                           |
+|                   |             | codes       |   language  |                           |
+|                   |             |             |   priority  |                           |
+|                   |             |             |   list for  |                           |
+|                   |             |             |   map label |                           |
+|                   |             |             |   display.  |                           |
+|                   |             |             |   Labels    |                           |
+|                   |             |             |   will be   |                           |
+|                   |             |             |   shown in  |                           |
+|                   |             |             |   the first |                           |
+|                   |             |             |   matching  |                           |
+|                   |             |             |   language  |                           |
+|                   |             |             |   from OSM  |                           |
+|                   |             |             |   ``name:<  |                           |
+|                   |             |             | lang>``     |                           |
+|                   |             |             |   tags. If  |                           |
+|                   |             |             |   no match  |                           |
+|                   |             |             |   is found, |                           |
+|                   |             |             |   the OSM   |                           |
+|                   |             |             |   ``name``  |                           |
+|                   |             |             |   tag is    |                           |
+|                   |             |             |   shown as  |                           |
+|                   |             |             |   fallback. |                           |
++-------------------+-------------+-------------+-------------+---------------------------+
 
 graphics
 --------
