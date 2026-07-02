@@ -614,3 +614,36 @@ void item_dump_filedesc(struct item *item, struct map *map, FILE *out) {
         for (i = 0; i < count; i++)
             fprintf(out, "mg:0x%x 0x%x\n", ca[i].x, ca[i].y);
 }
+
+const char *item_label_get(struct item *item, const char **lang_pref) {
+    static const enum attr_type native_types[] = {attr_label, attr_street_name, attr_town_name};
+    struct attr attr;
+    const char *native = NULL;
+    unsigned int ti;
+    int pi;
+
+    for (ti = 0; ti < sizeof(native_types) / sizeof(native_types[0]); ti++) {
+        item_attr_rewind(item);
+        if (item_attr_get(item, native_types[ti], &attr)) {
+            native = attr.u.str;
+            break;
+        }
+    }
+
+    if (!lang_pref || !lang_pref[0])
+        return native;
+
+    for (pi = 0; lang_pref[pi]; pi++) {
+        const char *lang = lang_pref[pi];
+        size_t ll = strlen(lang);
+
+        item_attr_rewind(item);
+        while (item_attr_get(item, attr_label_l10n, &attr)) {
+            const char *val = attr.u.str;
+            if (val && !strncmp(val, lang, ll) && val[ll] == ':')
+                return val + ll + 1;
+        }
+    }
+
+    return native;
+}
