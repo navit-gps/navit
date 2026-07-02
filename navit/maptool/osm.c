@@ -125,6 +125,13 @@ enum attr_strings_type {
 
 char *attr_strings[attr_string_last];
 
+struct name_l10n_entry {
+    char *lang;
+    char *value;
+};
+
+static GList *name_l10n_list = NULL;
+
 char *osm_types[] = {"unknown", "node", "way", "relation"};
 
 /*
@@ -985,9 +992,60 @@ static void itembin_warning(struct item_bin *ib, int cont, char *fmt, ...) {
     va_end(ap);
 }
 
+static void name_l10n_clear(void) {
+    GList *l;
+    for (l = name_l10n_list; l; l = l->next) {
+        struct name_l10n_entry *e = l->data;
+        g_free(e->lang);
+        g_free(e->value);
+        g_free(e);
+    }
+    g_list_free(name_l10n_list);
+    name_l10n_list = NULL;
+}
+
+static void name_l10n_add(const char *lang, const char *value) {
+    GList *l;
+    struct name_l10n_entry *e;
+
+    for (l = name_l10n_list; l; l = l->next) {
+        e = l->data;
+        if (!strcmp(e->lang, lang)) {
+            g_free(e->value);
+            e->value = g_strdup(value);
+            return;
+        }
+    }
+    e = g_new(struct name_l10n_entry, 1);
+    e->lang = g_strdup(lang);
+    e->value = g_strdup(value);
+    name_l10n_list = g_list_append(name_l10n_list, e);
+}
+
+static void name_l10n_emit(struct item_bin *ib) {
+    GList *l;
+    char buf[BUFFER_SIZE * 2 + 2];
+    int n;
+    for (l = name_l10n_list; l; l = l->next) {
+        struct name_l10n_entry *e = l->data;
+        n = snprintf(buf, sizeof(buf), "%s:%s", e->lang, e->value);
+        if (n < 0) {
+            itembin_warning(ib, 0, "name:%s translation could not be formatted, dropping\n", e->lang);
+            continue;
+        }
+        if ((size_t)n >= sizeof(buf)) {
+            itembin_warning(ib, 0, "name:%s translation is %d bytes, exceeds %zu-byte limit, dropping\n", e->lang, n,
+                            sizeof(buf) - 1);
+            continue;
+        }
+        item_bin_add_attr_string(ib, attr_label_l10n, buf);
+    }
+}
+
 static void attr_strings_clear(void) {
     attr_strings_buffer_free_offset = 0;
     memset(attr_strings, 0, sizeof(attr_strings));
+    name_l10n_clear();
 }
 
 static void attr_strings_save(enum attr_strings_type id, char *str) {
@@ -1206,6 +1264,9 @@ void osm_add_tag(char *k, char *v) {
         level = 5;
     if (!g_strcmp0(k, "name")) {
         attr_strings_save(attr_string_label, v);
+        level = 5;
+    } else if (g_str_has_prefix(k, "name:")) {
+        name_l10n_add(k + 5, v); /* k+5 skips "name:" */
         level = 5;
     } else if (!g_strcmp0(k, "description")) {
         /* try description if no name is there */
@@ -1706,6 +1767,7 @@ static inline void osm_end_relation_multipolygon(struct maptool_osm *osm) {
             }
             // fprintf(stderr, "relation id "OSMID_FMT": got %d types\n", osmid_attr_value, count);
             item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
+            name_l10n_emit(tmp_item_bin);
             for (a = 0; a < count; a++) {
                 /*Don't write out multipolygons that will result in unknown types if -n is given.
                  *So we don't process useless multipolygons. May save a lot of time.
@@ -1728,6 +1790,7 @@ static inline void osm_end_relation_multipolygon(struct maptool_osm *osm) {
              * indicating the turn restrictions */
             // tmp_item_bin->type=type_none;
             item_bin_add_attr_string(tmp_item_bin, attr_label, attr_strings[attr_string_label]);
+            name_l10n_emit(tmp_item_bin);
             item_bin_write(tmp_item_bin, osm->multipolygons);
         }
     } else {
@@ -1795,6 +1858,8 @@ static void relation_add_tag(char *k, char *v) {
         g_strlcpy(iso_code, v, sizeof(iso_code));
     } else if (!g_strcmp0(k, "name")) {
         attr_strings_save(attr_string_label, v);
+    } else if (g_str_has_prefix(k, "name:")) {
+        name_l10n_add(k + 5, v); /* k+5 skips "name:" */
     }
     if (add_tag) {
         char *tag;
@@ -1883,6 +1948,7 @@ void osm_end_way(struct maptool_osm *osm) {
                 add_flags = 1;
         }
         item_bin_add_attr_string(item_bin, def_flags ? attr_street_name : attr_label, attr_strings[attr_string_label]);
+        name_l10n_emit(item_bin);
         item_bin_add_attr_string(item_bin, attr_district_name, attr_strings[attr_string_district_name]);
         item_bin_add_attr_string(item_bin, attr_street_name_systematic,
                                  attr_strings[attr_string_street_name_systematic]);
@@ -1923,6 +1989,7 @@ void osm_end_way(struct maptool_osm *osm) {
             item_bin = init_item(types[i]);
             item_bin_add_coord(item_bin, coord_buffer, coord_count);
             item_bin_add_attr_string(item_bin, attr_label, attr_strings[attr_string_label]);
+            name_l10n_emit(item_bin);
             item_bin_add_attr_string(item_bin, attr_house_number, attr_strings[attr_string_house_number]);
             item_bin_add_attr_string(item_bin, attr_district_name, attr_strings[attr_string_district_name]);
             item_bin_add_attr_string(item_bin, attr_street_name, attr_strings[attr_string_street_name]);
@@ -1966,6 +2033,7 @@ void osm_end_node(struct maptool_osm *osm) {
         item_bin_add_coord(item_bin, &current_node->c, 1);
         item_bin_add_attr_string(item_bin, item_is_town(*item_bin) ? attr_town_name : attr_label,
                                  attr_strings[attr_string_label]);
+        name_l10n_emit(item_bin);
         item_bin_add_attr_string(item_bin, attr_house_number, attr_strings[attr_string_house_number]);
         item_bin_add_attr_string(item_bin, attr_street_name, attr_strings[attr_string_street_name]);
         item_bin_add_attr_string(item_bin, attr_phone, attr_strings[attr_string_phone]);
@@ -1994,6 +2062,7 @@ void osm_end_node(struct maptool_osm *osm) {
             item_bin_add_attr_string(item_bin, attr_county_name, attr_strings[attr_string_county_name]);
             item_bin_add_attr_string(item_bin, item_is_district(*item_bin) ? attr_district_name : attr_town_name,
                                      attr_strings[attr_string_label]);
+            name_l10n_emit(item_bin);
             item_bin_write(item_bin, osm->towns);
         }
     }
@@ -2252,6 +2321,42 @@ static void osm_town_relations_to_poly(GList *boundaries, FILE *towns_poly) {
     }
 }
 
+static void osm_town_write_l10n_search_entries(struct item_bin *ib, enum attr_type type, enum attr_type match,
+                                               int maxdepth, FILE *out) {
+    char *native = item_bin_get_attr(ib, type, NULL);
+    char *l10n = NULL;
+    struct item_bin *snapshot;
+    GList *values = NULL, *l;
+
+    if (!native)
+        return;
+
+    while ((l10n = item_bin_get_attr(ib, attr_label_l10n, l10n))) {
+        char *colon = strchr(l10n, ':');
+        char *value = colon ? colon + 1 : NULL;
+        if (!value || !*value) {
+            itembin_warning(ib, 0, "malformed attr_label_l10n '%s', skipping\n", l10n);
+            continue;
+        }
+        if (strcmp(value, native))
+            values = g_list_prepend(values, g_strdup(value));
+    }
+    if (!values)
+        return;
+
+    snapshot = item_bin_dup(ib);
+
+    for (l = values; l; l = l->next) {
+        item_bin_remove_attr(ib, item_bin_get_attr(ib, type, NULL));
+        item_bin_add_attr_string(ib, type, l->data);
+        item_bin_write_match(ib, type, match, maxdepth, out);
+        memcpy(ib, snapshot, (snapshot->len + 1) * 4);
+    }
+
+    g_free(snapshot);
+    g_list_free_full(values, g_free);
+}
+
 void osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix) {
     struct item_bin *ib;
     GList *bl;
@@ -2359,10 +2464,14 @@ void osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix) {
                     item_bin_add_attr(ib, &tc->attrs[i]);
             }
 
-            if (item_bin_get_attr(ib, attr_district_name, NULL))
+            if (item_bin_get_attr(ib, attr_district_name, NULL)) {
+                osm_town_write_l10n_search_entries(ib, attr_district_name, attr_district_name_match, 5,
+                                                   tc->country->file);
                 item_bin_write_match(ib, attr_district_name, attr_district_name_match, 5, tc->country->file);
-            else
+            } else {
+                osm_town_write_l10n_search_entries(ib, attr_town_name, attr_town_name_match, 5, tc->country->file);
                 item_bin_write_match(ib, attr_town_name, attr_town_name_match, 5, tc->country->file);
+            }
 
             town_country_destroy(tc);
             processed_nodes_out++;

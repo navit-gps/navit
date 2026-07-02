@@ -187,6 +187,7 @@ struct navit {
     int tunnel_nightlayout; /* switch to nightlayout if we are in a tunnel? */
     char *layout_before_tunnel;
     int sunrise_degrees;
+    char **lang_pref;
 };
 
 struct gui *main_loop_gui;
@@ -1531,6 +1532,7 @@ struct navit *navit_new(struct attr *parent, struct attr **attrs) {
         navit_set_attr_do(this_, *attrs, 1);
     }
     this_->displaylist = graphics_displaylist_new();
+    graphics_displaylist_set_navit(this_->displaylist, this_);
     command_add_table(this_->attr_cbl, commands, sizeof(commands) / sizeof(struct command_table), this_);
 
     this_->messages = messagelist_new(attrs);
@@ -2568,6 +2570,15 @@ void navit_set_center_screen(struct navit *this_, struct point *p, int set_timeo
     navit_set_center(this_, &pc, set_timeout);
 }
 
+static void navit_lang_pref_free(char **lang_pref) {
+    char **p;
+    if (!lang_pref)
+        return;
+    for (p = lang_pref; *p; p++)
+        g_free(*p);
+    g_free(lang_pref);
+}
+
 static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
     int dir = 0, orient_old = 0, attr_updated = 0;
     struct coord co;
@@ -2582,6 +2593,26 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
     dbg(lvl_debug, "enter, this_=%p, attr=%p (%s), init=%d", this_, attr, attr_to_name(attr->type), init);
 
     switch (attr->type) {
+    case attr_lang_pref: {
+        char **old = this_->lang_pref;
+        this_->lang_pref = NULL;
+
+        if (attr->u.str && attr->u.str[0]) {
+            gchar **parts = g_strsplit(attr->u.str, ",", -1);
+            int n = 0, i;
+            while (parts[n])
+                n++;
+            this_->lang_pref = g_new(char *, n + 1);
+            for (i = 0; i < n; i++)
+                this_->lang_pref[i] = g_strdup(g_strstrip(parts[i]));
+            this_->lang_pref[n] = NULL;
+            g_strfreev(parts);
+        }
+
+        navit_lang_pref_free(old);
+        attr_updated = 1;
+        break;
+    }
     case attr_autozoom:
         attr_updated = (this_->autozoom_secs != attr->u.num);
         this_->autozoom_secs = attr->u.num;
@@ -2814,6 +2845,12 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
 
 int navit_set_attr(struct navit *this_, struct attr *attr) {
     return navit_set_attr_do(this_, attr, 0);
+}
+
+const char **navit_get_lang_pref(struct navit *this_) {
+    if (!this_)
+        return NULL;
+    return (const char **)this_->lang_pref;
 }
 
 int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
