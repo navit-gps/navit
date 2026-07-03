@@ -26,6 +26,7 @@ extern "C" {
 
 #include "attr.h"
 #include "attr_type_def.h"
+#include <stddef.h>
 
 struct point;
 struct vehicle_priv;
@@ -60,6 +61,10 @@ int vehicle_get_cursor_data(struct vehicle *this_, struct point *pnt, int *angle
 void vehicle_log_gpx_add_tag(char *tag, char **logstr);
 struct vehicle *vehicle_ref(struct vehicle *this_);
 void vehicle_unref(struct vehicle *this_);
+void nmea_chksum(char *nmea);
+void nmea_float_fmt(char *buf, size_t size, double value, int int_digits, int decimals);
+#define NMEA_GPGGA_FMT "$GPGGA,%02d%02d%02d,%s%s,%c,%s%s,%c,1,08,2.5,%s,M,,,,0000*  \n"
+#define NMEA_GPRMC_FMT "$GPRMC,%02d%02d%02d,A,%s%s,%c,%s%s,%c,%s,%s,%02d%02d%02d,,*  \n"
 /* end of prototypes */
 
 #ifdef __cplusplus
