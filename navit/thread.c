@@ -28,6 +28,7 @@
 #include <glib.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #ifdef HAVE_API_WIN32_BASE
 #    include <windows.h>
 #else
@@ -70,84 +71,7 @@ static void *thread_main_wrapper(void *data) {
 }
 
 static char *thread_format_error(int error) {
-    switch (error) {
-    case EPERM:
-        return "EPERM (Operation not permitted)";
-    case ENOENT:
-        return "ENOENT (No such file or directory)";
-    case ESRCH:
-        return "ESRCH (No such process)";
-    case EINTR:
-        return "EINTR (Interrupted system call)";
-    case EIO:
-        return "EIO (I/O error)";
-    case ENXIO:
-        return "ENXIO (No such device or address)";
-    case E2BIG:
-        return "E2BIG (Argument list too long)";
-    case ENOEXEC:
-        return "ENOEXEC (Exec format error)";
-    case EBADF:
-        return "EBADF (Bad number)";
-    case ECHILD:
-        return "ECHILD (No child processes)";
-    case EAGAIN:
-        return "EAGAIN (Try again)";
-    case ENOMEM:
-        return "ENOMEM (Out of memory)";
-    case EACCES:
-        return "EACCES (Permission denied)";
-    case EFAULT:
-        return "EFAULT (Bad address)";
-    case ENOTBLK:
-        return "ENOTBLK (Block device required)";
-    case EBUSY:
-        return "EBUSY (Device or resource busy)";
-    case EEXIST:
-        return "EEXIST (File exists)";
-    case EXDEV:
-        return "EXDEV (Cross-device link)";
-    case ENODEV:
-        return "ENODEV (No such device)";
-    case ENOTDIR:
-        return "ENOTDIR (Not a directory)";
-    case EISDIR:
-        return "EISDIR (Is a directory)";
-    case EINVAL:
-        return "EINVAL (Invalid argument)";
-    case ENFILE:
-        return "ENFILE (File table overflow)";
-    case EMFILE:
-        return "EMFILE (Too many open files)";
-    case ENOTTY:
-        return "ENOTTY (Not a typewriter)";
-    case ETXTBSY:
-        return "ETXTBSY (Text file busy)";
-    case EFBIG:
-        return "EFBIG (File too large)";
-    case ENOSPC:
-        return "ENOSPC (No space left on device)";
-    case ESPIPE:
-        return "ESPIPE (Illegal seek)";
-    case EROFS:
-        return "EROFS (Read-only file system)";
-    case EMLINK:
-        return "EMLINK (Too many links)";
-    case EPIPE:
-        return "EPIPE (Broken pipe)";
-    case EDOM:
-        return "EDOM (Math argument out of domain of func)";
-    case ERANGE:
-        return "ERANGE (Math result not representable)";
-    case EDEADLK:
-        return "EDEADLK (Resource deadlock would occur)";
-    case ENAMETOOLONG:
-        return "ENAMETOOLONG (File name too long)";
-    case ENOLCK:
-        return "ENOLCK (No record locks available)";
-    default:
-        return "unknown";
-    }
+    return strerror(error);
 }
 
 #elif HAVE_API_WIN32
