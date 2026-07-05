@@ -4394,8 +4394,11 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
         dbg(lvl_debug, "*****enter, %d messages in queue", g_list_length(this_->shared->message_queue));
 
     gettimeofday(&start, NULL);
-    for (; this_->shared->message_queue && (msec < TIME_SLICE);
-         this_->shared->message_queue = g_list_remove(this_->shared->message_queue, message)) {
+    while (this_->shared->message_queue) {
+        gettimeofday(&now, NULL);
+        msec = (now.tv_usec - start.tv_usec) / ((double)1000) + (now.tv_sec - start.tv_sec) * 1000;
+        if (msec >= TIME_SLICE)
+            break;
         message = (struct traffic_message *)this_->shared->message_queue->data;
         i++;
         if (message->expiration_time < time(NULL)) {
@@ -4466,9 +4469,13 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
                                  * operation is deferred until a rectangle overlapping with the location is queried.
                                  */
                                 if (!message->priv->items) {
-                                    /* TODO do this in an idle loop, not here */
-                                    traffic_message_add_segments(message, this_->shared->ms, data, this_->shared->map,
-                                                                 this_->shared->rt);
+                                    gettimeofday(&now, NULL);
+                                    msec = (now.tv_usec - start.tv_usec) / ((double)1000)
+                                           + (now.tv_sec - start.tv_sec) * 1000;
+                                    if (msec < TIME_SLICE) {
+                                        traffic_message_add_segments(message, this_->shared->ms, data,
+                                                                     this_->shared->map, this_->shared->rt);
+                                    }
                                     break;
                                     map_selection_destroy(loc_ms);
                                     map_selection_destroy(rt_ms);
@@ -4509,8 +4516,7 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
 
             dbg(lvl_debug, "*****checkpoint PROCESS-6");
         }
-        gettimeofday(&now, NULL);
-        msec = (now.tv_usec - start.tv_usec) / ((double)1000) + (now.tv_sec - start.tv_sec) * 1000;
+        this_->shared->message_queue = g_list_remove(this_->shared->message_queue, message);
     }
 
     if (i)
