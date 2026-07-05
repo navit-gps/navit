@@ -252,7 +252,7 @@ if(PKG_CONFIG_FOUND)
     if(ANDROID)
         # pkg_check_modules found the host libcurl, not the Android one.
         # Require an explicit cross-compiled libcurl for the target ABI.
-	find_library(curl REQUIRED CONFIG)
+        find_library(curl REQUIRED CONFIG)
         set(LIBCURL_FOUND TRUE)
         set(LIBCURL_LIBRARIES ${LIBCURL_LIBRARY})
         set_with_reason(traffic/traff_http "libcurl found in NDK sysroot" TRUE)
