@@ -3845,6 +3845,16 @@ int navit_get_blocked(struct navit *this_) {
     return this_->blocked;
 }
 
+static void navit_shutdown_traffic(struct navit *this_) {
+    struct attr_iter *iter;
+    struct attr attr;
+
+    iter = navit_attr_iter_new(NULL);
+    while (navit_get_attr(this_, attr_traffic, &attr, iter))
+        traffic_shutdown((struct traffic *)attr.u.navit_object);
+    navit_attr_iter_destroy(iter);
+}
+
 static void navit_destroy_traffic_maps(struct navit *this_) {
     GList *mapsets;
     GList *m;
@@ -3970,6 +3980,7 @@ static void navit_attrs_free_navigation_last(struct attr **attrs) {
 void navit_destroy(struct navit *this_) {
     graphics_draw_cancel(this_->gra, this_->displaylist);
 
+    navit_shutdown_traffic(this_);
     navit_destroy_traffic_maps(this_);
 
     callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);
