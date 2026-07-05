@@ -7,21 +7,8 @@ Traffic in Navit
 distortion…|\ |…seen here|\ |Route avoiding a traffic distortion (route
 in blue, traffic distortion in orange)|
 
-Traffic support in Navit is currently (as of August 2019) available on
-Android only. On recent builds, all you need is another app which
-supplies traffic information.
-
-Until October 2018, Navit lacked full support for routing around traffic
-problems, although the routing engine has had the core functionality for
-many years. Full traffic support, i.e. receiving traffic reports and
-routing around congestions, is currently an experimental feature and
-still under development. Follow the latest developments on the
-`traffic <https://github.com/navit-gps/navit/tree/traffic>`__ branch if
-you’re interested in seeing how it works, or are interested in
-contributing. The `project
-board <https://github.com/navit-gps/navit/projects/8>`__ will give you
-an idea of what is currently being worked on, and where we are looking
-for contributions.
+On Android, another app (Oz or RoadEagle)  is required, which supplies traffic information.
+On Linux, traff_http is available as a plugin.
 
 .. _using_traffic_information_in_navit:
 
@@ -46,11 +33,8 @@ Here is a brief overview of TraFF backends and platforms:
 
 If a traffic plugin for your platform is included and enabled by
 default, you are ready to go. If it is included but not enabled, you can
-enable it by editing navit.xml and adding a like similar to the
-following before the element:
+enable it by editing navit.xml.
 
-Replace ``traffic_foobar`` with the name of the traffic module you wish
-to use, and ``attr="value"`` with any attributes your module requires.
 
 You may still find Navit sending you through what appears to be an
 obstruction on the map: While the map only shows obstructions with no
@@ -123,9 +107,9 @@ This plugin is still in early development stage. In order for
 threads (support for Windows is under development), and
 `libcurl <https://curl.se/libcurl/>`__ must be available at build time
 and at run time. This works if you are building Navit on Linux and
-running it locally; others are currently untested.
+running it locally.
 
-You will need to configure the plugin manually, e.g.:
+<traffic type="traff_http" interval="600000" source="<server URL>" />
 
 ``interval`` is the interval (in milliseconds) at which you would like
 Navit to poll the source. The example has 600000 msec, or 10 minutes.
@@ -271,17 +255,7 @@ In order to route around the new distortions, you will need to stop
 navigation and set the destination again (which will cause a new route
 graph to be built—simply recalculating the route is also not sufficient,
 because that still uses the same route graph). Navit has no way to tell
-routing about the changes, and the currently used `Dijkstra
-algorithm <https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm>`__ does
-not support partial updates.
-
-This is being changed in the traffic branch. First, when a traffic
-message is received, that will always trigger a map redraw, causing
-traffic distortions to show up in the map as soon as they are received.
-Also, the routing algorithm was changed to
-[https://en.wikipedia.org/wiki/Lifelong_Planning_A\ \* LPA*], which
-supports partial updates. Thus, when a traffic distortion changes, Navit
-will automatically recalculate the cheapest route.
+routing about the changes.
 
 API
 ---
