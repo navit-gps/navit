@@ -53,9 +53,10 @@
 #ifndef NAVIT_TRAFFIC_H
 #define NAVIT_TRAFFIC_H
 
+#include "coord.h"
+#include "item_type_def.h"
 #include "route.h"
 #include <time.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -417,6 +418,16 @@ struct traffic_message {
     int event_count;                   /*!< The number of events in `events`. */
     struct traffic_event **events;     /*!< Points to an array of pointers to the events for this message. */
     struct traffic_message_priv *priv; /*!< Internal data, not exposed via the API */
+};
+
+/**
+ * @brief A response from a TraFF source.
+ */
+struct traffic_response {
+    char *status;                      /**< Response status, indicating success or an error */
+    char *subscription_id;             /**< Subscription ID, if any */
+    int timeout;                       /**< Timeout in seconds, if any, else 0 */
+    struct traffic_message **messages; /**< Points to an array of pointers for the messages, if any */
 };
 
 struct map;
@@ -951,7 +962,7 @@ struct traffic_message **traffic_get_messages_from_xml_file(struct traffic *this
  * @brief Reads traffic messages from an XML string.
  *
  * @param this_ The traffic instance
- * @param filename The XML document to parse, as a string
+ * @param xml The XML document to parse, as a string
  *
  * @return A `NULL`-terminated pointer array. Each element points to one `struct traffic_message`.
  * `NULL` is returned (rather than an empty pointer array) if there are no messages to report.
@@ -969,6 +980,16 @@ struct traffic_message **traffic_get_messages_from_xml_string(struct traffic *th
  * @return The traffic map
  */
 struct map *traffic_get_map(struct traffic *this_);
+
+/**
+ * @brief Reads a TraFF response from an XML string.
+ *
+ * @param this_ The traffic instance
+ * @param xml The XML document to parse, as a string
+ *
+ * @return The response, or NULL if the data did not contain a response
+ */
+struct traffic_response *traffic_get_response_from_xml_string(struct traffic *this_, char *xml);
 
 /**
  * @brief Returns currently active traffic messages.
