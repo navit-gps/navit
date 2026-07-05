@@ -24,8 +24,8 @@
 
 #include "thread.h"
 #include <glib.h>
-#include <math.h>
 #include <stdlib.h>
+#include <string.h>
 #ifdef HAVE_API_WIN32_BASE
 #    include <windows.h>
 #else
@@ -69,84 +69,7 @@ static void *thread_main_wrapper(void *data) {
 }
 
 char *thread_format_error(int error) {
-    switch (error) {
-    case EPERM:
-        return "EPERM (Operation not permitted)";
-    case ENOENT:
-        return "ENOENT (No such file or directory)";
-    case ESRCH:
-        return "ESRCH (No such process)";
-    case EINTR:
-        return "EINTR (Interrupted system call)";
-    case EIO:
-        return "EIO (I/O error)";
-    case ENXIO:
-        return "ENXIO (No such device or address)";
-    case E2BIG:
-        return "E2BIG (Argument list too long)";
-    case ENOEXEC:
-        return "ENOEXEC (Exec format error)";
-    case EBADF:
-        return "EBADF (Bad file number)";
-    case ECHILD:
-        return "ECHILD (No child processes)";
-    case EAGAIN:
-        return "EAGAIN (Try again)";
-    case ENOMEM:
-        return "ENOMEM (Out of memory)";
-    case EACCES:
-        return "EACCES (Permission denied)";
-    case EFAULT:
-        return "EFAULT (Bad address)";
-    case ENOTBLK:
-        return "ENOTBLK (Block device required)";
-    case EBUSY:
-        return "EBUSY (Device or resource busy)";
-    case EEXIST:
-        return "EEXIST (File exists)";
-    case EXDEV:
-        return "EXDEV (Cross-device link)";
-    case ENODEV:
-        return "ENODEV (No such device)";
-    case ENOTDIR:
-        return "ENOTDIR (Not a directory)";
-    case EISDIR:
-        return "EISDIR (Is a directory)";
-    case EINVAL:
-        return "EINVAL (Invalid argument)";
-    case ENFILE:
-        return "ENFILE (File table overflow)";
-    case EMFILE:
-        return "EMFILE (Too many open files)";
-    case ENOTTY:
-        return "ENOTTY (Not a typewriter)";
-    case ETXTBSY:
-        return "ETXTBSY (Text file busy)";
-    case EFBIG:
-        return "EFBIG (File too large)";
-    case ENOSPC:
-        return "ENOSPC (No space left on device)";
-    case ESPIPE:
-        return "ESPIPE (Illegal seek)";
-    case EROFS:
-        return "EROFS (Read-only file system)";
-    case EMLINK:
-        return "EMLINK (Too many links)";
-    case EPIPE:
-        return "EPIPE (Broken pipe)";
-    case EDOM:
-        return "EDOM (Math argument out of domain of func)";
-    case ERANGE:
-        return "ERANGE (Math result not representable)";
-    case EDEADLK:
-        return "EDEADLK (Resource deadlock would occur)";
-    case ENAMETOOLONG:
-        return "ENAMETOOLONG (File name too long)";
-    case ENOLCK:
-        return "ENOLCK (No record locks available)";
-    default:
-        return "unknown";
-    }
+    return strerror(error);
 }
 
 #elif HAVE_API_WIN32
@@ -361,14 +284,10 @@ void thread_event_wait(thread_event *this_, long msec) {
         pthread_cond_wait(this_->cond, this_->mutex);
     else {
         gettimeofday(&tp, NULL);
-        /* if msec is 1 s or more, add integer part to tv_sec */
-        ts.tv_sec = tp.tv_sec + floor(msec / 1000);
-        /* for now, these are really µsec, not nsec, to prevent overflow */
+        ts.tv_sec = tp.tv_sec + msec / 1000;
         ts.tv_nsec = tp.tv_usec + (msec % 1000) * 1000000;
-        /* if tv_nsec is 1s or more, move integer second part to tv_sec */
-        ts.tv_sec += floor(ts.tv_nsec / 1000000);
+        ts.tv_sec += ts.tv_nsec / 1000000;
         ts.tv_nsec %= 1000000;
-        /* and finally, convert µsec to nsec */
         ts.tv_nsec *= 1000;
 
         pthread_cond_timedwait(this_->cond, this_->mutex, &ts);
