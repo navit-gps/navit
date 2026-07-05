@@ -4392,8 +4392,11 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
         dbg(lvl_debug, "*****enter, %d messages in queue", g_list_length(this_->shared->message_queue));
 
     gettimeofday(&start, NULL);
-    for (; this_->shared->message_queue && (msec < TIME_SLICE);
-         this_->shared->message_queue = g_list_remove(this_->shared->message_queue, message)) {
+    while (this_->shared->message_queue) {
+        gettimeofday(&now, NULL);
+        msec = (now.tv_usec - start.tv_usec) / ((double)1000) + (now.tv_sec - start.tv_sec) * 1000;
+        if (msec >= TIME_SLICE)
+            break;
         message = (struct traffic_message *)this_->shared->message_queue->data;
         i++;
         if (message->expiration_time < time(NULL)) {
@@ -4512,8 +4515,7 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
 
             dbg(lvl_debug, "*****checkpoint PROCESS-6");
         }
-        gettimeofday(&now, NULL);
-        msec = (now.tv_usec - start.tv_usec) / ((double)1000) + (now.tv_sec - start.tv_sec) * 1000;
+        this_->shared->message_queue = g_list_remove(this_->shared->message_queue, message);
     }
 
     if (i)
