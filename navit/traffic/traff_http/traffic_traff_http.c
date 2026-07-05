@@ -274,6 +274,7 @@ static int traffic_traff_http_process_response(struct traffic_priv *this_, struc
             event_add_timeout(1, 0, *cb);
         }
         ret = !!(response->messages);
+        response->messages = NULL;
         g_free(response->status);
         g_free(response);
     } else {
@@ -639,7 +640,6 @@ static struct traffic_priv *traffic_traff_http_new(struct navit *nav, struct tra
     } else {
         dbg(lvl_error, "traffic source unset. Unable to use traff-http plugin");
         g_free(ret);
-        exit(42);
         return NULL;
     }
     ret->queue = NULL;
