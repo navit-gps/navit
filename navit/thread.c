@@ -25,6 +25,7 @@
 #include "thread.h"
 #include <glib.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #ifdef HAVE_API_WIN32_BASE
 #    include <windows.h>
@@ -63,8 +64,8 @@ struct thread_event_pthread {
  */
 static void *thread_main_wrapper(void *data) {
     struct thread_main_data *main_data = (struct thread_main_data *)data;
-    void *ret = (void *)(main_data->main(main_data->data));
-    // FIXME free up `data`
+    void *ret = (void *)(intptr_t)(main_data->main(main_data->data));
+    g_free(main_data);
     return ret;
 }
 
@@ -174,13 +175,13 @@ void thread_exit(int result) {
 
 int thread_join(thread *this_) {
 #ifdef HAVE_POSIX_THREADS
-    int *ret;
-    int err = pthread_join(*this_, (void **)&ret);
+    void *ret;
+    int err = pthread_join(*this_, &ret);
     if (err) {
         dbg(lvl_error, "error %d %s, thread=%p", err, thread_format_error(err), this_);
         return -1;
     }
-    return (int)*ret;
+    return (intptr_t)ret;
 #elif HAVE_API_WIN32
     DWORD res;
     DWORD err;
