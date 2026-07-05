@@ -552,7 +552,6 @@ size_t numdigits(long long l) {
 
 char *floattostr(char *ret, size_t size, navit_float f, char sep) {
     long long i = (long long)f;
-    char dec_str[size];
 
     snprintf(ret, size, "%.*f", size - numdigits(i) - (f < 0 ? 1 : 0) - 1, f);
 
