@@ -700,23 +700,27 @@ static struct traffic_priv *traffic_traff_http_new(struct navit *nav, struct tra
     if (ret->interval < MIN_INTERVAL)
         ret->interval = MIN_INTERVAL;
     attr = attr_search(attrs, attr_source);
-    if (attr) {
-        if (strncmp(attr->u.str, "http://", 7) && strncmp(attr->u.str, "https://", 8)) {
-            dbg(lvl_error, "source must be an HTTP(S) URI: %s", attr->u.str);
-        } else
-            ret->source = g_strdup(attr->u.str);
-    } else {
+    if (!attr) {
         dbg(lvl_error, "traffic source unset. Unable to use traff-http plugin");
         g_free(ret);
-        exit(42);
         return NULL;
     }
-
+    if (strncmp(attr->u.str, "http://", 7) && strncmp(attr->u.str, "https://", 8)) {
+        dbg(lvl_error, "source must be an HTTP(S) URI: %s", attr->u.str);
+        g_free(ret);
+        return NULL;
+    }
+    ret->source = g_strdup(attr->u.str);
     ret->queue_lock = thread_lock_new();
     ret->queue_event = thread_event_new();
     *meth = traffic_traff_http_meth;
 
-    traffic_traff_http_init(ret);
+    if (!traffic_traff_http_init(ret)) {
+        thread_event_destroy(ret->queue_event);
+        thread_lock_destroy(ret->queue_lock);
+        g_free(ret);
+        return NULL;
+    }
 
     return ret;
 }
