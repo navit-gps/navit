@@ -31,12 +31,13 @@ static void event_glib_main_loop_run(void) {
     if (g_main_loop_is_running(loop)) {
         g_main_loop_run(loop);
     }
+    g_main_loop_unref(loop);
+    loop = NULL;
 }
 
 static void event_glib_main_loop_quit(void) {
     if (loop) {
         g_main_loop_quit(loop);
-        g_main_loop_unref(loop);
     }
 }
 
