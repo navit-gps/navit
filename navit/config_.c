@@ -62,7 +62,6 @@ void config_clear_attrs(void) {
 }
 
 static void config_terminate(int sig) {
-    dbg(lvl_debug, "terminating");
     event_main_loop_quit();
 }
 
