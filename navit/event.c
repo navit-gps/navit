@@ -22,12 +22,60 @@
 #include "plugin.h"
 #include <stdlib.h>
 #include <string.h>
+#ifndef _WIN32
+#    include <fcntl.h>
+#    include <unistd.h>
+#endif
 
 static struct event_methods event_methods;
 static const char *e_requestor;
 static const char *e_system;
 
 static int has_quit;
+
+#ifdef _WIN32
+
+void event_signal_notify(void) {
+    event_main_loop_quit();
+}
+
+int event_get_signal_fd(void) {
+    return -1;
+}
+
+#else
+
+static int sig_pipe_fds[2] = {-1, -1};
+
+static void sig_pipe_init(void) __attribute__((constructor));
+static void sig_pipe_init(void) {
+    if (pipe(sig_pipe_fds) < 0) {
+        sig_pipe_fds[0] = sig_pipe_fds[1] = -1;
+    } else {
+        int flags;
+        flags = fcntl(sig_pipe_fds[0], F_GETFL);
+        if (flags != -1)
+            fcntl(sig_pipe_fds[0], F_SETFL, flags | O_NONBLOCK);
+        flags = fcntl(sig_pipe_fds[1], F_GETFL);
+        if (flags != -1)
+            fcntl(sig_pipe_fds[1], F_SETFL, flags | O_NONBLOCK);
+    }
+}
+
+void event_signal_notify(void) {
+    if (sig_pipe_fds[1] != -1) {
+        char c = 1;
+        if (write(sig_pipe_fds[1], &c, 1) < 0) {
+            /* ignore EAGAIN (pipe full) and other harmless errors */
+        }
+    }
+}
+
+int event_get_signal_fd(void) {
+    return sig_pipe_fds[0];
+}
+
+#endif
 
 #define require_method_helper(m)                                                                                       \
     if (!event_methods.m) {                                                                                            \

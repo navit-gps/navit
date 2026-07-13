@@ -23,13 +23,34 @@
 #include "event.h"
 #include "plugin.h"
 #include <glib.h>
+#include <unistd.h>
 
 static GMainLoop *loop;
+static guint signal_watch_source;
+
+static gboolean event_glib_signal_cb(GIOChannel *channel, GIOCondition cond, gpointer data) {
+    char c;
+    while (read(g_io_channel_unix_get_fd(channel), &c, 1) > 0)
+        ;
+    event_main_loop_quit();
+    return FALSE;
+}
 
 static void event_glib_main_loop_run(void) {
+    GIOChannel *signal_channel;
+    int signal_fd = event_get_signal_fd();
     loop = g_main_loop_new(NULL, TRUE);
+    if (signal_fd != -1) {
+        signal_channel = g_io_channel_unix_new(signal_fd);
+        signal_watch_source = g_io_add_watch(signal_channel, G_IO_IN, event_glib_signal_cb, NULL);
+        g_io_channel_unref(signal_channel);
+    }
     if (g_main_loop_is_running(loop)) {
         g_main_loop_run(loop);
+    }
+    if (signal_watch_source) {
+        g_source_remove(signal_watch_source);
+        signal_watch_source = 0;
     }
     g_main_loop_unref(loop);
     loop = NULL;
