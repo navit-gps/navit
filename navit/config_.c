@@ -62,7 +62,7 @@ void config_clear_attrs(void) {
 }
 
 static void config_terminate(int sig) {
-    event_main_loop_quit();
+    event_signal_notify();
 }
 
 static void config_new_int(void) {

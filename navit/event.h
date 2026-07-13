@@ -56,6 +56,8 @@ struct event_watch;
 void event_main_loop_run(void);
 void event_main_loop_quit(void);
 int event_main_loop_has_quit(void);
+void event_signal_notify(void);
+int event_get_signal_fd(void);
 struct event_watch *event_add_watch(int fd, enum event_watch_cond cond, struct callback *cb);
 void event_remove_watch(struct event_watch *ev);
 struct event_timeout *event_add_timeout(int timeout, int multi, struct callback *cb);
