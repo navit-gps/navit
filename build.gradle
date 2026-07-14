@@ -8,7 +8,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:9.2.1'
+        classpath 'com.android.tools.build:gradle:9.3.0'
     }
 }
 
@@ -102,7 +102,7 @@ android {
         }
 
         checkstyle {
-            toolVersion = '13.7.0'
+            toolVersion = '13.8.0'
         }
     }
 
