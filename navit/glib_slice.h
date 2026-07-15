@@ -5,3 +5,6 @@
 #    define g_slice_free(x, y) g_free(y)
 #    define g_slice_free1(x, y) g_free(y)
 #endif
+#if !GLIB_CHECK_VERSION(2, 68, 0)
+#    define g_memdup2(mem, n) g_memdup((mem), (guint)(n))
+#endif

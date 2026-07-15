@@ -4,6 +4,7 @@
 #include "coord.h"
 #include "debug.h"
 #include "fib.h"
+#include "glib_slice.h"
 #include "graphics.h"
 #include "gui_internal.h"
 #include "gui_internal_html.h"
@@ -237,7 +238,7 @@ static struct poi_param *gui_internal_poi_param_clone(struct poi_param *p) {
     if (p->filterstr) {
         char *last = g_list_last(l)->data;
         int len = (last - p->filterstr) + strlen(last) + 1;
-        r->filterstr = g_memdup(p->filterstr, len);
+        r->filterstr = g_memdup2(p->filterstr, len);
     }
     while (l) {
         r->filter = g_list_append(r->filter, r->filterstr + ((char *)(l->data) - p->filterstr));
