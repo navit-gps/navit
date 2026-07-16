@@ -906,7 +906,7 @@ static struct item *tm_add_item(struct map *map, enum item_type type, int id_hi,
         ret->meth = &methods_traffic_item;
         priv_data = (struct item_priv *)ret->priv_data;
         priv_data->attrs = int_attrs;
-        priv_data->coords = g_memdup(c, sizeof(struct coord) * count);
+        priv_data->coords = g_memdup2(c, sizeof(struct coord) * count);
         priv_data->coord_count = count;
         priv_data->next_attr = int_attrs;
         priv_data->next_coord = 0;
@@ -5549,7 +5549,7 @@ struct traffic_suppl_info *traffic_suppl_info_new(enum si_class si_class, enum s
     ret = g_new0(struct traffic_suppl_info, 1);
     ret->si_class = si_class;
     ret->type = type;
-    ret->quantifier = quantifier ? g_memdup(quantifier, sizeof(struct quantifier)) : NULL;
+    ret->quantifier = quantifier ? g_memdup2(quantifier, sizeof(struct quantifier)) : NULL;
     return ret;
 }
 
@@ -5568,10 +5568,10 @@ struct traffic_event *traffic_event_new(enum event_class event_class, enum event
     ret->type = type;
     ret->length = length;
     ret->speed = speed;
-    ret->quantifier = quantifier ? g_memdup(quantifier, sizeof(struct quantifier)) : NULL;
+    ret->quantifier = quantifier ? g_memdup2(quantifier, sizeof(struct quantifier)) : NULL;
     if (si_count && si) {
         ret->si_count = si_count;
-        ret->si = g_memdup(si, sizeof(struct traffic_suppl_info *) * si_count);
+        ret->si = g_memdup2(si, sizeof(struct traffic_suppl_info *) * si_count);
     } else {
         ret->si_count = 0;
         ret->si = NULL;
@@ -5637,7 +5637,7 @@ struct traffic_message *traffic_message_new(char *id, time_t receive_time, time_
     ret->is_forecast = is_forecast;
     if (replaced_count && replaces) {
         ret->replaced_count = replaced_count;
-        ret->replaces = g_memdup(replaces, sizeof(char *) * replaced_count);
+        ret->replaces = g_memdup2(replaces, sizeof(char *) * replaced_count);
     } else {
         ret->replaced_count = 0;
         ret->replaces = NULL;
@@ -5645,7 +5645,7 @@ struct traffic_message *traffic_message_new(char *id, time_t receive_time, time_
     ret->location = location;
     if (event_count && events) {
         ret->event_count = event_count;
-        ret->events = g_memdup(events, sizeof(struct traffic_event *) * event_count);
+        ret->events = g_memdup2(events, sizeof(struct traffic_event *) * event_count);
     }
     ret->priv = g_new0(struct traffic_message_priv, 1);
     ret->priv->items = NULL;

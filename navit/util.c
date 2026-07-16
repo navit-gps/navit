@@ -20,6 +20,7 @@
 #include "util.h"
 #include "config.h"
 #include "debug.h"
+#include "glib_slice.h"
 #include <ctype.h>
 #include <glib.h>
 #include <limits.h>
@@ -808,12 +809,12 @@ time_t mkgmtime(struct tm *pt) {
     /* Input, GMT and local time */
     struct tm *pti, *pgt, *plt;
 
-    pti = g_memdup(pt, sizeof(struct tm));
+    pti = g_memdup2(pt, sizeof(struct tm));
 
     ret = mktime(pti);
 
-    pgt = g_memdup(gmtime(&ret), sizeof(struct tm));
-    plt = g_memdup(localtime(&ret), sizeof(struct tm));
+    pgt = g_memdup2(gmtime(&ret), sizeof(struct tm));
+    plt = g_memdup2(localtime(&ret), sizeof(struct tm));
 
     pti->tm_year = pt->tm_year - pgt->tm_year + plt->tm_year;
     pti->tm_mon = pt->tm_mon - pgt->tm_mon + plt->tm_mon;
