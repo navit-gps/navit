@@ -295,5 +295,5 @@ We can now set up the GPS using this
 `document <http://www.usglobalsat.com/downloads/NMEA_commands.pdf>`__.
 
 .. |Navit on iPAQ H2210| image:: Imgp0459-320.jpg
-.. |Internal gui on iPAQ H2210| image:: Screenshot-1.png
+.. |Internal gui on iPAQ H2210| image:: ../../user/configuration/Screenshot-1.png
 .. |Navit on iPAQ H2210 w/ Globalsat BC-337| image:: Img_0174.jpg
