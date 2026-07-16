@@ -1,5 +1,6 @@
 var NAVTREEINDEX20 =
 {
+"gui__internal__priv_8h.html#a2c5ce8c9e2aacab5c7d2a26892cfbb31":[3,0,4,1,16,11],
 "gui__internal__priv_8h.html#a4fd955925a6330096a5fb006d07161ce":[3,0,4,1,16,18],
 "gui__internal__priv_8h.html#a53b6431af49ec8203c72046e0512fec4":[3,0,4,1,16,25],
 "gui__internal__priv_8h.html#a59c97cf2120fc8b016e2f24d5f8b2302":[3,0,4,1,16,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX20 =
 "interfaceVSSpeechSynthesizer.html#aa989bc284ea7db534120e271c5bc3546":[2,0,422,10],
 "interfaceVSSpeechSynthesizer.html#aad7cf3a6957094ed41a7a07d2823743f":[2,0,422,7],
 "interfaceVSSpeechSynthesizer.html#ab7098e9b49a06f56c2839e20aab389e8":[2,0,422,8],
-"interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult.html":[2,0,0,0,0,2],
-"interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult.html#a315aa94c3fab93f3dae6d90a89186e00":[2,0,0,0,0,2,0]
+"interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult.html":[2,0,0,0,0,2]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX21 =
 {
+"interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult.html#a315aa94c3fab93f3dae6d90a89186e00":[2,0,0,0,0,2,0],
 "item_8c.html":[3,0,67],
 "item_8c.html#a049612b8c52acba4b3908b0f63503048":[3,0,67,35],
 "item_8c.html#a06f39817adf6b6fe25ff0d9ff9325505":[3,0,67,41],
@@ -248,6 +249,5 @@ var NAVTREEINDEX21 =
 "layout_8c.html#aad487fc21b1cfce3531563fc32471c20":[3,0,73,20],
 "layout_8c.html#ab0a0f9098827ccb63b980330d6af57df":[3,0,73,24],
 "layout_8c.html#ab9fe03394484d32c45e732ecd3c2194b":[3,0,73,25],
-"layout_8c.html#abba7de7ad1494928bf4e7b8b8c456f23":[3,0,73,26],
-"layout_8c.html#ac9baa7d03e7c26cd1e3434a27fcaa803":[3,0,73,23]
+"layout_8c.html#abba7de7ad1494928bf4e7b8b8c456f23":[3,0,73,26]
 };

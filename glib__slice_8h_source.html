@@ -104,6 +104,9 @@ $(document).ready(function(){initNavTree('glib__slice_8h_source.html',''); initR
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#    define g_slice_free(x, y) g_free(y)</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#    define g_slice_free1(x, y) g_free(y)</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#if !GLIB_CHECK_VERSION(2, 68, 0)</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="glib__slice_8h.html#ae373e38f1f00cd6609d47679570031f1">    9</a></span><span class="preprocessor">#    define g_memdup2(mem, n) g_memdup((mem), (guint)(n))</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

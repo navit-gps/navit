@@ -1,5 +1,6 @@
 var NAVTREEINDEX42 =
 {
+"structroute.html#adeaa626b19e8e36e268e596d0622d271":[2,0,323,7],
 "structroute.html#af1a6e165ddec06052971e17c4bff0f68":[2,0,323,16],
 "structrouteObject.html":[2,0,338],
 "structrouteObject.html#a405e84961bde43c3befffa20905debb6":[2,0,338,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX42 =
 "structspawn__process__info.html":[2,0,357],
 "structspawn__process__info.html#a0085ee74d437968d534e39154fca5af7":[2,0,357,0],
 "structspawn__process__info.html#a0cdfba1474649261e9f135def0ba0709":[2,0,357,1],
-"structspeech.html":[2,0,358],
-"structspeech.html#a3dec345f6c4a3ccdf573a94d3644c767":[2,0,358,2]
+"structspeech.html":[2,0,358]
 };

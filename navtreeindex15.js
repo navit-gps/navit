@@ -1,5 +1,6 @@
 var NAVTREEINDEX15 =
 {
+"graphics__opengl_8h.html":[3,0,3,6,1],
 "graphics__opengl_8h.html#aa62e34303bc6b6c97858da2439cad448":[3,0,3,6,1,2],
 "graphics__opengl_8h.html#ac491172aae407cb11782487e5fab302b":[3,0,3,6,1,3],
 "graphics__opengl_8h_source.html":[3,0,3,6,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX15 =
 "graphics__win32_8c.html#ab95c091265df40792440ce33c53bb9f0":[3,0,3,11,1,54],
 "graphics__win32_8c.html#abede460fd607c07286fff792e1ca0696":[3,0,3,11,1,25],
 "graphics__win32_8c.html#ac69f474d11a94ac72e085dd3faed5f26":[3,0,3,11,1,62],
-"graphics__win32_8c.html#acde0f0e30327b6c2d2161bfd6c4b4ecc":[3,0,3,11,1,29],
-"graphics__win32_8c.html#ad23ec2e18eb0e803d1db5ce00f624297":[3,0,3,11,1,24]
+"graphics__win32_8c.html#acde0f0e30327b6c2d2161bfd6c4b4ecc":[3,0,3,11,1,29]
 };

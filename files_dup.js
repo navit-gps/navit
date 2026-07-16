@@ -61,7 +61,7 @@ var files_dup =
     [ "geom.c", "geom_8c.html", "geom_8c" ],
     [ "geom.h", "geom_8h.html", "geom_8h" ],
     [ "glib_compat.c", "glib__compat_8c.html", "glib__compat_8c" ],
-    [ "glib_slice.h", "glib__slice_8h.html", null ],
+    [ "glib_slice.h", "glib__slice_8h.html", "glib__slice_8h" ],
     [ "graphics.c", "graphics_8c.html", "graphics_8c" ],
     [ "graphics.h", "graphics_8h.html", "graphics_8h" ],
     [ "gtkext.h", "gtkext_8h.html", "gtkext_8h" ],
