@@ -3,7 +3,7 @@
 Contacts
 ========
 
-You can contact Navit `team <team>`__ and frequent users for help or
+You can contact Navit :ref:`team` and frequent users for help or
 advice through a variety of methods. Though you can use any of the
 methods below, Discord will probably result the quickest response.
 
@@ -26,7 +26,7 @@ Feel free to join: https://discord.gg/ADfXxZx
 Reporting Bugs/Feature Requests
 -------------------------------
 
-Please see `Reporting Bugs <reporting_bugs>`__ and
+Please see :ref:`reporting_bugs` and
 :doc:`Patches </development/guides/submitting_patches>`, if you like to contribute code.
 
 .. _following_development:
