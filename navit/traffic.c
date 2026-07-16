@@ -45,7 +45,6 @@
 #include "util.h"
 #include "vehicleprofile.h"
 #include "xmlconfig.h"
-#include <locale.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
@@ -125,11 +124,6 @@ struct traffic {
     struct event_timeout *timeout;      /**< The timeout event that triggers the loop function */
     struct callback *idle_cb;           /**< Idle callback to process new messages */
     struct event_idle *idle_ev;         /**< The pointer to the idle event */
-#ifndef WIN32                           // TODO: find win32 implementation to allow parsing of traff data
-                                        // independent from locale
-    locale_t systemlocale;
-    locale_t trafflocale;
-#endif
 };
 
 struct traffic_location_priv {
@@ -4472,13 +4466,9 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
                                  * operation is deferred until a rectangle overlapping with the location is queried.
                                  */
                                 if (!message->priv->items) {
-                                    gettimeofday(&now, NULL);
-                                    msec = (now.tv_usec - start.tv_usec) / ((double)1000)
-                                           + (now.tv_sec - start.tv_sec) * 1000;
-                                    if (msec < TIME_SLICE) {
-                                        traffic_message_add_segments(message, this_->shared->ms, data,
-                                                                     this_->shared->map, this_->shared->rt);
-                                    }
+                                    /* TODO do this in an idle loop, not here */
+                                    traffic_message_add_segments(message, this_->shared->ms, data, this_->shared->map,
+                                                                 this_->shared->rt);
                                     break;
                                     map_selection_destroy(loc_ms);
                                     map_selection_destroy(rt_ms);

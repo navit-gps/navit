@@ -53,8 +53,6 @@
 #ifndef NAVIT_TRAFFIC_H
 #define NAVIT_TRAFFIC_H
 
-#include "coord.h"
-#include "item_type_def.h"
 #include "route.h"
 #include <time.h>
 #ifdef __cplusplus

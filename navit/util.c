@@ -19,13 +19,11 @@
 
 #include "util.h"
 #include "config.h"
-#include "coord.h"
 #include "debug.h"
 #include "glib_slice.h"
 #include <ctype.h>
 #include <glib.h>
 #include <limits.h>
-#include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>

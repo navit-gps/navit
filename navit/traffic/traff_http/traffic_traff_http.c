@@ -32,8 +32,6 @@
 #include "coord.h"
 #include "debug.h"
 #include "event.h"
-#include "glib_slice.h"
-#include "item.h"
 #include "map.h"
 #include "navigation.h"
 #include "navit.h"
@@ -45,12 +43,9 @@
 #include "transform.h"
 #include "util.h"
 #include "vehicle.h"
-#include "xmlconfig.h"
 #include <curl/curl.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 #ifdef _POSIX_C_SOURCE
 #    include <sys/types.h>
