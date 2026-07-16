@@ -13,7 +13,7 @@ The Navit Community has a lot of opportunities to get involved, not everyone nee
 
    contacts
    feedback
-   Reporting_Bugs
    Translations
+   Reporting_Bugs
    donate
    logo
