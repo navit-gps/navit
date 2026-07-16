@@ -10,7 +10,7 @@ all, we will try to guide you trough this process:
 preparations
 ------------
 
-Make sure you are familar with our `development <development>`__,
+Make sure you are familar with our :doc:`/development/index`,
 learned about the codebase and our guidelines. If you found a bug,
 please open a `Trac <Trac>`__ ticket and bring up all details so others
 can check them and help you on isolating the defective code. Point out

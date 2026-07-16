@@ -3,8 +3,7 @@
 Developer Overview
 ==================
 
-**Navit** is written mostly in C (see `Programming
-guidelines <Programming_guidelines>`__), and versioned with git at the `Git
+**Navit** is written mostly in C (see :doc:`programming_guidelines`), and versioned with git at the `Git
 repository <https://github.com/navit-gps/navit>`__.
 So get started by cloning the sources is easy as:
 
@@ -12,6 +11,10 @@ So get started by cloning the sources is easy as:
 
   git clone https://github.com/navit-gps/navit.git
 
+
+.. image:: NAVIT_components.svg
+   :width: 500px
+   :alt: Navit component architecture diagram
 
 If you feel that you can provide a positive **contribution** to Navit,
 please submit :ref:`patches <submitting_patches>` or `a pull
