@@ -290,8 +290,11 @@ static void changed(GtkWidget *widget, struct search_param *search) {
             else
                 gtk_list_store_set(search->liststore, &iter, 0, "", -1);
             if (res->town) {
+                const char *town_name =
+                    item_town_name_get(&res->town->common.item, navit_get_lang_pref(search->nav), search->attr.u.str);
                 gtk_list_store_set(search->liststore, &iter, 1, res->town->common.postal, -1);
-                gtk_list_store_set(search->liststore, &iter, 2, res->town->common.town_name, -1);
+                gtk_list_store_set(search->liststore, &iter, 2, town_name ? town_name : res->town->common.town_name,
+                                   -1);
                 gtk_list_store_set(search->liststore, &iter, 3, res->town->common.district_name, -1);
             } else {
                 gtk_list_store_set(search->liststore, &iter, 1, "", -1);

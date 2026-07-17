@@ -130,8 +130,10 @@ static char *district_str(struct search_list_result *res, int level, enum attr_t
     return ret;
 }
 
-static char *town_display_label(struct search_list_result *res, int level, int flags) {
-    char *town = district_str(res, level, attr_town_name, "");
+static char *town_display_label(struct search_list_result *res, int level, int flags, const char **lang_pref,
+                                const char *search_query) {
+    const char *resolved = item_town_name_get(&res->town->common.item, lang_pref, search_query);
+    char *town = resolved ? (char *)resolved : district_str(res, level, attr_town_name, "");
     char *district = district_str(res, level, attr_district_name, NULL);
     char *postal = postal_str(res, level);
     char *postal_sep = " ";
@@ -340,6 +342,7 @@ static void gui_internal_search_idle(struct gui_priv *this, char *wm_name, struc
     struct item *item = NULL;
     struct widget *search_input = NULL;
     struct widget *menu, *resultlist_row, *resultlist_entry;
+    const char **lang_pref = navit_get_lang_pref(this->nav);
 
     res = search_list_get_result(this->sl);
     if (!res) {
@@ -348,24 +351,31 @@ static void gui_internal_search_idle(struct gui_priv *this, char *wm_name, struc
         return;
     }
 
+    menu = g_list_last(this->root.children)->data;
+    search_input = gui_internal_find_widget(menu, NULL, STATE_EDIT);
+    dbg_assert(search_input);
+    search_text = search_input->text;
+
     if (!strcmp(wm_name, "Country")) {
         item_name = res->country->name;
         item = &res->country->common.item;
         result_main_label = g_strdup_printf("%s", res->country->name);
     } else if (!strcmp(wm_name, "Town")) {
+        const char *resolved;
         item = &res->town->common.item;
-        item_name = res->town->common.town_name;
-        result_main_label = town_display_label(res, 1, 0);
-        result_sublabel = town_display_label(res, 1, 2);
+        resolved = item_town_name_get(&res->town->common.item, lang_pref, search_text);
+        item_name = resolved ? (char *)resolved : res->town->common.town_name;
+        result_main_label = town_display_label(res, 1, 0, lang_pref, search_text);
+        result_sublabel = town_display_label(res, 1, 2, lang_pref, search_text);
     } else if (!strcmp(wm_name, "Street")) {
         item_name = res->street->name;
         item = &res->street->common.item;
         result_main_label = g_strdup(res->street->name);
-        result_sublabel = town_display_label(res, 2, 1);
+        result_sublabel = town_display_label(res, 2, 1, lang_pref, search_text);
     } else if (!strcmp(wm_name, "House number")) {
         item_name = res->house_number->house_number;
         result_main_label = g_strdup_printf("%s, %s", item_name, res->street->name);
-        result_sublabel = town_display_label(res, 3, 0);
+        result_sublabel = town_display_label(res, 3, 0, lang_pref, search_text);
         widget_name = g_strdup(result_main_label);
     }
     if (!item_name) {
@@ -375,11 +385,6 @@ static void gui_internal_search_idle(struct gui_priv *this, char *wm_name, struc
 
     if (!widget_name)
         widget_name = g_strdup(item_name);
-
-    menu = g_list_last(this->root.children)->data;
-    search_input = gui_internal_find_widget(menu, NULL, STATE_EDIT);
-    dbg_assert(search_input);
-    search_text = search_input->text;
 
     gui_internal_find_next_possible_key(search_text, wm_name, possible_keys_incremental_search, item_name);
 

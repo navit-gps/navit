@@ -647,3 +647,51 @@ const char *item_label_get(struct item *item, const char **lang_pref) {
 
     return native;
 }
+
+const char *item_town_name_get(struct item *item, const char **lang_pref, const char *search_query) {
+    struct attr attr;
+    const char *native = NULL;
+    int pi;
+    size_t qlen;
+
+    item_attr_rewind(item);
+    if (item_attr_get(item, attr_town_name, &attr))
+        native = attr.u.str;
+    else if (item_attr_get(item, attr_district_name, &attr))
+        native = attr.u.str;
+
+    if (!search_query || !search_query[0])
+        goto apply_lang_pref;
+
+    qlen = strlen(search_query);
+
+    {
+        item_attr_rewind(item);
+        while (item_attr_get(item, attr_label_l10n, &attr)) {
+            const char *val = attr.u.str;
+            if (val) {
+                const char *colon = strchr(val, ':');
+                if (colon && !g_ascii_strncasecmp(colon + 1, search_query, qlen))
+                    return colon + 1;
+            }
+        }
+    }
+
+apply_lang_pref:
+    if (!lang_pref || !lang_pref[0])
+        return native;
+
+    for (pi = 0; lang_pref[pi]; pi++) {
+        const char *lang = lang_pref[pi];
+        size_t ll = strlen(lang);
+
+        item_attr_rewind(item);
+        while (item_attr_get(item, attr_label_l10n, &attr)) {
+            const char *val = attr.u.str;
+            if (val && !strncmp(val, lang, ll) && val[ll] == ':')
+                return val + ll + 1;
+        }
+    }
+
+    return native;
+}

@@ -151,9 +151,11 @@ static void notify_textchange(struct datawindow_priv *datawindow, int param1, in
         case attr_country_name:
             tcharBuffer = newSysString(res->country->name);
             break;
-        case attr_town_name:
-            tcharBuffer = newSysString(res->town->common.town_name);
-            break;
+        case attr_town_name: {
+            const char *name =
+                item_town_name_get(&res->town->common.item, navit_get_lang_pref(datawindow->nav), search_string);
+            tcharBuffer = newSysString(name ? name : res->town->common.town_name);
+        } break;
         case attr_street_name:
             if (res->street->name) {
                 tcharBuffer = newSysString(res->street->name);

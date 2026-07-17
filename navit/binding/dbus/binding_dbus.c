@@ -1791,13 +1791,21 @@ static DBusHandlerResult request_search_list_get_result(DBusConnection *connecti
         dbus_message_iter_close_container(&iter2, &iter3);
     }
     if (result->town && (result->town->common.district_name || result->town->common.town_name)) {
+        struct attr navit_attr;
+        const char **lang_pref = NULL;
+        const char *display_name;
+        if (config_get_attr(config_get(), attr_navit, &navit_attr, NULL))
+            lang_pref = navit_get_lang_pref(navit_attr.u.navit);
+        display_name = item_town_name_get(&result->town->common.item, lang_pref, NULL);
         dbus_message_iter_open_container(&iter2, DBUS_TYPE_DICT_ENTRY, NULL, &iter3);
         dbus_message_iter_append_basic(&iter3, DBUS_TYPE_STRING, &town);
         dbus_message_iter_open_container(&iter3, DBUS_TYPE_ARRAY, "{sv}", &iter4);
         request_search_list_common(&result->town->common, &iter4);
         if (result->town->common.district_name)
             encode_dict_string_variant_string(&iter4, "district", result->town->common.district_name);
-        if (result->town->common.town_name)
+        if (display_name)
+            encode_dict_string_variant_string(&iter4, "name", display_name);
+        else if (result->town->common.town_name)
             encode_dict_string_variant_string(&iter4, "name", result->town->common.town_name);
         dbus_message_iter_close_container(&iter3, &iter4);
         dbus_message_iter_close_container(&iter2, &iter3);
