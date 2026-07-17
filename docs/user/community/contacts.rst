@@ -26,6 +26,23 @@ Reporting Bugs/Feature Requests
 Please see :ref:`reporting_bugs` and
 :doc:`Patches <../../development/guides/submitting_patches>`, if you like to contribute code.
 
+.. _communication_rules:
+
+Rules
+=====
+
+For communicating within the navit project, across all communication channels,
+please adhere to these rules:
+
+-  **Use English**. Whilst not a hard-and-fast rule, there are people from
+   a variety of cultural backgrounds represented within the channel, and
+   English has been chosen as the primary language of communication.
+-  **Be patient**. There are usually a lot of people logged in, but most
+   of these people are not constantly monitoring the channel. Ask a
+   question, then wait patiently for a reply. If you know the person to
+   which your questions should be directed, include their nickname in
+   your message so that their chat window is highlighted.
+
 .. _following_development:
 
 Following Development
