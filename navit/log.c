@@ -368,8 +368,10 @@ struct log *log_new(struct attr *parent, struct attr **attrs) {
     ret->func = &log_func;
     navit_object_ref((struct navit_object *)ret);
     data = attr_search(attrs, attr_data);
-    if (!data)
+    if (!data) {
+        dbg(lvl_error, "log_new: missing attr_data");
         return NULL;
+    }
     filename = data->u.str;
     wexp = file_wordexp_new(filename);
     if (wexp && file_wordexp_get_count(wexp) > 0) {
