@@ -412,7 +412,7 @@ void add_aux_tiles(char *name, struct zip_info *info) {
     in = fopen(name, "rb");
     if (!in)
         return;
-    while (fscanf(in, "%s", buffer) == 1) {
+    while (fscanf(in, "%4095s", buffer) == 1) {
         s = strchr(buffer, '/');
         if (s)
             s++;
