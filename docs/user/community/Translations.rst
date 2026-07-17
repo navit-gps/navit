@@ -26,7 +26,7 @@ This allows everybody who signs up at the service to
 browse/contribute/edit the translations of every language. You are
 guided by launchpad during the process and help is offered in the whole
 wizard. In case of any questions, please get in contact with the
-`team <team>`__.
+:ref:`team`.
 
 .. _po.in_files:
 

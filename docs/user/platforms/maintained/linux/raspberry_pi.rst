@@ -9,7 +9,7 @@ Compiling for the Raspberry Pi
 ------------------------------
 
 Compiling for the Pi is (of course) mostly like `Compiling for
-Linux <Linux_development>`__.
+Linux <linux_development>`__.
 
 (Thanks to Angelus88, who posted it here:
 `1 <https://forum.navit-project.org/viewtopic.php?f=11&t=405>`__.)

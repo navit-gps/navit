@@ -18,20 +18,16 @@ Map + Route                    EU       > 4y
 ============================== ======== ===== ======= ====== == =============== ========
 
 .. toctree::
-   :glob:
    :maxdepth: 1
    :caption: Map Plugins
 
    binfile
-   Binfile
    Csv
    Custom_POIs
    Garmin_maps
    Map_Route
-   Maps
    Marco_Polo_Grosser_Reiseplaner
    OpenStreetMap_countries
-   OpenStreetMap
    osm
    Shapefiles
    Textfile

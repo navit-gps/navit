@@ -15,7 +15,7 @@ Reporting a bug
 
 .. note::
 
-   You should also head over to the :ref:`discord` or to the :ref:`irc` if you want to discuss the bug before submitting a report
+   You should also head over to the :ref:`discord` if you want to discuss the bug before submitting a report
    for example, it may just be that your local configuration is wrong, which can quickly be diagnosed by the developers.
 
 #. Head over to https://github.com/navit-gps/navit/issues and search for
@@ -59,7 +59,7 @@ In addition, please provide the following (where appropriate):
 Reporting coordinates for problems
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Assuming you are using `OpenStreetMap <OpenStreetMap>`__ map packages:
+Assuming you are using :doc:`../configuration/maps/osm` map packages:
 
 #. Browse at http://www.openstreetmap.org to the area
 #. Pick the "share" tool from the right toolbox.
@@ -128,7 +128,7 @@ etc.
    from and your destination (if routing was
    enabled) <#Reporting_coordinates_for_problems>`__.
 -  If possible, provide an NMEA log (see
-   `Configuration <Configuration>`__) and add the time at which the
+   :doc:`../configuration/basic`) and add the time at which the
    problem occured.
 -  If an incorrect vehicle position was shown, specify where you were in
    real-life, and where Navit indicated you to be.
@@ -144,7 +144,7 @@ jumping between correct and incorrect positions.
    and your destination (if routing was
    enabled) <#Reporting_coordinates_for_problems>`__.
 -  If possible, provide an NMEA log (see
-   `Configuration <Configuration>`__) and add the time at which the
+   :doc:`../configuration/basic`) and add the time at which the
    problem occured.
 -  If an incorrect vehicle position was shown, specify where you were in
    real-life, and where Navit indicated you to be.
@@ -176,6 +176,7 @@ Thanks for your submission, the Navit team.
 See also
 ========
 
--  `Submitting patches <Submitting_patches>`__
--  `Translations <Translations>`__
--  `Commit guidelines <Commit_guidelines>`__
+-  :doc:`../../development/guides/submitting_patches`
+-  :doc:`Translations`
+-  :doc:`../../development/commit_guidelines`
+-  :ref:`team`

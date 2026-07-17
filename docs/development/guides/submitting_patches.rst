@@ -3,51 +3,47 @@
 Submitting patches
 ==================
 
-We are very happy that you like to participate and help the
-`team <team>`__ to improve Navit :) To make this teamwork a pleasure for
-all, we will try to guide you trough this process:
+We are happy that you would like to participate and help the
+:ref:`team` improve Navit. To make this teamwork productive for
+all, we will guide you through this process:
 
-preparations
+Preparations
 ------------
 
-Make sure you are familar with our `development <development>`__,
-learned about the codebase and our guidelines. If you found a bug,
-please open a `Trac <Trac>`__ ticket and bring up all details so others
-can check them and help you on isolating the defective code. Point out
-that you like to submit a patch.
+Make sure you are familiar with our :doc:`/development/index`,
+the codebase, and our guidelines. If you found a bug,
+please open a `GitHub issue <https://github.com/navit-gps/navit/issues>`__ and include all relevant details so others
+can verify it and help isolate the defective code. Indicate
+that you intend to submit a patch.
 
-process
+Process
 -------
 
 #. Clone the codebase via
    `GitHub <https://github.com/navit-gps/navit>`__
-#. Find the bug (and please address only one issue per patch!) and try
-   to fix it
-#. Test test test if still compiles and the behaviour is as expected
-#. Think about possible side effects (as performance, different
-   settings, ...)
-#. Get the newest Git Navit version and apply your changes once more
-#. Test if everything still works fine
-#. `Create an pull
+#. Find the bug (address only one issue per patch) and fix
+   it
+#. Run ``scripts/ci_sanity_check.sh`` and test your changes
+#. Consider possible side effects (performance, different
+   settings, etc.)
+#. Pull the latest Git Navit version and re-apply your changes
+#. Test that everything still works
+#. `Create a pull
    request <https://help.github.com/articles/creating-a-pull-request/>`__
-   on github
+   on GitHub
 
-review
+Review
 ------
 
-It might take some time until somebody reviews the pull request (maybe
-give a ping via `Contacts <Contacts>`__). If your changes are more
-complex, catch up new ideas, or still have some minor problems, it might
-be discussed and we might ask you to submit an updated version/adapt
-your changes.
-
-So that's it, you helped Navit to go one step forward. Thank you very
-much :)
+It may take some time for someone to review the pull request (you
+can ping via :doc:`/user/community/contacts`). If your changes are
+complex, raise new ideas, or still have minor issues, we may discuss
+them and ask you to submit an updated version.
 
 See also
 --------
 
--  `Programming guidelines <Programming_guidelines>`__
--  `Commit guidelines <Commit_guidelines>`__
--  `Reporting Bugs <Reporting_Bugs>`__
--  `Translations <Translations>`__
+-  :doc:`/development/programming_guidelines`
+-  :doc:`/development/commit_guidelines`
+-  :doc:`/user/community/Reporting_Bugs`
+-  :doc:`/user/community/Translations`

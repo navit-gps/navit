@@ -449,7 +449,7 @@ Doing Navit/Android development with Eclipse **INCOMPLETE**
 
 This guide assumes you already have the source downloaded locally, and
 have already built a package for Android using CMake (see `Linux
-development <Linux_development>`__).
+development <linux_development>`__).
 
 -  Download Eclipse
 
