@@ -901,7 +901,9 @@ struct search_list_result *search_list_get_result(struct search_list *this_) {
 
                 if (le->parent && has_street_name) {
                     struct search_list_street *street = this_->levels[level - 1].last->data;
-                    if (navit_utf8_strcasecmp(street->name, attr2.u.str)) {
+                    /* Tolerant comparison: house numbers often carry a less complete
+                     * street name than the street itself (see linguistics_name_match). */
+                    if (!linguistics_name_match(street->name, attr2.u.str)) {
                         search_list_house_number_destroy(p);
                         // this_->item=NULL;
                         continue;

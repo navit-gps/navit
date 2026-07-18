@@ -14,6 +14,7 @@ enum linguistics_cmp_mode {
     linguistics_cmp_words = 4
 };
 int linguistics_compare(const char *s1, const char *s2, enum linguistics_cmp_mode mode);
+int linguistics_name_match(const char *s1, const char *s2);
 #ifdef __cplusplus
 }
 #endif

@@ -2239,9 +2239,11 @@ static struct item *binmap_search_get_item(struct map_search_priv *map_search) {
                     && !(map_search->boundaries && !item_inside_poly_list(it, map_search->boundaries))) {
                     if (has_house_number) {
                         struct attr at2;
-                        if ((binfile_attr_get(it->priv_data, attr_street_name, &at2) || map_search->mode != 2)
+                        int has_street_name = binfile_attr_get(it->priv_data, attr_street_name, &at2);
+                        if ((has_street_name || map_search->mode != 2)
                             && !linguistics_compare(at.u.str, map_search->search.u.str, mode)
-                            && !strcmp(at2.u.str, map_search->parent_name)) {
+                            && (!has_street_name
+                                || linguistics_name_match(at2.u.str, map_search->parent_name))) {
                             if (!duplicate(map_search, it, attr_house_number, 0)) {
                                 binfile_attr_rewind(it->priv_data);
                                 return it;
@@ -2249,8 +2251,10 @@ static struct item *binmap_search_get_item(struct map_search_priv *map_search) {
                         }
                     } else {
                         struct attr at2;
-                        if ((binfile_attr_get(it->priv_data, attr_street_name, &at2) || map_search->mode != 2)
-                            && !strcmp(at2.u.str, map_search->parent_name)) {
+                        int has_street_name = binfile_attr_get(it->priv_data, attr_street_name, &at2);
+                        if ((has_street_name || map_search->mode != 2)
+                            && (!has_street_name
+                                || linguistics_name_match(at2.u.str, map_search->parent_name))) {
                             if (!duplicate(map_search, it, attr_house_number_interpolation_no_ends_incrmt_2, 0)) {
                                 binfile_attr_rewind(it->priv_data);
                                 return it;

@@ -374,6 +374,38 @@ int linguistics_compare(const char *s1, const char *s2, enum linguistics_cmp_mod
 }
 
 /**
+ * @brief Compare two names tolerantly, accepting a word-boundary match in either direction.
+ *
+ * Names referring to the same object often differ in completeness between data sources.
+ * A common case are house numbers, whose street name comes from the OSM addr:street tag
+ * and frequently lacks the directional prefix or suffix the street itself carries
+ * (e.g. "Alamo Place" vs "East Alamo Place", widespread in imported address data).
+ * This accepts a match if either name matches the other starting at a word boundary,
+ * using the same comparison rules as the street search.
+ *
+ * @param s1 first name, e.g. an item name from the map
+ * @param s2 second name to compare against
+ * @returns nonzero if the names are considered to match
+ */
+int linguistics_name_match(const char *s1, const char *s2) {
+    char *folded;
+    int match;
+    if (!s1 || !s2)
+        return 0;
+    if (!strcmp(s1, s2))
+        return 1;
+    folded = linguistics_casefold(s2);
+    match = !linguistics_compare(s1, folded, linguistics_cmp_expand | linguistics_cmp_words);
+    g_free(folded);
+    if (!match) {
+        folded = linguistics_casefold(s1);
+        match = !linguistics_compare(s2, folded, linguistics_cmp_expand | linguistics_cmp_words);
+        g_free(folded);
+    }
+    return match;
+}
+
+/**
  * @brief Replace special characters in string (e.g. umlauts) with plain letters.
  * This is useful e.g. to canonicalize a string for comparison.
  *
