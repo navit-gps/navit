@@ -615,12 +615,39 @@ void item_dump_filedesc(struct item *item, struct map *map, FILE *out) {
             fprintf(out, "mg:0x%x 0x%x\n", ca[i].x, ca[i].y);
 }
 
+static const char *item_resolve_l10n(struct item *item, const char **lang_pref) {
+    struct attr attr;
+    const char *l10n = NULL;
+    int pi;
+
+    if (!lang_pref || !lang_pref[0])
+        return NULL;
+
+    for (pi = 0; lang_pref[pi]; pi++) {
+        const char *lang = lang_pref[pi];
+        size_t ll = strlen(lang);
+
+        item_attr_rewind(item);
+        while (item_attr_get(item, attr_label_l10n, &attr)) {
+            const char *val = attr.u.str;
+            if (!strncmp(val, lang, ll) && val[ll] == ':') {
+                l10n = val + ll + 1;
+                break;
+            }
+        }
+        if (l10n)
+            break;
+    }
+
+    return l10n;
+}
+
 const char *item_label_get(struct item *item, const char **lang_pref) {
     static const enum attr_type native_types[] = {attr_label, attr_street_name, attr_town_name};
     struct attr attr;
     const char *native = NULL;
+    const char *l10n;
     unsigned int ti;
-    int pi;
 
     for (ti = 0; ti < sizeof(native_types) / sizeof(native_types[0]); ti++) {
         item_attr_rewind(item);
@@ -630,29 +657,14 @@ const char *item_label_get(struct item *item, const char **lang_pref) {
         }
     }
 
-    if (!lang_pref || !lang_pref[0])
-        return native;
-
-    for (pi = 0; lang_pref[pi]; pi++) {
-        const char *lang = lang_pref[pi];
-        size_t ll = strlen(lang);
-
-        item_attr_rewind(item);
-        while (item_attr_get(item, attr_label_l10n, &attr)) {
-            const char *val = attr.u.str;
-            if (val && !strncmp(val, lang, ll) && val[ll] == ':')
-                return val + ll + 1;
-        }
-    }
-
-    return native;
+    l10n = item_resolve_l10n(item, lang_pref);
+    return l10n ? l10n : native;
 }
 
 const char *item_town_name_get(struct item *item, const char **lang_pref, const char *search_query) {
     struct attr attr;
     const char *native = NULL;
-    int pi;
-    size_t qlen;
+    const char *l10n;
 
     item_attr_rewind(item);
     if (item_attr_get(item, attr_town_name, &attr))
@@ -660,38 +672,18 @@ const char *item_town_name_get(struct item *item, const char **lang_pref, const 
     else if (item_attr_get(item, attr_district_name, &attr))
         native = attr.u.str;
 
-    if (!search_query || !search_query[0])
-        goto apply_lang_pref;
-
-    qlen = strlen(search_query);
-
-    {
-        item_attr_rewind(item);
-        while (item_attr_get(item, attr_label_l10n, &attr)) {
-            const char *val = attr.u.str;
-            if (val) {
-                const char *colon = strchr(val, ':');
-                if (colon && !g_ascii_strncasecmp(colon + 1, search_query, qlen))
-                    return colon + 1;
-            }
-        }
-    }
-
-apply_lang_pref:
-    if (!lang_pref || !lang_pref[0])
-        return native;
-
-    for (pi = 0; lang_pref[pi]; pi++) {
-        const char *lang = lang_pref[pi];
-        size_t ll = strlen(lang);
+    if (search_query && search_query[0]) {
+        size_t qlen = strlen(search_query);
 
         item_attr_rewind(item);
         while (item_attr_get(item, attr_label_l10n, &attr)) {
             const char *val = attr.u.str;
-            if (val && !strncmp(val, lang, ll) && val[ll] == ':')
-                return val + ll + 1;
+            const char *colon = strchr(val, ':');
+            if (colon && !g_ascii_strncasecmp(colon + 1, search_query, qlen))
+                return colon + 1;
         }
     }
 
-    return native;
+    l10n = item_resolve_l10n(item, lang_pref);
+    return l10n ? l10n : native;
 }
