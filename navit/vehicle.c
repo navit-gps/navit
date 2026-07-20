@@ -54,6 +54,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#define NMEA_GPGGA_FMT "$GPGGA,%02d%02d%02d,%s%s,%c,%s%s,%c,1,08,2.5,%s,M,,,,0000*  \n"
+#define NMEA_GPRMC_FMT "$GPRMC,%02d%02d%02d,A,%s%s,%c,%s%s,%c,%s,%s,%02d%02d%02d,,*  \n"
+
 struct callback_list;
 struct log;
 
@@ -484,7 +487,7 @@ static void vehicle_draw_do(struct vehicle *this_) {
     }
 }
 
-void nmea_chksum(char *nmea) {
+static void nmea_chksum(char *nmea) {
     int i, len;
     if (nmea && (len = strlen(nmea)) > 3) {
         unsigned char csum = 0;
@@ -494,7 +497,7 @@ void nmea_chksum(char *nmea) {
     }
 }
 
-void nmea_float_fmt(char *buf, size_t size, double value, int int_digits, int decimals) {
+static void nmea_float_fmt(char *buf, size_t size, double value, int int_digits, int decimals) {
     char tmp[64];
     long long i = (long long)value;
     int digit_count = 0;
