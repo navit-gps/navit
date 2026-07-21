@@ -719,7 +719,7 @@ void gui_internal_box_resize(struct gui_priv *this, struct widget *w, void *data
             GList *old_children = w->children;
             wb->on_resize(this, wb, NULL, wb->w, wb->h);
             if (w->children != old_children) {
-                l = w->children;
+                l = g_list_next(w->children);
                 continue;
             }
         }
