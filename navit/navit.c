@@ -167,6 +167,7 @@ struct navit {
     int use_mousewheel;
     struct messagelist *messages;
     struct callback *resize_callback, *button_callback, *motion_callback, *predraw_callback;
+    GList *voiceprofiles;
     struct vehicleprofile *vehicleprofile;
     GList *vehicleprofiles;
     int pitch;
@@ -1582,6 +1583,10 @@ struct graphics *navit_get_graphics(struct navit *this_) {
     return this_->gra;
 }
 
+GList *navit_get_voiceprofiles(struct navit *this_) {
+    return this_->voiceprofiles;
+}
+
 struct vehicleprofile *navit_get_vehicleprofile(struct navit *this_) {
     return this_->vehicleprofile;
 }
@@ -1916,13 +1921,25 @@ void navit_textfile_debug_log_at(struct navit *this_, struct pcoord *pc, const c
 }
 
 void navit_say(struct navit *this_, const char *text) {
-    struct attr attr;
+    struct attr name_attr;
+    struct attr active_attr;
+
+    name_attr.type = attr_name;
+    active_attr.type = attr_active;
+
     if (this_->speech) {
-        if (!speech_get_attr(this_->speech, attr_active, &attr, NULL))
-            attr.u.num = 1;
-        dbg(lvl_debug, "this_.speech->active %ld", attr.u.num);
-        if (attr.u.num)
+        if (!speech_get_attr(this_->speech, attr_active, &active_attr, NULL))
+            name_attr.u.str = "No voice name";
+        if (!speech_get_attr(this_->speech, attr_active, &active_attr, NULL))
+            active_attr.u.num = 1;
+
+        dbg(lvl_debug, "this_.speech->name %s", name_attr.u.str);
+        dbg(lvl_debug, "this_.speech->active %ld", active_attr.u.num);
+        if (active_attr.u.num == 1)
             speech_say(this_->speech, text);
+
+    } else {
+        dbg(lvl_warning, "No voice configured. No text will be spoken.");
     }
 }
 
@@ -2133,6 +2150,7 @@ int navit_init(struct navit *this_) {
             "for explanations and solutions\n");
         exit(1);
     }
+    dbg(lvl_debug, "Setting Voice");
     if (this_->speech && this_->navigation) {
         struct attr speech;
         speech.type = attr_speech;
@@ -2421,7 +2439,7 @@ static int navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_o
 
     float offset = this_->radius;  // Cursor offset from the center of the screen (percent).
 #if 0 /* Better improve track.c to get that issue resolved or make it configurable with being off the default, the     \
-         jumping back to the center is a bit annoying */
+        jumping back to the center is a bit annoying */
     float min_offset = 0.;      // Percent offset at min_offset_speed.
     float max_offset = 30.;     // Percent offset at max_offset_speed.
     int min_offset_speed = 2;   // Speed in km/h
@@ -2575,6 +2593,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
     GList *l;
     struct navit_vehicle *nv;
     struct layout *lay;
+    struct attr name;
     struct attr active;
     active.type = attr_active;
     active.u.num = 0;
@@ -3134,6 +3153,10 @@ static int navit_add_layout(struct navit *this_, struct layout *layout) {
 
 int navit_add_attr(struct navit *this_, struct attr *attr) {
     int ret = 1;
+    struct attr speechattr;
+    struct attr activeattr;
+    struct attr nameattr;
+
     switch (attr->type) {
     case attr_callback:
         navit_add_callback(this_, attr->u.callback);
@@ -3165,7 +3188,14 @@ int navit_add_attr(struct navit *this_, struct attr *attr) {
         this_->recentdest_count = attr->u.num;
         break;
     case attr_speech:
-        this_->speech = attr->u.speech;
+        this_->voiceprofiles = g_list_append(this_->voiceprofiles, attr->u.speech);
+        speech_get_attr(attr->u.speech, attr_name, &nameattr, NULL);
+        if (speech_get_attr(attr->u.speech, attr_active, &activeattr, NULL)) {
+            if (activeattr.u.num == 1) {
+                this_->speech = attr->u.speech;
+                dbg(lvl_debug, "navit_add_attr: Add speech attribute to: %s", nameattr.u.str);
+            }
+        }
         break;
     case attr_trackingo:
         this_->tracking = attr->u.tracking;
