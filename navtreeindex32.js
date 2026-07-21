@@ -1,5 +1,13 @@
 var NAVTREEINDEX32 =
 {
+"structcoastline__tile__data.html#ad83bf48ffe3875657e8406e7ec995939":[2,0,41,2],
+"structcolor.html":[2,0,42],
+"structcolor.html#a7b23afbfdc39f8f97369aa0f9cdad48d":[2,0,42,2],
+"structcolor.html#ada88c609a801744faf4f35601733f96f":[2,0,42,0],
+"structcolor.html#adf42bf89ce203b7b9b3677bd6ae571d8":[2,0,42,3],
+"structcolor.html#af18acfb5e593334f215f2f9c391f25e7":[2,0,42,1],
+"structcommand__saved.html":[2,0,43],
+"structcommand__saved.html#a0a97887f86d850f2923f8ff8fa71a2ab":[2,0,43,2],
 "structcommand__saved.html#a1c246cec8c9e0f30d149294964d25318":[2,0,43,1],
 "structcommand__saved.html#a3a1e891d75dcb5cfac82b6d5acbba3d8":[2,0,43,7],
 "structcommand__saved.html#a40bab60d16b40d5a00b540b0910fdd00":[2,0,43,12],
@@ -241,13 +249,5 @@ var NAVTREEINDEX32 =
 "structedge.html#aa2623b020778eac561223116906af618":[2,0,87,4],
 "structedge.html#ab580aa46e0f7f53d37f0f169a1c6f19f":[2,0,87,5],
 "structedge.html#ac6cf46f253ca5faf8f4e83b18013bf9c":[2,0,87,7],
-"structedge.html#af3288fbdbe1e4c12fb6abc66a1822e95":[2,0,87,2],
-"structedge__hash__item.html":[2,0,88],
-"structedge__hash__item.html#a5404389badfbf65219a5a2e11ca61496":[2,0,88,1],
-"structedge__hash__item.html#afaf7f497d53cecf084c41744d945bc0e":[2,0,88,0],
-"structelement.html":[2,0,89],
-"structelement.html#a02f0e6e6acaedd30e303a0d8cbac7bc3":[2,0,89,26],
-"structelement.html#a09e685f1ccad0d42287543aa385b8326":[2,0,89,9],
-"structelement.html#a11db7bc1f8de5b936d88bc2ba2eea2ef":[2,0,89,15],
-"structelement.html#a18e88a462664541872b1018c06289ead":[2,0,89,27]
+"structedge.html#af3288fbdbe1e4c12fb6abc66a1822e95":[2,0,87,2]
 };

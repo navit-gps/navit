@@ -1,5 +1,13 @@
 var NAVTREEINDEX21 =
 {
+"interfaceVSSpeechSynthesizer.html#a38b7a978d0018462537868527e666a82":[2,0,422,6],
+"interfaceVSSpeechSynthesizer.html#a3adf24f3a4f947468fa658d2eb81e495":[2,0,422,3],
+"interfaceVSSpeechSynthesizer.html#a5a7b3ef55ce44ef92b830d80c6da2f75":[2,0,422,0],
+"interfaceVSSpeechSynthesizer.html#a7f710e355dd58cfe7495ce254267559d":[2,0,422,4],
+"interfaceVSSpeechSynthesizer.html#aa989bc284ea7db534120e271c5bc3546":[2,0,422,10],
+"interfaceVSSpeechSynthesizer.html#aad7cf3a6957094ed41a7a07d2823743f":[2,0,422,7],
+"interfaceVSSpeechSynthesizer.html#ab7098e9b49a06f56c2839e20aab389e8":[2,0,422,8],
+"interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult.html":[2,0,0,0,0,2],
 "interfaceorg_1_1navitproject_1_1navit_1_1NavitActivityResult.html#a315aa94c3fab93f3dae6d90a89186e00":[2,0,0,0,0,2,0],
 "item_8c.html":[3,0,67],
 "item_8c.html#a049612b8c52acba4b3908b0f63503048":[3,0,67,35],
@@ -241,13 +249,5 @@ var NAVTREEINDEX21 =
 "layout_8c.html#a890cd750d04ca41c653a8c0b5050412a":[3,0,73,29],
 "layout_8c.html#a9200e541b0f5a46aac86117b1fe42242":[3,0,73,14],
 "layout_8c.html#a974e96cc3d5358bc410fda94e425eda0":[3,0,73,2],
-"layout_8c.html#a982d452a1843683381c225c2b8f8239e":[3,0,73,16],
-"layout_8c.html#a985b6f89722a541b986509885b71ea13":[3,0,73,42],
-"layout_8c.html#a9e029f4c80ef34915d766b3d1b6e4be0":[3,0,73,27],
-"layout_8c.html#aabe6c545ed780e6b0257edee05f3a8e1":[3,0,73,3],
-"layout_8c.html#aad0b2451f4bf07d96a4071b3d364bb0b":[3,0,73,39],
-"layout_8c.html#aad487fc21b1cfce3531563fc32471c20":[3,0,73,20],
-"layout_8c.html#ab0a0f9098827ccb63b980330d6af57df":[3,0,73,24],
-"layout_8c.html#ab9fe03394484d32c45e732ecd3c2194b":[3,0,73,25],
-"layout_8c.html#abba7de7ad1494928bf4e7b8b8c456f23":[3,0,73,26]
+"layout_8c.html#a982d452a1843683381c225c2b8f8239e":[3,0,73,16]
 };

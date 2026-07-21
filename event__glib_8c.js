@@ -19,6 +19,8 @@ var event__glib_8c =
     [ "event_glib_remove_idle", "event__glib_8c.html#a1c945359e335902640a865b4b62a8b44", null ],
     [ "event_glib_remove_timeout", "event__glib_8c.html#a4106c5e0c2041e4e23a8378fefff77c2", null ],
     [ "event_glib_remove_watch", "event__glib_8c.html#aa60840220e67e97052715504d5b9826e", null ],
+    [ "event_glib_signal_cb", "event__glib_8c.html#ae841f6b30d50fec16f0f075f568d0d64", null ],
     [ "event_glib_methods", "event__glib_8c.html#aa650af5a9da83134e4cc18969339b205", null ],
-    [ "loop", "event__glib_8c.html#a35126dd286141bc2cc1f045de5e1f81a", null ]
+    [ "loop", "event__glib_8c.html#a35126dd286141bc2cc1f045de5e1f81a", null ],
+    [ "signal_watch_source", "event__glib_8c.html#ab744cb0d2d7b52c8b2ee9a0522058180", null ]
 ];

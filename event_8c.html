@@ -101,6 +101,8 @@ $(document).ready(function(){initNavTree('event_8c.html',''); initResizable(); }
 <code>#include &quot;<a class="el" href="plugin_8h_source.html">plugin.h</a>&quot;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;fcntl.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -113,6 +115,12 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ad9da65f45e7b5aa5bc9060ec59269d57" id="r_ad9da65f45e7b5aa5bc9060ec59269d57"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="event_8c.html#ad9da65f45e7b5aa5bc9060ec59269d57">sig_pipe_init</a> (void)</td></tr>
+<tr class="separator:ad9da65f45e7b5aa5bc9060ec59269d57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3abd63f9b0bcefea2896e5e35ef737be" id="r_a3abd63f9b0bcefea2896e5e35ef737be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="event_8c.html#a3abd63f9b0bcefea2896e5e35ef737be">event_signal_notify</a> (void)</td></tr>
+<tr class="separator:a3abd63f9b0bcefea2896e5e35ef737be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a420f9ff7345e5c4dd9adfa7aaeb4244b" id="r_a420f9ff7345e5c4dd9adfa7aaeb4244b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="event_8c.html#a420f9ff7345e5c4dd9adfa7aaeb4244b">event_get_signal_fd</a> (void)</td></tr>
+<tr class="separator:a420f9ff7345e5c4dd9adfa7aaeb4244b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5e1b65befbe363ec3105728d4456b4c" id="r_aa5e1b65befbe363ec3105728d4456b4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="event_8c.html#aa5e1b65befbe363ec3105728d4456b4c">event_main_loop_run</a> (void)</td></tr>
 <tr class="separator:aa5e1b65befbe363ec3105728d4456b4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c9904dff9f3ba0cef33a0d0a99b1a31" id="r_a9c9904dff9f3ba0cef33a0d0a99b1a31"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="event_8c.html#a9c9904dff9f3ba0cef33a0d0a99b1a31">event_main_loop_quit</a> (void)</td></tr>
@@ -148,6 +156,8 @@ Variables</h2></td></tr>
 <tr class="separator:a13e9247376f707249e223df89fe5ae18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13f8d9f2356f7a400f683244f16844ab" id="r_a13f8d9f2356f7a400f683244f16844ab"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="event_8c.html#a13f8d9f2356f7a400f683244f16844ab">has_quit</a></td></tr>
 <tr class="separator:a13f8d9f2356f7a400f683244f16844ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53665bbeabffeda888a2e8c59fb2b73c" id="r_a53665bbeabffeda888a2e8c59fb2b73c"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="event_8c.html#a53665bbeabffeda888a2e8c59fb2b73c">sig_pipe_fds</a> [2] = {-1, -1}</td></tr>
+<tr class="separator:a53665bbeabffeda888a2e8c59fb2b73c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="af19f5d11210c8c4f7819be8c4805b115" name="af19f5d11210c8c4f7819be8c4805b115"></a>
@@ -167,7 +177,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="event_8c.html#ad134c63e1cfff987e5d1c3718b31ffa7">require_method_helper</a>(m) <span class="keywordflow">return</span>;                                                                                   \</div>
 <div class="line">    }</div>
-<div class="ttc" id="aevent_8c_html_ad134c63e1cfff987e5d1c3718b31ffa7"><div class="ttname"><a href="event_8c.html#ad134c63e1cfff987e5d1c3718b31ffa7">require_method_helper</a></div><div class="ttdeci">#define require_method_helper(m)</div><div class="ttdef"><b>Definition</b> event.c:32</div></div>
+<div class="ttc" id="aevent_8c_html_ad134c63e1cfff987e5d1c3718b31ffa7"><div class="ttname"><a href="event_8c.html#ad134c63e1cfff987e5d1c3718b31ffa7">require_method_helper</a></div><div class="ttdeci">#define require_method_helper(m)</div><div class="ttdef"><b>Definition</b> event.c:80</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -220,7 +230,7 @@ Variables</h2></td></tr>
 <div class="line">        dbg(<a class="code hl_enumvalue" href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a>, <span class="stringliteral">&quot;Can&#39;t find event system method %s. Event system is %s%s&quot;</span>, #m,                                  \</div>
 <div class="line">            <a class="code hl_variable" href="event_8c.html#a13e9247376f707249e223df89fe5ae18">e_system</a> ? <span class="stringliteral">&quot;set to &quot;</span> : <span class="stringliteral">&quot;not set.&quot;</span>, <a class="code hl_variable" href="event_8c.html#a13e9247376f707249e223df89fe5ae18">e_system</a> ? <a class="code hl_variable" href="event_8c.html#a13e9247376f707249e223df89fe5ae18">e_system</a> : <span class="stringliteral">&quot;&quot;</span>);</div>
 <div class="ttc" id="adebug_8h_html_a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb"><div class="ttname"><a href="debug_8h.html#a3ce13c42b29fe2a7552478859b7f3c25a83f9ab2a71d2244b99268510714e94fb">lvl_error</a></div><div class="ttdeci">@ lvl_error</div><div class="ttdef"><b>Definition</b> debug.h:46</div></div>
-<div class="ttc" id="aevent_8c_html_a13e9247376f707249e223df89fe5ae18"><div class="ttname"><a href="event_8c.html#a13e9247376f707249e223df89fe5ae18">e_system</a></div><div class="ttdeci">static const char * e_system</div><div class="ttdef"><b>Definition</b> event.c:28</div></div>
+<div class="ttc" id="aevent_8c_html_a13e9247376f707249e223df89fe5ae18"><div class="ttname"><a href="event_8c.html#a13e9247376f707249e223df89fe5ae18">e_system</a></div><div class="ttdeci">static const char * e_system</div><div class="ttdef"><b>Definition</b> event.c:32</div></div>
 <div class="ttc" id="astructevent__methods_html"><div class="ttname"><a href="structevent__methods.html">event_methods</a></div><div class="ttdef"><b>Definition</b> event.h:37</div></div>
 </div><!-- fragment -->
 </div>
@@ -366,6 +376,28 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a420f9ff7345e5c4dd9adfa7aaeb4244b" name="a420f9ff7345e5c4dd9adfa7aaeb4244b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a420f9ff7345e5c4dd9adfa7aaeb4244b">&#9670;&#160;</a></span>event_get_signal_fd()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int event_get_signal_fd </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="event_8c.html#a53665bbeabffeda888a2e8c59fb2b73c">sig_pipe_fds</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="event__glib_8c.html#aecd2dbd22e206134f62ea46b3dbd6f55">event_glib_main_loop_run()</a>.</p>
+
+</div>
+</div>
 <a id="a7a179abcb3203612381ec5b36a0df311" name="a7a179abcb3203612381ec5b36a0df311"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7a179abcb3203612381ec5b36a0df311">&#9670;&#160;</a></span>event_main_loop_has_quit()</h2>
 
@@ -406,7 +438,7 @@ Variables</h2></td></tr>
 
 <p class="reference">References <a class="el" href="event_8c.html#a13f8d9f2356f7a400f683244f16844ab">has_quit</a>, and <a class="el" href="structevent__methods.html#a852802e1db120719cb6866c15f78914c">event_methods::main_loop_quit</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="config___8c.html#a18363ec6c557c346dd08a7525dc7331d">config_terminate()</a>, <a class="el" href="gui__gtk__window_8c.html#a1cb1859c507e0d9f065bb227f43fd589">gui_gtk_delete()</a>, <a class="el" href="gui__internal__command_8c.html#aa2fa227b0e3e36159493d4b6412be1b5">gui_internal_cmd2_quit()</a>, <a class="el" href="classNGQProxyNavit.html#a587ed867190d2f528e897946218dcf88">NGQProxyNavit::quit()</a>, <a class="el" href="gui__gtk__action_8c.html#acd9deea3873f3659c192687f9cba7861">quit_action()</a>, and <a class="el" href="binding__dbus_8c.html#a9d9fce6034800153b4f7f4e3a9d6bbac">request_navit_quit()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="event__glib_8c.html#ae841f6b30d50fec16f0f075f568d0d64">event_glib_signal_cb()</a>, <a class="el" href="gui__gtk__window_8c.html#a1cb1859c507e0d9f065bb227f43fd589">gui_gtk_delete()</a>, <a class="el" href="gui__internal__command_8c.html#aa2fa227b0e3e36159493d4b6412be1b5">gui_internal_cmd2_quit()</a>, <a class="el" href="classNGQProxyNavit.html#a587ed867190d2f528e897946218dcf88">NGQProxyNavit::quit()</a>, <a class="el" href="gui__gtk__action_8c.html#acd9deea3873f3659c192687f9cba7861">quit_action()</a>, and <a class="el" href="binding__dbus_8c.html#a9d9fce6034800153b4f7f4e3a9d6bbac">request_navit_quit()</a>.</p>
 
 </div>
 </div>
@@ -530,6 +562,28 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a3abd63f9b0bcefea2896e5e35ef737be" name="a3abd63f9b0bcefea2896e5e35ef737be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3abd63f9b0bcefea2896e5e35ef737be">&#9670;&#160;</a></span>event_signal_notify()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void event_signal_notify </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="popup_8c.html#aafe71b070668214be9b4b4849985dc6b">c</a>, and <a class="el" href="event_8c.html#a53665bbeabffeda888a2e8c59fb2b73c">sig_pipe_fds</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="config___8c.html#a18363ec6c557c346dd08a7525dc7331d">config_terminate()</a>.</p>
+
+</div>
+</div>
 <a id="aa3bb35e693cb3e324403581c54ca080e" name="aa3bb35e693cb3e324403581c54ca080e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa3bb35e693cb3e324403581c54ca080e">&#9670;&#160;</a></span>event_system()</h2>
 
@@ -549,6 +603,32 @@ Variables</h2></td></tr>
 <p class="reference">References <a class="el" href="event_8c.html#a13e9247376f707249e223df89fe5ae18">e_system</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="messages_8c.html#a4d5893fd28e03c28178b4900cdb0fb0c">messagelist_init()</a>.</p>
+
+</div>
+</div>
+<a id="ad9da65f45e7b5aa5bc9060ec59269d57" name="ad9da65f45e7b5aa5bc9060ec59269d57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9da65f45e7b5aa5bc9060ec59269d57">&#9670;&#160;</a></span>sig_pipe_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void sig_pipe_init </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -648,6 +728,30 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">Referenced by <a class="el" href="event_8c.html#a7a179abcb3203612381ec5b36a0df311">event_main_loop_has_quit()</a>, and <a class="el" href="event_8c.html#a9c9904dff9f3ba0cef33a0d0a99b1a31">event_main_loop_quit()</a>.</p>
+
+</div>
+</div>
+<a id="a53665bbeabffeda888a2e8c59fb2b73c" name="a53665bbeabffeda888a2e8c59fb2b73c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53665bbeabffeda888a2e8c59fb2b73c">&#9670;&#160;</a></span>sig_pipe_fds</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int sig_pipe_fds[2] = {-1, -1}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="event_8c.html#a420f9ff7345e5c4dd9adfa7aaeb4244b">event_get_signal_fd()</a>, and <a class="el" href="event_8c.html#a3abd63f9b0bcefea2896e5e35ef737be">event_signal_notify()</a>.</p>
 
 </div>
 </div>

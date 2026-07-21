@@ -7,6 +7,7 @@ var event_8c =
     [ "event_add_timeout", "event_8c.html#a0c6c999d9849124775bfd2cbec4701d1", null ],
     [ "event_add_watch", "event_8c.html#abd5b601f7b7770975b9d76fd4e3d8014", null ],
     [ "event_call_callback", "event_8c.html#a453f6780e27351ce4592ccef2e63d4a7", null ],
+    [ "event_get_signal_fd", "event_8c.html#a420f9ff7345e5c4dd9adfa7aaeb4244b", null ],
     [ "event_main_loop_has_quit", "event_8c.html#a7a179abcb3203612381ec5b36a0df311", null ],
     [ "event_main_loop_quit", "event_8c.html#a9c9904dff9f3ba0cef33a0d0a99b1a31", null ],
     [ "event_main_loop_run", "event_8c.html#aa5e1b65befbe363ec3105728d4456b4c", null ],
@@ -14,9 +15,12 @@ var event_8c =
     [ "event_remove_timeout", "event_8c.html#a617f1c54db196a3258a14be7311bec8a", null ],
     [ "event_remove_watch", "event_8c.html#a71c4acd9e0bfcf4cc341c6dbe4c2610b", null ],
     [ "event_request_system", "event_8c.html#a68bf52f223d8ad1e5a9e9a457a62630c", null ],
+    [ "event_signal_notify", "event_8c.html#a3abd63f9b0bcefea2896e5e35ef737be", null ],
     [ "event_system", "event_8c.html#aa3bb35e693cb3e324403581c54ca080e", null ],
+    [ "sig_pipe_init", "event_8c.html#ad9da65f45e7b5aa5bc9060ec59269d57", null ],
     [ "e_requestor", "event_8c.html#a88f08a89ab9a6e569e6067158d2915c6", null ],
     [ "e_system", "event_8c.html#a13e9247376f707249e223df89fe5ae18", null ],
     [ "event_methods", "event_8c.html#a60f0c63f1455ac27b7ae28dc32c5e26e", null ],
-    [ "has_quit", "event_8c.html#a13f8d9f2356f7a400f683244f16844ab", null ]
+    [ "has_quit", "event_8c.html#a13f8d9f2356f7a400f683244f16844ab", null ],
+    [ "sig_pipe_fds", "event_8c.html#a53665bbeabffeda888a2e8c59fb2b73c", null ]
 ];

@@ -1,5 +1,13 @@
 var NAVTREEINDEX31 =
 {
+"structandroid__search__priv.html#ac0e13b34fd0801c75385948134ff36cc":[2,0,3,7],
+"structandroid__search__priv.html#ad07fa112dc30709e2f3c3c18cdd3e537":[2,0,3,1],
+"structandroid__search__priv.html#ad4092458cc4c0fc5670f7ba6cb0a3344":[2,0,3,6],
+"structandroid__search__priv.html#af5a94cbb1b440d6a11adaa7db58f58b7":[2,0,3,8],
+"structannouncement.html":[2,0,4],
+"structannouncement.html#ab04df6842aba726819e95c55312a0b6d":[2,0,4,0],
+"structassociated__street.html":[2,0,5],
+"structassociated__street.html#a2320855eff8ea069623a3b4a9e85b545":[2,0,5,0],
 "structassociated__street.html#aca109d12afc30f7612e6a88b184dde3d":[2,0,5,1],
 "structattr.html":[2,0,6],
 "structattr.html#a01ceae1640de61b230328298671db012":[2,0,6,8],
@@ -241,13 +249,5 @@ var NAVTREEINDEX31 =
 "structcoastline__tile__data.html#a74aecbf26b43a2d9b88320c129f7bfc0":[2,0,41,3],
 "structcoastline__tile__data.html#ab87974dd9dcacb23948b629a2bfe1816":[2,0,41,4],
 "structcoastline__tile__data.html#ac9b03e4aa74a3bce8777b3410942e397":[2,0,41,1],
-"structcoastline__tile__data.html#acb30df934d8c05e5f93b76f28998af08":[2,0,41,0],
-"structcoastline__tile__data.html#ad83bf48ffe3875657e8406e7ec995939":[2,0,41,2],
-"structcolor.html":[2,0,42],
-"structcolor.html#a7b23afbfdc39f8f97369aa0f9cdad48d":[2,0,42,2],
-"structcolor.html#ada88c609a801744faf4f35601733f96f":[2,0,42,0],
-"structcolor.html#adf42bf89ce203b7b9b3677bd6ae571d8":[2,0,42,3],
-"structcolor.html#af18acfb5e593334f215f2f9c391f25e7":[2,0,42,1],
-"structcommand__saved.html":[2,0,43],
-"structcommand__saved.html#a0a97887f86d850f2923f8ff8fa71a2ab":[2,0,43,2]
+"structcoastline__tile__data.html#acb30df934d8c05e5f93b76f28998af08":[2,0,41,0]
 };
