@@ -91,6 +91,15 @@ endmacro(message_error)
 
 include(CheckCCompilerFlag)
 include(CheckCXXCompilerFlag)
+
+macro(add_debug_compiler_flag_if_available FLAG)
+   set(VAR_FLAG_AVAILABLE_C "FLAG_AVAILABLE_C_${FLAG}")
+   check_c_compiler_flag(${FLAG} ${VAR_FLAG_AVAILABLE_C})
+   if (${${VAR_FLAG_AVAILABLE_C}})
+	   add_compile_options("$<$<CONFIG:DEBUG>:${FLAG}>")
+   endif()
+endmacro(add_debug_compiler_flag_if_available)
+
 macro(add_compiler_flag_if_available FLAG)
    set(VAR_FLAG_AVAILABLE_C "FLAG_AVAILABLE_C_${FLAG}")
    check_c_compiler_flag(${FLAG} ${VAR_FLAG_AVAILABLE_C})
