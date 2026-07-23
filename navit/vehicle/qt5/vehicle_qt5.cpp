@@ -271,7 +271,7 @@ static struct vehicle_priv *vehicle_qt5_new_qt5(struct vehicle_methods *meth, st
     ret = g_new0(struct vehicle_priv, 1);
     ret->cbl = cbl;
     *meth = vehicle_null_methods;
-    ret->attrs = attrs;
+    ret->attrs = attr_list_dup(attrs);
     /* Get qt location source from config if there*/
     if ((source_attr = attr_search(attrs, attr_src))) {
         ret->source = QGeoPositionInfoSource::createSource(QString(source_attr->u.str), NULL);

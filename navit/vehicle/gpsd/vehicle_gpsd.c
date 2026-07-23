@@ -479,7 +479,7 @@ static struct vehicle_priv *vehicle_gpsd_new_gpsd(struct vehicle_methods *meth, 
     }
     ret->cbl = cbl;
     *meth = vehicle_gpsd_methods;
-    ret->attrs = attrs;
+    ret->attrs = attr_list_dup(attrs);
     vehicle_gpsd_open(ret);
     return ret;
 }

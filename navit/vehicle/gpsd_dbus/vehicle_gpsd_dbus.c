@@ -206,7 +206,7 @@ static struct vehicle_priv *vehicle_gpsd_dbus_new(struct vehicle_methods *meth, 
     struct vehicle_priv *ret;
 
     ret = g_new0(struct vehicle_priv, 1);
-    ret->attrs = attrs;
+    ret->attrs = attr_list_dup(attrs);
     ret->cbl = cbl;
     *meth = vehicle_gpsd_methods;
     while (*attrs) {
