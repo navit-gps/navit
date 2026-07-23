@@ -497,6 +497,7 @@ unsigned char *file_data_read_compressed(struct file *file, long long offset, in
     void *ret;
     char *buffer = 0;
     uLongf destLen = size_uncomp;
+    int cached = 0;
 
     if (file->cache) {
         struct file_cache_id id = {offset, size, file->name_id, 1};
@@ -504,18 +505,25 @@ unsigned char *file_data_read_compressed(struct file *file, long long offset, in
         if (ret)
             return ret;
         ret = cache_insert_new(file_cache, &id, size_uncomp);
+        cached = 1;
     } else
         ret = g_malloc(size_uncomp);
     lseek(file->fd, offset, SEEK_SET);
 
     buffer = (char *)g_malloc(size);
     if (read(file->fd, buffer, size) != size) {
-        g_free(ret);
+        if (cached)
+            cache_flush_data(file_cache, ret);
+        else
+            g_free(ret);
         ret = NULL;
     } else {
         if (uncompress_int(ret, &destLen, (Bytef *)buffer, size) != Z_OK) {
             dbg(lvl_error, "uncompress failed");
-            g_free(ret);
+            if (cached)
+                cache_flush_data(file_cache, ret);
+            else
+                g_free(ret);
             ret = NULL;
         }
     }
