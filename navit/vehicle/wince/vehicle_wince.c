@@ -929,7 +929,7 @@ static struct vehicle_priv *vehicle_wince_new(struct vehicle_methods *meth, stru
     checksum_ignore = attr_search(attrs, attr_checksum_ignore);
     if (checksum_ignore)
         ret->checksum_ignore = checksum_ignore->u.num;
-    ret->attrs = attrs;
+    ret->attrs = attr_list_dup(attrs);
     on_eof = attr_search(attrs, attr_on_eof);
     if (on_eof && !g_strcasecmp(on_eof->u.str, "stop"))
         ret->on_eof = 1;

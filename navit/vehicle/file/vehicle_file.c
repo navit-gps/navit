@@ -1001,7 +1001,7 @@ static struct vehicle_priv *vehicle_file_new_file(struct vehicle_methods *meth, 
     checksum_ignore = attr_search(attrs, attr_checksum_ignore);
     if (checksum_ignore)
         ret->checksum_ignore = checksum_ignore->u.num;
-    ret->attrs = attrs;
+    ret->attrs = attr_list_dup(attrs);
     on_eof = attr_search(attrs, attr_on_eof);
     if (on_eof && !g_ascii_strcasecmp(on_eof->u.str, "stop"))
         ret->on_eof = 1;
