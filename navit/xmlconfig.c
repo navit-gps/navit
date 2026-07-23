@@ -675,8 +675,8 @@ static void start_element(xml_context *context, const gchar *element_name, const
         else
             parent_attr = &new->parent->element_attr;
         new->element_attr.u.data = new->object_func->create(parent_attr, attrs);
+        attr_list_free(attrs);
         if (!new->element_attr.u.data) {
-            attr_list_free(attrs);
             return;
         }
         new->element_attr.type = attr_from_name(element_name);
