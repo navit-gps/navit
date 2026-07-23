@@ -37,10 +37,11 @@ struct item_data {
 struct selector {
     char *icon;
     char *name;
-    enum item_type *types;
+    enum item_type *types;  // even items are start, odd ones are end of selection
 };
 static enum item_type selectors_BankTypes[] = {type_poi_bank, type_poi_bank, type_poi_atm, type_poi_atm, type_none};
 static enum item_type selectors_FuelTypes[] = {type_poi_fuel, type_poi_fuel, type_none};
+static enum item_type selectors_Charging[] = {type_poi_charging_station, type_poi_charging_station, type_none};
 static enum item_type selectors_BusTrainTypes[] = {
     type_poi_rail_station, type_poi_rail_station, type_poi_rail_halt, type_poi_rail_tram_stop,
     type_poi_bus_station,  type_poi_bus_stop,     type_none};
@@ -130,20 +131,23 @@ static enum item_type selectors_OtherTypes[] = {type_point_unspecified,
                                                 type_poi_shop_beverages + 1,
                                                 type_poi_pub - 1,
                                                 type_poi_atm + 1,
+                                                type_poi_charging_station - 1,
+                                                type_poi_charging_station + 1,
                                                 type_line - 1,
                                                 type_none};
 /*static enum item_type selectors_UnknownTypes[]={type_point_unkn,type_point_unkn,type_none};*/
 struct selector selectors[] = {
-    {"bank",       "Bank",          selectors_BankTypes        },
-    {"fuel",       "Fuel",          selectors_FuelTypes        },
-    {"bus_stop",   "Bus&Train",     selectors_BusTrainTypes    },
-    {"hotel",      "Hotel",         selectors_HotelTypes       },
-    {"restaurant", "Restaurant",    selectors_RestaurantTypes  },
-    {"shopping",   "Shopping",      selectors_ShoppingTypes    },
-    {"hospital",   "Service",       selectors_ServiceTypes     },
-    {"parking",    "Parking",       selectors_ParkingTypes     },
-    {"peak",       "Land Features", selectors_LandFeaturesTypes},
-    {"unknown",    "Other",         selectors_OtherTypes       },
+    {"bank",             "Bank",             selectors_BankTypes        },
+    {"fuel",             "Fuel",             selectors_FuelTypes        },
+    {"charging_station", "Charging Station", selectors_Charging         },
+    {"bus_stop",         "Bus&Train",        selectors_BusTrainTypes    },
+    {"hotel",            "Hotel",            selectors_HotelTypes       },
+    {"restaurant",       "Restaurant",       selectors_RestaurantTypes  },
+    {"shopping",         "Shopping",         selectors_ShoppingTypes    },
+    {"hospital",         "Service",          selectors_ServiceTypes     },
+    {"parking",          "Parking",          selectors_ParkingTypes     },
+    {"peak",             "Land Features",    selectors_LandFeaturesTypes},
+    {"unknown",          "Other",            selectors_OtherTypes       },
     /*	{"unknown","Unknown",selectors_UnknownTypes},*/
 };
 /**
