@@ -340,9 +340,25 @@ static void cache_stats(struct cache *cache) {
     cache->misses = 0;
 }
 
+static void cache_list_drain(struct cache_entry_list *list) {
+    struct cache_entry *entry = list->first;
+    while (entry) {
+        struct cache_entry *next = entry->next;
+        g_slice_free1(entry->size, entry);
+        entry = next;
+    }
+    list->first = NULL;
+    list->last = NULL;
+    list->size = 0;
+}
+
 void cache_destroy(struct cache *cache) {
     if (!cache)
         return;
+    cache_list_drain(&cache->t1);
+    cache_list_drain(&cache->b1);
+    cache_list_drain(&cache->t2);
+    cache_list_drain(&cache->b2);
     g_hash_table_destroy(cache->hash);
     g_free(cache);
 }
