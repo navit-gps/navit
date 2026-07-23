@@ -1,5 +1,6 @@
 var NAVTREEINDEX20 =
 {
+"gui__internal__poi_8h_source.html":[3,0,4,1,15],
 "gui__internal__priv_8h.html":[3,0,4,1,16],
 "gui__internal__priv_8h.html#a015bfc0405e0ff20ce45a7433686524a":[3,0,4,1,16,20],
 "gui__internal__priv_8h.html#a056ea224a10186c169a90b5ec945471c":[3,0,4,1,16,34],
@@ -248,6 +249,5 @@ var NAVTREEINDEX20 =
 "interfaceVSSpeechSynthesizer.html":[2,0,422],
 "interfaceVSSpeechSynthesizer.html#a08b5b4954718a35846cb7952f36bf3d0":[2,0,422,1],
 "interfaceVSSpeechSynthesizer.html#a127d778223120cf73771ad209e7c13d2":[2,0,422,9],
-"interfaceVSSpeechSynthesizer.html#a34e515e08388f7f1be1dffc34764035e":[2,0,422,2],
-"interfaceVSSpeechSynthesizer.html#a3803af9cac86ea6270d1913714839b0c":[2,0,422,5]
+"interfaceVSSpeechSynthesizer.html#a34e515e08388f7f1be1dffc34764035e":[2,0,422,2]
 };

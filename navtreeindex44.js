@@ -1,5 +1,6 @@
 var NAVTREEINDEX44 =
 {
+"structtracking.html#a076fcd8ec5b3e540a5ef6b9bf31b7d15":[2,0,391,25],
 "structtracking.html#a0939a4cee31508ce1bf3385703a80179":[2,0,391,6],
 "structtracking.html#a0a48d209b17700fccfc14ad19575ab5a":[2,0,391,36],
 "structtracking.html#a17012e1d55ad097ab0eca6c6fb1838d3":[2,0,391,23],
@@ -242,12 +243,11 @@ var NAVTREEINDEX44 =
 "structvehicle__methods.html#a41e7e645fa088f7fbce0705077a4b62c":[2,0,417,2],
 "structvehicle__methods.html#a501719479d64b5230d500cc6e0408df8":[2,0,417,1],
 "structvehicle__methods.html#a6f0edcabbd2447efe79c1efc1746bb6b":[2,0,417,0],
+"structvehicle__priv.html":[0,2,0,3,0],
+"structvehicle__priv.html":[0,2,0,2,1],
 "structvehicle__priv.html":[0,2,0,4,0],
 "structvehicle__priv.html":[0,2,0,5,0],
-"structvehicle__priv.html":[0,2,0,3,0],
-"structvehicle__priv.html":[0,2,0,6,0],
-"structvehicle__priv.html":[0,2,0,7,0],
-"structvehicle__priv.html":[0,2,0,2,1],
 "structvehicle__priv.html":[0,2,0,9,1],
-"structvehicle__priv.html#a06c2b21afd1a3613e551e2690bc9285d":[0,2,0,2,1,84]
+"structvehicle__priv.html":[0,2,0,7,0],
+"structvehicle__priv.html":[0,2,0,6,0]
 };

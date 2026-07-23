@@ -1,5 +1,6 @@
 var NAVTREEINDEX36 =
 {
+"structgui__methods.html#a3cf8fab98124f6dc0202900de3ec2845":[2,0,151,4],
 "structgui__methods.html#a405dbb54c703abb831c7d96bec25b012":[2,0,151,10],
 "structgui__methods.html#a466654518365adeed39739938a041040":[2,0,151,3],
 "structgui__methods.html#a8cd63422f5b2fe2ac806b61e273ad1b4":[2,0,151,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX36 =
 "structitem__bin__sink__func.html#a63043b4b8b24c820f81323d1e6a354ca":[2,0,164,0],
 "structitem__data.html":[2,0,165],
 "structitem__data.html#a092645828d64a634437540488e4e2b46":[2,0,165,1],
-"structitem__data.html#a72e27a14462db2c54799ed9512d36371":[2,0,165,0],
-"structitem__data.html#ae664c5300ff05ce9f3e148ea016d00f9":[2,0,165,3]
+"structitem__data.html#a72e27a14462db2c54799ed9512d36371":[2,0,165,0]
 };

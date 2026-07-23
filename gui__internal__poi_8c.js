@@ -19,6 +19,7 @@ var gui__internal__poi_8c =
     [ "selectors", "gui__internal__poi_8c.html#ac319792e83406287d4198c50e9210fcb", null ],
     [ "selectors_BankTypes", "gui__internal__poi_8c.html#aff59e7e34223282da99784f3ca712067", null ],
     [ "selectors_BusTrainTypes", "gui__internal__poi_8c.html#a8b714326977305bdde346dca4be7aba0", null ],
+    [ "selectors_Charging", "gui__internal__poi_8c.html#a4211be8ea999c9dcc8e60738081cfdd3", null ],
     [ "selectors_FuelTypes", "gui__internal__poi_8c.html#a81e7731b7fccec3ccc1b185a5831955a", null ],
     [ "selectors_HotelTypes", "gui__internal__poi_8c.html#a83a8ac21d89bdd9c0e62192bba3dc1ec", null ],
     [ "selectors_LandFeaturesTypes", "gui__internal__poi_8c.html#aab7069965678552a892d72b4c8ff1227", null ],

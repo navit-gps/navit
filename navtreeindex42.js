@@ -1,5 +1,6 @@
 var NAVTREEINDEX42 =
 {
+"structroute.html#a8227252962feb3782d426da1d36b9573":[2,0,323,6],
 "structroute.html#a87641aa05073f2c20434369aa6c42e4c":[2,0,323,5],
 "structroute.html#a9f4f8a0d9a56d4f73ef201cc4d68d55a":[2,0,323,17],
 "structroute.html#aa1edf18cdace11ebf4cc1605181d0eac":[2,0,323,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX42 =
 "structslicerpolygon.html#a4d52c25ea2dfe2a85a3d54c8f4fb286b":[2,0,356,0],
 "structslicerpolygon.html#a5c02acd6f48d58f4eb9087021043d36e":[2,0,356,3],
 "structslicerpolygon.html#a65d6c8ba101f6027c7957130c9d6ceef":[2,0,356,7],
-"structslicerpolygon.html#a71a9ac2e24f5c0c332245ed724d429e5":[2,0,356,11],
-"structslicerpolygon.html#a7c017a0370fdf1702803dd4ee36c3301":[2,0,356,8]
+"structslicerpolygon.html#a71a9ac2e24f5c0c332245ed724d429e5":[2,0,356,11]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX31 =
 {
+"structandroid__search__priv.html#a64aed6a9a20c259bf78a3085342f38c1":[2,0,3,2],
 "structandroid__search__priv.html#ac0e13b34fd0801c75385948134ff36cc":[2,0,3,7],
 "structandroid__search__priv.html#ad07fa112dc30709e2f3c3c18cdd3e537":[2,0,3,1],
 "structandroid__search__priv.html#ad4092458cc4c0fc5670f7ba6cb0a3344":[2,0,3,6],
@@ -248,6 +249,5 @@ var NAVTREEINDEX31 =
 "structcoastline__tile__data.html":[2,0,41],
 "structcoastline__tile__data.html#a74aecbf26b43a2d9b88320c129f7bfc0":[2,0,41,3],
 "structcoastline__tile__data.html#ab87974dd9dcacb23948b629a2bfe1816":[2,0,41,4],
-"structcoastline__tile__data.html#ac9b03e4aa74a3bce8777b3410942e397":[2,0,41,1],
-"structcoastline__tile__data.html#acb30df934d8c05e5f93b76f28998af08":[2,0,41,0]
+"structcoastline__tile__data.html#ac9b03e4aa74a3bce8777b3410942e397":[2,0,41,1]
 };
