@@ -3454,6 +3454,7 @@ static char *show_maneuver(struct navigation *nav, struct navigation_itm *itm, s
     }
     switch (level) {
     case level_follow:
+        g_free(d);
         d = get_distance_str(nav, distance, type, 1);
         ret = g_strdup_printf(_("Follow the road for the next %s"), d);
         break;
