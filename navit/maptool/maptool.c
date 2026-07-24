@@ -26,6 +26,7 @@
 #include "map.h"
 #include "plugin.h"
 #include "util.h"
+#include "zipfile.h"
 #include <assert.h>
 #include <errno.h>
 #include <glib.h>
@@ -45,6 +46,7 @@
 #endif
 
 #define SLIZE_SIZE_DEFAULT_GB 1
+#define MAP_INDEX_VERSION 15
 long long slice_size = SLIZE_SIZE_DEFAULT_GB * 1024ll * 1024 * 1024;
 int attr_debug_level = 1;
 int ignore_unknown = 0;
@@ -307,6 +309,7 @@ static void usage(void) {
     fprintf(f, "-U (--unknown-country)            : add objects with unknown country to index\n");
     fprintf(f, "-x (--index-size)                 : set maximum country index size in bytes\n");
     fprintf(f, "-z (--compression-level) <level>  : set the compression level\n");
+    fprintf(f, "-C (--compression-method) <method>: compression method (zlib or lzma, default zlib)\n");
     fprintf(f, "Internal options (undocumented):\n");
     fprintf(f, "-b (--binfile)\n");
     fprintf(f, "-B \n");
@@ -331,6 +334,7 @@ struct maptool_params {
     int dump;
     int o5m;
     int compression_level;
+    int compression_method;
     int protobuf;
     int dump_coordinates;
     int input;
@@ -361,6 +365,7 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
         {"attr-debug-level",  1, 0, 'a'},
         {"binfile",           0, 0, 'b'},
         {"compression-level", 1, 0, 'z'},
+        {"compression-method", 1, 0, 'C'},
 #ifdef HAVE_POSTGRESQL
         {"db",                1, 0, 'd'},
 #endif
@@ -390,7 +395,7 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
         {0,                   0, 0, 0  }
     };
     c = getopt_long(argc, argv,
-                    "36B:DEMNO:PS:Wa:bc"
+                    "36B:C:DEMNO:PS:Wa:bc"
 #ifdef HAVE_POSTGRESQL
                     "d:"
 #endif
@@ -526,7 +531,13 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
     case 'x':
         p->max_index_size = atoi(optarg);
         break;
-#ifdef HAVE_ZLIB
+    case 'C':
+        if (!strcmp(optarg, "lzma"))
+            p->compression_method = ZIP_COMPRESSION_LZMA;
+        else
+            p->compression_method = ZIP_COMPRESSION_DEFLATE;
+        break;
+#if defined(HAVE_ZLIB) || defined(HAVE_LZMA)
     case 'z':
         p->compression_level = atoi(optarg);
         break;
@@ -817,6 +828,7 @@ static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **
         zip_set_timestamp(zip_info, p->timestamp);
         zip_set_maxnamelen(zip_info, 14 + strlen(suffix0));
         zip_set_compression_level(zip_info, p->compression_level);
+        zip_set_compression_method(zip_info, p->compression_method);
         if (!zip_open(zip_info, p->result, zipdir, zipindex)) {
             fprintf(stderr, "Fatal: Could not write output file.\n");
             exit(1);
@@ -825,7 +837,7 @@ static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **
             map_information_attrs[1].type = attr_url;
             map_information_attrs[1].u.str = p->url;
         }
-        index_init(zip_info, 1);
+        index_init(zip_info, MAP_INDEX_VERSION);
         g_free(zipdir);
         g_free(zipindex);
     }
@@ -928,9 +940,10 @@ int main(int argc, char **argv) {
     linguistics_init();
 
     memset(&p, 0, sizeof(p));
-    p.zip64 = 1; /* default to 64 bit zip */
-#ifdef HAVE_ZLIB
-    p.compression_level = 9;
+    p.zip64 = 1;                                    /* default to 64 bit zip */
+    p.compression_method = ZIP_COMPRESSION_DEFLATE; /* default to zlib */
+#if defined(HAVE_ZLIB) || defined(HAVE_LZMA)
+    p.compression_level = 6;
 #endif
     p.start = 1;
     p.end = 99;

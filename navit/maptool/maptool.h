@@ -412,12 +412,18 @@ void index_init(struct zip_info *info, int version);
 void index_submap_add(struct tile_info *info, struct tile_head *th);
 
 /* zip.c */
+char *compress_for_zip(char *input, int input_size, int level, int method, int *out_size, int *out_method,
+                       char **reuse_buf, size_t *reuse_size, void *lzma_alloc);
 void write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, int data_size);
+void write_zipmember_raw(struct zip_info *zip_info, char *name, int filelen, char *compressed_data, int compressed_size,
+                         int uncompressed_size, unsigned long crc, int zipmthd);
 int zip_write_index(struct zip_info *info);
 int zip_write_directory(struct zip_info *info);
 struct zip_info *zip_new(void);
 void zip_set_zip64(struct zip_info *info, int on);
 void zip_set_compression_level(struct zip_info *info, int level);
+void zip_set_compression_method(struct zip_info *info, int method);
+int zip_get_compression_method(struct zip_info *info);
 void zip_set_maxnamelen(struct zip_info *info, int max);
 int zip_get_maxnamelen(struct zip_info *info);
 int zip_add_member(struct zip_info *info);
@@ -425,6 +431,7 @@ int zip_set_timestamp(struct zip_info *info, char *timestamp);
 int zip_open(struct zip_info *info, char *out, char *dir, char *index);
 FILE *zip_get_index(struct zip_info *info);
 int zip_get_zipnum(struct zip_info *info);
+int zip_get_compression_level(struct zip_info *info);
 void zip_set_zipnum(struct zip_info *info, int num);
 void zip_close(struct zip_info *info);
 void zip_destroy(struct zip_info *info);
