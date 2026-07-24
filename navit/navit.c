@@ -3938,7 +3938,6 @@ void navit_destroy(struct navit *this_) {
     navit_destroy_traffic_maps(this_);
 
     callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);
-    callback_list_destroy(this_->attr_cbl);
 
     navit_destroy_mapset_maps(this_);
 
@@ -3949,6 +3948,7 @@ void navit_destroy(struct navit *this_) {
     tracking_destroy_map(this_->tracking);
 
     attr_list_free(this_->attrs);
+    callback_list_destroy(this_->attr_cbl);
     this_->navigation = NULL;
     this_->speech = NULL;
     this_->tracking = NULL;
