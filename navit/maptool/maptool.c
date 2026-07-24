@@ -50,7 +50,7 @@
 long long slice_size = SLIZE_SIZE_DEFAULT_GB * 1024ll * 1024 * 1024;
 int attr_debug_level = 1;
 int ignore_unknown = 0;
-int thread_count = 8; /* good default even on single cores */
+int thread_count = 0; /* 0 = auto-detect at startup */
 GHashTable *dedupe_ways_hash;
 int phase;
 int slices;
@@ -360,39 +360,39 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
     int pos, c, i;
 
     static struct option long_options[] = {
-        {"32bit",             0, 0, '3'},
-        {"64bit",             0, 0, '6'},
-        {"attr-debug-level",  1, 0, 'a'},
-        {"binfile",           0, 0, 'b'},
-        {"compression-level", 1, 0, 'z'},
+        {"32bit",              0, 0, '3'},
+        {"64bit",              0, 0, '6'},
+        {"attr-debug-level",   1, 0, 'a'},
+        {"binfile",            0, 0, 'b'},
+        {"compression-level",  1, 0, 'z'},
         {"compression-method", 1, 0, 'C'},
 #ifdef HAVE_POSTGRESQL
-        {"db",                1, 0, 'd'},
+        {"db",                 1, 0, 'd'},
 #endif
-        {"dedupe-ways",       0, 0, 'w'},
-        {"dump",              0, 0, 'D'},
-        {"dump-coordinates",  0, 0, 'c'},
-        {"end",               1, 0, 'e'},
-        {"experimental",      0, 0, 'E'},
-        {"help",              0, 0, 'h'},
-        {"keep-tmpfiles",     0, 0, 'k'},
-        {"nodes-only",        0, 0, 'N'},
-        {"map",               1, 0, 'm'},
-        {"o5m",               0, 0, 'M'},
-        {"plugin",            1, 0, 'p'},
-        {"protobuf",          0, 0, 'P'},
-        {"start",             1, 0, 's'},
-        {"timestamp",         1, 0, 't'},
-        {"threads",           1, 0, 'T'},
-        {"input-file",        1, 0, 'i'},
-        {"rule-file",         1, 0, 'r'},
-        {"ignore-unknown",    0, 0, 'n'},
-        {"url",               1, 0, 'u'},
-        {"ways-only",         0, 0, 'W'},
-        {"slice-size",        1, 0, 'S'},
-        {"unknown-country",   0, 0, 'U'},
-        {"index-size",        0, 0, 'x'},
-        {0,                   0, 0, 0  }
+        {"dedupe-ways",        0, 0, 'w'},
+        {"dump",               0, 0, 'D'},
+        {"dump-coordinates",   0, 0, 'c'},
+        {"end",                1, 0, 'e'},
+        {"experimental",       0, 0, 'E'},
+        {"help",               0, 0, 'h'},
+        {"keep-tmpfiles",      0, 0, 'k'},
+        {"nodes-only",         0, 0, 'N'},
+        {"map",                1, 0, 'm'},
+        {"o5m",                0, 0, 'M'},
+        {"plugin",             1, 0, 'p'},
+        {"protobuf",           0, 0, 'P'},
+        {"start",              1, 0, 's'},
+        {"timestamp",          1, 0, 't'},
+        {"threads",            1, 0, 'T'},
+        {"input-file",         1, 0, 'i'},
+        {"rule-file",          1, 0, 'r'},
+        {"ignore-unknown",     0, 0, 'n'},
+        {"url",                1, 0, 'u'},
+        {"ways-only",          0, 0, 'W'},
+        {"slice-size",         1, 0, 'S'},
+        {"unknown-country",    0, 0, 'U'},
+        {"index-size",         0, 0, 'x'},
+        {0,                    0, 0, 0  }
     };
     c = getopt_long(argc, argv,
                     "36B:C:DEMNO:PS:Wa:bc"
@@ -940,8 +940,8 @@ int main(int argc, char **argv) {
     linguistics_init();
 
     memset(&p, 0, sizeof(p));
-    p.zip64 = 1;                                    /* default to 64 bit zip */
-    p.compression_method = ZIP_COMPRESSION_DEFLATE; /* default to zlib */
+    p.zip64 = 1; /* default to 64 bit zip */
+    p.compression_method = ZIP_COMPRESSION_DEFLATE;
 #if defined(HAVE_ZLIB) || defined(HAVE_LZMA)
     p.compression_level = 6;
 #endif
@@ -953,6 +953,9 @@ int main(int argc, char **argv) {
     p.process_relations = 1;
     p.timestamp = current_to_iso8601();
     p.max_index_size = 65536;
+
+    if (thread_count == 0)
+        thread_count = g_get_num_processors();
 
 #ifdef HAVE_SBRK
     start_brk = (long)sbrk(0);

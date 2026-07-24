@@ -28,6 +28,15 @@
 #include "item.h"
 #include "item_type_def.h"
 #include "types.h"
+#ifdef HAVE_LZMA
+struct lzma_arena {
+    char *buf;
+    size_t size;
+    size_t pos;
+};
+void *arena_alloc(void *opaque, size_t nmemb, size_t size);
+void arena_free(void *opaque, void *ptr);
+#endif
 #include <glib.h>
 
 #define sq(x) ((double)(x) * (x))
@@ -71,6 +80,12 @@ extern struct tile_head {
     int zipnum;
     int process;
     struct tile_head *next;
+    char *comp_data;
+    int comp_size;
+    unsigned long crc;
+    int zipmthd;
+    int compression_level;
+    int compression_method;
     // char subtiles[0];
 } *tile_head_root;
 
