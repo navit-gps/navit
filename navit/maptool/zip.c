@@ -96,6 +96,37 @@ static int compress_lzma_int(uint8_t *dest, size_t *destLen, const uint8_t *sour
     return -1;
 }
 
+void *lzma_allocator_create(int level) {
+    struct lzma_arena *a;
+    lzma_allocator *alloc;
+    uint64_t mem;
+    mem = lzma_easy_encoder_memusage(level);
+    if (mem == UINT64_MAX) {
+        fprintf(stderr, "Invalid LZMA compression level %d\n", level);
+        exit(1);
+    }
+    a = g_malloc(sizeof(struct lzma_arena));
+    a->size = mem + LZMA_ARENA_MARGIN;
+    a->buf = g_malloc0(a->size);
+    a->pos = 0;
+    alloc = g_malloc(sizeof(lzma_allocator));
+    alloc->alloc = arena_alloc;
+    alloc->free = arena_free;
+    alloc->opaque = a;
+    return alloc;
+}
+
+void lzma_allocator_destroy(void *allocator) {
+    lzma_allocator *alloc;
+    struct lzma_arena *a;
+    if (!allocator)
+        return;
+    alloc = (lzma_allocator *)allocator;
+    a = (struct lzma_arena *)alloc->opaque;
+    g_free(a->buf);
+    g_free(a);
+    g_free(alloc);
+}
 #endif
 
 #ifdef HAVE_ZLIB
@@ -145,6 +176,8 @@ char *compress_for_zip(char *input, int input_size, int level, int method, int *
         if (method == ZIP_COMPRESSION_LZMA) {
             size_t out_len = compbuflen;
             int ok;
+            if (lzma_alloc)
+                ((struct lzma_arena *)((lzma_allocator *)lzma_alloc)->opaque)->pos = 0;
             ok = compress_lzma_int((uint8_t *)*reuse_buf, &out_len, (uint8_t *)input, input_size, level,
                                    (const lzma_allocator *)lzma_alloc);
             if (ok == 0 && out_len < (size_t)input_size) {

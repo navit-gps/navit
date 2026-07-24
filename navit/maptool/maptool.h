@@ -71,6 +71,12 @@ extern struct tile_head {
     int zipnum;
     int process;
     struct tile_head *next;
+    char *comp_data;
+    int comp_size;
+    unsigned long crc;
+    int zipmthd;
+    int compression_level;
+    int compression_method;
     // char subtiles[0];
 } *tile_head_root;
 
@@ -412,6 +418,10 @@ void index_init(struct zip_info *info, int version);
 void index_submap_add(struct tile_info *info, struct tile_head *th);
 
 /* zip.c */
+#ifdef HAVE_LZMA
+void *lzma_allocator_create(int level);
+void lzma_allocator_destroy(void *allocator);
+#endif
 char *compress_for_zip(char *input, int input_size, int level, int method, int *out_size, int *out_method,
                        char **reuse_buf, size_t *reuse_size, void *lzma_alloc);
 void write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, int data_size);
