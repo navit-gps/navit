@@ -4411,10 +4411,13 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
                 dbg(lvl_debug, "*****checkpoint PROCESS-3");
                 /* check if any of the replaced messages has the same location and segment data */
                 for (msg_iter = msgs_to_remove; msg_iter && !swap_candidate; msg_iter = g_list_next(msg_iter)) {
+                    struct seg_data *stored_data;
                     stored_msg = (struct traffic_message *)msg_iter->data;
-                    if (seg_data_equals(data, traffic_message_parse_events(stored_msg))
+                    stored_data = traffic_message_parse_events(stored_msg);
+                    if (seg_data_equals(data, stored_data)
                         && traffic_location_equals(message->location, stored_msg->location))
                         swap_candidate = stored_msg;
+                    g_free(stored_data);
                 }
 
                 if (swap_candidate) {
@@ -4460,6 +4463,8 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
                                     map_selection_destroy(rt_ms);
                                 }
                             }
+                        g_free(loc_ms);
+                        route_free_selection(rt_ms);
                     }
                     ret |= MESSAGE_UPDATE_SEGMENTS;
                 }
@@ -5933,6 +5938,8 @@ void traffic_set_route(struct traffic *this_, struct route *rt) {
 }
 
 void traffic_destroy(struct traffic *this_) {
+    g_free(this_->shared);
+    this_->shared = NULL;
     if (this_->meth.destroy)
         this_->meth.destroy(this_->priv);
     attr_list_free(this_->attrs);
