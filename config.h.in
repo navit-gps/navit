@@ -30,6 +30,7 @@
 #define NAVIT_VERSION PACKAGE_VERSION "+git:" GIT_VERSION NAVIT_VARIANT
 
 #cmakedefine HAVE_ZLIB 1
+#cmakedefine HAVE_LZMA 1
 
 #cmakedefine USE_ROUTING 1
 
