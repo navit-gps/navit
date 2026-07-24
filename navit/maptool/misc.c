@@ -31,11 +31,13 @@
 #include "map.h"
 #include "maptool.h"
 #include "types.h"
+#include "zipfile.h"
 #include <fcntl.h>
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <zlib.h>
 #ifndef _MSC_VER
 #    include <getopt.h>
 #    include <unistd.h>
@@ -300,15 +302,152 @@ int phase4(FILE **in, int in_count, int with_range, char *suffix, FILE *tilesdir
     return phase34(&info, zip_info, in, NULL, in_count, with_range);
 }
 
+static struct tile_head tile_killer;
+
+/* Persistent thread pool reused across slices */
+static GAsyncQueue *tile_queue = NULL;
+static GAsyncQueue *tile_done_queue = NULL;
+static struct tile_process_thread *worker_threads = NULL;
+static int worker_count = 0;
+
+struct tile_process_thread {
+    GAsyncQueue *queue;
+    GThread *thread;
+    char *scratch_buf;
+    size_t scratch_size;
+#ifdef HAVE_LZMA
+    void *allocator;
+#endif
+};
+
+static gpointer process_tile_worker(gpointer data) {
+    struct tile_process_thread *me = (struct tile_process_thread *)data;
+    struct tile_head *th;
+
+    while ((th = (struct tile_head *)g_async_queue_pop(me->queue)) != &tile_killer) {
+        int data_size = th->total_size;
+        th->crc = crc32(0, NULL, 0);
+        th->crc = crc32(th->crc, (unsigned char *)th->zip_data, data_size);
+
+        th->comp_data = compress_for_zip(th->zip_data, data_size, th->compression_level, th->compression_method,
+                                         &th->comp_size, &th->zipmthd, &me->scratch_buf, &me->scratch_size,
+                                         me->allocator);
+        if (!th->comp_data) {
+            th->comp_data = th->zip_data;
+            th->zipmthd = ZIP_COMPRESSION_STORED;
+        }
+
+        g_async_queue_push(tile_done_queue, th);
+    }
+
+    g_thread_exit(NULL);
+    return NULL;
+}
+
+static void tile_worker_pool_init(int n_threads, struct zip_info *zip_info) {
+    int i;
+    int compression_level = zip_get_compression_level(zip_info);
+    int compression_method = zip_get_compression_method(zip_info);
+    if (n_threads <= 0) {
+        fprintf(stderr, "Invalid thread count %d\n", n_threads);
+        exit(1);
+    }
+    worker_count = n_threads;
+    tile_queue = g_async_queue_new();
+    tile_done_queue = g_async_queue_new();
+    worker_threads = g_malloc0(sizeof(struct tile_process_thread) * n_threads);
+    for (i = 0; i < n_threads; i++) {
+        worker_threads[i].queue = tile_queue;
+#ifdef HAVE_LZMA
+        if (compression_level > 0 && compression_method == ZIP_COMPRESSION_LZMA)
+            worker_threads[i].allocator = lzma_allocator_create(compression_level);
+#endif
+        worker_threads[i].thread = g_thread_new("tile_worker", process_tile_worker, &worker_threads[i]);
+    }
+}
+
+static void tile_worker_pool_fini(void) {
+    int i;
+    if (!worker_threads)
+        return;
+    for (i = 0; i < worker_count; i++)
+        g_async_queue_push(tile_queue, &tile_killer);
+    for (i = 0; i < worker_count; i++) {
+        g_thread_join(worker_threads[i].thread);
+        g_free(worker_threads[i].scratch_buf);
+#ifdef HAVE_LZMA
+        lzma_allocator_destroy(worker_threads[i].allocator);
+#endif
+    }
+    g_async_queue_unref(tile_queue);
+    g_async_queue_unref(tile_done_queue);
+    g_free(worker_threads);
+    tile_queue = NULL;
+    tile_done_queue = NULL;
+    worker_threads = NULL;
+    worker_count = 0;
+}
+
+static int write_tiles_for_slice(struct zip_info *zip_info) {
+    int zipfiles = 0;
+    int tile_count = 0;
+    int compression_level = zip_get_compression_level(zip_info);
+    int compression_method = zip_get_compression_method(zip_info);
+    struct tile_head *th;
+
+    if (!worker_threads) {
+        fprintf(stderr, "Tile worker pool not initialized\n");
+        exit(1);
+    }
+
+    th = tile_head_root;
+    while (th) {
+        if (th->process && th->name[0])
+            tile_count++;
+        th = th->next;
+    }
+
+    for (th = tile_head_root; th; th = th->next) {
+        if (th->process && !th->name[0])
+            dbg_assert(fwrite(th->zip_data, th->total_size, 1, zip_get_index(zip_info)) == 1);
+    }
+
+    th = tile_head_root;
+    while (th) {
+        if (th->process && th->name[0]) {
+            th->compression_level = compression_level;
+            th->compression_method = compression_method;
+            g_async_queue_push(tile_queue, th);
+        }
+        th = th->next;
+    }
+
+    while (tile_count > 0) {
+        th = g_async_queue_pop(tile_done_queue);
+        if (th->total_size != th->total_size_used) {
+            fprintf(stderr, "Size error '%s': %d vs %d\n", th->name, th->total_size, th->total_size_used);
+            exit(1);
+        }
+        write_zipmember_raw(zip_info, th->name, zip_get_maxnamelen(zip_info), th->comp_data, th->comp_size,
+                            th->total_size, th->crc, th->zipmthd);
+        if (th->comp_data != th->zip_data)
+            g_free(th->comp_data);
+        th->comp_data = NULL;
+        zipfiles++;
+        tile_count--;
+    }
+    return zipfiles;
+}
+
 static int process_slice(FILE **in, FILE **reference, int in_count, int with_range, long long size, char *suffix,
-                         struct zip_info *zip_info) {
+                         struct zip_info *zip_info, char **slice_data_ptr) {
     struct tile_head *th;
     char *slice_data, *zip_data;
-    int zipfiles = 0;
     struct tile_info info;
     int i;
 
-    slice_data = g_malloc(size);
+    slice_data = g_realloc(*slice_data_ptr, size);
+    *slice_data_ptr = slice_data;
     zip_data = slice_data;
     th = tile_head_root;
     while (th) {
@@ -331,24 +470,7 @@ static int process_slice(FILE **in, FILE **reference, int in_count, int with_ran
     info.tiles_list = NULL;
     info.tilesdir_out = NULL;
     phase34(&info, zip_info, in, reference, in_count, with_range);
-
-    for (th = tile_head_root; th; th = th->next) {
-        if (!th->process)
-            continue;
-        if (th->name[0]) {
-            if (th->total_size != th->total_size_used) {
-                fprintf(stderr, "Size error '%s': %d vs %d\n", th->name, th->total_size, th->total_size_used);
-                exit(1);
-            }
-            write_zipmember(zip_info, th->name, zip_get_maxnamelen(zip_info), th->zip_data, th->total_size);
-            zipfiles++;
-        } else {
-            dbg_assert(fwrite(th->zip_data, th->total_size, 1, zip_get_index(zip_info)) == 1);
-        }
-    }
-    g_free(slice_data);
-
-    return zipfiles;
+    return write_tiles_for_slice(zip_info);
 }
 
 int phase5(FILE **in, FILE **references, int in_count, int with_range, char *suffix, struct zip_info *zip_info) {
@@ -356,6 +478,7 @@ int phase5(FILE **in, FILE **references, int in_count, int with_range, char *suf
     int slices;
     int zipnum, written_tiles;
     struct tile_head *th, *th2;
+    char *slice_data_reuse = NULL;
     create_tile_hash();
 
     th = tile_head_root;
@@ -373,6 +496,8 @@ int phase5(FILE **in, FILE **references, int in_count, int with_range, char *suf
     }
     if (size)
         fprintf(stderr, "Slice %d is of size " LONGLONG_FMT "\n", slices, size);
+    tile_worker_pool_init(thread_count, zip_info);
+
     th = tile_head_root;
     size = 0;
     slices = 0;
@@ -390,10 +515,14 @@ int phase5(FILE **in, FILE **references, int in_count, int with_range, char *suf
         }
         /* process_slice() modifies zip_info, but need to retain old info */
         zipnum = zip_get_zipnum(zip_info);
-        written_tiles = process_slice(in, references, in_count, with_range, size, suffix, zip_info);
+        written_tiles = process_slice(in, references, in_count, with_range, size, suffix, zip_info, &slice_data_reuse);
         zip_set_zipnum(zip_info, zipnum + written_tiles);
         slices++;
     }
+
+    g_free(slice_data_reuse);
+
+    tile_worker_pool_fini();
     return 0;
 }
 
