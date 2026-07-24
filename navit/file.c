@@ -40,6 +40,9 @@
 #include <wordexp.h>
 #include <zconf.h>
 #include <zlib.h>
+#ifdef HAVE_LZMA
+#    include <lzma.h>
+#endif
 
 #ifdef _MSC_VER
 #    include <windows.h>
@@ -493,11 +496,27 @@ static int uncompress_int(Bytef *dest, uLongf *destLen, const Bytef *source, uLo
     return err;
 }
 
-unsigned char *file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp) {
+static int lzma_uncompress_int(Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLen) {
+#ifdef HAVE_LZMA
+    size_t in_pos = 0;
+    size_t out_pos = 0;
+    uint64_t memlimit = UINT64_MAX;
+    lzma_ret ret = lzma_stream_buffer_decode(&memlimit, 0, NULL, source, &in_pos, sourceLen, dest, &out_pos, *destLen);
+    if (ret == LZMA_OK) {
+        *destLen = out_pos;
+        return 0;
+    }
+    return -1;
+#else
+    return -1;
+#endif
+}
+
+unsigned char *file_data_read_compressed_method(struct file *file, long long offset, int size, int size_uncomp,
+                                                int method) {
     void *ret;
     char *buffer = 0;
     uLongf destLen = size_uncomp;
-    int cached = 0;
 
     if (file->cache) {
         struct file_cache_id id = {offset, size, file->name_id, 1};
@@ -505,31 +524,46 @@ unsigned char *file_data_read_compressed(struct file *file, long long offset, in
         if (ret)
             return ret;
         ret = cache_insert_new(file_cache, &id, size_uncomp);
-        cached = 1;
     } else
         ret = g_malloc(size_uncomp);
     lseek(file->fd, offset, SEEK_SET);
 
     buffer = (char *)g_malloc(size);
     if (read(file->fd, buffer, size) != size) {
-        if (cached)
-            cache_flush_data(file_cache, ret);
-        else
-            g_free(ret);
+        file_data_remove(file, ret);
         ret = NULL;
     } else {
-        if (uncompress_int(ret, &destLen, (Bytef *)buffer, size) != Z_OK) {
-            dbg(lvl_error, "uncompress failed");
-            if (cached)
-                cache_flush_data(file_cache, ret);
-            else
-                g_free(ret);
+        switch (method) {
+        case ZIP_COMPRESSION_DEFLATE:
+            if (uncompress_int(ret, &destLen, (Bytef *)buffer, size) != Z_OK) {
+                dbg(lvl_error, "uncompress failed");
+                file_data_remove(file, ret);
+                ret = NULL;
+            }
+            break;
+#ifdef HAVE_LZMA
+        case ZIP_COMPRESSION_LZMA:
+            if (lzma_uncompress_int(ret, &destLen, (Bytef *)buffer, size) != 0) {
+                dbg(lvl_error, "lzma uncompress failed");
+                file_data_remove(file, ret);
+                ret = NULL;
+            }
+            break;
+#endif
+        default:
+            dbg(lvl_error, "unsupported compression method %d", method);
+            file_data_remove(file, ret);
             ret = NULL;
+            break;
         }
     }
     g_free(buffer);
 
     return ret;
+}
+
+unsigned char *file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp) {
+    return file_data_read_compressed_method(file, offset, size, size_uncomp, ZIP_COMPRESSION_DEFLATE);
 }
 
 void file_data_free(struct file *file, unsigned char *data) {
