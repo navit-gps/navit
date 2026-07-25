@@ -46,14 +46,6 @@ Multiple Maps
 Navit can display multiple maps simultaneously. You can enable or disable specific maps at runtime using the GTK GUI.
 
 
-Known Issues
-------------
-
-.. warning::
-
-   Navit may cause problems when using multiple binfiles at once. See `Ticket #1046 <http://trac.navit-project.org/ticket/1046>`_ for details.
-
-
 Getting Maps
 ------------
 
