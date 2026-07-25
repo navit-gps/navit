@@ -3,4 +3,5 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="cancel">Cancel</string>
+    <string name="channel_name">Navit</string>
 </resources>
