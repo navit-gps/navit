@@ -26,6 +26,7 @@
 #include "map.h"
 #include "plugin.h"
 #include "util.h"
+#include "zipfile.h"
 #include <assert.h>
 #include <errno.h>
 #include <glib.h>
@@ -45,10 +46,11 @@
 #endif
 
 #define SLIZE_SIZE_DEFAULT_GB 1
+#define MAP_INDEX_VERSION 15
 long long slice_size = SLIZE_SIZE_DEFAULT_GB * 1024ll * 1024 * 1024;
 int attr_debug_level = 1;
 int ignore_unknown = 0;
-int thread_count = 8; /* good default even on single cores */
+int thread_count = 0; /* 0 = auto-detect at startup */
 GHashTable *dedupe_ways_hash;
 int phase;
 int slices;
@@ -307,6 +309,7 @@ static void usage(void) {
     fprintf(f, "-U (--unknown-country)            : add objects with unknown country to index\n");
     fprintf(f, "-x (--index-size)                 : set maximum country index size in bytes\n");
     fprintf(f, "-z (--compression-level) <level>  : set the compression level\n");
+    fprintf(f, "-C (--compression-method) <method>: compression method (zlib or lzma, default zlib)\n");
     fprintf(f, "Internal options (undocumented):\n");
     fprintf(f, "-b (--binfile)\n");
     fprintf(f, "-B \n");
@@ -331,6 +334,7 @@ struct maptool_params {
     int dump;
     int o5m;
     int compression_level;
+    int compression_method;
     int protobuf;
     int dump_coordinates;
     int input;
@@ -356,41 +360,42 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
     int pos, c, i;
 
     static struct option long_options[] = {
-        {"32bit",             0, 0, '3'},
-        {"64bit",             0, 0, '6'},
-        {"attr-debug-level",  1, 0, 'a'},
-        {"binfile",           0, 0, 'b'},
-        {"compression-level", 1, 0, 'z'},
+        {"32bit",              0, 0, '3'},
+        {"64bit",              0, 0, '6'},
+        {"attr-debug-level",   1, 0, 'a'},
+        {"binfile",            0, 0, 'b'},
+        {"compression-level",  1, 0, 'z'},
+        {"compression-method", 1, 0, 'C'},
 #ifdef HAVE_POSTGRESQL
-        {"db",                1, 0, 'd'},
+        {"db",                 1, 0, 'd'},
 #endif
-        {"dedupe-ways",       0, 0, 'w'},
-        {"dump",              0, 0, 'D'},
-        {"dump-coordinates",  0, 0, 'c'},
-        {"end",               1, 0, 'e'},
-        {"experimental",      0, 0, 'E'},
-        {"help",              0, 0, 'h'},
-        {"keep-tmpfiles",     0, 0, 'k'},
-        {"nodes-only",        0, 0, 'N'},
-        {"map",               1, 0, 'm'},
-        {"o5m",               0, 0, 'M'},
-        {"plugin",            1, 0, 'p'},
-        {"protobuf",          0, 0, 'P'},
-        {"start",             1, 0, 's'},
-        {"timestamp",         1, 0, 't'},
-        {"threads",           1, 0, 'T'},
-        {"input-file",        1, 0, 'i'},
-        {"rule-file",         1, 0, 'r'},
-        {"ignore-unknown",    0, 0, 'n'},
-        {"url",               1, 0, 'u'},
-        {"ways-only",         0, 0, 'W'},
-        {"slice-size",        1, 0, 'S'},
-        {"unknown-country",   0, 0, 'U'},
-        {"index-size",        0, 0, 'x'},
-        {0,                   0, 0, 0  }
+        {"dedupe-ways",        0, 0, 'w'},
+        {"dump",               0, 0, 'D'},
+        {"dump-coordinates",   0, 0, 'c'},
+        {"end",                1, 0, 'e'},
+        {"experimental",       0, 0, 'E'},
+        {"help",               0, 0, 'h'},
+        {"keep-tmpfiles",      0, 0, 'k'},
+        {"nodes-only",         0, 0, 'N'},
+        {"map",                1, 0, 'm'},
+        {"o5m",                0, 0, 'M'},
+        {"plugin",             1, 0, 'p'},
+        {"protobuf",           0, 0, 'P'},
+        {"start",              1, 0, 's'},
+        {"timestamp",          1, 0, 't'},
+        {"threads",            1, 0, 'T'},
+        {"input-file",         1, 0, 'i'},
+        {"rule-file",          1, 0, 'r'},
+        {"ignore-unknown",     0, 0, 'n'},
+        {"url",                1, 0, 'u'},
+        {"ways-only",          0, 0, 'W'},
+        {"slice-size",         1, 0, 'S'},
+        {"unknown-country",    0, 0, 'U'},
+        {"index-size",         0, 0, 'x'},
+        {0,                    0, 0, 0  }
     };
     c = getopt_long(argc, argv,
-                    "36B:DEMNO:PS:Wa:bc"
+                    "36B:C:DEMNO:PS:Wa:bc"
 #ifdef HAVE_POSTGRESQL
                     "d:"
 #endif
@@ -526,7 +531,13 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
     case 'x':
         p->max_index_size = atoi(optarg);
         break;
-#ifdef HAVE_ZLIB
+    case 'C':
+        if (!strcmp(optarg, "lzma"))
+            p->compression_method = ZIP_COMPRESSION_LZMA;
+        else
+            p->compression_method = ZIP_COMPRESSION_DEFLATE;
+        break;
+#if defined(HAVE_ZLIB) || defined(HAVE_LZMA)
     case 'z':
         p->compression_level = atoi(optarg);
         break;
@@ -817,6 +828,7 @@ static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **
         zip_set_timestamp(zip_info, p->timestamp);
         zip_set_maxnamelen(zip_info, 14 + strlen(suffix0));
         zip_set_compression_level(zip_info, p->compression_level);
+        zip_set_compression_method(zip_info, p->compression_method);
         if (!zip_open(zip_info, p->result, zipdir, zipindex)) {
             fprintf(stderr, "Fatal: Could not write output file.\n");
             exit(1);
@@ -825,7 +837,7 @@ static void maptool_assemble_map(struct maptool_params *p, char *suffix, char **
             map_information_attrs[1].type = attr_url;
             map_information_attrs[1].u.str = p->url;
         }
-        index_init(zip_info, 1);
+        index_init(zip_info, MAP_INDEX_VERSION);
         g_free(zipdir);
         g_free(zipindex);
     }
@@ -929,8 +941,9 @@ int main(int argc, char **argv) {
 
     memset(&p, 0, sizeof(p));
     p.zip64 = 1; /* default to 64 bit zip */
-#ifdef HAVE_ZLIB
-    p.compression_level = 9;
+    p.compression_method = ZIP_COMPRESSION_DEFLATE;
+#if defined(HAVE_ZLIB) || defined(HAVE_LZMA)
+    p.compression_level = 6;
 #endif
     p.start = 1;
     p.end = 99;
@@ -940,6 +953,9 @@ int main(int argc, char **argv) {
     p.process_relations = 1;
     p.timestamp = current_to_iso8601();
     p.max_index_size = 65536;
+
+    if (thread_count == 0)
+        thread_count = g_get_num_processors();
 
 #ifdef HAVE_SBRK
     start_brk = (long)sbrk(0);

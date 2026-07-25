@@ -31,6 +31,11 @@
 #    define ATTRIBUTE_PACKED
 #endif
 
+#define ZIP_COMPRESSION_NONE 0
+#define ZIP_COMPRESSION_STORED 0
+#define ZIP_COMPRESSION_DEFLATE 8
+#define ZIP_COMPRESSION_LZMA 14
+
 #define zip_split_sig 0x08074b50
 #define zip_split_sig_rev 0x504b0708
 

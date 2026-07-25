@@ -40,6 +40,9 @@
 #include <wordexp.h>
 #include <zconf.h>
 #include <zlib.h>
+#ifdef HAVE_LZMA
+#    include <lzma.h>
+#endif
 
 #ifdef _MSC_VER
 #    include <windows.h>
@@ -491,7 +494,24 @@ static int uncompress_int(Bytef *dest, uLongf *destLen, const Bytef *source, uLo
     return err;
 }
 
-unsigned char *file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp) {
+static int lzma_uncompress_int(Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLen) {
+#ifdef HAVE_LZMA
+    size_t in_pos = 0;
+    size_t out_pos = 0;
+    uint64_t memlimit = UINT64_MAX;
+    lzma_ret ret = lzma_stream_buffer_decode(&memlimit, 0, NULL, source, &in_pos, sourceLen, dest, &out_pos, *destLen);
+    if (ret == LZMA_OK) {
+        *destLen = out_pos;
+        return 0;
+    }
+    return -1;
+#else
+    return -1;
+#endif
+}
+
+unsigned char *file_data_read_compressed_method(struct file *file, long long offset, int size, int size_uncomp,
+                                                int method) {
     void *ret;
     char *buffer = 0;
     uLongf destLen = size_uncomp;
@@ -511,15 +531,37 @@ unsigned char *file_data_read_compressed(struct file *file, long long offset, in
         g_free(ret);
         ret = NULL;
     } else {
-        if (uncompress_int(ret, &destLen, (Bytef *)buffer, size) != Z_OK) {
-            dbg(lvl_error, "uncompress failed");
+        switch (method) {
+        case ZIP_COMPRESSION_DEFLATE:
+            if (uncompress_int(ret, &destLen, (Bytef *)buffer, size) != Z_OK) {
+                dbg(lvl_error, "uncompress failed");
+                g_free(ret);
+                ret = NULL;
+            }
+            break;
+#ifdef HAVE_LZMA
+        case ZIP_COMPRESSION_LZMA:
+            if (lzma_uncompress_int(ret, &destLen, (Bytef *)buffer, size) != 0) {
+                dbg(lvl_error, "lzma uncompress failed");
+                g_free(ret);
+                ret = NULL;
+            }
+            break;
+#endif
+        default:
+            dbg(lvl_error, "unsupported compression method %d", method);
             g_free(ret);
             ret = NULL;
+            break;
         }
     }
     g_free(buffer);
 
     return ret;
+}
+
+unsigned char *file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp) {
+    return file_data_read_compressed_method(file, offset, size, size_uncomp, ZIP_COMPRESSION_DEFLATE);
 }
 
 void file_data_free(struct file *file, unsigned char *data) {
