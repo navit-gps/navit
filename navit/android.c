@@ -31,6 +31,7 @@ struct android_search_priv {
     struct event_idle *idle_ev;
     struct callback *idle_clb;
     struct search_list *search_list;
+    struct navit *nav;
     struct attr search_attr;
     gchar **phrases;
     int current_phrase_per_level[4];
@@ -590,8 +591,10 @@ static char *district_str(struct search_list_result *res, int level) {
     return ret;
 }
 
-static char *town_str(struct search_list_result *res, int level) {
-    char *town = res->town->common.town_name;
+static char *town_str(struct android_search_priv *search_priv, struct search_list_result *res, int level) {
+    const char *resolved = item_town_name_get(&res->town->common.item, navit_get_lang_pref(search_priv->nav),
+                                              search_priv->search_attr.u.str);
+    char *town = resolved ? (char *)resolved : res->town->common.town_name;
     char *district = district_str(res, level);
     char *postal = postal_str(res, level);
     char *postal_sep = " ";
@@ -643,19 +646,19 @@ static void android_search_idle_result(struct android_search_priv *search_priv, 
     search_priv->found = 1;
     switch (search_priv->search_attr.type) {
     case attr_town_or_district_name: {
-        gchar *town = town_str(res, 1);
+        gchar *town = town_str(search_priv, res, 1);
         android_return_search_result(&search_priv->search_result_obj, 0, res->town->common.c, town);
         g_free(town);
     } break;
     case attr_street_name: {
-        gchar *town = town_str(res, 2);
+        gchar *town = town_str(search_priv, res, 2);
         gchar *address = g_strdup_printf("%.101s,%.101s, %.101s", res->country->name, town, res->street->name);
         android_return_search_result(&search_priv->search_result_obj, 1, res->street->common.c, address);
         g_free(address);
         g_free(town);
     } break;
     case attr_house_number: {
-        gchar *town = town_str(res, 3);
+        gchar *town = town_str(search_priv, res, 3);
         gchar *address = g_strdup_printf("%.101s, %.101s, %.101s %.15s", res->country->name, town, res->street->name,
                                          res->house_number->house_number);
         android_return_search_result(&search_priv->search_result_obj, 2, res->house_number->common.c, address);
@@ -755,6 +758,7 @@ JNIEXPORT jlong JNICALL Java_org_navitproject_navit_NavitAddressSearchActivity_c
 
         search_priv = g_new0(struct android_search_priv, 1);
         search_priv->search_list = search_list_new(ms4);
+        search_priv->nav = attr.u.navit;
         search_priv->partial = partial;
         search_priv->current_phrase_per_level[1] = -1;
         search_priv->current_phrase_per_level[2] = -1;
