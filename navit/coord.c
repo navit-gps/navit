@@ -85,10 +85,14 @@ void coord_rect_destroy(struct coord_rect *r) {
 }
 
 int coord_rect_overlap(struct coord_rect *r1, struct coord_rect *r2) {
-    dbg_assert(r1->lu.x <= r1->rl.x);
-    dbg_assert(r1->lu.y >= r1->rl.y);
-    dbg_assert(r2->lu.x <= r2->rl.x);
-    dbg_assert(r2->lu.y >= r2->rl.y);
+    if (r1->lu.x > r1->rl.x || r1->lu.y < r1->rl.y) {
+        dbg(lvl_error, "r1 degenerate: lu=(0x%x,0x%x) rl=(0x%x,0x%x)", r1->lu.x, r1->lu.y, r1->rl.x, r1->rl.y);
+        return 0;
+    }
+    if (r2->lu.x > r2->rl.x || r2->lu.y < r2->rl.y) {
+        dbg(lvl_error, "r2 degenerate: lu=(0x%x,0x%x) rl=(0x%x,0x%x)", r2->lu.x, r2->lu.y, r2->rl.x, r2->rl.y);
+        return 0;
+    }
     dbg(lvl_debug, "0x%x,0x%x - 0x%x,0x%x vs 0x%x,0x%x - 0x%x,0x%x", r1->lu.x, r1->lu.y, r1->rl.x, r1->rl.y, r2->lu.x,
         r2->lu.y, r2->rl.x, r2->rl.y);
     if (r1->lu.x > r2->rl.x)
@@ -103,8 +107,8 @@ int coord_rect_overlap(struct coord_rect *r1, struct coord_rect *r2) {
 }
 
 int coord_rect_contains(struct coord_rect *r, struct coord *c) {
-    dbg_assert(r->lu.x <= r->rl.x);
-    dbg_assert(r->lu.y >= r->rl.y);
+    if (r->lu.x > r->rl.x || r->lu.y < r->rl.y)
+        return 0;
     if (c->x < r->lu.x)
         return 0;
     if (c->x > r->rl.x)
