@@ -2,6 +2,24 @@
 
 General Options
 ===============
+
+Configuration File
+------------------
+Navit is configured via an XML file, by default called ``navit.xml``. A specific file can be passed with ``-c <file>`` or as a positional argument on the command line; in that case only that file is tried.
+
+Otherwise, Navit searches for the configuration file in the following order, using the first one found:
+
+1. ``~/.navit/navit.xml``
+2. ``navit.xml.local`` in the current directory
+3. ``navit.xml`` in the current directory
+4. ``$NAVIT_SHAREDIR/navit.xml.local``
+5. ``$NAVIT_SHAREDIR/navit.xml``
+6. ``/etc/navit/navit.xml`` (non-Windows only)
+
+If none exist, Navit exits with an error.
+
+In a default installation, Navit ships a preconfigured ``navit.xml`` under ``$NAVIT_SHAREDIR``. To customise your setup, copy it to ``~/.navit/navit.xml`` and edit from there.
+
 Settings which affect Navit's general behaviour are located within the ``<navit .. >`` tag. In a default installation, this is found on line 31 of ``navit.xml``. By default, the ``navit`` tag is set as follows:
 
 .. code-block:: xml
