@@ -44,9 +44,6 @@ valuable information you can provide.
 
 3. Copy the complete gdb output and include it in your bug report.
 
-If you are using the SDL GUI, also attach the ``CEGUI.log`` file from
-Navit's working directory.
-
 
 Information you should provide
 ==============================
