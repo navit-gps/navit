@@ -30,6 +30,8 @@ var searchData=
   ['navit_5fsqrt_27',['navit_sqrt',['../coord_8h.html#aae41641e415d4c65412d016224330e2b',1,'coord.h']]],
   ['navit_5ftan_28',['navit_tan',['../coord_8h.html#addba39f52db590f088d67d9e7b4d2f3e',1,'coord.h']]],
   ['new_29',['NEW',['../xmlconfig_8c.html#a7324348ee403bddaf991adcbde25b678',1,'xmlconfig.c']]],
-  ['no_5fresult_5fyet_30',['NO_RESULT_YET',['../gui__internal_8c.html#a7ddca880413fe571801fc18926301cb9',1,'gui_internal.c']]],
-  ['node_5fid_5fbits_31',['NODE_ID_BITS',['../maptool_8h.html#a50a3ebef15b437fc4fbca7e26d519c51',1,'maptool.h']]]
+  ['nmea_5fgpgga_5ffmt_30',['NMEA_GPGGA_FMT',['../vehicle_8c.html#a7509a92e11b0d33ad739b70f81c205f7',1,'vehicle.c']]],
+  ['nmea_5fgprmc_5ffmt_31',['NMEA_GPRMC_FMT',['../vehicle_8c.html#a07b7b9407bce797690a1ae066853fc1f',1,'vehicle.c']]],
+  ['no_5fresult_5fyet_32',['NO_RESULT_YET',['../gui__internal_8c.html#a7ddca880413fe571801fc18926301cb9',1,'gui_internal.c']]],
+  ['node_5fid_5fbits_33',['NODE_ID_BITS',['../maptool_8h.html#a50a3ebef15b437fc4fbca7e26d519c51',1,'maptool.h']]]
 ];

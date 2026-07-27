@@ -1,6 +1,10 @@
 var vehicle_8c =
 [
     [ "vehicle", "structvehicle.html", "structvehicle" ],
+    [ "NMEA_GPGGA_FMT", "vehicle_8c.html#a7509a92e11b0d33ad739b70f81c205f7", null ],
+    [ "NMEA_GPRMC_FMT", "vehicle_8c.html#a07b7b9407bce797690a1ae066853fc1f", null ],
+    [ "nmea_chksum", "vehicle_8c.html#a11f821124a4cfe286968be8ccdfadc15", null ],
+    [ "nmea_float_fmt", "vehicle_8c.html#a711604edf71ab03458cf52427f6d8ba5", null ],
     [ "vehicle_add_attr", "vehicle_8c.html#ae64bdc4e1acf7c58034e288545c0d4fe", null ],
     [ "vehicle_add_log", "vehicle_8c.html#a0ab50275418834c7c6a1b23e649564d1", null ],
     [ "vehicle_attr_iter_destroy", "vehicle_8c.html#a85f330e1ac6fbc2f998e9b5da61d4c4d", null ],
@@ -20,5 +24,6 @@ var vehicle_8c =
     [ "vehicle_set_attr", "vehicle_8c.html#a5f940ec1c91e1d2bc0e8872a8fe6a45c", null ],
     [ "vehicle_set_cursor", "vehicle_8c.html#a6ca2660b5bf01115304d952d1b083aba", null ],
     [ "vehicle_set_default_name", "vehicle_8c.html#af3cd9e8c76aa37d97e5680c16ee95f83", null ],
+    [ "vehicle_synthesize_nmea", "vehicle_8c.html#a08cb4db915bb634d2cd6368d9fd7cb98", null ],
     [ "vehicle_func", "vehicle_8c.html#a74992576db530f3756a0ae02b2b3583c", null ]
 ];

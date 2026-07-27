@@ -111,7 +111,6 @@ $(document).ready(function(){initNavTree('vehicle__demo_8c.html',''); initResiza
 <code>#include &quot;<a class="el" href="util_8h_source.html">util.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="vehicle_8h_source.html">vehicle.h</a>&quot;</code><br />
 <code>#include &lt;glib.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -123,8 +122,6 @@ Data Structures</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a1ef345208068f7734c1c0b5138909303" id="r_a1ef345208068f7734c1c0b5138909303"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__demo_8c.html#a1ef345208068f7734c1c0b5138909303">vehicle_demo_destroy</a> (struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *priv)</td></tr>
 <tr class="separator:a1ef345208068f7734c1c0b5138909303"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11f821124a4cfe286968be8ccdfadc15" id="r_a11f821124a4cfe286968be8ccdfadc15"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__demo_8c.html#a11f821124a4cfe286968be8ccdfadc15">nmea_chksum</a> (char *nmea)</td></tr>
-<tr class="separator:a11f821124a4cfe286968be8ccdfadc15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15d551902461670f5640ff479c076e30" id="r_a15d551902461670f5640ff479c076e30"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__demo_8c.html#a15d551902461670f5640ff479c076e30">vehicle_demo_position_attr_get</a> (struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *priv, enum <a class="el" href="attr__type__def_8h.html#a9a9ab3c12bda86add06f89976f36f98c">attr_type</a> <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
 <tr class="separator:a15d551902461670f5640ff479c076e30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78aa9c074e557f2619944a5a0e6c4f5d" id="r_a78aa9c074e557f2619944a5a0e6c4f5d"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vehicle__demo_8c.html#a78aa9c074e557f2619944a5a0e6c4f5d">vehicle_demo_set_attr_do</a> (struct <a class="el" href="structvehicle__priv.html">vehicle_priv</a> *priv, struct <a class="el" href="structattr.html">attr</a> *<a class="el" href="structattr.html">attr</a>)</td></tr>
@@ -145,34 +142,6 @@ Variables</h2></td></tr>
 <tr class="separator:a612cec9e067ab0d2a6ae55f0123a124f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a11f821124a4cfe286968be8ccdfadc15" name="a11f821124a4cfe286968be8ccdfadc15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a11f821124a4cfe286968be8ccdfadc15">&#9670;&#160;</a></span>nmea_chksum()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void nmea_chksum </td>
-          <td>(</td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>nmea</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="vehicle__demo_8c.html#a15d551902461670f5640ff479c076e30">vehicle_demo_position_attr_get()</a>.</p>
-
-</div>
-</div>
 <a id="a1eaae939034896b436dffbf5e93c0da1" name="a1eaae939034896b436dffbf5e93c0da1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1eaae939034896b436dffbf5e93c0da1">&#9670;&#160;</a></span>plugin_init()</h2>
 
@@ -315,7 +284,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="attr_8h.html#ac9443a1d6bee1405ac935c8218f46e6b">AF_UNDERGROUND</a>, <a class="el" href="structattr.html#a439b17886c791f6d9b6873f3ec354353">attr::coord_geo</a>, <a class="el" href="util_8c.html#a95756c782d3ae5b8fa4bd8cc6c9ed6b6">current_to_iso8601()</a>, <a class="el" href="group__vehicle-file.html#ga21c7e1de5a5e49615041d0a66907e4b9">vehicle_priv::direction</a>, <a class="el" href="group__vehicle-file.html#gad84849f1968fc52322edfb467f4b197b">vehicle_priv::geo</a>, <a class="el" href="group__vehicle-file.html#ga24287586a32d78db052c9ab99f348c4e">vehicle_priv::height</a>, <a class="el" href="structcoord__geo.html#a549223ef1f76a24ba2568a4b25a0f766">coord_geo::lat</a>, <a class="el" href="garmin__img_8c.html#a426867fb1e80a778a24f2a67841852f2">lat</a>, <a class="el" href="structcoord__geo.html#aa780b02448f92912d7c6a541f289e8fb">coord_geo::lng</a>, <a class="el" href="group__vehicle-iphone.html#ga421f3554190f8dfd77b706dc76b89ecf">vehicle_priv::navit</a>, <a class="el" href="group__navit.html#ga50bf7df991ea83b8a6007d2b9d085e8c">navit_get_tracking()</a>, <a class="el" href="structvehicle__priv.html#a4682dacaa770c7d8c545490d61521ad1">vehicle_priv::nmea</a>, <a class="el" href="vehicle__demo_8c.html#a11f821124a4cfe286968be8ccdfadc15">nmea_chksum()</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="structattr.html#a76048cf7f2de123ea5250cf82f32702b">attr::numd</a>, <a class="el" href="group__vehicle-file.html#ga6b84269fed74ae3ee462db9265821c13">vehicle_priv::speed</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structvehicle__priv.html#acd21a93863c1af2b2a7837e646c6ca4b">vehicle_priv::timep</a>, <a class="el" href="track_8c.html#a2a7e217f50ab062ee038f699d2e4a941">tracking_get_current_flags()</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>, and <a class="el" href="group__vehicle-file.html#gaec188d6d2efdbc99af2d003eb53e2624">vehicle_priv::valid</a>.</p>
+<p class="reference">References <a class="el" href="attr_8h.html#ac9443a1d6bee1405ac935c8218f46e6b">AF_UNDERGROUND</a>, <a class="el" href="structattr.html#a439b17886c791f6d9b6873f3ec354353">attr::coord_geo</a>, <a class="el" href="util_8c.html#a95756c782d3ae5b8fa4bd8cc6c9ed6b6">current_to_iso8601()</a>, <a class="el" href="group__vehicle-file.html#ga21c7e1de5a5e49615041d0a66907e4b9">vehicle_priv::direction</a>, <a class="el" href="group__vehicle-file.html#gad84849f1968fc52322edfb467f4b197b">vehicle_priv::geo</a>, <a class="el" href="group__vehicle-file.html#ga24287586a32d78db052c9ab99f348c4e">vehicle_priv::height</a>, <a class="el" href="group__vehicle-iphone.html#ga421f3554190f8dfd77b706dc76b89ecf">vehicle_priv::navit</a>, <a class="el" href="group__navit.html#ga50bf7df991ea83b8a6007d2b9d085e8c">navit_get_tracking()</a>, <a class="el" href="structattr.html#aebf8c468883c8a41033b97c2ae91003b">attr::num</a>, <a class="el" href="structattr.html#a76048cf7f2de123ea5250cf82f32702b">attr::numd</a>, <a class="el" href="group__vehicle-file.html#ga6b84269fed74ae3ee462db9265821c13">vehicle_priv::speed</a>, <a class="el" href="structattr.html#a2a2a2da11501e5c4b5464938c91b87e9">attr::str</a>, <a class="el" href="structvehicle__priv.html#acd21a93863c1af2b2a7837e646c6ca4b">vehicle_priv::timep</a>, <a class="el" href="track_8c.html#a2a7e217f50ab062ee038f699d2e4a941">tracking_get_current_flags()</a>, <a class="el" href="structattr.html#acbbeecb9ce16c2d7973d0bd2ff544457">attr::type</a>, <a class="el" href="garmin__img_8c.html#a8f7b0321b1954f07b747aeb1e311814e">type</a>, <a class="el" href="structattr.html#a866ccbbc4e5249f2e53a0a3db2525542">attr::u</a>, and <a class="el" href="group__vehicle-file.html#gaec188d6d2efdbc99af2d003eb53e2624">vehicle_priv::valid</a>.</p>
 
 </div>
 </div>
@@ -444,9 +413,9 @@ Variables</h2></td></tr>
 <div class="line">    <a class="code hl_function" href="vehicle__demo_8c.html#a15d551902461670f5640ff479c076e30">vehicle_demo_position_attr_get</a>,</div>
 <div class="line">    <a class="code hl_function" href="vehicle__demo_8c.html#a9e8aaccf8c944a651a3e7f528cf7fc71">vehicle_demo_set_attr</a>,</div>
 <div class="line">}</div>
-<div class="ttc" id="avehicle__demo_8c_html_a15d551902461670f5640ff479c076e30"><div class="ttname"><a href="vehicle__demo_8c.html#a15d551902461670f5640ff479c076e30">vehicle_demo_position_attr_get</a></div><div class="ttdeci">static int vehicle_demo_position_attr_get(struct vehicle_priv *priv, enum attr_type type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> vehicle_demo.c:82</div></div>
-<div class="ttc" id="avehicle__demo_8c_html_a1ef345208068f7734c1c0b5138909303"><div class="ttname"><a href="vehicle__demo_8c.html#a1ef345208068f7734c1c0b5138909303">vehicle_demo_destroy</a></div><div class="ttdeci">static void vehicle_demo_destroy(struct vehicle_priv *priv)</div><div class="ttdef"><b>Definition</b> vehicle_demo.c:64</div></div>
-<div class="ttc" id="avehicle__demo_8c_html_a9e8aaccf8c944a651a3e7f528cf7fc71"><div class="ttname"><a href="vehicle__demo_8c.html#a9e8aaccf8c944a651a3e7f528cf7fc71">vehicle_demo_set_attr</a></div><div class="ttdeci">static int vehicle_demo_set_attr(struct vehicle_priv *priv, struct attr *attr)</div><div class="ttdef"><b>Definition</b> vehicle_demo.c:196</div></div>
+<div class="ttc" id="avehicle__demo_8c_html_a15d551902461670f5640ff479c076e30"><div class="ttname"><a href="vehicle__demo_8c.html#a15d551902461670f5640ff479c076e30">vehicle_demo_position_attr_get</a></div><div class="ttdeci">static int vehicle_demo_position_attr_get(struct vehicle_priv *priv, enum attr_type type, struct attr *attr)</div><div class="ttdef"><b>Definition</b> vehicle_demo.c:70</div></div>
+<div class="ttc" id="avehicle__demo_8c_html_a1ef345208068f7734c1c0b5138909303"><div class="ttname"><a href="vehicle__demo_8c.html#a1ef345208068f7734c1c0b5138909303">vehicle_demo_destroy</a></div><div class="ttdeci">static void vehicle_demo_destroy(struct vehicle_priv *priv)</div><div class="ttdef"><b>Definition</b> vehicle_demo.c:62</div></div>
+<div class="ttc" id="avehicle__demo_8c_html_a9e8aaccf8c944a651a3e7f528cf7fc71"><div class="ttname"><a href="vehicle__demo_8c.html#a9e8aaccf8c944a651a3e7f528cf7fc71">vehicle_demo_set_attr</a></div><div class="ttdeci">static int vehicle_demo_set_attr(struct vehicle_priv *priv, struct attr *attr)</div><div class="ttdef"><b>Definition</b> vehicle_demo.c:153</div></div>
 </div><!-- fragment -->
 <p class="reference">Referenced by <a class="el" href="vehicle__demo_8c.html#ad6cf23d2b0d1611d83f6ac4dad2e4a15">vehicle_demo_new()</a>.</p>
 

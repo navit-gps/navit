@@ -68,7 +68,6 @@ var group__vehicle_gpsd =
       [ "NavitVehicleClass", "structvehicle__priv.html#ad1ba23a84cd7e33c629242a665b8705c", null ],
       [ "next", "group__vehicle-file.html#gade55fdfe0c48baffb2fc86a6d355876d", null ],
       [ "next_count", "group__vehicle-file.html#gac238dc219e0210c66efaf1cefe0bcf05", null ],
-      [ "nmea", "structvehicle__priv.html#a4682dacaa770c7d8c545490d61521ad1", null ],
       [ "nmea_data", "group__vehicle-file.html#ga14cc95e029dee185ffe0297756afdc65", null ],
       [ "nmea_data_buf", "group__vehicle-file.html#gaeb8a38e575177d385be105a427761438", null ],
       [ "on_eof", "group__vehicle-file.html#ga3bbc47ab9d3bb2459aa769491f17460b", null ],

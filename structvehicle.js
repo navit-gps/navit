@@ -20,5 +20,6 @@ var structvehicle =
     [ "real_w", "structvehicle.html#a53e1870dc477623db33de1fe32bd6949", null ],
     [ "sequence", "structvehicle.html#a32c3eded2cf7db036ebc472fbea8160d", null ],
     [ "speed", "structvehicle.html#a26b8e34e52f6bbf90c5c044eb2fd7e07", null ],
+    [ "synthesized_nmea", "structvehicle.html#adc46ceeaff6bbdd6dd16cfb89f83470c", null ],
     [ "trans", "structvehicle.html#a89fc94f513cd50b9818be45e80b33615", null ]
 ];

@@ -107,12 +107,12 @@ var NAVTREEINDEX =
 "structroute.html#a8227252962feb3782d426da1d36b9573",
 "structslicerpolygon.html#a7c017a0370fdf1702803dd4ee36c3301",
 "structtracking.html#a076fcd8ec5b3e540a5ef6b9bf31b7d15",
-"structvehicle__priv.html#a06c2b21afd1a3613e551e2690bc9285d",
-"structxml__element.html#af0efabd95cded6534efb8c733f5e69ee",
-"tile_8c.html#acaf42c480b97fa886fd03f311ce02c1e",
-"traffic_8h.html#a11f762bebecdef520397c5d16ace0832",
-"transform_8c.html#ae1b04ebb9ec02e3a4ddffd54434412a1",
-"vehicle__geoclue_8c.html"
+"structvehicle__priv.html",
+"structxml__state.html#a7465a44708e7a6d72dcf99006226673d",
+"tile_8c.html#affb3cdd2bb4199a88bf97578475ee786",
+"traffic_8h.html#a2ac13bc2df7fc10faf6820b3c6750171a256e3a285ac237c986629846a9038b89",
+"transform_8c.html#af7b2aff35176783ffa387bb52ce47fef",
+"vehicle__gpsd__dbus_8c.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
