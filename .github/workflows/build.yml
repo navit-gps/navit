@@ -121,7 +121,7 @@ jobs:
           -v ${{ runner.temp }}/rpmbuild:/home/nemo/rpmbuild:rw
           -v ${{ github.workspace }}:/home/nemo/navit
           coderus/sailfishos-platform-sdk:5.0.0.43
-          /bin/bash -x /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh
+          /bin/bash -lxc "git config --global --add safe.directory /home/nemo/navit; /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh"
       - uses: actions/upload-artifact@v7
         with:
           name: Sailfish RPMs
