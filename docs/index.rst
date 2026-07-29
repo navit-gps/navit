@@ -100,9 +100,6 @@ Main Features
    user/configuration/vehicleprofile/vehicleprofile_hike_bike_hard
    user/configuration/vehicleprofile/vehicleprofile_hike_bike_on_ground_gravel
    user/configuration/maps/binfile
-   user/faq/Failed_to_connect_graphics_to_gui
-   user/faq/Gpsd_Troubleshooting
-   user/faq/Troubleshooting
 
 
 .. Indices and tables
