@@ -2,9 +2,11 @@ var navigation_8h =
 [
     [ "FEET_PER_METER", "navigation_8h.html#ae12f53427fba2f2790098221f27e8cee", null ],
     [ "FEET_PER_MILE", "navigation_8h.html#adf409a6032c8d9d39196543724e92836", null ],
+    [ "INVALID_ANGLE", "navigation_8h.html#a5170bc48d6335c4d845a96c3d04a7f96", null ],
     [ "KILOMETERS_TO_MILES", "navigation_8h.html#a32886caa8cb9a4c8aa583a0f6124bfe6", null ],
     [ "METERS_TO_MILES", "navigation_8h.html#ad2c9af5d6ed9fc71aadbac0899451945", null ],
     [ "MPS_TO_KPH", "navigation_8h.html#a977822f448c2c2a69f846839d085fc98", null ],
+    [ "ROUNDABOUT_EXTRA_LENGTH", "navigation_8h.html#a7ba9df8213539c3aeb82e03f30964d6b", null ],
     [ "nav_status", "navigation_8h.html#a7ade999856f5b83d663486411f753860", [
       [ "status_invalid", "navigation_8h.html#a7ade999856f5b83d663486411f753860ad38988001a09398f8fe58fa4ab604821", null ],
       [ "status_no_route", "navigation_8h.html#a7ade999856f5b83d663486411f753860a234d3868cd10dcfa742c18df16e51506", null ],

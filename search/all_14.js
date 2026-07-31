@@ -326,7 +326,7 @@ var searchData=
   ['round_5fdistance_5freduced_323',['round_distance_reduced',['../navigation_8c.html#a72295784955cec782925ac7a7fade424',1,'navigation.c']]],
   ['round_5fto_5fnice_5fvalue_324',['round_to_nice_value',['../osd__core_8c.html#a605db09d147c562b8d9e313d2bf427fb',1,'osd_core.c']]],
   ['roundabout_5fdelta_325',['roundabout_delta',['../structnavigation__command.html#a5af2f5db45da7088be99d32eff88f926',1,'navigation_command']]],
-  ['roundabout_5fextra_5flength_326',['roundabout_extra_length',['../navigation_8c.html#a609131fea6f8d51a2dacc2036f3b53f0',1,'navigation.c']]],
+  ['roundabout_5fextra_5flength_326',['ROUNDABOUT_EXTRA_LENGTH',['../navigation_8h.html#a7ba9df8213539c3aeb82e03f30964d6b',1,'navigation.h']]],
   ['route_327',['route',['../structrouteObject.html#a44be0e79e5e4e07518e72847e026ec1b',1,'routeObject::route'],['../structstatusbar__priv.html#a35281bf0639e24edd50a89e3ac2b00fa',1,'statusbar_priv::route'],['../structnavigation.html#a0873807f546a819a1b0f8eb93cc6fa93',1,'navigation::route'],['../structnavit.html#aa44c570cb5bea50985eb46fa8e2f59b9',1,'navit::route'],['../structmap__priv.html#aae5e4b4d9d45cbc3b87394edf63743c1',1,'map_priv::route'],['../structvehicle__priv.html#a06c2b21afd1a3613e551e2690bc9285d',1,'vehicle_priv::route'],['../structattr.html#a2132d9f8722d472ea71342ea68b03754',1,'attr::route'],['../structroute.html',1,'route']]],
   ['route_2ec_328',['route.c',['../binding_2python_2route_8c.html',1,'(Global Namespace)'],['../route_8c.html',1,'(Global Namespace)']]],
   ['route_2eh_329',['route.h',['../route_8h.html',1,'']]],
