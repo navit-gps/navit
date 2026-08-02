@@ -2689,18 +2689,18 @@ static void multiline_label_draw(struct graphics *gra, struct graphics_gc *fg, s
             endline = NULL;  /* This means we reached the end of string */
         if (endline)         /* Test if we got a new line character ('\n') */
             *endline = '\0'; /* Terminate string at line ('\n') and print this line */
+        if (label_nblines
+            >= (sizeof(label_lines)
+                / sizeof(char *))) { /* Would label_nblines overflow the number of entries in array label_lines? */
+            dbg(lvl_warning, "Too many lines (%d) in label \"%s\", truncating to %lu", label_nblines, label,
+                sizeof(label_lines) / sizeof(char *));
+            break;
+        }
         label_lines[label_nblines++] = startline;
         if (endline == NULL) /* endline is NULL, this was the last line of the multi-line string */
             break;
         endline++;           /* No need for g_utf8_next_char() here, as we know '\n' is a single byte UTF-8 char */
         startline = endline; /* Start processing next line, by setting startline to its first character */
-    }
-    if (label_nblines
-        > (sizeof(label_lines)
-           / sizeof(char *))) { /* Does label_nblines overflows the number of entries in array label_lines? */
-        dbg(lvl_warning, "Too many lines (%d) in label \"%s\", truncating to %lu", label_nblines, label,
-            sizeof(label_lines) / sizeof(char *));
-        label_nblines = sizeof(label_lines) / sizeof(char *);
     }
     /* Horizontally, we position the label next to the specified point (on the right handside) */
     pref.x += 1;
