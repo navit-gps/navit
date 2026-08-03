@@ -1,12 +1,8 @@
 Vehicleprofile
 ==============
 
-**Vehicleprofiles**
-===================
-
-|
-| for general information about Vehicleprofiles look into `Configuration
-  #Vehicle Options <Configuration#Vehicle_Options>`__
+for general information about Vehicleprofiles look into `Configuration
+#Vehicle Options <Configuration#Vehicle_Options>`__
 
 --------------
 
