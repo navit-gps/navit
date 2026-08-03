@@ -69,7 +69,6 @@ Main Features
    :glob:
    :caption: Old Wiki
 
-   user/configuration/Configuration_(old)
    user/configuration/Configuration_Display_Options
    user/configuration/Configuration_Full_list_of_options
    user/configuration/Configuration_General_Options
