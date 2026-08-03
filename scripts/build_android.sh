@@ -7,7 +7,7 @@
 # It will build Navit for all processor architectures specified in navit/android/build.gradle.
 #
 # When running this script locally, ensure all build dependencies are in place:
-# - Packages required: cmake gettext libsaxonb-java librsvg2-bin pkg-config libprotobuf-c-dev protobuf-c-compiler
+# - Packages required: cmake gettext libsaxonb-java librsvg2-bin pkg-config libprotozero-dev libosmium2-dev
 # - Android SDK installed
 # - Environment variable $ANDROID_HOME points to Android SDK install location
 # - Android NDK and CMake components installed via
