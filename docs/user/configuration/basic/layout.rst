@@ -74,6 +74,26 @@ Note on the default layout used by navit
 ----------------------------------------
 When no layout has been specifically selected by the user (for example at first startup), navit will use the default layout specified (see [[Configuration/General_Options#Default_layout|the related section to know how to configure this]]).
 
+Alternatively, a layout tag can carry an ``active="1"`` attribute;
+irrespective of where the layout appears in the XML file, that layout
+becomes the default. ``default_layout`` is the preferred way to select a
+default layout.
+
+Day and night layouts
+---------------------
+A layout can reference a daytime and a nighttime counterpart via the
+``daylayout`` and ``nightlayout`` attributes, each holding the name of
+another layout. Navit then automatically switches between the two based
+on the actual sunrise and sunset at the current position, so the behavior
+is identical in both hemispheres.
+
+To control the switch manually, use the ``switch_layout_day_night``
+command (see [[OSD]]) with ``"manual"``, ``"auto"``, ``"manual_toggle"``,
+``"manual_day"`` or ``"manual_night"``.
+
+Setting ``tunnel_nightlayout="1"`` on the ``<navit>`` tag additionally
+switches to the night layout while driving through a tunnel.
+
 Using a layer in multiple layouts
 ---------------------------------
 Sometimes, multiple layouts can use the same layer. For example, a reduced layout for a cleaner map may use the same layers as the regular layout, just not all of them.
