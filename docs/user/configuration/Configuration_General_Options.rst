@@ -134,4 +134,4 @@ navit tag allows to specify which layout to use as default;
 
 This string should match the ``name`` attribute of the required tag.
 
-See `layout options <Configuration/Layout_Options>`__ for more details.
+See :doc:`layout options </user/configuration/basic/layout>` for more details.
