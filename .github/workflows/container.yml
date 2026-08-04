@@ -4,6 +4,10 @@ on:
     push:
         branches:
             - trunk
+    # Lets you build the image for any other branch, so that a branch under
+    # review can be tested with the tools that use this image. The tag is the
+    # name of the branch.
+    workflow_dispatch:
 
 jobs:
     build:
@@ -12,6 +16,15 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v7
+
+            - name: Get the image tag from the branch name
+              id: image
+              # A branch name can contain a slash, which a tag cannot.
+              # github.ref_name goes through the environment, because a branch
+              # name must not become part of the command.
+              env:
+                REF_NAME: ${{ github.ref_name }}
+              run: echo "tag=${REF_NAME//\//-}" >> "$GITHUB_OUTPUT"
 
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v4
@@ -29,4 +42,4 @@ jobs:
                 context: .
                 file: contrib/container/maptool/Dockerfile
                 push: true
-                tags: ghcr.io/${{ github.repository }}/maptool:trunk
+                tags: ghcr.io/${{ github.repository }}/maptool:${{ steps.image.outputs.tag }}
