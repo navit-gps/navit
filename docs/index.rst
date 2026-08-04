@@ -76,7 +76,6 @@ Main Features
    user/configuration/Configuration_Vehicle_Options
    user/configuration/Coordinate_format
    user/configuration/Gui_internal
-   user/configuration/Icons
    user/configuration/Internal_GUI
    user/configuration/Internal_GUI_Menu_configurations
    user/configuration/Layout
