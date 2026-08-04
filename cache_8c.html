@@ -159,6 +159,8 @@ Functions</h2></td></tr>
 <tr class="separator:ab75370fa85b253da594bcc38282c3d7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d5577d7ee2d23fb1ea588d96e67fff0" id="r_a3d5577d7ee2d23fb1ea588d96e67fff0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cache_8c.html#a3d5577d7ee2d23fb1ea588d96e67fff0">cache_stats</a> (struct <a class="el" href="structcache.html">cache</a> *<a class="el" href="structcache.html">cache</a>)</td></tr>
 <tr class="separator:a3d5577d7ee2d23fb1ea588d96e67fff0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ed4307370caf2f1dbb94434e07437be" id="r_a6ed4307370caf2f1dbb94434e07437be"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cache_8c.html#a6ed4307370caf2f1dbb94434e07437be">cache_list_drain</a> (struct <a class="el" href="structcache__entry__list.html">cache_entry_list</a> *list)</td></tr>
+<tr class="separator:a6ed4307370caf2f1dbb94434e07437be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7a98b430a692a1d36da2923cae0833d" id="r_ac7a98b430a692a1d36da2923cae0833d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cache_8c.html#ac7a98b430a692a1d36da2923cae0833d">cache_destroy</a> (struct <a class="el" href="structcache.html">cache</a> *<a class="el" href="structcache.html">cache</a>)</td></tr>
 <tr class="separator:ac7a98b430a692a1d36da2923cae0833d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa83882c590eeb96f220e5a3be9b218a4" id="r_aa83882c590eeb96f220e5a3be9b218a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cache_8c.html#aa83882c590eeb96f220e5a3be9b218a4">cache_dump</a> (struct <a class="el" href="structcache.html">cache</a> *<a class="el" href="structcache.html">cache</a>)</td></tr>
@@ -181,7 +183,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structcache.html#a834610537a8cf470dd606a4e98468fa8">cache::hash</a>.</p>
+<p class="reference">References <a class="el" href="cache_8c.html#a6ed4307370caf2f1dbb94434e07437be">cache_list_drain()</a>, and <a class="el" href="structcache.html#a834610537a8cf470dd606a4e98468fa8">cache::hash</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="file_8c.html#a993bb3507115904a16af758bb4088a1f">file_deinit()</a>.</p>
 
@@ -455,7 +457,7 @@ Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="cache_8c.html#a7c40c1f85e90196e814cc3f8228bff71">cache_remove()</a>, <a class="el" href="cache_8c.html#aa7ab569452978d8397647dacde369683">cache_remove_from_list()</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, <a class="el" href="structcache.html#a14fbf117f13f77bd249a795e8a61ed00">cache::entry_size</a>, and <a class="el" href="structcache__entry.html#add5e125db81b24374db7f1391d65def7">cache_entry::where</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="file_8c.html#a76031922f1260793df921314aedbafa8">file_data_remove()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="file_8c.html#a1572347433aaa06d371c1b7966fcc6a5">file_data_read_compressed()</a>, and <a class="el" href="file_8c.html#a76031922f1260793df921314aedbafa8">file_data_remove()</a>.</p>
 
 </div>
 </div>
@@ -632,6 +634,36 @@ Functions</h2></td></tr>
 <p class="reference">References <a class="el" href="cache_8c.html#a9dbeac94c112d353d7553758dc884398">cache_entry_new()</a>, <a class="el" href="cache_8c.html#a4b86e363ff9d8206249c73c4c98d34de">cache_insert()</a>, <a class="el" href="garmin__img_8c.html#a433b1c9921d3b90f7c145c781a43f325">data</a>, and <a class="el" href="garmin__img_8c.html#ad2d6a0619c2be768bdc2eeade6cc3073">size</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="file_8c.html#a4cbd47107c4770831caf1d6572204cda">file_data_read()</a>, and <a class="el" href="file_8c.html#a1572347433aaa06d371c1b7966fcc6a5">file_data_read_compressed()</a>.</p>
+
+</div>
+</div>
+<a id="a6ed4307370caf2f1dbb94434e07437be" name="a6ed4307370caf2f1dbb94434e07437be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ed4307370caf2f1dbb94434e07437be">&#9670;&#160;</a></span>cache_list_drain()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void cache_list_drain </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structcache__entry__list.html">cache_entry_list</a> *&#160;</td>
+          <td class="paramname"><em>list</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="structcache__entry__list.html#a9cc579349aa7af8f79f4029919e217b5">cache_entry_list::first</a>, <a class="el" href="structcache__entry__list.html#ad4a821e25117b80f159df61b88ff49c5">cache_entry_list::last</a>, <a class="el" href="structcache__entry.html#afd4bec9067a7e0c76158d32a9d287684">cache_entry::next</a>, <a class="el" href="garmin__img_8c.html#a72b26dfab473b56b23271050c385bcf7">next</a>, <a class="el" href="structcache__entry.html#ac9058838dc9037a54a2a0b8f7147eb2b">cache_entry::size</a>, and <a class="el" href="structcache__entry__list.html#a767638916c9f3fa09d2ee7db7cdc874f">cache_entry_list::size</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="cache_8c.html#ac7a98b430a692a1d36da2923cae0833d">cache_destroy()</a>.</p>
 
 </div>
 </div>

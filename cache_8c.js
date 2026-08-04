@@ -17,6 +17,7 @@ var cache_8c =
     [ "cache_insert", "cache_8c.html#a4b86e363ff9d8206249c73c4c98d34de", null ],
     [ "cache_insert_mru", "cache_8c.html#a917e2c67ecef2d6be3530ba097ad9fd8", null ],
     [ "cache_insert_new", "cache_8c.html#ab75370fa85b253da594bcc38282c3d7b", null ],
+    [ "cache_list_drain", "cache_8c.html#a6ed4307370caf2f1dbb94434e07437be", null ],
     [ "cache_list_dump", "cache_8c.html#a6d5a754a82e2825cab26ffe7f094a664", null ],
     [ "cache_lookup", "cache_8c.html#ae19368c309652037fd38946cf92a532d", null ],
     [ "cache_move", "cache_8c.html#a5d048400f6c1e46cb1b31cba20b204b7", null ],

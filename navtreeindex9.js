@@ -1,5 +1,6 @@
 var NAVTREEINDEX9 =
 {
+"enumorg_1_1navitproject_1_1navit_1_1NavitCallbackHandler_1_1MsgType.html#a971d3b3827782f5b2094cc125f57be14":[2,0,0,0,0,6,2,3],
 "errorcode_8h.html":[3,0,12,0,0,2],
 "errorcode_8h.html#a251e2622c7ae45db78fa605c73a02508":[3,0,12,0,0,2,1],
 "errorcode_8h.html#a30588a864f54f7d06ed0a922923dc4a6":[3,0,12,0,0,2,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "font__freetype_8c.html#a23233dabc103f43f6c9b15ec36ce06c5":[3,0,2,0,0,25],
 "font__freetype_8c.html#a28b8ecb564a87b5eff301e60509edf2e":[3,0,2,0,0,12],
 "font__freetype_8c.html#a2db8514bc28e4ae706b25cd1f285a2e8":[3,0,2,0,0,11],
-"font__freetype_8c.html#a308dad0a7398a4bd24d0576c942b02eb":[3,0,2,0,0,24],
-"font__freetype_8c.html#a7fbb541a4fa2678c1fc463e9fd5e40e5":[3,0,2,0,0,18]
+"font__freetype_8c.html#a308dad0a7398a4bd24d0576c942b02eb":[3,0,2,0,0,24]
 };

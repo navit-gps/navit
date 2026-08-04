@@ -1,5 +1,6 @@
 var NAVTREEINDEX10 =
 {
+"font__freetype_8c.html#a7fbb541a4fa2678c1fc463e9fd5e40e5":[3,0,2,0,0,18],
 "font__freetype_8c.html#a81c4e804180d680f69fe733f95072b06":[3,0,2,0,0,23],
 "font__freetype_8c.html#a8b3f86c5bd051d9d7ea71c6133864d8a":[3,0,2,0,0,13],
 "font__freetype_8c.html#a9d7bd0e56e3959b3c35a95e1993b2c9e":[3,0,2,0,0,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX10 =
 "garmin__img_8c.html#a93762be7e895038d3a5d902e124c50a4":[3,0,6,4,0,32],
 "garmin__img_8c.html#a953d607a0578c3fcf1267f19a1ed5e15":[3,0,6,4,0,44],
 "garmin__img_8c.html#a96332446fb99de6de5edb1b999a4c372":[3,0,6,4,0,43],
-"garmin__img_8c.html#a989b22f8aac43b2f5bcec1d96de0d32f":[3,0,6,4,0,90],
-"garmin__img_8c.html#a9938428a278efe0ff87cb816b2525907":[3,0,6,4,0,35]
+"garmin__img_8c.html#a989b22f8aac43b2f5bcec1d96de0d32f":[3,0,6,4,0,90]
 };

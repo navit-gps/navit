@@ -1,5 +1,6 @@
 var NAVTREEINDEX34 =
 {
+"structg2sstats.html#a7d344022728f81a2fb86a7a3bc6a50ef":[2,0,116,7],
 "structg2sstats.html#a8f614045f066ce04f36497759c2e6b2a":[2,0,116,1],
 "structg2sstats.html#abcf739989492b41a2b069c5a2afa4593":[2,0,116,4],
 "structg2sstats.html#acba337ad2a5c44a7b103ca1a14dd905c":[2,0,116,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX34 =
 "structgraphics__opengl__window__system__methods.html#a0c4015dd6ab8cee6d8b224d4c86bd3f1":[2,0,139,3],
 "structgraphics__opengl__window__system__methods.html#a7eaba9e10ffc445cd5093c5178a2402a":[2,0,139,2],
 "structgraphics__opengl__window__system__methods.html#a9ee902977cd17dbf055b8e48582ba528":[2,0,139,0],
-"structgraphics__opengl__window__system__methods.html#aee8ef90d62581ab1fd2761bf61e2848c":[2,0,139,1],
-"structgraphics__priv.html":[2,0,140]
+"structgraphics__opengl__window__system__methods.html#aee8ef90d62581ab1fd2761bf61e2848c":[2,0,139,1]
 };

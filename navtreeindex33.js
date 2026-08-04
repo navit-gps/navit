@@ -1,5 +1,6 @@
 var NAVTREEINDEX33 =
 {
+"structedge.html#ac6cf46f253ca5faf8f4e83b18013bf9c":[2,0,87,7],
 "structedge.html#af3288fbdbe1e4c12fb6abc66a1822e95":[2,0,87,2],
 "structedge__hash__item.html":[2,0,88],
 "structedge__hash__item.html#a5404389badfbf65219a5a2e11ca61496":[2,0,88,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX33 =
 "structg2sprop.html#ae852dbb22eff6b19be6c1cb9803cc82f":[2,0,115,18],
 "structg2sstats.html":[2,0,116],
 "structg2sstats.html#a20d54c28892aa9a96fa4b1c1ffc88989":[2,0,116,3],
-"structg2sstats.html#a49cb417a5b2cdd27539f6970c5c99963":[2,0,116,2],
-"structg2sstats.html#a7d344022728f81a2fb86a7a3bc6a50ef":[2,0,116,7]
+"structg2sstats.html#a49cb417a5b2cdd27539f6970c5c99963":[2,0,116,2]
 };

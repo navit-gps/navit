@@ -1,5 +1,6 @@
 var NAVTREEINDEX32 =
 {
+"structcoastline__tile__data.html#ac9b03e4aa74a3bce8777b3410942e397":[2,0,41,1],
 "structcoastline__tile__data.html#acb30df934d8c05e5f93b76f28998af08":[2,0,41,0],
 "structcoastline__tile__data.html#ad83bf48ffe3875657e8406e7ec995939":[2,0,41,2],
 "structcolor.html":[2,0,42],
@@ -248,6 +249,5 @@ var NAVTREEINDEX32 =
 "structedge.html#a61dfd47f39f87264492c823dafc87002":[2,0,87,3],
 "structedge.html#aa26182326bb1019fc5f06e2605ab7df0":[2,0,87,6],
 "structedge.html#aa2623b020778eac561223116906af618":[2,0,87,4],
-"structedge.html#ab580aa46e0f7f53d37f0f169a1c6f19f":[2,0,87,5],
-"structedge.html#ac6cf46f253ca5faf8f4e83b18013bf9c":[2,0,87,7]
+"structedge.html#ab580aa46e0f7f53d37f0f169a1c6f19f":[2,0,87,5]
 };

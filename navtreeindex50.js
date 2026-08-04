@@ -1,5 +1,6 @@
 var NAVTREEINDEX50 =
 {
+"vehicle__gpsd_8c.html":[3,0,14,4,0],
 "vehicle__gpsd__dbus_8c.html":[3,0,14,5,0],
 "vehicle__gpsd__dbus_8c.html#a2cc11b99c924d554a8ab1bb8e768c3cf":[3,0,14,5,0,0],
 "vehicle__gypsy_8c.html":[3,0,14,6,0],
