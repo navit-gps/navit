@@ -7,6 +7,19 @@ Layouts
 A layout defines how to **render a map**.  Layouts are fully customisable, from the road colours and widths to size and type of icons to display for specific POIs. The layout is also where the **cursor** (i.e. the shape which shows where you are) is defined.<br>
 A number of user-generated layouts and cursor definitions are available at [[Layout]].
 
+The ``layout`` tag accepts the following options:
+
+* **name** - Name of this layout, displayed in the GUI (required).
+* **color** - Default background color of the map for areas where nothing is drawn at all.
+* **font** - Default font for this layout, used if no other font is given to text items (see Fonts).
+* **daylayout** - Name of the layout to switch to during daytime (see Day and night layouts).
+* **nightlayout** - Name of the layout to switch to at night.
+* **icon_w** - Default width of on-map icons if no other size is provided.
+* **icon_h** - Default height of on-map icons if no other size is provided.
+* **underground_alpha** - Alpha (transparency) value for underground roads and ways, typically tunnels. Valid from 0 (fully transparent) to 255 (solid).
+* **active** - Set to 1 to make this layout the default layout (see Note on the default layout used by navit).
+* **order_delta** - Offsets the zoom level at which this layout's items are rendered; a negative value draws the layout only at higher zoom levels.
+
 Defining layers
 ---------------
 A layout consist of one cursor and one or more **layers** which are each a set of rules on how and when to draw certain items. Those rules are called **itemgra**. The layers are rendered one by one in the order they appear in the XML config file, as are the items in each layer. If you can't see an item make sure there is not another one hiding it. If your item is hidden, you can move your item further down in the layout section of the file.
