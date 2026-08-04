@@ -98,10 +98,10 @@ use different sizes at different zoom levels.
 
 Overriding default (shipped) layouts
 ------------------------------------
-When the XML config file is parsed, layouts are taken in the order they come, and a layout with an already existing name overrides a previous definition.
-The default (shipped) navit.xml includes first system-wide navit_layout_*.xml files then the user-specific navit_layout_*.xml files, so the system-wide navit_layout_*.xml files can be overiden by adding a user-specific navit-layout_*.xml containing the same **name** attribute.
+When the XML config file is parsed, layouts are taken in the order they come, and a layout whose name already exists is discarded; the first definition of a name wins.
+The default (shipped) navit.xml includes the user-specific navit_layout_*.xml files first, then the system-wide ones, so the system-wide layouts are only used when no user-specific layout with the same name exists. Adding a user-specific navit_layout_*.xml that reuses the **name** attribute therefore overrides the shipped layout.
 
-Copying the default **navit.xml** file to the user-specific location will still use the default shipped layout files, but copying one or several layout files as well to the user-specific location (and modifying them) allow to override these specific layouts.
+Copying the default **navit.xml** file to the user-specific location will still use the default shipped layout files, but copying one or several layout files as well to the user-specific location (and modifying them) allows overriding these specific layouts.
 
 Note on the default layout used by navit
 ----------------------------------------
