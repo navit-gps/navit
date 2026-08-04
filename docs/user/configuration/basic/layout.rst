@@ -78,8 +78,8 @@ border color.
 
 Icons
 ~~~~~
-POI and map icons are provided with the source tree in the ``navit/xpm/``
-directory (installed usually to ``/usr/share/navit/xpm/``). Originally they
+POI and map icons are provided with the source tree in the ``navit/icons/``
+directory (installed usually to ``/usr/share/navit/icons/``). Originally they
 were 16x16 .xpm bitmaps; they are now .svg files that are converted to
 .png bitmaps at build time.
 
