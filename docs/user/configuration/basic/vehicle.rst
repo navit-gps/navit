@@ -133,12 +133,12 @@ will only be stored if your GPS device actually reports it.
 | position_radius       | *               | Stores the estimated   |
 |                       |                 | position error radius  |
 +-----------------------+-----------------+------------------------+
-| position_height       | ?               | Elevation in meters    |
+| position_height       | *               | Elevation in meters    |
 +-----------------------+-----------------+------------------------+
-| position_sats_used    | ?               | Satellites used to     |
+| position_sats_used    | *               | Satellites used to     |
 |                       |                 | determine position     |
 +-----------------------+-----------------+------------------------+
-| position_hdop         | ?               | Horizontal dilution of |
+| position_hdop         | *               | Horizontal dilution of |
 |                       |                 | precision              |
 +-----------------------+-----------------+------------------------+
 
