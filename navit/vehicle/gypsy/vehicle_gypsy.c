@@ -433,7 +433,7 @@ static struct vehicle_priv *vehicle_gypsy_new_gypsy(struct vehicle_methods *meth
     ret = g_new0(struct vehicle_priv, 1);
     ret->have_cords = 0;
     ret->source = g_strdup(source->u.str);
-    ret->attrs = attrs;
+    ret->attrs = attr_list_dup(attrs);
     retry_int = attr_search(attrs, attr_retry_interval);
     if (retry_int) {
         ret->retry_interval = retry_int->u.num;

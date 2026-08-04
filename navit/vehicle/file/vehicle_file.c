@@ -799,6 +799,8 @@ static void vehicle_file_destroy(struct vehicle_priv *priv) {
         g_free(priv->source);
     if (priv->buffer)
         g_free(priv->buffer);
+    g_free(priv->nmea_data_buf);
+    g_free(priv->nmea_data);
     attr_list_free(priv->attrs);
     g_free(priv);
 }
@@ -1001,7 +1003,7 @@ static struct vehicle_priv *vehicle_file_new_file(struct vehicle_methods *meth, 
     checksum_ignore = attr_search(attrs, attr_checksum_ignore);
     if (checksum_ignore)
         ret->checksum_ignore = checksum_ignore->u.num;
-    ret->attrs = attrs;
+    ret->attrs = attr_list_dup(attrs);
     on_eof = attr_search(attrs, attr_on_eof);
     if (on_eof && !g_ascii_strcasecmp(on_eof->u.str, "stop"))
         ret->on_eof = 1;

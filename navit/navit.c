@@ -1852,8 +1852,10 @@ static void navit_add_former_destinations_from_file(struct navit *this_) {
     struct map_rect *mr;
 
     this_->former_destination = read_former_destinations_from_file();
-    if (!this_->route || !navit_former_destinations_active(this_) || !this_->vehicle)
+    if (!this_->route || !navit_former_destinations_active(this_) || !this_->vehicle) {
+        g_free(c);
         return;
+    }
     mr = map_rect_new(this_->former_destination, NULL);
     while ((item = map_rect_get_item(mr))) {
         if (item->type == type_former_itinerary || item->type == type_former_itinerary_part) {
@@ -3936,7 +3938,6 @@ void navit_destroy(struct navit *this_) {
     navit_destroy_traffic_maps(this_);
 
     callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);
-    callback_list_destroy(this_->attr_cbl);
 
     navit_destroy_mapset_maps(this_);
 
@@ -3947,6 +3948,7 @@ void navit_destroy(struct navit *this_) {
     tracking_destroy_map(this_->tracking);
 
     attr_list_free(this_->attrs);
+    callback_list_destroy(this_->attr_cbl);
     this_->navigation = NULL;
     this_->speech = NULL;
     this_->tracking = NULL;
