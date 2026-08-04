@@ -101,6 +101,6 @@ The  <tt>default_layout</tt> attribute of the navit tag allows to specify which 
 
 This string should match the <tt>name</tt> attribute of the required <tt><layout></tt> tag.
 
-See [[Configuration/Layout_Options| layout options]] for more details.
+See :doc:`layout options </user/configuration/basic/layout>` for more details.
 [[Category:Customizing]]
 [[Category:Configuration]]
