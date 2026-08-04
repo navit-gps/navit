@@ -72,7 +72,7 @@ Here the available options:
 -  angle_range: Range for pitch angle.
 -  sequence_range: Useful for animated cursors.
 
-For infos about map icons, see `Icons <Icons>`__
+For infos about map icons, see :ref:`Icons <layout_icons>`
 
 .. _overriding_default_shipped_layouts:
 

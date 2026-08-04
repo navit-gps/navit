@@ -20,6 +20,9 @@ Here some of the available options:
 * **source** : source of GPS (required)
 * **profilename**: link the vehicleprofile for this vehicle.
 
+You can have as many vehicles as you like! It's for example useful to
+track your friends, etc.
+
 .. do we need to keep this keys or note them elsewhere?
    Obsolete options:
    * **update**: This will force the map to be recentered at your main cursor's position.
@@ -103,7 +106,58 @@ To display your track for more than one hour, you must use [[binfile]] to create
  <log type="binfile" data="track.bin" flush_size="0"/>
 
 
-For customizing what is stored, see [[GPX]]
+For customizing what is stored in the GPX log, the ``log`` tag supports an
+``attr_types`` attribute with a comma-separated list of values. Make sure
+not to use any spaces after the commas, as this will break parsing and the
+attribute after the space will be missing.
+
+Values marked with a ``*`` denote values that are GPS device dependent and
+will only be stored if your GPS device actually reports it.
+
++-----------------------+-----------------+------------------------+
+| Attribute type        | Device-specific | Meaning                |
++=======================+=================+========================+
+| position_time_iso8601 |                 | Store the current time |
+|                       |                 | in ISO8601 format      |
++-----------------------+-----------------+------------------------+
+| position_direction    | *               | Store the current      |
+|                       |                 | direction              |
++-----------------------+-----------------+------------------------+
+| position_speed        | *               | Store the current      |
+|                       |                 | speed                  |
++-----------------------+-----------------+------------------------+
+| profilename           |                 | Save the ID of the     |
+|                       |                 | active vehicleprofile  |
+|                       |                 | with the track points  |
++-----------------------+-----------------+------------------------+
+| position_radius       | *               | Stores the estimated   |
+|                       |                 | position error radius  |
++-----------------------+-----------------+------------------------+
+| position_height       | ?               | Elevation in meters    |
++-----------------------+-----------------+------------------------+
+| position_sats_used    | ?               | Satellites used to     |
+|                       |                 | determine position     |
++-----------------------+-----------------+------------------------+
+| position_hdop         | ?               | Horizontal dilution of |
+|                       |                 | precision              |
++-----------------------+-----------------+------------------------+
+
+With all options enabled, a gpx file with trackpoints which look like the
+following will be created:
+
+.. code-block:: xml
+
+   <trkpt lat="52.207269" lon="-0.935199">
+       <time>2010-10-30T13:22:39Z</time>
+       <ele>76.875000</ele>
+       <sat>10</sat>
+       <hdop>0.000000</hdop>
+       <course>295.0</course>
+       <speed>31.35</speed>
+       <extensions>
+           <navit:profilename>car</navit:profilename>
+       </extensions>
+   </trkpt>
 
 Vehicleprofile
 --------------
@@ -128,8 +182,6 @@ Defines the behaviour of the routing and are usually linked to a vehicle section
 For details on the flags, see [[Vehicle profile flags]].
 The speeds are in km/h.
 
-Only the vehicle profile names "car", "bike" and "pedestrian" are translated in the GUI.
+Only the vehicle profile names "car", "bike" and "pedestrian" are translated in the GUI. Others appear as-is from the XML config file.
 
 
-[[Category:Customizing]]
-[[Category:Configuration]]
