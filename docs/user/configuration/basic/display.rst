@@ -112,3 +112,8 @@ A number of options specific to the ``gtk`` GUI are available. These include:
 .. code-block:: xml
 
 	<gui type="gtk" enabled="yes" menubar="1" toolbar="1" statusbar="1"/>
+
+On Screen Display
+-----------------
+The on-screen display (OSD) overlays widgets such as navigation
+instructions, speed or compass on the map. See :doc:`OSD </user/configuration/OSD>` for details.
