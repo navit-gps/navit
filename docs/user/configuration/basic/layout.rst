@@ -61,7 +61,7 @@ color defines the color with which lines are drawn. If the item is a line,
 such as a street, it is its color; if the item is a polygon, it is its
 border color.
 
-For infos about map icons, see [[Icons]]
+For infos about map icons, see :doc:`Icons </user/configuration/Icons>`
 
 Overriding default (shipped) layouts
 ------------------------------------
