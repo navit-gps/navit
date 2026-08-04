@@ -5,7 +5,7 @@ Layout Options
 Layouts
 -------
 A layout defines how to **render a map**.  Layouts are fully customisable, from the road colours and widths to size and type of icons to display for specific POIs. The layout is also where the **cursor** (i.e. the shape which shows where you are) is defined.<br>
-A number of user-generated layouts and cursor definitions are available at [[Layout]].
+A number of user-generated layouts and cursor definitions are available at :doc:`Layout </user/configuration/Layout>`.
 
 The ``layout`` tag accepts the following options:
 
@@ -105,7 +105,7 @@ Copying the default **navit.xml** file to the user-specific location will still 
 
 Note on the default layout used by navit
 ----------------------------------------
-When no layout has been specifically selected by the user (for example at first startup), navit will use the default layout specified (see [[Configuration/General_Options#Default_layout|the related section to know how to configure this]]).
+When no layout has been specifically selected by the user (for example at first startup), navit will use the default layout specified (see :doc:`the related section </user/configuration/basic/general>`).
 
 Alternatively, a layout tag can carry an ``active="1"`` attribute;
 irrespective of where the layout appears in the XML file, that layout
@@ -121,7 +121,7 @@ on the actual sunrise and sunset at the current position, so the behavior
 is identical in both hemispheres.
 
 To control the switch manually, use the ``switch_layout_day_night``
-command (see [[OSD]]) with ``"manual"``, ``"auto"``, ``"manual_toggle"``,
+command (see :doc:`OSD </user/configuration/OSD>`) with ``"manual"``, ``"auto"``, ``"manual_toggle"``,
 ``"manual_day"`` or ``"manual_night"``.
 
 Setting ``tunnel_nightlayout="1"`` on the ``<navit>`` tag additionally
