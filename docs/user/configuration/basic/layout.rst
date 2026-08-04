@@ -61,7 +61,27 @@ color defines the color with which lines are drawn. If the item is a line,
 such as a street, it is its color; if the item is a polygon, it is its
 border color.
 
-For infos about map icons, see :doc:`Icons </user/configuration/Icons>`
+.. _layout_icons:
+
+Icons
+~~~~~
+POI and map icons are provided with the source tree in the ``navit/xpm/``
+directory (installed usually to ``/usr/share/navit/xpm/``). Originally they
+were 16x16 .xpm bitmaps; they are now .svg files that are converted to
+.png bitmaps at build time.
+
+Icons are drawn in an ``itemgra`` with an ``icon`` element. The ``src``
+attribute is required; ``w`` and ``h`` limit the size, ``x`` and ``y``
+offset the icon within the item, and ``rotation`` rotates it:
+
+.. code-block:: xml
+
+  <itemgra item_types="poi_fuel" order="12-">
+      <icon src="fuel.png"/>
+  </itemgra>
+
+Navit does not scale map icons automatically, so it is up to the style to
+use different sizes at different zoom levels.
 
 Overriding default (shipped) layouts
 ------------------------------------
