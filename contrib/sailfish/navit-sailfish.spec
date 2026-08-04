@@ -15,15 +15,36 @@ License: GPL
 Group: Applications/Productivity
 URL: http://navit-project.org/
 
-#git is vor version info while building
+#git is for version info while building
+%if 0%{?suse_version} >= 1500
+BuildRequires: espeak-devel
+%endif
+%if 0%{?fedora}
+BuildRequires: espeak-devel
+%endif
+%if 0%{?suse_version} >= 1500
 BuildRequires: git
+%endif
+%if 0%{?fedora}
+BuildRequires: git
+%endif
 #BuildRequires: gcc
 BuildRequires: cmake
 BuildRequires: glib2-devel
+%if 0%{?suse_version} >= 1500
 BuildRequires: gettext-devel
+%endif
+%if 0%{?fedora}
+BuildRequires: gettext-devel
+%endif
 #BuildRequires: freetype-devel
 BuildRequires: zlib-devel
+%if 0%{?suse_version} >= 1500
 BuildRequires: libxslt
+%endif
+%if 0%{?fedora}
+BuildRequires: libxslt
+%endif
 BuildRequires: qt5-qtcore-devel
 BuildRequires: qt5-qtdeclarative-devel
 BuildRequires: qt5-qtdbus-devel
@@ -113,6 +134,8 @@ fi
 %make_install
 # prune bogus files
 for a in $(find %{buildroot} -name "*.a"); do rm $a; done;
+# ensure locale directory exists even when gettext tools are absent
+mkdir -p %{buildroot}%{_datadir}/harbour-navit/locale
 
 #copy in sailfish config
 #cp %{navit_real_source}/contrib/sailfish/navit.xml %{buildroot}/usr/share/harbour-navit/navit.xml
