@@ -17,7 +17,7 @@ of ``navit.xml``. By default, the ``navit`` tag is set as follows:
     <navit center="4808 N 1134 E" zoom="256" tracking="1" orientation="-1" recent_dest="10">
 
 Some common attributes are discussed below. For more advanced features,
-see `the full list of options <Configuration/Full_list_of_options>`__.
+see :doc:`the full list of options </user/configuration/Configuration_Full_list_of_options>`.
 
 .. _initial_map_position:
 
@@ -33,7 +33,7 @@ covered by the sample map created on installation.
     center="11.5666 48.1333"
 
 Coordinates can be written in different formats; see
-`Coordinate_format <Coordinate_format>`__ for the full list. To
+:doc:`Coordinate format </user/configuration/Coordinate_format>` for the full list. To
 determine a specific latitude and longitude for your location you can
 use http://itouchmap.com/latlong.html. Usually, changing the "center"
 setting is not necessary, since it is only used during the first start.
@@ -46,13 +46,13 @@ be zoomed in.
 
 ``zoom="256"``
 
-For those using the `SDL GUI <SDL_GUI>`__, a level of 128 is
+For those using the SDL GUI, a level of 128 is
 recommended.
 
 ``zoom="128"``
 
 Note that once Navit has started, the zoom level can be altered using
-`OSD <OSD>`__ or menu items.
+:doc:`OSD </user/configuration/OSD>` or menu items.
 
 Use the **orientation** attribute to orient the map in either the
 direction of travel, or oriented North. .To orient the map in the
@@ -64,7 +64,7 @@ or to orient North:
 
 ``orientation="0"``
 
-Orienting the map North whilst in `3D <3D>`__ mode will provide visually
+Orienting the map North whilst in 3D mode will provide visually
 confusing results, and is not recommended. When in 3D mode, it's best to
 have the map oriented in the direction of travel.
 
@@ -86,7 +86,7 @@ To de-activate autozoom:
 ~~~~~~~~
 
 Navit has the capability to display either a 2D map (bird's eye
-perspective) or a `3D <3D>`__ map (some amount of tilt looking to the
+perspective) or a 3D map (some amount of tilt looking to the
 horizon). Navit's default configuration is to startup in the 2D
 perspective but it is possible to specify that Navit start with a 3D
 perspective. The amount of tilt is specified by setting the value of
