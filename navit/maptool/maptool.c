@@ -498,7 +498,8 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
         p->start = atoi(optarg);
         break;
     case 't':
-        p->timestamp = optarg;
+        g_free(p->timestamp);
+        p->timestamp = g_strdup(optarg);
         break;
     case 'T':
         thread_count = atoi(optarg);
