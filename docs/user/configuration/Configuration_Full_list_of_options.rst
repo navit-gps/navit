@@ -645,6 +645,31 @@ navit
 |                   |             |             | et_center_c |                           |
 |                   |             |             | ursor()"``. |                           |
 +-------------------+-------------+-------------+-------------+---------------------------+
+| lang_pref         |             | comma-sep   |   Priority  | ``lang_pref="de,en"``     |
+|                   |             | language    |   list of   |                           |
+|                   |             | codes       |   languages |                           |
+|                   |             |             |   for map   |                           |
+|                   |             |             |   label and |                           |
+|                   |             |             |   search    |                           |
+|                   |             |             |   result    |                           |
+|                   |             |             |   display.  |                           |
+|                   |             |             |   Labels are|                           |
+|                   |             |             |   shown in  |                           |
+|                   |             |             |   the first |                           |
+|                   |             |             |   matching  |                           |
+|                   |             |             |   language. |                           |
+|                   |             |             |   Towns are |                           |
+|                   |             |             |   also      |                           |
+|                   |             |             |   searchable|                           |
+|                   |             |             |   by their  |                           |
+|                   |             |             |   translated|                           |
+|                   |             |             |   names. If |                           |
+|                   |             |             |   no match  |                           |
+|                   |             |             |   is found, |                           |
+|                   |             |             |   the native|                           |
+|                   |             |             |   name is   |                           |
+|                   |             |             |   shown.    |                           |
++-------------------+-------------+-------------+-------------+---------------------------+
 
 graphics
 --------
