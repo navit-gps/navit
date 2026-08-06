@@ -24,6 +24,19 @@ if(BUILD_MAPTOOL)
 		SET(NAVIT_LIBS ${NAVIT_LIBS} m)
 	endif(NOT MSVC)
 
+	# libdeflate compresses much faster than zlib. It is optional: without it,
+	# maptool compresses with zlib as before.
+	find_path(LIBDEFLATE_INCLUDE_DIR libdeflate.h)
+	find_library(LIBDEFLATE_LIBRARY deflate)
+	if(LIBDEFLATE_INCLUDE_DIR AND LIBDEFLATE_LIBRARY)
+		message(STATUS "maptool: compressing with libdeflate (${LIBDEFLATE_LIBRARY})")
+		set_property(SOURCE zip.c APPEND PROPERTY COMPILE_DEFINITIONS HAVE_LIBDEFLATE=1)
+		target_include_directories(maptool_core PRIVATE ${LIBDEFLATE_INCLUDE_DIR})
+		target_link_libraries(maptool_core ${LIBDEFLATE_LIBRARY})
+	else()
+		message(STATUS "maptool: libdeflate not found, compressing with zlib")
+	endif()
+
 	target_link_libraries(maptool maptool_core ${NAVIT_LIBNAME} ${NAVIT_LIBS})
 
 	install(TARGETS maptool

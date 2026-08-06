@@ -28,6 +28,9 @@
 #include <unistd.h>
 #include <zconf.h>
 #include <zlib.h>
+#ifdef HAVE_LIBDEFLATE
+#    include <libdeflate.h>
+#endif
 
 struct zip_info {
     int zipnum;
@@ -49,7 +52,7 @@ static int zip_write(struct zip_info *info, void *data, int len) {
     return 1;
 }
 
-#ifdef HAVE_ZLIB
+#if defined(HAVE_ZLIB) && !defined(HAVE_LIBDEFLATE)
 static int compress2_int(Byte *dest, uLongf *destLen, const Bytef *source, uLong sourceLen, int level) {
     z_stream stream;
     int err;
@@ -101,7 +104,25 @@ void zip_compress_member(struct zip_info *zip_info, char *data, int data_size, s
     m->buffer = NULL;
     m->crc = crc32(crc32(0, NULL, 0), (unsigned char *)data, data_size);
     m->method = zip_info->compression_level ? 8 : 0;
-#ifdef HAVE_ZLIB
+#ifdef HAVE_LIBDEFLATE
+    if (zip_info->compression_level) {
+        /* libdeflate produces the same raw deflate format as the zlib call
+         * below, only faster. Level 6 of libdeflate compresses tile data
+         * better than level 9 of zlib. A compressor is not safe for use by
+         * several threads, so every call allocates its own. */
+        struct libdeflate_compressor *comp = libdeflate_alloc_compressor(zip_info->compression_level);
+        size_t destlen = data_size + data_size / 500 + 12;
+        size_t outlen;
+        m->buffer = g_malloc(destlen);
+        outlen = libdeflate_deflate_compress(comp, data, data_size, m->buffer, destlen);
+        libdeflate_free_compressor(comp);
+        if (outlen && outlen < (size_t)data_size) {
+            m->data = m->buffer;
+            m->data_size = outlen;
+        } else
+            m->method = 0;
+    }
+#elif defined(HAVE_ZLIB)
     if (zip_info->compression_level) {
         uLongf destlen = data_size + data_size / 500 + 12;
         int error;
