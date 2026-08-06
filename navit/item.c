@@ -614,3 +614,66 @@ void item_dump_filedesc(struct item *item, struct map *map, FILE *out) {
         for (i = 0; i < count; i++)
             fprintf(out, "mg:0x%x 0x%x\n", ca[i].x, ca[i].y);
 }
+
+int item_l10n_lang_matches(const char *pref, const char *lang, int lang_len) {
+    int preflen;
+    int langlen;
+    int len;
+
+    if (!pref || !lang || lang_len <= 0)
+        return 0;
+    preflen = (int)strcspn(pref, "-_");
+    langlen = (int)strcspn(lang, "-_:");
+    if (langlen > lang_len)
+        langlen = lang_len;
+    len = preflen < langlen ? preflen : langlen;
+    if (!len)
+        return 0;
+    return !g_ascii_strncasecmp(pref, lang, len);
+}
+
+static const char *item_resolve_l10n(struct item *item, const char **lang_pref) {
+    struct attr attr;
+    const char *l10n = NULL;
+    int pi;
+
+    if (!lang_pref || !lang_pref[0])
+        return NULL;
+
+    for (pi = 0; lang_pref[pi]; pi++) {
+        const char *lang = lang_pref[pi];
+
+        item_attr_rewind(item);
+        while (item_attr_get(item, attr_label_l10n, &attr)) {
+            const char *val = attr.u.str;
+            const char *colon = val ? strchr(val, ':') : NULL;
+            if (colon && item_l10n_lang_matches(lang, val, (int)(colon - val))) {
+                l10n = colon + 1;
+                break;
+            }
+        }
+        if (l10n)
+            break;
+    }
+
+    return l10n;
+}
+
+const char *item_label_get(struct item *item, const char **lang_pref) {
+    static const enum attr_type native_types[] = {attr_label, attr_street_name, attr_town_name};
+    struct attr attr;
+    const char *native = NULL;
+    const char *l10n;
+    unsigned int ti;
+
+    for (ti = 0; ti < sizeof(native_types) / sizeof(native_types[0]); ti++) {
+        item_attr_rewind(item);
+        if (item_attr_get(item, native_types[ti], &attr)) {
+            native = attr.u.str;
+            break;
+        }
+    }
+
+    l10n = item_resolve_l10n(item, lang_pref);
+    return l10n ? l10n : native;
+}
