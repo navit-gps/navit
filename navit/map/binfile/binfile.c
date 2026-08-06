@@ -912,6 +912,17 @@ static int selection_contains(struct map_selection *sel, struct coord_rect *r, s
     return 0;
 }
 
+static int tile_index_covers(struct map_rect_priv *mr, const char *name) {
+    struct attr af, al;
+    if (binfile_attr_get(mr->item.priv_data, attr_first_key, &af))
+        if (linguistics_compare(af.u.str, name, linguistics_cmp_partial) > 0)
+            return 0;
+    if (binfile_attr_get(mr->item.priv_data, attr_last_key, &al))
+        if (linguistics_compare(al.u.str, name, linguistics_cmp_partial) < 0)
+            return 0;
+    return 1;
+}
+
 static void map_parse_country_binfile(struct map_rect_priv *mr) {
     struct attr at;
 
@@ -928,18 +939,9 @@ static void map_parse_country_binfile(struct map_rect_priv *mr) {
         struct attr *search = &mr->msp->search;
         if (search->type == attr_town_name || search->type == attr_district_name
             || search->type == attr_town_or_district_name) {
-            struct attr af, al;
-            if (binfile_attr_get(mr->item.priv_data, attr_first_key, &af)) {
-                if (linguistics_compare(af.u.str, search->u.str, linguistics_cmp_partial) > 0) {
-                    dbg(lvl_debug, "Skipping index item with first_key='%s'", af.u.str);
-                    return;
-                }
-            }
-            if (binfile_attr_get(mr->item.priv_data, attr_last_key, &al)) {
-                if (linguistics_compare(al.u.str, search->u.str, linguistics_cmp_partial) < 0) {
-                    dbg(lvl_debug, "Skipping index item with first_key='%s', last_key='%s'", af.u.str, al.u.str);
-                    return;
-                }
+            if (!tile_index_covers(mr, search->u.str)) {
+                dbg(lvl_debug, "Skipping index item, search term '%s' outside key range", search->u.str);
+                return;
             }
         }
     }
@@ -1413,6 +1415,39 @@ static int duplicate(struct map_search_priv *msp, struct item *item, enum attr_t
     return 0;
 }
 
+/**
+ * @brief Check if item is duplicate by its town identity.
+ *
+ * Dedupes the native and translated index entries of the same town, which carry
+ * the same osm node id. Falls back to town name and coordinates for maps
+ * without node ids.
+ * @returns 0 if item is not a duplicate
+ * 	    1 if item is a duplicate or carries no dedupe identity
+ */
+static int duplicate_identity(struct map_search_priv *msp, struct item *item) {
+    struct attr nodeid;
+    struct duplicate *d;
+    int len;
+
+    if (binfile_attr_get(item->priv_data, attr_osm_nodeid, &nodeid)) {
+        len = sizeof(struct coord) + 21;
+        d = g_alloca(len);
+        d->c.x = 0;
+        d->c.y = 0;
+        g_snprintf(d->str, 21, "%lld", (long long)*nodeid.u.num64);
+        if (!msp->search_results)
+            msp->search_results = g_hash_table_new_full(duplicate_hash, duplicate_equal, g_free, NULL);
+        if (!g_hash_table_lookup(msp->search_results, d)) {
+            struct duplicate *dr = g_malloc(len);
+            memcpy(dr, d, len);
+            duplicate_insert(msp, dr);
+            return 0;
+        }
+        return 1;
+    }
+    return duplicate(msp, item, attr_town_name, 0);
+}
+
 static int item_inside_poly_list(struct item *it, GList *l) {
 
     while (l) {
@@ -1462,8 +1497,8 @@ static struct item *binmap_search_get_item(struct map_search_priv *map_search) {
                     && map_search->search.type == attr_town_postal) {
                     if (binfile_attr_get(it->priv_data, attr_town_postal, &at)) {
                         if (!linguistics_compare(at.u.str, map_search->search.u.str, mode)) {
-                            /* check for duplicate combination of town_name and town_postal */
-                            if (!duplicate(map_search, it, attr_town_name, attr_town_postal)) {
+                            /* skip towns already returned, deduped by their identity */
+                            if (!duplicate_identity(map_search, it)) {
                                 return it;
                             } else {
                                 break;
@@ -1476,7 +1511,7 @@ static struct item *binmap_search_get_item(struct map_search_priv *map_search) {
                     if (binfile_attr_get(it->priv_data, attr_town_name_match, &at)
                         || binfile_attr_get(it->priv_data, attr_town_name, &at)) {
                         if (!linguistics_compare(at.u.str, map_search->search.u.str, mode)
-                            && !duplicate(map_search, it, attr_town_name, 0))
+                            && !duplicate_identity(map_search, it))
                             return it;
                     }
                 }
@@ -1485,7 +1520,7 @@ static struct item *binmap_search_get_item(struct map_search_priv *map_search) {
                     if (binfile_attr_get(it->priv_data, attr_district_name_match, &at)
                         || binfile_attr_get(it->priv_data, attr_district_name, &at)) {
                         if (!linguistics_compare(at.u.str, map_search->search.u.str, mode)
-                            && !duplicate(map_search, it, attr_town_name, 0))
+                            && !duplicate_identity(map_search, it))
                             return it;
                     }
                 }
