@@ -308,8 +308,63 @@ struct slice_compress_job {
     GThread *thread;
 };
 
+static int canonicalize_tile_cmp(const void *a, const void *b) {
+    const struct item_bin *ia = *(const struct item_bin *const *)a;
+    const struct item_bin *ib = *(const struct item_bin *const *)b;
+    if (ia->len != ib->len)
+        return ia->len < ib->len ? -1 : 1;
+    return memcmp(ia, ib, (ia->len + 1) * 4);
+}
+
+/**
+ * @brief Sorts the items of one tile into one fixed order.
+ *
+ * The phases with threads store the items of a tile in an order that changes
+ * from run to run. The maps are equal, but their bytes are not. This function
+ * sorts the items of a tile by their content, so the same input always gives
+ * the same file. A reproducible file is easy to compare, and a later run can
+ * take the compressed bytes of an unchanged tile from an old map instead of
+ * a new call of deflate.
+ *
+ * The order of the items inside a tile carries no meaning: two runs of maptool
+ * already give two different orders, and Navit reads every item of a tile.
+ *
+ * This function must not run before the last phase. The earlier passes record
+ * the offset of an item inside its tile, and a sort makes those offsets wrong.
+ * In the last phase no reference file is open, see the callers of phase5().
+ *
+ * @param data the items of the tile, a sequence of struct item_bin
+ * @param size the size of data in bytes
+ */
+static void canonicalize_tile(char *data, int size) {
+    struct item_bin **items;
+    char *scratch, *pos;
+    int i, count = 0;
+
+    for (pos = data; pos < data + size; pos += (((struct item_bin *)pos)->len + 1) * 4)
+        count++;
+    if (count < 2)
+        return;
+    items = g_malloc(count * sizeof(struct item_bin *));
+    count = 0;
+    for (pos = data; pos < data + size; pos += (((struct item_bin *)pos)->len + 1) * 4)
+        items[count++] = (struct item_bin *)pos;
+    qsort(items, count, sizeof(struct item_bin *), canonicalize_tile_cmp);
+    scratch = g_malloc(size);
+    pos = scratch;
+    for (i = 0; i < count; i++) {
+        int len = (items[i]->len + 1) * 4;
+        memcpy(pos, items[i], len);
+        pos += len;
+    }
+    memcpy(data, scratch, size);
+    g_free(scratch);
+    g_free(items);
+}
+
 static gpointer slice_compress_worker(gpointer data) {
     struct slice_compress_job *job = data;
+    canonicalize_tile(job->th->zip_data, job->th->total_size);
     zip_compress_member(job->zip_info, job->th->zip_data, job->th->total_size, &job->member);
     return NULL;
 }
