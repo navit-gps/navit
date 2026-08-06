@@ -81,7 +81,60 @@ static int compress2_int(Byte *dest, uLongf *destLen, const Bytef *source, uLong
 }
 #endif
 
-void write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, int data_size) {
+/**
+ * @brief Compresses the data of one zip member.
+ *
+ * This function reads zip_info but does not change it. Several threads can
+ * therefore compress different members at the same time. The caller must then
+ * give the results to write_zipmember_compressed() in the order of the members,
+ * because the position of a member in the file depends on the members before it.
+ *
+ * @param zip_info the zip file that receives the member
+ * @param data the data of the member
+ * @param data_size the size of data in bytes
+ * @param m receives the result. Give it to write_zipmember_compressed().
+ */
+void zip_compress_member(struct zip_info *zip_info, char *data, int data_size, struct zip_member *m) {
+    m->data = data;
+    m->data_size = data_size;
+    m->uncomp_size = data_size;
+    m->buffer = NULL;
+    m->crc = crc32(crc32(0, NULL, 0), (unsigned char *)data, data_size);
+    m->method = zip_info->compression_level ? 8 : 0;
+#ifdef HAVE_ZLIB
+    if (zip_info->compression_level) {
+        uLongf destlen = data_size + data_size / 500 + 12;
+        int error;
+        m->buffer = g_malloc(destlen);
+        error = compress2_int((Byte *)m->buffer, &destlen, (Bytef *)data, data_size, zip_info->compression_level);
+        if (error == Z_OK) {
+            if (destlen < data_size) {
+                m->data = m->buffer;
+                m->data_size = destlen;
+            } else
+                m->method = 0;
+        } else {
+            /* Note that this keeps method 8 for data that is not compressed.
+             * The behavior is the same as before the members were compressed in
+             * parallel. deflate needs more room than the buffer only for data
+             * that grows, and tile data always becomes smaller. */
+            fprintf(stderr, "compress2 returned %d\n", error);
+        }
+    }
+#endif
+}
+
+/**
+ * @brief Writes one compressed zip member and frees its buffer.
+ *
+ * Call this function for the members of a slice in the order of the members.
+ *
+ * @param zip_info the zip file that receives the member
+ * @param name the name of the member
+ * @param filelen the length that every name in this file uses
+ * @param m the result of zip_compress_member(). This function frees its buffer.
+ */
+void write_zipmember_compressed(struct zip_info *zip_info, char *name, int filelen, struct zip_member *m) {
     struct zip_lfh lfh = {
         0x04034b50, 0x0a, 0x0, 0x0, zip_info->time, zip_info->date, 0x0, 0x0, 0x0, filelen, 0x0,
     };
@@ -95,35 +148,16 @@ void write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *d
         zip_info->offset,
     };
     char *filename;
-    int crc = 0, len, comp_size = data_size;
-    uLongf destlen = data_size + data_size / 500 + 12;
-    char *compbuffer;
+    int len;
 
-    compbuffer = g_malloc(destlen);
-    crc = crc32(0, NULL, 0);
-    crc = crc32(crc, (unsigned char *)data, data_size);
-    lfh.zipmthd = zip_info->compression_level ? 8 : 0;
-#ifdef HAVE_ZLIB
-    if (zip_info->compression_level) {
-        int error = compress2_int((Byte *)compbuffer, &destlen, (Bytef *)data, data_size, zip_info->compression_level);
-        if (error == Z_OK) {
-            if (destlen < data_size) {
-                data = compbuffer;
-                comp_size = destlen;
-            } else
-                lfh.zipmthd = 0;
-        } else {
-            fprintf(stderr, "compress2 returned %d\n", error);
-        }
-    }
-#endif
-    lfh.zipcrc = crc;
-    lfh.zipsize = comp_size;
-    lfh.zipuncmp = data_size;
-    cd.zipccrc = crc;
-    cd.zipcsiz = lfh.zipsize;
-    cd.zipcunc = data_size;
-    cd.zipcmthd = lfh.zipmthd;
+    lfh.zipmthd = m->method;
+    lfh.zipcrc = m->crc;
+    lfh.zipsize = m->data_size;
+    lfh.zipuncmp = m->uncomp_size;
+    cd.zipccrc = m->crc;
+    cd.zipcsiz = m->data_size;
+    cd.zipcunc = m->uncomp_size;
+    cd.zipcmthd = m->method;
     if (zip_info->zip64) {
         cd.zipofst = 0xffffffff;
         cd.zipcxtl += sizeof(cd_ext);
@@ -138,8 +172,8 @@ void write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *d
     zip_write(zip_info, &lfh, sizeof(lfh));
     zip_write(zip_info, filename, filelen);
     zip_info->offset += sizeof(lfh) + filelen;
-    zip_write(zip_info, data, comp_size);
-    zip_info->offset += comp_size;
+    zip_write(zip_info, m->data, m->data_size);
+    zip_info->offset += m->data_size;
     dbg_assert(fwrite(&cd, sizeof(cd), 1, zip_info->dir) == 1);
     dbg_assert(fwrite(filename, filelen, 1, zip_info->dir) == 1);
     zip_info->dir_size += sizeof(cd) + filelen;
@@ -148,7 +182,14 @@ void write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *d
         zip_info->dir_size += sizeof(cd_ext);
     }
 
-    g_free(compbuffer);
+    g_free(m->buffer);
+    m->buffer = NULL;
+}
+
+void write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, int data_size) {
+    struct zip_member m;
+    zip_compress_member(zip_info, data, data_size, &m);
+    write_zipmember_compressed(zip_info, name, filelen, &m);
 }
 
 int zip_write_index(struct zip_info *info) {

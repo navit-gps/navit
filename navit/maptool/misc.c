@@ -300,11 +300,92 @@ int phase4(FILE **in, int in_count, int with_range, char *suffix, FILE *tilesdir
     return phase34(&info, zip_info, in, NULL, in_count, with_range);
 }
 
+/** One member of a batch that process_slice() compresses in parallel. */
+struct slice_compress_job {
+    struct zip_info *zip_info;
+    struct tile_head *th;
+    struct zip_member member;
+    GThread *thread;
+};
+
+static gpointer slice_compress_worker(gpointer data) {
+    struct slice_compress_job *job = data;
+    zip_compress_member(job->zip_info, job->th->zip_data, job->th->total_size, &job->member);
+    return NULL;
+}
+
+/**
+ * @brief Compresses and writes the tiles of one slice.
+ *
+ * The compression is the largest part of this phase and one member does not
+ * depend on another member, so this function compresses thread_count members at
+ * the same time. It then writes the members of the batch in the order of the
+ * list, because the position of a member in the zip file depends on the members
+ * before it.
+ *
+ * The result is the same file that a sequential run gives. The order of the
+ * members and the parameters of deflate do not change.
+ *
+ * A batch holds no more than thread_count members. The memory that the
+ * compressed data needs is therefore small against slice_data, which already
+ * holds the whole slice.
+ *
+ * @param zip_info the zip file that receives the tiles
+ * @param tiles the tiles of the slice, in the order of the write
+ * @param count the number of tiles
+ *
+ * @returns the number of tiles that went into the zip file
+ */
+static int write_tiles(struct zip_info *zip_info, struct tile_head **tiles, int count) {
+    /* thread_count comes from the command line, so do not trust it for the
+     * stride of the loop below. A stride of 0 would never end. */
+    int batch_max = thread_count > 0 ? thread_count : 1;
+    struct slice_compress_job *jobs = g_malloc0(sizeof(struct slice_compress_job) * batch_max);
+    int maxnamelen = zip_get_maxnamelen(zip_info);
+    gint64 start = g_get_monotonic_time();
+    long long bytes = 0;
+    int zipfiles = 0;
+    int first, i;
+
+    for (first = 0; first < count; first += batch_max) {
+        int batch = MIN(batch_max, count - first);
+        for (i = 0; i < batch; i++) {
+            jobs[i].zip_info = zip_info;
+            jobs[i].th = tiles[first + i];
+            jobs[i].thread = NULL;
+            /* A tile without a name goes to the index and needs no compression. */
+            if (jobs[i].th->name[0])
+                jobs[i].thread = g_thread_new("zip_compress_worker", slice_compress_worker, &(jobs[i]));
+        }
+        for (i = 0; i < batch; i++) {
+            if (jobs[i].thread)
+                g_thread_join(jobs[i].thread);
+        }
+        for (i = 0; i < batch; i++) {
+            struct tile_head *th = jobs[i].th;
+            if (jobs[i].thread) {
+                bytes += th->total_size;
+                write_zipmember_compressed(zip_info, th->name, maxnamelen, &(jobs[i].member));
+                zipfiles++;
+            } else {
+                dbg_assert(fwrite(th->zip_data, th->total_size, 1, zip_get_index(zip_info)) == 1);
+            }
+        }
+    }
+    g_free(jobs);
+
+    fprintf(stderr, "Compressed %d tiles, " LONGLONG_FMT " bytes in %.1f s with %d threads\n", zipfiles, bytes,
+            (g_get_monotonic_time() - start) / 1000000.0, batch_max);
+
+    return zipfiles;
+}
+
 static int process_slice(FILE **in, FILE **reference, int in_count, int with_range, long long size, char *suffix,
                          struct zip_info *zip_info) {
     struct tile_head *th;
+    struct tile_head **tiles;
     char *slice_data, *zip_data;
-    int zipfiles = 0;
+    int zipfiles = 0, tile_count = 0;
     struct tile_info info;
     int i;
 
@@ -333,19 +414,22 @@ static int process_slice(FILE **in, FILE **reference, int in_count, int with_ran
     phase34(&info, zip_info, in, reference, in_count, with_range);
 
     for (th = tile_head_root; th; th = th->next) {
+        if (th->process)
+            tile_count++;
+    }
+    tiles = g_malloc(sizeof(struct tile_head *) * (tile_count ? tile_count : 1));
+    tile_count = 0;
+    for (th = tile_head_root; th; th = th->next) {
         if (!th->process)
             continue;
-        if (th->name[0]) {
-            if (th->total_size != th->total_size_used) {
-                fprintf(stderr, "Size error '%s': %d vs %d\n", th->name, th->total_size, th->total_size_used);
-                exit(1);
-            }
-            write_zipmember(zip_info, th->name, zip_get_maxnamelen(zip_info), th->zip_data, th->total_size);
-            zipfiles++;
-        } else {
-            dbg_assert(fwrite(th->zip_data, th->total_size, 1, zip_get_index(zip_info)) == 1);
+        if (th->name[0] && th->total_size != th->total_size_used) {
+            fprintf(stderr, "Size error '%s': %d vs %d\n", th->name, th->total_size, th->total_size_used);
+            exit(1);
         }
+        tiles[tile_count++] = th;
     }
+    zipfiles = write_tiles(zip_info, tiles, tile_count);
+    g_free(tiles);
     g_free(slice_data);
 
     return zipfiles;

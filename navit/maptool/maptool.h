@@ -412,7 +412,32 @@ void index_init(struct zip_info *info, int version);
 void index_submap_add(struct tile_info *info, struct tile_head *th);
 
 /* zip.c */
+
+/**
+ * One zip member after the compression and before the write.
+ *
+ * zip_compress_member() fills this struct and write_zipmember_compressed()
+ * writes it. The two steps are separate because the compression of different
+ * members can run at the same time, but the write cannot.
+ */
+struct zip_member {
+    /** The data to write. This is buffer, or the input when deflate did not help. */
+    char *data;
+    /** Size of data in bytes. */
+    int data_size;
+    /** Size of the member before the compression. */
+    int uncomp_size;
+    /** CRC-32 of the data before the compression. */
+    int crc;
+    /** 8 for deflate, 0 for no compression. */
+    int method;
+    /** The buffer for the compressed data. write_zipmember_compressed() frees it. */
+    char *buffer;
+};
+
 void write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, int data_size);
+void zip_compress_member(struct zip_info *zip_info, char *data, int data_size, struct zip_member *m);
+void write_zipmember_compressed(struct zip_info *zip_info, char *name, int filelen, struct zip_member *m);
 int zip_write_index(struct zip_info *info);
 int zip_write_directory(struct zip_info *info);
 struct zip_info *zip_new(void);
