@@ -439,6 +439,23 @@ void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_pr
     }
 
     if (item->gr) {
+        if (item->resize_cb) {
+            if (navit_gr)
+                graphics_remove_callback(navit_gr, item->resize_cb);
+            callback_destroy(item->resize_cb);
+            item->resize_cb = NULL;
+        }
+        if (item->keypress_cb) {
+            if (navit_gr)
+                graphics_remove_callback(navit_gr, item->keypress_cb);
+            callback_destroy(item->keypress_cb);
+            item->keypress_cb = NULL;
+        }
+        if (item->cb) {
+            navit_remove_callback(nav, item->cb);
+            callback_destroy(item->cb);
+            item->cb = NULL;
+        }
         if (item->graphic_bg)
             graphics_gc_destroy(item->graphic_bg);
         if (item->graphic_fg)
@@ -447,7 +464,8 @@ void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_pr
             graphics_gc_destroy(item->graphic_fg_text);
         if (item->font)
             graphics_font_destroy(item->font);
-        graphics_free(item->gr);
+        if (!(item->flags & DISABLE_OVERLAY))
+            graphics_free(item->gr);
         item->graphic_bg = NULL;
         item->graphic_fg = NULL;
         item->graphic_fg_text = NULL;
@@ -482,15 +500,18 @@ void osd_destroy_std_graphic(struct osd_item *item, struct navit *nav) {
         if (navit_gr)
             graphics_remove_callback(navit_gr, item->resize_cb);
         callback_destroy(item->resize_cb);
+        item->resize_cb = NULL;
     }
     if (item->keypress_cb) {
         if (navit_gr)
             graphics_remove_callback(navit_gr, item->keypress_cb);
         callback_destroy(item->keypress_cb);
+        item->keypress_cb = NULL;
     }
     if (item->cb) {
         navit_remove_callback(nav, item->cb);
         callback_destroy(item->cb);
+        item->cb = NULL;
     }
     if (item->graphic_bg)
         graphics_gc_destroy(item->graphic_bg);
@@ -500,13 +521,22 @@ void osd_destroy_std_graphic(struct osd_item *item, struct navit *nav) {
         graphics_gc_destroy(item->graphic_fg_text);
     if (item->font)
         graphics_font_destroy(item->font);
-    if (item->gr)
+    if (item->gr && !(item->flags & DISABLE_OVERLAY))
         graphics_free(item->gr);
+    item->graphic_bg = NULL;
+    item->graphic_fg = NULL;
+    item->graphic_fg_text = NULL;
+    item->font = NULL;
+    item->gr = NULL;
     if (item->enable_cs)
         command_saved_destroy(item->enable_cs);
+    item->enable_cs = NULL;
     g_free(item->command);
+    item->command = NULL;
     g_free(item->accesskey);
+    item->accesskey = NULL;
     g_free(item->font_name);
+    item->font_name = NULL;
 }
 
 void osd_fill_with_bgcolor(struct osd_item *item) {
