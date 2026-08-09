@@ -1127,6 +1127,7 @@ int main(int argc, char **argv) {
     start_phase(&p, "done");
     if (p.timestamp != NULL)
         g_free(p.timestamp);
-    tempfile_cleanup();
+    if (!p.keep_tmpfiles)
+        tempfile_cleanup();
     return 0;
 }
