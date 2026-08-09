@@ -31,6 +31,7 @@ struct gui {
     struct gui_methods meth;
     struct gui_priv *priv;
     struct attr **attrs;
+    struct callback_list *cbl;
     struct attr parent;
 };
 
@@ -50,7 +51,8 @@ struct gui *gui_new(struct attr *parent, struct attr **attrs) {
     this_ = g_new0(struct gui, 1);
     this_->attrs = attr_list_dup(attrs);
     cbl.type = attr_callback_list;
-    cbl.u.callback_list = callback_list_new();
+    this_->cbl = callback_list_new();
+    cbl.u.callback_list = this_->cbl;
     this_->attrs = attr_generic_add_attr(this_->attrs, &cbl);
     this_->priv = guitype_new(parent->u.navit, &this_->meth, this_->attrs, this_);
     this_->parent = *parent;
@@ -185,14 +187,7 @@ void gui_destroy(struct gui *this_) {
         return;
     if (this_->meth.destroy)
         this_->meth.destroy(this_->priv);
-    if (this_->attrs) {
-        struct attr **a = this_->attrs;
-        while (a && *a) {
-            if ((*a)->type == attr_callback_list)
-                callback_list_destroy((*a)->u.callback_list);
-            a++;
-        }
-    }
+    callback_list_destroy(this_->cbl);
     attr_list_free(this_->attrs);
     g_free(this_);
 }
