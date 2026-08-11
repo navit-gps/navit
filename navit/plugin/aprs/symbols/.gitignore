@@ -1,0 +1,6 @@
+# Symbol PNGs are generated on demand (not committed) by update_symbols.sh,
+# which clones hessu/aprs-symbols and runs extract_symbols.py. Ignore both the
+# clone and the generated 48x48 output so they never get committed back.
+aprs-symbols/
+48x48/
+*.git

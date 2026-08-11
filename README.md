@@ -37,6 +37,16 @@ Current vehicle position from \
 — the location service of several mobile platforms. \
 — a UDP server (friends tracking) (experimental).
 
+Plugins
+=======
+
+Navit includes several plugins that extend its functionality:
+
+- **APRS Plugin** — Real-time APRS station tracking with packet decoding and map display
+- **APRS SDR Plugin** — RTL-SDR hardware support for direct APRS packet reception
+
+For complete plugin documentation, see the `Navit User Manual <https://navit.readthedocs.io/en/latest/user/plugins/index.html>`_.
+
 Translation
 ===========
 The [Hosted Weblate](https://hosted.weblate.org/projects/navit/) platform is used to manage translations, which runs [Weblate](https://weblate.org).
