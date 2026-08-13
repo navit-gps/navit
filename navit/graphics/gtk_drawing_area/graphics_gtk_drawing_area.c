@@ -929,7 +929,7 @@ static void get_data_window(struct graphics_priv *this, unsigned int xid) {
     else
         gtk_container_add(GTK_CONTAINER(this->win), this->widget);
     gtk_widget_show_all(this->win);
-    GTK_WIDGET_SET_FLAGS(this->widget, GTK_CAN_FOCUS);
+    gtk_widget_set_can_focus(this->widget, TRUE);
     gtk_widget_set_sensitive(this->widget, TRUE);
     gtk_widget_grab_focus(this->widget);
     g_signal_connect(G_OBJECT(this->widget), "key-press-event", G_CALLBACK(keypress), this);
