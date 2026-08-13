@@ -760,7 +760,6 @@ static char **gtk_argv = {NULL};
 
 void plugin_init(void) {
     gtk_init(&gtk_argc, &gtk_argv);
-    gtk_set_locale();
 #ifdef HAVE_API_WIN32
     setlocale(LC_NUMERIC, "C");
 #endif
