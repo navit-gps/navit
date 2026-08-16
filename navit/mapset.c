@@ -51,6 +51,7 @@ struct attr_iter {
  */
 struct mapset *mapset_new(struct attr *parent, struct attr **attrs) {
     struct mapset *ms;
+    (void)parent;
 
     ms = g_new0(struct mapset, 1);
     ms->func = &mapset_func;
@@ -67,6 +68,7 @@ struct mapset *mapset_dup(struct mapset *ms) {
 }
 
 struct attr_iter *mapset_attr_iter_new(void *unused) {
+    (void)unused;
     return g_new0(struct attr_iter, 1);
 }
 
