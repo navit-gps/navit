@@ -428,13 +428,18 @@ static int write_tiles_for_slice(struct zip_info *zip_info) {
             fprintf(stderr, "Size error '%s': %d vs %d\n", th->name, th->total_size, th->total_size_used);
             exit(1);
         }
-        write_zipmember_raw(zip_info, th->name, zip_get_maxnamelen(zip_info), th->comp_data, th->comp_size,
-                            th->total_size, th->crc, th->zipmthd);
-        if (th->comp_data != th->zip_data)
-            g_free(th->comp_data);
-        th->comp_data = NULL;
-        zipfiles++;
         tile_count--;
+    }
+
+    for (th = tile_head_root; th; th = th->next) {
+        if (th->process && th->name[0]) {
+            write_zipmember_raw(zip_info, th->name, zip_get_maxnamelen(zip_info), th->comp_data, th->comp_size,
+                                th->total_size, th->crc, th->zipmthd);
+            if (th->comp_data != th->zip_data)
+                g_free(th->comp_data);
+            th->comp_data = NULL;
+            zipfiles++;
+        }
     }
     return zipfiles;
 }
