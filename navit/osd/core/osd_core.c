@@ -2375,9 +2375,8 @@ static struct osd_priv *osd_nav_toggle_announcer_new(struct navit *nav, struct o
 
     opc->osd_item.command = g_strdup(command);
 
-    navit_add_callback(nav,
-                       this->graphics_ready_cb =
-                           callback_new_attr_1(callback_cast(osd_nav_toggle_announcer_init), attr_graphics_ready, opc));
+    navit_add_callback(nav, this->graphics_ready_cb = callback_new_attr_1(callback_cast(osd_nav_toggle_announcer_init),
+                                                                          attr_graphics_ready, opc));
     meth->destroy = osd_nav_toggle_announcer_destroy;
     return (struct osd_priv *)opc;
 }
@@ -3778,9 +3777,8 @@ static struct osd_priv *osd_gps_status_new(struct navit *nav, struct osd_methods
     } else
         this->icon_src = graphics_icon_path("gui_strength_%d_32_32.png");
 
-    navit_add_callback(nav,
-                       this->graphics_ready_cb =
-                           callback_new_attr_1(callback_cast(osd_gps_status_init), attr_graphics_ready, opc));
+    navit_add_callback(nav, this->graphics_ready_cb =
+                                callback_new_attr_1(callback_cast(osd_gps_status_init), attr_graphics_ready, opc));
     meth->destroy = osd_gps_status_destroy;
     return (struct osd_priv *)opc;
 }
@@ -3905,9 +3903,8 @@ static struct osd_priv *osd_volume_new(struct navit *nav, struct osd_methods *me
     } else
         this->icon_src = graphics_icon_path("gui_strength_%d_32_32.png");
 
-    navit_add_callback(nav,
-                       this->graphics_ready_cb =
-                           callback_new_attr_1(callback_cast(osd_volume_init), attr_graphics_ready, opc));
+    navit_add_callback(nav, this->graphics_ready_cb =
+                                callback_new_attr_1(callback_cast(osd_volume_init), attr_graphics_ready, opc));
     meth->destroy = osd_volume_destroy;
     return (struct osd_priv *)opc;
 }
