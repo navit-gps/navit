@@ -398,7 +398,7 @@ void gtk_gui_poi(struct navit *nav) {
         search->label_distance = gtk_label_new(_("Select a search radius from screen center in miles"));
     }
 
-    search->entry_distance=gtk_entry_new();
+    search->entry_distance = gtk_entry_new();
     gtk_entry_set_max_length(GTK_ENTRY(search->entry_distance), 2);
     gtk_entry_set_text(GTK_ENTRY(search->entry_distance), "10");
 
