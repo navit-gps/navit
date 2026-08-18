@@ -490,7 +490,7 @@ void linguistics_init(void) {
     }
 
     special_hash = g_hash_table_new(g_str_hash, g_str_equal);
-    for (i = 0; i < sizeof(special) / sizeof(special[0]); i++)
+    for (i = 0; i < (int)(sizeof(special) / sizeof(special[0])); i++)
         g_hash_table_insert(special_hash, (gpointer)special[i][0], special[i]);
 }
 

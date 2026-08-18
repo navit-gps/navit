@@ -85,10 +85,11 @@ expand_variables(const char *in)
 int 
 wordexp(const char *words, wordexp_t *we, int flags)
 {	
-	int     i;
+	size_t  i;
 	int     error = 0;
 	char   *words_expanded;
 	glob_t  pglob;
+	(void)flags;
 
 	assert(we != NULL);
 	assert(words != NULL);
@@ -124,7 +125,7 @@ wordexp(const char *words, wordexp_t *we, int flags)
 
 void wordfree(wordexp_t *we)
 {
-	int i;
+	size_t i;
 
 	for (i=0; i < we->we_wordc; i++)
 	{

@@ -99,6 +99,7 @@ struct attr_iter {
 };
 
 struct attr_iter *layout_attr_iter_new(void *unused) {
+    (void)unused;
     return g_new0(struct attr_iter, 1);
 }
 
@@ -194,6 +195,7 @@ struct cursor *layout_get_cursor(struct layout *this_, char *name) {
 struct cursor *cursor_new(struct attr *parent, struct attr **attrs) {
     struct attr *w, *h, *name, *interval, *sequence_range;
     struct cursor *this;
+    (void)parent;
 
     w = attr_search(attrs, attr_w);
     h = attr_search(attrs, attr_h);
@@ -257,6 +259,7 @@ int cursor_add_attr(struct cursor *this_, struct attr *attr) {
 static int layer_set_attr_do(struct layer *l, struct attr *attr, int init) {
     struct attr_iter *iter;
     struct navit_object *obj;
+    (void)init;
     struct attr layer;
     switch (attr->type) {
     case attr_active:
@@ -316,6 +319,7 @@ struct layer *layer_new(struct attr *parent, struct attr **attrs) {
 }
 
 int layer_get_attr(struct layer *layer, enum attr_type type, struct attr *attr, struct attr_iter *iter) {
+    (void)iter;
     attr->type = type;
     switch (type) {
     case attr_active:
@@ -376,6 +380,7 @@ static void layer_destroy(struct layer *layer) {
 struct itemgra *itemgra_new(struct attr *parent, struct attr **attrs) {
     struct itemgra *itm;
     struct attr *order, *item_types, *speed_range, *angle_range, *sequence_range;
+    (void)parent;
     enum item_type *type;
     struct range defrange;
 
@@ -541,6 +546,7 @@ static void element_set_circle_radius(struct element *e, struct attr **attrs) {
 struct polygon *polygon_new(struct attr *parent, struct attr **attrs) {
     struct element *e;
     int add_size_to_e = 0;
+    (void)parent;
     struct attr *src, *w, *h, *rotation, *x, *y;
     /* search fot icon src first as this increases the required memory for e*/
     src = attr_search(attrs, attr_src);
@@ -587,6 +593,7 @@ struct polygon *polygon_new(struct attr *parent, struct attr **attrs) {
 
 struct polyline *polyline_new(struct attr *parent, struct attr **attrs) {
     struct element *e;
+    (void)parent;
 
     e = g_new0(struct element, 1);
     e->type = element_polyline;
@@ -602,6 +609,7 @@ struct polyline *polyline_new(struct attr *parent, struct attr **attrs) {
 struct circle *circle_new(struct attr *parent, struct attr **attrs) {
     struct element *e;
     struct color color_black = {COLOR_BLACK_};
+    (void)parent;
     struct color color_white = {COLOR_WHITE_};
 
     e = g_new0(struct element, 1);
@@ -621,6 +629,7 @@ struct circle *circle_new(struct attr *parent, struct attr **attrs) {
 struct text *text_new(struct attr *parent, struct attr **attrs) {
     struct element *e;
     struct color color_black = {COLOR_BLACK_};
+    (void)parent;
     struct color color_white = {COLOR_WHITE_};
 
     e = g_new0(struct element, 1);
@@ -638,6 +647,7 @@ struct text *text_new(struct attr *parent, struct attr **attrs) {
 struct icon *icon_new(struct attr *parent, struct attr **attrs) {
     struct element *e;
     struct attr *src, *w, *h, *rotation, *x, *y;
+    (void)parent;
     src = attr_search(attrs, attr_src);
     if (!src)
         return NULL;
@@ -669,6 +679,8 @@ struct icon *icon_new(struct attr *parent, struct attr **attrs) {
 
 struct image *image_new(struct attr *parent, struct attr **attrs) {
     struct element *e;
+    (void)parent;
+    (void)attrs;
 
     e = g_malloc0(sizeof(*e));
     e->type = element_image;
@@ -678,6 +690,7 @@ struct image *image_new(struct attr *parent, struct attr **attrs) {
 
 struct arrows *arrows_new(struct attr *parent, struct attr **attrs) {
     struct element *e;
+    (void)parent;
     e = g_malloc0(sizeof(*e));
     e->type = element_arrows;
     element_set_color(e, attrs);
@@ -688,6 +701,7 @@ struct arrows *arrows_new(struct attr *parent, struct attr **attrs) {
 
 struct spikes *spikes_new(struct attr *parent, struct attr **attrs) {
     struct element *e;
+    (void)parent;
     e = g_malloc0(sizeof(*e));
     e->type = element_spikes;
     element_set_color(e, attrs);
