@@ -6,7 +6,7 @@ set(MACOSX_BUNDLE_BUNDLE_NAME "Navit")
 set(CPACK_PACKAGE_CONTACT "navit@navit-project.org")
 set(CPACK_DEB_COMPONENT_INSTALL ON)
 #set(CPACK_DEBIAN_MAPTOOL_PACKAGE_DEPENDS "")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libglib2.0-0 (>= 2.10.0), libprotobuf-c1")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libglib2.0-0 (>= 2.10.0)")
 message(STATUS "Building with CMake V${CMAKE_VERSION}")
 if (DISABLE_CXX)
 	project(navit C)
@@ -747,11 +747,15 @@ if(CMAKE_SIZEOF_VOID_P LESS 8)
 endif()
 
 if(BUILD_MAPTOOL)
-	find_package(PROTOBUF_C REQUIRED)
-	if(NOT PROTOBUF_C_FOUND)
-		set_with_reason(BUILD_MAPTOOL "PROTOBUF-C not found" FALSE)
+	# libosmium reads compressed and XML data with these libraries. Disable
+	# maptool if one of them is absent, instead of stopping the configuration.
+	find_package(EXPAT)
+	find_package(BZip2)
+	if(NOT ZLIB_FOUND OR NOT EXPAT_FOUND OR NOT BZIP2_FOUND OR NOT Threads_FOUND)
+		set_with_reason(BUILD_MAPTOOL "libosmium needs zlib, expat, bzip2 and threads" FALSE)
 	endif()
 endif()
+
 
 set(LOCALEDIR "${LOCALE_DIR}")
 

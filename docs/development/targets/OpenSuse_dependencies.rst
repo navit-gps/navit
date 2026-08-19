@@ -18,8 +18,8 @@ Optionals
 
 To build maptool:
 
--  protobuf-c
--  libprotobuf-c-devel
+-  libosmium-devel
+-  protozero-devel
 
 
 GTK Gui
