@@ -92,4 +92,9 @@ struct gui_internal_data {
     struct gui_internal_widget_methods *widget;
 };
 
+struct gui_download_data {
+    struct gui_priv *this;
+    struct widget *wm;
+    void *data;
+};
 #endif
