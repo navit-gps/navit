@@ -1,14 +1,13 @@
 Vehicleprofile
 ==============
 
-for general information about Vehicleprofiles look into `Configuration
-#Vehicle Options <Configuration#Vehicle_Options>`__
+For general information about Vehicleprofiles, see :doc:`vehicle options </user/configuration/basic/vehicle>`.
 
 --------------
 
 
-`Bike Cycleway <Vehicleprofile/Bike_Cycleway>`__
-------------------------------------------------
+:doc:`Bike Cycleway </user/configuration/vehicleprofile/vehicleprofile_bike_cycleway>`
+--------------------------------------------------------------------------------------
 
 Features
 ~~~~~~~~
@@ -17,8 +16,8 @@ Ride your bike by navigation prefered on Cycleways, use less paths and
 tracks
 
 
-`Bike on Asphalt <Vehicleprofile/Bike_on_Asphalt>`__
-----------------------------------------------------
+:doc:`Bike on Asphalt </user/configuration/vehicleprofile/vehicleprofile_bike_on_asphalt>`
+------------------------------------------------------------------------------------------
 
 
 Features
@@ -28,8 +27,8 @@ Ride your bike by navigation prefered on Asphalt, use less paths and
 tracks
 
 
-`Hike & Bike on Ground & Gravel <Vehicleprofile/Hike_Bike_on_Ground_Gravel>`__
-------------------------------------------------------------------------------
+:doc:`Hike & Bike on Ground & Gravel </user/configuration/vehicleprofile/vehicleprofile_hike_bike_on_ground_gravel>`
+--------------------------------------------------------------------------------------------------------------------
 
 
 Features
@@ -39,8 +38,8 @@ You are a Biker or a Hiker? Navigate your tor with this profile throu
 tracks, hikes, paths, mountainpaths and so on
 
 
-`Hike & Bike hard <Vehicleprofile/Hike_Bike_hard>`__
-----------------------------------------------------
+:doc:`Hike & Bike hard </user/configuration/vehicleprofile/vehicleprofile_hike_bike_hard>`
+------------------------------------------------------------------------------------------
 
 
 Features
@@ -49,8 +48,8 @@ Features
 You want more paths than the profile Hike & Bike on Ground & Gravel?
 
 
-`Car (no Highway) <Vehicleprofile/Car_no_Highway)>`__
------------------------------------------------------
+:doc:`Car (no Highway) </user/configuration/vehicleprofile/vehicleprofile_car_no_highway>`
+------------------------------------------------------------------------------------------
 
 
 Features

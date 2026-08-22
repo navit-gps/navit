@@ -5,7 +5,20 @@ Layout Options
 Layouts
 -------
 A layout defines how to **render a map**.  Layouts are fully customisable, from the road colours and widths to size and type of icons to display for specific POIs. The layout is also where the **cursor** (i.e. the shape which shows where you are) is defined.<br>
-A number of user-generated layouts and cursor definitions are available at [[Layout]].
+A number of user-generated layouts and cursor definitions are available at :doc:`Layout </user/configuration/Layout>`.
+
+The ``layout`` tag accepts the following options:
+
+* **name** - Name of this layout, displayed in the GUI (required).
+* **color** - Default background color of the map for areas where nothing is drawn at all.
+* **font** - Default font for this layout, used if no other font is given to text items (see Fonts).
+* **daylayout** - Name of the layout to switch to during daytime (see Day and night layouts).
+* **nightlayout** - Name of the layout to switch to at night.
+* **icon_w** - Default width of on-map icons if no other size is provided.
+* **icon_h** - Default height of on-map icons if no other size is provided.
+* **underground_alpha** - Alpha (transparency) value for underground roads and ways, typically tunnels. Valid from 0 (fully transparent) to 255 (solid).
+* **active** - Set to 1 to make this layout the default layout (see Note on the default layout used by navit).
+* **order_delta** - Offsets the zoom level at which this layout's items are rendered; a negative value draws the layout only at higher zoom levels.
 
 Defining layers
 ---------------
@@ -65,8 +78,8 @@ border color.
 
 Icons
 ~~~~~
-POI and map icons are provided with the source tree in the ``navit/xpm/``
-directory (installed usually to ``/usr/share/navit/xpm/``). Originally they
+POI and map icons are provided with the source tree in the ``navit/icons/``
+directory (installed usually to ``/usr/share/navit/icons/``). Originally they
 were 16x16 .xpm bitmaps; they are now .svg files that are converted to
 .png bitmaps at build time.
 
@@ -85,14 +98,14 @@ use different sizes at different zoom levels.
 
 Overriding default (shipped) layouts
 ------------------------------------
-When the XML config file is parsed, layouts are taken in the order they come, and a layout with an already existing name overrides a previous definition.
-The default (shipped) navit.xml includes first system-wide navit_layout_*.xml files then the user-specific navit_layout_*.xml files, so the system-wide navit_layout_*.xml files can be overiden by adding a user-specific navit-layout_*.xml containing the same **name** attribute.
+When the XML config file is parsed, layouts are taken in the order they come, and a layout whose name already exists is discarded; the first definition of a name wins.
+The default (shipped) navit.xml includes the user-specific navit_layout_*.xml files first, then the system-wide ones, so the system-wide layouts are only used when no user-specific layout with the same name exists. Adding a user-specific navit_layout_*.xml that reuses the **name** attribute therefore overrides the shipped layout.
 
-Copying the default **navit.xml** file to the user-specific location will still use the default shipped layout files, but copying one or several layout files as well to the user-specific location (and modifying them) allow to override these specific layouts.
+Copying the default **navit.xml** file to the user-specific location will still use the default shipped layout files, but copying one or several layout files as well to the user-specific location (and modifying them) allows overriding these specific layouts.
 
 Note on the default layout used by navit
 ----------------------------------------
-When no layout has been specifically selected by the user (for example at first startup), navit will use the default layout specified (see [[Configuration/General_Options#Default_layout|the related section to know how to configure this]]).
+When no layout has been specifically selected by the user (for example at first startup), navit will use the default layout specified (see :doc:`the related section </user/configuration/basic/general>`).
 
 Alternatively, a layout tag can carry an ``active="1"`` attribute;
 irrespective of where the layout appears in the XML file, that layout
@@ -108,7 +121,7 @@ on the actual sunrise and sunset at the current position, so the behavior
 is identical in both hemispheres.
 
 To control the switch manually, use the ``switch_layout_day_night``
-command (see [[OSD]]) with ``"manual"``, ``"auto"``, ``"manual_toggle"``,
+command (see :doc:`OSD </user/configuration/OSD>`) with ``"manual"``, ``"auto"``, ``"manual_toggle"``,
 ``"manual_day"`` or ``"manual_night"``.
 
 Setting ``tunnel_nightlayout="1"`` on the ``<navit>`` tag additionally
