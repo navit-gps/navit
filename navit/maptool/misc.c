@@ -388,49 +388,49 @@ static void tile_worker_pool_fini(void) {
     worker_count = 0;
 }
 
-static int write_tiles_for_slice(struct zip_info *zip_info) {
-    int zipfiles = 0;
+static int count_named_tiles(void) {
     int tile_count = 0;
-    int compression_level = zip_get_compression_level(zip_info);
-    int compression_method = zip_get_compression_method(zip_info);
     struct tile_head *th;
-
-    if (!worker_threads) {
-        fprintf(stderr, "Tile worker pool not initialized\n");
-        exit(1);
-    }
-
-    th = tile_head_root;
-    while (th) {
+    for (th = tile_head_root; th; th = th->next) {
         if (th->process && th->name[0])
             tile_count++;
-        th = th->next;
     }
+    return tile_count;
+}
 
+static void write_unnamed_tiles_to_index(struct zip_info *zip_info) {
+    struct tile_head *th;
     for (th = tile_head_root; th; th = th->next) {
         if (th->process && !th->name[0])
             dbg_assert(fwrite(th->zip_data, th->total_size, 1, zip_get_index(zip_info)) == 1);
     }
+}
 
-    th = tile_head_root;
-    while (th) {
+static void dispatch_named_tiles_for_compression(int compression_level, int compression_method) {
+    struct tile_head *th;
+    for (th = tile_head_root; th; th = th->next) {
         if (th->process && th->name[0]) {
             th->compression_level = compression_level;
             th->compression_method = compression_method;
             g_async_queue_push(tile_queue, th);
         }
-        th = th->next;
     }
+}
 
+static void await_compressed_tiles(int tile_count) {
     while (tile_count > 0) {
-        th = g_async_queue_pop(tile_done_queue);
+        struct tile_head *th = (struct tile_head *)g_async_queue_pop(tile_done_queue);
         if (th->total_size != th->total_size_used) {
             fprintf(stderr, "Size error '%s': %d vs %d\n", th->name, th->total_size, th->total_size_used);
             exit(1);
         }
         tile_count--;
     }
+}
 
+static int write_and_release_compressed_tiles(struct zip_info *zip_info) {
+    int zipfiles = 0;
+    struct tile_head *th;
     for (th = tile_head_root; th; th = th->next) {
         if (th->process && th->name[0]) {
             write_zipmember_raw(zip_info, th->name, zip_get_maxnamelen(zip_info), th->comp_data, th->comp_size,
@@ -442,6 +442,21 @@ static int write_tiles_for_slice(struct zip_info *zip_info) {
         }
     }
     return zipfiles;
+}
+
+static int write_tiles_for_slice(struct zip_info *zip_info) {
+    int tile_count;
+
+    if (!worker_threads) {
+        fprintf(stderr, "Tile worker pool not initialized\n");
+        exit(1);
+    }
+
+    tile_count = count_named_tiles();
+    write_unnamed_tiles_to_index(zip_info);
+    dispatch_named_tiles_for_compression(zip_get_compression_level(zip_info), zip_get_compression_method(zip_info));
+    await_compressed_tiles(tile_count);
+    return write_and_release_compressed_tiles(zip_info);
 }
 
 static int process_slice(FILE **in, FILE **reference, int in_count, int with_range, long long size, char *suffix,
