@@ -349,13 +349,15 @@ static unsigned char *binfile_read_content(struct map_priv *m, struct file *fi, 
 
     offset += sizeof(struct zip_lfh) + lfh->zipfnln;
     switch (lfh->zipmthd) {
-    case 0:
+    case ZIP_COMPRESSION_STORED:
         offset += lfh->zipxtraln;
         ret = file_data_read(fi, offset, lfh->zipuncmp);
         break;
-    case 8:
+    case ZIP_COMPRESSION_DEFLATE:
+        /* fallthrough */
+    case ZIP_COMPRESSION_LZMA:
         offset += lfh->zipxtraln;
-        ret = file_data_read_compressed(fi, offset, lfh->zipsize, lfh->zipuncmp);
+        ret = file_data_read_compressed_method(fi, offset, lfh->zipsize, lfh->zipuncmp, lfh->zipmthd);
         break;
     default:
         dbg(lvl_error, "map file %s: unknown compression method %d", fi->name, lfh->zipmthd);

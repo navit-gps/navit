@@ -4,15 +4,15 @@ maptool \- parse osm textfile and convert to Navit binfile format
 .SH SYNOPSIS
 .B For OSM XML data:
 .B bzcat planet.osm.bz2 | maptool mymap.bin
-[\-h] [\-6] [\-a <level>] [\-c] -[\-d <connect string]
+[\-h] [\-6] [\-a <level>] [\-c] [\-C <method>] [\-d <connect string]
 [\-e <phase>] [\-i <file>] [\-k] [\-M] [\-N] [\-o] [\-r <file>] [\-s <phase>]
-[\-S <size>] [\-w] [\-W] [\-U] [\-z <level>]
+[\-S <size>] [\-T <threads>] [\-w] [\-W] [\-U] [\-z <level>]
 
 .B For OSM Protobuf/PBF data:
 .B maptool \-\-protobuf \-i planet.osm.pbf planet.bin
-[\-h] [\-6] [\-a <level>] [\-c] [\-e <phase>]
+[\-h] [\-6] [\-a <level>] [\-c] [\-C <method>] [\-e <phase>]
 [\-i <file>] [\-k] [\-M] [\-N] [\-o] [\-P] [\-r <file>] [\-s <phase>]
-[\-S <size>] [\-w] [\-W] [\-U] [\-z <level>]
+[\-S <size>] [\-T <threads>] [\-w] [\-W] [\-U] [\-z <level>]
 .SH DESCRIPTION
 maptool parses osm textfile and converts it to Navit binfile format
 .SH OPTIONS
@@ -28,6 +28,10 @@ control which data is included in the debug attribute
 .TP
 \-c (\-\-dump-coordinates)
 dump coordinates after phase 1
+.TP
+\-C (\-\-compression-method) <method>
+select compression method: zlib or lzma (default zlib).
+lzma is only available if maptool was built with liblzma support.
 .TP
 \-d (\-\-db) <connect string>
 get osm data out of a postgresql database with osm simple scheme and given connect string
@@ -73,6 +77,10 @@ Smaller slices reduce peak memory usage, at the cost of increased processing tim
 \-t (\-\-timestamp) <y-m-dTh:m:s>
 set zip timestamp
 .TP
+\-T (\-\-threads) <count>
+number of worker threads for tile compression (default: auto-detect CPU count).
+Set to 1 to disable threading.
+.TP
 \-w (\-\-dedupe-ways)
 ensure no duplicate ways or nodes. useful when using several input files
 .TP
@@ -86,7 +94,7 @@ add objects with unknown country to index
 set maximum country index size in bytes
 .TP
 \-z (\-\-compression-level) <level>
-set the compression level
+set the compression level (1-9 for zlib, 1-9 for lzma, default 6)
 .SH BUGS
 Should you find one, please report it :
  http://trac.navit-project.org
