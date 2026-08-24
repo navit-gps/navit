@@ -1942,6 +1942,8 @@ static int route_time_seg(struct vehicleprofile *profile, struct route_segment_d
 
     if (speed)
         time = over->len * MPS_TO_KPH * 10 / speed + (dist ? dist->delay : 0);
+    if (!time)
+        time = 1;
 
     return time;
 }
@@ -2715,6 +2717,15 @@ void route_recalculate_partial(struct route *this_) {
     route_path_update_done(this_, 0);
 }
 
+static int route_graph_count_points(struct route_graph *this) {
+    int i, count = 0;
+    struct route_graph_point *p;
+    for (i = 0; i < HASH_SIZE; i++)
+        for (p = this->hash[i]; p; p = p->hash_next)
+            count++;
+    return count;
+}
+
 /**
  * @brief Starts an "offroad" path
  *
@@ -2817,6 +2828,7 @@ static struct route_path *route_path_new(struct route_graph *this, struct route_
     int segs = 0, dir;                    /* number of segments added to graph, direction of first segment */
     int val1 = INT_MAX, val2 = INT_MAX;   /* total cost for s1 and s2, respectively */
     int val, val1_new, val2_new;
+    int max_segs;
     struct route_path *ret;
 
     if (!pos->street || !dst->street) {
@@ -2897,8 +2909,15 @@ static struct route_path *route_path_new(struct route_graph *this, struct route_
     ret->path_hash = item_hash_new();
     dstinfo = NULL;
     posinfo = pos;
+    max_segs = route_graph_count_points(this);
     while (s && !dstinfo) { /* following start->seg, which indicates the least costly way to reach our destination */
         segs++;
+        if (segs > max_segs) {
+            dbg(lvl_error, "path walk aborted after %d segments for a graph with %d points: seg chain is cyclic", segs,
+                max_segs);
+            route_path_destroy(ret, 0);
+            return NULL;
+        }
         if (s->start == start) {
             if (item_is_equal(s->data.item, dst->street->item) && (s->end->seg == s || !posinfo))
                 dstinfo = dst;
