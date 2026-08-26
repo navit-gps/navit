@@ -16,6 +16,7 @@
 package org.navitproject.navit;
 
 import static org.navitproject.navit.NavitAppConfig.getTstring;
+import static org.navitproject.navit.NavitMapDownloader.getMapSize;
 
 import android.Manifest;
 import android.app.Activity;
@@ -125,7 +126,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
                         HashMap<String, String> currentPositionMapChild = new HashMap<>();
                         currentPositionMapChild.put("map_name", NavitMapDownloader.osm_maps[currentMapIndex].mMapName
                                     + " "
-                                    + (NavitMapDownloader.osm_maps[currentMapIndex].mEstSizeBytes / 1024 / 1024)
+                                    + (getMapSize(currentMapIndex) / 1024 / 1024)
                                     + "MB");
                         currentPositionMapChild.put("map_index", String.valueOf(currentMapIndex));
 
@@ -172,7 +173,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
             HashMap<String, String> child = new HashMap<>();
             child.put("map_name", (osmMaps[currentMapIndex].mLevel > 1 ? MAP_BULLETPOINT : "")
                     + osmMaps[currentMapIndex].mMapName + " "
-                    + (osmMaps[currentMapIndex].mEstSizeBytes / 1024 / 1024) + "MB");
+                    + (getMapSize(currentMapIndex) / 1024 / 1024) + "MB");
             child.put("map_index", String.valueOf(currentMapIndex));
 
             secList.add(child);
@@ -199,7 +200,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         if (mapIndex != null) {
             int mi = Integer.parseInt(mapIndex);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N
-                    && NavitMapDownloader.osm_maps[mi].mEstSizeBytes >= Math.pow(2, 32) * 0.95) {
+                    && getMapSize(mi) >= Math.pow(2, 32) * 0.95) {
                 // limit map download size to 3.8GiB on Android versions before Nougat
                 NavitDialogs.sendDialogMessage(NavitDialogs.MSG_TOAST_LONG, null,
                         getTstring(R.string.map_download_oversize),
