@@ -61,13 +61,12 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        updateGithubMetaData();
 
         if (sAdapter == null) {
             sAdapter = createAdapter();
         }
 
-        // todo add async function to download the github file
-        updateGithubMetaData();
         updateDownloadedMaps();
         updateMapsForLocation();
         setListAdapter(sAdapter);
