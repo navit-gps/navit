@@ -685,7 +685,7 @@ public class NavitMapDownloader extends Thread {
 	    BufferedReader br = new BufferedReader(new InputStreamReader(is));
 	    String data = br.readLine();
 	    int ind_dataset = data.indexOf(osm_maps[mapId].mSubMaps[subMapIndex]);
-	    int ind_colon = data.indexOf("size", ind_dataset) + 6;
+	    int ind_colon = data.indexOf("size", ind_dataset) +9;
 	    int ind_comma = data.indexOf(",", ind_colon);
         Log.e(TAG, "number to be converted:" + data.substring(ind_colon, ind_comma));
 
@@ -699,7 +699,7 @@ public class NavitMapDownloader extends Thread {
 
     private static long getEstSizeBytes(int mapId, int subMapIndex, String githubMetadata) {
             int ind_dataset = githubMetadata.indexOf(osm_maps[mapId].mSubMaps[subMapIndex]);
-            int ind_colon = githubMetadata.indexOf("size", ind_dataset) + 6;
+            int ind_colon = githubMetadata.indexOf("size", ind_dataset) + 9;
             int ind_comma = githubMetadata.indexOf(",", ind_colon);
             Log.e(TAG, "number to be converted:" + githubMetadata.substring(ind_colon, ind_comma));
             return Math.max(Long.valueOf(githubMetadata.substring(ind_colon, ind_comma)), 0);
