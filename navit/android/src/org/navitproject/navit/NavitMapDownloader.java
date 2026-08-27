@@ -88,7 +88,6 @@ static String[] world = {"africa-algeria", "africa-angola", "africa-benin", "afr
 
     static final OsmMapValues[] osm_maps = {
 
-        // size estimations updated 2019-10-28
         new OsmMapValues(R.string.whole_planet, "-180", "-90", "180", "90",
                          0, world),
         new OsmMapValues(R.string.africa, "-30.89", "-36.17", "61.68", "38.40",
@@ -687,7 +686,9 @@ static String[] world = {"africa-algeria", "africa-angola", "africa-benin", "afr
 	    int ind_dataset = data.indexOf(osm_maps[mapId].mSubMaps[subMapIndex]);
 	    int ind_colon = data.indexOf("size", ind_dataset + 6);
 	    int ind_comma = data.indexOf(",", ind_colon);
-	    return Long.valueOf(data.substring(ind_colon, ind_comma));
+        Log.e(TAG, "number to be converted:" + data.substring(ind_colon, ind_comma));
+
+        return Math.max(Long.valueOf(data.substring(ind_colon, ind_comma)), 0);
 	} catch (IOException e) {
             Log.e(TAG, "We failed to retrieve the date. ");
             e.printStackTrace();
@@ -699,7 +700,8 @@ static String[] world = {"africa-algeria", "africa-angola", "africa-benin", "afr
             int ind_dataset = githubMetadata.indexOf(osm_maps[mapId].mSubMaps[subMapIndex]);
             int ind_colon = githubMetadata.indexOf("size", ind_dataset + 6);
             int ind_comma = githubMetadata.indexOf(",", ind_colon);
-            return Long.valueOf(githubMetadata.substring(ind_colon, ind_comma));
+            Log.e(TAG, "number to be converted:" + githubMetadata.substring(ind_colon, ind_comma));
+            return Math.max(Long.valueOf(githubMetadata.substring(ind_colon, ind_comma)), 0);
     }
 
     public static long getMapSize(int mapId) {
