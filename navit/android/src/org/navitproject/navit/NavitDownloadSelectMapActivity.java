@@ -110,7 +110,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
             }
         });
         thread.run();
-        thread.join();
+        //thread.join();
     }
 
     private void updateDownloadedMaps() {
