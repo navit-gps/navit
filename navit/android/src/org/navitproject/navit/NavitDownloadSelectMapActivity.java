@@ -86,21 +86,18 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
     }
 
     private void updateGithubMetaData() {
-        URL url;
         try {
-            url = new URL("https://api.github.com/repositories/384098365/releases/latest");
+            URL url = new URL("https://api.github.com/repositories/384098365/releases/latest");
             InputStream is = url.openStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             githubMetadata = br.readLine();
         } catch (MalformedURLException e) {
             Log.e(TAG, "We failed to create a URL to download the github api file.");
             e.printStackTrace();
-            return;
         }
         catch (IOException e) {
             Log.e(TAG, "We failed to retrieve the date. ");
             e.printStackTrace();
-            return;
         }
     }
 
