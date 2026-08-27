@@ -58,15 +58,21 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
 
     private static String githubMetadata = "";
 
+
     @Override
     public void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
+
         try {
             updateGithubMetaData();
         } catch (InterruptedException e) {
             Log.e(TAG, "We failed to download the github api file.");
             e.printStackTrace();
             throw new RuntimeException("failed to download github api file.");
+        }
+
+        while (true) {
+            if (githubMetadata != "") break;
         }
 
         if (sAdapter == null) {
@@ -109,8 +115,10 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
                 }
             }
         });
-        thread.run();
-        //thread.join();
+        thread.start();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            thread.onSpinWait();
+        }
     }
 
     private void updateDownloadedMaps() {
