@@ -59,9 +59,15 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
     private static String githubMetadata = "";
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
-        updateGithubMetaData();
+        try {
+            updateGithubMetaData();
+        } catch (InterruptedException e) {
+            Log.e(TAG, "We failed to download the github api file.");
+            e.printStackTrace();
+            throw new RuntimeException("failed to download github api file.");
+        }
 
         if (sAdapter == null) {
             sAdapter = createAdapter();
@@ -84,20 +90,27 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         }
     }
 
-    private void updateGithubMetaData() {
-        try {
-            URL url = new URL("https://api.github.com/repositories/384098365/releases/latest");
-            InputStream is = url.openStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            githubMetadata = br.readLine();
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "We failed to create a URL to download the github api file.");
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            Log.e(TAG, "We failed to retrieve the date. ");
-            e.printStackTrace();
-        }
+    private void updateGithubMetaData() throws InterruptedException {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL("https://api.github.com/repositories/384098365/releases/latest");
+                    InputStream is = url.openStream();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                    githubMetadata = br.readLine();         // Your code goes here
+                } catch (MalformedURLException e) {
+                    Log.e(TAG, "We failed to create a URL to download the github api file.");
+                    e.printStackTrace();
+                }
+                catch (IOException e) {
+                    Log.e(TAG, "We failed to retrieve the date. ");
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.run();
+        thread.join();
     }
 
     private void updateDownloadedMaps() {
