@@ -677,7 +677,7 @@ static String[] world = {"africa-algeria", "africa-angola", "africa-benin", "afr
         } catch (MalformedURLException e) {
             Log.e(TAG, "We failed to create a URL to download the github api file.");
             e.printStackTrace();
-            return -1;
+            return 0;
         }
 
 	try {
@@ -691,7 +691,7 @@ static String[] world = {"africa-algeria", "africa-angola", "africa-benin", "afr
 	} catch (IOException e) {
             Log.e(TAG, "We failed to retrieve the date. ");
             e.printStackTrace();
-            return -1;
+            return 0;
         }
     }
 
