@@ -649,25 +649,25 @@ static String[] world = {"africa-algeria", "africa-angola", "africa-benin", "afr
 
     private String getLatestDate() {
         URL url;
-	try {
-	    url = new URL("https://api.github.com/repositories/384098365/releases/latest");
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "We failed to create a URL to download the github api file.");
-            e.printStackTrace();
-            return "";
-        }
+        try {
+            url = new URL("https://api.github.com/repositories/384098365/releases/latest");
+            } catch (MalformedURLException e) {
+                Log.e(TAG, "We failed to create a URL to download the github api file.");
+                e.printStackTrace();
+                return "";
+            }
 
-	try {
-	    InputStream is = url.openStream();
-	    BufferedReader br = new BufferedReader(new InputStreamReader(is));
-	    String data = br.readLine();
-	    int ind = data.indexOf("/tarball/");
-	    return data.substring(ind + 9, ind + 19);
-	} catch (IOException e) {
-            Log.e(TAG, "We failed to retrieve the date. ");
-            e.printStackTrace();
-            return (String) "";
-        }
+        try {
+            InputStream is = url.openStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            String data = br.readLine();
+            int ind = data.indexOf("/tarball/");
+            return data.substring(ind + 9, ind + 19);
+        } catch (IOException e) {
+                Log.e(TAG, "We failed to retrieve the date. ");
+                e.printStackTrace();
+                return (String) "";
+            }
     }
 
     private static long getEstSizeBytes(int mapId, int subMapIndex) {
@@ -695,12 +695,28 @@ static String[] world = {"africa-algeria", "africa-angola", "africa-benin", "afr
         }
     }
 
+    private static long getEstSizeBytes(int mapId, int subMapIndex, String githubMetadata) {
+            int ind_dataset = githubMetadata.indexOf(osm_maps[mapId].mSubMaps[subMapIndex]);
+            int ind_colon = githubMetadata.indexOf("size", ind_dataset + 6);
+            int ind_comma = githubMetadata.indexOf(",", ind_colon);
+            return Long.valueOf(githubMetadata.substring(ind_colon, ind_comma));
+    }
+
     public static long getMapSize(int mapId) {
         long size = 0;
 
-	for (int subMapIndex = 0; subMapIndex < osm_maps[mapId].mSubMaps.length; subMapIndex++) {
+        for (int subMapIndex = 0; subMapIndex < osm_maps[mapId].mSubMaps.length; subMapIndex++) {
             size += getEstSizeBytes(subMapIndex, mapId);
-	}
+        }
+        return size;
+    }
+
+    public static long getMapSize(int mapId, String githubMetadata) {
+        long size = 0;
+
+        for (int subMapIndex = 0; subMapIndex < osm_maps[mapId].mSubMaps.length; subMapIndex++) {
+            size += getEstSizeBytes(subMapIndex, mapId, githubMetadata);
+        }
         return size;
     }
 
