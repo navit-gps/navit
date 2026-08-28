@@ -707,8 +707,6 @@ public class NavitMapDownloader extends Thread {
                 int ind_dataset = githubMetadata.indexOf(osm_maps[mapId].mSubMaps[subMapIndex]);
                 int ind_colon = githubMetadata.indexOf("size", ind_dataset) + 6;
                 int ind_comma = githubMetadata.indexOf(",", ind_colon);
-                Log.e(TAG, "map to be processed: " + osm_maps[mapId].mSubMaps[subMapIndex]);
-                Log.e(TAG, "number to be converted:" + githubMetadata.substring(ind_colon, ind_comma));
                 return Math.max(Long.valueOf(githubMetadata.substring(ind_colon, ind_comma)), 0);
             } else {
                 return 0;
@@ -728,7 +726,7 @@ public class NavitMapDownloader extends Thread {
         long size = 0;
 
         for (int subMapIndex = 0; subMapIndex < osm_maps[mapId].mSubMaps.length; subMapIndex++) {
-            size += getEstSizeBytes(subMapIndex, mapId, githubMetadata);
+            size += getEstSizeBytes(mapId, subMapIndex, githubMetadata);
         }
         return size;
     }
