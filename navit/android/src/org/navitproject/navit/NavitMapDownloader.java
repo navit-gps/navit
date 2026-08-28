@@ -495,23 +495,24 @@ public class NavitMapDownloader extends Thread {
                      && !mStopMe);
 
             if (success) {
-                //toast(mMapValues.mSubMaps[subMapIndex] + " " + getTstring(R.string.map_download_ready));
+                toast(mMapValues.mSubMaps[subMapIndex] + " " + getTstring(R.string.map_download_ready));
                 getMapInfoFile(subMapIndex).delete();
                 Log.d(TAG, "success");
             }
 
-            if (success || mStopMe) {
-                NavitDialogs.sendDialogMessage(NavitDialogs.MSG_MAP_DOWNLOAD_FINISHED,
-                                               Navit.sMapFilenamePath + mMapValues.mSubMaps[subMapIndex] + ".bin",
-                                               null,
-                                               -1,
-                                               success ? 1 : 0,
-                                               mMapId);
-            }
     	}
-        /*if (success) {
+        if (success || mStopMe) {
+            NavitDialogs.sendDialogMessage(NavitDialogs.MSG_MAP_DOWNLOAD_FINISHED,
+                    Navit.sMapFilenamePath + mMapValues.mSubMaps[0] + ".bin",
+                    null,
+                    -1,
+                    success ? 1 : 0,
+                    mMapId);
+        }
+
+        if (success) {
             toast(mMapValues.mMapName + " " + getTstring(R.string.map_download_ready));
-        }*/
+        }
 
 
     }

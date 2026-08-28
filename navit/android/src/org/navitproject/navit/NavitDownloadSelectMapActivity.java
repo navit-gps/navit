@@ -104,7 +104,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
                     URL url = new URL("https://api.github.com/repositories/384098365/releases/latest");
                     InputStream is = url.openStream();
                     BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                    githubMetadata = br.readLine();         // Your code goes here
+                    githubMetadata = br.readLine();
                 } catch (MalformedURLException e) {
                     Log.e(TAG, "We failed to create a URL to download the github api file.");
                     e.printStackTrace();
