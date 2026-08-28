@@ -696,7 +696,7 @@ public class NavitMapDownloader extends Thread {
             return 0;
         }
 	} catch (IOException e) {
-            Log.e(TAG, "We failed to retrieve the date. ");
+            Log.e(TAG, "We failed to retrieve the size. ");
             e.printStackTrace();
             return 0;
         }
@@ -815,7 +815,13 @@ public class NavitMapDownloader extends Thread {
         try {
             while (!mStopMe && (len1 = bif.read(buffer)) != -1) {
                 alreadyRead += len1;
-                updateProgress(startTimestamp, startOffset, alreadyRead, getEstSizeBytes(this.mMapId, subMapIndex));
+
+                long totalSize = getEstSizeBytes(this.mMapId, subMapIndex);
+                if (totalSize==0) {
+                    return false;
+                }
+
+                updateProgress(startTimestamp, startOffset, alreadyRead, totalSize);
 
                 try {
                     buf.write(buffer, 0, len1);
