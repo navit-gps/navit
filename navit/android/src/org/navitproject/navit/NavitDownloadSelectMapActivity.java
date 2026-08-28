@@ -35,6 +35,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,13 +56,29 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
     private static boolean sCurrentLocationKnown = false;
     private static final String TAG = "DownloadSelectMapAct";
 
+    private static String githubMetadata = "";
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        try {
+            updateGithubMetaData();
+        } catch (InterruptedException e) {
+            Log.e(TAG, "We failed to download the github api file.");
+            e.printStackTrace();
+            throw new RuntimeException("failed to download github api file.");
+        }
+
+        while (true) {
+            if (githubMetadata != "") break;
+        }
+
         if (sAdapter == null) {
             sAdapter = createAdapter();
         }
+
         updateDownloadedMaps();
         updateMapsForLocation();
         setListAdapter(sAdapter);
@@ -73,6 +96,30 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         }
     }
 
+    private void updateGithubMetaData() throws InterruptedException {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL("https://api.github.com/repositories/384098365/releases/latest");
+                    InputStream is = url.openStream();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                    githubMetadata = br.readLine();
+                } catch (MalformedURLException e) {
+                    Log.e(TAG, "We failed to create a URL to download the github api file.");
+                    e.printStackTrace();
+                }
+                catch (IOException e) {
+                    Log.e(TAG, "We failed to retrieve the date. ");
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            thread.onSpinWait();
+        }
+    }
 
     private void updateDownloadedMaps() {
         sDownloadedMapsChilds.clear();
@@ -125,7 +172,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
                         HashMap<String, String> currentPositionMapChild = new HashMap<>();
                         currentPositionMapChild.put("map_name", NavitMapDownloader.osm_maps[currentMapIndex].mMapName
                                     + " "
-                                    + (NavitMapDownloader.osm_maps[currentMapIndex].mEstSizeBytes / 1024 / 1024)
+                                    + (NavitMapDownloader.getMapSize(currentMapIndex, githubMetadata) / 1024 / 1024)
                                     + "MB");
                         currentPositionMapChild.put("map_index", String.valueOf(currentMapIndex));
 
@@ -172,7 +219,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
             HashMap<String, String> child = new HashMap<>();
             child.put("map_name", (osmMaps[currentMapIndex].mLevel > 1 ? MAP_BULLETPOINT : "")
                     + osmMaps[currentMapIndex].mMapName + " "
-                    + (osmMaps[currentMapIndex].mEstSizeBytes / 1024 / 1024) + "MB");
+                    + (NavitMapDownloader.getMapSize(currentMapIndex, githubMetadata) / 1024 / 1024) + "MB");
             child.put("map_index", String.valueOf(currentMapIndex));
 
             secList.add(child);
@@ -199,7 +246,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
         if (mapIndex != null) {
             int mi = Integer.parseInt(mapIndex);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N
-                    && NavitMapDownloader.osm_maps[mi].mEstSizeBytes >= Math.pow(2, 32) * 0.95) {
+                    && NavitMapDownloader.getMapSize(mi, githubMetadata) >= Math.pow(2, 32) * 0.95) {
                 // limit map download size to 3.8GiB on Android versions before Nougat
                 NavitDialogs.sendDialogMessage(NavitDialogs.MSG_TOAST_LONG, null,
                         getTstring(R.string.map_download_oversize),
