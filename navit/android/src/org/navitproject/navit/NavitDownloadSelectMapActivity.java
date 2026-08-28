@@ -217,6 +217,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
             }
 
             HashMap<String, String> child = new HashMap<>();
+            Log.d(TAG, "currentMapIndex in createAdapter:" + currentMapIndex);
             child.put("map_name", (osmMaps[currentMapIndex].mLevel > 1 ? MAP_BULLETPOINT : "")
                     + osmMaps[currentMapIndex].mMapName + " "
                     + (NavitMapDownloader.getMapSize(currentMapIndex, githubMetadata) / 1024 / 1024) + "MB");
