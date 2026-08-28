@@ -441,9 +441,6 @@ public class NavitMapDownloader extends Thread {
     private Boolean mRetryDownload = false; //Download failed, but
     private int mRetryCounter = 0;
 
-
-
-
     NavitMapDownloader(int mapId) {
         this.mMapValues = osm_maps[mapId];
         this.mMapId = mapId;
@@ -514,7 +511,6 @@ public class NavitMapDownloader extends Thread {
             toast(mMapValues.mMapName + " " + getTstring(R.string.map_download_ready));
         }
 
-
     }
 
     void stop_thread() {
@@ -561,7 +557,6 @@ public class NavitMapDownloader extends Thread {
         return false;
     }
 
-
     private boolean download_osm_map(int subMapIndex) {
         long alreadyRead = 0;
         long realSizeBytes;
@@ -595,7 +590,7 @@ public class NavitMapDownloader extends Thread {
 
             long fileTime = c.getLastModified();
 
-           if (!resume) {
+            if (!resume) {
                 outputFile.delete();
                 writeFileInfo(c, realSizeBytes, subMapIndex);
             }

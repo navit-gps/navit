@@ -54,13 +54,13 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
     private static ArrayList<HashMap<String, String>> sDownloadedMapsChilds = null;
     private static ArrayList<HashMap<String, String>> sMapsCurrentPositionChilds = null;
     private static boolean sCurrentLocationKnown = false;
-    private static final String TAG = "NavitSelectMapAct";
+    private static final String TAG = "DownloadSelectMapAct";
 
     private static String githubMetadata = "";
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState)  {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         try {
