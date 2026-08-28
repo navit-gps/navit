@@ -54,7 +54,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
     private static ArrayList<HashMap<String, String>> sDownloadedMapsChilds = null;
     private static ArrayList<HashMap<String, String>> sMapsCurrentPositionChilds = null;
     private static boolean sCurrentLocationKnown = false;
-    private static final String TAG = "DownloadSelectMapAct";
+    private static final String TAG = "NavitDownloadSelectMapAct";
 
     private static String githubMetadata = "";
 
