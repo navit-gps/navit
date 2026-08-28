@@ -495,7 +495,7 @@ public class NavitMapDownloader extends Thread {
                      && !mStopMe);
 
             if (success) {
-                toast(mMapValues.mSubMaps[subMapIndex] + " " + getTstring(R.string.map_download_ready));
+                //toast(mMapValues.mSubMaps[subMapIndex] + " " + getTstring(R.string.map_download_ready));
                 getMapInfoFile(subMapIndex).delete();
                 Log.d(TAG, "success");
             }
