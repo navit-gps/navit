@@ -717,7 +717,7 @@ public class NavitMapDownloader extends Thread {
         long size = 0;
 
         for (int subMapIndex = 0; subMapIndex < osm_maps[mapId].mSubMaps.length; subMapIndex++) {
-            size += getEstSizeBytes(subMapIndex, mapId);
+            size += getEstSizeBytes(mapId, subMapIndex);
         }
         return size;
     }
