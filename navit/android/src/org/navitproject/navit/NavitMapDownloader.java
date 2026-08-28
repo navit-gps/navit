@@ -684,12 +684,17 @@ public class NavitMapDownloader extends Thread {
 	    InputStream is = url.openStream();
 	    BufferedReader br = new BufferedReader(new InputStreamReader(is));
 	    String data = br.readLine();
-	    int ind_dataset = data.indexOf(osm_maps[mapId].mSubMaps[subMapIndex]);
-	    int ind_colon = data.indexOf("size", ind_dataset) +6;
-	    int ind_comma = data.indexOf(",", ind_colon);
-        Log.e(TAG, "map to be processed: " + osm_maps[mapId].mSubMaps[subMapIndex]);
-        Log.e(TAG, "number to be converted:" + data.substring(ind_colon, ind_comma));
-        return Math.max(Long.valueOf(data.substring(ind_colon, ind_comma)), 0);
+        if (subMapIndex < osm_maps[mapId].mSubMaps.length) {
+            int ind_dataset = data.indexOf(osm_maps[mapId].mSubMaps[subMapIndex]);
+            int ind_colon = data.indexOf("size", ind_dataset) + 6;
+            int ind_comma = data.indexOf(",", ind_colon);
+            Log.e(TAG, "map to be processed: " + osm_maps[mapId].mSubMaps[subMapIndex]);
+            Log.e(TAG, "number to be converted:" + data.substring(ind_colon, ind_comma));
+            return Math.max(Long.valueOf(data.substring(ind_colon, ind_comma)), 0);
+        }
+        else {
+            return 0;
+        }
 	} catch (IOException e) {
             Log.e(TAG, "We failed to retrieve the date. ");
             e.printStackTrace();
@@ -698,12 +703,16 @@ public class NavitMapDownloader extends Thread {
     }
 
     private static long getEstSizeBytes(int mapId, int subMapIndex, String githubMetadata) {
-            int ind_dataset = githubMetadata.indexOf(osm_maps[mapId].mSubMaps[subMapIndex]);
-            int ind_colon = githubMetadata.indexOf("size", ind_dataset) + 6;
-            int ind_comma = githubMetadata.indexOf(",", ind_colon);
-            Log.e(TAG, "map to be processed: " + osm_maps[mapId].mSubMaps[subMapIndex]);
-            Log.e(TAG, "number to be converted:" + githubMetadata.substring(ind_colon, ind_comma));
-            return Math.max(Long.valueOf(githubMetadata.substring(ind_colon, ind_comma)), 0);
+            if (subMapIndex < osm_maps[mapId].mSubMaps.length) {
+                int ind_dataset = githubMetadata.indexOf(osm_maps[mapId].mSubMaps[subMapIndex]);
+                int ind_colon = githubMetadata.indexOf("size", ind_dataset) + 6;
+                int ind_comma = githubMetadata.indexOf(",", ind_colon);
+                Log.e(TAG, "map to be processed: " + osm_maps[mapId].mSubMaps[subMapIndex]);
+                Log.e(TAG, "number to be converted:" + githubMetadata.substring(ind_colon, ind_comma));
+                return Math.max(Long.valueOf(githubMetadata.substring(ind_colon, ind_comma)), 0);
+            } else {
+                return 0;
+            }
     }
 
     public static long getMapSize(int mapId) {
