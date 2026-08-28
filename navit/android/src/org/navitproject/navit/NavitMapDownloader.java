@@ -508,10 +508,10 @@ public class NavitMapDownloader extends Thread {
                                                success ? 1 : 0,
                                                mMapId);
             }
-	}
-        if (success) {
+    	}
+        /*if (success) {
             toast(mMapValues.mMapName + " " + getTstring(R.string.map_download_ready));
-        }
+        }*/
 
 
     }
@@ -846,7 +846,7 @@ public class NavitMapDownloader extends Thread {
             }
 
             if (mStopMe) {
-                toast(getTstring(R.string.map_download_download_aborted));
+                //toast(getTstring(R.string.map_download_download_aborted));
             } else if (alreadyRead < totalSize) {
                 Log.d(TAG, "Server send only " + alreadyRead + " bytes of " + totalSize);
                 enableRetry();
