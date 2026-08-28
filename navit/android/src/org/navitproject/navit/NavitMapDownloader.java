@@ -812,14 +812,15 @@ public class NavitMapDownloader extends Thread {
         long startOffset = alreadyRead;
         boolean success = false;
 
+
+        long totalSize = getEstSizeBytes(this.mMapId, subMapIndex);
+        if (totalSize==0) {
+            return false;
+        }
+
         try {
             while (!mStopMe && (len1 = bif.read(buffer)) != -1) {
                 alreadyRead += len1;
-
-                long totalSize = getEstSizeBytes(this.mMapId, subMapIndex);
-                if (totalSize==0) {
-                    return false;
-                }
 
                 updateProgress(startTimestamp, startOffset, alreadyRead, totalSize);
 
@@ -827,16 +828,16 @@ public class NavitMapDownloader extends Thread {
                     buf.write(buffer, 0, len1);
                 } catch (IOException e) {
                     Log.d(TAG, "Error: " + e);
-                    if (!checkFreeSpace(getEstSizeBytes(this.mMapId, subMapIndex) - alreadyRead + MAP_WRITE_FILE_BUFFER)) {
+                    if (!checkFreeSpace(totalSize - alreadyRead + MAP_WRITE_FILE_BUFFER)) {
                         if (deleteMap(subMapIndex)) {
                             enableRetry();
                         } else {
-                            updateProgress(alreadyRead, getEstSizeBytes(this.mMapId, subMapIndex),
+                            updateProgress(alreadyRead, totalSize,
                                            getTstring(R.string.map_download_download_error) + "\n"
                                            + getTstring(R.string.map_download_not_enough_free_space));
                         }
                     } else {
-                        updateProgress(alreadyRead, getEstSizeBytes(this.mMapId, subMapIndex),
+                        updateProgress(alreadyRead, totalSize,
                                        getTstring(R.string.map_download_error_writing_map));
                     }
 
@@ -846,8 +847,8 @@ public class NavitMapDownloader extends Thread {
 
             if (mStopMe) {
                 toast(getTstring(R.string.map_download_download_aborted));
-            } else if (alreadyRead < getEstSizeBytes(this.mMapId, subMapIndex)) {
-                Log.d(TAG, "Server send only " + alreadyRead + " bytes of " + getEstSizeBytes(this.mMapId, subMapIndex));
+            } else if (alreadyRead < totalSize) {
+                Log.d(TAG, "Server send only " + alreadyRead + " bytes of " + totalSize);
                 enableRetry();
             } else {
                 success = true;
@@ -856,7 +857,7 @@ public class NavitMapDownloader extends Thread {
             Log.d(TAG, "Error: " + e);
 
             enableRetry();
-            updateProgress(alreadyRead, getEstSizeBytes(this.mMapId, subMapIndex),
+            updateProgress(alreadyRead, totalSize,
                            getTstring(R.string.map_download_download_error));
         }
 
