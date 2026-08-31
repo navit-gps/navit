@@ -7,15 +7,17 @@ msgstr ""
 "Project-Id-Version: navit 0.5.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-16 19:22+0100\n"
-"PO-Revision-Date: 2015-05-14 13:03+0200\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-09-01 05:51+0000\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Language-Team: Georgian <https://hosted.weblate.org/projects/navit/navit-"
+"core/ka/>\n"
 "Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 
 msgid "Running from source directory\n"
 msgstr ""
@@ -30,59 +32,59 @@ msgstr ""
 
 #. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
-msgstr ""
+msgstr "მენულე"
 
 msgid "first"
-msgstr ""
+msgstr "პირველი"
 
 msgid "second"
-msgstr ""
+msgstr "წამი"
 
 msgid "third"
-msgstr ""
+msgstr "მესამე"
 
 msgid "fourth"
-msgstr ""
+msgstr "მეოთხე"
 
 msgid "fifth"
-msgstr ""
+msgstr "მეხუთე"
 
 msgid "sixth"
-msgstr ""
+msgstr "მეექვსე"
 
 #. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
-msgstr ""
+msgstr "მენულე გასასვლელი"
 
 msgid "first exit"
-msgstr ""
+msgstr "პირველი გასასვლელი"
 
 msgid "second exit"
-msgstr ""
+msgstr "მეორე გასასვლელი"
 
 msgid "third exit"
-msgstr ""
+msgstr "მესამე გასასვლელი"
 
 msgid "fourth exit"
-msgstr ""
+msgstr "მეოთხე გასასვლელი"
 
 msgid "fifth exit"
-msgstr ""
+msgstr "მეხუთე გასასვლელი"
 
 msgid "sixth exit"
-msgstr ""
+msgstr "მეექვსე გასასვლელი"
 
 #, c-format
 msgid "%d feet"
-msgstr ""
+msgstr "%d ფუტი"
 
 #, c-format
 msgid "in %d feet"
-msgstr ""
+msgstr "%d ფუტში"
 
 #, c-format
 msgid "%d.%d miles"
-msgstr ""
+msgstr "%d.%d მილი"
 
 #, c-format
 msgid "in %d.%d miles"
@@ -91,42 +93,42 @@ msgstr ""
 #, c-format
 msgid "one mile"
 msgid_plural "%d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ერთი მილი"
+msgstr[1] "%d მილი"
 
 #, c-format
 msgid "in one mile"
 msgid_plural "in %d miles"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ერთ მილში"
+msgstr[1] "%d მილში"
 
 #, c-format
 msgid "%d meters"
-msgstr ""
+msgstr "%d მეტრი"
 
 #, c-format
 msgid "in %d meters"
-msgstr ""
+msgstr "%d მეტრში"
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr ""
+msgstr "%d.%d კილომეტრი"
 
 #, c-format
 msgid "in %d.%d kilometers"
-msgstr ""
+msgstr "%d.%d კილომეტრში"
 
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ერთი კილომეტრი"
+msgstr[1] "%d კილომეტრი"
 
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ერთი კილომეტრში"
+msgstr[1] "%d კილომეტრში"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Systematic Street Name 3: Separator (Space if required), 4: Street Name
 #, c-format
@@ -210,13 +212,13 @@ msgid "Leave the roundabout at the %1$s %2$s"
 msgstr ""
 
 msgid "soon"
-msgstr ""
+msgstr "მალე"
 
 msgid "now"
-msgstr ""
+msgstr "ახლა"
 
 msgid "then"
-msgstr ""
+msgstr "შემდეგ"
 
 #. TRANSLATORS: the arg. is the phrase 'onto ...'. Right merge, the stuff after | doesn't have to be included.
 #, c-format
@@ -293,19 +295,19 @@ msgstr ""
 
 #. TRANSLATORS: "right" as in "turn right"
 msgid "right"
-msgstr ""
+msgstr "მარჯვენა"
 
 #. TRANSLATORS: "left" as in "turn left"
 msgid "left"
-msgstr ""
+msgstr "დარჩა"
 
 #. TRANSLATORS: as in "turn easily right"
 msgid "easily "
-msgstr ""
+msgstr "იოლად "
 
 #. TRANSLATORS: as in "turn strongly right"
 msgid "strongly "
-msgstr ""
+msgstr "მკვეთრად "
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
@@ -355,7 +357,7 @@ msgstr ""
 #. *
 #.
 msgid "follow"
-msgstr ""
+msgstr "მიყოლა"
 
 msgid "then you have reached your destination."
 msgstr ""
@@ -369,32 +371,32 @@ msgid "Interchange"
 msgstr ""
 
 msgid "Exit"
-msgstr ""
+msgstr "გასვლა"
 
 #. Android resource: @strings/position_popup_title
 msgid "Position"
-msgstr ""
+msgstr "პოზიცია"
 
 msgid "Command"
-msgstr ""
+msgstr "ბრძანება"
 
 msgid "Length"
-msgstr ""
+msgstr "სიგრძე"
 
 msgid "mi"
-msgstr ""
+msgstr "მი"
 
 msgid "km"
-msgstr ""
+msgstr "კმ"
 
 msgid "feet"
-msgstr ""
+msgstr "ფუტი"
 
 msgid "m"
-msgstr ""
+msgstr "წთ"
 
 msgid "Time"
-msgstr ""
+msgstr "დრო"
 
 msgid "Destination Length"
 msgstr ""
@@ -431,32 +433,32 @@ msgstr ""
 
 #. 020
 msgid "Andorra"
-msgstr ""
+msgstr "ანდორა"
 
 #. 784
 msgid "United Arab Emirates"
-msgstr ""
+msgstr "არაბეთის გაერთიანებული ემირატები"
 
 #. 004
 msgid "Afghanistan"
-msgstr ""
+msgstr "ავღანეთი"
 
 #. 028
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "ანტიგუა და ბარბუდა"
 
 #. 660
 msgid "Anguilla"
-msgstr ""
+msgstr "ანგილა"
 
 #. 008
 #. Android resource: @strings/albania
 msgid "Albania"
-msgstr ""
+msgstr "ალბანეთი"
 
 #. 051
 msgid "Armenia"
-msgstr ""
+msgstr "სომხეთი"
 
 #. 530
 msgid "Netherlands Antilles"
@@ -465,162 +467,162 @@ msgstr ""
 #. 024
 #. Android resource: @strings/angola
 msgid "Angola"
-msgstr ""
+msgstr "ანგოლა"
 
 #. 010
 msgid "Antarctica"
-msgstr ""
+msgstr "ანტარქტიკა"
 
 #. 032
 #. Android resource: @strings/argentina
 msgid "Argentina"
-msgstr ""
+msgstr "არგენტინა"
 
 #. 016
 msgid "American Samoa"
-msgstr ""
+msgstr "ამერიკული სამოა"
 
 #. 040
 #. Android resource: @strings/austria
 msgid "Austria"
-msgstr ""
+msgstr "ავსტრია"
 
 #. 036
 #. Android resource: @strings/australia
 msgid "Australia"
-msgstr ""
+msgstr "ავსტრალია"
 
 #. 533
 msgid "Aruba"
-msgstr ""
+msgstr "არუბა"
 
 #. 248
 msgid "Aland Islands"
-msgstr ""
+msgstr "ალანდის კუნძულები"
 
 #. 031
 #. Android resource: @strings/azerbaijan
 msgid "Azerbaijan"
-msgstr ""
+msgstr "აზერბაიჯანი"
 
 #. 070
 #. Android resource: @strings/bosnia_and_herzegovina
 msgid "Bosnia and Herzegovina"
-msgstr ""
+msgstr "ბოსნია და ჰერცოგოვინა"
 
 #. 052
 msgid "Barbados"
-msgstr ""
+msgstr "ბარბადოსი"
 
 #. 050
 msgid "Bangladesh"
-msgstr ""
+msgstr "ბანგლადეში"
 
 #. 056
 #. Android resource: @strings/belgium
 msgid "Belgium"
-msgstr ""
+msgstr "ბელგია"
 
 #. 854
 msgid "Burkina Faso"
-msgstr ""
+msgstr "ბურკინა ფასო"
 
 #. 100
 #. Android resource: @strings/bulgaria
 msgid "Bulgaria"
-msgstr ""
+msgstr "ბულგარეთი"
 
 #. 048
 msgid "Bahrain"
-msgstr ""
+msgstr "ბაჰრეინი"
 
 #. 108
 #. Android resource: @strings/burundi
 msgid "Burundi"
-msgstr ""
+msgstr "ბურუნდი"
 
 #. 204
 msgid "Benin"
-msgstr ""
+msgstr "ბენინი"
 
 #. 652
 msgid "Saint Barthelemy"
-msgstr ""
+msgstr "სენ-ბართელმი"
 
 #. 060
 msgid "Bermuda"
-msgstr ""
+msgstr "ბერმუდა"
 
 #. 096
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "ბრუნეი"
 
 #. 068
 #. Android resource: @strings/bolivia
 msgid "Bolivia"
-msgstr ""
+msgstr "ბოლივია"
 
 #. 535
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr "ბონეირი, სინტ ევსტატიუსი და საბა"
 
 #. 076
 #. Android resource: @strings/brazil
 msgid "Brazil"
-msgstr ""
+msgstr "ბრაზილია"
 
 #. 044
 msgid "Bahamas"
-msgstr ""
+msgstr "ბაჰამის კუნძულები"
 
 #. 064
 msgid "Bhutan"
-msgstr ""
+msgstr "ბუტანი"
 
 #. 074
 msgid "Bouvet Island"
-msgstr ""
+msgstr "ბუვეტის კუნძული"
 
 #. 072
 #. Android resource: @strings/botswana
 msgid "Botswana"
-msgstr ""
+msgstr "ბოცვანა"
 
 #. 112
 #. Android resource: @strings/belarus
 msgid "Belarus"
-msgstr ""
+msgstr "ბელარუსი"
 
 #. 084
 msgid "Belize"
-msgstr ""
+msgstr "ბელიზი"
 
 #. 124
 #. Android resource: @strings/canada
 msgid "Canada"
-msgstr ""
+msgstr "კანადა"
 
 #. 166
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "ქოქოს (კეელინგ) კუნძულები"
 
 #. 180
 #. Android resource: @strings/congo
 msgid "Congo, Democratic Republic of the"
-msgstr ""
+msgstr "კონგო (დემოკრატიული რესპუბლიკა)"
 
 #. 140
 msgid "Central African Republic"
-msgstr ""
+msgstr "ცენტრალური აფრიკის რესპუბლიკა"
 
 #. 178
 msgid "Congo"
-msgstr ""
+msgstr "კონგო"
 
 #. 756
 #. Android resource: @strings/switzerland
 msgid "Switzerland"
-msgstr ""
+msgstr "შვეიცარია"
 
 #. 384
 #. Android resource: @strings/cotedivoire
@@ -629,283 +631,283 @@ msgstr ""
 
 #. 184
 msgid "Cook Islands"
-msgstr ""
+msgstr "კუკის კუნძულები (ახალი ზელანდია)"
 
 #. 152
 #. Android resource: @strings/chile
 msgid "Chile"
-msgstr ""
+msgstr "ჩილე"
 
 #. 120
 msgid "Cameroon"
-msgstr ""
+msgstr "კამერუნი"
 
 #. 156
 #. Android resource: @strings/china
 msgid "China"
-msgstr ""
+msgstr "ჩინეთი"
 
 #. 170
 #. Android resource: @strings/colombia
 msgid "Colombia"
-msgstr ""
+msgstr "კოლუმბია"
 
 #. 188
 msgid "Costa Rica"
-msgstr ""
+msgstr "კოსტა რიკა"
 
 #. 192
 #. Android resource: @strings/cuba
 msgid "Cuba"
-msgstr ""
+msgstr "კუბა"
 
 #. 132
 msgid "Cape Verde"
-msgstr ""
+msgstr "კაბო ვერდე"
 
 #. 531
 msgid "Curacao"
-msgstr ""
+msgstr "კურაკაო"
 
 #. 162
 msgid "Christmas Island"
-msgstr ""
+msgstr "შობის კუნძული"
 
 #. 196
 #. Android resource: @strings/cyprus
 msgid "Cyprus"
-msgstr ""
+msgstr "კვიპროსი"
 
 #. 203
 #. Android resource: @strings/czech_republic
 msgid "Czech Republic"
-msgstr ""
+msgstr "ჩეხეთი"
 
 #. 276
 #. Android resource: @strings/germany
 msgid "Germany"
-msgstr ""
+msgstr "გერმანია"
 
 #. 262
 msgid "Djibouti"
-msgstr ""
+msgstr "ჯიბუტი"
 
 #. 208
 #. Android resource: @strings/denmark
 msgid "Denmark"
-msgstr ""
+msgstr "დანია"
 
 #. 212
 msgid "Dominica"
-msgstr ""
+msgstr "დომინიკა"
 
 #. 214
 #. Android resource: @strings/dominican_republic
 msgid "Dominican Republic"
-msgstr ""
+msgstr "დომენიკის რესპუბლიკა"
 
 #. 012
 msgid "Algeria"
-msgstr ""
+msgstr "ალჟირი"
 
 #. 218
 #. Android resource: @strings/ecuador
 msgid "Ecuador"
-msgstr ""
+msgstr "ეკვადორი"
 
 #. 233
 #. Android resource: @strings/estonia
 msgid "Estonia"
-msgstr ""
+msgstr "ესტონეთი"
 
 #. 818
 msgid "Egypt"
-msgstr ""
+msgstr "ეგვიპტე"
 
 #. 732
 msgid "Western Sahara"
-msgstr ""
+msgstr "დასავლეთ საჰარა"
 
 #. 232
 msgid "Eritrea"
-msgstr ""
+msgstr "ერითრეა"
 
 #. 724
 #. Android resource: @strings/spain
 msgid "Spain"
-msgstr ""
+msgstr "ესპანეთი"
 
 #. 231
 #. Android resource: @strings/ethiopia
 msgid "Ethiopia"
-msgstr ""
+msgstr "ეთიოპია"
 
 #. 246
 #. Android resource: @strings/finland
 msgid "Finland"
-msgstr ""
+msgstr "ფინეთი"
 
 #. 242
 msgid "Fiji"
-msgstr ""
+msgstr "ფიჯი"
 
 #. 238
 msgid "Falkland Islands (Malvinas)"
-msgstr ""
+msgstr "ფოლკლენდის კუნძულები"
 
 #. 583
 msgid "Micronesia, Federated States of"
-msgstr ""
+msgstr "მიკრონეზიის ფედერალური შტატები"
 
 #. 234
 #. Android resource: @strings/faroe_islands
 msgid "Faroe Islands"
-msgstr ""
+msgstr "ფარერის კუნძულები"
 
 #. 250
 #. Android resource: @strings/france
 msgid "France"
-msgstr ""
+msgstr "საფრანგეთი"
 
 #. 266
 msgid "Gabon"
-msgstr ""
+msgstr "გაბონი"
 
 #. 826
 #. Android resource: @strings/united_kingdom
 msgid "United Kingdom"
-msgstr ""
+msgstr "დიდი ბრიტანეთი"
 
 #. 308
 msgid "Grenada"
-msgstr ""
+msgstr "გრენადა"
 
 #. 268
 msgid "Georgia"
-msgstr ""
+msgstr "ჯორჯია"
 
 #. 254
 msgid "French Guiana"
-msgstr ""
+msgstr "ფრანგული გვიანა"
 
 #. 831
 msgid "Guernsey"
-msgstr ""
+msgstr "გერნსი"
 
 #. 288
 msgid "Ghana"
-msgstr ""
+msgstr "განა"
 
 #. 292
 msgid "Gibraltar"
-msgstr ""
+msgstr "გიბრალტარი"
 
 #. 304
 msgid "Greenland"
-msgstr ""
+msgstr "გრენლანდია"
 
 #. 270
 msgid "Gambia"
-msgstr ""
+msgstr "გამბია"
 
 #. 324
 #. Android resource: @strings/guinea
 msgid "Guinea"
-msgstr ""
+msgstr "გვინეა"
 
 #. 312
 msgid "Guadeloupe"
-msgstr ""
+msgstr "გვადალუპე"
 
 #. 226
 msgid "Equatorial Guinea"
-msgstr ""
+msgstr "ეკვატორული გვინეა"
 
 #. 300
 #. Android resource: @strings/greece
 msgid "Greece"
-msgstr ""
+msgstr "საბერძნეთი"
 
 #. 239
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "სამხრეთ ჯორჯია და სამხრეთ სენდვიჩის კუნძულები"
 
 #. 320
 msgid "Guatemala"
-msgstr ""
+msgstr "გვატემალა"
 
 #. 316
 msgid "Guam"
-msgstr ""
+msgstr "გუამი"
 
 #. 624
 msgid "Guinea-Bissau"
-msgstr ""
+msgstr "გვინეა-ბისაუ"
 
 #. 328
 #. Android resource: @strings/guyana
 msgid "Guyana"
-msgstr ""
+msgstr "გაიანა"
 
 #. 344
 msgid "Hong Kong"
-msgstr ""
+msgstr "ჰონგკონგი"
 
 #. 334
 msgid "Heard Island and McDonald Islands"
-msgstr ""
+msgstr "ჰერდის და მაკდონალდის კუნძულები"
 
 #. 340
 msgid "Honduras"
-msgstr ""
+msgstr "ჰონდურასი"
 
 #. 191
 #. Android resource: @strings/croatia
 msgid "Croatia"
-msgstr ""
+msgstr "ხორვატია"
 
 #. 332
 #. Android resource: @strings/haiti
 msgid "Haiti"
-msgstr ""
+msgstr "ჰაიტი"
 
 #. 348
 #. Android resource: @strings/hungary
 msgid "Hungary"
-msgstr ""
+msgstr "უნგრეთი"
 
 #. 360
 #. Android resource: @strings/indonesia
 msgid "Indonesia"
-msgstr ""
+msgstr "ინდონეზია"
 
 #. 372
 #. Android resource: @strings/ireland
 msgid "Ireland"
-msgstr ""
+msgstr "ირლანდია"
 
 #. 376
 #. Android resource: @strings/israel
 msgid "Israel"
-msgstr ""
+msgstr "ისრაელი"
 
 #. 833
 msgid "Isle of Man"
-msgstr ""
+msgstr "მენის კუნძული"
 
 #. 356
 #. Android resource: @strings/india
 msgid "India"
-msgstr ""
+msgstr "ინდოეთი"
 
 #. 086
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "ბრიტანეთის ინდოეთის ოკეანის ტერიტორია"
 
 #. 368
 #. Android resource: @strings/iraq
 msgid "Iraq"
-msgstr ""
+msgstr "ერაყი"
 
 #. 364
 #. Android resource: @strings/iran
@@ -915,56 +917,56 @@ msgstr ""
 #. 352
 #. Android resource: @strings/iceland
 msgid "Iceland"
-msgstr ""
+msgstr "ისლანდია"
 
 #. 380
 #. Android resource: @strings/italy
 msgid "Italy"
-msgstr ""
+msgstr "იტალია"
 
 #. 832
 msgid "Jersey"
-msgstr ""
+msgstr "ჯერსი"
 
 #. 388
 #. Android resource: @strings/jamaica
 msgid "Jamaica"
-msgstr ""
+msgstr "იამაიკა"
 
 #. 400
 msgid "Jordan"
-msgstr ""
+msgstr "იორდანია"
 
 #. 392
 #. Android resource: @strings/japan
 msgid "Japan"
-msgstr ""
+msgstr "იაპონია"
 
 #. 404
 #. Android resource: @strings/kenya
 msgid "Kenya"
-msgstr ""
+msgstr "კენია"
 
 #. 417
 #. Android resource: @strings/kyrgyzsyan
 msgid "Kyrgyzstan"
-msgstr ""
+msgstr "ყირგიზეთი"
 
 #. 116
 msgid "Cambodia"
-msgstr ""
+msgstr "კამბოჯა"
 
 #. 296
 msgid "Kiribati"
-msgstr ""
+msgstr "კირიბატი"
 
 #. 174
 msgid "Comoros"
-msgstr ""
+msgstr "კომორი"
 
 #. 659
 msgid "Saint Kitts and Nevis"
-msgstr ""
+msgstr "სენტ კიტსი და ნევისი"
 
 #. 408
 msgid "Korea, Democratic People's Republic of"
@@ -976,74 +978,74 @@ msgstr ""
 
 #. 414
 msgid "Kuwait"
-msgstr ""
+msgstr "ქუვეიტი"
 
 #. 136
 msgid "Cayman Islands"
-msgstr ""
+msgstr "კაიმანის კუნძულები"
 
 #. 398
 #. Android resource: @strings/kazakhstan
 msgid "Kazakhstan"
-msgstr ""
+msgstr "ყაზახეთი"
 
 #. 418
 msgid "Lao People's Democratic Republic"
-msgstr ""
+msgstr "ლაოსის სახალხო დემოკრატიული რესპუბლიკა"
 
 #. 422
 msgid "Lebanon"
-msgstr ""
+msgstr "ლიბანი"
 
 #. 662
 msgid "Saint Lucia"
-msgstr ""
+msgstr "წმინდა ლუჩია"
 
 #. 438
 msgid "Liechtenstein"
-msgstr ""
+msgstr "ლიჰტენშტაინი"
 
 #. 144
 msgid "Sri Lanka"
-msgstr ""
+msgstr "შრი ლანკა"
 
 #. 430
 #. Android resource: @strings/liberia
 msgid "Liberia"
-msgstr ""
+msgstr "ლიბერია"
 
 #. 426
 #. Android resource: @strings/lesotho
 msgid "Lesotho"
-msgstr ""
+msgstr "ლესოტო"
 
 #. 440
 #. Android resource: @strings/lithuania
 msgid "Lithuania"
-msgstr ""
+msgstr "ლიეტუვა"
 
 #. 442
 #. Android resource: @strings/luxembourg
 msgid "Luxembourg"
-msgstr ""
+msgstr "ლუქსემბურგი"
 
 #. 428
 #. Android resource: @strings/latvia
 msgid "Latvia"
-msgstr ""
+msgstr "ლატვია"
 
 #. 434
 #. Android resource: @strings/libya
 msgid "Libya"
-msgstr ""
+msgstr "ლიბია"
 
 #. 504
 msgid "Morocco"
-msgstr ""
+msgstr "მაროკო"
 
 #. 492
 msgid "Monaco"
-msgstr ""
+msgstr "მონაკო"
 
 #. 498
 msgid "Moldova, Republic of"
@@ -1051,20 +1053,20 @@ msgstr ""
 
 #. 499
 msgid "Montenegro"
-msgstr ""
+msgstr "მონტენეგრო"
 
 #. 663
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "სენტ მარტინი (საფრანგეთი)"
 
 #. 450
 #. Android resource: @strings/madagascar
 msgid "Madagascar"
-msgstr ""
+msgstr "მადაგასკარი"
 
 #. 584
 msgid "Marshall Islands"
-msgstr ""
+msgstr "მარშალის კუნძულები"
 
 #. 807
 msgid "Macedonia, the former Yugoslav Republic of"
@@ -1072,167 +1074,167 @@ msgstr ""
 
 #. 466
 msgid "Mali"
-msgstr ""
+msgstr "მალი"
 
 #. 104
 msgid "Myanmar"
-msgstr ""
+msgstr "მიანმარი"
 
 #. 496
 #. Android resource: @strings/mongolia
 msgid "Mongolia"
-msgstr ""
+msgstr "მონღოლეთი"
 
 #. 446
 msgid "Macao"
-msgstr ""
+msgstr "მაკაო"
 
 #. 580
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "ჩრდილოეთ მარიანას კუნძულები"
 
 #. 474
 msgid "Martinique"
-msgstr ""
+msgstr "მარტინიკა"
 
 #. 478
 msgid "Mauritania"
-msgstr ""
+msgstr "მავრიტანია"
 
 #. 500
 msgid "Montserrat"
-msgstr ""
+msgstr "მონტსერატი"
 
 #. 470
 msgid "Malta"
-msgstr ""
+msgstr "მალტა"
 
 #. 480
 msgid "Mauritius"
-msgstr ""
+msgstr "მავრიკი"
 
 #. 462
 msgid "Maldives"
-msgstr ""
+msgstr "მალდივები"
 
 #. 454
 msgid "Malawi"
-msgstr ""
+msgstr "მალავი"
 
 #. 484
 #. Android resource: @strings/mexico
 msgid "Mexico"
-msgstr ""
+msgstr "მექსიკა"
 
 #. 458
 #. Android resource: @strings/malaysia
 msgid "Malaysia"
-msgstr ""
+msgstr "მალაიზია"
 
 #. 508
 msgid "Mozambique"
-msgstr ""
+msgstr "მოზამბიკი"
 
 #. 516
 #. Android resource: @strings/namibia
 msgid "Namibia"
-msgstr ""
+msgstr "ნამიბია"
 
 #. 540
 #. Android resource: @strings/new_caledonia
 msgid "New Caledonia"
-msgstr ""
+msgstr "ახალი კალედონია"
 
 #. 562
 msgid "Niger"
-msgstr ""
+msgstr "ნიგერი"
 
 #. 574
 msgid "Norfolk Island"
-msgstr ""
+msgstr "ნორფოლკის კუნძული"
 
 #. 566
 msgid "Nigeria"
-msgstr ""
+msgstr "ნიგერია"
 
 #. 558
 msgid "Nicaragua"
-msgstr ""
+msgstr "ნიკარაგუა"
 
 #. 528
 #. Android resource: @strings/netherlands
 msgid "Netherlands"
-msgstr ""
+msgstr "ჰოლანდია"
 
 #. 578
 msgid "Norway"
-msgstr ""
+msgstr "ნორვეგია"
 
 #. 524
 #. Android resource: @strings/nepal
 msgid "Nepal"
-msgstr ""
+msgstr "ნეპალი"
 
 #. 520
 msgid "Nauru"
-msgstr ""
+msgstr "ნაურუ"
 
 #. 570
 msgid "Niue"
-msgstr ""
+msgstr "ნიუე"
 
 #. 554
 #. Android resource: @strings/newzealand
 msgid "New Zealand"
-msgstr ""
+msgstr "ახალი ზელანდია"
 
 #. 512
 msgid "Oman"
-msgstr ""
+msgstr "ომანი"
 
 #. 591
 msgid "Panama"
-msgstr ""
+msgstr "პანამა"
 
 #. 604
 #. Android resource: @strings/peru
 msgid "Peru"
-msgstr ""
+msgstr "პერუ"
 
 #. 258
 msgid "French Polynesia"
-msgstr ""
+msgstr "ფრანგული პოლინეზია"
 
 #. 598
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "პაპუა ახალი გვინეა"
 
 #. 608
 #. Android resource: @strings/philippines
 msgid "Philippines"
-msgstr ""
+msgstr "ფილიპინები"
 
 #. 586
 #. Android resource: @strings/pakistan
 msgid "Pakistan"
-msgstr ""
+msgstr "პაკისტანი"
 
 #. 616
 #. Android resource: @strings/poland
 msgid "Poland"
-msgstr ""
+msgstr "პოლონეთი"
 
 #. 666
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "წმინდა პიერი და მიქელონი"
 
 #. 612
 msgid "Pitcairn"
-msgstr ""
+msgstr "პიტკერნი"
 
 #. 630
 msgid "Puerto Rico"
-msgstr ""
+msgstr "პუერტო რიკო"
 
 #. 275
 msgid "Palestinian Territory, Occupied"
@@ -1241,191 +1243,191 @@ msgstr ""
 #. 620
 #. Android resource: @strings/portugal
 msgid "Portugal"
-msgstr ""
+msgstr "პორტუგალია"
 
 #. 585
 msgid "Palau"
-msgstr ""
+msgstr "პალაუ"
 
 #. 600
 #. Android resource: @strings/paraguay
 msgid "Paraguay"
-msgstr ""
+msgstr "პარაგვაი"
 
 #. 634
 msgid "Qatar"
-msgstr ""
+msgstr "ყატარი"
 
 #. 638
 #. Android resource: @strings/reunion
 msgid "Reunion"
-msgstr ""
+msgstr "რეიუნიონი"
 
 #. 642
 #. Android resource: @strings/romania
 msgid "Romania"
-msgstr ""
+msgstr "რუმინეთი"
 
 #. 688
 msgid "Serbia"
-msgstr ""
+msgstr "სერბია"
 
 #. 643
 #. Android resource: @strings/russian_federation
 msgid "Russian Federation"
-msgstr ""
+msgstr "რუსეთის ფედერაცია"
 
 #. 646
 #. Android resource: @strings/rwanda
 msgid "Rwanda"
-msgstr ""
+msgstr "რუანდა"
 
 #. 682
 #. Android resource: @strings/saudi_arabia
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "საუდის არაბეთი"
 
 #. 090
 msgid "Solomon Islands"
-msgstr ""
+msgstr "სოლომონის კუნძულები"
 
 #. 690
 msgid "Seychelles"
-msgstr ""
+msgstr "სეიშელები"
 
 #. 736
 msgid "Sudan"
-msgstr ""
+msgstr "სუდანი"
 
 #. 752
 msgid "Sweden"
-msgstr ""
+msgstr "შვედეთი"
 
 #. 702
 #. Android resource: @strings/singapore
 msgid "Singapore"
-msgstr ""
+msgstr "სინგაპური"
 
 #. 654
 msgid "Saint Helena"
-msgstr ""
+msgstr "წმინდა ელენე"
 
 #. 705
 msgid "Slovenia"
-msgstr ""
+msgstr "სლოვენია"
 
 #. 744
 msgid "Svalbard and Jan Mayen"
-msgstr ""
+msgstr "სვალბარდი და ან-მაიენი"
 
 #. 703
 #. Android resource: @strings/slovakia
 msgid "Slovakia"
-msgstr ""
+msgstr "სლოვაკეთი"
 
 #. 694
 msgid "Sierra Leone"
-msgstr ""
+msgstr "სიერა ლეონე"
 
 #. 674
 msgid "San Marino"
-msgstr ""
+msgstr "სან მარინო"
 
 #. 686
 msgid "Senegal"
-msgstr ""
+msgstr "სენეგალი"
 
 #. 706
 msgid "Somalia"
-msgstr ""
+msgstr "სომალი"
 
 #. 740
 #. Android resource: @strings/suriname
 msgid "Suriname"
-msgstr ""
+msgstr "სურინამი"
 
 #. 728
 msgid "South Sudan"
-msgstr ""
+msgstr "სამხრეთ სუდანი"
 
 #. 678
 msgid "Sao Tome and Principe"
-msgstr ""
+msgstr "საო ტომე და პრინციპე"
 
 #. 222
 msgid "El Salvador"
-msgstr ""
+msgstr "ელ სალვადორი"
 
 #. 534
 msgid "Sint Maarten (Dutch part)"
-msgstr ""
+msgstr "სინტ-მარტენი (ჰოლანდიის ნაწილი)"
 
 #. 760
 msgid "Syrian Arab Republic"
-msgstr ""
+msgstr "სირიის არაბული რესპუბლიკა"
 
 #. 748
 msgid "Swaziland"
-msgstr ""
+msgstr "ესვატინი"
 
 #. 796
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "ტერქსისა და კაიკოსის კუნძულები"
 
 #. 148
 msgid "Chad"
-msgstr ""
+msgstr "ჩადი"
 
 #. 260
 msgid "French Southern Territories"
-msgstr ""
+msgstr "ფრანგული სამხრეთ ტერიტორიები"
 
 #. 768
 msgid "Togo"
-msgstr ""
+msgstr "ტოგო"
 
 #. 764
 #. Android resource: @strings/thailand
 msgid "Thailand"
-msgstr ""
+msgstr "ტაილანდი"
 
 #. 762
 msgid "Tajikistan"
-msgstr ""
+msgstr "ტაჯიკეთი"
 
 #. 772
 msgid "Tokelau"
-msgstr ""
+msgstr "ტოკელაუ"
 
 #. 626
 msgid "Timor-Leste"
-msgstr ""
+msgstr "ტიმორ-ლესტე"
 
 #. 795
 #. Android resource: @strings/turkmenistan
 msgid "Turkmenistan"
-msgstr ""
+msgstr "თურქმენეთი"
 
 #. 788
 msgid "Tunisia"
-msgstr ""
+msgstr "ტუნისი"
 
 #. 776
 msgid "Tonga"
-msgstr ""
+msgstr "ტონგა"
 
 #. 792
 #. Android resource: @strings/turkey
 msgid "Turkey"
-msgstr ""
+msgstr "თურქეთი"
 
 #. 780
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "ტრინიდადი და ტობაგო"
 
 #. 798
 msgid "Tuvalu"
-msgstr ""
+msgstr "ტუვალუ"
 
 #. 158
 msgid "Taiwan, Province of China"
@@ -1434,96 +1436,96 @@ msgstr ""
 #. 834
 #. Android resource: @strings/tanzania
 msgid "Tanzania, United Republic of"
-msgstr ""
+msgstr "ტანზანია, გაერთიანებული რესპუბლიკა"
 
 #. 804
 #. Android resource: @strings/ukraine
 msgid "Ukraine"
-msgstr ""
+msgstr "უკრაინა"
 
 #. 800
 #. Android resource: @strings/uganda
 msgid "Uganda"
-msgstr ""
+msgstr "უგანდა"
 
 #. 581
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "შეერთებული შტატების მცირე გარემდებარე კუნძულები"
 
 #. 840
 msgid "United States"
-msgstr ""
+msgstr "ამერიკის შეერთებული შტატები"
 
 #. 858
 #. Android resource: @strings/uruguay
 msgid "Uruguay"
-msgstr ""
+msgstr "ურუგვაი"
 
 #. 860
 msgid "Uzbekistan"
-msgstr ""
+msgstr "უზბეკეთი"
 
 #. 336
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "წმიდა საყდართან (ვატიკანის ქალაქი სახელმწიფო)"
 
 #. 670
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "სენტ ვინცენტი და გრენადინები"
 
 #. 862
 #. Android resource: @strings/venezuela
 msgid "Venezuela"
-msgstr ""
+msgstr "ვენესუელა"
 
 #. 092
 msgid "Virgin Islands, British"
-msgstr ""
+msgstr "ვირჯინიის კუნძულები, ბრიტანელები"
 
 #. 850
 msgid "Virgin Islands, U.S."
-msgstr ""
+msgstr "ვირჯინიის კუნძულები, აშშ."
 
 #. 704
 msgid "Viet Nam"
-msgstr ""
+msgstr "ვიეტნამი"
 
 #. 548
 msgid "Vanuatu"
-msgstr ""
+msgstr "ვანუატუ"
 
 #. 876
 msgid "Wallis and Futuna"
-msgstr ""
+msgstr "ვალისი და ფუტუნა"
 
 #. 882
 msgid "Samoa"
-msgstr ""
+msgstr "სამოა"
 
 #. 412
 msgid "Kosovo"
-msgstr ""
+msgstr "კოსოვო"
 
 #. 887
 msgid "Yemen"
-msgstr ""
+msgstr "იემენი"
 
 #. 175
 msgid "Mayotte"
-msgstr ""
+msgstr "მეიოტი"
 
 #. 710
 #. Android resource: @strings/south_africa
 msgid "South Africa"
-msgstr ""
+msgstr "სამხრეთ აფრიკა"
 
 #. 894
 msgid "Zambia"
-msgstr ""
+msgstr "ზამბია"
 
 #. 716
 msgid "Zimbabwe"
-msgstr ""
+msgstr "ზიმბაბვე"
 
 msgid "* Unknown, add is_in tags to those cities"
 msgstr ""
@@ -1560,7 +1562,7 @@ msgid "Internal initialization failed, exiting. Check previous error messages."
 msgstr ""
 
 msgid "unknown street"
-msgstr ""
+msgstr "უცნობი ქუჩა"
 
 #. Safe cast: attr_generic_set_attr does not modify its parameter.
 msgid "Unnamed vehicle"
@@ -1571,59 +1573,59 @@ msgstr ""
 
 #. Strings from navit_shipped.xml
 msgid "Map Point"
-msgstr ""
+msgstr "რუკის წერტილი"
 
 msgid "Car"
-msgstr ""
+msgstr "მანქანა"
 
 msgid "Iso2"
-msgstr ""
+msgstr "Iso2"
 
 msgid "Iso3"
-msgstr ""
+msgstr "Iso3"
 
 msgid "Country"
-msgstr ""
+msgstr "ქვეყანა"
 
 msgid "Postal"
-msgstr ""
+msgstr "საფოსტო კოდი"
 
 msgid "Town"
-msgstr ""
+msgstr "ქალაქი"
 
 msgid "District"
-msgstr ""
+msgstr "ოლქი"
 
 msgid "Street"
-msgstr ""
+msgstr "ქუჩა"
 
 msgid "Number"
-msgstr ""
+msgstr "რიცხვი"
 
 msgid "Enter Destination"
 msgstr ""
 
 msgid "Zip Code"
-msgstr ""
+msgstr "საფოსტო ინდექსი"
 
 msgid "City"
-msgstr ""
+msgstr "ქალაქი"
 
 msgid "District/Township"
 msgstr ""
 
 msgid "Map"
-msgstr ""
+msgstr "რუკა"
 
 msgid "Bookmark"
-msgstr ""
+msgstr "სანიშნე"
 
 msgid "Destination"
-msgstr ""
+msgstr "სამიზნე"
 
 #. TRANSLATORS: These texts are for menu items in GTK GUI. The _ indicates the mnemonic key (=underlined character) for this menu item. Please place the _ before a suitable character in the translation (or omit it if no mnemonic key is desired).
 msgid "_Display"
-msgstr ""
+msgstr "ეკრანი"
 
 msgid "_Route"
 msgstr ""
@@ -1632,13 +1634,13 @@ msgid "_Former Destinations"
 msgstr ""
 
 msgid "_Bookmarks"
-msgstr ""
+msgstr "_სანიშნეები"
 
 msgid "_Map"
-msgstr ""
+msgstr "რუ_კა"
 
 msgid "_Layout"
-msgstr ""
+msgstr "გან_ლაგება"
 
 msgid "_Projection"
 msgstr ""
@@ -1647,25 +1649,25 @@ msgid "_Vehicle"
 msgstr ""
 
 msgid "Zoom_Out"
-msgstr ""
+msgstr "და_პატარავება"
 
 msgid "Decrease zoom level"
 msgstr ""
 
 msgid "Zoom_In"
-msgstr ""
+msgstr "გად_იდება"
 
 msgid "Increase zoom level"
 msgstr ""
 
 msgid "_Recalculate"
-msgstr ""
+msgstr "თავიდან _გამოთვლა"
 
 msgid "Redraw map"
 msgstr ""
 
 msgid "_Info"
-msgstr ""
+msgstr "_ინფორმაცია"
 
 msgid "Set _destination"
 msgstr ""
@@ -1683,13 +1685,13 @@ msgid "_Stop Navigation"
 msgstr ""
 
 msgid "Test"
-msgstr ""
+msgstr "შემოწმება"
 
 msgid "_Quit"
-msgstr ""
+msgstr "გასვ_ლა"
 
 msgid "Quit the application"
-msgstr ""
+msgstr "აპლიკაციიდან გასვლა"
 
 msgid "Show position _cursor"
 msgstr ""
@@ -1719,22 +1721,22 @@ msgid "Enable/disable automatic zoom level changing"
 msgstr ""
 
 msgid "_Fullscreen"
-msgstr ""
+msgstr "სრული ეკრა_ნზე"
 
 msgid "Data"
-msgstr ""
+msgstr "მონაცემები"
 
 msgid "Pharmacy"
-msgstr ""
+msgstr "ფარმაცია"
 
 msgid "Restaurant"
-msgstr ""
+msgstr "რესტორანი"
 
 msgid "Restaurant. Fast food"
 msgstr ""
 
 msgid "Hotel"
-msgstr ""
+msgstr "სასტუმრო"
 
 msgid "Car parking"
 msgstr ""
@@ -1743,31 +1745,31 @@ msgid "Fuel station"
 msgstr ""
 
 msgid "Bank"
-msgstr ""
+msgstr "ბანკი"
 
 msgid "Hospital"
-msgstr ""
+msgstr "საავადმყოფო"
 
 msgid "Cinema"
-msgstr ""
+msgstr "კინო"
 
 msgid "Train station"
 msgstr ""
 
 msgid "School"
-msgstr ""
+msgstr "სკოლა"
 
 msgid "Police"
-msgstr ""
+msgstr "პოლიცია"
 
 msgid "Justice"
 msgstr ""
 
 msgid "Taxi"
-msgstr ""
+msgstr "ტაქსი"
 
 msgid "Shopping"
-msgstr ""
+msgstr "შოპინგი"
 
 #. Input is in kilometers
 msgid "Select a search radius from screen center in km"
@@ -1797,62 +1799,62 @@ msgid "POI search"
 msgstr ""
 
 msgid "Select a category"
-msgstr ""
+msgstr "აირჩიე კატეგორია"
 
 msgid "Select a POI"
 msgstr ""
 
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Category"
-msgstr ""
+msgstr "კატეგორია"
 
 msgid "Direction"
-msgstr ""
+msgstr "მიმართულება"
 
 msgid "Distance"
-msgstr ""
+msgstr "მანძილი"
 
 msgid "Name"
-msgstr ""
+msgstr "სახელი"
 
 msgid "Visit Before"
 msgstr ""
 
 msgid "N"
-msgstr ""
+msgstr "ჩრდ"
 
 msgid "NE"
-msgstr ""
+msgstr "ჩა"
 
 msgid "E"
-msgstr ""
+msgstr "აღმ"
 
 msgid "SE"
-msgstr ""
+msgstr "სა"
 
 msgid "S"
-msgstr ""
+msgstr "შაბ"
 
 msgid "SW"
-msgstr ""
+msgstr "სდ"
 
 msgid "W"
-msgstr ""
+msgstr "ვტ"
 
 msgid "NW"
-msgstr ""
+msgstr "ჩდ"
 
 #. Android resource: @strings/no
 msgid "No"
 msgstr ""
 
 msgid "2D"
-msgstr ""
+msgstr "2D"
 
 msgid "3D"
-msgstr ""
+msgstr "3D"
 
 msgid "OT"
 msgstr ""
@@ -1865,7 +1867,7 @@ msgid "Route 0000km  0+00:00 ETA"
 msgstr ""
 
 msgid "Help"
-msgstr ""
+msgstr "დახმარება"
 
 #, c-format
 msgid "Waypoint %s"
@@ -1878,14 +1880,14 @@ msgid "View in Browser"
 msgstr ""
 
 msgid "Item type"
-msgstr ""
+msgstr "ჩანაწერის ტიპი"
 
 #. Android resource: @strings/address_search_streets
 msgid "Streets"
-msgstr ""
+msgstr "ქუჩები"
 
 msgid "House numbers"
-msgstr ""
+msgstr "სახლების ნომრები"
 
 msgid "View Attributes"
 msgstr ""
@@ -1912,19 +1914,19 @@ msgid "Copy Bookmark"
 msgstr ""
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "სანიშნეს სახელის გადარქმევა"
 
 msgid "Paste Bookmark"
 msgstr ""
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "სანიშნეს წაშლა"
 
 msgid "Delete waypoint"
 msgstr ""
 
 msgid "Bookmarks"
-msgstr ""
+msgstr "სანიშნეები"
 
 msgid "Bookmarks as waypoints"
 msgstr ""
@@ -1936,7 +1938,7 @@ msgid "Replace with waypoints"
 msgstr ""
 
 msgid "Delete Folder"
-msgstr ""
+msgstr "საქაღალდის წაშლა"
 
 #. Adds the Bookmark folders
 msgid "Add Bookmark folder"
@@ -1958,7 +1960,7 @@ msgid "Map Download"
 msgstr ""
 
 msgid "Active"
-msgstr ""
+msgstr "აქტიური"
 
 msgid "Download Enabled"
 msgstr ""
@@ -1979,10 +1981,10 @@ msgid "Show NMEA Data"
 msgstr ""
 
 msgid "car"
-msgstr ""
+msgstr "მანქანა"
 
 msgid "bike"
-msgstr ""
+msgstr "ველოსიპედი"
 
 msgid "pedestrian"
 msgstr ""
@@ -2005,10 +2007,10 @@ msgid "Show NMEA data"
 msgstr ""
 
 msgid "Add Bookmark"
-msgstr ""
+msgstr "სანიშნეს დამატება"
 
 msgid "Rename"
-msgstr ""
+msgstr "სახელის გადარქმევა"
 
 msgid "About Navit"
 msgstr ""
@@ -2025,7 +2027,7 @@ msgid "members and contributors."
 msgstr ""
 
 msgid "Waypoints"
-msgstr ""
+msgstr "გზის წერტილი"
 
 msgid "Enter Coordinates"
 msgstr ""
@@ -2043,16 +2045,16 @@ msgid "Enter coordinates, for example:"
 msgstr ""
 
 msgid "Vehicle"
-msgstr ""
+msgstr "მანქანა"
 
 msgid "Rules"
-msgstr ""
+msgstr "წესები"
 
 msgid "Lock on road"
 msgstr ""
 
 msgid "Northing"
-msgstr ""
+msgstr "არაფერი"
 
 msgid "Map follows Vehicle"
 msgstr ""
@@ -2061,10 +2063,10 @@ msgid "Plan with Waypoints"
 msgstr ""
 
 msgid "Maps"
-msgstr ""
+msgstr "რუკები"
 
 msgid "Layout"
-msgstr ""
+msgstr "განლაგება"
 
 msgid "Height Profile"
 msgstr ""
@@ -2091,25 +2093,25 @@ msgid "- No former destinations available -"
 msgstr ""
 
 msgid "Message"
-msgstr ""
+msgstr "შეტყობინება"
 
 msgid "Back"
-msgstr ""
+msgstr "უკან"
 
 msgid "Back to map"
-msgstr ""
+msgstr "რუკაზე დაბრუნება"
 
 msgid "Main Menu"
-msgstr ""
+msgstr "მთავარი მენიუ"
 
 msgid "House number"
-msgstr ""
+msgstr "სახლის ნომერი"
 
 msgid "Next"
-msgstr ""
+msgstr "შემდეგი"
 
 msgid "Prev"
-msgstr ""
+msgstr "წინა"
 
 msgid "Return to route!"
 msgstr ""
@@ -2126,7 +2128,7 @@ msgid "Vehicle Position"
 msgstr ""
 
 msgid "Main menu"
-msgstr ""
+msgstr "მთავარი მენიუ"
 
 msgid ""
 "Show\n"
@@ -2134,22 +2136,22 @@ msgid ""
 msgstr ""
 
 msgid "Settings"
-msgstr ""
+msgstr "მორგება"
 
 msgid "Tools"
-msgstr ""
+msgstr "ხელსაწყოები"
 
 msgid "Route"
-msgstr ""
+msgstr "გზა"
 
 msgid "About"
-msgstr ""
+msgstr "შესახებ"
 
 msgid "Quit"
-msgstr ""
+msgstr "გასვლა"
 
 msgid "Actions"
-msgstr ""
+msgstr "ქმედებები"
 
 msgid ""
 "Former\n"
@@ -2157,7 +2159,7 @@ msgid ""
 msgstr ""
 
 msgid "Coordinates"
-msgstr ""
+msgstr "კოორდინატები"
 
 msgid ""
 "Stop\n"
@@ -2165,13 +2167,13 @@ msgid ""
 msgstr ""
 
 msgid "Display"
-msgstr ""
+msgstr "ჩვენება"
 
 msgid "Fullscreen"
-msgstr ""
+msgstr "სრულ ეკრანზე"
 
 msgid "Window Mode"
-msgstr ""
+msgstr "ფანჯრის რეჟიმი"
 
 msgid "Auto zoom"
 msgstr ""
@@ -2180,13 +2182,13 @@ msgid "Manual zoom"
 msgstr ""
 
 msgid "Layers"
-msgstr ""
+msgstr "ფენები"
 
 msgid "Zoom to route"
 msgstr ""
 
 msgid "Description"
-msgstr ""
+msgstr "აღწერა"
 
 msgid ""
 "Drop last\n"
@@ -2214,19 +2216,19 @@ msgid "car_pedantic"
 msgstr ""
 
 msgid "horse"
-msgstr ""
+msgstr "ცხენი"
 
 msgid "Truck"
-msgstr ""
+msgstr "სატვირთო"
 
 #. Strings from android/res/values/strings.xml
 #. Android resource: @strings/yes
 msgid "Yes"
-msgstr ""
+msgstr "დიახ"
 
 #. Android resource: @strings/cancel
 msgid "Cancel"
-msgstr ""
+msgstr "გაუქმება"
 
 #. Android resource: @strings/channel_name
 msgid "Navit"
@@ -2258,23 +2260,23 @@ msgstr ""
 
 #. Android resource: @strings/initial_info_box_OK
 msgid "OK"
-msgstr ""
+msgstr "დიახ"
 
 #. Android resource: @strings/initial_info_box_more_info
 msgid "More info"
-msgstr ""
+msgstr "მეტი ინფორმაცია"
 
 #. Android resource: @strings/optionsmenu_zoom_in
 msgid "Zoom in"
-msgstr ""
+msgstr "გადიდება"
 
 #. Android resource: @strings/optionsmenu_zoom_out
 msgid "Zoom out"
-msgstr ""
+msgstr "დაპატარავება"
 
 #. Android resource: @strings/optionsmenu_download_maps
 msgid "Download maps"
-msgstr ""
+msgstr "რუკების გადმოწერა"
 
 #. Android resource: @strings/optionsmenu_toggle_poi
 msgid "Toggle POIs"
@@ -2294,11 +2296,11 @@ msgstr ""
 
 #. Android resource: @strings/position_popup_drive_here
 msgid "Route to here"
-msgstr ""
+msgstr "გზა ამ წერტილამდე"
 
 #. Android resource: @strings/position_popup_view
 msgid "View"
-msgstr ""
+msgstr "ხედი"
 
 #. Android resource: @strings/use_position_with
 msgid "Use position with"
@@ -2318,11 +2320,11 @@ msgstr ""
 
 #. Android resource: @strings/map_download_eta
 msgid "ETA"
-msgstr ""
+msgstr "დარჩენილი დრო"
 
 #. Android resource: @strings/map_download_ready
 msgid "ready"
-msgstr ""
+msgstr "მზადაა"
 
 #. Android resource: @strings/map_download_download_error
 msgid "Error downloading map."
@@ -2334,7 +2336,7 @@ msgstr ""
 
 #. Android resource: @strings/map_download_not_enough_free_space
 msgid "Not enough free space"
-msgstr ""
+msgstr "თავისუფალი ადგილი საკმარისი არაა"
 
 #. Android resource: @strings/map_download_oversize
 msgid ""
@@ -2356,7 +2358,7 @@ msgstr ""
 
 #. Android resource: @strings/map_downloading
 msgid "downloading"
-msgstr ""
+msgstr "გადმოწერა"
 
 #. Android resource: @strings/map_download_medium_unavailable
 msgid "Media selected for map storage is not available"
@@ -2392,7 +2394,7 @@ msgstr ""
 
 #. Android resource: @strings/address_search_button
 msgid "Search"
-msgstr ""
+msgstr "ძებნა"
 
 #. Android resource: @strings/    <string name="address_search_searching">Searching
 #. Android resource: @strings/    <string name="backing_up">Backing up
@@ -2414,7 +2416,7 @@ msgstr ""
 
 #. Android resource: @strings/address_search_no_results
 msgid "No results found"
-msgstr ""
+msgstr "შედეგების გარეშე"
 
 #. Android resource: @strings/address_search_no_text_entered
 msgid "No text entered"
@@ -2426,7 +2428,7 @@ msgstr ""
 
 #. Android resource: @strings/address_search_towns
 msgid "Towns"
-msgstr ""
+msgstr "ქალაქები"
 
 #. Android resource: @strings/choose_an_action
 msgid "Choose an action"
@@ -2442,7 +2444,7 @@ msgstr ""
 
 #. Android resource: @strings/backup_failed
 msgid "Backup failed"
-msgstr ""
+msgstr "მარქაფის შეცდომა"
 
 #. Android resource: @strings/no_backup_found
 msgid "No backup found"
@@ -2450,7 +2452,7 @@ msgstr ""
 
 #. Android resource: @strings/failed_to_restore
 msgid "Failed to restore"
-msgstr ""
+msgstr "აღდგენა ჩავარდა"
 
 #. Android resource: @strings/backup_successful
 msgid "Backup successful"
@@ -2464,23 +2466,23 @@ msgstr ""
 
 #. Android resource: @strings/backup_not_found
 msgid "Backup not found"
-msgstr ""
+msgstr "მარქაფი აღმოჩენილი არაა"
 
 #. Android resource: @strings/restore_failed
 msgid "Restore failed"
-msgstr ""
+msgstr "აღდგენის შეცდომა"
 
 #. Android resource: @strings/select_backup
 msgid "Select backup"
-msgstr ""
+msgstr "აირჩიეთ მარქაფი"
 
 #. Android resource: @strings/backup
 msgid "Backup"
-msgstr ""
+msgstr "მარქაფი"
 
 #. Android resource: @strings/restore
 msgid "Restore"
-msgstr ""
+msgstr "აღდგენა"
 
 #. Android resource: @strings/TTS_title_data_missing
 msgid "System text to speech engine data is missing"
@@ -2505,27 +2507,27 @@ msgstr ""
 
 #. Android resource: @strings/whole_planet
 msgid "Whole Planet"
-msgstr ""
+msgstr "მთელი პლანეტა"
 
 #. Android resource: @strings/africa
 msgid "Africa"
-msgstr ""
+msgstr "აფრიკა"
 
 #. Android resource: @strings/canary_islands
 msgid "Canary Islands"
-msgstr ""
+msgstr "კანარის კუნძულები"
 
 #. Android resource: @strings/asia
 msgid "Asia"
-msgstr ""
+msgstr "აზია"
 
 #. Android resource: @strings/taiwan
 msgid "Taiwan"
-msgstr ""
+msgstr "ტაივანი"
 
 #. Android resource: @strings/korea
 msgid "Korea"
-msgstr ""
+msgstr "კორეა"
 
 #. Android resource: @strings/uae_other
 msgid "UAE+Other"
@@ -2533,459 +2535,459 @@ msgstr ""
 
 #. Android resource: @strings/oceania
 msgid "Oceania"
-msgstr ""
+msgstr "ოკეანია"
 
 #. Android resource: @strings/tasmania
 msgid "Tasmania"
-msgstr ""
+msgstr "ტასმანია"
 
 #. Android resource: @strings/victoria
 msgid "Victoria"
-msgstr ""
+msgstr "ვიქტორია"
 
 #. Android resource: @strings/new_south_wales
 msgid "New South Wales"
-msgstr ""
+msgstr "ახალი სამხრეთი უელსი"
 
 #. Android resource: @strings/europe
 msgid "Europe"
-msgstr ""
+msgstr "ევროპა"
 
 #. Android resource: @strings/western_europe
 msgid "Western Europe"
-msgstr ""
+msgstr "დასავლეთი ევროპა"
 
 #. Android resource: @strings/azores
 msgid "Azores"
-msgstr ""
+msgstr "აზორები"
 
 #. Android resource: @strings/benelux
 msgid "BeNeLux"
-msgstr ""
+msgstr "ბენელუქსი"
 
 #. Android resource: @strings/alsace
 msgid "Alsace"
-msgstr ""
+msgstr "ელზასი"
 
 #. Android resource: @strings/aquitaine
 msgid "Aquitaine"
-msgstr ""
+msgstr "აკვიტანია"
 
 #. Android resource: @strings/auvergne
 msgid "Auvergne"
-msgstr ""
+msgstr "ოვერნი"
 
 #. Android resource: @strings/centre
 msgid "Centre"
-msgstr ""
+msgstr "ცენტრი"
 
 #. Android resource: @strings/bretagne
 msgid "Bretagne"
-msgstr ""
+msgstr "ბრეტანი"
 
 #. Android resource: @strings/bourgogne
 msgid "Bourgogne"
-msgstr ""
+msgstr "ბურგუნდია"
 
 #. Android resource: @strings/basse_normandie
 msgid "Basse-Normandie"
-msgstr ""
+msgstr "ქვემო ნორმანდია"
 
 #. Android resource: @strings/champagne_ardenne
 msgid "Champagne-Ardenne"
-msgstr ""
+msgstr "შამპან-არდენი"
 
 #. Android resource: @strings/corse
 msgid "Corse"
-msgstr ""
+msgstr "კორსიკა"
 
 #. Android resource: @strings/franche_comte
 msgid "Franche-Comte"
-msgstr ""
+msgstr "ფრანშ-კომტე"
 
 #. Android resource: @strings/haute_normandie
 msgid "Haute-Normandie"
-msgstr ""
+msgstr "ზემო ნორმანდია"
 
 #. Android resource: @strings/ile_de_france
 msgid "Ile-de-France"
-msgstr ""
+msgstr "ილ-დე-ფრანსი"
 
 #. Android resource: @strings/languedoc_roussillon
 msgid "Languedoc-Roussillon"
-msgstr ""
+msgstr "ლანგედოკი-რუსილონი"
 
 #. Android resource: @strings/limousin
 msgid "Limousin"
-msgstr ""
+msgstr "ლიმუზენი"
 
 #. Android resource: @strings/lorraine
 msgid "Lorraine"
-msgstr ""
+msgstr "ლოთარინგია"
 
 #. Android resource: @strings/midi_pyrenees
 msgid "Midi-Pyrenees"
-msgstr ""
+msgstr "სამხრეთი პირენეები"
 
 #. Android resource: @strings/nord_pas_de_calais
 msgid "Nord-pas-de-Calais"
-msgstr ""
+msgstr "ნორ-პა-დე-კალე"
 
 #. Android resource: @strings/pays_de_la_loire
 msgid "Pays-de-la-Loire"
-msgstr ""
+msgstr "ლუარის რეგიონი"
 
 #. Android resource: @strings/picardie
 msgid "Picardie"
-msgstr ""
+msgstr "პიკარდია"
 
 #. Android resource: @strings/poitou_charentes
 msgid "Poitou-Charentes"
-msgstr ""
+msgstr "პუატუ-შარანტი"
 
 #. Android resource: @strings/provence_alpes_cote_d_azur
 msgid "Provence-Alpes-Cote-d-Azur"
-msgstr ""
+msgstr "პროვანსი-ალპები-ლაჟვარდოვანი ნაპირი"
 
 #. Android resource: @strings/rhone_alpes
 msgid "Rhone-Alpes"
-msgstr ""
+msgstr "რონა-ალპები"
 
 #. Android resource: @strings/baden_wuerttemberg
 msgid "Baden-Wuerttemberg"
-msgstr ""
+msgstr "ბადენ-ვუერტემბერგი"
 
 #. Android resource: @strings/bayern
 msgid "Bayern"
-msgstr ""
+msgstr "ბაიერნი"
 
 #. Android resource: @strings/mittelfranken
 msgid "Mittelfranken"
-msgstr ""
+msgstr "მიტელფრანკენი"
 
 #. Android resource: @strings/niederbayern
 msgid "Niederbayern"
-msgstr ""
+msgstr "ქვედა ბავარია"
 
 #. Android resource: @strings/oberbayern
 msgid "Oberbayern"
-msgstr ""
+msgstr "ზედა ბავარია"
 
 #. Android resource: @strings/oberfranken
 msgid "Oberfranken"
-msgstr ""
+msgstr "ზედა ფრანკონია"
 
 #. Android resource: @strings/oberpfalz
 msgid "Oberpfalz"
-msgstr ""
+msgstr "ზედა პფალცი"
 
 #. Android resource: @strings/schwaben
 msgid "Schwaben"
-msgstr ""
+msgstr "შვაბია"
 
 #. Android resource: @strings/unterfranken
 msgid "Unterfranken"
-msgstr ""
+msgstr "ქვედა ფრანკონია"
 
 #. Android resource: @strings/berlin
 msgid "Berlin"
-msgstr ""
+msgstr "ბერლინი"
 
 #. Android resource: @strings/brandenburg
 msgid "Brandenburg"
-msgstr ""
+msgstr "ბრანდენბურგი"
 
 #. Android resource: @strings/bremen
 msgid "Bremen"
-msgstr ""
+msgstr "ბრემენი"
 
 #. Android resource: @strings/hamburg
 msgid "Hamburg"
-msgstr ""
+msgstr "ჰამბურგი"
 
 #. Android resource: @strings/hessen
 msgid "Hessen"
-msgstr ""
+msgstr "ჰესენი"
 
 #. Android resource: @strings/mecklenburg_vorpommern
 msgid "Mecklenburg-Vorpommern"
-msgstr ""
+msgstr "მეკლენბურგი დასავლეთ პომერანია"
 
 #. Android resource: @strings/niedersachsen
 msgid "Niedersachsen"
-msgstr ""
+msgstr "ქვედა საქსონია"
 
 #. Android resource: @strings/nordrhein_westfalen
 msgid "Nordrhein-westfalen"
-msgstr ""
+msgstr "ჩრდილოეთი რაინ-ვესტფალია"
 
 #. Android resource: @strings/rheinland_pfalz
 msgid "Rheinland-Pfalz"
-msgstr ""
+msgstr "რაინლანდ-პფალცი"
 
 #. Android resource: @strings/saarland
 msgid "Saarland"
-msgstr ""
+msgstr "ზაარლანდი"
 
 #. Android resource: @strings/sachsen_anhalt
 msgid "Sachsen-Anhalt"
-msgstr ""
+msgstr "საქსონია-ანჰალტი"
 
 #. Android resource: @strings/sachsen
 msgid "Sachsen"
-msgstr ""
+msgstr "საქსონია"
 
 #. Android resource: @strings/schleswig_holstein
 msgid "Schleswig-Holstein"
-msgstr ""
+msgstr "შლესვიგ-ჰოლსტაინი"
 
 #. Android resource: @strings/thueringen
 msgid "Thueringen"
-msgstr ""
+msgstr "თიურინგია"
 
 #. Android resource: @strings/mallorca
 msgid "Mallorca"
-msgstr ""
+msgstr "მალიორკა"
 
 #. Android resource: @strings/galicia
 msgid "Galicia"
-msgstr ""
+msgstr "გალისია"
 
 #. Android resource: @strings/scandinavia
 msgid "Scandinavia"
-msgstr ""
+msgstr "სკანდინავია"
 
 #. Android resource: @strings/england
 msgid "England"
-msgstr ""
+msgstr "ინგლისი"
 
 #. Android resource: @strings/buckinghamshire
 msgid "Buckinghamshire"
-msgstr ""
+msgstr "ბუკინგემშაირი"
 
 #. Android resource: @strings/cambridgeshire
 msgid "Cambridgeshire"
-msgstr ""
+msgstr "კემბრიჯშირი"
 
 #. Android resource: @strings/cumbria
 msgid "Cumbria"
-msgstr ""
+msgstr "კამბრია"
 
 #. Android resource: @strings/east_yorkshire_with_hull
 msgid "East yorkshire with hull"
-msgstr ""
+msgstr "ისთ იორკშირი"
 
 #. Android resource: @strings/essex
 msgid "Essex"
-msgstr ""
+msgstr "ესექსი"
 
 #. Android resource: @strings/herefordshire
 msgid "Herefordshire"
-msgstr ""
+msgstr "ჰერეფორდშირი"
 
 #. Android resource: @strings/kent
 msgid "Kent"
-msgstr ""
+msgstr "კენტი"
 
 #. Android resource: @strings/lancashire
 msgid "Lancashire"
-msgstr ""
+msgstr "ლანკაშირი"
 
 #. Android resource: @strings/leicestershire
 msgid "Leicestershire"
-msgstr ""
+msgstr "ლესტერშირი"
 
 #. Android resource: @strings/norfolk
 msgid "Norfolk"
-msgstr ""
+msgstr "ნორფოლკი"
 
 #. Android resource: @strings/nottinghamshire
 msgid "Nottinghamshire"
-msgstr ""
+msgstr "ნოთინგჰემპშირი"
 
 #. Android resource: @strings/oxfordshire
 msgid "Oxfordshire"
-msgstr ""
+msgstr "ოქსფორდშირი"
 
 #. Android resource: @strings/shropshire
 msgid "Shropshire"
-msgstr ""
+msgstr "შროპშირი"
 
 #. Android resource: @strings/somerset
 msgid "Somerset"
-msgstr ""
+msgstr "სომერსეტი"
 
 #. Android resource: @strings/south_yorkshire
 msgid "South yorkshire"
-msgstr ""
+msgstr "სამხრეთი იორკშირი"
 
 #. Android resource: @strings/suffolk
 msgid "Suffolk"
-msgstr ""
+msgstr "სუფოლკი"
 
 #. Android resource: @strings/surrey
 msgid "Surrey"
-msgstr ""
+msgstr "სარი"
 
 #. Android resource: @strings/wiltshire
 msgid "Wiltshire"
-msgstr ""
+msgstr "უილტშირი"
 
 #. Android resource: @strings/scotland
 msgid "Scotland"
-msgstr ""
+msgstr "შოტლანდია"
 
 #. Android resource: @strings/wales
 msgid "Wales"
-msgstr ""
+msgstr "უელსი"
 
 #. Android resource: @strings/crete
 msgid "Crete"
-msgstr ""
+msgstr "კრეტა"
 
 #. Android resource: @strings/north_america
 msgid "North America"
-msgstr ""
+msgstr "ჩრდილოეთ ამერიკა"
 
 #. Android resource: @strings/alaska
 msgid "Alaska"
-msgstr ""
+msgstr "ალიასკა"
 
 #. Android resource: @strings/hawaii
 msgid "Hawaii"
-msgstr ""
+msgstr "ჰავაი"
 
 #. Android resource: @strings/usa
 msgid "USA"
-msgstr ""
+msgstr "აშშ"
 
 #. Android resource: @strings/except_alaska_and_hawaii
 msgid "(except Alaska and Hawaii)"
-msgstr ""
+msgstr "(ალიასკის და ჰავაის გარდა)"
 
 #. Android resource: @strings/midwest
 msgid "Midwest"
-msgstr ""
+msgstr "მიდუესტი"
 
 #. Android resource: @strings/michigan
 msgid "Michigan"
-msgstr ""
+msgstr "მიჩიგანი"
 
 #. Android resource: @strings/ohio
 msgid "Ohio"
-msgstr ""
+msgstr "ოჰაიო"
 
 #. Android resource: @strings/northeast
 msgid "Northeast"
-msgstr ""
+msgstr "ჩრდილოაღმოსავლეთი"
 
 #. Android resource: @strings/massachusetts
 msgid "Massachusetts"
-msgstr ""
+msgstr "მასაჩუსეტსი"
 
 #. Android resource: @strings/vermont
 msgid "Vermont"
-msgstr ""
+msgstr "ვერმონტი"
 
 #. Android resource: @strings/pacific
 msgid "Pacific"
-msgstr ""
+msgstr "წყნარი ოკეანე"
 
 #. Android resource: @strings/south
 msgid "South"
-msgstr ""
+msgstr "სამხრეთი"
 
 #. Android resource: @strings/arkansas
 msgid "Arkansas"
-msgstr ""
+msgstr "არკანზასი"
 
 #. Android resource: @strings/district_of_columbia
 msgid "District of Columbia"
-msgstr ""
+msgstr "კოლუმბიის ოლქი"
 
 #. Android resource: @strings/florida
 msgid "Florida"
-msgstr ""
+msgstr "ფლორიდა"
 
 #. Android resource: @strings/louisiana
 msgid "Louisiana"
-msgstr ""
+msgstr "ლუიზიანა"
 
 #. Android resource: @strings/maryland
 msgid "Maryland"
-msgstr ""
+msgstr "მერილენდი"
 
 #. Android resource: @strings/mississippi
 msgid "Mississippi"
-msgstr ""
+msgstr "მისისიპი"
 
 #. Android resource: @strings/oklahoma
 msgid "Oklahoma"
-msgstr ""
+msgstr "ოკლაჰომა"
 
 #. Android resource: @strings/texas
 msgid "Texas"
-msgstr ""
+msgstr "ტეხასი"
 
 #. Android resource: @strings/virginia
 msgid "Virginia"
-msgstr ""
+msgstr "ვირჯინია"
 
 #. Android resource: @strings/west_virginia
 msgid "West Virginia"
-msgstr ""
+msgstr "დასავლეთი ვირჯინია"
 
 #. Android resource: @strings/west
 msgid "West"
-msgstr ""
+msgstr "დასავლეთი"
 
 #. Android resource: @strings/arizona
 msgid "Arizona"
-msgstr ""
+msgstr "არიზონა"
 
 #. Android resource: @strings/california
 msgid "California"
-msgstr ""
+msgstr "კალიფორნია"
 
 #. Android resource: @strings/colorado
 msgid "Colorado"
-msgstr ""
+msgstr "კოლორადო"
 
 #. Android resource: @strings/idaho
 msgid "Idaho"
-msgstr ""
+msgstr "აიდაჰო"
 
 #. Android resource: @strings/montana
 msgid "Montana"
-msgstr ""
+msgstr "მონტანა"
 
 #. Android resource: @strings/new_mexico
 msgid "New Mexico"
-msgstr ""
+msgstr "ნიუ მექსიკო"
 
 #. Android resource: @strings/nevada
 msgid "Nevada"
-msgstr ""
+msgstr "ნევადა"
 
 #. Android resource: @strings/oregon
 msgid "Oregon"
-msgstr ""
+msgstr "ორეგონი"
 
 #. Android resource: @strings/utah
 msgid "Utah"
-msgstr ""
+msgstr "იუტა"
 
 #. Android resource: @strings/washington_state
 msgid "Washington State"
-msgstr ""
+msgstr "ვაშინგტონის შტატი"
 
 #. Android resource: @strings/south_middle_america
 msgid "South+Middle America"
-msgstr ""
+msgstr "სამხრეთი+შუა ამერიკა"
 
 #. Android resource: @strings/guyane_francaise
 msgid "Guyane Francaise"
-msgstr ""
+msgstr "Guyane Francaise"
 
 #, c-format
 #~ msgid "%d m"
