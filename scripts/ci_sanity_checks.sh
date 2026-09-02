@@ -7,8 +7,9 @@ set -u
 # the path given. This can be used to provide the user with the diff from the on CI run of this script which the User
 # can then import and commit.
 #
-# WARNING: make sure you commit ALL your changes before running it locally if you ever do it because it will run a git
-# checkout -- which will reset your changes on all files...
+# WARNING: This script edits files in the working tree (trailing spaces, clang-format).
+# Commit or stash first if you need a clean snapshot. Set SANITY_GIT_BASE if your clone
+# has no origin/trunk (defaults try main/master, then @{upstream}, then HEAD).
 # #####################################################################################################################
 
 return_code=0
@@ -62,8 +63,28 @@ check_po || {
 
 git config --global --add safe.directory $(pwd)
 
-# List the files that are different from the trunk
-for f in $(git --no-pager diff --name-only refs/remotes/origin/trunk | sort -u); do
+# Files to sanitize: working tree vs a merge target. Navit CI uses origin/trunk; many
+# clones only have a feature remote. Override with SANITY_GIT_BASE if needed.
+SANITY_GIT_BASE="${SANITY_GIT_BASE:-}"
+if [[ -z "${SANITY_GIT_BASE}" ]]; then
+	if git rev-parse -q --verify refs/remotes/origin/trunk >/dev/null 2>&1; then
+		SANITY_GIT_BASE="refs/remotes/origin/trunk"
+	elif git rev-parse -q --verify refs/remotes/origin/main >/dev/null 2>&1; then
+		SANITY_GIT_BASE="refs/remotes/origin/main"
+	elif git rev-parse -q --verify refs/remotes/origin/master >/dev/null 2>&1; then
+		SANITY_GIT_BASE="refs/remotes/origin/master"
+	elif git rev-parse -q --verify '@{upstream}' >/dev/null 2>&1; then
+		SANITY_GIT_BASE="@{upstream}"
+	else
+		echo "[WARN] No origin/trunk, origin/main, origin/master, or @{upstream}; set SANITY_GIT_BASE." >&2
+		echo "[WARN] Falling back to HEAD (only sees uncommitted changes vs last commit)." >&2
+		SANITY_GIT_BASE="HEAD"
+	fi
+fi
+echo "[INFO] Sanitize: git diff --name-only ${SANITY_GIT_BASE} (working tree vs base)"
+
+# List the files that are different from the base ref
+for f in $(git --no-pager diff --name-only "${SANITY_GIT_BASE}" | sort -u); do
     if [[ "${f}" =~ navit/support/ ]] || [[ "${f}" =~ navit/fib-1\.1/ ]] || [[ "${f}" =~ navit/traffic/permanentrestrictions/ ]] ; then
         echo "[DEBUG] Skipping file ${f} ..."
         continue
