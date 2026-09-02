@@ -525,6 +525,11 @@ static const char *search_list_town_name_match(struct search_list_common *common
     const char *name;
     int pi;
 
+    for (pi = 0; lang_pref && lang_pref[pi]; pi++) {
+        name = search_list_town_name_find(common, lang_pref[pi], search_query);
+        if (name)
+            return name;
+    }
     if (search_query && (name = search_list_town_name_find(common, NULL, search_query)))
         return name;
     for (pi = 0; lang_pref && lang_pref[pi]; pi++) {
