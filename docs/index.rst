@@ -69,10 +69,8 @@ Main Features
    :glob:
    :caption: Old Wiki
 
-   user/configuration/Configuration_Display_Options
    user/configuration/Configuration_Full_list_of_options
    user/configuration/Configuration_General_Options
-   user/configuration/Configuration_Layout_Options
    user/configuration/Configuration_Vehicle_Options
    user/configuration/Coordinate_format
    user/configuration/Gui_internal
