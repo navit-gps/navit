@@ -85,7 +85,7 @@ char *thread_format_error(int error) {
 static DWORD WINAPI *thread_main_wrapper(_In_ LPVOID data) {
     struct thread_main_data *main_data = (struct thread_main_data *)data;
     DWORD ret = (DWORD)(main_data->main(main_data->data));
-    // FIXME free up `data`
+    g_free(main_data);
     return ret;
 }
 
@@ -165,7 +165,7 @@ void thread_sleep(long msec) {
 
 void thread_exit(int result) {
 #ifdef HAVE_POSIX_THREADS
-    pthread_exit((void *)&result);
+    pthread_exit((void *)(intptr_t)result);
 #elif HAVE_API_WIN32
     ExitThread((DWORD)result);
 #else
