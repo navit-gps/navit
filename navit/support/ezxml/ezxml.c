@@ -97,7 +97,7 @@ const char *ezxml_attr(ezxml_t xml, const char *attr)
 }
 
 // same as ezxml_get but takes an already initialized va_list
-ezxml_t ezxml_vget(ezxml_t xml, va_list ap)
+static ezxml_t ezxml_vget(ezxml_t xml, va_list ap)
 {
     char *name = va_arg(ap, char *);
     int idx = -1;
@@ -140,7 +140,7 @@ const char **ezxml_pi(ezxml_t xml, const char *target)
 }
 
 // set an error string and return root
-ezxml_t ezxml_err(ezxml_root_t root, char *s, const char *err, ...)
+static ezxml_t ezxml_err(ezxml_root_t root, char *s, const char *err, ...)
 {
     va_list ap;
     int line = 1;
@@ -162,7 +162,7 @@ ezxml_t ezxml_err(ezxml_root_t root, char *s, const char *err, ...)
 // for cdata sections, ' ' for attribute normalization, or '*' for non-cdata
 // attribute normalization. Returns s, or if the decoded string is longer than
 // s, returns a malloced string that must be freed.
-char *ezxml_decode(char *s, char **ent, char t)
+static char *ezxml_decode(char *s, char **ent, char t)
 {
     char *e, *r = s, *m = s;
     long b, c, d, l;
