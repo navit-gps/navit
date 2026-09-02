@@ -102,6 +102,16 @@ chosen. These should also appear in Navit.
 traff_http
 ~~~~~~~~~~
 
+.. warning::
+
+   **EXPERIMENTAL — DEVELOPMENT ONLY**
+
+   The ``traff_http`` feature **and its whole backend are experimental.**
+   The ``traff-server`` referenced below is a **development server**
+   intended only for developers and evaluation, not for production use.
+   Expect instability, breaking changes and incomplete functionality,
+   and do not rely on this feature for safety-critical navigation.
+
 This plugin is still in early development stage. In order for
 ``traff_http`` to work, your platform must currently support POSIX
 threads (support for Windows is under development), and
