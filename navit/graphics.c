@@ -1012,6 +1012,8 @@ struct graphics_image *graphics_image_new(struct graphics *gra, char *path) {
  * @author Martin Schaller (04/2008)
  */
 void graphics_image_free(struct graphics *gra, struct graphics_image *img) {
+    (void)gra;
+    (void)img;
     /* Image is cached inside gra->image_cache_hash. So it would be freed only when graphics is destroyed => Do nothing
      * here. */
 }
@@ -1456,6 +1458,8 @@ static void xdisplay_free(struct displaylist *dl) {
 static inline struct displayitem_poly_holes *display_add_holes(struct item *item, int hole_count, char **p) {
     struct attr attr;
     struct displayitem_poly_holes *holes;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-align"
     holes = (struct displayitem_poly_holes *)*p;
     *p += sizeof(*holes);
     holes->count = 0;
@@ -1472,6 +1476,7 @@ static inline struct displayitem_poly_holes *display_add_holes(struct item *item
         *p += holes->ccount[holes->count] * sizeof(struct coord);
         holes->count++;
     }
+#pragma GCC diagnostic pop
     return holes;
 }
 

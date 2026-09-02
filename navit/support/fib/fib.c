@@ -128,7 +128,7 @@ fh_destroyheap(struct fibheap *h)
  * Public Heap Functions
  */
 struct fibheap *
-fh_makekeyheap()
+fh_makekeyheap(void)
 {
 	struct fibheap *n;
 
@@ -142,7 +142,7 @@ fh_makekeyheap()
 }
 
 struct fibheap *
-fh_makeheap()
+fh_makeheap(void)
 {
 	struct fibheap *n;
 
@@ -526,6 +526,7 @@ fh_consolidate(struct fibheap *h)
 static void
 fh_heaplink(struct fibheap *h, struct fibheap_el *y, struct fibheap_el *x)
 {
+	(void)h;
 	/* make y a child of x */
 	if (x->fhe_child == NULL)
 		x->fhe_child = y;
@@ -566,7 +567,7 @@ fh_cascading_cut(struct fibheap *h, struct fibheap_el *y)
  * begining of handling elements of fibheap
  */
 static struct fibheap_el *
-fhe_newelem()
+fhe_newelem(void)
 {
 	struct fibheap_el *e;
 
