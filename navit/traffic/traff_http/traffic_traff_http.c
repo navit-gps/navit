@@ -118,7 +118,12 @@ void traffic_traff_http_destroy(struct traffic_priv *this_) {
     this_->route_map_sel = NULL;
     dbg(lvl_debug, "waiting for worker thread to clean up and terminate…");
     thread_join(this_->worker_thread);
+    thread_destroy(this_->worker_thread);
+    this_->worker_thread = NULL;
     dbg(lvl_debug, "worker thread terminated");
+    g_free(this_->subscription_id);
+    this_->subscription_id = NULL;
+    g_free(this_);
 }
 
 /**
@@ -329,6 +334,7 @@ static int traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
                 request =
                     g_strdup_printf("<request operation='UNSUBSCRIBE' subscription_id='%s'/>", this_->subscription_id);
                 chunk = curl_post(this_->source, request);
+                g_free(request);
                 if (chunk) {
                     g_free(chunk->data);
                     g_free(chunk);
@@ -382,6 +388,7 @@ static int traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
                 // TODO handle unknown subscription
                 traffic_traff_http_process_response(this_, response);
             }
+            g_free(request);
         }
 
         /* finally, sleep until the next poll is due or we receive a new request */
