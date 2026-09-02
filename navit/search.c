@@ -523,8 +523,16 @@ static const char *search_list_town_name_match(struct search_list_common *common
     const char *name;
     int pi;
 
+    /* First: try preferred languages with the search query */
+    for (pi = 0; lang_pref && lang_pref[pi]; pi++) {
+        name = search_list_town_name_find(common, lang_pref[pi], search_query);
+        if (name)
+            return name;
+    }
+    /* Second: try any language with the search query */
     if (search_query && (name = search_list_town_name_find(common, NULL, search_query)))
         return name;
+    /* Third: try preferred languages without query filter */
     for (pi = 0; lang_pref && lang_pref[pi]; pi++) {
         name = search_list_town_name_find(common, lang_pref[pi], NULL);
         if (name)
