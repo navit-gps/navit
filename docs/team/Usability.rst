@@ -214,9 +214,3 @@ Android port specific issues
       tricky)
    -  type of vehicle should be remembered.
 
-.. _see_also:
-
-See also
---------
-
--  `Brainstorming <Brainstorming>`__
