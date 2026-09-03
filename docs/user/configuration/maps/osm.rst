@@ -7,18 +7,9 @@ OpenStreetMap
 Quick Start
 ~~~~~~~~~~~
 
-* Go to `Navit Planet Extractor <http://maps.navit-project.org/>`_
-* Zoom in and select the area that you are interested in. Use the 'Map Controls' on the right to switch between 'Navigation' and 'Select' modes. or use
-* preselected areas:
-
-  * `Germany <http://maps.navit-project.org/api/map/?bbox=5.185546875,46.845703125,15.46875,55.634765625>`_
-  * `France <http://maps.navit-project.org/api/map/?bbox=-5.44921875,42.01171875,8.437500000000002,51.6796875>`_
-  * `BeNeLux <http://maps.navit-project.org/api/map/?bbox=2.08740234375,48.8671875,7.778320312500001,54.51416015625>`_
-  * `Spain/Portugal <http://maps.navit-project.org/api/map/?bbox=-11.0302734375,34.87060546875,4.614257812500003,44.40673828125>`_
-  * `Italy <http://maps.navit-project.org/api/map/?bbox=6.52587890625,36.38671875,18.96240234375,47.197265625>`_
-  * `Entire planet <http://maps.navit-project.org/planet.bin>`_
-
-* Hit "Get Map!"
+* Go to `Github Actions Mapserver <https://github.com/navit-gps/gh-actions-mapserver/releases/latest>`_
+* Download the map you are interested in. Github does not show all artefacts on
+  first page load, so be sure to use the dropdown to show all >200 maps
 * Move the downloaded map to the directory of your choice, and add it to the active the mapset (see [[Configuration]]) in navit.xml with a line similar to the following:
 
 .. code-block:: xml

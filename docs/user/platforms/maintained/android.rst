@@ -50,8 +50,7 @@ There are two ways to get a map into Navit.
 
 #. Press your device's Menu button, and choose *Download first map*.
    Maps will be greater than 50MB, so it's best to turn on your wifi.
-#. Download a map from `the Navit Map
-   Extractor <http://maps.navit-project.org/>`__, connect your device to
+#. Download a map from the `Github Actions Mapserver <../../configuration/maps/osm#quick-start>`__, connect your device to
    your pc, choose *Select to copy files to/from your computer* on the
    device and save the downloaded map as *navitmap.bin* into the *navit*
    folder on your device.
