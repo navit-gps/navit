@@ -156,13 +156,13 @@ For example, you can either use:
 | ``iphone$ cd /var/mobile/Media``
 | ``iphone$ mkdir Maps``
 | ``iphone$ cd Maps``
-| ``iphone$ wget ``\ ```http://maps.navit-project.org/planet.bin`` <http://maps.navit-project.org/planet.bin>`__
+| ``iphone$ wget <URL from the Github Actions Mapserver>`` (see `OpenStreetMap maps <../../configuration/maps/osm#quick-start>`__)
 
 Or
 
 -  openssh
 
-| ``PC$ wget ``\ ```http://maps.navit-project.org/planet.bin`` <http://maps.navit-project.org/planet.bin>`__
+| ``PC$ wget <URL from the Github Actions Mapserver>`` (see `OpenStreetMap maps <../../configuration/maps/osm#quick-start>`__)
 | ``PC$ scp planet.bin root@xxx.xxx.xxx.xxx:/var/mobile/Media/Maps/planet.bin``
 
 xxx.xxx.xxx.xxx is the ip of your iphone.

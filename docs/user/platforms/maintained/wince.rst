@@ -148,16 +148,12 @@ manually configure your language by manually setting it in
 Download a Map from OpenStreetmap
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Use `Navit pre-processed OSM
-maps <http://maps.navit-project.org/download/>`__. With your browser on
-desktop:
+Download an OpenStreetMap map for your region as described in the
+`Quick Start <../../configuration/maps/osm#quick-start>`__ section,
+and save it as ``country.bin`` (e.g. ``germany.bin``) on your desktop
+computer.
 
--  Navigate to the region you want,
--  mark a rectangle for your map (e.g. for Germany) and click select for
-   the chosen rectanglular map.
--  then click on download and save the file to ``country.bin`` (e.g.
-   ``germany.bin``) on your desktop computer.
--  copy the file to on your WinCE/WinMobile device via ActiveSync or
+-  Copy the file to your WinCE/WinMobile device via ActiveSync or
    SynCE on Linux (or an option that may be faster because of the size
    of the maps, you can also directly copy the map to the (Micro-)SD
    card from your PC and re-insert the card in your mobile device
