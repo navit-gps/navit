@@ -111,6 +111,13 @@ if(NOT MSVC AND NOT WINCE)
 	SET(NAVIT_LIBS ${NAVIT_LIBS} m)
 endif(NOT MSVC AND NOT WINCE)
 target_link_libraries(${NAVIT_LIBNAME} ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} ${NAVIT_LIBS} )
+# The navit target is C-only, so the NDK does not inject the C++ runtime via
+# CMAKE_CXX_STANDARD_LIBRARIES. The curl prefab (boringssl/nghttp2) is built as
+# C++ and its static archives need operator delete / std::sort etc., so link the
+# C++ static runtime explicitly or the final link of libnavit.so fails.
+if(ANDROID)
+	target_link_libraries(${NAVIT_LIBNAME} c++_static c++abi)
+endif(ANDROID)
 set_target_properties(${NAVIT_LIBNAME} PROPERTIES COMPILE_DEFINITIONS "MODULE=navit;LIBDIR=\"${CMAKE_INSTALL_PREFIX}/${LIB_DIR}\";PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
 if (DEFINED NAVIT_COMPILE_FLAGS)
 	set_target_properties(${NAVIT_LIBNAME} PROPERTIES COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS}")
