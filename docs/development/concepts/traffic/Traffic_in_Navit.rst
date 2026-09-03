@@ -264,8 +264,19 @@ the vehicle).
 In order to route around the new distortions, you will need to stop
 navigation and set the destination again (which will cause a new route
 graph to be built—simply recalculating the route is also not sufficient,
-because that still uses the same route graph). Navit has no way to tell
-routing about the changes.
+because that still uses the same route graph). Because textfile maps are
+static, Navit has no way to tell routing about changes to them; this
+workaround is therefore only intended for the early development phase (see
+`#Dynamic Traffic Reports <#Dynamic_Traffic_Reports>`__ for more suitable
+approaches).
+
+This limitation does not apply to the traffic module and its backends
+(``traff_android``, ``traff_http``), which feed traffic distortions
+directly into the route graph and trigger a partial route recalculation.
+When new traffic information arrives, or existing distortions are changed
+or removed, the route is updated automatically to avoid problems where
+possible—there is no need to stop navigation or set the destination
+again.
 
 API
 ---
