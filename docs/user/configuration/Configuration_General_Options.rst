@@ -17,7 +17,7 @@ of ``navit.xml``. By default, the ``navit`` tag is set as follows:
     <navit center="4808 N 1134 E" zoom="256" tracking="1" orientation="-1" recent_dest="10">
 
 Some common attributes are discussed below. For more advanced features,
-see :doc:`the full list of options </user/configuration/Configuration_Full_list_of_options>`.
+see :doc:`advanced options </user/configuration/advanced/options>`.
 
 .. _initial_map_position:
 

@@ -118,10 +118,87 @@ output when you need it.
 Debugging
 ~~~~~~~~~
 
+The ``debug`` tag sets the debug level for a particular Navit module:
+
+.. code:: xml
+
+    <debug name="gui_internal" dbg_level="info"/>
+
+Attributes:
+
+* **name** - the module name; optionally a function name in that module
+  can be appended with a colon (e.g. ``navit:do_draw``). The module name
+  is defined by the ``module_add_library()`` call in each plugin's
+  ``CMakeLists.txt`` file. Common examples: ``navit``, ``gui_internal``,
+  ``map_binfile``, ``speech_speech_dispatcher``, ``vehicle_gpsd``.
+* **dbg_level** - the level to set for the component named by ``name``:
+  ``error``, ``warning``, ``info`` or ``debug`` (default ``error``).
+* **level** *(older numeric form)* - equivalent to ``dbg_level``, but
+  using a number (0-3) instead of the level's name. Prefer ``dbg_level``.
+
+Some special module names are available:
+
+* Setting a level > 0 for **"timestamps"** enables printing of timestamps
+  in debug messages.
+* Setting **"segv"** to any value >= 1 installs a segmentation-fault
+  handler that prints a backtrace. With a value of 1, gdb is run
+  non-interactively just to capture the backtrace and then quit; with a
+  value > 1, gdb is started and kept attached for interactive debugging.
+* **"global"** sets the global debug level (applies to all modules); this
+  is the same as using the command line option ``-d``.
+
 Bookmarks
 ~~~~~~~~~
 
 See `Add Bookmarks with Dbus <Dbus#add_bookmark_signal>`__
+
+Navigation and routing
+~~~~~~~~~~~~~~~~~~~~~~
+
+Tracking
+^^^^^^^^
+
+The ``tracking`` tag controls how Navit follows the position reported by
+the active vehicle while it is moving:
+
+.. code:: xml
+
+    <tracking cdf_histsize="4" route_pref="1000"/>
+
+Attributes:
+
+* **cdf_histsize** - the number of recent position samples kept for the
+  cumulative-displacement (CDF) filter that smooths the reported
+  position. A value of 0 disables the filter. See
+  `this article <http://julien.cayzac.name/code/gps/>`__ for behind the
+  filter.
+* **route_pref** - the routing bonus (added to a street's routing value)
+  that makes Navit prefer staying on the calculated route. Increasing
+  this value helps to stay on track while receiving an inaccurate GPS
+  position. The default is 300; use 1000 to 3000 if the device tends to
+  skip from the track.
+
+Announcements
+^^^^^^^^^^^^^
+
+Voice announcements are defined with ``announce`` tags inside a
+``navigation`` tag:
+
+.. code:: xml
+
+    <navigation>
+      <announce type="street_0,street_1_city" level0="300" level1="1000" level2="2000"/>
+    </navigation>
+
+Attributes:
+
+* **type** - types of ways for which this announcement is valid.
+* **level0** *(metres)* - the distance at which the final announcement
+  is made (i.e. "turn left now").
+* **level1** *(metres)* - the distance at which the intermediate
+  announcement is made (i.e. "turn left in 1km").
+* **level2** *(metres)* - the distance at which the first announcement
+  is made (i.e. "turn left soon").
 
 .. _splitting_navit.xml:
 

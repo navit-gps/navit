@@ -58,4 +58,4 @@ See Also
 --------
 
 - :doc:`coordinate_formats` for coordinate format options
-- :doc:`../advanced/full_options_reference` for complete configuration reference
+- :doc:`advanced options </user/configuration/advanced/options>` for advanced configuration options
