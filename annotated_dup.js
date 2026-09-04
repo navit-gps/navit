@@ -219,7 +219,6 @@ var annotated_dup =
     [ "malloc_tail", "structmalloc__tail.html", "structmalloc__tail" ],
     [ "map", "structmap.html", "structmap" ],
     [ "map_data", "structmap__data.html", "structmap__data" ],
-    [ "map_download", "structmap__download.html", "structmap__download" ],
     [ "map_methods", "structmap__methods.html", "structmap__methods" ],
     [ "map_priv", "structmap__priv.html", "structmap__priv" ],
     [ "map_rect", "structmap__rect.html", "structmap__rect" ],

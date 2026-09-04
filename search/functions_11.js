@@ -116,7 +116,7 @@ var searchData=
   ['popup_5fset_5fbookmark_113',['popup_set_bookmark',['../popup_8c.html#a1a2187c0bd9ab9a2216bc3e3ab0fbcb6',1,'popup.c']]],
   ['popup_5fset_5fdestination_114',['popup_set_destination',['../popup_8c.html#aa92e1ddd0959ca989f2844b3bd64f4e7',1,'popup.c']]],
   ['popup_5fset_5fposition_115',['popup_set_position',['../popup_8c.html#a26f8fb90edd10daefc29af18d04b9cf1',1,'popup.c']]],
-  ['popup_5fset_5fvisitbefore_116',['popup_set_visitbefore',['../popup_8h.html#a291bb98e55f053436dd1322b56ac0e76',1,'popup_set_visitbefore(struct navit *nav, struct pcoord *pc, int visitbefore):&#160;popup.c'],['../popup_8c.html#a291bb98e55f053436dd1322b56ac0e76',1,'popup_set_visitbefore(struct navit *nav, struct pcoord *pc, int visitbefore):&#160;popup.c']]],
+  ['popup_5fset_5fvisitbefore_116',['popup_set_visitbefore',['../popup_8c.html#a291bb98e55f053436dd1322b56ac0e76',1,'popup_set_visitbefore(struct navit *nav, struct pcoord *pc, int visitbefore):&#160;popup.c'],['../popup_8h.html#a291bb98e55f053436dd1322b56ac0e76',1,'popup_set_visitbefore(struct navit *nav, struct pcoord *pc, int visitbefore):&#160;popup.c']]],
   ['popup_5fshow_5fattr_5fval_117',['popup_show_attr_val',['../popup_8c.html#a57e39817b9b798ba9e11cda23e6a6931',1,'popup.c']]],
   ['popup_5fshow_5fattrs_118',['popup_show_attrs',['../popup_8c.html#a2295e0d8a9a9aa33078db4aaef60dc6a',1,'popup.c']]],
   ['popup_5fshow_5fitem_119',['popup_show_item',['../popup_8c.html#a210ae1cb75af3dc657ea19dcb06f7541',1,'popup.c']]],
@@ -189,10 +189,9 @@ var searchData=
   ['progress_5ftime_186',['progress_time',['../maptool_8c.html#ad3bd185beace3592c3db41326c5c8af3',1,'maptool.c']]],
   ['projection_5ffrom_5fname_187',['projection_from_name',['../projection_8c.html#a3978616304a97908438c12bb16106a21',1,'projection_from_name(const char *name, struct coord *utm_offset):&#160;projection.c'],['../projection_8h.html#ab88b4aae7ee305476bf3ac7faebe8019',1,'projection_from_name(const char *name, struct coord *offset):&#160;projection.c']]],
   ['projection_5fto_5fname_188',['projection_to_name',['../projection_8c.html#a68eb71483131cbd92118aa31788241bc',1,'projection_to_name(enum projection proj):&#160;projection.c'],['../projection_8h.html#a68eb71483131cbd92118aa31788241bc',1,'projection_to_name(enum projection proj):&#160;projection.c']]],
-  ['push_5fmodified_5fitem_189',['push_modified_item',['../binfile_8c.html#a558ac79a2d15404ad81c41ee91710e1a',1,'binfile.c']]],
-  ['push_5ftile_190',['push_tile',['../binfile_8c.html#aa4ea5396c93882e4bc1354232b1cea72',1,'binfile.c']]],
-  ['push_5fzipfile_5ftile_191',['push_zipfile_tile',['../binfile_8c.html#ab58a75ae4d6374a93b531d0bb8b9546a',1,'binfile.c']]],
-  ['push_5fzipfile_5ftile_5fdo_192',['push_zipfile_tile_do',['../binfile_8c.html#a0d3b2dd9ccb6ef61780f07c0e8400cdf',1,'binfile.c']]],
-  ['pushpage_193',['pushPage',['../classNGQProxyGui.html#a27beb6c93fd4b9073423b8db0a637659',1,'NGQProxyGui']]],
-  ['python_5fobject_5ffrom_5fattr_194',['python_object_from_attr',['../binding__python_8c.html#a417d7b7e39216d62f7b3739433ddc689',1,'python_object_from_attr(struct attr *attr):&#160;binding_python.c'],['../common_8h.html#a417d7b7e39216d62f7b3739433ddc689',1,'python_object_from_attr(struct attr *attr):&#160;binding_python.c']]]
+  ['push_5ftile_189',['push_tile',['../binfile_8c.html#aa4ea5396c93882e4bc1354232b1cea72',1,'binfile.c']]],
+  ['push_5fzipfile_5ftile_190',['push_zipfile_tile',['../binfile_8c.html#ab58a75ae4d6374a93b531d0bb8b9546a',1,'binfile.c']]],
+  ['push_5fzipfile_5ftile_5fdo_191',['push_zipfile_tile_do',['../binfile_8c.html#a0d3b2dd9ccb6ef61780f07c0e8400cdf',1,'binfile.c']]],
+  ['pushpage_192',['pushPage',['../classNGQProxyGui.html#a27beb6c93fd4b9073423b8db0a637659',1,'NGQProxyGui']]],
+  ['python_5fobject_5ffrom_5fattr_193',['python_object_from_attr',['../binding__python_8c.html#a417d7b7e39216d62f7b3739433ddc689',1,'python_object_from_attr(struct attr *attr):&#160;binding_python.c'],['../common_8h.html#a417d7b7e39216d62f7b3739433ddc689',1,'python_object_from_attr(struct attr *attr):&#160;binding_python.c']]]
 ];

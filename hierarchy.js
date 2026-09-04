@@ -226,7 +226,6 @@ var hierarchy =
     [ "malloc_tail", "structmalloc__tail.html", null ],
     [ "map", "structmap.html", null ],
     [ "map_data", "structmap__data.html", null ],
-    [ "map_download", "structmap__download.html", null ],
     [ "map_methods", "structmap__methods.html", null ],
     [ "map_priv", "structmap__priv.html", null ],
     [ "map_rect", "structmap__rect.html", null ],

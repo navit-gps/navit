@@ -158,7 +158,6 @@ var structmap__rect__priv =
     [ "tre", "structmap__rect__priv.html#a52594165b791088dba7c65aa66eb417e", null ],
     [ "tre_hdr", "structmap__rect__priv.html#a49f477fdacb9f322b846894aabe5e1e7", null ],
     [ "ts", "structmap__rect__priv.html#a0ec981f21fdbb8ca5278d22ab3b046df", null ],
-    [ "url", "structmap__rect__priv.html#a10d527b25e3a1e0e9e81beda3bb03d88", null ],
     [ "ways", "structmap__rect__priv.html#a4c405eaeaee3d6750dd976ce36a94ef2", null ],
     [ "xsel", "structmap__rect__priv.html#a2f639b2528da73d2e6f733470ca968f6", null ]
 ];
