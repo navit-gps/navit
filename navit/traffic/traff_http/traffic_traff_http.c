@@ -308,6 +308,23 @@ static int traffic_traff_http_process_response(struct traffic_priv *this_, struc
 }
 
 /**
+ * @brief Checks whether the plugin is shutting down.
+ *
+ * The flag is owned and set by the main thread, so reads are guarded by the queue lock to avoid a data race.
+ *
+ * @param this_ The instance to check
+ *
+ * @return Whether the plugin is shutting down
+ */
+static int traffic_traff_http_is_exiting(struct traffic_priv *this_) {
+    int exiting;
+    thread_lock_acquire_write(this_->queue_lock);
+    exiting = this_->exiting;
+    thread_lock_release_write(this_->queue_lock);
+    return exiting;
+}
+
+/**
  * @brief Main function for the worker thread.
  *
  * The worker thread handles all network I/O and, if a feed has been received, notifies the main thread
@@ -334,11 +351,8 @@ static int traffic_traff_http_worker_thread_main(void *this_gpointer) {
     struct traffic_response *response;
 
     while (1) {
-        /* by default, poll the source every time the loop runs, unless we’re exiting */
-        poll = !this_->exiting;
-
         /* if we’re exiting, clean up and exit */
-        if (this_->exiting) {
+        if (traffic_traff_http_is_exiting(this_)) {
 
             /* no need for the lock as the main thread is no longer placing requests at this point */
             while (this_->queue) {
@@ -367,6 +381,9 @@ static int traffic_traff_http_worker_thread_main(void *this_gpointer) {
 
             break;
         }
+
+        /* by default, poll the source every time the loop runs */
+        poll = 1;
 
         /* check if we have any pending requests */
         thread_lock_acquire_write(this_->queue_lock);
@@ -418,7 +435,7 @@ static int traffic_traff_http_worker_thread_main(void *this_gpointer) {
         /* finally, sleep until the next poll is due or we receive a new request; wake regularly to notice shutdown */
         {
             long wait_left = this_->interval;
-            while (wait_left > 0 && !this_->exiting) {
+            while (wait_left > 0 && !traffic_traff_http_is_exiting(this_)) {
                 long wait_slice = wait_left > EXIT_RECHECK_INTERVAL ? EXIT_RECHECK_INTERVAL : wait_left;
                 thread_event_wait(this_->queue_event, wait_slice);
                 wait_left -= wait_slice;
