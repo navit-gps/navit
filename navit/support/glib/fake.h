@@ -2,7 +2,10 @@
 #ifndef __GLIB_FAKE_H__
 #define __GLIB_FAKE_H__
 
-#ifndef HAVE_API_WIN32_BASE
+#ifdef HAVE_API_WIN32_BASE
+#include <windows.h>
+#define USE_POSIX_THREADS 0
+#else
 #define USE_POSIX_THREADS 1
 #endif
 #if USE_POSIX_THREADS
