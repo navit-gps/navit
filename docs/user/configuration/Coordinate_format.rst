@@ -11,10 +11,11 @@ Coordinates in Navit
 Various parts of Navit will read geographical coordinates provided as
 text:
 
--  the `textfile <textfile>`__ map format
+-  the :doc:`textfile </user/configuration/maps/Textfile>` map format
 -  the "center=" attribute in the configuration file
 -  some Navit commands (e.g. set_position), which can be invoked via the
-   `internal GUI <internal_GUI>`__ or the `Dbus <Dbus>`__ bindings
+   :doc:`internal GUI </user/configuration/Internal_GUI>` or the
+   :doc:`Dbus </user/configuration/integrations/dbus>` bindings
 -  the files for bookmarks and last map position (bookmarks.txt and
    center.txt)
 
@@ -46,7 +47,7 @@ common navigation systems).
 Latitude / Longitude in degrees and minutes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Latitude / Longitude can also be specified in degress and minutes with
+Latitude / Longitude can also be specified in degrees and minutes with
 compass directions (N/S, E/W):
 
 ``4808 N 1134 E``

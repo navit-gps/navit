@@ -23,8 +23,7 @@ latitude (note order) as decimal fractions, for example:
 
 ``-33.3553 6.334``
 
-For the full list of formats see `Coordinate
-format <Coordinate_format>`__.
+For the full list of formats see :doc:`Coordinate format </user/configuration/Coordinate_format>`.
 
 If you want to have points after polylines/polygons, you have to add an
 empty line after the polys Then:

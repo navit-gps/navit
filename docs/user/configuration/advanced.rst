@@ -16,4 +16,5 @@ The rest of this webpage is meant for advanced/power users who'd like to fiddle 
    maps/index
    Layout
    Vehicleprofile
+   Coordinate_format
 
