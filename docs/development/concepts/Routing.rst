@@ -63,7 +63,7 @@ Tweaks
 ------
 
 As of , the vehicle profile in
-`navit.xml <Configuring/Full_list_of_options>`__ can take a
+:doc:`navit.xml </user/configuration/basic/vehicle>` can take a
 **``route_depth``** attribute. This attribute sets how the rectangles
 mentioned above are built (how many rectangles, which size, which
 order).

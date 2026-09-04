@@ -184,4 +184,68 @@ The speeds are in km/h.
 
 Only the vehicle profile names "car", "bike" and "pedestrian" are translated in the GUI. Others appear as-is from the XML config file.
 
+Vehicleprofile attributes
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ``vehicleprofile`` tag supports the following routing attributes:
+
+* **name** - the name of the profile, used by the ``profilename``
+  attribute inside the ``vehicle`` tag.
+* **flags** - the road flags (as defined by the AF\_\* constants in
+  ``attr.h``) that must be set for a way to be passable for this
+  profile. See :doc:`Vehicle profile flags </user/configuration/Vehicle_profile_flags>` for a
+  comprehensive list of bit values.
+* **flags_forward_mask** - the bits that, in addition to ``flags``, a
+  way must *not* have set in order to be used in the forward direction.
+  More technically: a way's ``flags`` are ANDed with this mask; the
+  result must match ``flags`` or the way must not be used.
+* **flags_reverse_mask** - identical to ``flags_forward_mask``, but for
+  ways used in the reverse direction.
+* **route_depth** - sets which roads to consider for routing, as a
+  comma-separated list of ``order:rectsize`` tuples (e.g.
+  ``route_depth="4:25%,8:40000,18:10000"``). Order of the tuples is
+  insignificant. ``order`` is the depth of roads to consider (highest is
+  18); ``rectsize`` is the size of the rectangle (in metres) around each
+  waypoint in which these roads are considered, or a percentage of the
+  longer side of the route when followed by a ``%`` sign. Increasing
+  these values increases time and memory needed to calculate routes.
+* **route_mode** - ``0`` automatically selects between an on-road and an
+  off-road route, ``1`` always uses an on-road route, ``2`` always uses
+  an off-road route.
+* **static_speed** *(km/h)* - the maximum speed at which the vehicle is
+  still considered stationary. If the current speed drops below this
+  value *and* the distance moved since the previous GPS position stays
+  below ``static_distance``, Navit marks the position as static and does
+  not update the map or the voice announcements while the vehicle is
+  standing still. The default is 3 km/h.
+* **static_distance** *(metres)* - the maximum distance moved from the
+  previous GPS position at which the vehicle is still considered
+  stationary. If the distance moved since the previous position stays
+  below this value *and* the speed drops below ``static_speed``, Navit
+  marks the position as static. The default is 10 m.
+
+  The two options work together to avoid unnecessary map updates that
+  would otherwise be caused by a stationary GPS receiver drifting in
+  place. Making the values smaller makes Navit more sensitive to
+  movement (it will detect motion sooner).
+
+Roadprofile attributes
+^^^^^^^^^^^^^^^^^^^^^^
+
+Routing behaviour of different road types is described by ``roadprofile``
+elements nested inside a ``vehicleprofile`` (see the example above):
+
+* **item_types** - the types of ways for which this profile is valid
+  (e.g. ``steps``).
+* **speed** *(km/h)* - the assumed maximum speed of the vehicle on roads
+  of this type. It caps the routing speed used to compute travel time,
+  so it influences both which route is chosen and the estimated time of
+  arrival. If unset, no such cap is applied.
+* **maxspeed** *(km/h)* - the speed limit on roads of this type, used as
+  a fallback when the map data provides no explicit (OSM) speed limit
+  for a road. In that case it caps the routing speed (and is also shown
+  by the ``speed_warner`` OSD item as the current speed limit). When a
+  road does carry an explicit OSM speed limit, that value takes
+  precedence.
+
 
