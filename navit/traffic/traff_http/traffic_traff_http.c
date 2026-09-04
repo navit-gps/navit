@@ -73,6 +73,9 @@
 /** Name for the worker thread */
 #define TRAFF_HTTP_WORKER_THREAD_NAME "traff_http"
 
+/** How often the worker thread re-checks for shutdown while waiting for the next poll due, in msec */
+#define EXIT_RECHECK_INTERVAL 1000
+
 /**
  * @brief Stores information about the plugin instance.
  */
@@ -118,11 +121,19 @@ void traffic_traff_http_destroy(struct traffic_priv *this_) {
     if (this_->route_map_sel)
         route_free_selection(this_->route_map_sel);
     this_->route_map_sel = NULL;
-    dbg(lvl_debug, "waiting for worker thread to clean up and terminate…");
-    thread_join(this_->worker_thread);
-    thread_destroy(this_->worker_thread);
-    this_->worker_thread = NULL;
-    dbg(lvl_debug, "worker thread terminated");
+    if (this_->worker_thread) {
+        dbg(lvl_debug, "waiting for worker thread to clean up and terminate…");
+        thread_join(this_->worker_thread);
+        thread_destroy(this_->worker_thread);
+        this_->worker_thread = NULL;
+        dbg(lvl_debug, "worker thread terminated");
+    } else {
+        /* the worker thread never started and did not dispose of the queue infrastructure */
+        thread_event_destroy(this_->queue_event);
+        this_->queue_event = NULL;
+        thread_lock_destroy(this_->queue_lock);
+        this_->queue_lock = NULL;
+    }
     g_free(this_->subscription_id);
     this_->subscription_id = NULL;
     g_free(this_);
@@ -404,8 +415,15 @@ static int traffic_traff_http_worker_thread_main(void *this_gpointer) {
             g_free(request);
         }
 
-        /* finally, sleep until the next poll is due or we receive a new request */
-        thread_event_wait(this_->queue_event, this_->interval);
+        /* finally, sleep until the next poll is due or we receive a new request; wake regularly to notice shutdown */
+        {
+            long wait_left = this_->interval;
+            while (wait_left > 0 && !this_->exiting) {
+                long wait_slice = wait_left > EXIT_RECHECK_INTERVAL ? EXIT_RECHECK_INTERVAL : wait_left;
+                thread_event_wait(this_->queue_event, wait_slice);
+                wait_left -= wait_slice;
+            }
+        }
     }
     return 0;
 }
@@ -648,16 +666,17 @@ static struct traffic_priv *traffic_traff_http_new(struct navit *nav, struct tra
     else
         ret->interval = DEFAULT_INTERVAL;
     attr = attr_search(attrs, attr_source);
-    if (attr) {
-        if (strncmp(attr->u.str, "http://", 7) && strncmp(attr->u.str, "https://", 8)) {
-            dbg(lvl_error, "source must be an HTTP(S) URI: %s", attr->u.str);
-        } else
-            ret->source = attr->u.str;
-    } else {
+    if (!attr) {
         dbg(lvl_error, "traffic source unset. Unable to use traff-http plugin");
         g_free(ret);
         return NULL;
     }
+    if (strncmp(attr->u.str, "http://", 7) && strncmp(attr->u.str, "https://", 8)) {
+        dbg(lvl_error, "source must be an HTTP(S) URI: %s", attr->u.str);
+        g_free(ret);
+        return NULL;
+    }
+    ret->source = attr->u.str;
     ret->queue = NULL;
     ret->queue_lock = thread_lock_new();
     ret->queue_event = thread_event_new();
@@ -665,7 +684,12 @@ static struct traffic_priv *traffic_traff_http_new(struct navit *nav, struct tra
     ret->exiting = 0;
     *meth = traffic_traff_http_meth;
 
-    traffic_traff_http_init(ret);
+    if (!traffic_traff_http_init(ret)) {
+        thread_event_destroy(ret->queue_event);
+        thread_lock_destroy(ret->queue_lock);
+        g_free(ret);
+        return NULL;
+    }
 
     return ret;
 }
