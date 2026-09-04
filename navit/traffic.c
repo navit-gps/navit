@@ -94,6 +94,9 @@
 /** Time slice for idle loops, in milliseconds */
 #define TIME_SLICE 40
 
+/** Idle callback priority for traffic processing (lower value = higher priority) */
+#define TRAFFIC_IDLE_PRIORITY 300
+
 /** Default value assumed for access flags if we cannot get flags for the item, nor for the item type */
 int item_default_flags_value = AF_ALL;
 
@@ -101,12 +104,16 @@ int item_default_flags_value = AF_ALL;
  * @brief Private data shared between all traffic instances.
  */
 struct traffic_shared_priv {
-    GList *messages;      /**< Currently active messages */
-    GList *message_queue; /**< Queued messages, waiting to be processed */
+    GList *messages;                     /**< Currently active messages */
+    GList *message_queue;                /**< Queued messages, waiting to be processed */
+    GList *deferred_segments;            /**< Messages awaiting segment addition via idle callback */
+    struct callback *deferred_idle_cb;   /**< Idle callback for deferred segment addition */
+    struct event_idle *deferred_idle_ev; /**< Idle event for deferred segment addition */
     // TODO messages by ID?                 In a later phase…
-    struct mapset *ms; /**< The mapset used for routing */
-    struct route *rt;  /**< The route to notify of traffic changes */
-    struct map *map;   /**< The traffic map, in which traffic distortions are stored */
+    struct navit *navit; /**< The navit instance (for triggering redraws) */
+    struct mapset *ms;   /**< The mapset used for routing */
+    struct route *rt;    /**< The route to notify of traffic changes */
+    struct map *map;     /**< The traffic map, in which traffic distortions are stored */
 };
 
 /**
@@ -245,6 +252,9 @@ struct point_data {
  * to NULL when a message is created.
  */
 struct xml_state {
+    char *status;                      /**< Response status, indicating success or an error, if any */
+    char *subscription_id;             /**< Subscription ID, if any */
+    int timeout;                       /**< Timeout in seconds, if any, else 0 */
     GList *messages;                   /**< Messages read so far */
     GList *tagstack;                   /**< Currently open tags (order is bottom to top) */
     int is_valid;                      /**< Whether `tagstack` represents a hierarchy of elements we recognize */
@@ -296,6 +306,7 @@ static int tm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *a
 static int tm_type_set(void *priv_data, enum item_type type);
 static struct map_selection *traffic_location_get_rect(struct traffic_location *this_, enum projection projection);
 static struct route_graph *traffic_location_get_route_graph(struct traffic_location *this_, struct mapset *ms);
+static struct traffic_response *traffic_get_response_from_parsed_xml(struct xml_state *state);
 static int traffic_location_match_attributes(struct traffic_location *this_, struct item *item);
 static int traffic_message_add_segments(struct traffic_message *this_, struct mapset *ms, struct seg_data *data,
                                         struct map *map, struct route *route);
@@ -308,6 +319,7 @@ static void traffic_dump_messages_to_xml(struct traffic_shared_priv *shared);
 static void traffic_loop(struct traffic *this_);
 static struct traffic *traffic_new(struct attr *parent, struct attr **attrs);
 static int traffic_process_messages_int(struct traffic *this_, int flags);
+static void traffic_add_segments_idle(struct traffic_shared_priv *shared);
 static void traffic_message_dump_to_stderr(struct traffic_message *this_);
 static struct seg_data *traffic_message_parse_events(struct traffic_message *this_);
 static struct route_graph_point *traffic_route_flood_graph(struct route_graph *rg, struct seg_data *data,
@@ -967,7 +979,6 @@ static struct map_rect_priv *tm_rect_new(struct map_priv *priv, struct map_selec
                 msg_sel = traffic_location_get_rect(message->location, traffic_map_meth.pro);
                 for (rect_sel = sel; rect_sel; rect_sel = rect_sel->next)
                     if (coord_rect_overlap(&(msg_sel->u.c_rect), &(rect_sel->u.c_rect))) {
-                        /* TODO do this in an idle loop, not here */
                         /* lazy cache restore */
                         if (message->location->priv->txt_data) {
                             dbg(lvl_debug, "location has txt_data, trying to restore");
@@ -1231,13 +1242,13 @@ static struct map_methods traffic_map_meth = {
  */
 static int traffic_event_is_valid(struct traffic_event *this_) {
     if (!this_->event_class || !this_->type) {
-        dbg(lvl_debug, "event_class (%d) or type (%d) are unknown", this_->event_class, this_->type);
+        dbg(lvl_warning, "event_class (%d) or type (%d) are unknown", this_->event_class, this_->type);
         return 0;
     }
     switch (this_->event_class) {
     case event_class_congestion:
         if ((this_->type < event_congestion_cleared) || (this_->type >= event_delay_clearance)) {
-            dbg(lvl_debug, "illegal type (%d) for event_class_congestion", this_->type);
+            dbg(lvl_warning, "illegal type (%d) for event_class_congestion", this_->type);
             return 0;
         }
         break;
@@ -1255,11 +1266,11 @@ static int traffic_event_is_valid(struct traffic_event *this_) {
         }
         break;
     default:
-        dbg(lvl_debug, "unknown event class %d", this_->event_class);
+        dbg(lvl_warning, "unknown event class %d", this_->event_class);
         return 0;
     }
     if (this_->si_count && !this_->si) {
-        dbg(lvl_debug, "si_count=%d but no supplementary information", this_->si_count);
+        dbg(lvl_warning, "si_count=%d but no supplementary information", this_->si_count);
         return 0;
     }
     /* TODO check SI */
@@ -3587,6 +3598,8 @@ static int traffic_message_restore_segments(struct traffic_message *this_, struc
              * Iterate through items in the map.
              */
             while ((map_item = map_rect_get_item(mr))) {
+                if (!map_item)
+                    continue;
                 /* If item is not routable, continue */
                 if ((map_item->type < route_item_first) || (map_item->type > route_item_last))
                     continue;
@@ -3615,6 +3628,8 @@ static int traffic_message_restore_segments(struct traffic_message *this_, struc
 
                     /* Skip already-matched items */
                     if (pitem->is_matched)
+                        continue;
+                    if (!map_item)
                         continue;
                     /* If IDs do not match, continue */
                     if ((map_item->id_hi != pitem->id_hi) || (map_item->id_lo != pitem->id_lo))
@@ -3851,7 +3866,7 @@ static int traffic_message_is_valid(struct traffic_message *this_) {
         return 0;
     }
     if (!this_->receive_time || !this_->update_time) {
-        dbg(lvl_debug, "%s: receive_time or update_time not supplied", this_->id);
+        dbg(lvl_warning, "%s: receive_time or update_time not supplied", this_->id);
         return 0;
     }
     if (!this_->is_cancellation) {
@@ -3860,15 +3875,15 @@ static int traffic_message_is_valid(struct traffic_message *this_) {
             return 0;
         }
         if (!this_->location) {
-            dbg(lvl_debug, "%s: not a cancellation, but no location supplied", this_->id);
+            dbg(lvl_warning, "%s: not a cancellation, but no location supplied", this_->id);
             return 0;
         }
         if (!traffic_location_is_valid(this_->location)) {
-            dbg(lvl_debug, "%s: not a cancellation, but location is invalid", this_->id);
+            dbg(lvl_warning, "%s: not a cancellation, but location is invalid", this_->id);
             return 0;
         }
         if (!this_->event_count || !this_->events) {
-            dbg(lvl_debug, "%s: not a cancellation, but no events supplied", this_->id);
+            dbg(lvl_warning, "%s: not a cancellation, but no events supplied", this_->id);
             return 0;
         }
         for (i = 0; i < this_->event_count; i++)
@@ -4174,6 +4189,7 @@ static void traffic_set_shared(struct traffic *this_) {
     if (!this_->shared) {
         this_->shared = g_new0(struct traffic_shared_priv, 1);
     }
+    this_->shared->navit = this_->navit;
 }
 
 /**
@@ -4310,6 +4326,70 @@ static void traffic_dump_messages_to_xml(struct traffic_shared_priv *shared) {
 }
 
 /**
+ * @brief Ensures the deferred segment addition idle callback is registered.
+ *
+ * If the deferred idle callback is not yet active and there are messages awaiting segment
+ * addition, this function registers the idle callback.
+ *
+ * @param shared The shared traffic data
+ */
+static void traffic_ensure_deferred_idle(struct traffic_shared_priv *shared) {
+    if (!shared->deferred_idle_cb)
+        shared->deferred_idle_cb = callback_new_1(callback_cast(traffic_add_segments_idle), shared);
+    if (!shared->deferred_idle_ev)
+        shared->deferred_idle_ev = event_add_idle(TRAFFIC_IDLE_PRIORITY, shared->deferred_idle_cb);
+}
+
+/**
+ * @brief Idle callback for deferred segment addition.
+ *
+ * Processes one message from the deferred segment queue per invocation. This keeps the GUI
+ * responsive by yielding back to the event loop after each expensive segment addition.
+ *
+ * @param shared The shared traffic data
+ */
+static void traffic_add_segments_idle(struct traffic_shared_priv *shared) {
+    GList *entry;
+    struct traffic_message *message;
+    struct seg_data *data;
+    struct attr attr;
+
+    entry = shared->deferred_segments;
+    if (!entry) {
+        if (shared->deferred_idle_ev)
+            event_remove_idle(shared->deferred_idle_ev);
+        if (shared->deferred_idle_cb)
+            callback_destroy(shared->deferred_idle_cb);
+        shared->deferred_idle_ev = NULL;
+        shared->deferred_idle_cb = NULL;
+        return;
+    }
+
+    message = (struct traffic_message *)entry->data;
+    shared->deferred_segments = g_list_remove(shared->deferred_segments, message);
+
+    if (!message || !message->priv) {
+        dbg(lvl_warning, "traffic_add_segments_idle: skipping invalid message %p", message);
+        if (shared->deferred_segments)
+            traffic_ensure_deferred_idle(shared);
+        return;
+    }
+
+    if (!message->priv->items && route_get_attr(shared->rt, attr_route_status, &attr, NULL) && route_get_pos(shared->rt)
+        && ((attr.u.num & route_status_destination_set))) {
+        traffic_location_set_enclosing_rect(message->location, NULL);
+        data = traffic_message_parse_events(message);
+        traffic_message_add_segments(message, shared->ms, data, shared->map, shared->rt);
+        g_free(data);
+        if (message->priv->items && navit_get_ready(shared->navit) == 3)
+            navit_draw_async(shared->navit, 1);
+    }
+
+    if (shared->deferred_segments)
+        traffic_ensure_deferred_idle(shared);
+}
+
+/**
  * @brief Processes new traffic messages.
  *
  * This is the internal backend for `traffic_process_messages()`. It is also used internally.
@@ -4363,6 +4443,9 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
     /* Message replaced by the current one whose segments can be reused */
     struct traffic_message *swap_candidate;
 
+    /* Segment data from a stored message, used for comparison */
+    struct seg_data *stored_data;
+
     /* Temporary store for swapping locations and items */
     struct traffic_location *swap_location;
     struct item **swap_items;
@@ -4380,8 +4463,11 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
         dbg(lvl_debug, "*****enter, %d messages in queue", g_list_length(this_->shared->message_queue));
 
     gettimeofday(&start, NULL);
-    for (; this_->shared->message_queue && (msec < TIME_SLICE);
-         this_->shared->message_queue = g_list_remove(this_->shared->message_queue, message)) {
+    while (this_->shared->message_queue) {
+        gettimeofday(&now, NULL);
+        msec = (now.tv_usec - start.tv_usec) / ((double)1000) + (now.tv_sec - start.tv_sec) * 1000;
+        if (msec >= TIME_SLICE)
+            break;
         message = (struct traffic_message *)this_->shared->message_queue->data;
         i++;
         if (message->expiration_time < time(NULL)) {
@@ -4411,7 +4497,6 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
                 dbg(lvl_debug, "*****checkpoint PROCESS-3");
                 /* check if any of the replaced messages has the same location and segment data */
                 for (msg_iter = msgs_to_remove; msg_iter && !swap_candidate; msg_iter = g_list_next(msg_iter)) {
-                    struct seg_data *stored_data;
                     stored_msg = (struct traffic_message *)msg_iter->data;
                     stored_data = traffic_message_parse_events(stored_msg);
                     if (seg_data_equals(data, stored_data)
@@ -4454,17 +4539,13 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
                                  * map selection, as the message might have an effect on the route. Otherwise this
                                  * operation is deferred until a rectangle overlapping with the location is queried.
                                  */
-                                if (!message->priv->items) {
-                                    /* TODO do this in an idle loop, not here */
-                                    traffic_message_add_segments(message, this_->shared->ms, data, this_->shared->map,
-                                                                 this_->shared->rt);
+                                if (!message->priv->items && !message->is_cancellation) {
+                                    this_->shared->deferred_segments =
+                                        g_list_append(this_->shared->deferred_segments, message);
+                                    traffic_ensure_deferred_idle(this_->shared);
                                     break;
-                                    map_selection_destroy(loc_ms);
-                                    map_selection_destroy(rt_ms);
                                 }
                             }
-                        g_free(loc_ms);
-                        route_free_selection(rt_ms);
                     }
                     ret |= MESSAGE_UPDATE_SEGMENTS;
                 }
@@ -4484,6 +4565,7 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
                     if (stored_msg->priv->items)
                         ret |= MESSAGE_UPDATE_SEGMENTS;
                     this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
+                    this_->shared->deferred_segments = g_list_remove_all(this_->shared->deferred_segments, stored_msg);
                     traffic_message_remove_item_data(stored_msg, message, this_->shared->rt);
                     traffic_message_destroy(stored_msg);
                 }
@@ -4495,13 +4577,14 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
 
             traffic_message_dump_to_stderr(message);
 
-            if (message->is_cancellation)
+            if (message->is_cancellation) {
+                this_->shared->deferred_segments = g_list_remove_all(this_->shared->deferred_segments, message);
                 traffic_message_destroy(message);
+            }
 
             dbg(lvl_debug, "*****checkpoint PROCESS-6");
         }
-        gettimeofday(&now, NULL);
-        msec = (now.tv_usec - start.tv_usec) / ((double)1000) + (now.tv_sec - start.tv_sec) * 1000;
+        this_->shared->message_queue = g_list_remove(this_->shared->message_queue, message);
     }
 
     if (i)
@@ -4536,6 +4619,7 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
                 if (stored_msg->priv->items)
                     ret |= MESSAGE_UPDATE_SEGMENTS;
                 this_->shared->messages = g_list_remove_all(this_->shared->messages, stored_msg);
+                this_->shared->deferred_segments = g_list_remove_all(this_->shared->deferred_segments, stored_msg);
                 traffic_message_remove_item_data(stored_msg, NULL, this_->shared->rt);
                 traffic_message_destroy(stored_msg);
             }
@@ -4589,7 +4673,7 @@ static void traffic_loop(struct traffic *this_) {
             callback_destroy(this_->idle_cb);
         this_->idle_cb =
             callback_new_2(callback_cast(traffic_process_messages_int), this_, PROCESS_MESSAGES_PURGE_EXPIRED);
-        this_->idle_ev = event_add_idle(50, this_->idle_cb);
+        this_->idle_ev = event_add_idle(TRAFFIC_IDLE_PRIORITY, this_->idle_cb);
     } else
         traffic_process_messages_int(this_, PROCESS_MESSAGES_PURGE_EXPIRED);
 }
@@ -4606,8 +4690,8 @@ static void traffic_loop(struct traffic *this_) {
  */
 static struct traffic *traffic_new(struct attr *parent, struct attr **attrs) {
     struct traffic *this_;
-    struct traffic_priv *(*traffic_new)(struct navit *nav, struct traffic_methods *meth, struct attr **attrs,
-                                        struct callback_list *cbl);
+    struct traffic_priv *(*traffic_priv_new)(struct navit *nav, struct traffic_methods *meth, struct attr **attrs,
+                                             struct callback_list *cbl);
     struct attr *attr;
 
     attr = attr_search(attrs, attr_type);
@@ -4616,9 +4700,9 @@ static struct traffic *traffic_new(struct attr *parent, struct attr **attrs) {
         return NULL;
     }
     dbg(lvl_debug, "type='%s'", attr->u.str);
-    traffic_new = plugin_get_category_traffic(attr->u.str);
-    dbg(lvl_debug, "new=%p", traffic_new);
-    if (!traffic_new) {
+    traffic_priv_new = plugin_get_category_traffic(attr->u.str);
+    dbg(lvl_debug, "new=%p", traffic_priv_new);
+    if (!traffic_priv_new) {
         dbg(lvl_error, "wrong type '%s'", attr->u.str);
         return NULL;
     }
@@ -4631,7 +4715,7 @@ static struct traffic *traffic_new(struct attr *parent, struct attr **attrs) {
         return NULL;
     }
 
-    this_->priv = traffic_new(parent->u.navit, &this_->meth, this_->attrs, NULL);
+    this_->priv = traffic_priv_new(parent->u.navit, &this_->meth, this_->attrs, NULL);
     dbg(lvl_debug, "get_messages=%p", this_->meth.get_messages);
     dbg(lvl_debug, "priv=%p", this_->priv);
     if (!this_->priv) {
@@ -4729,6 +4813,10 @@ static void traffic_xml_element_destroy(struct xml_element *this_) {
 /**
  * @brief Retrieves the value of an XML attribute.
  *
+ * The return value is a pointer from `values`. If this is called from an XML parser callback function,
+ * the return value is valid only inside that function. Callers wishing to store the value for later use
+ * must store a copy of the return value.
+ *
  * @param name The name of the attribute to retrieve
  * @param names All attribute names
  * @param values Attribute values (indices correspond to `names`)
@@ -4760,9 +4848,14 @@ static int traffic_xml_is_tagstack_valid(struct xml_state *state) {
         el = (struct xml_element *)tagiter->data;
         el_parent = tagiter->next ? tagiter->next->data : NULL;
 
-        if (!g_ascii_strcasecmp(el->tag_name, "navit_messages") || !g_ascii_strcasecmp(el->tag_name, "feed"))
+        if (!g_ascii_strcasecmp(el->tag_name, "navit_messages") || !g_ascii_strcasecmp(el->tag_name, "response"))
+            /* response and navit_messages are only allowed as root elements */
             ret = !tagiter->next;
+        else if (!g_ascii_strcasecmp(el->tag_name, "feed"))
+            /* feed can be a root element or a child of response */
+            ret = (!el_parent || !g_ascii_strcasecmp(el_parent->tag_name, "response"));
         else if (!g_ascii_strcasecmp((char *)el->tag_name, "message"))
+            /* message can be a root element or a child of feed or navit_messages */
             ret = (!el_parent || !g_ascii_strcasecmp(el_parent->tag_name, "navit_messages")
                    || !g_ascii_strcasecmp(el_parent->tag_name, "feed"));
         else if (!g_ascii_strcasecmp(el->tag_name, "events") || !g_ascii_strcasecmp(el->tag_name, "location")
@@ -4773,6 +4866,7 @@ static int traffic_xml_is_tagstack_valid(struct xml_state *state) {
         else if (!g_ascii_strcasecmp(el->tag_name, "from") || !g_ascii_strcasecmp(el->tag_name, "to")
                  || !g_ascii_strcasecmp(el->tag_name, "at") || !g_ascii_strcasecmp(el->tag_name, "via")
                  || !g_ascii_strcasecmp(el->tag_name, "not_via") || !g_ascii_strcasecmp(el->tag_name, "navit_items"))
+            /* FIXME navit_messages is not legal in TraFF (root element is feed or response) */
             ret = (el_parent && !g_ascii_strcasecmp(el_parent->tag_name, "location"));
         else if (!g_ascii_strcasecmp(el->tag_name, "supplementary_info"))
             ret = (el_parent && !g_ascii_strcasecmp(el_parent->tag_name, "event"));
@@ -4810,7 +4904,16 @@ static void traffic_xml_start(xml_context *dummy, const char *tag_name, const ch
 
     dbg(lvl_debug, "OPEN: %s", tag_name);
 
-    if (!g_ascii_strcasecmp((char *)tag_name, "supplementary_info")) {
+    if (!g_ascii_strcasecmp((char *)tag_name, "response")) {
+        state->status = traffic_xml_get_attr("status", el->names, el->values);
+        if (state->status)
+            state->status = g_strdup(state->status);
+        state->subscription_id = traffic_xml_get_attr("subscription_id", el->names, el->values);
+        if (state->subscription_id)
+            state->subscription_id = g_strdup(state->subscription_id);
+        state->timeout = 0;
+        /* TODO parse timeout */
+    } else if (!g_ascii_strcasecmp((char *)tag_name, "supplementary_info")) {
         state->si = g_list_append(
             state->si, traffic_suppl_info_new(si_class_new(traffic_xml_get_attr("class", el->names, el->values)),
                                               si_type_new(traffic_xml_get_attr("type", el->names, el->values)),
@@ -4833,6 +4936,29 @@ static void traffic_xml_start(xml_context *dummy, const char *tag_name, const ch
      * from, to, at, via, not_via: Everything handled in end callback
      * navit_items: Everything handled in end callback
      */
+}
+
+static int floatparse(char *line, gdouble *lat, gdouble *lon) {
+    char *foo = g_strdup(line);
+    char *token = strtok(foo, " ");
+
+    if (token) {
+        *lat = g_ascii_strtod(token, NULL);
+        token = strtok(NULL, " ");
+        if (token) {
+            *lon = g_ascii_strtod(token, NULL);
+        } else {
+            g_free(foo);
+            return 1;
+        }
+    } else {
+        g_free(foo);
+        return 1;
+    }
+
+    g_free(foo);
+
+    return 0;
 }
 
 /**
@@ -4864,7 +4990,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
     /* New traffic event */
     struct traffic_event *event = NULL;
 
-    float lat, lon;
+    navit_float lat, lon;
 
     if (state->is_valid) {
         dbg(lvl_debug, "  END:  %s", tag_name);
@@ -4891,6 +5017,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
                                           0, NULL, state->location, count, (struct traffic_event **)children);
             if (!traffic_message_is_valid(message)) {
                 dbg(lvl_error, "%s: malformed message detected, skipping", message->id);
+
                 traffic_message_destroy(message);
             } else
                 state->messages = g_list_append(state->messages, message);
@@ -4976,7 +5103,7 @@ static void traffic_xml_end(xml_context *dummy, const char *tag_name, void *data
 
         if (point) {
             /* we have a location point (from, at, to, via or not_via) to process */
-            if (sscanf(el->text, "%f %f", &lat, &lon) == 2) {
+            if (floatparse(el->text, &lat, &lon) == 0) {
                 *point = traffic_point_new(lon, lat, traffic_xml_get_attr("junction_name", el->names, el->values),
                                            traffic_xml_get_attr("junction_ref", el->names, el->values),
                                            traffic_xml_get_attr("tmc_id", el->names, el->values));
@@ -5009,8 +5136,11 @@ static void traffic_xml_text(xml_context *dummy, const char *text, gsize len, vo
 
     dbg(lvl_debug, " TEXT: '%s'", text_sz);
     if (state->is_valid && state->is_opened) {
-        /* this will work only for leaf nodes, which is not an issue at the moment as the only nodes
-         * with actual text data are leaf nodes */
+        /* This will work only for leaf nodes, which is not an issue at the moment as the only nodes
+         * with actual text data are leaf nodes. For a node which has children, this function will get
+         * called multiple times: for text before, within, between and after the child nodes (even if
+         * empty), in the order encountered. */
+        // FIXME make sure we avoid memory leaks if this function is called multiple times
         el->text = g_strndup(text, len);
     }
     g_free(text_sz);
@@ -5815,7 +5945,7 @@ struct map *traffic_get_map(struct traffic *this_) {
                     this_->idle_cb = callback_new_2(callback_cast(traffic_process_messages_int), this_,
                                                     PROCESS_MESSAGES_NO_DUMP_STORE);
                 if (!this_->idle_ev)
-                    this_->idle_ev = event_add_idle(50, this_->idle_cb);
+                    this_->idle_ev = event_add_idle(TRAFFIC_IDLE_PRIORITY, this_->idle_cb);
             }
         }
     }
@@ -5848,6 +5978,28 @@ static struct traffic_message **traffic_get_messages_from_parsed_xml(struct xml_
     return ret;
 }
 
+/**
+ * @brief Reads a TraFF response (including messages, if any) from parsed XML data.
+ *
+ * @param state The XML parser state after parsing the XML data
+ *
+ * @return The response, or NULL if the data did not contain a response
+ */
+static struct traffic_response *traffic_get_response_from_parsed_xml(struct xml_state *state) {
+    struct traffic_response *ret = NULL;
+    struct traffic_message **messages = NULL;
+
+    messages = traffic_get_messages_from_parsed_xml(state);
+    if (messages || state->status) {
+        ret = g_new0(struct traffic_response, 1);
+        ret->status = state->status;
+        ret->subscription_id = state->subscription_id;
+        ret->timeout = state->timeout;
+        ret->messages = messages;
+    }
+    return ret;
+}
+
 struct traffic_message **traffic_get_messages_from_xml_file(struct traffic *this_, char *filename) {
     struct traffic_message **ret = NULL;
     struct xml_state state;
@@ -5862,6 +6014,23 @@ struct traffic_message **traffic_get_messages_from_xml_file(struct traffic *this
             dbg(lvl_error, "could not retrieve stored traffic messages");
         }
     } /* if (traffic_filename) */
+    return ret;
+}
+
+struct traffic_response *traffic_get_response_from_xml_string(struct traffic *this_, char *xml) {
+    struct traffic_response *ret = NULL;
+    struct xml_state state;
+    int read_success = 0;
+
+    if (xml) {
+        memset(&state, 0, sizeof(struct xml_state));
+        read_success = xml_parse_text(xml, &state, traffic_xml_start, traffic_xml_end, traffic_xml_text);
+        if (read_success) {
+            ret = traffic_get_response_from_parsed_xml(&state);
+        } else {
+            dbg(lvl_error, "no data supplied");
+        }
+    } /* if (xml) */
     return ret;
 }
 
@@ -5925,7 +6094,7 @@ void traffic_process_messages(struct traffic *this_, struct traffic_message **me
         if (this_->idle_cb)
             callback_destroy(this_->idle_cb);
         this_->idle_cb = callback_new_2(callback_cast(traffic_process_messages_int), this_, 0);
-        this_->idle_ev = event_add_idle(50, this_->idle_cb);
+        this_->idle_ev = event_add_idle(TRAFFIC_IDLE_PRIORITY, this_->idle_cb);
     }
 }
 
@@ -5938,8 +6107,14 @@ void traffic_set_route(struct traffic *this_, struct route *rt) {
 }
 
 void traffic_destroy(struct traffic *this_) {
-    g_free(this_->shared);
-    this_->shared = NULL;
+    if (this_->shared->deferred_idle_ev)
+        event_remove_idle(this_->shared->deferred_idle_ev);
+    if (this_->shared->deferred_idle_cb)
+        callback_destroy(this_->shared->deferred_idle_cb);
+    this_->shared->deferred_idle_ev = NULL;
+    this_->shared->deferred_idle_cb = NULL;
+    g_list_free(this_->shared->deferred_segments);
+    this_->shared->deferred_segments = NULL;
     if (this_->meth.destroy)
         this_->meth.destroy(this_->priv);
     attr_list_free(this_->attrs);
