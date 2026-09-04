@@ -20,11 +20,11 @@ If none exist, Navit exits with an error.
 
 In a default installation, Navit ships a preconfigured ``navit.xml`` under ``$NAVIT_SHAREDIR``. To customise your setup, copy it to ``~/.navit/navit.xml`` and edit from there.
 
-Settings which affect Navit's general behaviour are located within the ``<navit .. >`` tag. In a default installation, this is found on line 31 of ``navit.xml``. By default, the ``navit`` tag is set as follows:
+Settings which affect Navit's general behaviour are located within the ``<navit .. >`` tag. In a default installation, the ``navit`` tag looks like this:
 
 .. code-block:: xml
 
-	<navit center="4808 N 1134 E" zoom="256" tracking="1" orientation="-1" recent_dest="10">
+	<navit center="11.5666 48.1333" zoom="256" tracking="1" orientation="-1" recent_dest="250" drag_bitmap="0" default_layout="Car">
 
 
 Some common attributes are discussed below. For more advanced features, see :doc:`advanced options </user/configuration/advanced/options>`.
