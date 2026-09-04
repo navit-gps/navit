@@ -67,7 +67,7 @@ Linux:
 If you want to connect multiple tools to your GPS, you need an multiplexer tool, as gpsd or gypsy.
 
 * source="gpsd://host[:port]"	 - gpsd://localhost, the default one, will try to connect to gpsd on localhost
-* source="socket:ipaddr:post"    - socket connection (expects nmea stream)
+* source="socket:ipaddr:port"    - socket connection (expects nmea stream)
 * source="socket:ipaddr:2947:r=1" - connect to gpsd in nmea mode (gpsd versions 2.39 or older)
 * source='socket:ipaddr:2947:?WATCH={"enable":true,"nmea":true};' - connect to gpsd in nmea mode (gpsd versions newer than 2.39)
 * source="gypsy://connectstring" - gypsy

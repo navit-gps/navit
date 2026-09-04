@@ -42,6 +42,20 @@ longitude comes first. The coordinates are assumed to be based on WGS84
 (the coordinate system used by the GPS system, and by practically all
 common navigation systems).
 
+.. _latitude_comma_longitude:
+
+Latitude, Longitude (comma-separated)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If the two values are separated by a comma and the text contains no
+whitespace, Navit interprets them as latitude first, longitude second
+(the order used by Google Maps and similar tools):
+
+``48.1333,11.5666``
+
+That is 48°8' N, 11°34' E (Munich). Note the inverted order compared
+to the space-separated formats on this page.
+
 .. _latitude_longitude_in_degrees_and_minutes:
 
 Latitude / Longitude in degrees and minutes
@@ -52,8 +66,10 @@ compass directions (N/S, E/W):
 
 ``4808 N 1134 E``
 
-Latitude and longitude are multiplied by 100, so the position above
-corresponds to 48°8' N, 11°34' (Munich).
+Here the degrees are multiplied by 100 and the arcminutes are added:
+``4808`` means 48 degrees and 8 arcminutes (48°8'), ``1134`` means 11
+degrees and 34 arcminutes (11°34'), so the position above corresponds
+to 48°8' N, 11°34' E (Munich).
 
 For greater precision you can write the minutes as decimal fractions:
 
@@ -67,8 +83,10 @@ Notes:
 -  This format is rather unusual (because it uses arcminutes, but not
    arcseconds). It is probably easier to just use decimal fractions of
    degrees.
--  The spaces are relevant for parsing. Use exactly one space between
-   the number and the letter N/S/E/W.
+-  Separating whitespace is optional: ``4808 N 1134 E`` and
+   ``4808N 1134E`` are parsed the same way. The only case in which the
+   exact presence of spaces matters is the comma-separated format below,
+   which requires the text to contain no spaces at all.
 
 .. _cartesian_coordinates:
 
@@ -103,7 +121,19 @@ coordinate
 system <http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system>`__
 (UTM).
 
-TODO: Document the expected format.
+The expected format is::
+
+    utm<zone><n|s>: <easting> <northing>
+
+The ``utm`` specifier is mandatory: it is followed by the UTM zone
+number (1-60) and the hemisphere letter ``n`` or ``s``, e.g.
+``utm32n``. The coordinates are the UTM easting and northing in
+metres, as given on maps. Example (Frankfurt am Main, zone 32N):
+
+``utm32n: 477119 5550910``
+
+For the southern hemisphere use ``s``; the northing is then entered in
+the usual way and Navit applies the required sign internally.
 
 .. _development_notes:
 
