@@ -1065,6 +1065,31 @@ static int access_value(char *v) {
     return 3;
 }
 
+/**
+ * @brief Returns the default access flags for a barrier node, or -1 if the type is not a barrier
+ *
+ * A barrier without any access restrictions restricts traffic as follows:
+ * \li Bollards and cycle barriers narrow the way, so pedestrians, bicycles and horses can usually pass
+ * \li A lift gate blocks motorized traffic, but pedestrians and bicycles usually bypass it
+ *
+ * @param type The item type to check
+ * @return the default access flags, or -1 if the type is not a barrier
+ */
+static int osm_node_barrier_default_flags(enum item_type type) {
+    switch (type) {
+    case type_barrier_bollard:
+    case type_barrier_cycle:
+    case type_barrier_lift_gate:
+        return AF_PBH;
+    default:
+        return -1;
+    }
+}
+
+static int osm_access_flags(int def_flags) {
+    return ((def_flags & ~flagsa[2]) | flags[0] | flags[1] | flagsa[1]) & ~flags[2];
+}
+
 static void osm_update_attr_present(char *k, char *v);
 
 void osm_add_tag(char *k, char *v) {
@@ -1439,6 +1464,8 @@ static void remove_last_node_item_from_buffer(void) {
 void osm_add_node(osmid id, double lat, double lon) {
     in_node = 1;
     attr_strings_clear();
+    memset(flags, 0, sizeof(flags));
+    memset(flagsa, 0, sizeof(flagsa));
     node_is_tagged = 0;
     nodeid = id;
     item.type = type_point_unkn;
@@ -1453,6 +1480,7 @@ void osm_add_node(osmid id, double lat, double lon) {
     dbg_assert(id < ((2ull << NODE_ID_BITS) - 1));
     current_node->nd_id = id;
     current_node->ref_way = 0;
+    current_node->is_barrier = 0;
     current_node->c.x = lon * 6371000.0 * G_PI / 180;
     current_node->c.y = log(tan(G_PI_4 + lat * G_PI / 360)) * 6371000.0;
     if (!node_hash) {
@@ -1879,7 +1907,7 @@ void osm_end_way(struct maptool_osm *osm) {
         nodes_ref_item_bin(item_bin);
         def_flags = item_get_default_flags(types[i]);
         if (def_flags) {
-            flags_attr_value = ((*def_flags & ~flagsa[2]) | flags[0] | flags[1] | flagsa[1]) & ~flags[2];
+            flags_attr_value = osm_access_flags(*def_flags);
             if (flags_attr_value != *def_flags)
                 add_flags = 1;
         }
@@ -1940,7 +1968,7 @@ void osm_end_way(struct maptool_osm *osm) {
 }
 
 void osm_end_node(struct maptool_osm *osm) {
-    int count, i;
+    int count, i, barrier_flags;
     char *postal;
     enum item_type types[10];
     struct item_bin *item_bin;
@@ -1962,9 +1990,14 @@ void osm_end_node(struct maptool_osm *osm) {
         if (types[i] == type_none)
             continue;
         item_bin = init_item(types[i]);
+        barrier_flags = osm_node_barrier_default_flags(types[i]);
         if (item_is_town(*item_bin) && attr_strings[attr_string_population])
             item_bin_set_type_by_population(item_bin, atoi(attr_strings[attr_string_population]));
         item_bin_add_coord(item_bin, &current_node->c, 1);
+if (barrier_flags != -1) {
+            current_node->is_barrier = 1;
+            item_bin_add_attr_int(item_bin, attr_flags, osm_access_flags(barrier_flags));
+        }
         item_bin_add_attr_string(item_bin, item_is_town(*item_bin) ? attr_town_name : attr_label,
                                  attr_strings[attr_string_label]);
         item_bin_add_attr_string(item_bin, attr_house_number, attr_strings[attr_string_house_number]);
@@ -4069,7 +4102,8 @@ int map_resolve_coords_and_split_at_intersections(FILE *in, FILE *out, FILE *out
                 ni = node_item_get(ndref);
                 if (ni) {
                     c[i] = ni->c;
-                    if (ni->ref_way > 1 && i != 0 && i != ccount - 1 && i != last && item_get_default_flags(ib->type)) {
+                    if ((ni->ref_way > 1 || ni->is_barrier) && i != 0 && i != ccount - 1 && i != last
+                        && item_get_default_flags(ib->type)) {
                         write_item_way_subsection(out, out_index, out_graph, ib, last, i, &last_id);
                         last = i;
                     }
