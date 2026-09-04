@@ -89,7 +89,7 @@ An example ``gui`` tag using the previous options is shown below:
 
 	<gui type="internal" enabled="yes" font_size="250" icon_xs="48" icon_s="48" icon_l="64">
 
-More options are discussed on the :doc:`Internal GUI </user/configuration/Internal_GUI>` and the :doc:`full list of options </user/configuration/Configuration_Full_list_of_options>`.
+More options are discussed on the :doc:`Internal GUI </user/configuration/Internal_GUI>` and the :doc:`advanced options </user/configuration/advanced/options>`.
 
 GTK GUI
 ~~~~~~~

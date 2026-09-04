@@ -131,8 +131,8 @@ actions are mapped to these two keys.
 
 When using a rotary encoder (or cursor keys), it may be useful to set
 option hide_impossible_next_keys to hide irrelevant keys when searching.
-See the `full list of
-options <Configuration/Full_list_of_options#gui>`__ for details.
+See the :doc:`advanced options </user/configuration/advanced/options>`
+for details.
 
 *Support for rotary encoders was added in December 2015, and
 hide_impossible_next_keys in February 2017.*
