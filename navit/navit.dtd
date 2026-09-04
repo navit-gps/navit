@@ -74,7 +74,7 @@
 <!ATTLIST tracking cdf_histsize CDATA #IMPLIED>
 <!ELEMENT route EMPTY>
 <!ATTLIST route destination_distance CDATA #IMPLIED>
-<!ELEMENT roadprofile (announcement*)>
+<!ELEMENT roadprofile EMPTY>
 <!ATTLIST roadprofile item_types CDATA #REQUIRED>
 <!ATTLIST roadprofile speed CDATA #REQUIRED>
 <!ATTLIST roadprofile maxspeed CDATA #IMPLIED>
@@ -87,8 +87,6 @@
 <!ATTLIST announce level0 CDATA #IMPLIED>
 <!ATTLIST announce level1 CDATA #IMPLIED>
 <!ATTLIST announce level2 CDATA #IMPLIED>
-<!ELEMENT announcement EMPTY>
-<!ATTLIST announcement level CDATA #REQUIRED>
 <!ELEMENT speech EMPTY>
 <!ATTLIST speech active CDATA #REQUIRED>
 <!ATTLIST speech type CDATA #REQUIRED>
