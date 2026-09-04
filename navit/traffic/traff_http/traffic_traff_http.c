@@ -108,7 +108,9 @@ struct traffic_message **traffic_traff_http_get_messages(struct traffic_priv *th
  */
 void traffic_traff_http_destroy(struct traffic_priv *this_) {
     /* tell the worker thread to clean up and exit */
+    thread_lock_acquire_write(this_->queue_lock);
     this_->exiting = 1;
+    thread_lock_release_write(this_->queue_lock);
     thread_event_signal(this_->queue_event);
     if (this_->position_rect)
         g_free(this_->position_rect);
@@ -263,9 +265,11 @@ static int traffic_traff_http_process_response(struct traffic_priv *this_, struc
     struct callback **cb;
     if (!strcmp(response->status, "OK") || !strcmp(response->status, "PARTIALLY_COVERED")) {
         if (response->subscription_id) {
+            g_free(this_->subscription_id);
             this_->subscription_id = response->subscription_id;
+            response->subscription_id = NULL;
         }
-        // TODO subscription timeout
+        /* TODO subscription timeout */
         if (response->messages && *(response->messages)) {
             dbg(lvl_debug, "response contains messages, posting traffic feed");
             cb = g_new0(struct callback *, 1);
@@ -279,6 +283,15 @@ static int traffic_traff_http_process_response(struct traffic_priv *this_, struc
         g_free(response);
     } else {
         dbg(lvl_error, "TraFF request failed with status %s", response->status);
+        if (response->messages) {
+            int i;
+            for (i = 0; response->messages[i]; i++)
+                traffic_message_destroy(response->messages[i]);
+            g_free(response->messages);
+        }
+        g_free(response->status);
+        g_free(response->subscription_id);
+        g_free(response);
     }
     return ret;
 }
@@ -291,7 +304,7 @@ static int traffic_traff_http_process_response(struct traffic_priv *this_, struc
  *
  * @param this_gpointer Pointer to the `struct traffic_priv` for the plugin instance
  */
-static int traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
+static int traffic_traff_http_worker_thread_main(void *this_gpointer) {
     struct traffic_priv *this_ = (struct traffic_priv *)this_gpointer;
 
     /* Whether the current run of the loop should poll the source */
@@ -364,7 +377,7 @@ static int traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
                 response = traffic_get_response_from_xml_string(this_->traffic, chunk->data);
                 g_free(chunk->data);
                 g_free(chunk);
-                // TODO repeat if subscription unknown
+                /* TODO repeat if subscription unknown */
                 poll &= !traffic_traff_http_process_response(this_, response);
             }
             g_free(request);
@@ -385,7 +398,7 @@ static int traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
                 response = traffic_get_response_from_xml_string(this_->traffic, chunk->data);
                 g_free(chunk->data);
                 g_free(chunk);
-                // TODO handle unknown subscription
+                /* TODO handle unknown subscription */
                 traffic_traff_http_process_response(this_, response);
             }
             g_free(request);
@@ -398,17 +411,18 @@ static int traffic_traff_http_worker_thread_main(gpointer this_gpointer) {
 }
 
 static void coordtostr(char *dst, size_t dstsize, navit_float a, navit_float b, navit_float c, navit_float d) {
+#define COORDTOSTR_NUMSIZE 14
+    char e[4][COORDTOSTR_NUMSIZE];
+
     if (a > c) {
-        dbg(lvl_error, "BUGBUGBUG TRAFFIC rl.LAT > lu.lat. This should never happen.");
+        dbg(lvl_error, "rl.lat > lu.lat, this should never happen");
     }
 
-#define numsize 14
-    char e[4][numsize];
     memset(e, '\0', sizeof(e));
-    floattostr(e[0], numsize, a, '.');
-    floattostr(e[1], numsize, b, '.');
-    floattostr(e[2], numsize, c, '.');
-    floattostr(e[3], numsize, d, '.');
+    floattostr(e[0], COORDTOSTR_NUMSIZE, a, '.');
+    floattostr(e[1], COORDTOSTR_NUMSIZE, b, '.');
+    floattostr(e[2], COORDTOSTR_NUMSIZE, c, '.');
+    floattostr(e[3], COORDTOSTR_NUMSIZE, d, '.');
     dst[0] = '\0';
     strncat(dst, (e[0]), dstsize - 1);
     for (int i = 1; i < 4; i++) {

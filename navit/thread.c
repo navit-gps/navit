@@ -118,12 +118,12 @@ thread *thread_new(int (*main)(void *), void *data, char *name) {
 #        endif
     return ret;
 #    elif HAVE_API_WIN32
-    thread *ret = g_new0(thread, 1);
     struct thread_main_data *main_data = g_new0(struct thread_main_data, 1);
+    thread *ret = g_new0(thread, 1);
     DWORD err;
     main_data->main = main;
     main_data->data = data;
-    ret = CreateThread(NULL, 0, thread_main_wrapper, (LPVOID)main_data, 0, NULL);
+    *ret = CreateThread(NULL, 0, thread_main_wrapper, (LPVOID)main_data, 0, NULL);
     if (!*ret) {
         err = GetLastError();
         dbg(lvl_error, "error %d, thread=%p", err, ret);
@@ -326,7 +326,7 @@ thread_lock *thread_lock_new(void) {
      * can (and in that case, should) be changed to use SRWLock instead. Until then, obtaining a lock on
      * Windows will always be an exclusive operation, i.e. multiple concurrent readers are not allowed.
      */
-    // FIXME should we hold the mutex initially (indicated by second arg)?
+    /* FIXME should we hold the mutex initially (indicated by second arg)? */
     *ret = CreateMutex(NULL, FALSE, NULL);
     if (!*ret) {
         err = GetLastError();

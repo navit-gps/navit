@@ -94,6 +94,9 @@
 /** Time slice for idle loops, in milliseconds */
 #define TIME_SLICE 40
 
+/** Idle callback priority for traffic processing (lower value = higher priority) */
+#define TRAFFIC_IDLE_PRIORITY 300
+
 /** Default value assumed for access flags if we cannot get flags for the item, nor for the item type */
 int item_default_flags_value = AF_ALL;
 
@@ -4334,7 +4337,7 @@ static void traffic_ensure_deferred_idle(struct traffic_shared_priv *shared) {
     if (!shared->deferred_idle_cb)
         shared->deferred_idle_cb = callback_new_1(callback_cast(traffic_add_segments_idle), shared);
     if (!shared->deferred_idle_ev)
-        shared->deferred_idle_ev = event_add_idle(300, shared->deferred_idle_cb);
+        shared->deferred_idle_ev = event_add_idle(TRAFFIC_IDLE_PRIORITY, shared->deferred_idle_cb);
 }
 
 /**
@@ -4440,6 +4443,9 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
     /* Message replaced by the current one whose segments can be reused */
     struct traffic_message *swap_candidate;
 
+    /* Segment data from a stored message, used for comparison */
+    struct seg_data *stored_data;
+
     /* Temporary store for swapping locations and items */
     struct traffic_location *swap_location;
     struct item **swap_items;
@@ -4492,9 +4498,11 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
                 /* check if any of the replaced messages has the same location and segment data */
                 for (msg_iter = msgs_to_remove; msg_iter && !swap_candidate; msg_iter = g_list_next(msg_iter)) {
                     stored_msg = (struct traffic_message *)msg_iter->data;
-                    if (seg_data_equals(data, traffic_message_parse_events(stored_msg))
+                    stored_data = traffic_message_parse_events(stored_msg);
+                    if (seg_data_equals(data, stored_data)
                         && traffic_location_equals(message->location, stored_msg->location))
                         swap_candidate = stored_msg;
+                    g_free(stored_data);
                 }
 
                 if (swap_candidate) {
@@ -4665,7 +4673,7 @@ static void traffic_loop(struct traffic *this_) {
             callback_destroy(this_->idle_cb);
         this_->idle_cb =
             callback_new_2(callback_cast(traffic_process_messages_int), this_, PROCESS_MESSAGES_PURGE_EXPIRED);
-        this_->idle_ev = event_add_idle(300, this_->idle_cb);
+        this_->idle_ev = event_add_idle(TRAFFIC_IDLE_PRIORITY, this_->idle_cb);
     } else
         traffic_process_messages_int(this_, PROCESS_MESSAGES_PURGE_EXPIRED);
 }
@@ -5937,7 +5945,7 @@ struct map *traffic_get_map(struct traffic *this_) {
                     this_->idle_cb = callback_new_2(callback_cast(traffic_process_messages_int), this_,
                                                     PROCESS_MESSAGES_NO_DUMP_STORE);
                 if (!this_->idle_ev)
-                    this_->idle_ev = event_add_idle(300, this_->idle_cb);
+                    this_->idle_ev = event_add_idle(TRAFFIC_IDLE_PRIORITY, this_->idle_cb);
             }
         }
     }
@@ -6086,7 +6094,7 @@ void traffic_process_messages(struct traffic *this_, struct traffic_message **me
         if (this_->idle_cb)
             callback_destroy(this_->idle_cb);
         this_->idle_cb = callback_new_2(callback_cast(traffic_process_messages_int), this_, 0);
-        this_->idle_ev = event_add_idle(300, this_->idle_cb);
+        this_->idle_ev = event_add_idle(TRAFFIC_IDLE_PRIORITY, this_->idle_cb);
     }
 }
 
