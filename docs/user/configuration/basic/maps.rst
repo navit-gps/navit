@@ -57,5 +57,5 @@ For different map providers, see the `Maps <https://wiki.navit-project.org/index
 See Also
 --------
 
-- :doc:`coordinate_formats` for coordinate format options
+- :doc:`Coordinate format </user/configuration/Coordinate_format>` for coordinate format options
 - :doc:`advanced options </user/configuration/advanced/options>` for advanced configuration options
