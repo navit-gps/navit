@@ -11,6 +11,8 @@ This page aims to point out the most common options which a first-time user may 
 
 Setting up Navit is done by editing a configuration file called "**navit.xml**".
 
+Navit comes **shipped** with a default ``navit.xml`` together with ``navit_layout_*.xml`` files that are stored at various locations (depending on your system).
+
 Editing XML configurations files in a text editor is simple, they are just plain text XML files, that can be edited with any editor.
 Just remember to ''turn off 'save UTF8 byte mark' in Preferences'' or navit may complain very much on the first byte of the file.
 
@@ -32,7 +34,6 @@ The Navit Configuration XML is splitted into sections with this hierarchy:
 		</navit>
 	</config>
 
-Navit comes **shipped** with a default ``navit.xml`` together with ``navit_layout_*.xml`` files that are stored at various locations (depending on your system).
 
 For Linux-like OSes:
  * in ``~/.navit/``: e.g: ``/home/myusername/.navit/navit.xml`` (This is probably to best place to customize your settings!)
