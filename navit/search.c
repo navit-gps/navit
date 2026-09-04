@@ -423,9 +423,9 @@ static void search_list_common_addattr(struct attr *attr, struct search_list_com
 static void search_list_common_new(struct item *item, struct search_list_common *common) {
     struct attr attr;
     int i;
-    enum attr_type common_attrs[] = {attr_state_name,  attr_county_name,   attr_municipality_name,
-                                     attr_town_name,   attr_district_name, attr_postal,
-                                     attr_town_postal, attr_postal_mask,   attr_none};
+    enum attr_type common_attrs[] = {attr_state_name,    attr_county_name, attr_municipality_name, attr_town_name,
+                                     attr_district_name, attr_postal,      attr_town_postal,       attr_postal_mask,
+                                     attr_label_l10n,    attr_none};
 
     common->town_name = NULL;
     common->district_name = NULL;
@@ -435,7 +435,15 @@ static void search_list_common_new(struct item *item, struct search_list_common 
     common->attrs = NULL;
 
     for (i = 0; common_attrs[i]; i++) {
-        if (item_attr_get(item, common_attrs[i], &attr)) {
+        if (common_attrs[i] == attr_label_l10n) {
+            while (item_attr_get(item, attr_label_l10n, &attr)) {
+                struct attr at;
+                at.type = attr.type;
+                at.u.str = map_convert_string(item->map, attr.u.str);
+                search_list_common_addattr(&at, common);
+                map_convert_free(at.u.str);
+            }
+        } else if (item_attr_get(item, common_attrs[i], &attr)) {
             struct attr at;
             at.type = attr.type;
             at.u.str = map_convert_string(item->map, attr.u.str);
@@ -472,6 +480,74 @@ static void search_list_common_destroy(struct search_list_common *common) {
     common->postal_mask = NULL;
     common->c = NULL;
     common->attrs = NULL;
+}
+
+/**
+ * @brief Get the display name of a town search result.
+ *
+ * This works on the string attributes stored in the search result, not on the
+ * item itself, since the item's map rect is destroyed once the search is done.
+ * It matches the behavior of {@link item_label_get()} for live map items.
+ *
+ * @param common The search result's common data
+ * @param lang_pref The language preferences, or NULL
+ * @param search_query The search query, or NULL. If given, a localized name
+ *                     matching the query is preferred.
+ * @return The best matching name, or NULL
+ */
+static const char *search_list_town_name_find(struct search_list_common *common, const char *lang,
+                                              const char *search_query) {
+    size_t qlen = search_query ? strlen(search_query) : 0;
+    int i;
+
+    for (i = 0; common->attrs && common->attrs[i]; i++) {
+        const char *val;
+        const char *colon;
+        if (common->attrs[i]->type != attr_label_l10n)
+            continue;
+        val = common->attrs[i]->u.str;
+        colon = val ? strchr(val, ':') : NULL;
+        if (!colon)
+            continue;
+        if (lang && !item_l10n_lang_matches(lang, val, (int)(colon - val)))
+            continue;
+        if (search_query && g_ascii_strncasecmp(colon + 1, search_query, qlen))
+            continue;
+        return colon + 1;
+    }
+    return NULL;
+}
+
+static const char *search_list_town_name_match(struct search_list_common *common, const char **lang_pref,
+                                               const char *search_query) {
+    const char *name;
+    int pi;
+
+    /* First: try preferred languages with the search query */
+    for (pi = 0; lang_pref && lang_pref[pi]; pi++) {
+        name = search_list_town_name_find(common, lang_pref[pi], search_query);
+        if (name)
+            return name;
+    }
+    /* Second: try any language with the search query */
+    if (search_query && (name = search_list_town_name_find(common, NULL, search_query)))
+        return name;
+    /* Third: try preferred languages without query filter */
+    for (pi = 0; lang_pref && lang_pref[pi]; pi++) {
+        name = search_list_town_name_find(common, lang_pref[pi], NULL);
+        if (name)
+            return name;
+    }
+    return NULL;
+}
+
+const char *search_list_town_name_get(struct search_list_common *common, const char **lang_pref,
+                                      const char *search_query) {
+    const char *native = common->town_name ? common->town_name : common->district_name;
+    const char *name;
+
+    name = search_list_town_name_match(common, lang_pref, (search_query && search_query[0]) ? search_query : NULL);
+    return name ? name : native;
 }
 
 static struct search_list_country *search_list_country_new(struct item *item) {
