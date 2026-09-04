@@ -86,7 +86,6 @@
 <!ATTLIST announce level0 CDATA #IMPLIED>
 <!ATTLIST announce level1 CDATA #IMPLIED>
 <!ATTLIST announce level2 CDATA #IMPLIED>
-<!ATTLIST announce unit CDATA #REQUIRED>
 <!ELEMENT announcement EMPTY>
 <!ATTLIST announcement level CDATA #REQUIRED>
 <!ELEMENT speech EMPTY>
