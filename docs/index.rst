@@ -69,7 +69,6 @@ Main Features
    :glob:
    :caption: Old Wiki
 
-   user/configuration/Configuration_Vehicle_Options
    user/configuration/Coordinate_format
    user/configuration/Gui_internal
    user/configuration/Internal_GUI
