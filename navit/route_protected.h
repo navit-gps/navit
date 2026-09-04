@@ -37,6 +37,7 @@ extern "C" {
 #define RP_TRAFFIC_DISTORTION 1
 #define RP_TURN_RESTRICTION 2
 #define RP_TURN_RESTRICTION_RESOLVED 4
+#define RP_BLOCKED 8
 
 #define RSD_MAXSPEED(x) *((int *)route_segment_data_field_pos((x), attr_maxspeed))
 
