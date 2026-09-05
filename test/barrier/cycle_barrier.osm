@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="synthetic-test">
+  <bounds minlat="52.09" minlon="11.59" maxlat="52.12" maxlon="11.62"/>
+  <node id="1" lat="52.100" lon="11.600" version="1"/>
+  <node id="2" lat="52.105" lon="11.600" version="1">
+    <tag k="barrier" v="cycle_barrier"/>
+  </node>
+  <node id="3" lat="52.110" lon="11.600" version="1"/>
+  <node id="4" lat="52.100" lon="11.610" version="1"/>
+  <node id="5" lat="52.105" lon="11.610" version="1"/>
+  <node id="6" lat="52.110" lon="11.610" version="1"/>
+  <way id="100" version="1">
+    <nd ref="1"/>
+    <nd ref="2"/>
+    <nd ref="3"/>
+    <tag k="highway" v="residential"/>
+    <tag k="name" v="Barrier Street"/>
+  </way>
+  <way id="101" version="1">
+    <nd ref="4"/>
+    <nd ref="5"/>
+    <nd ref="6"/>
+    <tag k="highway" v="residential"/>
+    <tag k="name" v="Detour Street"/>
+  </way>
+</osm>

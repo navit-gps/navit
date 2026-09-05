@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="synthetic-test">
+  <bounds minlat="52.10" minlon="11.60" maxlat="52.14" maxlon="11.62"/>
+  <node id="1" lat="52.100" lon="11.600" version="1"/>
+  <node id="2" lat="52.105" lon="11.600" version="1">
+    <tag k="barrier" v="bollard"/>
+    <tag k="bollard" v="rising"/>
+    <tag k="motor_vehicle" v="no"/>
+    <tag k="access" v="yes"/>
+    <tag k="psv" v="yes"/>
+    <tag k="service" v="emergency_access"/>
+  </node>
+  <node id="3" lat="52.110" lon="11.600" version="1"/>
+  <node id="4" lat="52.100" lon="11.610" version="1"/>
+  <node id="5" lat="52.105" lon="11.610" version="1"/>
+  <node id="6" lat="52.110" lon="11.610" version="1"/>
+  <way id="100" version="1">
+    <nd ref="1"/>
+    <nd ref="2"/>
+    <nd ref="3"/>
+    <tag k="highway" v="residential"/>
+    <tag k="name" v="Barrier Street"/>
+  </way>
+  <way id="101" version="1">
+    <nd ref="4"/>
+    <nd ref="5"/>
+    <nd ref="6"/>
+    <tag k="highway" v="residential"/>
+    <tag k="name" v="Detour Street"/>
+  </way>
+</osm>
