@@ -278,9 +278,9 @@ void thread_lock_destroy(thread_lock *this_);
 /**
  * @brief Acquires a read lock for the current thread.
  *
- * Read locks are recursive, i.e. one thread can acquire the same read lock multiple times. Each release will undo
- * exactly one lock operation, i.e. if a read lock was acquired n times, it must be released n times before another
- * thread can acquire a write lock.
+ * Read locks are not recursive. A thread that already holds a read lock on the same lock must not acquire it again;
+ * doing so is undefined behavior (on glibc it deadlocks). Multiple threads may each hold a read lock on the same lock
+ * simultaneously. A read lock must be released exactly once per acquisition.
  *
  * If another thread is currently holding the same lock for writing, the calling thread will block until the lock can
  * be acquired. If lock acquisition fails for any reason (including a deadlock), the process will abort.
