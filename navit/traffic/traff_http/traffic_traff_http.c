@@ -396,6 +396,129 @@ static int traffic_traff_http_is_exiting(struct traffic_priv *this_) {
 }
 
 /**
+ * @brief Cleans up the worker thread's resources on shutdown.
+ *
+ * Drains the request queue, destroys the queue infrastructure and unsubscribes from the source.
+ * Runs on the worker thread. The main thread is no longer placing requests at this point, so no lock
+ * is needed.
+ *
+ * @param this_ The plugin instance
+ */
+static void traffic_traff_http_worker_cleanup(struct traffic_priv *this_) {
+    while (this_->queue) {
+        char *request = this_->queue->data;
+        dbg(lvl_debug, "discarding request: \n%s", request);
+        this_->queue = g_list_remove(this_->queue, request);
+        g_free(request);
+    }
+
+    thread_event_destroy(this_->queue_event);
+    this_->queue_event = NULL;
+    thread_lock_destroy(this_->queue_lock);
+    this_->queue_lock = NULL;
+
+    /* unsubscribe if we are subscribed */
+    if (this_->subscription_id) {
+        char *request =
+            g_strdup_printf("<request operation='UNSUBSCRIBE' subscription_id='%s'/>", this_->subscription_id);
+        struct curl_result *chunk = curl_post(this_->source, request);
+        g_free(request);
+        if (chunk) {
+            g_free(chunk->data);
+            g_free(chunk);
+        }
+    }
+}
+
+/**
+ * @brief Sends all pending requests from the queue.
+ *
+ * Runs on the worker thread. For each queued request, the lock is released for the duration of the
+ * network request, then reacquired so the loop condition is protected.
+ *
+ * @param this_ The plugin instance
+ *
+ * @return Whether the loop should still poll the source. Skipped if a response contained messages.
+ */
+static int traffic_traff_http_worker_drain_queue(struct traffic_priv *this_) {
+    int poll = 1;
+
+    thread_lock_acquire_write(this_->queue_lock);
+    while (this_->queue) {
+        char *rdata = this_->queue->data;
+        this_->queue = g_list_remove(this_->queue, rdata);
+        thread_lock_release_write(this_->queue_lock);
+
+        char *request;
+        if (this_->subscription_id)
+            request = g_strdup_printf("<request operation='CHANGE' subscription_id='%s'>\n%s\n</request>",
+                                      this_->subscription_id, rdata);
+        else
+            request = g_strdup_printf("<request operation='SUBSCRIBE'>\n%s\n</request>", rdata);
+        dbg(lvl_debug, "sending request: \n%s", request);
+        struct curl_result *chunk = curl_post(this_->source, request);
+        if (chunk) {
+            struct traffic_response *response = traffic_get_response_from_xml_string(this_->traffic, chunk->data);
+            g_free(chunk->data);
+            g_free(chunk);
+            /* TODO repeat if subscription unknown */
+            poll &= !traffic_traff_http_process_response(this_, response);
+        }
+        g_free(request);
+        g_free(rdata);
+
+        /* reacquire the lock so the loop condition is protected */
+        thread_lock_acquire_write(this_->queue_lock);
+    }
+    /* the queue is empty, ensure the event is unset before releasing the lock */
+    thread_event_reset(this_->queue_event);
+    thread_lock_release_write(this_->queue_lock);
+
+    return poll;
+}
+
+/**
+ * @brief Polls the source for updates.
+ *
+ * Runs on the worker thread.
+ *
+ * @param this_ The plugin instance
+ */
+static void traffic_traff_http_worker_poll(struct traffic_priv *this_) {
+    char *request = g_strdup_printf("<request operation='POLL' subscription_id='%s'/>", this_->subscription_id);
+    struct curl_result *chunk = curl_post(this_->source, request);
+    if (chunk) {
+        struct traffic_response *response = traffic_get_response_from_xml_string(this_->traffic, chunk->data);
+        g_free(chunk->data);
+        g_free(chunk);
+        /* TODO handle unknown subscription */
+        traffic_traff_http_process_response(this_, response);
+    }
+    g_free(request);
+}
+
+/**
+ * @brief Sleeps until the next poll is due or a new request arrives.
+ *
+ * Wakes regularly to notice a shutdown request.
+ *
+ * @param this_ The plugin instance
+ */
+static void traffic_traff_http_worker_wait(struct traffic_priv *this_) {
+    long wait_left = this_->interval;
+    while (wait_left > 0 && !traffic_traff_http_is_exiting(this_)) {
+        long wait_slice = wait_left > EXIT_RECHECK_INTERVAL ? EXIT_RECHECK_INTERVAL : wait_left;
+        thread_event_wait(this_->queue_event, wait_slice);
+        thread_lock_acquire_write(this_->queue_lock);
+        int has_work = this_->queue != NULL;
+        thread_lock_release_write(this_->queue_lock);
+        if (has_work)
+            break;
+        wait_left -= wait_slice;
+    }
+}
+
+/**
  * @brief Main function for the worker thread.
  *
  * The worker thread handles all network I/O and, if a feed has been received, notifies the main thread
@@ -406,112 +529,22 @@ static int traffic_traff_http_is_exiting(struct traffic_priv *this_) {
 static int traffic_traff_http_worker_thread_main(void *this_gpointer) {
     struct traffic_priv *this_ = (struct traffic_priv *)this_gpointer;
 
-    /* Whether the current run of the loop should poll the source */
-    int poll;
-
-    /* Partial request data (from queue), if any */
-    char *rdata;
-
-    /* Data for the request, if any */
-    char *request;
-
-    /* Result for the request */
-    struct curl_result *chunk;
-
-    /* Decoded response */
-    struct traffic_response *response;
-
     while (1) {
-        /* if we’re exiting, clean up and exit */
+        /* if we're exiting, clean up and exit */
         if (traffic_traff_http_is_exiting(this_)) {
-
-            /* no need for the lock as the main thread is no longer placing requests at this point */
-            while (this_->queue) {
-                request = this_->queue->data;
-                dbg(lvl_debug, "discarding request: \n%s", request);
-                this_->queue = g_list_remove(this_->queue, request);
-                g_free(request);
-            }
-
-            thread_event_destroy(this_->queue_event);
-            this_->queue_event = NULL;
-            thread_lock_destroy(this_->queue_lock);
-            this_->queue_lock = NULL;
-
-            /* unsubscribe if we are subscribed */
-            if (this_->subscription_id) {
-                request =
-                    g_strdup_printf("<request operation='UNSUBSCRIBE' subscription_id='%s'/>", this_->subscription_id);
-                chunk = curl_post(this_->source, request);
-                g_free(request);
-                if (chunk) {
-                    g_free(chunk->data);
-                    g_free(chunk);
-                }
-            }
-
+            traffic_traff_http_worker_cleanup(this_);
             break;
         }
 
-        /* by default, poll the source every time the loop runs */
-        poll = 1;
-
-        /* check if we have any pending requests */
-        thread_lock_acquire_write(this_->queue_lock);
-        while (this_->queue) {
-            /* get data, remove entry and release the lock for the duration of the network request */
-            rdata = this_->queue->data;
-            this_->queue = g_list_remove(this_->queue, rdata);
-            thread_lock_release_write(this_->queue_lock);
-
-            /* send the request and process its results */
-            if (this_->subscription_id)
-                request = g_strdup_printf("<request operation='CHANGE' subscription_id='%s'>\n%s\n</request>",
-                                          this_->subscription_id, rdata);
-            else
-                request = g_strdup_printf("<request operation='SUBSCRIBE'>\n%s\n</request>", rdata);
-            dbg(lvl_debug, "sending request: \n%s", request);
-            chunk = curl_post(this_->source, request);
-            if (chunk) {
-                response = traffic_get_response_from_xml_string(this_->traffic, chunk->data);
-                g_free(chunk->data);
-                g_free(chunk);
-                // TODO repeat if subscription unknown
-                poll &= !traffic_traff_http_process_response(this_, response);
-            }
-            g_free(request);
-            g_free(rdata);
-
-            /* reacquire the lock so the loop condition is protected */
-            thread_lock_acquire_write(this_->queue_lock);
-        }
-        /* the queue is empty, ensure the event is unset before releasing the lock */
-        thread_event_reset(this_->queue_event);
-        thread_lock_release_write(this_->queue_lock);
+        /* process all pending requests; skip the poll if a response contained messages */
+        int poll = traffic_traff_http_worker_drain_queue(this_);
 
         if (this_->subscription_id && poll) {
-            /* poll */
-            request = g_strdup_printf("<request operation='POLL' subscription_id='%s'/>", this_->subscription_id);
-            chunk = curl_post(this_->source, request);
-            if (chunk) {
-                response = traffic_get_response_from_xml_string(this_->traffic, chunk->data);
-                g_free(chunk->data);
-                g_free(chunk);
-                // TODO handle unknown subscription
-                traffic_traff_http_process_response(this_, response);
-            }
-            g_free(request);
+            traffic_traff_http_worker_poll(this_);
         }
 
         /* finally, sleep until the next poll is due or we receive a new request; wake regularly to notice shutdown */
-        {
-            long wait_left = this_->interval;
-            while (wait_left > 0 && !traffic_traff_http_is_exiting(this_)) {
-                long wait_slice = wait_left > EXIT_RECHECK_INTERVAL ? EXIT_RECHECK_INTERVAL : wait_left;
-                thread_event_wait(this_->queue_event, wait_slice);
-                wait_left -= wait_slice;
-            }
-        }
+        traffic_traff_http_worker_wait(this_);
     }
     return 0;
 }
