@@ -56,6 +56,23 @@ below:
 You can use the following example to enable/disable the
 ``menu_on_map_click`` behaviour from an `OSD#button <OSD#button>`__:
 
+View in Browser
+~~~~~~~~~~~~~~~
+
+Clicking a map item that corresponds to an OSM node, way or relation
+opens a context menu containing a **View in Browser** item. Navit then
+builds the matching `openstreetmap.org` browse URL and invokes the
+external command ``navit-browser.sh '<url>'``.
+
+To make this work, place a shell script named ``navit-browser.sh`` in
+your ``PATH`` that opens the URL passed to it in a browser, for example:
+
+.. code-block:: bash
+
+   #!/bin/bash
+   xdg-open "$@"
+
+
 Icon and font sizes
 ~~~~~~~~~~~~~~~~~~~
 
@@ -146,11 +163,11 @@ Main Menu
 (or tap for touch screen) anywhere on the map. From here all other
 sub-menus and actions are accessible. The sub menu items are:
 
-#. `Actions <Internal_Gui#Actions>`__
-#. `Settings <Internal_Gui#Settings>`__
-#. `Tools <Internal_Gui#Tools>`__
-#. `Route <Internal_Gui#Route>`__
-#. `About <Internal_Gui#About>`__
+#. `Actions <Internal_GUI#Actions>`__
+#. `Settings <Internal_GUI#Settings>`__
+#. `Tools <Internal_GUI#Tools>`__
+#. `Route <Internal_GUI#Route>`__
+#. `About <Internal_GUI#About>`__
 
 |
 
@@ -161,11 +178,11 @@ Actions
 that are focused primarily on routing and location finding. The sub menu
 items are:
 
-#. `Bookmarks <Internal_Gui#Bookmarks>`__
-#. `Former destinations <Internal_Gui#Former_destinations>`__
-#. `Map Point <Internal_Gui#Map_Point>`__
-#. `Current Location <Internal_Gui#Current_Location>`__
-#. `Town <Internal_Gui#Town>`__
+#. `Bookmarks <Internal_GUI#Bookmarks>`__
+#. `Former destinations <Internal_GUI#Former_destinations>`__
+#. `Map Point <Internal_GUI#Map_Point>`__
+#. `Current Location <Internal_GUI#Current_Location>`__
+#. `Town <Internal_GUI#Town>`__
 #. Quit - Closes Navit
 
 |
@@ -308,10 +325,10 @@ instead of the navit.xml file.
 
 The sub menu items are:
 
-#. `Display <Internal_Gui#Display>`__
-#. `Maps <Internal_Gui#Maps>`__
-#. `Vehicle <Internal_Gui#Vehicle>`__
-#. `Rules <Internal_Gui#Rules>`__
+#. `Display <Internal_GUI#Display>`__
+#. `Maps <Internal_GUI#Maps>`__
+#. `Vehicle <Internal_GUI#Vehicle>`__
+#. `Rules <Internal_GUI#Rules>`__
 
 |
 
@@ -321,9 +338,9 @@ Display
 |InternalGUI-Display.png| The display sub menu provides items to control
 various display features within Navit.
 
-#. `Layout <Internal_Gui#Layout>`__
-#. `Fullscreen/Window Mode <Internal_Gui#Window_Mode>`__
-#. `3D <Internal_Gui#3D>`__
+#. `Layout <Internal_GUI#Layout>`__
+#. `Fullscreen/Window Mode <Internal_GUI#Window_Mode>`__
+#. `3D <Internal_GUI#3D>`__
 
 |
 
@@ -387,7 +404,7 @@ Route
 |InternalGUI-Route.png| The route icon brings up the route menu that
 will display the active route.
 
-#. `Route Description <Internal_Gui#Route_Description>`__
+#. `Route Description <Internal_GUI#Route_Description>`__
 #. Height Profile, requires a dedicated binfile to providing
    heightlines.
 
