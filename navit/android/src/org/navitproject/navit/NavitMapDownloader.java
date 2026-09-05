@@ -22,6 +22,8 @@ import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 
+import org.json.*;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -677,16 +679,32 @@ public class NavitMapDownloader extends Thread {
 
     private String getLatestDate() {
         if (this.mGitHubMetadata != "") {
-            int ind = this.mGitHubMetadata.indexOf("/tarball/");
-            return this.mGitHubMetadata.substring(ind + 9, ind + 19);
+            try {
+                JSONObject objectFile = (JSONObject) new JSONTokener(this.mGitHubMetadata).nextValue();
+                return objectFile.getString("tag_name");
+            } catch (JSONException e) {
+                Log.e(TAG, "We failed to retrieve the date. ");
+                e.printStackTrace();
+                return (String) "";
+            }
+
         } else {
                 Log.e(TAG, "We failed to retrieve the date. ");
                 return (String) "";
         }
     }
-
+    ba521c5dfbb9f75e8549a003cba7a4c759c9bef5
+            ba521c5dfbb9f75e8549a003cba7a4c759c9bef5
     private static long getEstSizeBytes(int mapId, int subMapIndex, String githubMetadata) {
             if (subMapIndex < osm_maps[mapId].mSubMaps.length) {
+                try {
+                    JSONObject objectFile = (JSONObject) new JSONTokener(githubMetadata).nextValue();
+                    JSONArray objectAssets = objectFile.getJSONArray("assets");
+                    JSONArray objectMap = objectAssets.getJSONArray("");
+                } catch (JSONException e) {
+                    return 0;
+                }
+
                 int ind_dataset = githubMetadata.indexOf(osm_maps[mapId].mSubMaps[subMapIndex]);
                 int ind_colon = githubMetadata.indexOf("size", ind_dataset) + 6;
                 int ind_comma = githubMetadata.indexOf(",", ind_colon);
