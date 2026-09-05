@@ -57,7 +57,7 @@ ENDIF(NOT CMAKE_BUILD_TYPE)
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	find_program(iwyu_path NAMES include-what-you-use iwyu)
 	if (iwyu_path)
-		set(CMAKE_C_INCLUDE_WHAT_YOU_USE ${iwyu_path} )
+		set(CMAKE_C_INCLUDE_WHAT_YOU_USE "${CMAKE_SOURCE_DIR}/cmake/iwyu-wrapper.sh" ${iwyu_path})
 	endif()
 endif()
 
