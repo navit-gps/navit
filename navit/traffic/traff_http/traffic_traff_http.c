@@ -516,46 +516,6 @@ static int traffic_traff_http_worker_thread_main(void *this_gpointer) {
     return 0;
 }
 
-static void coordtostr(char *dst, size_t dstsize, navit_float a, navit_float b, navit_float c, navit_float d) {
-#define COORDTOSTR_NUMSIZE 14
-    navit_float nums[4] = {a, b, c, d};
-    char e[4][COORDTOSTR_NUMSIZE];
-
-    if (a > c) {
-        dbg(lvl_error, "rl.lat > lu.lat, this should never happen");
-    }
-
-    dst[0] = '\0';
-    for (int i = 0; i < 4; i++) {
-        floattostr(e[i], COORDTOSTR_NUMSIZE, nums[i], '.');
-        if (i) {
-            strncat(dst, " ", dstsize - strlen(dst) - 1);
-        }
-        strncat(dst, e[i], dstsize - strlen(dst) - 1);
-    }
-}
-
-/**
- * @brief Appends a filter for the given rectangle to the filter list.
- *
- * @param filter_list The filter list to append to
- * @param rect The rectangle to describe, in `projection_mg` coordinates
- * @param min_road_class Minimum road class for the filter, or NULL for none
- */
-static void add_filter(gchar **filter_list, struct coord_rect *rect, gchar *min_road_class) {
-    struct coord_geo lu, rl;
-    char coordbuf[80] = "";
-    transform_to_geo(projection_mg, &rect->lu, &lu);
-    transform_to_geo(projection_mg, &rect->rl, &rl);
-    coordtostr(coordbuf, sizeof(coordbuf), rl.lat, lu.lng, lu.lat, rl.lng);
-    if (min_road_class) {
-        *filter_list = g_strconcat_printf(*filter_list, "    <filter min_road_class=\"%s\" bbox=\"%s\"/>\n",
-                                          min_road_class, coordbuf);
-    } else {
-        *filter_list = g_strconcat_printf(*filter_list, "    <filter bbox=\"%s\"/>\n", coordbuf);
-    }
-}
-
 /**
  * @brief Sets the route map selection
  *
@@ -576,11 +536,11 @@ static void traffic_traff_http_set_selection(struct traffic_priv *this_) {
     /* start building the filter list */
     filter_list = g_strconcat_printf(NULL, "<filter_list>\n");
     if (this_->position_rect) {
-        add_filter(&filter_list, this_->position_rect, NULL);
+        traffic_add_filter(&filter_list, this_->position_rect, NULL);
     }
     for (sel = this_->route_map_sel; sel; sel = sel->next) {
         min_road_class = order_to_min_road_class(sel->order);
-        add_filter(&filter_list, &sel->u.c_rect, min_road_class);
+        traffic_add_filter(&filter_list, &sel->u.c_rect, min_road_class);
     }
     filter_list = g_strconcat_printf(filter_list, "</filter_list>");
     thread_lock_acquire_write(this_->queue_lock);
@@ -646,25 +606,6 @@ static void traffic_traff_http_status_callback(struct traffic_priv *this_, int s
 }
 
 /**
- * @brief Returns a rectangle of the given size around the given center point.
- *
- * @param c The center point
- * @param pad Padding on each side, in `projection_mg` units
- *
- * @return The rectangle
- */
-static struct coord_rect padded_rect(struct coord c, int pad) {
-    struct coord_rect cr;
-    cr.lu = c;
-    cr.rl = c;
-    cr.lu.x -= pad;
-    cr.rl.x += pad;
-    cr.lu.y += pad;
-    cr.rl.y -= pad;
-    return cr;
-}
-
-/**
  * @brief Callback for position changes
  *
  * This updates {@link struct traffic_priv::position_rect} if the vehicle has moved far enough from its
@@ -686,9 +627,9 @@ static void traffic_traff_http_position_callback(struct traffic_priv *this_, str
     transform_from_geo(projection_mg, attr.u.coord_geo, &c);
     if (!this_->position_rect)
         this_->position_rect = g_new0(struct coord_rect, 1);
-    cr = padded_rect(c, POSITION_RECT_SIZE);
+    cr = traffic_padded_rect(c, POSITION_RECT_SIZE);
     if (!coord_rect_contains(this_->position_rect, &cr.lu) || !coord_rect_contains(this_->position_rect, &cr.rl)) {
-        *(this_->position_rect) = padded_rect(c, 2 * POSITION_RECT_SIZE);
+        *(this_->position_rect) = traffic_padded_rect(c, 2 * POSITION_RECT_SIZE);
         traffic_traff_http_set_selection(this_);
     }
 }
@@ -699,8 +640,6 @@ static void traffic_traff_http_position_callback(struct traffic_priv *this_, str
  * @return True on success, false on failure
  */
 static int traffic_traff_http_init(struct traffic_priv *this_) {
-    struct navigation *navigation;
-
     /* TODO verify event system, accept if thread-safe, warn if functions are missing, else exit
      *
      * Thread-safe and OK to use: glib, android

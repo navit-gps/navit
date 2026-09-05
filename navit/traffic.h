@@ -1037,6 +1037,25 @@ void traffic_set_mapset(struct traffic *this_, struct mapset *ms);
 void traffic_set_route(struct traffic *this_, struct route *rt);
 
 /**
+ * @brief Calculates a rectangle of the given size around the given center point.
+ *
+ * @param c The center point
+ * @param pad Padding on each side, in `projection_mg` units
+ *
+ * @return The rectangle
+ */
+struct coord_rect traffic_padded_rect(struct coord c, int pad);
+
+/**
+ * @brief Appends a filter for the given rectangle to a filter list.
+ *
+ * @param filter_list The filter list to append to
+ * @param rect The rectangle to describe, in `projection_mg` coordinates
+ * @param min_road_class Minimum road class for the filter, or NULL for none
+ */
+void traffic_add_filter(char **filter_list, struct coord_rect *rect, char *min_road_class);
+
+/**
  * @brief Destructor.
  */
 void traffic_destroy(struct traffic *this_);
