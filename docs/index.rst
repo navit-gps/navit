@@ -69,7 +69,6 @@ Main Features
    :glob:
    :caption: Old Wiki
 
-   user/configuration/Internal_GUI
    user/configuration/Internal_GUI_Menu_configurations
    user/configuration/Layout
    user/configuration/Menu
