@@ -51,6 +51,7 @@ import java.io.BufferedReader;
  */
 public class NavitMapDownloader extends Thread {
 
+    // removed since not available in github-actions-mapserver
     static int [] removed = new int[]{R.string.korea, R.string.uae_other, R.string.tasmania, R.string.victoria, R.string.new_south_wales, R.string.new_caledonia,
             R.string.mittelfranken, R.string.oberfranken, R.string.unterfranken, R.string.oberbayern, R.string.niederbayern, R.string.oberpfalz, R.string.schwaben,
             R.string.mallorca, R.string.galicia, R.string.wiltshire, R.string.surrey, R.string.suffolk, R.string.south_yorkshire, R.string.somerset,
@@ -58,6 +59,7 @@ public class NavitMapDownloader extends Thread {
             R.string.kent, R.string.herefordshire, R.string.essex, R.string.east_yorkshire_with_hull, R.string.cumbria, R.string.cambridgeshire, R.string.buckinghamshire,
             R.string.crete, R.string.midwest, R.string.pacific, R.string.south, R.string.west, R.string.guyana
     };
+    
     static String [] africa = new String[]{"africa-algeria", "africa-angola", "africa-benin", "africa-botswana", "africa-burkina-faso", "africa-burundi", "africa-cameroon", "africa-canary-islands", "africa-cape-verde", "africa-central-african-republic", "africa-chad", "africa-comores", "africa-congo-brazzaville", "africa-congo-democratic-republic", "africa-djibouti", "africa-egypt", "africa-equatorial-guinea", "africa-eritrea", "africa-ethiopia", "africa-gabon", "africa-ghana", "africa-guinea", "africa-guinea-bissau", "africa-ivory-coast", "africa-kenya", "africa-lesotho", "africa-liberia", "africa-libya", "africa-madagascar", "africa-malawi", "africa-mali", "africa-mauritania", "africa-mauritius", "africa-morocco", "africa-mozambique", "africa-namibia", "africa-niger", "africa-nigeria", "africa-rwanda", "africa-saint-helena-ascension-and-tristan-da-cunha", "africa-sao-tome-and-principe", "africa-senegal-and-gambia", "africa-seychelles", "africa-sierra-leone", "africa-somalia", "africa-south-africa", "africa-south-sudan", "africa-sudan", "africa-swaziland", "africa-tanzania", "africa-togo", "africa-tunisia", "africa-uganda", "africa-zambia", "africa-zimbabwe"};
 
     static String[] asia = new String[]{"asia-afghanistan", "asia-armenia", "asia-azerbaijan", "asia-bangladesh", "asia-bhutan", "asia-cambodia", "asia-china", "asia-gcc-states", "asia-india", "asia-indonesia", "asia-iran", "asia-iraq", "asia-israel-and-palestine", "asia-japan", "asia-jordan", "asia-kazakhstan", "asia-kyrgyzstan", "asia-laos", "asia-lebanon", "asia-malaysia-singapore-brunei", "asia-maldives", "asia-mongolia", "asia-myanmar", "asia-nepal", "asia-north-korea", "asia-pakistan", "asia-philippines", "asia-south-korea", "asia-sri-lanka", "asia-syria", "asia-taiwan", "asia-tajikistan", "asia-thailand", "asia-turkmenistan", "asia-uzbekistan", "asia-vietnam", "asia-yemen"};
@@ -449,6 +451,8 @@ public class NavitMapDownloader extends Thread {
     private static final String TAG = "NavitMapDownLoader";
     private final OsmMapValues mMapValues;
     private final int mMapId;
+
+    private String mGitHubMetadata;
     private Boolean mStopMe = false;
     private long mUiLastUpdated = -1;
     private Boolean mRetryDownload = false; //Download failed, but
@@ -457,6 +461,23 @@ public class NavitMapDownloader extends Thread {
     NavitMapDownloader(int mapId) {
         this.mMapValues = osm_maps[mapId];
         this.mMapId = mapId;
+
+        URL url;
+        try {
+            url = new URL("https://api.github.com/repositories/384098365/releases/latest");
+
+            InputStream is = url.openStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            this.mGitHubMetadata = br.readLine();
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "We failed to create a URL to download the github api file.");
+            e.printStackTrace();
+            this.mGitHubMetadata = "";
+        } catch (IOException e) {
+            Log.e(TAG, "We failed to download the github api file.");
+            e.printStackTrace();
+            this.mGitHubMetadata = "";
+        }
     }
 
     static NavitMap[] getAvailableMaps() {
@@ -609,7 +630,7 @@ public class NavitMapDownloader extends Thread {
             }
 
             if (realSizeBytes <= 0) {
-                realSizeBytes = getEstSizeBytes(this.mMapId, subMapIndex);
+                realSizeBytes = getEstSizeBytes(this.mMapId, subMapIndex, this.mGitHubMetadata);
             }
 
             Log.d(TAG, "size: " + realSizeBytes + ", read: " + alreadyRead + ", timestamp: "
@@ -657,57 +678,12 @@ public class NavitMapDownloader extends Thread {
     }
 
     private String getLatestDate() {
-        URL url;
-        try {
-            url = new URL("https://api.github.com/repositories/384098365/releases/latest");
-            } catch (MalformedURLException e) {
-                Log.e(TAG, "We failed to create a URL to download the github api file.");
-                e.printStackTrace();
-                return "";
-            }
-
-        try {
-            InputStream is = url.openStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            String data = br.readLine();
-            int ind = data.indexOf("/tarball/");
-            return data.substring(ind + 9, ind + 19);
-        } catch (IOException e) {
+        if (this.mGitHubMetadata != "") {
+            int ind = this.mGitHubMetadata.indexOf("/tarball/");
+            return this.mGitHubMetadata.substring(ind + 9, ind + 19);
+        } else {
                 Log.e(TAG, "We failed to retrieve the date. ");
-                e.printStackTrace();
                 return (String) "";
-            }
-    }
-
-    private static long getEstSizeBytes(int mapId, int subMapIndex) {
-        URL url;
-	try {
-	    url = new URL("https://api.github.com/repositories/384098365/releases/latest");
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "We failed to create a URL to download the github api file.");
-            e.printStackTrace();
-            return 0;
-        }
-
-	try {
-	    InputStream is = url.openStream();
-	    BufferedReader br = new BufferedReader(new InputStreamReader(is));
-	    String data = br.readLine();
-        if (subMapIndex < osm_maps[mapId].mSubMaps.length) {
-            int ind_dataset = data.indexOf(osm_maps[mapId].mSubMaps[subMapIndex]);
-            int ind_colon = data.indexOf("size", ind_dataset) + 6;
-            int ind_comma = data.indexOf(",", ind_colon);
-            Log.e(TAG, "map to be processed: " + osm_maps[mapId].mSubMaps[subMapIndex]);
-            Log.e(TAG, "number to be converted:" + data.substring(ind_colon, ind_comma));
-            return Math.max(Long.valueOf(data.substring(ind_colon, ind_comma)), 0);
-        }
-        else {
-            return 0;
-        }
-	} catch (IOException e) {
-            Log.e(TAG, "We failed to retrieve the size. ");
-            e.printStackTrace();
-            return 0;
         }
     }
 
@@ -722,11 +698,11 @@ public class NavitMapDownloader extends Thread {
             }
     }
 
-    public static long getMapSize(int mapId) {
+    private long getMapSize(int mapId) {
         long size = 0;
 
         for (int subMapIndex = 0; subMapIndex < osm_maps[mapId].mSubMaps.length; subMapIndex++) {
-            size += getEstSizeBytes(mapId, subMapIndex);
+            size += getEstSizeBytes(mapId, subMapIndex, this.mGitHubMetadata);
         }
         return size;
     }
@@ -822,7 +798,7 @@ public class NavitMapDownloader extends Thread {
         boolean success = false;
 
 
-        long totalSize = getEstSizeBytes(this.mMapId, subMapIndex);
+        long totalSize = getEstSizeBytes(this.mMapId, subMapIndex, this.mGitHubMetadata);
         if (totalSize==0) {
             return false;
         }
