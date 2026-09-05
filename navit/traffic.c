@@ -6126,6 +6126,47 @@ struct traffic_message **traffic_get_stored_messages(struct traffic *this_) {
     return ret;
 }
 
+static void traffic_coordtostr(char *dst, size_t dstsize, navit_float a, navit_float b, navit_float c, navit_float d) {
+    navit_float nums[4] = {a, b, c, d};
+
+    if (a > c) {
+        dbg(lvl_error, "rl.lat > lu.lat, this should never happen");
+    }
+
+    dst[0] = '\0';
+    for (int i = 0; i < 4; i++) {
+        if (i) {
+            strncat(dst, " ", dstsize - strlen(dst) - 1);
+        }
+        g_ascii_formatd(dst + strlen(dst), dstsize - strlen(dst), "%+.6f", nums[i]);
+    }
+}
+
+struct coord_rect traffic_padded_rect(struct coord c, int pad) {
+    struct coord_rect cr;
+    cr.lu = c;
+    cr.rl = c;
+    cr.lu.x -= pad;
+    cr.rl.x += pad;
+    cr.lu.y += pad;
+    cr.rl.y -= pad;
+    return cr;
+}
+
+void traffic_add_filter(char **filter_list, struct coord_rect *rect, char *min_road_class) {
+    struct coord_geo lu, rl;
+    char coordbuf[80] = "";
+    transform_to_geo(projection_mg, &rect->lu, &lu);
+    transform_to_geo(projection_mg, &rect->rl, &rl);
+    traffic_coordtostr(coordbuf, sizeof(coordbuf), rl.lat, lu.lng, lu.lat, rl.lng);
+    if (min_road_class) {
+        *filter_list = g_strconcat_printf(*filter_list, "    <filter min_road_class=\"%s\" bbox=\"%s\"/>\n",
+                                          min_road_class, coordbuf);
+    } else {
+        *filter_list = g_strconcat_printf(*filter_list, "    <filter bbox=\"%s\"/>\n", coordbuf);
+    }
+}
+
 void traffic_process_messages(struct traffic *this_, struct traffic_message **messages) {
     struct traffic_message **cur_msg;
 
