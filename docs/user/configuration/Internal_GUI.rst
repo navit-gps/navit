@@ -7,54 +7,53 @@ The Internal GUI is designed to be used on touch screen devices, but
 also work very well on other devices such as netbooks and laptops. It is
 under continual development and as such features are constantly being
 added and improved upon. If you think that a particular feature is
-missing or poorly implemented, come talk to us in the `irc
-channel <Contacts#IRC>`__ or open up a feature request on the `trac
-system <Contacts#trac>`__.
+missing or poorly implemented, get in touch with us (see
+:doc:`contacts </user/community/contacts>`) and consider filing a
+feature request (see :doc:`Reporting bugs
+</user/community/Reporting_Bugs>`).
 
+The menu used by the Internal GUI is fully configurable using an
+HTML-like syntax inside the ``<gui>`` element of ``navit.xml``. Ready-made
+configurations can be found under :doc:`Internal GUI/Menu configurations
+</user/configuration/Internal_GUI_Menu_configurations>`. The configuration
+options of the ``internal`` GUI itself (such as ``keyboard``,
+``menu_on_map_click`` or the icon sizes) are described on the
+:doc:`display options </user/configuration/basic/display>` page.
 
-Configuring Internal GUI
-------------------------
+Using the Internal GUI
+----------------------
 
+.. _internal_gui_initial_startup:
 
-Enabling Internal GUI
-~~~~~~~~~~~~~~~~~~~~~
+Initial Start-up
+~~~~~~~~~~~~~~~~
 
-The Internal GUI is configured as the default GUI for Navit, so if
-you're reading this after a first install no further configuration is
-required.
+|N810-OSD-Home.png| When Navit is first started using the Internal GUI
+one should see (depending on the skin you have selected to use)
+something similar to the image to the right. The layout of the internal
+GUI is controlled by the OSD tags located in the navit.xml file. These
+tags should be located within the first 100 lines of the file. For
+information on how to modify the appearance of the OSD layout please
+reference this link. :doc:`OSD </user/configuration/OSD>`
 
-If the configuration has changed since first install, the Internal GUI
-can be chosen by setting the ``type`` attribute in the tag.
+.. _internal_gui_basics:
 
-Ensure that any other ``gui`` tags are disabled by setting their
-``enabled`` attribute to "no".
+Basics and breadcrumbs
+~~~~~~~~~~~~~~~~~~~~~~
 
+The Internal GUI should be mostly self-explanatory (that's the idea, at
+least - if it is not, please file a bug). It basically consists of
+different screens which show icons that can be clicked / touched, lists
+(such as search results) and input fields. For text input, a **virtual
+keyboard** is available. Of course, a regular hardware keyboard can be
+used if available.
 
-Keyboard Preferences
-~~~~~~~~~~~~~~~~~~~~
+On all screens of the Internal GUI, there is a **breadcrumb trail** at
+the top of the screen, which shows the current position inside the
+screen hierarchy of the Internal GUI. The breadcrumbs are clickable, to
+return to an earlier screen.
 
-Some options inside the Internal GUI menu require keyboard input - for
-example, Town search. By default, Navit provides a custom on-screen
-keyboard to enter text. If your device has it's own keyboard which you'd
-prefer to use, and you'd like to conserve some screen space then set the
-``keyboard`` attribute to "false" inside the tag.
-
-
-Map-click Preferences
-~~~~~~~~~~~~~~~~~~~~~
-
-By default, the menu appears when the map is clicked. This can be
-disabled by adding the following to the tag:
-
-``menu_on_map_click="0"``
-
-This of course means that you now can't access the menu by clicking on
-the map. Instead you will have to add an `OSD <OSD>`__ item with the
-`command <OSD#GUI_commands>`__ ``gui.menu()``, as shown in the example
-below:
-
-You can use the following example to enable/disable the
-``menu_on_map_click`` behaviour from an `OSD#button <OSD#button>`__:
+.. _internal_gui_view_in_browser:
 
 View in Browser
 ~~~~~~~~~~~~~~~
@@ -72,66 +71,7 @@ your ``PATH`` that opens the URL passed to it in a browser, for example:
    #!/bin/bash
    xdg-open "$@"
 
-
-Icon and font sizes
-~~~~~~~~~~~~~~~~~~~
-
-You can also configure the icon sizes used in the menu. The syntax is as
-follows:
-
-``font_size`` is off course the font size, ``icon_xs`` is the size of
-the green "ticks" you see `here <Internal_GUI#Map_Point>`__. ``icon_s``
-is the size of the world and home icon and of the icons in the `POI
-selector <Internal_GUI#POIs>`__. Finally, ``icon_l`` is the size of the
-icons `defined in the menu html <Internal_GUI/Menu_configurations>`__.
-The icon sizes need to be available as files in Navit (they should be by
-default).
-
-
-Menu Configuration
-~~~~~~~~~~~~~~~~~~
-
-Using Internal GUI, the menu can be brought up by clicking (almost)
-anywhere on the map, or pressing the Enter (Return) key on the device's
-keyboard.
-
-The menu is configured using a html-like syntax inside the ... tags. Of
-course, this configuration can be customised - alternative
-configurations can be found in `Internal GUI/Menu
-configurations <Internal_GUI/Menu_configurations>`__.
-
-
-Initial Start-up
-~~~~~~~~~~~~~~~~
-
-|N810-OSD-Home.png| When Navit is first started using the Internal GUI
-one should see (depending on the skin you have selected to use)
-something similar to the image to the right. The layout of the internal
-GUI is controlled by the OSD tags located in the navit.xml file. These
-tags should be located within the first 100 lines of the file. For
-information on how to modify the appearance of the OSD layout please
-reference this link. `OSD Layout <OSD>`__
-
-
-Using the Internal GUI
-----------------------
-
-
-Basics and breadcrumbs
-~~~~~~~~~~~~~~~~~~~~~~
-
-The Internal GUI should be mostly self-explanatory (that's the idea, at
-least - if it is not, please file a bug). It basically consists of
-different screens which show icons that can be clicked / touched, lists
-(such as search results) and input fields. For text input, a **virtual
-keyboard** is available. Of course, a regular hardware keyboard can be
-used if available.
-
-On all screens of the Internal GUI, there is a **breadcrumb trail** at
-the top of the screen, which shows the current position inside the
-screen hierarchy of the Internal GUI. The breadcrumbs are clickable, to
-return to an earlier screen.
-
+.. _internal_gui_keyboard_operation:
 
 Operation with keyboard or rotary encoder
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -154,6 +94,7 @@ for details.
 *Support for rotary encoders was added in December 2015, and
 hide_impossible_next_keys in February 2017.*
 
+.. _internal_gui_main_menu:
 .. _main_menu:
 
 Main Menu
@@ -163,13 +104,15 @@ Main Menu
 (or tap for touch screen) anywhere on the map. From here all other
 sub-menus and actions are accessible. The sub menu items are:
 
-#. `Actions <Internal_GUI#Actions>`__
-#. `Settings <Internal_GUI#Settings>`__
-#. `Tools <Internal_GUI#Tools>`__
-#. `Route <Internal_GUI#Route>`__
-#. `About <Internal_GUI#About>`__
+#. :ref:`Actions <internal_gui_actions>`
+#. :ref:`Settings <internal_gui_settings>`
+#. :ref:`Tools <internal_gui_tools>`
+#. :ref:`Route <internal_gui_route>`
+#. ``About`` - displays version and author information
 
 |
+
+.. _internal_gui_actions:
 
 Actions
 ~~~~~~~
@@ -178,14 +121,16 @@ Actions
 that are focused primarily on routing and location finding. The sub menu
 items are:
 
-#. `Bookmarks <Internal_GUI#Bookmarks>`__
-#. `Former destinations <Internal_GUI#Former_destinations>`__
-#. `Map Point <Internal_GUI#Map_Point>`__
-#. `Current Location <Internal_GUI#Current_Location>`__
-#. `Town <Internal_GUI#Town>`__
+#. :ref:`Bookmarks <internal_gui_bookmarks>`
+#. :ref:`Former destinations <internal_gui_former_destinations>`
+#. :ref:`Map Point <internal_gui_map_point>`
+#. :ref:`Current Location <internal_gui_vehicle_position>`
+#. :ref:`Town <internal_gui_town>`
 #. Quit - Closes Navit
 
 |
+
+.. _internal_gui_bookmarks:
 
 Bookmarks
 ^^^^^^^^^
@@ -210,6 +155,7 @@ Friends and the bookmarks Bill and Joe in there.
   Bookmarks are stored in a plain-text bookmarks file in your Navit
   directory (~/.navit on unix systems).
 
+.. _internal_gui_former_destinations:
 
 Former destinations
 ^^^^^^^^^^^^^^^^^^^
@@ -224,14 +170,17 @@ reuse a destination. The functionality offered is similar to the
 Bookmarks menu (however, the list cannot be edited, as it is meant as a
 record of the destinations selected).
 
-To prevent the list from getting too long to be useful, only the last 10
-destinations are kept. This limit can be changed in navit.xml (attribute
-"recent_dest" in element ""). So normally, each time a new destination
-is selected, it will be added to the list, and the oldest entry in the
-list will be discarded. As an exception, if a destination is set that is
-already in the list, it will not be repeated in the list; instead the
-entry will just be moved to the top.
+To prevent the list from getting too long to be useful, only a limited
+number of destinations are kept (10 by default, configurable in
+``navit.xml`` with the ``recent_dest`` attribute of the ``<navit>``
+element, see :doc:`basic/general
+</user/configuration/basic/general>`). So normally, each time a new
+destination is selected, it will be added to the list, and the oldest
+entry in the list will be discarded. As an exception, if a destination
+is set that is already in the list, it will not be repeated in the list;
+instead the entry will just be moved to the top.
 
+.. _internal_gui_map_point:
 
 Map Point
 ^^^^^^^^^
@@ -248,10 +197,12 @@ on the map. The items contained in this sub menu are:
    position to your desired destination.
 -  Add as Bookmark: Brings up a keyboard so a name can be entered for
    the bookmark. The point can then be easily recalled via the
-   `Bookmark <Internal_GUI#Bookmarks>`__ menu.
+   :ref:`Bookmark <internal_gui_bookmarks>` menu.
 -  POIs: Brings up a list of all known POIs around the map point.
 
 |
+
+.. _internal_gui_pois:
 
 POIs
 ''''
@@ -264,6 +215,7 @@ POIs
   to that location. Navit will create a route from the current position
   to the location of the POI selected.
 
+.. _internal_gui_vehicle_position:
 
 Vehicle Position
 ^^^^^^^^^^^^^^^^
@@ -280,12 +232,14 @@ for the GPS position of the device.
    position to your desired destination.
 -  Add as Bookmark: Brings up a keyboard so a name can be entered for
    the bookmark. The point can then be easily recalled via the
-   `Bookmark <Internal_GUI#Bookmarks>`__ menu.
+   :ref:`Bookmark <internal_gui_bookmarks>` menu.
 -  POIs: Brings up a list of all known POIs around the map point.
 -  View on Map: Re-pans the map to display the current "known" position
    based upon GPS data.
 
 |
+
+.. _internal_gui_town:
 
 Town
 ^^^^
@@ -308,8 +262,10 @@ icons not being properly generated. This will result in no icon image at
 all. If you have this problem check your logs to see what is happening
 during compiling.
 
-| If you are having problems with search, please check
-  `OpenStreetMap#Problems_with_OSM_and_navit_or_navigation_in_general <OpenStreetMap#Problems_with_OSM_and_navit_or_navigation_in_general>`__.
+| If you are having problems with search, please check the
+  :doc:`FAQ </user/faq/index>`.
+
+.. _internal_gui_settings:
 
 Settings
 ~~~~~~~~
@@ -325,12 +281,14 @@ instead of the navit.xml file.
 
 The sub menu items are:
 
-#. `Display <Internal_GUI#Display>`__
-#. `Maps <Internal_GUI#Maps>`__
-#. `Vehicle <Internal_GUI#Vehicle>`__
-#. `Rules <Internal_GUI#Rules>`__
+#. :ref:`Display <internal_gui_display>`
+#. :ref:`Maps <internal_gui_maps>`
+#. :ref:`Vehicle <internal_gui_vehicle>`
+#. :ref:`Rules <internal_gui_rules>`
 
 |
+
+.. _internal_gui_display:
 
 Display
 ^^^^^^^
@@ -338,11 +296,13 @@ Display
 |InternalGUI-Display.png| The display sub menu provides items to control
 various display features within Navit.
 
-#. `Layout <Internal_GUI#Layout>`__
-#. `Fullscreen/Window Mode <Internal_GUI#Window_Mode>`__
-#. `3D <Internal_GUI#3D>`__
+#. :ref:`Layout <internal_gui_layout>`
+#. :ref:`Fullscreen/Window Mode <internal_gui_window_mode>`
+#. :ref:`3D <internal_gui_3d>`
 
 |
+
+.. _internal_gui_layout:
 
 Layout
 ''''''
@@ -354,12 +314,14 @@ Layout
   layout options MUST be enabled in the navit.xml file before they can
   be turned on or off in this menu.
 
+.. _internal_gui_window_mode:
 
 Window Mode (Toggle)
 ''''''''''''''''''''
 
 Changes Navit from windowed mode to fullscreen mode and vice versa.
 
+.. _internal_gui_3d:
 
 3D (Toggle)
 '''''''''''
@@ -368,6 +330,8 @@ This is a toggle button that enables / disables drawing the map in
 either a 2D mode or a 3D mode. Currently the only way to modify the
 "tilt" for the 3D mode is to modify the navit.xml file.
 
+.. _internal_gui_maps:
+
 Maps
 ^^^^
 
@@ -375,6 +339,8 @@ Maps
   navit.xml file and allows for activating/de-activating those maps.
   Note that a map must be enabled in navit.xml before it will appear in
   this menu.
+
+.. _internal_gui_vehicle:
 
 Vehicle
 ^^^^^^^
@@ -385,6 +351,8 @@ name opens a menu with available routing profiles.
 
 |
 
+.. _internal_gui_rules:
+
 Rules
 ^^^^^
 
@@ -393,10 +361,14 @@ Rules
   some of these items are currently not function and must be changed in
   the navit.xml file.
 
+.. _internal_gui_tools:
+
 Tools
 ~~~~~
 
 The tools menu allows the user to check what Locale Navit is set to.
+
+.. _internal_gui_route:
 
 Route
 ~~~~~
@@ -404,12 +376,13 @@ Route
 |InternalGUI-Route.png| The route icon brings up the route menu that
 will display the active route.
 
-#. `Route Description <Internal_GUI#Route_Description>`__
+#. :ref:`Route Description <internal_gui_route_description>`
 #. Height Profile, requires a dedicated binfile to providing
    heightlines.
 
 |
 
+.. _internal_gui_route_description:
 
 Route Description
 ^^^^^^^^^^^^^^^^^

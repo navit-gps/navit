@@ -14,6 +14,7 @@ The rest of this webpage is meant for advanced/power users who'd like to fiddle 
    integrations
    advanced/options
    maps/index
+   Internal_GUI
    Layout
    Vehicleprofile
    Coordinate_format
