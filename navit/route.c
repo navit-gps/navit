@@ -1447,6 +1447,8 @@ static void route_graph_init(struct route_graph *this, struct route_info *dst, s
         val = route_value_seg(profile, NULL, s, -1);
         if (val != INT_MAX) {
             val = val * (100 - dst->percent) / 100;
+            if (s->end->flags & RP_CYCLE_DISMOUNT)
+                val += profile->cycle_dismount_penalty * dst->percent / 100;
             s->end->seg = s;
             s->end->dst_seg = s;
             s->end->rhs = val;
@@ -1456,6 +1458,8 @@ static void route_graph_init(struct route_graph *this, struct route_info *dst, s
         val = route_value_seg(profile, NULL, s, 1);
         if (val != INT_MAX) {
             val = val * dst->percent / 100;
+            if (s->start->flags & RP_CYCLE_DISMOUNT)
+                val += profile->cycle_dismount_penalty * (100 - dst->percent) / 100;
             s->start->seg = s;
             s->start->dst_seg = s;
             s->start->rhs = val;
@@ -2068,6 +2072,10 @@ static int route_value_seg(struct vehicleprofile *profile, struct route_graph_po
     if (!route_through_traffic_allowed(profile, over) && from && from->seg
         && route_through_traffic_allowed(profile, from->seg))
         ret += profile->through_traffic_penalty;
+    if (dir == 1 && (over->start->flags & RP_CYCLE_DISMOUNT))
+        ret += profile->cycle_dismount_penalty;
+    if (dir == -1 && (over->end->flags & RP_CYCLE_DISMOUNT))
+        ret += profile->cycle_dismount_penalty;
     return ret;
 }
 
@@ -2441,7 +2449,8 @@ static void route_graph_change_traffic_distortion(struct route_graph *this, stru
 }
 
 /*
- * Add a barrier as a blocked point unless the profile can pass it. Unlike a
+ * Add a barrier as a blocked point unless the profile can pass it; a cycle
+ * barrier that requires dismounting becomes a penalty point instead. Unlike a
  * street segment a point has no direction, so passing in either direction
  * makes it no obstacle; the point only takes effect if maptool split the
  * street at the barrier node.
@@ -2460,8 +2469,13 @@ static void route_graph_add_barrier(struct route_graph *this, struct vehicleprof
         barrier_flags = attr.u.num;
 
     if (((barrier_flags & profile->flags_forward_mask) == profile->flags)
-        || ((barrier_flags & profile->flags_reverse_mask) == profile->flags))
+        || ((barrier_flags & profile->flags_reverse_mask) == profile->flags)) {
+        if ((barrier_flags & AF_CYCLE_DISMOUNT) && (profile->flags & AF_BIKE)) {
+            pnt = route_graph_add_point(this, &c);
+            pnt->flags |= RP_CYCLE_DISMOUNT;
+        }
         return;
+    }
 
     pnt = route_graph_add_point(this, &c);
     pnt->flags |= RP_BLOCKED;
