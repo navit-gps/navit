@@ -91,6 +91,8 @@
 
 #cmakedefine HAVE_PTHREAD_SETNAME_NP 1
 
+#cmakedefine HAVE_THREAD_LOCAL_STORAGE 1
+
 #cmakedefine HAVE_ENDIAN_H 1
 
 #cmakedefine HAVE_FREEIMAGE 1

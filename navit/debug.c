@@ -24,6 +24,7 @@
 #include "debug.h"
 #include "file.h"
 #include "item.h"
+#include "thread.h"
 #include <glib.h>
 #include <glib/gtypes.h>
 #include <signal.h>
@@ -64,6 +65,33 @@
 static int debug_socket = -1;
 static struct sockaddr_in debug_sin;
 #endif
+
+/** Read/write lock for console output */
+static thread_lock *rw_lock;
+
+#if defined(_MSC_VER)
+static __declspec(thread) int debug_logging;
+#elif HAVE_THREAD_LOCAL_STORAGE
+static __thread int debug_logging;
+#else
+static GPrivate *debug_logging_key;
+#endif
+
+static int debug_logging_get(void) {
+#if defined(_MSC_VER) || HAVE_THREAD_LOCAL_STORAGE
+    return debug_logging;
+#else
+    return GPOINTER_TO_INT(g_private_get(debug_logging_key));
+#endif
+}
+
+static void debug_logging_set(int value) {
+#if defined(_MSC_VER) || HAVE_THREAD_LOCAL_STORAGE
+    debug_logging = value;
+#else
+    g_private_set(debug_logging_key, GINT_TO_POINTER(value));
+#endif
+}
 
 #define DEFAULT_DEBUG_LEVEL lvl_error
 dbg_level max_debug_level = DEFAULT_DEBUG_LEVEL;
@@ -140,6 +168,12 @@ void debug_init(const char *program_name) {
     gdb_program = g_strdup(program_name);
     signal(SIGSEGV, sigsegv);
 #endif
+#if !defined(_MSC_VER) && !HAVE_THREAD_LOCAL_STORAGE
+    if (!debug_logging_key)
+        debug_logging_key = g_private_new(NULL);
+#endif
+    if (!rw_lock)
+        rw_lock = thread_lock_new();
     debug_hash = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
     debug_fp = stdout;
@@ -335,6 +369,13 @@ static android_LogPriority dbg_level_to_android(dbg_level level) {
  */
 void debug_vprintf(dbg_level level, const char *module, const int mlen, const char *function, const int flen,
                    int prefix, const char *fmt, va_list ap) {
+    int lock_held = 0;
+    if (rw_lock && !debug_logging_get()) {
+        thread_lock_acquire_write(rw_lock);
+        debug_logging_set(1);
+        lock_held = 1;
+    }
+
     char *end; /* Pointer to the NUL terminating byte of debug_message */
     char debug_message[4096];
     char *message_origin = debug_message + sizeof(debug_message)
@@ -450,16 +491,23 @@ void debug_vprintf(dbg_level level, const char *module, const int mlen, const ch
 #        ifdef HAVE_SOCKET
         if (debug_socket != -1) {
             sendto(debug_socket, debug_message, len, 0, (struct sockaddr *)&debug_sin, sizeof(debug_sin));
-            return;
+        } else {
+#        endif
+            FILE *fp = debug_fp;
+            if (!fp)
+                fp = stderr;
+            fprintf(fp, "%s", debug_message);
+            fflush(fp);
+#        ifdef HAVE_SOCKET
         }
 #        endif
-        FILE *fp = debug_fp;
-        if (!fp)
-            fp = stderr;
-        fprintf(fp, "%s", debug_message);
-        fflush(fp);
 #    endif
 #endif
+    }
+
+    if (lock_held) {
+        debug_logging_set(0);
+        thread_lock_release_write(rw_lock);
     }
 }
 
@@ -482,8 +530,12 @@ void debug_destroy(void) {
         return;
     if (debug_fp == stderr || debug_fp == stdout)
         return;
+    if (rw_lock && !debug_logging_get())
+        thread_lock_acquire_write(rw_lock);
     fclose(debug_fp);
     debug_fp = NULL;
+    if (rw_lock && !debug_logging_get())
+        thread_lock_release_write(rw_lock);
 }
 
 void debug_set_logfile(const char *path) {
