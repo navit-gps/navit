@@ -226,6 +226,12 @@ The ``vehicleprofile`` tag supports the following routing attributes:
   would otherwise be caused by a stationary GPS receiver drifting in
   place. Making the values smaller makes Navit more sensitive to
   movement (it will detect motion sooner).
+* **cycle_dismount_penalty** *(tenths of a second)* - the routing cost
+  added each time the route passes a barrier that has to be dismounted,
+  such as a cycle barrier that the map data marks as passable only by
+  dismounting. Raising it makes Navit prefer a detour over dismounting;
+  set it to 0 to treat dismounting as free. The default is 300 (30
+  seconds).
 
 .. _vehicle_profile_flags:
 

@@ -41,6 +41,7 @@ struct vehicleprofile {
     int axle_weight;             /**< Axle Weight of the vehicle in kg */
     int dangerous_goods;         /**< Flags of dangerous goods present */
     int through_traffic_penalty; /**< Penalty when driving on a through traffic limited road */
+    int cycle_dismount_penalty;  /**< Penalty when passing a barrier that requires dismounting */
     GHashTable *roadprofile_hash;
     struct attr active_callback;
     int turn_around_penalty;  /**< Penalty when turning around */
