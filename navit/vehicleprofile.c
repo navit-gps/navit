@@ -27,6 +27,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define CYCLE_DISMOUNT_PENALTY_DEFAULT 300
+
 static void vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr) {
     dbg(lvl_debug, "%s:%ld", attr_to_name(attr->type), attr->u.num);
     switch (attr->type) {
@@ -80,6 +82,9 @@ static void vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr
     case attr_through_traffic_penalty:
         this_->through_traffic_penalty = attr->u.num;
         break;
+    case attr_cycle_dismount_penalty:
+        this_->cycle_dismount_penalty = attr->u.num;
+        break;
     case attr_turn_around_penalty:
         this_->turn_around_penalty = attr->u.num;
         break;
@@ -121,6 +126,7 @@ static void vehicleprofile_clear(struct vehicleprofile *this_) {
     this_->weight = -1;
     this_->axle_weight = -1;
     this_->through_traffic_penalty = 9000;
+    this_->cycle_dismount_penalty = CYCLE_DISMOUNT_PENALTY_DEFAULT;
     vehicleprofile_free_hash(this_);
     this_->roadprofile_hash = g_hash_table_new(NULL, NULL);
 }
@@ -194,8 +200,8 @@ static void vehicleprofile_update(struct vehicleprofile *this_) {
             vehicleprofile_apply_attrs(this_, profile_option.u.navit_object, 1);
     }
     vehicleprofile_attr_iter_destroy(iter);
-    dbg(lvl_debug, "result l %d w %d h %d wg %d awg %d pen %d", this_->length, this_->width, this_->height,
-        this_->weight, this_->axle_weight, this_->through_traffic_penalty);
+    dbg(lvl_debug, "result l %d w %d h %d wg %d awg %d pen %d cdpen %d", this_->length, this_->width, this_->height,
+        this_->weight, this_->axle_weight, this_->through_traffic_penalty, this_->cycle_dismount_penalty);
     dbg(lvl_debug, "m %d fwd 0x%x rev 0x%x flags 0x%x stsp %d stdst %d dg %d", this_->mode, this_->flags_forward_mask,
         this_->flags_reverse_mask, this_->flags, this_->static_speed, this_->static_distance, this_->dangerous_goods);
     g_hash_table_foreach(this_->roadprofile_hash, vehicleprofile_debug_roadprofile, NULL);
