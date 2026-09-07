@@ -1034,7 +1034,15 @@ osmid item_bin_get_id(struct item_bin *ib) {
     return ret;
 }
 
+enum cycle_barrier_design {
+    CYCLE_DESIGN_UNKNOWN,
+    CYCLE_DESIGN_SIMPLE
+};
+
 static int node_is_tagged;
+static int node_bicycle_dismount;
+static int node_bicycle_tagged;
+static enum cycle_barrier_design cycle_barrier_design;
 static void relation_add_tag(char *k, char *v);
 
 static int access_value(char *v) {
@@ -1063,6 +1071,21 @@ static int access_value(char *v) {
     if (!g_strcmp0(v, "destination"))
         return 2;
     return 3;
+}
+
+/*
+ * Access flags for a cycle barrier. An explicit bicycle tag overrides the
+ * default: no blocks bicycles, yes and dismount let bicycles pass, where
+ * dismount marks the barrier for a routing penalty. Without an explicit tag
+ * the design decides: simple designs are passable, chicane designs or an
+ * unknown design at least require getting off the bike.
+ */
+static int osm_cycle_barrier_flags(void) {
+    if (node_bicycle_dismount)
+        return AF_PBH | AF_CYCLE_DISMOUNT;
+    if (node_bicycle_tagged)
+        return AF_PBH;
+    return AF_PBH | (cycle_barrier_design == CYCLE_DESIGN_SIMPLE ? 0 : AF_CYCLE_DISMOUNT);
 }
 
 static int osm_merge_access_flags(int def_flags) {
@@ -1153,9 +1176,18 @@ void osm_add_tag(char *k, char *v) {
         level = 5;
     }
     if (!g_strcmp0(k, "bicycle")) {
-        flags[access_value(v)] |= AF_BIKE;
+        if (!g_strcmp0(v, "dismount")) {
+            node_bicycle_dismount = 1;
+            flags[1] |= AF_BIKE;
+        } else {
+            flags[access_value(v)] |= AF_BIKE;
+        }
+        node_bicycle_tagged = 1;
         level = 5;
     }
+    if (!g_strcmp0(k, "cycle_barrier"))
+        if (!g_strcmp0(v, "single") || !g_strcmp0(v, "diagonal") || !g_strcmp0(v, "tilted"))
+            cycle_barrier_design = CYCLE_DESIGN_SIMPLE;
     if (!g_strcmp0(k, "foot")) {
         flags[access_value(v)] |= AF_PEDESTRIAN;
         level = 5;
@@ -1446,6 +1478,9 @@ void osm_add_node(osmid id, double lat, double lon) {
     memset(flags, 0, sizeof(flags));
     memset(flagsa, 0, sizeof(flagsa));
     node_is_tagged = 0;
+    node_bicycle_dismount = 0;
+    node_bicycle_tagged = 0;
+    cycle_barrier_design = CYCLE_DESIGN_UNKNOWN;
     nodeid = id;
     item.type = type_point_unkn;
     debug_attr_buffer[0] = '\0';
@@ -1974,6 +2009,10 @@ void osm_end_node(struct maptool_osm *osm) {
             item_bin_set_type_by_population(item_bin, atoi(attr_strings[attr_string_population]));
         item_bin_add_coord(item_bin, &current_node->c, 1);
         if (barrier_flags != -1) {
+            if (types[i] == type_barrier_cycle)
+                barrier_flags = osm_cycle_barrier_flags();
+            else if (node_bicycle_dismount)
+                barrier_flags |= AF_CYCLE_DISMOUNT;
             current_node->is_barrier = 1;
             item_bin_add_attr_int(item_bin, attr_flags, osm_merge_access_flags(barrier_flags));
         }
