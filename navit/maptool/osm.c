@@ -1439,6 +1439,8 @@ static void remove_last_node_item_from_buffer(void) {
 void osm_add_node(osmid id, double lat, double lon) {
     in_node = 1;
     attr_strings_clear();
+    memset(flags, 0, sizeof(flags));
+    memset(flagsa, 0, sizeof(flagsa));
     node_is_tagged = 0;
     nodeid = id;
     item.type = type_point_unkn;
