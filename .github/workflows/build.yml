@@ -96,13 +96,28 @@ jobs:
         run: apt-get update && apt-get -y install doxygen ca-certificates git rsync
       - name: Run doxygen
         run: cd navit && doxygen
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Prepare webroot
+        run: |
+          echo "doxygen.navit-project.org" > doc/html/CNAME
+          touch doc/html/.nojekyll
+      - name: Upload static files as artifact
+        id: build
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./doc/html
-          publish_branch: gh-pages
-          cname: doxygen.navit-project.org
+          path: doc/html
+  deploy_doxygen:
+    runs-on: ubuntu-latest
+    needs: run_doxygen
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
   build_sailfish:
     # FIXME: use a specific docker image, so we can build this at home
     runs-on: ubuntu-latest
