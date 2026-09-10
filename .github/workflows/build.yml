@@ -118,6 +118,16 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deploy
         uses: actions/deploy-pages@v4
+  check_spelling:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: apt-get update && apt-get install -y git wget
+      - uses: crate-ci/typos@v1.50.1
+        with:
+          files: docs/
   build_sailfish:
     # FIXME: use a specific docker image, so we can build this at home
     runs-on: ubuntu-latest
