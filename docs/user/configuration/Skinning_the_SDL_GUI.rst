@@ -157,7 +157,7 @@ Structure of \*.imageset files
 | ``   ``\
 |
 
-It's nice to make code more readable by spliting it like below
+It's nice to make code more readable by splitting it like below
 
 ``    ``\
 

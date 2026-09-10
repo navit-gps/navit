@@ -25,7 +25,7 @@ Alternate Layouts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 `right|300px|text-top|thumb|Mapnik-style map
-layout <image:Layout_osm_2.png>`__ This layout tries to closely mimick
+layout <image:Layout_osm_2.png>`__ This layout tries to closely mimic
 the Mapnik rendering style used by default over at
 `OpenStreetMap <http://www.openstreetmap.org>`__. It even uses the same
 icon styles where available (this means you will have to download the
@@ -174,7 +174,7 @@ Features
 ^^^^^^^^
 
 -  bike paths visible green
--  less confortable but still fine roads are visible in brown
+-  less comfortable but still fine roads are visible in brown
 -  everything else is much like car layout
 -  no dashed lines - suitable for winCE
 

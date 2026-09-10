@@ -12,7 +12,7 @@ Compiling / debugging using CodeBlocks & mingw compiler
 =======================================================
 
  Up to and including release 0.0.4 the Win32 builds were supported using the CodeBlocks/mingw development environment,
- in combination with the glade for win32 GTK devlopment toolkit. For release 0.1.0 and later use native mingw
+ in combination with the glade for win32 GTK development toolkit. For release 0.1.0 and later use native mingw
  (see below) or cygwin (see below).
 
 Downloads
@@ -45,7 +45,7 @@ To compile:
 
  * Start the CodeBlocks application
  * Open the navit.workspace file (located in projs\CodeBlocks directory)
- * Set the GTK_DIR enviroment variable in CodeBlocks (Setting/Environment, and select environments variables)
+ * Set the GTK_DIR environment variable in CodeBlocks (Setting/Environment, and select environments variables)
  * the GTK_DIR should point to where you have installed the Glade/Gtk toolkit package (e.g. d:\gtk)
 
 Now you should be able to  build/debug the navit project:
@@ -128,7 +128,7 @@ try adding the following parameters to ./configure :
 Cygwin 1.7
 ''''''''''
 
-With cygwin 1.7 is fairly easy to build navit. Install all the required packages(some has diffrent names now).
+With cygwin 1.7 is fairly easy to build navit. Install all the required packages(some has different names now).
 Run the autogen script first `./autogen.sh`
 and then configure with the following options: `./configure --disable-binding-python --disable-plugins`
 
@@ -323,7 +323,7 @@ Known "bugs"
 The "locale" folder is generated one level up.
 because of that the languages in navit are not working
 Cut and paste (or move) the "locale" folder to the navit folder.
-This should be investigated anf fixed so the folder is in the correct place after a build.
+This should be investigated and fixed so the folder is in the correct place after a build.
 So move `navit-source/build/locale/` to `navit-source/build/navit/locale`
 
 You can run
@@ -494,7 +494,7 @@ All other Linux/Unix systems use:
   pcp /opt/cegcc/arm-cegcc/lib/device/cegccthrd.dll ":/windows/cegccthrd.dll"
 
 
-Synchronisation with a grahic surface, if connection to device failed:
+Synchronisation with a graphic surface, if connection to device failed:
 
 Packages RAKI and RAPIP you can use.
 

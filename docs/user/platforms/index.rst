@@ -2,8 +2,8 @@ Supported Platforms
 ===================
 
 Navit is build very modular and as a result this has been ported to a lot of platforms.
-Some of them are activly maintaine while others are unmaintained.
-For instructions how to install Navit please select the matching plattform.
+Some of them are actively maintained while others are unmaintained.
+For instructions how to install Navit please select the matching platform.
 
 Maintained
 ----------

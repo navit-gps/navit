@@ -49,7 +49,7 @@ Navit has the basic functions:
 With the current structure of the navit menu you can do all these things
 already, but the menu is not consistent to the main functions of navit.
 Furthermore the user does not see at moment on the main menu page what
-is the processing status of Navit. The main **Informations on a Main
+is the processing status of Navit. The main **Information on a Main
 Menu** are (as options for changing):
 
 -  Main Navit-Mode: *(1) Navigation* or *(2) Route Planning*
@@ -118,16 +118,16 @@ navit-project.org)
    nearby non-blocked positions
 -  images (svg and maybe even png) should be scalable by the engine
 -  osd button priority: including graphics in OSDs seems to be working
-   via buttons. but the underlaying layers have click-priority, so
-   overlayed buttons dont work and underlayed ones are badly or even
-   invisible. top buttons should have priority over the underlaying
+   via buttons. but the underlying layers have click-priority, so
+   overlaid buttons dont work and underlaid ones are badly or even
+   invisible. top buttons should have priority over the underlying
    ones!
 -  osd_configuration allows for text elements to be switched on/off but
    not for buttons, and so not for design elements
 -  standard output could be more verbose, like giving speed on change or
    in intervals to be able to work with it (like beeping when to
    slow/fast in a way that is easy to control for users)
--  xml files should support enviroment variables like ~ or $HOME, so OSD
+-  xml files should support environment variables like ~ or $HOME, so OSD
    layouts can be more generic (setting vars in XML files would be nice,
    too)
 
@@ -140,13 +140,13 @@ navit-project.org)
 
 -  the vehicle should be switch off able from gui - to zoom/search on a
    map the vehicle first has to be disabled in xml, or it will
-   continously jump/zoom the map to it
+   continuously jump/zoom the map to it
 
    -  This is possible using Settings --> Rules --> Map follows vehicle.
       Switch that off. (again, r3136) --`Tiiiim <User:Tiiiim>`__ 12:14,
       6 April 2010 (UTC)
 
--  there is no place to look up what differnt map symbols mean like
+-  there is no place to look up what different map symbols mean like
    border-like lines
 -  altitude should be available as gui element like speed etc.
 
@@ -164,7 +164,7 @@ navit-project.org)
 -  OSD layout should be changeable if routing is active/inactive (eg
    dont display distance if there is not destination set)
 -  zoom_route() should zoom out further if follow is set
--  in internal gui my vehicle curser is not properly removed with each
+-  in internal gui my vehicle cursor is not properly removed with each
    update, so leaving a trace
 
    -  This is something to do with map refresh update intervals (if I
@@ -172,7 +172,7 @@ navit-project.org)
       6 April 2010 (UTC)
 
 -  switching whole (included) XML files instead of working with
-   osd_configuration might make it easier for dynamic menues and save
+   osd_configuration might make it easier for dynamic menus and save
    the cpu cycles of hidden elements.
 -  distance and speed OSD elements come with units, altitude and TL/ETA
    without - without would leave more space for OSD design
@@ -194,7 +194,7 @@ navit-project.org)
 Android port specific issues
 ----------------------------
 
--  These or the issues I have when using navit on an andriod phone. I
+-  These or the issues I have when using navit on an android phone. I
    guess a lot of them are easy to implement, others aren't. I don't
    want to put them in the track because I don't see them as bugs.
    --`Sanderd17 <User:Sanderd17>`__ 14:23, 26 August 2010 (UTC)

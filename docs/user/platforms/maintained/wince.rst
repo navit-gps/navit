@@ -118,7 +118,7 @@ Using Navigation Next Turn OSD item
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To use the `navigation_next_turn <OSD#navigation_next_turn>`__ OSD item
-on WinCE, the icon must be explicitely sourced. In ``navit.xml`` it
+on WinCE, the icon must be explicitly sourced. In ``navit.xml`` it
 should something like:
 
 \ `` ``

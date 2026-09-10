@@ -28,7 +28,7 @@ Thus, you need to add it via the application manager:
 
 After refreshing the application catalogues, you can install it using
 the application manager (pay attention, that it now should be a SVN
-version and not just the offical old 0.0.2)
+version and not just the official old 0.0.2)
 
 Dont forget about the additional packages, to use all features:
 
@@ -53,7 +53,7 @@ Copy /etc/navit/navit.xml to /home/user/.navit/navit.xml and adapt this
 file below the home directory.
 
 This basically follows the `Configuration <Configuration>`__
-instructions. But there are a few platform specific changes nessesary:
+instructions. But there are a few platform specific changes necessary:
 
 -
 -
@@ -150,7 +150,7 @@ and type the following:
     cp /media/mmc1/navit.xml /home/user/.navit/navit.xml
     cp /media/mmc1/navitOSD.xml /home/user/.navit/navitOSD.xml
 
-Again, this navit.xml file assums that your map file is located in
+Again, this navit.xml file assumes that your map file is located in
 "/media/mmc1/map/". When you open Navit for the first time you will
 likely be presented with a blank screen. To get Navit to center on your
 position you can either wait until you get a GPS fix or you can tap on
@@ -272,7 +272,7 @@ showing a reasonable setup for the n810
 ---Daniel Would
 
 Here's another option with each item in its' own text box. The layout
-also works without overlaping when in windowed mode.
+also works without overlapping when in windowed mode.
 
 .. code:: xml
 

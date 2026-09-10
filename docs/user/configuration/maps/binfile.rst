@@ -5,7 +5,7 @@ Navit has its own map format, called **binfile** format. It's a binary format, o
 
 Dividing the world into tiles
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The map coordinates of binfile are in meters, measured from equator and null meridian, with a merkator projection. The limit of this world is about 20000 km in earch direction from this null point. This doesn't cover polar regions, but it's ok for now.
+The map coordinates of binfile are in meters, measured from equator and null meridian, with a merkator projection. The limit of this world is about 20000 km in each direction from this null point. This doesn't cover polar regions, but it's ok for now.
 
 So, the world gives a 40000x40000km rectangle (tile). This rectangle is divided into 4 equally-sized sub-rectangles (tiles) called a,b,c and d counter clockwise ...
 

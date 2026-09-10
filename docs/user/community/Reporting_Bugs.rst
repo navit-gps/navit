@@ -5,7 +5,7 @@ Reporting Bugs
 
 All bugs and feature requests are to be reported to the Navit developers
 within `Github issues <https://github.com/navit-gps/navit/issues>`__.
-Please read the guidlines below before submitting your bug - this is so
+Please read the guidelines below before submitting your bug - this is so
 that the developers receive a clear and helpful bug report.
 
 .. _reporting_a_bug:
@@ -147,7 +147,7 @@ etc.
    enabled) <#Reporting_coordinates_for_problems>`__.
 -  If possible, provide an NMEA log (see
    :doc:`../configuration/basic`) and add the time at which the
-   problem occured.
+   problem occurred.
 -  If an incorrect vehicle position was shown, specify where you were in
    real-life, and where Navit indicated you to be.
 
@@ -163,7 +163,7 @@ jumping between correct and incorrect positions.
    enabled) <#Reporting_coordinates_for_problems>`__.
 -  If possible, provide an NMEA log (see
    :doc:`../configuration/basic`) and add the time at which the
-   problem occured.
+   problem occurred.
 -  If an incorrect vehicle position was shown, specify where you were in
    real-life, and where Navit indicated you to be.
 

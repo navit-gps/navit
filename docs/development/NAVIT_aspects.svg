@@ -206,7 +206,7 @@
          id="tspan3810"
          sodipodi:role="line"
          x="135.91507"
-         y="129.64862">adress</tspan><tspan
+         y="129.64862">address</tspan><tspan
          sodipodi:role="line"
          x="135.91507"
          y="149.64862"
@@ -306,7 +306,7 @@
          x="33.915085"
          sodipodi:role="line"
          id="tspan3893"
-         style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:125%;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans">appeareance</tspan></text>
+         style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:125%;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans">appearance</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:125%;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
@@ -351,7 +351,7 @@
          id="tspan3923"
          sodipodi:role="line"
          x="524.20081"
-         y="191.22003">code core maintainance</tspan></text>
+         y="191.22003">code core maintenance</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3925"
@@ -395,7 +395,7 @@
          y="217.22003"
          x="524.20081"
          sodipodi:role="line"
-         id="tspan3939">code platform maintainance</tspan></text>
+         id="tspan3939">code platform maintenance</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:16px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
@@ -406,7 +406,7 @@
          id="tspan3943"
          sodipodi:role="line"
          x="524.20081"
-         y="203.22003">code plugin maintainance</tspan></text>
+         y="203.22003">code plugin maintenance</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3945"
@@ -417,7 +417,7 @@
          y="118.64863"
          x="524.9151"
          sodipodi:role="line"
-         id="tspan3947">design ressources</tspan></text>
+         id="tspan3947">design resources</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:16px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
