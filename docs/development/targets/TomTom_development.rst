@@ -9,10 +9,10 @@ TomTom development
    This Page is old, dont use SVN anymore!
    }}
 
-Prerequisities for building Navit
+Prerequisites for building Navit
 ---------------------------------
 
-Before we can start, we need to set up a compiler toolchain targetting
+Before we can start, we need to set up a compiler toolchain targeting
 TomTom devices. TomTom provides a a pre-compiled compiler toolchain for
 Linux and Windows (CygWin). It can be downloaded from TomTom's website:
 http://www.tomtom.com/page.php?Page=gpl. This file needs to be unpacked
@@ -169,7 +169,7 @@ need the tslib source from the SVN repository:
 
 Before compiling, we need to patch the source a bit: Open the file
 plugins/input-raw.c in the tslib source directory and search for
-EVIOCGRAB. You will find several occurences of EVIOCGRAB, each of them
+EVIOCGRAB. You will find several occurrences of EVIOCGRAB, each of them
 within some if-statement. Enclose these if-statements with #ifdef
 EVIOCGRAB ... #endif, so that you get something like this:
 
@@ -599,7 +599,7 @@ TomTom disk. Here are some settings which are rather useful:
 
       <debug name="segv" level="0"/>
 
--  Use libSDL for graphics output. Set the screen witdh and height as
+-  Use libSDL for graphics output. Set the screen width and height as
    well as the bits per pixel fitting to your TomTom device. (Have a
    look at http://www.opentom.org/Hardware_TFT_LCD for a list of screen
    sizes.) Disable the window frame and set SDL flags such that

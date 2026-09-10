@@ -258,7 +258,7 @@ pretty fast.
 In the **Main-Menu** you can:
 
 -  1a) Do something with your bookmarks (e.g. navigate to a bookmark)
--  1b) Do something with an adress (e.g. navigate to an adress)
+-  1b) Do something with an address (e.g. navigate to an address)
 -  1c) Do something with your "map-position" (e.g. save as a bookmark,
    navigate to, search POIs nearby, ...)
 -  1d) Do something with your "GPS-position" (e.g. save as a bookmark,

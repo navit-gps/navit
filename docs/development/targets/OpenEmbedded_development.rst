@@ -74,7 +74,7 @@ EXTRA_OECONF line.
   As you can see there, the build uses libosso and libhildon so the +
   and - on top of device should zoom in or out; also gps should start
   automatically when we link libgpsbt and libgpsmgr.
-| We build navit with gpsd-2.30 to get libgps15 which is deliverd by
+| We build navit with gpsd-2.30 to get libgps15 which is delivered by
   osso-gpsd-1.0 on the n810.
 | Next, go to the main dir of the build environment (/OE) and type:
 
@@ -109,7 +109,7 @@ Reassemble a fresh deb using the
 `info <http://synthesize.us/HOWTO_make_a_deb_archive_without_dpkg>`__:
 
 | `` vi control``
-| `` tar cvzpf conrol.tar.gz control``
+| `` tar cvzpf control.tar.gz control``
 | `` ar -r navit_2087.deb debian-binary control.tar.gz data.tar.gz ``
 
 | Install and configure this reassembled deb as described (see
@@ -215,7 +215,7 @@ Misc stuff
 bitbake
 -------
 
-| Usefull reading: `bitbake
+| Useful reading: `bitbake
   manual <http://bitbake.berlios.de/manual/>`__.
 
 .. _n810_gps:

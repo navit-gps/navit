@@ -7,7 +7,7 @@ Installing Navit is easy using the distributions package manager using apt:
    apt install navit
 
 .. warning::
-    The package repository of your distribution might not have the latest and gratest version of Navit available.
+    The package repository of your distribution might not have the latest and greatest version of Navit available.
 
     Cou can check with :code:`navit -v` to see which version you got installed
 

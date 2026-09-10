@@ -91,7 +91,7 @@ Then go to the main dir of the build environment (/stuff) and type:
   ignored as it appears
 | Also see `this
   email <http://lists.linuxtogo.org/pipermail/openembedded-stablebranch/2008-May/000090.html>`__.
-| Usefull reading: `bitbake
+| Useful reading: `bitbake
   manual <http://bitbake.berlios.de/manual/>`__.
 
 Later
@@ -198,7 +198,7 @@ But also:
 local.conf
 ----------
 
-Below is the local.conf I used, it might be usefull.
+Below is the local.conf I used, it might be useful.
 
 | `` # Where to store sources ``
 | `` DL_DIR = "/home/user/downloads" ``

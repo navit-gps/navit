@@ -194,7 +194,7 @@ Raw notes about ViaMichelin
 ---------------------------
 
 It has a quite similar format, except that the tile configuration is
-different, they are using 16-Bit-Lenghts instead of 32-Bit-Pointers to
+different, they are using 16-Bit-Lengths instead of 32-Bit-Pointers to
 the data, and their compressed stream includes the crc. So basically,
 it's as previously, excepted the following:
 

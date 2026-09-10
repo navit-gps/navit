@@ -51,7 +51,7 @@ See for the graphics_methods
 -  **font_new**: Creates a new font, used for draw_text. Parameters are
    font_methods (which is just a destroy function) and the size of the
    font
--  **gc_new**: Creates a new graphics context (Not usefull for every
+-  **gc_new**: Creates a new graphics context (Not useful for every
    renderers, imagine it as the pen you are drawing with) Methods are:
 
    -  gc_destroy,

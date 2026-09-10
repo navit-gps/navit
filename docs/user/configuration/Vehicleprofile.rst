@@ -12,7 +12,7 @@ For general information about Vehicleprofiles, see :doc:`vehicle options </user/
 Features
 ~~~~~~~~
 
-Ride your bike by navigation prefered on Cycleways, use less paths and
+Ride your bike by navigation preferred on Cycleways, use less paths and
 tracks
 
 
@@ -23,7 +23,7 @@ tracks
 Features
 ~~~~~~~~
 
-Ride your bike by navigation prefered on Asphalt, use less paths and
+Ride your bike by navigation preferred on Asphalt, use less paths and
 tracks
 
 
@@ -34,7 +34,7 @@ tracks
 Features
 ~~~~~~~~
 
-You are a Biker or a Hiker? Navigate your tor with this profile throu
+You are a Biker or a Hiker? Navigate your tor with this profile thru
 tracks, hikes, paths, mountainpaths and so on
 
 

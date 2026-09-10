@@ -13,4 +13,4 @@ If you want to support us with money you can donate at Open Collective: `https:/
 
 Wishlist
 --------
-We also have a wishlist with items we wanne look into to support or need to continue the work on certan projects: :doc:`/team/wishlist`.
+We also have a wishlist with items we wanne look into to support or need to continue the work on certain projects: :doc:`/team/wishlist`.

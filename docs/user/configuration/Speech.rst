@@ -166,13 +166,13 @@ could substitute the default speech definition:
 
     <speech type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" />
 
-with an appropiate one, that uses festival:
+with an appropriate one, that uses festival:
 
 .. code:: xml
 
     <speech type="cmdline" data="/usr/local/bin/speech-wrapper %s spanish">
 
-You will also need following /usr/local/bin/speech-wrapper file wich
+You will also need following /usr/local/bin/speech-wrapper file which
 must have an executable bit set:
 
 .. code:: bash
@@ -191,11 +191,11 @@ for german) and -v specifies the language to use. Please refer to espeak
 to see which languages you can use on your system and which other
 command-line-options are useful.
 
-The call to external speech command is asynchronus, but it will block if
+The call to external speech command is asynchronous, but it will block if
 previous phrase is still being speaked. The GUI will freeze while espeak
 is speaking to you only if it's going to say a new phrase before it end
 with previous. If you do not want this behaviour, you can try using
-wrapper script like in festival smaple but with & sign at the end of
+wrapper script like in festival sample but with & sign at the end of
 last line:
 
 .. code:: xml
@@ -274,7 +274,7 @@ Use Google translate (online) to speak directions
 -------------------------------------------------
 
 You can let navit speak its directions using the TTS api from Google
-translate. It wil send the directions to the online service
+translate. It will send the directions to the online service
 (internetacces is needed) and it generates an MP3 with the spoken
 directions that you can play using different audioplayers. This script
 is generated and working in win32, other oss need to be tested and

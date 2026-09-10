@@ -1603,7 +1603,7 @@ XML
                    <itemgra item_types="poi_mine" order="10-">
                        <icon src="/sdcard/navit/icons/poi_mine.p.32.png"/>
                    </itemgra>
-                   <itemgra item_types="poi_forbiden_area" order="12-">
+                   <itemgra item_types="poi_forbidden_area" order="12-">
                        <icon src="/sdcard/navit/icons/forbiden_area.xpm"/>
                    </itemgra>
                    <itemgra item_types="poi_pharmacy" order="13-">

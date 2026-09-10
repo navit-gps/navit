@@ -107,9 +107,9 @@ You then only need to run "make" again from your binary folder (
 navit-build in the cmake example, or the current folder when using
 autotools).
 
-.. _prebuild_binairies:
+.. _prebuild_binaries:
 
-Prebuild binairies
+Prebuild binaries
 ==================
 
 `Prebuilt binaries <Download_Navit>`__ exist for many distributions.

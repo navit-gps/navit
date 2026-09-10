@@ -13,7 +13,7 @@ Europe, split into 5 regions (with Germany having its very own region!).
 These maps were the first map types which Navit supported.
 
 Note that Navit can only read Grosser Reiseplanner versions 2002/2003 to
-2007/2008. Newer versions are currently incomptible with Navit.
+2007/2008. Newer versions are currently incompatible with Navit.
 
 Description
 ~~~~~~~~~~~
@@ -57,7 +57,7 @@ aside. So it may differ a bit.**
 
    :*\* smp5: NL,B,GB,L,IRL
 
-      Update your `Configuation <Configuation>`__ accordingly. A sample
+      Update your `Configuration <Configuration>`__ accordingly. A sample
       for Germany would be:
 
 |

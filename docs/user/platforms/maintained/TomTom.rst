@@ -107,7 +107,7 @@ for you.
 |               |                |    screen      |    take care   |
 |               |                |    issues when |    of updates  |
 |               |                |    two         | -  can't use   |
-|               |                |    softwares   |    up to date  |
+|               |                |    software    |    up to date  |
 |               |                |    are trying  |    Linux       |
 |               |                |    to write to |    kernels due |
 |               |                |    the frame   |    to display  |
@@ -142,7 +142,7 @@ original ttsystem file. gltt write to the named pipe /var/run/gpspipe
 gltt is called like this sample: gltt -baud 115200 -periodic 1000
 -fix_start cold -rftype HH_4L
 
-You can get some informations about used device names in /proc/barcelona
+You can get some information about used device names in /proc/barcelona
 or the built in flash drive.
 
 .. _ram_memory_issues:

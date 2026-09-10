@@ -43,7 +43,7 @@ Permanently wrong announcements
 
 A strange bug, where you get every few seconds the direction to turn,
 even if there is no obvious reason to do so. This can happen, if you
-have (accidently?) multiple `binfile <binfile>`__ maps enabled.
+have (accidentally?) multiple `binfile <binfile>`__ maps enabled.
 
 Tickets `#1039 <http://trac.navit-project.org/ticket/1039>`__,
 `#1046 <http://trac.navit-project.org/ticket/1046>`__
@@ -259,7 +259,7 @@ So there we go:
 `Which is here, just in case you wanted to
 know... <http://maps.google.co.uk/maps?hl=en&xhr=t&q=Longitude:+4.5871787+++Latitude:+50.877276&cp=44&um=1&ie=UTF-8&sa=N&tab=wl>`__
 
-**Converting in one commmand**
+**Converting in one command**
 
 | `` Longitude: ``\ ```http://www.wolframalpha.com/input/?i=0x7c877/6371000.0/PI*180`` <http://www.wolframalpha.com/input/?i=0x7c877/6371000.0/PI*180>`__
 | `` Latitude: ``\ ```http://www.wolframalpha.com/input/?i=atan(exp(0x6496e5/6371000.0`` <http://www.wolframalpha.com/input/?i=atan(exp(0x6496e5/6371000.0>`__\ ``))/PI*360-90``
@@ -377,7 +377,7 @@ You're missing pkg-config
 gui_sdl_window.cpp:23:19: error: CEGUI.h: No such file or directory
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You need Crazy Eddie's GUI development files. Ususally called
+You need Crazy Eddie's GUI development files. Usually called
 cegui-devel or libcegui-mk2-dev.
 
 .. _navit_cant_find_libgarmin_but_i_installed_it:

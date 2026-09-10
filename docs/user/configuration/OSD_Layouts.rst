@@ -626,29 +626,29 @@ Features
 Screenshots
 ^^^^^^^^^^^
 
-+----------------------------------+----------------------------------+
-| .. fi                            | .. fi                            |
-| gure:: neo-cs_1.0_sceenshot1.png | gure:: neo-cs_1.0_sceenshot4.png |
-|                                  |                                  |
-|  :alt: neo-cs_1.0_sceenshot1.png |  :alt: neo-cs_1.0_sceenshot4.png |
-|                                  |                                  |
-|    neo-cs_1.0_sceenshot1.png     |    neo-cs_1.0_sceenshot4.png     |
-+----------------------------------+----------------------------------+
-| without gps fix                  | with gps fix in tracking mode    |
-+----------------------------------+----------------------------------+
-| .. fi                            | .. fi                            |
-| gure:: neo-cs_1.0_sceenshot2.png | gure:: neo-cs_1.0_sceenshot3.png |
-|                                  |                                  |
-|  :alt: neo-cs_1.0_sceenshot2.png |  :alt: neo-cs_1.0_sceenshot3.png |
-|                                  |                                  |
-|    neo-cs_1.0_sceenshot2.png     |    neo-cs_1.0_sceenshot3.png     |
-+----------------------------------+----------------------------------+
-| in routing mode                  | in routing mode with active      |
-|                                  | odometer in the second line of   |
-|                                  | the bottom bar                   |
-+----------------------------------+----------------------------------+
-|                                  |                                  |
-+----------------------------------+----------------------------------+
++------------------------------------+------------------------------------+
+| .. fi                              | .. fi                              |
+| gure:: neo-cs_1.0_screenshot1.png  | gure:: neo-cs_1.0_screenshot4.png  |
+|                                    |                                    |
+|  :alt: neo-cs_1.0_screenshot1.png  |  :alt: neo-cs_1.0_screenshot4.png  |
+|                                    |                                    |
+|    neo-cs_1.0_screenshot1.png      |    neo-cs_1.0_screenshot4.png      |
++------------------------------------+------------------------------------+
+| without gps fix                    | with gps fix in tracking mode      |
++------------------------------------+------------------------------------+
+| .. fi                              | .. fi                              |
+| gure:: neo-cs_1.0_screenshot2.png  | gure:: neo-cs_1.0_screenshot3.png  |
+|                                    |                                    |
+|  :alt: neo-cs_1.0_screenshot2.png  |  :alt: neo-cs_1.0_screenshot3.png  |
+|                                    |                                    |
+|    neo-cs_1.0_screenshot2.png      |    neo-cs_1.0_screenshot3.png      |
++------------------------------------+------------------------------------+
+| in routing mode                    | in routing mode with active        |
+|                                    | odometer in the second line of     |
+|                                    | the bottom bar                     |
++------------------------------------+------------------------------------+
+|                                    |                                    |
++------------------------------------+------------------------------------+
 
 Skin description
 ^^^^^^^^^^^^^^^^
@@ -663,7 +663,7 @@ map area:
 
    -  **Current speed** (1)
       tapping on the speed display toggles between some routing or
-      tracking informations and the odometer in the bottom bar (see
+      tracking information and the odometer in the bottom bar (see
       below).
    -  **Current altitude** (1)
    -  **Autozoom** (1)
@@ -740,7 +740,7 @@ place. There are some things to be mentioned:
 | | ``timeout="1"``           | be not visibe by default are shown.`` |
 | | ``radius="27"``           | | ``to snap on to roads.``            |
 |                             | | ``to immediately                    |
-|                             | resume the map draging by the vehicle |
+|                             | resume the map dragging by the vehicle |
 |                             | , since we have a button if we really |
 |                             |  want to look something on the map.`` |
 |                             | | ``a sligh                           |
@@ -760,7 +760,7 @@ place. There are some things to be mentioned:
 |                         | he map following the vehicle by default`` |
 +-------------------------+-------------------------------------------+
 
-I've put my configuration files in the tarball as they might be usefull
+I've put my configuration files in the tarball as they might be useful
 as a starting point. The included navit.xml isn't a complete
 configuration, just a skeleton in which all the stuff from the original
 config file is included. I find it more convenient to have just a small
@@ -774,11 +774,11 @@ Known issues, bugs and TODO
 -  In older navit versions the routing status icon will appear in the
    internal gui. This isn't a skin bug as it is fixed in the recent svn
    versions of navit.
--  There is a slight refresh delay of the seperator png's when toggling
+-  There is a slight refresh delay of the separator png's when toggling
    between odometer and the other display modes.
--  The scale should be not visible in 3D view, but it allways shows up.
+-  The scale should be not visible in 3D view, but it always shows up.
 -  I haven't found a better way to decide if there's a gps fix than to
-   watch if there are at least three satelites in use. Therefore it's
+   watch if there are at least three satellites in use. Therefore it's
    possible that, for a period of time, the gui decides there's a fix
    when the gps actually hasn't one. If someone knows a better
    (available) way, please let me know.
@@ -799,7 +799,7 @@ PC Layouts
 Mineque's PC layouts
 ~~~~~~~~~~~~~~~~~~~~
 
-| Thoose skins fits only screens with 800px width.
+| These skins fits only screens with 800px width.
 | Create dir ".navit/skins/" in your home dir and unpack there skin.
 | For enabling it you have to edit xml file from the archive in two
   places:
@@ -826,7 +826,7 @@ under
 
 ``   ``\
 
-with corrected path of your user dirname and choosen skin.
+with corrected path of your user dirname and chosen skin.
 
 .. raw:: html
 
@@ -1155,15 +1155,15 @@ following:
 
 -  Top left:
 
-   -  Distance left to next navigating maneouvre using
+   -  Distance left to next navigating manoeuvre using
       `OSD#text <OSD#text>`__'s ``navigation.item[1].length[named]``
-   -  Next navigation maneouvre icon using
+   -  Next navigation manoeuvre icon using
       `OSD#navigation_next_turn <OSD#navigation_next_turn>`__
 
 -  Top centre:
 
    -  Next road name and/or number (if available) to turn onto during
-      the next maneouvre. Uses `OSD#text <OSD#text>`__'s
+      the next manoeuvre. Uses `OSD#text <OSD#text>`__'s
       ``navigation.item[1].street_name`` and
       ``navigation.item[1].street_name_systematic``
 
@@ -1216,11 +1216,11 @@ There are some hard-coded paths in the markup, especially to the
 | ::                                                                   |
 |                                                                      |
 |    <!-- TOP LEFT -->                                                 |
-|    <!-- Distance to Next Maneouvre -->                               |
+|    <!-- Distance to Next Manoeuvre -->                               |
 |    <osd enabled="yes" type="text" label="${navi                      |
 | gation.item[1].length[named]}" x="0" y="0" font_size="350" w="75" h= |
 | "30" align="0" background_color="#000000c8" osd_configuration="2" /> |
-|    <!-- Next Maneouvre Icon -->                                      |
+|    <!-- Next Manoeuvre Icon -->                                      |
 |    <osd enabled="yes" type="navigation_next_turn" x="0"              |
 |  y="30" background_color="#000000c8" w="75" osd_configuration="2" /> |
 |    <!-- Next Road -->                                                |
@@ -1417,11 +1417,11 @@ the png versions, make sure you change the path.
 | .. code::                                                            |
 |                                                                      |
 |    <!-- TOP LEFT -->                                                 |
-|    <!-- Distance to Next Maneouvre -->                               |
+|    <!-- Distance to Next Manoeuvre -->                               |
 |    <osd enabled="yes" type="text" label="${navi                      |
 | gation.item[1].length[named]}" x="0" y="0" font_size="350" w="75" h= |
 | "30" align="0" background_color="#000000c8" osd_configuration="2" /> |
-|    <!-- Next Maneouvre Icon -->                                      |
+|    <!-- Next Manoeuvre Icon -->                                      |
 |    <osd enabled="yes" type="navigation_next_turn" x="0"              |
 |  y="30" background_color="#000000c8" w="75" osd_configuration="2" /> |
 |    <!-- Next Road -->                                                |
@@ -1579,7 +1579,7 @@ the png versions, make sure you change the path.
 | - arrow above the distance until turn
 | - middle: the street following, so you can look for street signs if
   navigation is not comprehensible
-| - right: GPS time, time, signal strengh and altitude above sea level
+| - right: GPS time, time, signal strength and altitude above sea level
 
 |
 | \*BOTTOM
@@ -1780,7 +1780,7 @@ All these OSDs are developed for and tested with navit 0.2.0
 Windows Mobile VGA 1
 ~~~~~~~~~~~~~~~~~~~~
 
-This OSD fits well for @480x640. The are still some minor issues beeing
+This OSD fits well for @480x640. The are still some minor issues being
 corrected soon.
 
 .. figure:: WM_VGA1_screen.png
@@ -2093,7 +2093,7 @@ Treo 750 QVGA Square (240x240) (German)
 
 The following XML-Code (click "show" for "Layout XML for Treo 750 QVGA
 Square" at the bottom) is part of my file "navit.xml". I did some
-comments (in German) to seperate the file into logical parts.
+comments (in German) to separate the file into logical parts.
 
 If you want to try, use or modify this layout, you have to insert this
 code in your file "navit.xml".
@@ -2144,7 +2144,7 @@ routing <image:Screen-Layout-navit-QVGA-240-240-routing-ok.png>`__
 
 -  tap on "30" to select a time-delay of about 30 seconds => thats good
    for scrolling on the map while navigating and looking e.g. for some
-   adresses.
+   addresses.
 
 |
 | The time-delay starts after your osd enabled="yes" type="text"
@@ -2316,7 +2316,7 @@ vertical mode. You can choose between 4 different OSD modes (OSD off,
 OSD Min, OSD Min+ and OSD full).
 
 -  this example menu doesn't need any additional pictures
--  disabling "speeed_cam" and "scale" will not work by now
+-  disabling "speed_cam" and "scale" will not work by now
 
 Of course you can delete one layout if you only need one. Changing of
 menu and to init osd_configuration is not necessary in this case.
@@ -2817,7 +2817,7 @@ With route:
 
 **Bottom**
 
--  left: next turn with remaining lenght to it
+-  left: next turn with remaining length to it
 -  middle: on which street to turn
 -  right: driving speed and speed restriction of street with speed
    warner (turns red if driving to fast)
@@ -3034,3 +3034,4 @@ free to contact me here.
 .. |image26| image:: Calculate.png
 .. |image27| image:: Calculate2.png
 .. |image28| image:: No_destination2.png
+

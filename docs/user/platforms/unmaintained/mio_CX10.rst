@@ -56,7 +56,7 @@ Unlock directly at factory config reset
 ---------------------------------------
 
 The .c31 scripts above perform a customization of the device at factory
-default, then reboot the device wiht the new config in order to get the
+default, then reboot the device with the new config in order to get the
 desktop running at each boot. I have no battery in my C210, and restart
 does not work well on my C210, so I prefer to avoid the reboot and
 directly get the desktop running at factory default reset. Thus, I
@@ -112,7 +112,7 @@ the end:
 This gives me 120 seconds to export the registry to a file, then run the
 calibration and language. After these 120 seconds, the ``MioMap.exe``
 process will be kille, the screen will return to the desktop where
-``Regedit`` can be run a second time to export the registery after the
+``Regedit`` can be run a second time to export the registry after the
 changes.
 
 For the C210, my ``MioLang.reg`` file, for french language, looks like:

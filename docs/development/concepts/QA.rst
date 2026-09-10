@@ -4,7 +4,7 @@ QA
 | routing QA is a github repo, on CircleCI it compiles Navit, fetches
   some maps and then runs routing and navigation tests
 | https://github.com/navit-gps/routing-qa
-| A test case is made of start and end coordinates and a succes
+| A test case is made of start and end coordinates and a success
   criterion
 | sample
   https://github.com/navit-gps/routing-qa/blob/master/Fremont_drive_bypass.yaml
