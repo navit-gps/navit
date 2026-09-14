@@ -908,6 +908,8 @@ which can be used in labels include:
 +----------------------------------+--------------------------------------------+
 | navit.messages                   |                                            |
 +----------------------------------+--------------------------------------------+
+| navit.destination_description    | Destination set by user                    |
++----------------------------------+--------------------------------------------+
 | tracking                         | Section containing information             |
 |                                  | on current track, available                |
 |                                  | whenever valid GPS information             |
