@@ -2042,6 +2042,9 @@ msgstr "fiets"
 msgid "pedestrian"
 msgstr "voetganger"
 
+msgid "Voice"
+msgstr "Stem"
+
 #, c-format
 msgid "Current profile: %s"
 msgstr "Huidig profiel: %s"
