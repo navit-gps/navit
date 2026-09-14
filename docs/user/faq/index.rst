@@ -202,7 +202,7 @@ Weird coordinates in bookmarks.txt and centre.txt
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Internally, Navit uses hexadecimal values to represent latitude and
-longitude values (see `Coordinate format <Coordinate_format>`__ for
+longitude values (see :doc:`Coordinate format </user/configuration/Coordinate_format>` for
 details). These values spill over to the outside world in bookmarks.txt
 and centre.txt, where points are saved as hexadecimal values by default.
 

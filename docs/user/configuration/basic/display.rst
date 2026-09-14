@@ -1,4 +1,4 @@
-.. configuration_display:
+.. _configuration_display:
 
 Display Options
 ===============
@@ -20,7 +20,7 @@ The current list of available graphics drivers:
 * **gtk_drawing_area**,  usually most appropriate on Linux desktop systems
 * **sdl**, render inside an X window, or direct to the Linux framebuffer, with min dependencies on external libraries.
 * **qt5**, render using Qt5 library, either using QWidgets or QML. On top of any Qt5 supported display technology.
-* **win32** - useable with <tt>gtk</tt> or <tt>internal</tt> GUIs for Windows systems only.
+* **win32** - useable with ``gtk`` or ``internal`` GUIs for Windows systems only.
 
 Experimental/less maintained drivers:
 
@@ -67,7 +67,9 @@ The following example uses the `internal` GUI, and starts Navit up in fullscreen
 
 Internal GUI
 ~~~~~~~~~~~~
-The first GUI is embedded in Navit core and is primarily aimed at touchscreen devices, or those devices with small screens (such as netbooks). However, this GUI also works very well on desktops and laptops.
+The first GUI is embedded in Navit core and is primarily aimed at touchscreen devices, or those devices with small screens (such as netbooks). However, this GUI also works very well on desktops and laptops. It is the default GUI, so normally no further configuration is required.
+
+The Internal GUI is selected by setting the ``type`` attribute to ``internal``. If other ``gui`` tags exist, disable them by setting their ``enabled`` attribute to ``"no"``.
 
 .. code-block:: xml
 
@@ -81,15 +83,21 @@ A number of options specific to the ``internal`` GUI are available. These includ
 * **icon_xs** - The size that extra-small style icons should be scaled to (e.g. country flag on town search).
 * **icon_s** - The size that small style icons should be scaled to (e.g. icons of ``internal`` GUI toolbar).
 * **icon_l** - The size that large style icons should be scaled to (e.g. icons of internal GUI menu).
-* **menu_on_map_click** - Toggles the ability to bring up the menu screen when clicking on the map. See the :doc:`internal GUI page </user/configuration/Internal_GUI>` for more information.
+* **keyboard** - If enabled (the default), Navit provides a custom on-screen keyboard for text input (e.g. in Town search). Set to ``0`` to use the device's native text entry instead, which conserves some screen space.
+* **menu_on_map_click** - If enabled (the default), clicking or tapping the map brings up the main menu. Set to ``0`` to disable this behaviour; the menu can then still be opened from an OSD button using the ``gui.menu()`` command (see :ref:`gui_commands`).
 
 An example ``gui`` tag using the previous options is shown below:
 
 .. code-block:: xml
 
-	<gui type="internal" enabled="yes" font_size="250" icon_xs="48" icon_s="48" icon_l="64">
+	<gui type="internal" enabled="yes" font_size="250" icon_xs="48" icon_s="48" icon_l="64" keyboard="0" menu_on_map_click="0">
 
-More options are discussed on the :doc:`Internal GUI </user/configuration/Internal_GUI>` and the :doc:`advanced options </user/configuration/advanced/options>`.
+Besides the attributes above, the menu itself is defined using an
+HTML-like syntax inside the ``<gui>`` element; ready-made configurations
+are listed under :doc:`Internal GUI/Menu configurations
+</user/configuration/Internal_GUI_Menu_configurations>`. A walkthrough of
+the resulting menus can be found on the :doc:`Internal GUI
+</user/configuration/Internal_GUI>` page.
 
 GTK GUI
 ~~~~~~~

@@ -67,7 +67,7 @@ Linux:
 If you want to connect multiple tools to your GPS, you need an multiplexer tool, as gpsd or gypsy.
 
 * source="gpsd://host[:port]"	 - gpsd://localhost, the default one, will try to connect to gpsd on localhost
-* source="socket:ipaddr:post"    - socket connection (expects nmea stream)
+* source="socket:ipaddr:port"    - socket connection (expects nmea stream)
 * source="socket:ipaddr:2947:r=1" - connect to gpsd in nmea mode (gpsd versions 2.39 or older)
 * source='socket:ipaddr:2947:?WATCH={"enable":true,"nmea":true};' - connect to gpsd in nmea mode (gpsd versions newer than 2.39)
 * source="gypsy://connectstring" - gypsy
@@ -161,9 +161,7 @@ following will be created:
 
 Vehicleprofile
 --------------
-:doc:`Profiles to add in the navit.xml </user/configuration/Vehicleprofile>`
-<br/>
-..  this is tricky, here we need a step by step introduction
+See :doc:`Profiles to add in the navit.xml </user/configuration/Vehicleprofile>`.
 
 Defines the behaviour of the routing and are usually linked to a vehicle section, so switching the "vehicle" (type of mobility) from within Navit, routing also will change its behaviour. This way, it is possible to include steps for pedestrian routing, but to exclude it for bike, horse or car routing. Within the vehicleprofile section, roadprofile sections are used to describe the routing behaviour of different roads. Here's a very basic example:
 
