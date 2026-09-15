@@ -317,22 +317,8 @@ static struct zip_lfh *binfile_read_lfh(struct file *fi, long long offset) {
 }
 
 static unsigned char *binfile_read_content(struct map_priv *m, struct file *fi, long long offset, struct zip_lfh *lfh) {
-    unsigned char *ret = NULL;
-
-    offset += sizeof(struct zip_lfh) + lfh->zipfnln;
-    switch (lfh->zipmthd) {
-    case 0:
-        offset += lfh->zipxtraln;
-        ret = file_data_read(fi, offset, lfh->zipuncmp);
-        break;
-    case 8:
-        offset += lfh->zipxtraln;
-        ret = file_data_read_compressed(fi, offset, lfh->zipsize, lfh->zipuncmp);
-        break;
-    default:
-        dbg(lvl_error, "map file %s: unknown compression method %d", fi->name, lfh->zipmthd);
-    }
-    return ret;
+    offset += sizeof(struct zip_lfh) + lfh->zipfnln + lfh->zipxtraln;
+    return file_data_read_method(fi, offset, lfh->zipsize, lfh->zipuncmp, lfh->zipmthd);
 }
 
 static int binfile_search_cd(struct map_priv *m, int offset, char *name, int partial, int skip) {
