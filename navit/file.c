@@ -512,8 +512,7 @@ static int lzma_uncompress_int(Bytef *dest, uLongf *destLen, const Bytef *source
 #endif
 }
 
-unsigned char *file_data_read_compressed_method(struct file *file, long long offset, int size, int size_uncomp,
-                                                int method) {
+unsigned char *file_data_read_method(struct file *file, long long offset, int size, int size_uncomp, int method) {
     void *ret;
     char *buffer = 0;
     uLongf destLen = size_uncomp;
@@ -534,6 +533,9 @@ unsigned char *file_data_read_compressed_method(struct file *file, long long off
         ret = NULL;
     } else {
         switch (method) {
+        case ZIP_COMPRESSION_STORED:
+            memcpy(ret, buffer, size);
+            break;
         case ZIP_COMPRESSION_DEFLATE:
             if (uncompress_int(ret, &destLen, (Bytef *)buffer, size) != Z_OK) {
                 dbg(lvl_error, "uncompress failed");
@@ -560,10 +562,6 @@ unsigned char *file_data_read_compressed_method(struct file *file, long long off
     g_free(buffer);
 
     return ret;
-}
-
-unsigned char *file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp) {
-    return file_data_read_compressed_method(file, offset, size, size_uncomp, ZIP_COMPRESSION_DEFLATE);
 }
 
 void file_data_free(struct file *file, unsigned char *data) {
