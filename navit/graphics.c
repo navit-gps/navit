@@ -148,6 +148,7 @@ struct displaylist_icon_cache {
 
 static void circle_to_points(const struct point *center, int diameter, int scale, int start, int len, struct point *res,
                              int *pos, int dir);
+static void graphics_labels_reset(struct graphics *gra);
 static void graphics_process_selection(struct graphics *gra, struct displaylist *dl);
 static void graphics_gc_init(struct graphics *this_);
 
@@ -572,7 +573,6 @@ void graphics_font_destroy(struct graphics_font *gra_font) {
  * @returns nothing
  * @author David Tegze (02/2011)
  */
-static void graphics_labels_reset(struct graphics *gra);
 
 void graphics_free(struct graphics *gra) {
     if (!gra)
