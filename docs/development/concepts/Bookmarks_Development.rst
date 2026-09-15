@@ -64,7 +64,7 @@ const char\* bookmarks_item_cwd(struct bookmarks\* this\_); - returns
 label of a current tree folder (or NULL if you are at topmost folder)
 
 Bookmarks will be useless without ability to change bookmarks data. Here
-we goe, with some editing stuff:
+we go, with some editing stuff:
 
 -  int bookmarks_add_bookmark(struct bookmarks \*this_, struct pcoord
    \*c, const char \*description) - Adds a bookmark labeled
@@ -72,7 +72,7 @@ we goe, with some editing stuff:
    coordinates, it will create folder, not bookmark.
 -  int bookmarks_cut_bookmark(struct bookmarks \*this_, const char
    \*label) - Copies data of bookmark labeled "label" to temporary
-   storage and deletes the bookmar. Be warned - temporary storage is not
+   storage and deletes the bookmark. Be warned - temporary storage is not
    persistent, so you will loose you bookmark if you quit the navit and
    didn't paste the bookmark somewhere.
 -  int bookmarks_copy_bookmark(struct bookmarks \*this_, const char
@@ -93,9 +93,9 @@ All data modification functions operate only at current tree position.
 You have to select required position before calling modification
 function. Those functions return TRUE if wverything went fine and FALSE
 otherwise. If the bookmarks with specified name couldn't be found, those
-fnctions will return FALSE and do nothing.
+functions will return FALSE and do nothing.
 
-The last important thing is a callbak, issued on map change:
+The last important thing is a callback, issued on map change:
 
 .. code:: c
 

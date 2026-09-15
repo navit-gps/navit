@@ -23,7 +23,7 @@ Copy and paste the following XML into navit.xml. Last update 01.01.13
 .. code:: xml
 
 
-           <vehicleprofile name="Bike prefered Cycleways" flags="0x80000000" flags_forward_mask="0x80000000" flags_reverse_mask="0x80000000" maxspeed_handling="1" route_mode="0" static_speed="5" static_distance="25">
+           <vehicleprofile name="Bike preferred Cycleways" flags="0x80000000" flags_forward_mask="0x80000000" flags_reverse_mask="0x80000000" maxspeed_handling="1" route_mode="0" static_speed="5" static_distance="25">
                <roadprofile item_types="steps" speed="2" >
                        <announcement level="0"/>
                        <announcement level="1"/>

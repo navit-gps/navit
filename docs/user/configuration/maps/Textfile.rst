@@ -2,7 +2,7 @@ Textfile
 ========
 
 Apart from the various map formats it can read, Navit also supports its
-own textual map format. This is useful for converting some datas sources
+own textual map format. This is useful for converting some data sources
 (gpx, OSM) into something Navit can read without too much work. An
 example is given in `Other maps <Other_maps>`__
 

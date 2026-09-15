@@ -50,7 +50,7 @@ Building Navit using Cmake
     make
 
 For subsequential builds it is sufficient to issue "make" in the build directory.
-A rerun of cmake is only neccessary if parameters are changed.
+A rerun of cmake is only necessary if parameters are changed.
 
 Remote Debugging
 ================
@@ -175,7 +175,7 @@ gettext
 
 workaround for `plural-eval.h:50: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'sigfpe_exit'`
 extend gettext-tools/src/plural-eval.h line 32 to `#if defined _MSC_VER || defined __MINGW32__ || defined __CEGCC__`
-dito for gettext-tools/gnulib-lib/wait-process.c line 31
+ditto for gettext-tools/gnulib-lib/wait-process.c line 31
 
 
 .. code-block:: bash

@@ -59,17 +59,17 @@ directory for build and issue following commands:
     cmake drive:/path/to/navit/source -G "MinGW Makefiles"
     mingw32-make
 
-.. _detailled_instructions_proved_to_be_working_with_r4675:
+.. _detailed_instructions_proved_to_be_working_with_r4675:
 
-Detailled instructions proved to be working with r4675
+Detailed instructions proved to be working with r4675
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-| `` Autors: AlexWien, Arpy``
+| `` Authors: AlexWien, Arpy``
 | `` (alphabethically ordered)``
 
 Since all attempts suggested on the `Windows <Windows>`__ failed for
 weeks, we were given the hint to use CMake, and a link to this page,
-which we try now to enhance with our detailled instructions which worked
+which we try now to enhance with our detailed instructions which worked
 for us finally. We hope you can find them useful too.
 
 Unfortunately, since we are not Navit developers, this is a one-shot
@@ -150,7 +150,7 @@ Trouble Shooting Build
 
    -  GTK install should add many entries to INCLUDE and LIB; These
       values must be visible inside the mingw shell. (One of us had to
-      add them manualy to the users environment variables, although they
+      add them manually to the users environment variables, although they
       were visible at the systems environment variables)
 
 -  After starting cmake, you get a configuration summary:

@@ -17,7 +17,7 @@ files are generated from these files during the build).
 Web-based translation tool
 --------------------------
 
-The easiest and prefered way to are the web-based translation tools of
+The easiest and preferred way to are the web-based translation tools of
 Launchpad:
 
 -  https://translations.launchpad.net/navit/trunk
@@ -50,7 +50,7 @@ all), then copy the [language].po file that was created over the
 they appear in the source code, along with the old translations from the
 previous .po.in file. Old translations for texts that no longer occur in
 the source code will appear commented out (with a leading "#"). New
-strings from the source code will have emtpy translations.
+strings from the source code will have empty translations.
 
 You can now correct/add translations, possibly using the old
 translations.

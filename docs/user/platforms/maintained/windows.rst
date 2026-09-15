@@ -30,7 +30,7 @@ instructions following.
 
 -  Support for NMEA serial GPS receiver devices (USB/Bluetooth) was
    broken in the win32 port since Navit releases 0.1.0. It is restored
-   with the latest builds (3650 and higer). The configuration for serial
+   with the latest builds (3650 and higher). The configuration for serial
    devices has changed: For example, a serial device on Com4 can be
    configured as follows:
 

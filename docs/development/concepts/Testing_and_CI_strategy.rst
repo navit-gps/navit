@@ -30,7 +30,7 @@ What is left to do ?
    ?)
 -  push updates automatically to f-droid
 
-Ressources available during a build
+Resources available during a build
 
 -  32x Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz
 -  4GB of RAM
@@ -230,7 +230,7 @@ If your feature branch exists already, do the following instead:
 
 Now you have two options. **Read them carefully and understand their
 limitations and side effects,** then choose the one that works best for
-your sitation:
+your situation:
 
 -  Create a patch in your git-svn repo and apply it to the navit-gps
    repo. This works well for a freshly forked branch, but if the branch

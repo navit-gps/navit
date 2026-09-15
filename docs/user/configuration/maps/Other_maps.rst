@@ -195,7 +195,7 @@ waypoint labels are dropped.
    EXTENSION               txt
    DATATYPE                WAYPOINT
 
-   # FILE LAYOUT DEFINITIIONS:
+   # FILE LAYOUT DEFINITIONS:
    #
    FIELD_DELIMITER         SPACE
    RECORD_DELIMITER        NEWLINE

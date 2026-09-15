@@ -8,7 +8,7 @@ Vehicleprofile/Hike Bike on Ground Gravel
 **Hike & Bike on Ground & Grave**
 =================================
 
-You are a Biker or a Hiker? Navigate your tor with this profile throu
+You are a Biker or a Hiker? Navigate your tor with this profile thru
 tracks, hikes, paths, mountainpaths and so on
 
 XML
