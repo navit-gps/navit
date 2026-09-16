@@ -5,7 +5,7 @@ Layout/detailedcampingbike
 Detailed Camping Biker
 ======================
 
-A Map created for bycicle rider who want to se campingplaces shops and
+A Map created for bicycle rider who want to see campingplaces shops and
 so on and no fuelstations or parking places. Most of the POI icons have
 been changed to those which are used within Mapnik, and they can be
 found here: http://www.sjjb.co.uk/mapicons/downloads. download the .zip
@@ -1320,8 +1320,8 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
                    <itemgra item_types="poi_fish" order="12-">
                        <icon src="fish.xpm"/>
                    </itemgra>
-                   <itemgra item_types="poi_forbiden_area" order="12-">
-                       <icon src="forbiden_area.xpm"/>
+                   <itemgra item_types="poi_forbidden_area" order="12-">
+                       <icon src="forbidden_area.xpm"/>
                    </itemgra>
                    <itemgra item_types="poi_golf" order="12-">
                        <icon src="/sdcard/navit/icons/sport_golf.p.16.png"/>
@@ -2935,8 +2935,8 @@ Copy and paste the following XML into navit.xml. Last update 12.01.13
                    <itemgra item_types="poi_fish" order="12-">
                        <icon src="fish.xpm"/>
                    </itemgra>
-                   <itemgra item_types="poi_forbiden_area" order="12-">
-                       <icon src="forbiden_area.xpm"/>
+                   <itemgra item_types="poi_forbidden_area" order="12-">
+                       <icon src="forbidden_area.xpm"/>
                    </itemgra>
                    <itemgra item_types="poi_golf" order="12-">
                        <icon src="/sdcard/navit/icons/sport_golf.p.16.png"/>

@@ -110,5 +110,5 @@ Colors
 | https://material.io/color/#!/?view.left=0&view.right=0&primary.color=FB8C00&secondary.color=42A5F5&secondary.text.color=000000&primary.text.color=000000
 | Toolbar:
 | Drawer:
-| Backgorund for the pages:
+| Background for the pages:
 | Icons:

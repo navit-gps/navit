@@ -19,7 +19,7 @@ Just remember to ''turn off 'save UTF8 byte mark' in Preferences'' or navit may 
 .. hint::
     If you are unfamiliar with XML files you can take a look at `Learn XML in Y minutes <https://learnxinyminutes.com/docs/xml/>`__
 
-The Navit Configuration XML is splitted into sections with this hierarchy:
+The Navit Configuration XML is split into sections with this hierarchy:
 
 .. code-block:: xml
 
@@ -122,7 +122,7 @@ Just change the map entry corresponding to your local folders
 Advanced Configuration
 **********************
 
-After those first setup ther is probably a lot more you night wanne tinker with.
+After those first setup there is probably a lot more you night wanne tinker with.
 There are many more options, including debugging, specific plugins, speech announcements, trip logging, ...
 
 See :doc:`advanced`

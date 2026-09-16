@@ -23,16 +23,16 @@ but hopefully there is a script which can convert osm v4 to osm v5...
 
 So the procedure should be something like :
 
-Get your datas from tiger. You can get the tiger to osm tools here :
+Get your data from tiger. You can get the tiger to osm tools here :
 http://sr71.net/~dave/osm/tiger/
 
 ``tiger-to-osm``
 
-Now convert the resulting datas to osm v5 (you can get the tool here :
+Now convert the resulting data to osm v5 (you can get the tool here :
 http://trac.openstreetmap.org/browser/applications/utils/conv05 )
 
 ``./04to05.pl mymap.osm``
 
-Now, convert the datas to navit binfile :
+Now, convert the data to navit binfile :
 
 ``./osm2navit mymap.bin < mymap.osm``

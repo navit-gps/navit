@@ -425,7 +425,7 @@ set_attr
 | **Description:** | Sets the specified attribute value. The          |
 |                  | attribute can be anything from attr_def.h. As    |
 |                  | shown in the example below, this can be useful   |
-|                  | to zoom to a specific zoom level, insted of just |
+|                  | to zoom to a specific zoom level, instead of just |
 |                  | zooming by a factor as with the                  |
 |                  | ```zoom`` <#zoom>`__ method.                     |
 +------------------+--------------------------------------------------+

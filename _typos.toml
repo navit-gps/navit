@@ -1,0 +1,42 @@
+[files]
+extend-exclude = ["*.gif", "*.jpeg", "*.jpg", "*.png"]
+
+[default.extend-words]
+# fragments from column-wrapped listings in the docs
+fo = "fo"
+ba = "ba"
+ser = "ser"
+ful = "ful"
+ove = "ove"
+nd = "nd"
+unce = "unce"
+syste = "syste"
+tatus = "tatus"
+statu = "statu"
+sligh = "sligh"
+ymbols = "ymbols"
+backgroun = "backgroun"
+configur = "configur"
+configurat = "configurat"
+configuratio = "configuratio"
+onfiguration = "onfiguration"
+comman = "comman"
+HEIGH = "HEIGH"
+HOM = "HOM"
+Ded = "Ded"
+Thi = "Thi"
+Nam = "Nam"
+# proper nouns and identifiers
+pn = "pn"
+# German wording in the OSD_Layouts page
+als = "als"
+Staus = "Staus"
+Konfiguration = "Konfiguration"
+explizit = "explizit"
+# fragments of long identifiers split by row wrapping in listings
+estination = "estination"
+navigatio = "navigatio"
+# real variety spellings
+thingie = "thingie"
+# suffix in expressions like "10ths"
+ths = "ths"

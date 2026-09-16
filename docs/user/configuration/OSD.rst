@@ -491,7 +491,7 @@ tag for navit.xml to configure odometer OSD below:
 
 | ``   idle_color="#E32636" text color of inactive odometer``
 | ``   text_color="#8DB600" text color of active odometer``
-| ``   background_color="#7f7f7f00" background box color (with transparancy)``
+| ``   background_color="#7f7f7f00" background box color (with transparency)``
 
 From svn version 4736 the label string can handle newline characters
 also ( you can write it as *&#10;* in navit.xml).
@@ -505,7 +505,7 @@ odometers on certain touchscreen devices where it is easy to send double
 click by misadventure.
 
 A persistent odometer will start automatically only if it was active
-when quiting Navit with *Quit* button in menu. When inactive and Navit
+when quitting Navit with *Quit* button in menu. When inactive and Navit
 is closed, the odometer will start in an inactive state. You can enable
 ``autostart`` feature by adding to item details:
 
@@ -528,7 +528,7 @@ route_guard
 she/he goes off the route by a specified distance (it also suppresses
 announcements outside another given limit) so the user should not check
 the device all the time if she/he is still on the correct path. This can
-save time finding the correct way when walking on unmarked pathes. The
+save time finding the correct way when walking on unmarked paths. The
 usage is the following. One should create a texfile or binfile map from
 the route points(see the example textfile map below). For track logs it
 is recommended to do polygon simplification before to reduce the number
@@ -711,7 +711,7 @@ can recognise the following camera types:
    -  *Description*: In the UK at least, these cameras are used a lot on
       motorway roadwork sections. CCTV ANPR cameras are located at
       strategic locations along the works, and take average speed
-      readings of vehicles by reading their number plates. Nightime use
+      readings of vehicles by reading their number plates. Nighttime use
       is facilitated through the use of IR lamps.
    -  *Suggested English name*: Avg speed
 
@@ -832,7 +832,7 @@ The label attribute can hold any combination of static text and
 placeholders, which will be replaced with data and updated in real time
 when displaying. The resulting text is cropped to the box dimensions
 given and there is no automatic line wrapping. Nevertheless labels may
-span multiple lines – explicitely insert a ``\n`` where you want a
+span multiple lines – explicitly insert a ``\n`` where you want a
 linebreak. The multi-line text obeys alignment settings.
 
 When using the text type, it is useful to set the width and height of
@@ -949,7 +949,7 @@ which can be used in labels include:
 |                                  | from onwards). Valid *format*              |
 |                                  | values are:                                |
 |                                  |                                            |
-|                                  | -  pos_deg: Latitute and                   |
+|                                  | -  pos_deg: Latitude and                   |
 |                                  |    longitude in decimal degrees            |
 |                                  | -  pos_degmin: Latitude and                |
 |                                  |    longitude in degrees, minutes           |
@@ -1513,7 +1513,7 @@ items), prefix them with **navit.** (e.g. **navit.zoom_in()**):
 |                                 | If you want the layer to be                                                |
 |                                 | hidden by default, set the                                                 |
 |                                 | active="0" tag in the layer                                                |
-|                                 | opening tag of the targetted                                               |
+|                                 | opening tag of the targeted                                               |
 |                                 | layer.                                                                     |
 |                                 |                                                                            |
 |                                 | .. code:: xml                                                              |

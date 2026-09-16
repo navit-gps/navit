@@ -91,8 +91,8 @@ Now, here is a sample of the init function :
        return this_;
    }
 
-And you plugin (gui) should initialize. Now, you need somme dummy
-functions (for now). Thoses are requested for GTK.
+And your plugin (gui) should initialize. Now, you need some dummy
+functions (for now). Those are requested for GTK.
 
 .. code:: c
 

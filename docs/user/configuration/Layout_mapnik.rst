@@ -1412,8 +1412,8 @@ March 2011 (UTC)
                    <itemgra item_types="poi_fish" order="9-">
                        <icon src="fish.xpm"/>
                    </itemgra>
-                   <itemgra item_types="poi_forbiden_area" order="12-">
-                       <icon src="forbiden_area.xpm"/>
+                   <itemgra item_types="poi_forbidden_area" order="12-">
+                       <icon src="forbidden_area.xpm"/>
                    </itemgra>
                    <itemgra item_types="poi_golf" order="12-">
                        <icon src="/home/netbook/.navit/poi/png/sport_golf.p.20.png"/>
@@ -3090,8 +3090,8 @@ Last update 19:30, 3 July 2011 (UTC)
                    <itemgra item_types="poi_fish" order="9-">
                        <icon src="fish.xpm"/>
                    </itemgra>
-                   <itemgra item_types="poi_forbiden_area" order="12-">
-                       <icon src="forbiden_area.xpm"/>
+                   <itemgra item_types="poi_forbidden_area" order="12-">
+                       <icon src="forbidden_area.xpm"/>
                    </itemgra>
                    <itemgra item_types="poi_golf" order="12-">
                        <icon src="sport_golf.p.20.png"/>

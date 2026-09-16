@@ -272,7 +272,7 @@ This takes a directory path, pointing to the icons for the menu GUI
 Using it
 --------
 
-I can't give any advices on using this gui, cause it is very flexible by
+I can't give any advice on using this gui, cause it is very flexible by
 it's nature, so there could be a lot of variations and customizations on
 it, but there are exists some hardcoded things. With click on map (or
 touchscreen tap) gui is usually switched on. This behavior could be
@@ -327,7 +327,7 @@ gui object also have some slots:
 Those slots are related to 'page switch helper'. backToMap switches
 between map and gui widget, obviously. The \*Page() slots are more
 interesting - pushPage(QString) puts some string value into the stack
-and popPage() returns top string from the stach. lengthPage() return
+and popPage() returns top string from the stack. lengthPage() return
 stack's size. This stack could be used for keeping page switching
 history, so you 'push' a page when you switch to it and 'pop' a page to
 know, where to get back.
@@ -356,7 +356,7 @@ Generic proxy object is based on NGQProxy class
    };
 
 NGQProxy provides generic setAttr/getAttr functions, that are mediating
-between QML and Navit's attributes system. I have to metion specially
+between QML and Navit's attributes system. I have to mention specially
 here - setAttr will convert "true" and "false" in attr_string variable
 to "1" and "0". It's not a bug :-)
 

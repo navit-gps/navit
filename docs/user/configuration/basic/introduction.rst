@@ -79,7 +79,7 @@ Just change the map entry corresponding to your local folders
 Advanced Configuration
 **********************
 
-After those first setup ther is probably a lot more you night wanne tinker with.
+After those first setup there is probably a lot more you night wanne tinker with.
 There are many more options, including debugging, specific plugins, speech announcements, trip logging, ...
 
 See :doc:`../advanced`
