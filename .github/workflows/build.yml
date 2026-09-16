@@ -102,7 +102,7 @@ jobs:
           touch doc/html/.nojekyll
       - name: Upload static files as artifact
         id: build
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: doc/html
   deploy_doxygen:
@@ -117,7 +117,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deploy
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
   check_spelling:
     runs-on: ubuntu-latest
     container:
@@ -125,7 +125,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - run: apt-get update && apt-get install -y git wget
-      - uses: crate-ci/typos@v1.50.1
+      - uses: crate-ci/typos@v1.50.2
         with:
           files: docs/
   build_sailfish:
