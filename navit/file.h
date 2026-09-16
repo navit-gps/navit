@@ -78,7 +78,7 @@ unsigned char *file_data_read_all(struct file *file);
 void file_data_flush(struct file *file, long long offset, int size);
 int file_data_write(struct file *file, long long offset, int size, const void *data);
 int file_get_contents(char *name, unsigned char **buffer, int *size);
-unsigned char *file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp);
+unsigned char *file_data_read_method(struct file *file, long long offset, int size, int size_uncomp, int method);
 void file_data_free(struct file *file, unsigned char *data);
 int file_exists(char const *name);
 void file_remap_readonly(struct file *f);
