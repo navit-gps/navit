@@ -102,7 +102,7 @@ jobs:
           touch doc/html/.nojekyll
       - name: Upload static files as artifact
         id: build
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: doc/html
   deploy_doxygen:
