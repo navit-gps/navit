@@ -104,6 +104,7 @@ int glob(const char *pattern, int flags,
 static int
 glob_requires_match(const char *pattern, int flags)
 {
+	(void)flags;
 	for (;;) {
 		switch (*pattern++) {
 		case '\0':
@@ -184,7 +185,7 @@ glob(const char *pattern, int flags, int (*errfunc) (const char *epath, int eerr
 
 void globfree(glob_t *pglob)
 {
-	int i;
+	size_t i;
 
 	for (i=0; i < pglob->gl_pathc; i++)
 	{

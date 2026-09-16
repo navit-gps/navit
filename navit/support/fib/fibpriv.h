@@ -43,7 +43,7 @@ struct fibheap {
 	struct	fibheap_el *fh_min;
 	struct	fibheap_el *fh_root;
 	void	*fh_neginf;
-	int	fh_keys		: 1;
+	unsigned	fh_keys		: 1;
 #ifdef FH_STATS
 	int	fh_maxn;
 	int	fh_ninserts;
