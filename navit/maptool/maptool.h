@@ -331,15 +331,11 @@ void remove_countryfiles(void);
 struct country_table *country_from_iso2(char *iso);
 void osm_init(FILE *);
 
-/* osm_o5m.c */
-int map_collect_data_osm_o5m(FILE *in, struct maptool_osm *osm);
-
 /* osm_psql.c */
 int map_collect_data_osm_db(char *dbstr, struct maptool_osm *osm);
 
-/* osm_protobuf.c */
-int map_collect_data_osm_protobuf(FILE *in, struct maptool_osm *osm);
-int osm_protobufdb_load(FILE *in, char *dir);
+/* osm_libosmium.cpp */
+int map_collect_data_osmium(const char *filename, const char *format, struct maptool_osm *osm);
 
 /* osm_relations.c */
 struct relations *relations_new(void);
@@ -353,11 +349,6 @@ void relations_add_relation_default_entry(struct relations *rel, struct relation
 void relations_process(struct relations *rel, FILE *nodes, FILE *ways);
 void relations_process_multi(struct relations **rel, int count, FILE *nodes, FILE *ways);
 void relations_destroy(struct relations *rel);
-
-/* osm_xml.c */
-int osm_xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size);
-void osm_xml_decode_entities(char *buffer);
-int map_collect_data_osm(FILE *in, struct maptool_osm *osm);
 
 /* sourcesink.c */
 

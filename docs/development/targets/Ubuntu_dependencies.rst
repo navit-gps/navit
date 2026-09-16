@@ -33,8 +33,8 @@ Minimum requirements
 --------------------
 
 -  cmake
--  protobuf-c-compiler
--  libprotobuf-c-dev
+-  libosmium2-dev
+-  libprotozero-dev
 -  zlib1g-dev
 -  libpng12-dev
 -  libgtk2.0-dev
@@ -110,5 +110,5 @@ Everything in one command
 
 | ``sudo apt-get install cmake zlib1g-dev libpng12-dev libgtk2.0-dev librsvg2-bin \``
 | ``g++ gpsd gpsd-clients libgps-dev libdbus-glib-1-dev freeglut3-dev libxft-dev \``
-| ``libglib2.0-dev libfreeimage-dev gettext protobuf-c-compiler  libprotobuf-c-dev``
+| ``libglib2.0-dev libfreeimage-dev gettext libosmium2-dev  libprotozero-dev``
 
