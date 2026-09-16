@@ -76,7 +76,7 @@ jobs:
           apt-get install sdkmanager
           rm -rf "$ANDROID_HOME/tools"
       - name: sdkmanager usage
-        run: sdkmanager "tools" "platform-tools" "build-tools;31.0.0"
+        run: sdkmanager "platform-tools" "build-tools;31.0.0"
       - name: build
         run: scripts/build_fdroid.sh
       - uses: actions/upload-artifact@v7
@@ -166,6 +166,8 @@ jobs:
         run: scripts/setup_publish_keys.sh
       - name: Setup Android SDK
         uses: android-actions/setup-android@v4
+        with:
+          packages: ''
       - name: Build and upload Android
         run: fastlane github_actions
       #- name: Run Lint Test
