@@ -1427,14 +1427,19 @@ static int duplicate(struct map_search_priv *msp, struct item *item, enum attr_t
 static int duplicate_identity(struct map_search_priv *msp, struct item *item) {
     struct attr nodeid;
     struct duplicate *d;
+    char str[64];
     int len;
+    int n;
 
     if (binfile_attr_get(item->priv_data, attr_osm_nodeid, &nodeid)) {
-        len = sizeof(struct coord) + 21;
+        n = g_snprintf(str, sizeof(str), "%lld", (long long)*nodeid.u.num64);
+        if (n < 0 || (size_t)n >= sizeof(str))
+            return duplicate(msp, item, attr_town_name, 0);
+        len = sizeof(struct coord) + n + 1;
         d = g_alloca(len);
         d->c.x = 0;
         d->c.y = 0;
-        g_snprintf(d->str, 21, "%lld", (long long)*nodeid.u.num64);
+        memcpy(d->str, str, n + 1);
         if (!msp->search_results)
             msp->search_results = g_hash_table_new_full(duplicate_hash, duplicate_equal, g_free, NULL);
         if (!g_hash_table_lookup(msp->search_results, d)) {
