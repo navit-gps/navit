@@ -101,6 +101,16 @@ static void osd_destroy(struct osd *osd) {
         return;
     if (osd->meth.destroy)
         osd->meth.destroy(osd->priv);
+    if (osd->attrs) {
+        struct attr **a = osd->attrs;
+        while (a && *a) {
+            if ((*a)->type == attr_callback_list) {
+                callback_list_destroy((*a)->u.callback_list);
+                (*a)->u.callback_list = NULL;
+            }
+            a++;
+        }
+    }
     attr_list_free(osd->attrs);
     g_free(osd);
 }
@@ -393,6 +403,50 @@ void osd_set_keypress(struct navit *nav, struct osd_item *item) {
 }
 
 /**
+ * @brief Tears down the graphics resources of an OSD item.
+ *
+ * Removes callbacks from the navit graphics, destroys GCs and font, and frees
+ * the overlay. Does NOT touch persistent config (enable_cs, command, etc.).
+ *
+ * @param item The OSD item
+ * @param nav The navit object
+ */
+static void osd_teardown_std_graphic(struct osd_item *item, struct navit *nav) {
+    struct graphics *navit_gr = navit_get_graphics(nav);
+    if (item->resize_cb) {
+        if (navit_gr)
+            graphics_remove_callback(navit_gr, item->resize_cb);
+        callback_destroy(item->resize_cb);
+        item->resize_cb = NULL;
+    }
+    if (item->keypress_cb) {
+        if (navit_gr)
+            graphics_remove_callback(navit_gr, item->keypress_cb);
+        callback_destroy(item->keypress_cb);
+        item->keypress_cb = NULL;
+    }
+    if (item->cb) {
+        navit_remove_callback(nav, item->cb);
+        callback_destroy(item->cb);
+        item->cb = NULL;
+    }
+    if (item->graphic_bg)
+        graphics_gc_destroy(item->graphic_bg);
+    if (item->graphic_fg)
+        graphics_gc_destroy(item->graphic_fg);
+    if (item->graphic_fg_text)
+        graphics_gc_destroy(item->graphic_fg_text);
+    if (item->font)
+        graphics_font_destroy(item->font);
+    if (item->gr && !(item->flags & DISABLE_OVERLAY))
+        graphics_free(item->gr);
+    item->graphic_bg = NULL;
+    item->graphic_fg = NULL;
+    item->graphic_fg_text = NULL;
+    item->font = NULL;
+}
+
+/**
  * @brief Sets up the graphics for an item.
  *
  * This method creates a new graphics overlay for an item and initializes its attributes (colors, font
@@ -403,30 +457,14 @@ void osd_set_keypress(struct navit *nav, struct osd_item *item) {
  * @param priv The `struct osd_priv` for the OSD item
  */
 void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *priv) {
-    struct graphics *navit_gr;
-    int w, h;
-    struct padding *padding = NULL;
-
-    navit_gr = navit_get_graphics(nav);
-    w = navit_get_width(nav);
-    h = navit_get_height(nav);
-
-    padding = graphics_get_data(navit_gr, "padding");
-
-    if (padding) {
-        dbg(lvl_debug, "Got padding=%p for item=%p: left=%d top=%d right=%d bottom=%d", padding, item, padding->left,
-            padding->top, padding->right, padding->bottom);
-        w -= (padding->left + padding->right);
-        h -= (padding->top + padding->bottom);
-    } else
-        dbg(lvl_debug, "Padding is NULL");
+    struct graphics *navit_gr = navit_get_graphics(nav);
+    int w = navit_get_width(nav);
+    int h = navit_get_height(nav);
 
     osd_std_calculate_sizes(item, w, h);
 
-    if (padding) {
-        item->p.x += padding->left;
-        item->p.y += padding->top;
-    }
+    if (item->gr)
+        osd_teardown_std_graphic(item, nav);
 
     item->gr = graphics_overlay_new(navit_gr, &item->p, item->w, item->h, 1);
 
@@ -448,6 +486,20 @@ void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_pr
     item->resize_cb = callback_new_attr_2(callback_cast(osd_std_calculate_sizes_and_redraw), attr_resize, item, priv);
     graphics_add_callback(navit_gr, item->resize_cb);
     osd_set_keypress(nav, item);
+}
+
+void osd_destroy_std_graphic(struct osd_item *item, struct navit *nav) {
+    osd_teardown_std_graphic(item, nav);
+    item->gr = NULL;
+    if (item->enable_cs)
+        command_saved_destroy(item->enable_cs);
+    item->enable_cs = NULL;
+    g_free(item->command);
+    item->command = NULL;
+    g_free(item->accesskey);
+    item->accesskey = NULL;
+    g_free(item->font_name);
+    item->font_name = NULL;
 }
 
 void osd_fill_with_bgcolor(struct osd_item *item) {
