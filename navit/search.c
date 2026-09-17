@@ -497,7 +497,7 @@ static void search_list_common_destroy(struct search_list_common *common) {
  */
 static const char *search_list_town_name_find(struct search_list_common *common, const char *lang,
                                               const char *search_query) {
-    size_t qlen = search_query ? strlen(search_query) : 0;
+    char *folded = search_query ? linguistics_casefold(search_query) : NULL;
     int i;
 
     for (i = 0; common->attrs && common->attrs[i]; i++) {
@@ -511,10 +511,12 @@ static const char *search_list_town_name_find(struct search_list_common *common,
             continue;
         if (lang && !item_l10n_lang_matches(lang, val, (int)(colon - val)))
             continue;
-        if (search_query && g_ascii_strncasecmp(colon + 1, search_query, qlen))
-            continue;
-        return colon + 1;
+        if (folded && !linguistics_compare(colon + 1, folded, linguistics_cmp_partial)) {
+            g_free(folded);
+            return colon + 1;
+        }
     }
+    g_free(folded);
     return NULL;
 }
 
