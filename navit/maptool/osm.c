@@ -130,6 +130,9 @@ struct name_l10n_entry {
     char *value;
 };
 
+#define NAME_L10N_BUF_SIZE (BUFFER_SIZE * 2 + 2)
+#define SEARCH_INDEX_TILE_DEPTH 5
+
 static GList *name_l10n_list = NULL;
 
 char *osm_types[] = {"unknown", "node", "way", "relation"};
@@ -1025,7 +1028,7 @@ static void name_l10n_add(const char *lang, const char *value) {
 
 static void name_l10n_emit(struct item_bin *ib) {
     GList *l;
-    char buf[BUFFER_SIZE * 2 + 2];
+    char buf[NAME_L10N_BUF_SIZE];
     int n;
     for (l = name_l10n_list; l; l = l->next) {
         struct name_l10n_entry *e = l->data;
@@ -2454,12 +2457,15 @@ void osm_process_towns(FILE *in, FILE *boundaries, FILE *ways, char *suffix) {
             }
 
             if (item_bin_get_attr(ib, attr_district_name, NULL)) {
-                osm_town_write_l10n_search_entries(ib, attr_district_name, attr_district_name_match, 5,
-                                                   tc->country->file);
-                item_bin_write_match(ib, attr_district_name, attr_district_name_match, 5, tc->country->file);
+                osm_town_write_l10n_search_entries(ib, attr_district_name, attr_district_name_match,
+                                                   SEARCH_INDEX_TILE_DEPTH, tc->country->file);
+                item_bin_write_match(ib, attr_district_name, attr_district_name_match, SEARCH_INDEX_TILE_DEPTH,
+                                     tc->country->file);
             } else {
-                osm_town_write_l10n_search_entries(ib, attr_town_name, attr_town_name_match, 5, tc->country->file);
-                item_bin_write_match(ib, attr_town_name, attr_town_name_match, 5, tc->country->file);
+                osm_town_write_l10n_search_entries(ib, attr_town_name, attr_town_name_match, SEARCH_INDEX_TILE_DEPTH,
+                                                   tc->country->file);
+                item_bin_write_match(ib, attr_town_name, attr_town_name_match, SEARCH_INDEX_TILE_DEPTH,
+                                     tc->country->file);
             }
 
             town_country_destroy(tc);
