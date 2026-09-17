@@ -2602,11 +2602,14 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
         if (attr->u.str && attr->u.str[0]) {
             gchar **parts = g_strsplit(attr->u.str, ",", -1);
             int len = g_strv_length(parts);
-            int i;
+            int i, j = 0;
             this_->lang_pref = g_new(char *, len + 1);
-            for (i = 0; i < len; i++)
-                this_->lang_pref[i] = g_strdup(g_strstrip(parts[i]));
-            this_->lang_pref[len] = NULL;
+            for (i = 0; i < len; i++) {
+                char *lang = g_strstrip(parts[i]);
+                if (lang[0])
+                    this_->lang_pref[j++] = g_strdup(lang);
+            }
+            this_->lang_pref[j] = NULL;
             g_strfreev(parts);
         }
 
