@@ -518,6 +518,48 @@ gchar *g_strconcat_printf(gchar *buffer, gchar *fmt, ...) {
     return ret;
 }
 
+/**
+ * Calculates the number of digits in a given long long integer.
+ *
+ * @param l The long long integer to calculate the number of digits for.
+ * @return The number of digits in the input integer.
+ */
+
+size_t numdigits(long long l) {
+    size_t ret = 0;
+    if (l == 0)
+        return 1;
+
+    do {
+        l = l / 10;
+        ++ret;
+    } while (l > 0);
+
+    return ret;
+}
+
+/**
+ * Converts a navit_float value to a string of a specified size, using sep as radix character
+ *
+ * @param ret The buffer where the string will be written.
+ * @param size The size of the buffer in bytes.
+ * @param f The Navit float value to convert.
+ * @param sep The separator to use between the integer and fractional parts of the float.
+ *
+ * @return A pointer to the string where the converted float value will be written.
+ */
+
+char *floattostr(char *ret, size_t size, navit_float f, char sep) {
+    long long i = (long long)f;
+
+    snprintf(ret, size, "%.*f", size - numdigits(i) - (f < 0 ? 1 : 0) - 1, f);
+
+    int separator_pos = numdigits(i) + (f < 0 ? 1 : 0);
+    ret[separator_pos] = sep;
+
+    return ret;
+}
+
 #ifndef HAVE_GLIB
 int g_utf8_strlen_force_link(gchar *buffer, int max);
 int g_utf8_strlen_force_link(gchar *buffer, int max) {

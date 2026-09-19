@@ -70,6 +70,8 @@
 <!ATTLIST cursor h CDATA #REQUIRED>
 <!ELEMENT traffic EMPTY>
 <!ATTLIST traffic type CDATA #REQUIRED>
+<!ATTLIST traffic interval CDATA #IMPLIED>
+<!ATTLIST traffic source CDATA #IMPLIED>
 <!ELEMENT tracking ANY>
 <!ATTLIST tracking cdf_histsize CDATA #IMPLIED>
 <!ELEMENT route EMPTY>
