@@ -2185,7 +2185,8 @@ the bottom left corner.
   (= arrows), leave them out and just use the "design"-files.
 | An additional Menu-Configuration optimized for 240x240 Display will be
   found here:
-| `_qvga_square_240x240_configuration_1_german`__
+| :ref:`QVGA Square (240x240) Configuration 1 (German)
+  <qvga_square_240x240_configuration_1_german>`
 
 +----------------------------------------------------------------------+
 | Layout XML for Treo 750 QVGA Square                                  |
