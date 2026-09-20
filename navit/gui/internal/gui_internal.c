@@ -843,7 +843,9 @@ static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widge
     }
     if (cmd) {
 #ifdef HAVE_SYSTEM
-        system(cmd);
+        int rc = system(cmd);
+        if (rc == -1)
+            dbg(lvl_error, "Error: Failed to execute external command '%s'.", cmd);
 #else
         dbg(lvl_error, "Error: External commands were disabled during compilation, cannot call '%s'.", cmd);
 #endif
