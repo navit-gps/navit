@@ -182,8 +182,10 @@ void gui_destroy(struct gui *this_) {
     if (this_->attrs) {
         struct attr **a = this_->attrs;
         while (a && *a) {
-            if ((*a)->type == attr_callback_list)
+            if ((*a)->type == attr_callback_list) {
                 callback_list_destroy((*a)->u.callback_list);
+                (*a)->u.callback_list = NULL;
+            }
             a++;
         }
     }
