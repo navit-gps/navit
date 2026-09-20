@@ -425,16 +425,6 @@ static void svg_debug_draw_mode(struct graphics_priv *gr, enum draw_mode_num mod
     }
 }
 
-static void graphics_svg_debug_overlay_draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
-    // TODO
-    // https://stackoverflow.com/questions/5451135/embed-svg-in-svg
-    // more or less like in draw_mode but with different format string
-    // probably overlay_num so main svg can import it
-}
-
-static struct graphics_priv *graphics_svg_debug_overlay_new(struct graphics_priv *gr, struct graphics_methods *meth,
-                                                            struct point *p, int w, int h, int wraparound);
-
 static int graphics_svg_debug_fullscreen(struct window *win, int on) {
     struct graphics_priv *graphics_priv = (struct graphics_priv *)win->priv;
     struct window *proxy_win;
@@ -500,14 +490,6 @@ static void svg_debug_image_free(struct graphics_priv *gr, struct graphics_image
     g_free(img);
 }
 
-static void graphics_svg_debug_overlay_disable(struct graphics_priv *gr, int disable) {
-    // TODO
-}
-
-static void graphics_svg_debug_overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int wraparound) {
-    // TODO
-}
-
 static struct graphics_methods graphics_methods = {
     .graphics_destroy = svg_debug_graphics_destroy,
     .draw_mode = svg_debug_draw_mode,
@@ -525,13 +507,13 @@ static struct graphics_methods graphics_methods = {
     .font_new = svg_debug_font_new,
     .gc_new = svg_debug_gc_new,
     .background_gc = svg_debug_background_gc,
-    .overlay_new = NULL,  // graphics_svg_debug_overlay_new, // TODO
+    .overlay_new = NULL,  // TODO
     .image_new = svg_debug_image_new,
     .get_data = svg_debug_get_data,
     .image_free = svg_debug_image_free,
     .get_text_bbox = svg_debug_get_text_bbox,
-    .overlay_disable = NULL,          // graphics_svg_debug_overlay_disable, // TODO
-    .overlay_resize = NULL,           // graphics_svg_debug_overlay_resize,  // TODO
+    .overlay_disable = NULL,          // TODO
+    .overlay_resize = NULL,           // TODO
     .set_attr = NULL,                 // TODO add proxy
     .show_native_keyboard = NULL,     // TODO add proxy
     .hide_native_keyboard = NULL,     // TODO add proxy
@@ -539,17 +521,6 @@ static struct graphics_methods graphics_methods = {
     .draw_polygon_with_holes = NULL,  // TODO add proxy
 
 };
-
-static struct graphics_priv *graphics_svg_debug_overlay_new(struct graphics_priv *gr, struct graphics_methods *meth,
-                                                            struct point *p, int w, int h, int wraparound) {
-    struct graphics_priv *this = g_new0(struct graphics_priv, 1);
-    *meth = graphics_methods;
-    meth->draw_mode = graphics_svg_debug_overlay_draw_mode;
-
-    // TODO
-
-    return this;
-}
 
 static struct graphics_priv *graphics_svg_debug_new(struct navit *nav, struct graphics_methods *meth,
                                                     struct attr **attrs, struct callback_list *cbl) {
