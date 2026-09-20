@@ -588,7 +588,7 @@ SHPOpenLL( const char * pszLayer, const char * pszAccess, SAHooks *psHooks )
 /* -------------------------------------------------------------------- */
 /*  Initialize the info structure.                  */
 /* -------------------------------------------------------------------- */
-    psSHP = (SHPHandle) calloc(sizeof(SHPInfo),1);
+    psSHP = (SHPHandle) calloc(1, sizeof(SHPInfo));
 
     psSHP->bUpdated = FALSE;
     memcpy( &(psSHP->sHooks), psHooks, sizeof(SAHooks) );
@@ -1488,7 +1488,7 @@ SHPCreateObject( int nSHPType, int nShapeId, int nParts,
         psObject->nParts = MAX(1,nParts);
 
         psObject->panPartStart = (int *)
-            calloc(sizeof(int), psObject->nParts);
+            calloc(psObject->nParts, sizeof(int));
         psObject->panPartType = (int *)
             malloc(sizeof(int) * psObject->nParts);
 
@@ -1515,10 +1515,10 @@ SHPCreateObject( int nSHPType, int nShapeId, int nParts,
 /* -------------------------------------------------------------------- */
     if( nVertices > 0 )
     {
-        psObject->padfX = (double *) calloc(sizeof(double),nVertices);
-        psObject->padfY = (double *) calloc(sizeof(double),nVertices);
-        psObject->padfZ = (double *) calloc(sizeof(double),nVertices);
-        psObject->padfM = (double *) calloc(sizeof(double),nVertices);
+        psObject->padfX = (double *) calloc(nVertices, sizeof(double));
+        psObject->padfY = (double *) calloc(nVertices, sizeof(double));
+        psObject->padfZ = (double *) calloc(nVertices, sizeof(double));
+        psObject->padfM = (double *) calloc(nVertices, sizeof(double));
 
         for( i = 0; i < nVertices; i++ )
         {

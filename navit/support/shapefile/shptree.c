@@ -830,7 +830,7 @@ SHPTreeDiskHandle SHPOpenDiskTree( const char* pszQIXFilename,
 {
     SHPTreeDiskHandle hDiskTree;
 
-    hDiskTree = (SHPTreeDiskHandle) calloc(sizeof(struct SHPDiskTreeInfo),1);
+    hDiskTree = (SHPTreeDiskHandle) calloc(1, sizeof(struct SHPDiskTreeInfo));
 
     if (psHooks == NULL)
         SASetupDefaultHooks( &(hDiskTree->sHooks) );
