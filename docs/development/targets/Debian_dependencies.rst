@@ -31,7 +31,10 @@ Translations for the user interface
 Maptool
 -------
 
-**protobuf-c-compiler libprotobuf-c-dev**
+**libosmium2-dev libprotozero-dev**
+
+If these packages are not available, the build downloads them. Both libraries
+are header-only.
 
 GTK+
 ----
