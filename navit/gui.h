@@ -42,7 +42,7 @@ struct gui_methods {
     struct datawindow_priv *(*datawindow_new)(struct gui_priv *priv, const char *name, struct callback *click,
                                               struct callback *close, struct datawindow_methods *meth);
     int (*add_bookmark)(struct gui_priv *priv, struct pcoord *c, char *description);
-    int (*show_coord_actions)(struct gui_priv *priv, struct pcoord *c, char *description);
+    int (*show_coord_actions)(struct gui_priv *priv, const struct pcoord *c, const char *description);
     void (*disable_suspend)(struct gui_priv *priv);
     int (*get_attr)(struct gui_priv *priv, enum attr_type type, struct attr *attr);
     int (*add_attr)(struct gui_priv *priv, struct attr *attr);
