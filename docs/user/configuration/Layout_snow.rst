@@ -6,7 +6,7 @@ Layout/snow
 Snow-Style Layout
 =================
 
-Optimised for the iPod/iPhone and walking. By `Theborg <User:Theborg>`__
+Optimised for the iPod/iPhone and walking.
 14:39, 13 January 2010 (UTC)
 
 Screenshots
