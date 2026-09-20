@@ -69,7 +69,6 @@ Main Features
    :glob:
    :caption: Old Wiki
 
-   user/configuration/Layout
    user/configuration/Menu
    user/configuration/NavitConfigurator
    user/configuration/OSD
