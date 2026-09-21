@@ -130,7 +130,7 @@ static int route_status_done(struct route *r) {
 
 static int run_case(char *map_path, int pro, struct coord *from,
                     struct coord *to, struct vehicleprofile *vp,
-                    int expect_found) {
+                    int expect_found, long *len_out) {
   struct attr type_a, data_a, desc_a, map_a;
   struct attr *map_attrs[4];
   struct map *map;
@@ -181,6 +181,16 @@ static int run_case(char *map_path, int pro, struct coord *from,
          status == 1   ? "path_done"
          : status == 0 ? "not_found"
                        : "?");
+  if (status == 1 && len_out) {
+    struct attr len_a;
+    len_a.type = attr_destination_length;
+    if (route_get_attr(r, attr_destination_length, &len_a, NULL)) {
+      *len_out = len_a.u.num;
+      printf("destination length=%ld\n", *len_out);
+    } else {
+      *len_out = -1;
+    }
+  }
   if ((status == 1) != expect_found) {
     printf("FAIL: expected %s but got %s\n",
            expect_found ? "route found" : "route not found",
@@ -203,8 +213,15 @@ int main(int argc, char **argv) {
       0x67ed00}; /* interior of Barrier Street between node1 and bollard */
   struct coord b2 = {
       0x13ae85, 0x67f100}; /* interior of Barrier Street BEYOND the bollard */
-  struct coord p1 = {0x13ae85, 0x67ef6e}; /* bollard point itself */
-  struct coord s1 = {0x13b0aa, 0x67ebe5}; /* interior of South Connector */
+  struct coord p1 = {0x13ae85, 0x67ef6e};  /* bollard point itself */
+  struct coord s1 = {0x13b0aa, 0x67ebe5};  /* interior of South Connector */
+  struct coord n9 = {0x13b314, 0x67ee83};  /* before bicycle=no barrier */
+  struct coord n11 = {0x13b314, 0x67f059}; /* after bicycle=no barrier */
+  struct coord n12 = {0x13b34c, 0x67ee83}; /* before bicycle=dismount barrier */
+  struct coord n14 = {0x13b34c, 0x67f059}; /* after bicycle=dismount barrier */
+  struct coord f20 = {0x13ae85, 0x67ed4f}; /* bypass loop, south of dismount */
+  struct coord t21 = {0x13ae85, 0x67f18d}; /* bypass loop, north of dismount */
+  long len_pen0 = -1, len_pen3000 = -1;
   int rc = 0;
 
   if (argc < 3) {
@@ -254,33 +271,66 @@ int main(int argc, char **argv) {
 
   printf("== corridor map: car BEFORE bollard -> BEYOND bollard (expect not "
          "found) ==\n");
-  rc |= run_case(argv[1], projection_mg, &a1, &b2, vp_car, 0);
+  rc |= run_case(argv[1], projection_mg, &a1, &b2, vp_car, 0, NULL);
+
   printf("== corridor map: car -> bollard point itself (expect not found: "
          "blocked point as dest) ==\n");
-  rc |= run_case(argv[1], projection_mg, &a1, &p1, vp_car, 0);
+  rc |= run_case(argv[1], projection_mg, &a1, &p1, vp_car, 0, NULL);
+
   printf("== corridor map: bike BEFORE -> BEYOND bollard (expect found) ==\n");
-  rc |= run_case(argv[1], projection_mg, &a1, &b2, vp_bike, 1);
+  rc |= run_case(argv[1], projection_mg, &a1, &b2, vp_bike, 1, NULL);
+
   printf("== detour map: car side street -> BEYOND bollard around (expect "
          "found) ==\n");
-  rc |= run_case(argv[2], projection_mg, &s1, &b2, vp_car, 1);
+  rc |= run_case(argv[2], projection_mg, &s1, &b2, vp_car, 1, NULL);
+
   if (argc >= 4) {
     printf("== cycle_barrier map: car -> BEYOND (expect not found) ==\n");
-    rc |= run_case(argv[3], projection_mg, &a1, &b2, vp_car, 0);
+    rc |= run_case(argv[3], projection_mg, &a1, &b2, vp_car, 0, NULL);
+
     printf("== cycle_barrier map: bike untagged -> BEYOND (expect found) ==\n");
-    rc |= run_case(argv[3], projection_mg, &a1, &b2, vp_bike, 1);
+    rc |= run_case(argv[3], projection_mg, &a1, &b2, vp_bike, 1, NULL);
+
+    printf("== cycle_barrier map: bike bicycle=no -> BEYOND (expect not found) "
+           "==\n");
+    rc |= run_case(argv[3], projection_mg, &n9, &n11, vp_bike, 0, NULL);
+
+    printf("== cycle_barrier map: bike bicycle=dismount -> BEYOND (expect "
+           "found) ==\n");
+    rc |= run_case(argv[3], projection_mg, &n12, &n14, vp_bike, 1, NULL);
+
+    printf("== cycle_barrier map: bike bypass penalty=0 -> DIRECT (expect "
+           "found) ==\n");
+    vp_bike->cycle_dismount_penalty = 0;
+    rc |= run_case(argv[3], projection_mg, &f20, &t21, vp_bike, 1, &len_pen0);
+    printf("== cycle_barrier map: bike bypass penalty=300s -> DETOUR (expect "
+           "found, longer) ==\n");
+    vp_bike->cycle_dismount_penalty = 3000;
+    rc |=
+        run_case(argv[3], projection_mg, &f20, &t21, vp_bike, 1, &len_pen3000);
+    if (len_pen0 > 0 && len_pen3000 > len_pen0) {
+      printf("PASS\n");
+    } else {
+      printf("FAIL: dismount penalty did not lengthen the route (len0=%ld "
+             "len3000=%ld)\n",
+             len_pen0, len_pen3000);
+      rc |= 1;
+    }
   }
   if (argc >= 5) {
     printf("== lift_gate map: car -> BEYOND (expect not found) ==\n");
-    rc |= run_case(argv[4], projection_mg, &a1, &b2, vp_car, 0);
+    rc |= run_case(argv[4], projection_mg, &a1, &b2, vp_car, 0, NULL);
+
     printf("== lift_gate map: bike -> BEYOND (expect found) ==\n");
-    rc |= run_case(argv[4], projection_mg, &a1, &b2, vp_bike, 1);
+    rc |= run_case(argv[4], projection_mg, &a1, &b2, vp_bike, 1, NULL);
   }
   if (argc >= 6) {
     printf("== regression map: car -> BEYOND (expect not found) ==\n");
-    rc |= run_case(argv[5], projection_mg, &a1, &b2, vp_car, 0);
+    rc |= run_case(argv[5], projection_mg, &a1, &b2, vp_car, 0, NULL);
+
     printf("== regression map: bike -> BEYOND (expect found; proves per-node "
            "flag reset) ==\n");
-    rc |= run_case(argv[5], projection_mg, &a1, &b2, vp_bike, 1);
+    rc |= run_case(argv[5], projection_mg, &a1, &b2, vp_bike, 1, NULL);
   }
   return rc;
 }
