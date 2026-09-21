@@ -203,12 +203,13 @@ static void traffic_traff_android_destination_callback(struct traffic_priv *this
  * @param status The status of the navigation engine (the value of the {@code nav_status} attribute)
  */
 static void traffic_traff_android_status_callback(struct traffic_priv *this_, int status) {
-    int new_position_valid = (status != 1);
-    if (new_position_valid && !this_->position_valid) {
-        this_->position_valid = new_position_valid;
+    int valid = (status != status_position_wait);
+    if (valid == this_->position_valid)
+        return;
+    this_->position_valid = valid;
+    if (valid) {
         traffic_traff_android_set_selection(this_);
-    } else if (new_position_valid != this_->position_valid)
-        this_->position_valid = new_position_valid;
+    }
 }
 
 static void traffic_traff_android_position_callback(struct traffic_priv *this_, struct navit *navit,
