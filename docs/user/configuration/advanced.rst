@@ -16,6 +16,7 @@ The rest of this webpage is meant for advanced/power users who'd like to fiddle 
    maps/index
    Internal_GUI
    Layout
+   OSD
    Vehicleprofile
    Coordinate_format
 
