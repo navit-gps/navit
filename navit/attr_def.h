@@ -160,7 +160,7 @@ ATTR(vehicle_axle_weight)
 ATTR(vehicle_dangerous_goods)
 ATTR(shmsize)
 ATTR(shmoffset)
-ATTR_UNUSED
+ATTR(cycle_dismount_penalty)
 ATTR(static_speed)
 ATTR(static_distance)
 ATTR(through_traffic_penalty)

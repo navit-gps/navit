@@ -80,6 +80,9 @@ static void vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr
     case attr_through_traffic_penalty:
         this_->through_traffic_penalty = attr->u.num;
         break;
+    case attr_cycle_dismount_penalty:
+        this_->cycle_dismount_penalty = attr->u.num;
+        break;
     case attr_turn_around_penalty:
         this_->turn_around_penalty = attr->u.num;
         break;
@@ -121,6 +124,7 @@ static void vehicleprofile_clear(struct vehicleprofile *this_) {
     this_->weight = -1;
     this_->axle_weight = -1;
     this_->through_traffic_penalty = 9000;
+    this_->cycle_dismount_penalty = 3000;
     vehicleprofile_free_hash(this_);
     this_->roadprofile_hash = g_hash_table_new(NULL, NULL);
 }
