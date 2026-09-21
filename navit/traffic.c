@@ -4447,6 +4447,9 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
     /* Message replaced by the current one whose segments can be reused */
     struct traffic_message *swap_candidate;
 
+    /* Segment data from a stored message, used for comparison */
+    struct seg_data *stored_data;
+
     /* Temporary store for swapping locations and items */
     struct traffic_location *swap_location;
     struct item **swap_items;
@@ -4499,9 +4502,11 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
                 /* check if any of the replaced messages has the same location and segment data */
                 for (msg_iter = msgs_to_remove; msg_iter && !swap_candidate; msg_iter = g_list_next(msg_iter)) {
                     stored_msg = (struct traffic_message *)msg_iter->data;
-                    if (seg_data_equals(data, traffic_message_parse_events(stored_msg))
+                    stored_data = traffic_message_parse_events(stored_msg);
+                    if (seg_data_equals(data, stored_data)
                         && traffic_location_equals(message->location, stored_msg->location))
                         swap_candidate = stored_msg;
+                    g_free(stored_data);
                 }
 
                 if (swap_candidate) {
