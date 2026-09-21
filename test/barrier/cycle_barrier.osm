@@ -9,6 +9,27 @@
   <node id="4" lat="52.100" lon="11.610" version="1"/>
   <node id="5" lat="52.105" lon="11.610" version="1"/>
   <node id="6" lat="52.110" lon="11.610" version="1"/>
+  <node id="9" lat="52.100" lon="11.6105" version="1"/>
+  <node id="10" lat="52.105" lon="11.6105" version="1">
+    <tag k="barrier" v="cycle_barrier"/>
+    <tag k="bicycle" v="no"/>
+  </node>
+  <node id="11" lat="52.110" lon="11.6105" version="1"/>
+  <node id="12" lat="52.100" lon="11.6110" version="1"/>
+  <node id="13" lat="52.105" lon="11.6110" version="1">
+    <tag k="barrier" v="cycle_barrier"/>
+    <tag k="bicycle" v="dismount"/>
+  </node>
+  <node id="14" lat="52.110" lon="11.6110" version="1"/>
+  <node id="21" lat="52.1000" lon="11.6000" version="1"/>
+  <node id="22" lat="52.1050" lon="11.6000" version="1">
+    <tag k="barrier" v="cycle_barrier"/>
+    <tag k="bicycle" v="dismount"/>
+  </node>
+  <node id="23" lat="52.1100" lon="11.6000" version="1"/>
+  <node id="24" lat="52.1000" lon="11.6025" version="1"/>
+  <node id="25" lat="52.1140" lon="11.6025" version="1"/>
+  <node id="26" lat="52.1140" lon="11.6000" version="1"/>
   <way id="100" version="1">
     <nd ref="1"/>
     <nd ref="2"/>
@@ -22,5 +43,50 @@
     <nd ref="6"/>
     <tag k="highway" v="residential"/>
     <tag k="name" v="Detour Street"/>
+  </way>
+  <way id="102" version="1">
+    <nd ref="9"/>
+    <nd ref="10"/>
+    <nd ref="11"/>
+    <tag k="highway" v="residential"/>
+    <tag k="name" v="No Bike Street"/>
+  </way>
+  <way id="103" version="1">
+    <nd ref="12"/>
+    <nd ref="13"/>
+    <nd ref="14"/>
+    <tag k="highway" v="residential"/>
+    <tag k="name" v="Dismount Street"/>
+  </way>
+  <way id="200" version="1">
+    <nd ref="21"/>
+    <nd ref="22"/>
+    <nd ref="23"/>
+    <tag k="highway" v="residential"/>
+    <tag k="name" v="Direct Street"/>
+  </way>
+  <way id="201" version="1">
+    <nd ref="21"/>
+    <nd ref="24"/>
+    <tag k="highway" v="residential"/>
+    <tag k="name" v="East Cross"/>
+  </way>
+  <way id="202" version="1">
+    <nd ref="24"/>
+    <nd ref="25"/>
+    <tag k="highway" v="residential"/>
+    <tag k="name" v="Parallel Street"/>
+  </way>
+  <way id="203" version="1">
+    <nd ref="25"/>
+    <nd ref="26"/>
+    <tag k="highway" v="residential"/>
+    <tag k="name" v="North Cross"/>
+  </way>
+  <way id="204" version="1">
+    <nd ref="26"/>
+    <nd ref="23"/>
+    <tag k="highway" v="residential"/>
+    <tag k="name" v="West Return"/>
   </way>
 </osm>
