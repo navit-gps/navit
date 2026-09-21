@@ -266,7 +266,7 @@ int main(int argc, char **argv) {
   if (argc >= 4) {
     printf("== cycle_barrier map: car -> BEYOND (expect not found) ==\n");
     rc |= run_case(argv[3], projection_mg, &a1, &b2, vp_car, 0);
-    printf("== cycle_barrier map: bike -> BEYOND (expect found) ==\n");
+    printf("== cycle_barrier map: bike untagged -> BEYOND (expect found) ==\n");
     rc |= run_case(argv[3], projection_mg, &a1, &b2, vp_bike, 1);
   }
   if (argc >= 5) {
