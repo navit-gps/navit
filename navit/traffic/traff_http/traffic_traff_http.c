@@ -97,7 +97,7 @@
  * @brief Stores information about the plugin instance.
  */
 struct traffic_priv {
-struct navit *nav;                      /**< The navit instance */
+    struct navit *nav;                      /**< The navit instance */
     struct traffic *traffic;                /**< The traffic instance */
     int position_valid;                     /**< Whether Navit currently has a valid position */
     struct coord_rect *position_rect;       /**< Rectangle around last known vehicle position (in `projection_mg`) */
@@ -111,6 +111,11 @@ struct navit *nav;                      /**< The navit instance */
     char *subscription_id;                  /**< Subscription ID */
     int exiting;                            /**< Whether the plugin is shutting down */
     struct event_timeout *feed_dispatch_ev; /**< Pending feed dispatch event for the main loop */
+    struct callback *traffic_cb;            /**< Callback registered with the navit instance */
+    struct callback *position_cb;           /**< Callback registered with the navit instance */
+    struct callback *destination_cb;        /**< Callback registered with the navit instance */
+    struct callback *status_cb;             /**< Callback registered with the navigation instance */
+    struct navigation *navigation;          /**< The navigation instance, registered callbacks on */
 };
 
 /**
@@ -139,14 +144,52 @@ void traffic_traff_http_destroy(struct traffic_priv *this_) {
     if (this_->route_map_sel)
         route_free_selection(this_->route_map_sel);
     this_->route_map_sel = NULL;
-dbg(lvl_debug, "waiting for worker thread to clean up and terminate…");
-    thread_join(this_->worker_thread);
-    dbg(lvl_debug, "worker thread terminated");
+    if (this_->worker_thread) {
+        dbg(lvl_debug, "waiting for worker thread to clean up and terminate…");
+        thread_join(this_->worker_thread);
+        thread_destroy(this_->worker_thread);
+        this_->worker_thread = NULL;
+        dbg(lvl_debug, "worker thread terminated");
+    } else {
+        /* the worker thread never started and did not dispose of the queue infrastructure */
+        while (this_->queue) {
+            char *request = this_->queue->data;
+            this_->queue = g_list_remove(this_->queue, request);
+            g_free(request);
+        }
+        thread_event_destroy(this_->queue_event);
+        this_->queue_event = NULL;
+        thread_lock_destroy(this_->queue_lock);
+        this_->queue_lock = NULL;
+    }
     if (this_->feed_dispatch_ev) {
         event_remove_timeout(this_->feed_dispatch_ev);
         this_->feed_dispatch_ev = NULL;
     }
+    if (this_->traffic_cb) {
+        navit_remove_callback(this_->nav, this_->traffic_cb);
+        callback_destroy(this_->traffic_cb);
+        this_->traffic_cb = NULL;
+    }
+    if (this_->position_cb) {
+        navit_remove_callback(this_->nav, this_->position_cb);
+        callback_destroy(this_->position_cb);
+        this_->position_cb = NULL;
+    }
+    if (this_->destination_cb) {
+        navit_remove_callback(this_->nav, this_->destination_cb);
+        callback_destroy(this_->destination_cb);
+        this_->destination_cb = NULL;
+    }
+    if (this_->status_cb) {
+        navigation_unregister_callback(this_->navigation, attr_nav_status, this_->status_cb);
+        callback_destroy(this_->status_cb);
+        this_->status_cb = NULL;
+    }
+    g_free(this_->subscription_id);
+    this_->subscription_id = NULL;
     g_free(this_->source);
+    g_free(this_);
 }
 
 /**
@@ -400,6 +443,7 @@ static int traffic_traff_http_worker_thread_main(void *this_gpointer) {
                 request =
                     g_strdup_printf("<request operation='UNSUBSCRIBE' subscription_id='%s'/>", this_->subscription_id);
                 chunk = curl_post(this_->source, request);
+                g_free(request);
                 if (chunk) {
                     g_free(chunk->data);
                     g_free(chunk);
@@ -456,6 +500,7 @@ static int traffic_traff_http_worker_thread_main(void *this_gpointer) {
                 // TODO handle unknown subscription
                 traffic_traff_http_process_response(this_, response);
             }
+            g_free(request);
         }
 
         /* finally, sleep until the next poll is due or we receive a new request; wake regularly to notice shutdown */
@@ -683,18 +728,21 @@ static int traffic_traff_http_init(struct traffic_priv *this_) {
     /* TODO anything else to do here? */
 
     /* register callback for traffic module so we can finish setting up */
-    navit_add_callback(this_->nav,
-                       callback_new_attr_1(callback_cast(traffic_traff_http_traffic_callback), attr_traffic, this_));
+    this_->traffic_cb = callback_new_attr_1(callback_cast(traffic_traff_http_traffic_callback), attr_traffic, this_);
+    navit_add_callback(this_->nav, this_->traffic_cb);
 
     /* register callbacks for position and destination changes */
-    navit_add_callback(this_->nav, callback_new_attr_1(callback_cast(traffic_traff_http_position_callback),
-                                                       attr_position_coord_geo, this_));
-    navit_add_callback(this_->nav, callback_new_attr_1(callback_cast(traffic_traff_http_destination_callback),
-                                                       attr_destination, this_));
-    if ((navigation = navit_get_navigation(this_->nav)))
-        navigation_register_callback(
-            navigation, attr_nav_status,
-            callback_new_attr_1(callback_cast(traffic_traff_http_status_callback), attr_nav_status, this_));
+    this_->position_cb =
+        callback_new_attr_1(callback_cast(traffic_traff_http_position_callback), attr_position_coord_geo, this_);
+    navit_add_callback(this_->nav, this_->position_cb);
+    this_->destination_cb =
+        callback_new_attr_1(callback_cast(traffic_traff_http_destination_callback), attr_destination, this_);
+    navit_add_callback(this_->nav, this_->destination_cb);
+    if ((this_->navigation = navit_get_navigation(this_->nav))) {
+        this_->status_cb =
+            callback_new_attr_1(callback_cast(traffic_traff_http_status_callback), attr_nav_status, this_);
+        navigation_register_callback(this_->navigation, attr_nav_status, this_->status_cb);
+    }
 
     return 1;
 }
