@@ -1447,6 +1447,8 @@ static void route_graph_init(struct route_graph *this, struct route_info *dst, s
         val = route_value_seg(profile, NULL, s, -1);
         if (val != INT_MAX) {
             val = val * (100 - dst->percent) / 100;
+            if (s->end->flags & RP_CYCLE_DISMOUNT)
+                val += profile->cycle_dismount_penalty * dst->percent / 100;
             s->end->seg = s;
             s->end->dst_seg = s;
             s->end->rhs = val;
@@ -1456,6 +1458,8 @@ static void route_graph_init(struct route_graph *this, struct route_info *dst, s
         val = route_value_seg(profile, NULL, s, 1);
         if (val != INT_MAX) {
             val = val * dst->percent / 100;
+            if (s->start->flags & RP_CYCLE_DISMOUNT)
+                val += profile->cycle_dismount_penalty * (100 - dst->percent) / 100;
             s->start->seg = s;
             s->start->dst_seg = s;
             s->start->rhs = val;
@@ -2049,9 +2053,9 @@ static int route_value_seg(struct vehicleprofile *profile, struct route_graph_po
         return INT_MAX;
     if ((over->data.flags & (dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags)
         return INT_MAX;
-    if (dir > 0 && (over->start->flags & RP_TURN_RESTRICTION))
+    if (dir > 0 && (over->start->flags & (RP_TURN_RESTRICTION | RP_BLOCKED)))
         return INT_MAX;
-    if (dir < 0 && (over->end->flags & RP_TURN_RESTRICTION))
+    if (dir < 0 && (over->end->flags & (RP_TURN_RESTRICTION | RP_BLOCKED)))
         return INT_MAX;
     if (from && from->seg == over)
         return INT_MAX;
@@ -2068,6 +2072,10 @@ static int route_value_seg(struct vehicleprofile *profile, struct route_graph_po
     if (!route_through_traffic_allowed(profile, over) && from && from->seg
         && route_through_traffic_allowed(profile, from->seg))
         ret += profile->through_traffic_penalty;
+    if (dir == 1 && (over->start->flags & RP_CYCLE_DISMOUNT))
+        ret += profile->cycle_dismount_penalty;
+    if (dir == -1 && (over->end->flags & RP_CYCLE_DISMOUNT))
+        ret += profile->cycle_dismount_penalty;
     return ret;
 }
 
@@ -2438,6 +2446,39 @@ static void route_graph_change_traffic_distortion(struct route_graph *this, stru
     /* TODO is there a more elegant way of doing this? */
     route_graph_remove_traffic_distortion(this, profile, item);
     route_graph_add_traffic_distortion(this, profile, item, 1);
+}
+
+/*
+ * Add a barrier as a blocked point unless the profile can pass it; a cycle
+ * barrier that requires dismounting becomes a penalty point instead. Unlike a
+ * street segment a point has no direction, so passing in either direction
+ * makes it no obstacle; the point only takes effect if maptool split the
+ * street at the barrier node.
+ */
+static void route_graph_add_barrier(struct route_graph *this, struct vehicleprofile *profile, struct item *item) {
+    struct coord c;
+    struct attr attr;
+    struct route_graph_point *pnt;
+    int barrier_flags = 0;
+
+    item_coord_rewind(item);
+    if (!item_coord_get(item, &c, 1))
+        return;
+    item_attr_rewind(item);
+    if (item_attr_get(item, attr_flags, &attr))
+        barrier_flags = attr.u.num;
+
+    if (((barrier_flags & profile->flags_forward_mask) == profile->flags)
+        || ((barrier_flags & profile->flags_reverse_mask) == profile->flags)) {
+        if ((barrier_flags & AF_CYCLE_DISMOUNT) && (profile->flags & AF_BIKE)) {
+            pnt = route_graph_add_point(this, &c);
+            pnt->flags |= RP_CYCLE_DISMOUNT;
+        }
+        return;
+    }
+
+    pnt = route_graph_add_point(this, &c);
+    pnt->flags |= RP_BLOCKED;
 }
 
 /**
@@ -3140,6 +3181,9 @@ static void route_graph_build_idle(struct route_graph *rg, struct vehicleprofile
             route_graph_add_traffic_distortion(rg, profile, item, 0);
         else if (item->type == type_street_turn_restriction_no || item->type == type_street_turn_restriction_only)
             route_graph_add_turn_restriction(rg, item);
+        else if (item->type == type_barrier_bollard || item->type == type_barrier_cycle
+                 || item->type == type_barrier_lift_gate)
+            route_graph_add_barrier(rg, profile, item);
         else
             route_graph_add_street(rg, item, profile);
         count--;
@@ -4162,7 +4206,7 @@ int route_set_attr(struct route *this_, struct attr *attr) {
         dbg(lvl_debug, "current route_status = %i", this_->route_status);
         attr_updated = (this_->route_status != attr->u.num);
         this_->route_status = attr->u.num;
-        dbg(lvl_debug, "route_status set to: %i", attr->u.num);
+        dbg(lvl_debug, "route_status set to: %li", attr->u.num);
         dbg(lvl_debug, "attr_updated (0 or 1): %i", attr_updated);
         break;
     case attr_destination:
