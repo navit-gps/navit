@@ -1830,7 +1830,7 @@ DBFGetFieldIndex(DBFHandle psDBF, const char *pszFieldName)
     for( i = 0; i < DBFGetFieldCount(psDBF); i++ )
     {
         DBFGetFieldInfo( psDBF, i, name, NULL, NULL );
-        strncpy(name2,name,XBASE_FLDNAME_LEN_READ);
+        memcpy(name2, name, XBASE_FLDNAME_LEN_READ);
         name2[XBASE_FLDNAME_LEN_READ] = '\0';
         str_to_upper(name2);
 
@@ -2071,10 +2071,10 @@ DBFReorderFields( DBFHandle psDBF, int* panMap )
         return FALSE;
 
     /* a simple malloc() would be enough, but calloc() helps clang static analyzer */
-    panFieldOffsetNew = (int *) calloc(sizeof(int), psDBF->nFields);
-    panFieldSizeNew = (int *) calloc(sizeof(int),  psDBF->nFields);
-    panFieldDecimalsNew = (int *) calloc(sizeof(int), psDBF->nFields);
-    pachFieldTypeNew = (char *) calloc(sizeof(char), psDBF->nFields);
+    panFieldOffsetNew = (int *) calloc(psDBF->nFields, sizeof(int));
+    panFieldSizeNew = (int *) calloc(psDBF->nFields, sizeof(int));
+    panFieldDecimalsNew = (int *) calloc(psDBF->nFields, sizeof(int));
+    pachFieldTypeNew = (char *) calloc(psDBF->nFields, sizeof(char));
     pszHeaderNew = (char*) malloc(sizeof(char) * XBASE_FLDHDR_SZ * 
                                   psDBF->nFields);
 

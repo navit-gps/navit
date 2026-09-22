@@ -4162,7 +4162,7 @@ int route_set_attr(struct route *this_, struct attr *attr) {
         dbg(lvl_debug, "current route_status = %i", this_->route_status);
         attr_updated = (this_->route_status != attr->u.num);
         this_->route_status = attr->u.num;
-        dbg(lvl_debug, "route_status set to: %i", attr->u.num);
+        dbg(lvl_debug, "route_status set to: %ld", attr->u.num);
         dbg(lvl_debug, "attr_updated (0 or 1): %i", attr_updated);
         break;
     case attr_destination:
