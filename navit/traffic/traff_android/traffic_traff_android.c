@@ -152,14 +152,8 @@ static void traffic_traff_android_on_feed_received(struct traffic_priv *this_, c
     }
 }
 
-/**
- * @brief Sets the route map selection
- *
- * @param this_ The instance which will handle the selection update
- */
 static void traffic_traff_android_set_selection(struct traffic_priv *this_) {
     struct route *route;
-    struct coord_geo lu, rl;
     gchar *filter_list;
     jstring j_filter_list;
     gchar *min_road_class;
@@ -174,22 +168,11 @@ static void traffic_traff_android_set_selection(struct traffic_priv *this_) {
     /* start building the filter list */
     filter_list = g_strconcat_printf(NULL, "<filter_list>\n");
     if (this_->position_rect) {
-        transform_to_geo(projection_mg, &this_->position_rect->lu, &lu);
-        transform_to_geo(projection_mg, &this_->position_rect->rl, &rl);
-        filter_list = g_strconcat_printf(filter_list, "    <filter bbox=\"%.5f %.5f %.5f %.5f\"/>\n", rl.lat, lu.lng,
-                                         lu.lat, rl.lng);
+        traffic_add_filter(&filter_list, this_->position_rect, NULL);
     }
     for (struct map_selection *sel = this_->route_map_sel; sel; sel = sel->next) {
-        transform_to_geo(projection_mg, &sel->u.c_rect.lu, &lu);
-        transform_to_geo(projection_mg, &sel->u.c_rect.rl, &rl);
         min_road_class = order_to_min_road_class(sel->order);
-        if (!min_road_class)
-            filter_list = g_strconcat_printf(filter_list, "    <filter bbox=\"%.5f %.5f %.5f %.5f\"/>\n", rl.lat,
-                                             lu.lng, lu.lat, rl.lng);
-        else
-            filter_list = g_strconcat_printf(filter_list,
-                                             "    <filter min_road_class=\"%s\" bbox=\"%.5f %.5f %.5f %.5f\"/>\n",
-                                             min_road_class, rl.lat, lu.lng, lu.lat, rl.lng);
+        traffic_add_filter(&filter_list, &sel->u.c_rect, min_road_class);
     }
     /* the trailing \0 is required for NewStringUTF */
     filter_list = g_strconcat_printf(filter_list, "</filter_list>\0");
@@ -220,49 +203,28 @@ static void traffic_traff_android_destination_callback(struct traffic_priv *this
  * @param status The status of the navigation engine (the value of the {@code nav_status} attribute)
  */
 static void traffic_traff_android_status_callback(struct traffic_priv *this_, int status) {
-    int new_position_valid = (status != 1);
-    if (new_position_valid && !this_->position_valid) {
-        this_->position_valid = new_position_valid;
+    int valid = (status != status_position_wait);
+    if (valid == this_->position_valid)
+        return;
+    this_->position_valid = valid;
+    if (valid) {
         traffic_traff_android_set_selection(this_);
-    } else if (new_position_valid != this_->position_valid)
-        this_->position_valid = new_position_valid;
+    }
 }
 
-/**
- * @brief Callback for position changes
- *
- * This updates {@link struct traffic_priv::position_rect} if the vehicle has moved far enough from its
- * center to be within {@link POSITION_RECT_SIZE} of one of its boundaries. The new rectangle is created
- * with twice that amount of padding, allowing the vehicle to move for at least that distance before the
- * subscription needs to be updated again.
- *
- * @param this_ The instance which will handle the position update
- * @param navit The Navit instance
- * @param vehicle The vehicle which delivered the position update and from which the position can be queried
- */
 static void traffic_traff_android_position_callback(struct traffic_priv *this_, struct navit *navit,
                                                     struct vehicle *vehicle) {
     struct attr attr;
     struct coord c;
     struct coord_rect cr;
-    jmethodID cid;
     if (!vehicle_get_attr(vehicle, attr_position_coord_geo, &attr, NULL))
         return;
     transform_from_geo(projection_mg, attr.u.coord_geo, &c);
-    cr.lu = c;
-    cr.rl = c;
-    cr.lu.x -= POSITION_RECT_SIZE;
-    cr.rl.x += POSITION_RECT_SIZE;
-    cr.lu.y += POSITION_RECT_SIZE;
-    cr.rl.y -= POSITION_RECT_SIZE;
     if (!this_->position_rect)
         this_->position_rect = g_new0(struct coord_rect, 1);
+    cr = traffic_padded_rect(c, POSITION_RECT_SIZE);
     if (!coord_rect_contains(this_->position_rect, &cr.lu) || !coord_rect_contains(this_->position_rect, &cr.rl)) {
-        cr.lu.x -= POSITION_RECT_SIZE;
-        cr.rl.x += POSITION_RECT_SIZE;
-        cr.lu.y += POSITION_RECT_SIZE;
-        cr.rl.y -= POSITION_RECT_SIZE;
-        *(this_->position_rect) = cr;
+        *(this_->position_rect) = traffic_padded_rect(c, 2 * POSITION_RECT_SIZE);
         traffic_traff_android_set_selection(this_);
     }
 }
