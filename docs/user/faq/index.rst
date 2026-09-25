@@ -14,10 +14,16 @@ Run time
 Flooded land
 ~~~~~~~~~~~~
 
-Sometimes areas appear to be covered with water, even if there is just
-land. This is a result of defective `OpenStreetMap <OpenStreetMap>`__
-data, here esp. the `coastline
-borders <http://wiki.openstreetmap.org/wiki/Coastline>`__.
+Sometimes land appears to be covered with water because a coastline is
+incomplete. This can be caused by errors in OpenStreetMap data or by a
+regional extract cutting an otherwise valid coastline. A coastal map can
+even cover inland areas of another enabled map with water.
+
+Regenerate the affected map with an updated maptool. The coastline generator
+limits ocean filling around unmatched coastline ends instead of propagating
+water into larger tiles. Water may be missing near incomplete coastlines,
+where its extent cannot be determined. Existing binary maps must be
+regenerated; updating the Navit application alone does not repair them.
 
 Düdingen_flood.png|flooded Düdingen_ok.png|ok
 

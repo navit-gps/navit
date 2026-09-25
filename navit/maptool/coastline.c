@@ -22,6 +22,8 @@
 struct coastline_tile {
     osmid wayid;
     int edges;
+    /* An open coastline cannot establish which side of ancestor tiles is ocean. */
+    int incomplete;
 };
 
 static int distance_from_ll(struct coord *c, struct rect *bbox) {
@@ -127,6 +129,7 @@ static void close_polygon(struct item_bin *ib, struct coord *from, struct coord 
 struct coastline_tile_data {
     struct item_bin_sink_func *sink;
     GHashTable *tile_edges;
+    GHashTable *endpoints;
     int level;
     GList *k, *v;
 };
@@ -168,6 +171,10 @@ static void tile_collector_process_tile(char *tile, int *tile_data, struct coast
     curr = sorted_segments;
     while (curr) {
         struct geom_poly_segment *seg = curr->data;
+        if (!coord_is_equal(*seg->first, *seg->last)
+            && (distance_from_ll(seg->first, &bbox) == -1 || distance_from_ll(seg->last, &bbox) == -1
+                || g_hash_table_lookup(data->endpoints, seg->first) || g_hash_table_lookup(data->endpoints, seg->last)))
+            ct->incomplete = 1;
         switch (seg->type) {
         case geom_poly_segment_type_way_inner:
             flags |= 1;
@@ -181,6 +188,9 @@ static void tile_collector_process_tile(char *tile, int *tile_data, struct coast
         }
         curr = g_list_next(curr);
     }
+    /* Closing across an unmatched end would invent water on an unknown side. */
+    if (ct->incomplete)
+        goto done;
     if (flags == 1) {
         ct->edges = 15;
         ib = init_item(type_poly_water_tiled);
@@ -253,6 +263,7 @@ static void tile_collector_process_tile(char *tile, int *tile_data, struct coast
         if (search > 55)
             break;
     }
+done:
     g_list_foreach(sorted_segments, (GFunc)geom_poly_segment_destroy, NULL);
     g_list_free(sorted_segments);
 
@@ -323,7 +334,8 @@ static int tile_sibling_edges(GHashTable *hash, char *tile, char c) {
     ct = g_hash_table_lookup(hash, tile2);
     if (ct)
         return ct->edges;
-    return 15;
+    /* Absence of coastline data is not evidence of water. */
+    return 0;
 }
 
 #if 0
@@ -376,7 +388,7 @@ static void tile_collector_add_siblings2(char *tile, struct coastline_tile *ct, 
         fprintf(stderr, "checking siblings of '%s' with %d edges active\n", tile, edges);
     if (t == 'b' && (edges & 1) && (tile_sibling_edges(data->tile_edges, tile, 'd') & 1))
         pedges |= 1;
-    if (t == 'd' && (edges & 2) && (tile_sibling_edges(data->tile_edges, tile, 'b') & 1))
+    if (t == 'd' && (edges & 1) && (tile_sibling_edges(data->tile_edges, tile, 'b') & 1))
         pedges |= 1;
     if (t == 'a' && (edges & 2) && (tile_sibling_edges(data->tile_edges, tile, 'b') & 2))
         pedges |= 2;
@@ -394,12 +406,15 @@ static void tile_collector_add_siblings2(char *tile, struct coastline_tile *ct, 
     if (debug)
         fprintf(stderr, "result '%s' %d old %d\n", tile2, pedges, co ? co->edges : 0);
     cn = g_new0(struct coastline_tile, 1);
+    cn->incomplete = ct->incomplete || (co && co->incomplete);
     cn->edges = pedges;
     if (co) {
         cn->edges |= co->edges;
         cn->wayid = co->wayid;
     } else
         cn->wayid = ct->wayid;
+    if (cn->incomplete)
+        cn->edges = 0;
     g_hash_table_insert(data->tile_edges, g_strdup(tile2), cn);
 }
 
@@ -429,11 +444,12 @@ static void foreach_tile(struct coastline_tile_data *data,
     g_list_free(data->v);
 }
 
-static int tile_collector_finish(struct item_bin_sink_func *tile_collector) {
+static int tile_collector_finish(struct item_bin_sink_func *tile_collector, GHashTable *endpoints) {
     struct coastline_tile_data data;
     int i;
     GHashTable *hash;
     data.sink = tile_collector;
+    data.endpoints = endpoints;
     data.tile_edges = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
     hash = tile_collector->priv_data[0];
     fprintf(stderr, "tile_collector_finish\n");
@@ -469,8 +485,24 @@ static int tile_collector_finish(struct item_bin_sink_func *tile_collector) {
     return 0;
 }
 
+static void coastline_endpoint_add(GHashTable *endpoints, struct coord *c, int direction) {
+    int balance = GPOINTER_TO_INT(g_hash_table_lookup(endpoints, c)) + direction;
+    if (balance) {
+        struct coord *key = g_new(struct coord, 1);
+        *key = *c;
+        g_hash_table_replace(endpoints, key, GINT_TO_POINTER(balance));
+    } else
+        g_hash_table_remove(endpoints, c);
+}
+
 static int coastline_processor_process(struct item_bin_sink_func *func, struct item_bin *ib,
                                        struct tile_data *tile_data) {
+    struct coord *c = (struct coord *)(ib + 1);
+    if (ib->clen < 4)
+        return 0;
+    /* Track original ends before clipping, including ends exactly on tile boundaries. */
+    coastline_endpoint_add(func->priv_data[3], c, 1);
+    coastline_endpoint_add(func->priv_data[3], c + ib->clen / 2 - 1, -1);
     item_bin_write_clipped(ib, func->priv_data[0], func->priv_data[1]);
     return 0;
 }
@@ -490,6 +522,7 @@ static struct item_bin_sink_func *coastline_processor_new(struct item_bin_sink *
     coastline_processor->priv_data[0] = param;
     coastline_processor->priv_data[1] = tiles;
     coastline_processor->priv_data[2] = tile_collector;
+    coastline_processor->priv_data[3] = g_hash_table_new_full(coord_hash, coord_equal, g_free, NULL);
     return coastline_processor;
 }
 
@@ -498,7 +531,8 @@ static void coastline_processor_finish(struct item_bin_sink_func *coastline_proc
     struct item_bin_sink *tiles = coastline_processor->priv_data[1];
     struct item_bin_sink_func *tile_collector = coastline_processor->priv_data[2];
     g_free(param);
-    tile_collector_finish(tile_collector);
+    tile_collector_finish(tile_collector, coastline_processor->priv_data[3]);
+    g_hash_table_destroy(coastline_processor->priv_data[3]);
     item_bin_sink_destroy(tiles);
     item_bin_sink_func_destroy(coastline_processor);
 }
