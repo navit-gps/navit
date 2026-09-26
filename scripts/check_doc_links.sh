@@ -18,6 +18,7 @@ set -uo pipefail
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 build_root="$(mktemp -d)"
+trap 'rm -rf "$build_root"' EXIT
 outdir="$build_root/html"
 log="$build_root/warnings.log"
 
@@ -47,7 +48,12 @@ if ! mb="$(git merge-base "$base" HEAD 2>/dev/null)" || [ -z "$mb" ]; then
     exit 1
 fi
 
-changed="$(git diff --name-only "$mb..HEAD" -- '*.rst')"
+# NUL-separated so that paths containing spaces or quotes survive, and with
+# quoting disabled so the list is not mangled by git's C-style escaping.
+changed=()
+while IFS= read -r -d '' file; do
+    changed+=("$file")
+done < <(git -c core.quotePath=false diff --name-only -z "$mb..HEAD" -- '*.rst')
 
 # Build unconditionally. Sphinx has to see the whole tree to resolve
 # references, and a branch that touches only docs/conf.py, the requirements
@@ -65,7 +71,7 @@ fi
 # Only the warning check is scoped to the branch: trunk still carries
 # warnings in pages nobody has cleaned up, and demanding zero of them would
 # mean every documentation change had to fix the whole set first.
-if [ -z "$changed" ]; then
+if [ "${#changed[@]}" -eq 0 ]; then
     echo "No .rst files changed since $mb ($base); the documentation set still builds."
     exit 0
 fi
@@ -75,14 +81,39 @@ if [ ! -s "$log" ]; then
     exit 0
 fi
 
+# Map every warning onto the file Sphinx blamed, normalised to a path
+# relative to the docs source directory so it can be compared against git's
+# list. Sphinx reports absolute paths for documents and source-relative ones
+# for included files such as CHANGELOG.md, and it omits the line number for
+# toctree warnings. Comparing the raw text instead let a touched page
+# inherit the warnings of any page whose path merely contained its own.
+blamed="$build_root/blamed"
+awk -v root="$root/" '
+    /: WARNING:/ {
+        path = $0
+        sub(/:[0-9]+: WARNING:.*$/, "", path)
+        sub(/: WARNING:.*$/, "", path)
+        sub("^" root "docs/", "", path)
+        sub("^" root, "", path)
+        sub("^docs/", "", path)
+        print path "\t" $0
+    }
+' "$log" | LC_ALL=C sort -u > "$blamed"
+
 hits=0
-while IFS= read -r file; do
-    if grep -F -q "$file" "$log"; then
-        printf '::error file=%s::Sphinx warning in a documentation file changed by this branch\n' "$file"
-        grep -F "$file" "$log"
-        hits=1
+for file in "${changed[@]}"; do
+    rel="${file#docs/}"
+    [ -n "$rel" ] || continue
+    # Compare the whole first field, never a substring of it: a bare
+    # index.rst is a different page from user/faq/index.rst, and testing
+    # for the shorter name inside the longer one blames the wrong page.
+    if ! awk -F'\t' -v want="$rel" '$1 == want { found = 1 } END { exit !found }' "$blamed"; then
+        continue
     fi
-done <<< "$changed"
+    printf '::error file=%s::Sphinx reported a warning in a page this branch changed\n' "$file"
+    awk -F'\t' -v want="$rel" '$1 == want' "$blamed" | cut -f2-
+    hits=1
+done
 
 if [ "$hits" -eq 0 ]; then
     echo "Sphinx warnings are limited to files not changed by this branch."
