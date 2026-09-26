@@ -592,15 +592,11 @@ fix the path to them in the nibbler01.xml.
 The .cxf files are now included in the download, so feel free to alter
 them under the terms of CC-SA.
 
-.. raw:: html
-
-   <hr style="height: 4px; color:#AB4E3F; background-color:#AB4E3F;" />
-
 LCARS v0.1 (Startrek TNG)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This OSD does not scale so well, so use the
-`resizer <Scaler>`__
+resizer
 if you need to. It also makes use of empty.svg which it expects in the
 default image location of navit (included in lcars directory of the tar)
 
@@ -621,12 +617,6 @@ to your navit.xml (just where all the default/deactivated osd elements
 are) and fix the paths to the pics within lcars.xml and your navit.xml.
 
 For an appropriate vehicle include the cursor:
-
-.. raw:: html
-
-   <hr style="height: 10px; color:#AB4E3F; background-color:#AB4E3F;" />
-
-|
 
 Netbook Layout 1
 ~~~~~~~~~~~~~~~~
