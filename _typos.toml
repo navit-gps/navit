@@ -33,6 +33,7 @@ als = "als"
 Staus = "Staus"
 Konfiguration = "Konfiguration"
 explizit = "explizit"
+Funktion = "Funktion"
 # fragments of long identifiers split by row wrapping in listings
 estination = "estination"
 navigatio = "navigatio"
