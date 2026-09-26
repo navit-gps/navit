@@ -10,14 +10,14 @@ of layouts expands this page will be broken into several sub sections
 for each device.
 
 Note: For an explanation of how to modify the OSD layouts reference
-`OSD <OSD>`__ section. Many of the layouts on this page were borrowed
+:doc:`OSD </user/configuration/OSD>` section. Many of the layouts on this page were borrowed
 from the examples on that page.
 
 Notes
 -----
 
 -  If you would like instructions on how to modify OSD layouts you can
-   refer to the `OSD page <OSD>`__.
+   refer to the :doc:`OSD page </user/configuration/OSD>`.
 
 -  If you would like to share your own layout please contact us on the
    IRC Freenode Channel #navit and let us know. You can also try the
@@ -39,7 +39,7 @@ hand edit their navit.xml files. The same trick will work for any subset
 part of the navit.xml file. Remember to begin your file with and end it
 with , otherwise Navit won't be able to parse it properly.
 
-This trick was contributed by Daniel Would on the `NSeries <Meamo>`__
+This trick was contributed by Daniel Would on the NSeries
 wiki page.
 
 Layout scaler for different screen sizes
@@ -65,18 +65,13 @@ Features:
 
 Usage: Create scaled layout with:
 
-| ``./scale.pl ``\ \ `` ``\
-| ``./scale.pl 50 ~/.navit/nibbler01/``
+.. code:: console
+
+   ./scale.pl 50 ~/.navit/nibbler01/
 
 then include the -scaled-XX xml file instead of the original.
 
 get it `here <http://www.wandersleb.net/navit/scale-0.1.tar.gz>`__
-
-.. raw:: html
-
-   <hr style="height: 8px; color:#AB4E3F; background-color:#AB4E3F;" />
-
-|
 
 Nokia NSeries Tablets
 ---------------------
