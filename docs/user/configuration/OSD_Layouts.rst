@@ -38,8 +38,9 @@ hand edit their navit.xml files. The same trick will work for any subset
 part of the navit.xml file. Remember to begin your file with and end it
 with , otherwise Navit won't be able to parse it properly.
 
-This trick was contributed by Daniel Would on the NSeries
-wiki page.
+This trick was contributed by Daniel Would.
+
+.. _layout-scaler:
 
 Layout scaler for different screen sizes
 ----------------------------------------
@@ -74,7 +75,7 @@ Nokia NSeries Tablets
 ---------------------
 
 For tips and advice on Nokia layouts please reference the
-NSeries specific page.
+NSeries layouts below.
 
 NSeries Layout 1
 ~~~~~~~~~~~~~~~~
@@ -165,7 +166,7 @@ NSeries Layout 4
 ~~~~~~~~~~~~~~~~~~
 
 Tested on N900 but should work on any display, as it works nicely on my
-laptop as well. See the Nokia specific page for further configuration.
+laptop as well. See the NSeries layouts above for further configuration.
 
 .. figure:: N900-OSD.png
    :alt: N900-OSD.png
@@ -590,7 +591,7 @@ LCARS v0.1 (Startrek TNG)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This OSD does not scale so well, so use the
-resizer
+:ref:`layout scaler <layout-scaler>`
 if you need to. It also makes use of empty.svg which it expects in the
 default image location of navit (included in lcars directory of the tar)
 
