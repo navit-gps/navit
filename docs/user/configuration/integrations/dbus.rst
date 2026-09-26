@@ -111,27 +111,27 @@ control your navit instance (set_destination, zoom,…), you have first to
 do the following (examples are in python) : 1) get the navit general
 object
 
-`` object = bus.get_object("org.navit_project.navit","/org/navit_project/navit")``
+`` object = bus.get_object("org.navit_project.navit","/org/navit_project/navit")``
 
 2) get the interface of this object :
 
-`` iface = dbus.Interface(object,dbus_interface="org.navit_project.navit")``
+`` iface = dbus.Interface(object,dbus_interface="org.navit_project.navit")``
 
 3) get an iterator through navit instances :
 
-`` iter=iface.attr_iter()``
+`` iter=iface.attr_iter()``
 
 4) get the object path of the navit instance in your iterator :
 
-`` path = object.get_attr_wi("navit",iter)``
+`` path = object.get_attr_wi("navit",iter)``
 
 5) get the navit instance you are interested in :
 
-`` navit=bus.get_object('org.navit_project.navit', path[1])``
+`` navit=bus.get_object('org.navit_project.navit', path[1])``
 
 6) destroy the iter :
 
-`` iface.attr_iter_destroy(iter)``
+`` iface.attr_iter_destroy(iter)``
 
 The following methods have to be applied on the navit object.
 
@@ -141,25 +141,25 @@ Methods
 Examples are shown for each command, and when using on the command line
 must be prefixed by:
 
-``dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit``
+``dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit``
 
 When a coordinate is specified, the coordinate can be formatted like:
 
-``[Proj:]-0xX [-]0xX``
+``[Proj:]-0xX [-]0xX``
 
 where ``Proj`` can be ``mg`` or ``garmin``. Default: ``mg``. For
 example:
 
-``mg: 0x138a4a 0x5d773f``
+``mg: 0x138a4a 0x5d773f``
 
 Or
 
-| ``[Proj:][D][D]Dmm.ss[S][S] N/S [D][D]DMM.ss[S][S]... E/W``
-| ``[Proj:][-][D]D.d[d]... [-][D][D]D.d[d]``
+| ``[Proj:][D][D]Dmm.ss[S][S] N/S [D][D]DMM.ss[S][S]... E/W``
+| ``[Proj:][-][D]D.d[d]... [-][D][D]D.d[d]``
 
 where ``Proj`` must be ``geo``. For example:
 
-``geo: 24.0 65.0``
+``geo: 24.0 65.0``
 
 draw
 ~~~~
@@ -465,7 +465,7 @@ Methods
 Examples are shown for each command, and when using on the command line
 must be prefixed by:
 
-``dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit/default_vehicleprofile``
+``dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit/default_vehicleprofile``
 
 .. _get_attr_1:
 
@@ -546,7 +546,7 @@ Methods
 Examples are shown for each command, and when using on the command line
 must be prefixed by:
 
-``dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit/default_vehicle``
+``dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit/default_vehicle``
 
 .. _set_attr_2:
 
@@ -581,7 +581,7 @@ Methods
 Examples are shown for each command, and when using on the command line
 must be prefixed by:
 
-``dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit/default_route``
+``dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit/default_route``
 
 .. _get_attr_2:
 
@@ -622,16 +622,16 @@ add bookmark signal
 
 Setup the callback:
 
-| `` dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit org.navit_project.navit.callback_attr_new string:my_signal string:bookmark_map ``
-| `` object path "/org/navit_project/navit/callback/0"``
-| `` dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit org.navit_project.navit.navit.add_attr string:callback ``
-| `` variant:objpath:/org/navit_project/navit/callback/0``
+| `` dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit org.navit_project.navit.callback_attr_new string:my_signal string:bookmark_map ``
+| `` object path "/org/navit_project/navit/callback/0"``
+| `` dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit org.navit_project.navit.navit.add_attr string:callback ``
+| `` variant:objpath:/org/navit_project/navit/callback/0``
 
 Replace "my_signal" with a signal name of your choice.
 
 Now add a bookmark and you should see this in dbus-monitor --session:
 
-`` signal sender=:1.927 -> dest=(null destination) path=/org/navit_project/navit; interface=org.navit_project.navit; member=my_signal``
+`` signal sender=:1.927 -> dest=(null destination) path=/org/navit_project/navit; interface=org.navit_project.navit; member=my_signal``
 
 .. _undocumented_methods:
 
