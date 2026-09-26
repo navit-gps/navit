@@ -123,9 +123,6 @@ for you.
 | Install       | WIP            | WIP            | WIP            |
 +---------------+----------------+----------------+----------------+
 
-OLD/WIP
--------
-
 .. _tomtom_gps_settings:
 
 TomTom GPS settings
