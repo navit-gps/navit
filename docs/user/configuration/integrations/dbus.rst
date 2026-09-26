@@ -164,253 +164,260 @@ where ``Proj`` must be ``geo``. For example:
 draw
 ~~~~
 
-================ ==============================================
-**Path:**        .navit
-**Arguments:**   *none*
-**Return:**      *none*
-**Description:** Forces a redraw of the current view of the map
-**Example:**     org.navit_project.navit.navit.draw
-================ ==============================================
+**Path:** ``.navit``
+
+**Arguments:** *none*
+
+**Return:** *none*
+
+**Description:** Forces a redraw of the current view of the map.
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.navit.draw
 
 add_message
 ~~~~~~~~~~~
 
-================ =============================================================
-**Path:**        .navit
-**Arguments:**   string: "message"
-**Return:**      *none*
-**Description:** **FIXME** Adds a message to the messages label
-**Example:**     org.navit_project.navit.navit.add_message string:"My Message"
-================ =============================================================
+**Path:** ``.navit``
+
+**Arguments:** string: "message"
+
+**Return:** *none*
+
+**Description:** FIXME. Adds a message to the messages label.
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.navit.add_message string:"My Message"
 
 set_center_by_string
 ~~~~~~~~~~~~~~~~~~~~
 
-================ ==========================================================================
-**Path:**        .navit
-**Arguments:**   string: ``coordinates``
-**Return:**      *none*
+**Path:** ``.navit``
+
+**Arguments:** string: ``coordinates``
+
+**Return:** *none*
+
 **Description:** Centres the map over the specified position.
-**Example:**     org.navit_project.navit.navit.set_center_by_string string:"geo: 24.0 65.0"
-================ ==========================================================================
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.navit.set_center_by_string string:"geo: 24.0 65.0"
 
 set_center
 ~~~~~~~~~~
 
-================ ==============================================================================
-**Path:**        .navit
-**Arguments:**   integer: ``projection`` string: ``coordinates``
-**Return:**      *none*
-**Description:** Centres the map over the specified position.
-**Example:**     org.navit_project.navit.navit.set_center int32:1 string:"geo: 24.0 65.0"
+**Path:** ``.navit``
 
-                 org.navit_project.navit.navit.set_center int32:1 int32:0x138a4a int32:0x5d773f
-================ ==============================================================================
+**Arguments:** integer: ``projection`` string: ``coordinates``
+
+**Return:** *none*
+
+**Description:** Centres the map over the specified position.
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.navit.set_center int32:1 string:"geo: 24.0 65.0"
+   org.navit_project.navit.navit.set_center int32:1 int32:0x138a4a int32:0x5d773f
 
 set_center_screen
 ~~~~~~~~~~~~~~~~~
 
-+------------------+----------------------------------------------------+
-| **Path:**        | .navit                                             |
-+------------------+----------------------------------------------------+
-| **Arguments:**   | integer: ``pixel_x`` integer: ``pixel_y``          |
-+------------------+----------------------------------------------------+
-| **Return:**      | *none*                                             |
-+------------------+----------------------------------------------------+
-| **Description:** | Centers the map to a specific position on the      |
-|                  | screen.                                            |
-+------------------+----------------------------------------------------+
-| **Example:**     | .. code:: bash                                     |
-|                  |                                                    |
-|                  |    org.navit_project.navit.navit.set_center_screen |
-|                  |    int32:200 int32:400                             |
-|                  |                                                    |
-+------------------+----------------------------------------------------+
+**Path:** ``.navit``
 
+**Arguments:** integer: ``pixel_x`` integer: ``pixel_y``
+
+**Return:** *none*
+
+**Description:** Centers the map to a specific position on the screen.
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.navit.set_center_screen int32:200 int32:400
 
 set_layout
 ~~~~~~~~~~
 
-+------------------+--------------------------------------------------+
-| **Path:**        | .navit                                           |
-+------------------+--------------------------------------------------+
-| **Arguments:**   | string: ``layoutname``                           |
-+------------------+--------------------------------------------------+
-| **Return:**      | *none*                                           |
-+------------------+--------------------------------------------------+
-| **Description:** | Changes the active map layout.                   |
-+------------------+--------------------------------------------------+
-| **Example:**     | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_                                    |
-|                  | project.navit.navit.set_layout string:"car-dark" |
-+------------------+--------------------------------------------------+
+**Path:** ``.navit``
+
+**Arguments:** string: ``layoutname``
+
+**Return:** *none*
+
+**Description:** Changes the active map layout.
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.navit.set_layout string:"car-dark"
 
 zoom
 ~~~~
 
-+------------------+--------------------------------------------------+
-| **Path:**        | .navit                                           |
-+------------------+--------------------------------------------------+
-| **Arguments:**   | integer: ``factor`` (integer: ``pixel_x``        |
-|                  | integer: ``pixel_y``)                            |
-+------------------+--------------------------------------------------+
-| **Return:**      | *none*                                           |
-+------------------+--------------------------------------------------+
-| **Description:** | Zooms into the map (positive ``factor``) or out  |
-|                  | of the map (negative ``factor``) by the factor   |
-|                  | specified. The factor must be integers greater   |
-|                  | than 1 (zoom in) or less than -1 (zoom out).     |
-|                  | Optionally, a screen position can be specified   |
-|                  | in ``pixel_x`` and ``pixel_y`` and the function  |
-|                  | will zoom into that particular position. In      |
-|                  | order to zoom to a specific zoom-level, use the  |
-|                  | ```set_attr`` <#set_attr>`__ method.             |
-+------------------+--------------------------------------------------+
-| **Example:**     | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_project.navit.navit.zoom int32:2    |
-|                  |                                                  |
-|                  | .. code:: bash                                   |
-|                  |                                                  |
-|                  |     org.navit_project.navit.navit.zoom           |
-|                  |     int32:6 int32:200 int32:400                  |
-+------------------+--------------------------------------------------+
+**Path:** ``.navit``
+
+**Arguments:** integer: ``factor`` (integer: ``pixel_x`` integer: ``pixel_y``)
+
+**Return:** *none*
+
+**Description:** Zooms into the map (positive ``factor``) or out of the
+map (negative ``factor``) by the factor specified. The factor must be
+integers greater than 1 (zoom in) or less than -1 (zoom out).
+Optionally, a screen position can be specified in ``pixel_x`` and
+``pixel_y`` and the function will zoom into that particular position.
+In order to zoom to a specific zoom-level, use the ``set_attr`` method.
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.navit.zoom int32:2
+
+.. code:: bash
+
+   org.navit_project.navit.navit.zoom int32:6 int32:200 int32:400
 
 block
 ~~~~~
 
-================ ==============================================
-**Path:**        .navit
-**Arguments:**   integer: ``mode``
-**Return:**      *none*
-**Description:** **FIXME**
-**Example:**     .. code:: bash
+**Path:** ``.navit``
 
-                    org.navit_project.navit.navit.block int32:1
-\
-================ ==============================================
+**Arguments:** integer: ``mode``
+
+**Return:** *none*
+
+**Description:** FIXME.
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.navit.block int32:1
 
 set_position
 ~~~~~~~~~~~~
 
-+------------------+--------------------------------------------------+
-| **Path:**        | .navit                                           |
-+------------------+--------------------------------------------------+
-| **Arguments:**   | | string: ``coordinates``                        |
-|                  | | integer: ``projection`` string:                |
-|                  |   ``coordinates``                                |
-|                  | | integer: ``projection`` integer: ``longitude`` |
-|                  |   integer: ``latitude``                          |
-+------------------+--------------------------------------------------+
-| **Return:**      | *none*                                           |
-+------------------+--------------------------------------------------+
-| **Description:** | Sets the current position (useful if no gps      |
-|                  | position is available).                          |
-+------------------+--------------------------------------------------+
-| **Example:**     | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_project.                            |
-|                  | navit.navit.set_position string:"geo: 24.0 65.0" |
-|                  |                                                  |
-|                  | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_project.navit.na                    |
-|                  | vit.set_position int32:1 string:"geo: 24.0 65.0" |
-|                  |                                                  |
-|                  | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_project.navit.navit.se              |
-|                  | t_position int32:1 int32:0x138a4a int32:0x5d773f |
-+------------------+--------------------------------------------------+
+**Path:** ``.navit``
+
+**Arguments:**
+
+-  string: ``coordinates``
+-  integer: ``projection`` string: ``coordinates``
+-  integer: ``projection`` integer: ``longitude`` integer: ``latitude``
+
+**Return:** *none*
+
+**Description:** Sets the current position (useful if no gps position
+is available).
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.navit.set_position string:"geo: 24.0 65.0"
+
+.. code:: bash
+
+   org.navit_project.navit.navit.set_position int32:1 string:"geo: 24.0 65.0"
+
+.. code:: bash
+
+   org.navit_project.navit.navit.set_position int32:1 int32:0x138a4a int32:0x5d773f
 
 set_destination
 ~~~~~~~~~~~~~~~
 
-+------------------+--------------------------------------------------+
-| **Path:**        | .navit                                           |
-+------------------+--------------------------------------------------+
-| **Arguments:**   | | string: ``coordinates`` string:"comment"       |
-|                  | | integer: ``projection`` string:                |
-|                  |   ``coordinates`` string:"comment"               |
-|                  | | integer: ``projection`` integer: ``longitude`` |
-|                  |   integer: ``latitude`` string:"comment"         |
-+------------------+--------------------------------------------------+
-| **Return:**      | *none*                                           |
-+------------------+--------------------------------------------------+
-| **Description:** | Sets the destination for routing.                |
-+------------------+--------------------------------------------------+
-| **Example:**     | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_project.nav                         |
-|                  | it.navit.set_destination string:"geo: 24.0 65.0" |
-|                  |                                                  |
-|                  | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_project.navit.navit                 |
-|                  | .set_destination int32:1 string:"geo: 24.0 65.0" |
-|                  |                                                  |
-|                  | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_project.navit.navit.set_d           |
-|                  | estination int32:1 int32:0x138a4a int32:0x5d773f |
-+------------------+--------------------------------------------------+
+**Path:** ``.navit``
+
+**Arguments:**
+
+-  string: ``coordinates`` string:"comment"
+-  integer: ``projection`` string: ``coordinates`` string:"comment"
+-  integer: ``projection`` integer: ``longitude`` integer: ``latitude`` string:"comment"
+
+**Return:** *none*
+
+**Description:** Sets the destination for routing.
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.navit.set_destination string:"geo: 24.0 65.0"
+
+.. code:: bash
+
+   org.navit_project.navit.navit.set_destination int32:1 string:"geo: 24.0 65.0"
+
+.. code:: bash
+
+   org.navit_project.navit.navit.set_destination int32:1 int32:0x138a4a int32:0x5d773f
 
 clear_destination
 ~~~~~~~~~~~~~~~~~
 
-================ ==================================================
-**Path:**        .navit
-**Arguments:**   *none*
-**Return:**      *none*
-**Description:** Removes the destination and stops routing.
-**Example:**     .. code:: bash
+**Path:** ``.navit``
 
-                    org.navit_project.navit.navit.clear_destination
-\
-================ ==================================================
+**Arguments:** *none*
+
+**Return:** *none*
+
+**Description:** Removes the destination and stops routing.
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.navit.clear_destination
 
 get_attr
 ~~~~~~~~
 
-+------------------+--------------------------------------------------+
-| **Path:**        | .navit                                           |
-+------------------+--------------------------------------------------+
-| **Arguments:**   | string:``attribute``                             |
-+------------------+--------------------------------------------------+
-| **Return:**      | string:``attribute`` variant:``value``           |
-+------------------+--------------------------------------------------+
-| **Description:** | Gets the specified attribute value. The          |
-|                  | attribute can be anything from attr_def.h.       |
-+------------------+--------------------------------------------------+
-| **Example:**     | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.                                          |
-|                  | navit_project.navit.navit.get_attr string:"zoom" |
-|                  |                                                  |
-|                  | returns:                                         |
-|                  |                                                  |
-|                  | .. code:: bash                                   |
-|                  |                                                  |
-|                  |       string "zoom"                              |
-|                  |       variant       int32 10                     |
-|                  |                                                  |
-|                  | .. raw:: html                                    |
-|                  |                                                  |
-|                  |    <hr>                                          |
-|                  |                                                  |
-|                  | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_p                                   |
-|                  | roject.navit.navit.get_attr string:"orientation" |
-|                  |                                                  |
-|                  | returns:                                         |
-|                  |                                                  |
-|                  | .. code:: bash                                   |
-|                  |                                                  |
-|                  |       string "orientation"                       |
-|                  |       variant       int32 1                      |
-+------------------+--------------------------------------------------+
+**Path:** ``.navit``
+
+**Arguments:** string: ``attribute``
+
+**Return:** string: ``attribute`` variant: ``value``
+
+**Description:** Gets the specified attribute value. The attribute can
+be anything from attr_def.h.
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.navit.get_attr string:"zoom"
+
+returns:
+
+.. code:: bash
+
+   string "zoom"
+   variant    int32 10
+
+.. code:: bash
+
+   org.navit_project.navit.navit.get_attr string:"orientation"
+
+returns:
+
+.. code:: bash
+
+   string "orientation"
+   variant    int32 1
 
 set_attr
 ~~~~~~~~
