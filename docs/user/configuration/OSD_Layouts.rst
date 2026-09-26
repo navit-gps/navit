@@ -480,33 +480,12 @@ Mineque's PC layouts
 | For enabling it you have to edit xml file from the archive in two
   places:
 
-``      ``\
 
-``      ``\ \ ``  ``
+You have to change the path after ``src="..."`` to one that fits your user
+dirname. And last thing, edit navit.xml: comment everything between
+``<vehicle ...>`` and ``<vehicle ...>``. After that paste ``<osd ...>``
+under it with the corrected path of your user dirname and chosen skin.
 
-| You have to change path after src="..." to one will fits your user
-  dirname.
-| And last thing edit navit.xml. You have to comment everything between:
-
-``   ``\
-
-and
-
-``   <vehicle ...``
-
-After that paste:
-
-``   ``\
-
-under
-
-``   ``\
-
-with corrected path of your user dirname and chosen skin.
-
-.. raw:: html
-
-   <hr style="height: 4px; color:#AB4E3F; background-color:#AB4E3F;" />
 
 Mineque's OSD 001 Layout
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -522,54 +501,22 @@ layout:
 
 -  `Mineque 001 <http://quanteam.pl/mineque/Mineque_001-800w.zip>`__
 
-+----------------------------------------------------------------------+
-| Layout XML                                                           |
-+======================================================================+
-| ::                                                                   |
-|                                                                      |
-|     <osd enabled="yes" type="text" label="Currently On ${navigat     |
-| ion.item.street_name} ${navigation.item[1].street_name_systematic}"  |
-|      x="0" y="0" w="735" h="30" align="1" backg                      |
-| round_color="#a60c0f00]" font_size="300" src="gui_fullscreen.svg" /> |
-|     <osd enabled="yes" type="gps_status" x="735" y="0" w="           |
-| 65" h="30" align="0" background_color="#a60c0f00" font_size="300" /> |
-|     <osd enabled="yes" type="text" label="ETA:${navigation.item      |
-| .destination_time[arrival]}" x="0" y="-25" w="160" h="25" align="4"  |
-|      background_color="#a60c0f01" font_size="350" />                 |
-|     <osd enabled="yes" type="text" label="TL:${navigation.item.de    |
-| stination_time[remaining]}" x="160" y="-25" w="160" h="25"align="4"  |
-|      background_color="#a60c0f00" font_size="350" />                 |
-|     <osd enabled="yes" type="text" label="Dist:${navigation.item.d   |
-| estination_length[named]}" x="320" y="-25" w="170" h="25" align="4"  |
-|      background_color="#a60c0f00" font_size="350" />                 |
-|     <                                                                |
-| osd enabled="yes" type="text" label="${vehicle.position_speed} / ${t |
-| racking.item.route_speed}" x="490" y="-25" w="150" h="25" align="4"  |
-|      background_color="#a60c0f00" font_size="280"/>                  |
-|                                                                      |
-|  <osd enabled="yes" type="text" label="${navigation.item[1].length[n |
-| amed]}" x="640" y="-30" w="160" h="30" background_color="#a60c0f00"  |
-|      font_size="500"/>                                               |
-|     <osd enabled="yes" type="navigation_next_tu                      |
-| rn" x="640" y="-80"  w="160" h="50" background_color="#a60c0f00" />  |
-|                                                                      |
-|    <osd enabled="yes" type="button" x="0" y="-85" w="800" h="85" com |
-| mand="" src="/home/mineque/.navit/skins/Mineque_001/M_001_01.png" /> |
-|     <osd enab                                                        |
-| led="yes" type="button" x="0" y="0" w="800" h="35" command="" src="/ |
-| home/mineque/.navit/skins/Mineque_001/M_001_02.png" />               |
-|     <osd enabled="yes"  type="button"                                |
-|  x="5" y="30" command="gui.fullscreen=1" src="gui_fullscreen.svg"/>  |
-|     <osd enabled="yes"  typ                                          |
-| e="button" x="5" y="475" command="zoom_in()" src="gui_zoom_in.svg"/> |
-|     <osd enabled="yes"  type="b                                      |
-| utton" x="590" y="475" command="zoom_out()" src="gui_zoom_out.svg"/> |
-|                                                                      |
-+----------------------------------------------------------------------+
+.. code:: xml
 
-.. raw:: html
+   <osd enabled="yes" type="text" label="Currently On ${navigation.item.street_name} ${navigation.item[1].street_name_systematic}" x="0" y="0" w="735" h="30" align="1" background_color="#a60c0f00]" font_size="300" src="gui_fullscreen.svg" />
+   <osd enabled="yes" type="gps_status" x="735" y="0" w="65" h="30" align="0" background_color="#a60c0f00" font_size="300" />
+   <osd enabled="yes" type="text" label="ETA:${navigation.item.destination_time[arrival]}" x="0" y="-25" w="160" h="25" align="4" background_color="#a60c0f01" font_size="350" />
+   <osd enabled="yes" type="text" label="TL:${navigation.item.destination_time[remaining]}" x="160" y="-25" w="160" h="25" align="4" background_color="#a60c0f00" font_size="350" />
+   <osd enabled="yes" type="text" label="Dist:${navigation.item.destination_length[named]}" x="320" y="-25" w="170" h="25" align="4" background_color="#a60c0f00" font_size="350" />
+   <osd enabled="yes" type="text" label="${vehicle.position_speed} / ${tracking.item.route_speed}" x="490" y="-25" w="150" h="25" align="4" background_color="#a60c0f00" font_size="280"/>
+   <osd enabled="yes" type="text" label="${navigation.item[1].length[named]}" x="640" y="-30" w="160" h="30" background_color="#a60c0f00" font_size="500"/>
+   <osd enabled="yes" type="navigation_next_turn" x="640" y="-80"  w="160" h="50" background_color="#a60c0f00" />
+   <osd enabled="yes" type="button" x="0" y="-85" w="800" h="85" command="" src="/home/mineque/.navit/skins/Mineque_001/M_001_01.png" />
+   <osd enabled="yes" type="button" x="0" y="0" w="800" h="35" command="" src="/home/mineque/.navit/skins/Mineque_001/M_001_02.png" />
+   <osd enabled="yes"  type="button" x="5" y="30" command="gui.fullscreen=1" src="gui_fullscreen.svg"/>
+   <osd enabled="yes"  type="button" x="5" y="475" command="zoom_in()" src="gui_zoom_in.svg"/>
+   <osd enabled="yes"  type="button" x="590" y="475" command="zoom_out()" src="gui_zoom_out.svg"/>
 
-   <hr style="height: 4px; color:#AB4E3F; background-color:#AB4E3F;" />
 
 Mineque's OSD 003 Layout
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -585,56 +532,23 @@ layout:
 
 -  `Mineque 003 <http://quanteam.pl/mineque/Mineque_003-800w.zip>`__
 
-+----------------------------------------------------------------------+
-| Layout XML                                                           |
-+======================================================================+
-| ::                                                                   |
-|                                                                      |
-|     <osd enabled="yes" type="text" label="Currently On ${navigat     |
-| ion.item.street_name} ${navigation.item[1].street_name_systematic}"  |
-|      x="0" y="0" w="735" h="35" align="16" back                      |
-| ground_color="#a60c0f00" font_size="430" src="gui_fullscreen.svg" /> |
-|     <osd enabled="yes" type="gps_status" x="735" y="0" w="           |
-| 65" h="30" align="0" background_color="#a60c0f00" font_size="300" /> |
-|     <osd enabled="yes" type="text" label="ETA:${navigation.item.d    |
-| estination_time[arrival]}" x="50" y="-100" w="275" h="70" align="4"  |
-|      background_color="#a60c0f01" font_size="500" />                 |
-|     <osd enabled="yes" type="text" label="TL:${navigation.item.des   |
-| tination_time[remaining]}" x="475" y="-100" w="275" h="70"align="4"  |
-|      background_color="#a60c0f00" font_size="500" />                 |
-|     <osd enabled="yes" type="text" label="Dist:${navigation.item.    |
-| destination_length[named]}" x="50" y="-60" w="275" h="70" align="4"  |
-|      background_color="#a60c0f00" font_size="500" />                 |
-|     <                                                                |
-| osd enabled="yes" type="text" label="${vehicle.position_speed} / ${t |
-| racking.item.route_speed}" x="475" y="-60" w="275" h="70" align="4"  |
-|      background_color="#a60c0f00" font_size="500"/>                  |
-|     <osd enabled="yes" type="text" label="${navigati                 |
-| on.item[1].length[named]}" x="325" y="-40" w="150" h="40" align="0"  |
-|      background_color="#a60c0f00" font_size="500"/>                  |
-|     <osd enabled="yes" type="navigation_next_turn" x="325" y         |
-| ="-135"  w="150" h="100" align="15" background_color="#a60c0f00" />  |
-|                                                                      |
-|  <osd enabled="yes" type="button" x="0" y="-120" w="800" h="120" com |
-| mand="" src="/home/mineque/.navit/skins/Mineque_003/M_003_01.png" /> |
-|     <osd enabled=                                                    |
-| "yes" type="button" x="0" y="0" w="800" h="35" command="" src="/home |
-| /mineque/.navit/skins/Mineque_003/M_003_02.png" />                   |
-|     <osd enabled="yes"  type="button"                                |
-|  x="5" y="35" command="gui.fullscreen=1" src="gui_fullscreen.svg"/>  |
-|     <osd enabled="no"                                                |
-|  type="button" x="300" y="100" command="gui.menu()" src="menu.xpm"/> |
-|     <osd enabled="yes"  typ                                          |
-| e="button" x="5" y="475" command="zoom_in()" src="gui_zoom_in.svg"/> |
-|     <osd enabled="yes"  type="b                                      |
-| utton" x="-53" y="475" command="zoom_out()" src="gui_zoom_out.svg"/> |
-+----------------------------------------------------------------------+
+.. code:: xml
 
-.. raw:: html
+   <osd enabled="yes" type="text" label="Currently On ${navigation.item.street_name} ${navigation.item[1].street_name_systematic}" x="0" y="0" w="735" h="35" align="16" background_color="#a60c0f00" font_size="430" src="gui_fullscreen.svg" />
+   <osd enabled="yes" type="gps_status" x="735" y="0" w="65" h="30" align="0" background_color="#a60c0f00" font_size="300" />
+   <osd enabled="yes" type="text" label="ETA:${navigation.item.destination_time[arrival]}" x="50" y="-100" w="275" h="70" align="4" background_color="#a60c0f01" font_size="500" />
+   <osd enabled="yes" type="text" label="TL:${navigation.item.destination_time[remaining]}" x="475" y="-100" w="275" h="70" align="4" background_color="#a60c0f00" font_size="500" />
+   <osd enabled="yes" type="text" label="Dist:${navigation.item.destination_length[named]}" x="50" y="-60" w="275" h="70" align="4" background_color="#a60c0f00" font_size="500" />
+   <osd enabled="yes" type="text" label="${vehicle.position_speed} / ${tracking.item.route_speed}" x="475" y="-60" w="275" h="70" align="4" background_color="#a60c0f00" font_size="500"/>
+   <osd enabled="yes" type="text" label="${navigation.item[1].length[named]}" x="325" y="-40" w="150" h="40" align="0" background_color="#a60c0f00" font_size="500"/>
+   <osd enabled="yes" type="navigation_next_turn" x="325" y="-135"  w="150" h="100" align="15" background_color="#a60c0f00" />
+   <osd enabled="yes" type="button" x="0" y="-120" w="800" h="120" command="" src="/home/mineque/.navit/skins/Mineque_003/M_003_01.png" />
+   <osd enabled="yes" type="button" x="0" y="0" w="800" h="35" command="" src="/home/mineque/.navit/skins/Mineque_003/M_003_02.png" />
+   <osd enabled="yes"  type="button" x="5" y="35" command="gui.fullscreen=1" src="gui_fullscreen.svg"/>
+   <osd enabled="no" type="button" x="300" y="100" command="gui.menu()" src="menu.xpm"/>
+   <osd enabled="yes"  type="button" x="5" y="475" command="zoom_in()" src="gui_zoom_in.svg"/>
+   <osd enabled="yes"  type="button" x="-53" y="475" command="zoom_out()" src="gui_zoom_out.svg"/>
 
-   <hr style="height: 10px; color:#AB4E3F; background-color:#AB4E3F;" />
-
-|
 
 Nibblers OSD Layouts
 ~~~~~~~~~~~~~~~~~~~~
