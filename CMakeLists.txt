@@ -538,6 +538,19 @@ if (GETTEXT_FOUND)
 	set_with_reason(USE_NATIVE_LANGUAGE_SUPPORT "Gettext found" TRUE)
 endif(GETTEXT_FOUND)
 
+# SQLite3 is the optional backend for the Navit Safety POI confirmation cache.
+find_package(PkgConfig QUIET)
+if(PkgConfig_FOUND)
+	pkg_check_modules(SQLITE3 sqlite3)
+endif()
+if(NOT SQLITE3_FOUND)
+	find_library(SQLITE3_LIBRARIES NAMES sqlite3)
+	find_path(SQLITE3_INCLUDE_DIRS NAMES sqlite3.h)
+	if(SQLITE3_LIBRARIES AND SQLITE3_INCLUDE_DIRS)
+		set(SQLITE3_FOUND TRUE)
+	endif()
+endif()
+
 #Independent modules
 add_module(graphics/null "Default" TRUE)
 add_module(osd/core "Default" TRUE)
@@ -561,6 +574,13 @@ add_module(map/csv "Default" TRUE)
 #Modules without test yet
 add_module(plugin/pedestrian "Default" FALSE)
 add_module(plugin/j1850 "Default" FALSE)
+add_module(plugin/navit_safety "Default" FALSE)
+# set_with_reason must run after add_module so the plugin is enabled in place.
+if(SQLITE3_FOUND)
+	set_with_reason(plugin/navit_safety "SQLite3 found" TRUE)
+else()
+	set_with_reason(plugin/navit_safety "SQLite3 not found" FALSE)
+endif()
 add_module(speech/android "Default" FALSE)
 add_module(speech/espeak "Default" FALSE)
 add_module(speech/iphone "Default" FALSE)
