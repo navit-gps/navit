@@ -155,23 +155,6 @@ Shops for food, Peaks (with names), Unknown (points with names). Tracks,
 Paths, hiking paths and so on have different colors to distinguish them.
 See :doc:`Layout_detailedcampingbike` for the full description and XML.
 
-bike
-~~~~
-
-Because all other layouts are not displaying bike paths properly on
-winCE devices, this layout was rolled on its own. It is simple and needs
-fixing and refining. Most POIs are hidden - this is one of the things
-which should be changed. It is also not independent from the car layout
-- another problem. See :doc:`Layout_bike` for the full XML.
-
-Features
-^^^^^^^^
-
--  bike paths visible green
--  less comfortable but still fine roads are visible in brown
--  everything else is much like car layout
--  no dashed lines - suitable for winCE
-
 Alternate Cursors
 -----------------
 
@@ -557,4 +540,3 @@ pages:
    Layout_snow
    Layout_hi_vis
    Layout_detailedcampingbike
-   Layout_bike
