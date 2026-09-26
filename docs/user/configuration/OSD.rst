@@ -1999,122 +1999,125 @@ These can be used as shown below in OSD items. If you want to use them
 elsewhere (e.g. in internal GUI menu items), prefix them with
 **navit.** (e.g. **navit.route.route_status**):
 
-+--------------------------+------------------------------------------+
-| Attribute                | Description                              |
-+==========================+==========================================+
-| **layout_name**          | Change the map `layout <layout>`__       |
-|                          | and/or cursor configuration. The         |
-|                          | following command changes the layout     |
-|                          | to Car-dark.                             |
-|                          |                                          |
-|                          | .. code:: xml                            |
-|                          |                                          |
-|                          |    <osd enabled="yes"                    |
-|                          |    type="button"                         |
-|                          |    src="gui_display_48_48.png"           |
-|                          |    command="layout_name='Car-dark'       |
-|                          |    />                                    |
-+--------------------------+------------------------------------------+
-| **route.route_status**   | Flags for the route status. See also     |
-|                          | route.h (enum route_status):             |
-|                          |                                          |
-|                          | +-------------------------+-------+      |
-|                          | | Const                   | Value |      |
-|                          | +=========================+=======+      |
-|                          | | rout                    | 0     |      |
-|                          | | e_status_no_destination |       |      |
-|                          | +-------------------------+-------+      |
-|                          | | route                   | 1     |      |
-|                          | | _status_destination_set |       |      |
-|                          | +-------------------------+-------+      |
-|                          | | route_status_not_found  | 1/2   |      |
-|                          | +-------------------------+-------+      |
-|                          | | rou                     | 1/4   |      |
-|                          | | te_status_building_path |       |      |
-|                          | +-------------------------+-------+      |
-|                          | | rout                    | 1/4/8 |      |
-|                          | | e_status_building_graph |       |      |
-|                          | +-------------------------+-------+      |
-|                          | | rou                     | 1/16  |      |
-|                          | | te_status_path_done_new |       |      |
-|                          | +-------------------------+-------+      |
-|                          | | route_statu             | 1/32  |      |
-|                          | | s_path_done_incremental |       |      |
-|                          | +-------------------------+-------+      |
-|                          | |                         |       |      |
-|                          | +-------------------------+-------+      |
-+--------------------------+------------------------------------------+
-| **osd_configuration**    | Set the osd_configuration flags for      |
-|                          | navit. With the command                  |
-|                          | osd_configuration=2 all osds where the   |
-|                          | condition (osd_configuration & 2) != 0   |
-|                          | is true will get visible, all others     |
-|                          | non-visible.                             |
-+--------------------------+------------------------------------------+
-| **orientation**          | Use this attribute to switch between a   |
-|                          | north-oriented map, or a map which is    |
-|                          | oriented in the direction of vehicle     |
-|                          | travel (same as "Northing" in the        |
-|                          | menu). This example toggles between a    |
-|                          | northing and vehicle oriented map.       |
-|                          |                                          |
-|                          | ``comma                                  |
-|                          | nd="orientation=orientation==0?-1:0"``   |
-+--------------------------+------------------------------------------+
-| **pitch**                | Use this attribute to vary the pitch     |
-|                          | of view (i.e. switch between 2D and 3D   |
-|                          | view). The following example toggles     |
-|                          | between 2D view and 3D view angled at    |
-|                          | 20 degrees.                              |
-|                          |                                          |
-|                          | ``command="pitch=pitch==0?20:0"``        |
-+--------------------------+------------------------------------------+
-| **speech.active**        | The following example toggles speech     |
-|                          | enabled/disabled.                        |
-|                          |                                          |
-|                          | ``co                                     |
-|                          | mmand="speech.active=!speech.active"``   |
-+--------------------------+------------------------------------------+
-| **zoom**                 | Use this attribute to vary the zoom      |
-|                          | level. The following example sets the    |
-|                          | zoom to level 15.                        |
-|                          |                                          |
-|                          | ``command="zoom=15"``                    |
-|                          |                                          |
-|                          | The following example toggles between    |
-|                          | zoom level 100 and zoom level 15.        |
-|                          |                                          |
-|                          | ``command="zoom=zoom==15?100:15"``       |
-+--------------------------+------------------------------------------+
-| **follow**               | Use this attribute to change the         |
-|                          | number of gps updates to wait before     |
-|                          | map is refreshed. A value of zero        |
-|                          | means vehicle will leave the edge of     |
-|                          | the map before the map is refreshed.     |
-|                          |                                          |
-|                          | ``command="follow=follow>1?1:10000"``    |
-+--------------------------+------------------------------------------+
-| **timeout**              | When the user scrolls the map, it        |
-|                          | stays there. After ``timeout`` number    |
-|                          | of GPS updates the map jumps back to     |
-|                          | the current location of the active       |
-|                          | vehicle.                                 |
-|                          |                                          |
-|                          | ``command="timeout=8"``                  |
-+--------------------------+------------------------------------------+
-| **follow_cursor**        | Use to set map followmode, follow=1      |
-|                          | means autocentering. Example will        |
-|                          | switch between autofollow on and off     |
-|                          |                                          |
-|                          | ::                                       |
-|                          |                                          |
-|                          |    <source lang="xml">                   |
-|                          |    <o                                    |
-|                          |    sd type="button" src="/sdcard/navit/to|
-|                          |    gglefollow.png" command="follow_cursor|
-|                          |    =follow_cursor==0?1:0" x="-64" y="0"/>|
-|                          |    </source>                             |
-+--------------------------+------------------------------------------+
+.. list-table::
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Attribute
+     - Description
+   * - **layout_name**
+     - Change the map `layout <layout>`__
+       and/or cursor configuration. The
+       following command changes the layout
+       to Car-dark.
+
+       .. code:: xml
+
+          <osd enabled="yes"
+          type="button"
+          src="gui_display_48_48.png"
+          command="layout_name='Car-dark'
+          />
+   * - **route.route_status**
+     - Flags for the route status. See also
+       route.h (enum route_status):
+
+       +-------------------------+-------+
+       | Const                   | Value |
+       +=========================+=======+
+       | rout                    | 0     |
+       | e_status_no_destination |       |
+       +-------------------------+-------+
+       | route                   | 1     |
+       | _status_destination_set |       |
+       +-------------------------+-------+
+       | route_status_not_found  | 1/2   |
+       +-------------------------+-------+
+       | rou                     | 1/4   |
+       | te_status_building_path |       |
+       +-------------------------+-------+
+       | rout                    | 1/4/8 |
+       | e_status_building_graph |       |
+       +-------------------------+-------+
+       | rou                     | 1/16  |
+       | te_status_path_done_new |       |
+       +-------------------------+-------+
+       | route_statu             | 1/32  |
+       | s_path_done_incremental |       |
+       +-------------------------+-------+
+       |                         |       |
+       +-------------------------+-------+
+   * - **osd_configuration**
+     - Set the osd_configuration flags for
+       navit. With the command
+       osd_configuration=2 all osds where the
+       condition (osd_configuration & 2) != 0
+       is true will get visible, all others
+       non-visible.
+   * - **orientation**
+     - Use this attribute to switch between a
+       north-oriented map, or a map which is
+       oriented in the direction of vehicle
+       travel (same as "Northing" in the
+       menu). This example toggles between a
+       northing and vehicle oriented map.
+
+       ``comma
+       nd="orientation=orientation==0?-1:0"``
+   * - **pitch**
+     - Use this attribute to vary the pitch
+       of view (i.e. switch between 2D and 3D
+       view). The following example toggles
+       between 2D view and 3D view angled at
+       20 degrees.
+
+       ``command="pitch=pitch==0?20:0"``
+   * - **speech.active**
+     - The following example toggles speech
+       enabled/disabled.
+
+       ``co
+       mmand="speech.active=!speech.active"``
+   * - **zoom**
+     - Use this attribute to vary the zoom
+       level. The following example sets the
+       zoom to level 15.
+
+       ``command="zoom=15"``
+
+       The following example toggles between
+       zoom level 100 and zoom level 15.
+
+       ``command="zoom=zoom==15?100:15"``
+   * - **follow**
+     - Use this attribute to change the
+       number of gps updates to wait before
+       map is refreshed. A value of zero
+       means vehicle will leave the edge of
+       the map before the map is refreshed.
+
+       ``command="follow=follow>1?1:10000"``
+   * - **timeout**
+     - When the user scrolls the map, it
+       stays there. After ``timeout`` number
+       of GPS updates the map jumps back to
+       the current location of the active
+       vehicle.
+
+       ``command="timeout=8"``
+   * - **follow_cursor**
+     - Use to set map followmode, follow=1
+       means autocentering. Example will
+       switch between autofollow on and off
+
+       ::
+
+          <source lang="xml">
+          <o
+          sd type="button" src="/sdcard/navit/to
+          gglefollow.png" command="follow_cursor
+          =follow_cursor==0?1:0" x="-64" y="0"/>
+          </source>
 
 .. |osd-button.png| image:: osd-button.png
 .. |osd-compass.png| image:: osd-compass.png
