@@ -46,7 +46,7 @@ valuable information you can provide.
 
 
 Information you should provide
-==============================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following information for each type of problem will enable the
 developers to very quickly isolate the section of code which is causing
