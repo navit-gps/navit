@@ -140,7 +140,7 @@ of 2.6.21 about PATH_MAX:
 | ``  #include "modpost.h"``
 | `` +#include <linux/limits.h>``
 | `` ``
-| ``  /*``
+| ``/*``
 | ``   * Stolen form Cryptographic API.``
 
 .. _gpsd_patch:

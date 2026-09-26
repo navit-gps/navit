@@ -97,7 +97,7 @@ Maemo 5 introduced a new API for accessing GPS devices and Navit
 supports it as vehicle_maemo, which is disabled by default, don't forget
 to enable it. The tag for maemo could be like this:
 
-`` ``\
+`` ``
 
 -  Source could be:
 

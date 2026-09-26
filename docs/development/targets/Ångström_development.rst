@@ -117,9 +117,9 @@ bitbake
   navit.xml to make the libs found:
 |
 
-| ``       ``\
-| ``       ``\
-| `` ``\
+| ``       ``
+| ``       ``
+| `` ``
 
 | Please note the '.*' at the end of the first plugin path.
   Alternatively you can attempt to install the navit-dev package which
