@@ -138,8 +138,8 @@ jobs:
     container:
       image: python:3.12-slim
     steps:
-      - name: Install git for checkout
-        run: apt-get update && apt-get install -y git
+      - name: Install git and jq for checkout
+        run: apt-get update && apt-get install -y git jq
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
@@ -152,6 +152,7 @@ jobs:
       - name: Check docs warnings in files touched by this branch
         env:
           DOCS_BASE: ${{ github.event.pull_request.base.sha }}
+          DOCS_EVENT: ${{ github.event_path }}
         run: bash scripts/check_doc_links.sh
   docs_linkcheck:
     runs-on: ubuntu-latest
