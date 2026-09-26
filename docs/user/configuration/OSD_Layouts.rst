@@ -584,8 +584,8 @@ From version 0.2 on: For the buttons to work, you need to copy the
 empty.svg to your image directory (/usr/share/navit/xpm/ in my case) or
 fix the path to them in the nibbler01.xml.
 
-The .cxf files are now included in the download, so feel free to alter
-them under the terms of CC-SA.
+The .cxf files are included, so feel free to alter them under the terms
+of CC-SA.
 
 LCARS v0.1 (Startrek TNG)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -827,7 +827,6 @@ following screenshots can be found at :doc:`OSM Mapnik layout style </user/confi
 The following screenshots show the two main OSD modes. The left layout
 is during tracking mode (i.e. no destination set), whilst the right
 layout shows the OSD layout during routing. The OSD items are almost
-exactly the same as Netbook Layout 1, with the
 exactly the same as Netbook Layout 1, with the exception of the removal
 of the :ref:`speed cam <osd_speed_cam>` OSD and the :ref:`compass <osd_compass>` OSD.
 
@@ -897,7 +896,7 @@ the png versions, make sure you change the path.
 
 .. code:: xml
 
-   .. code::<!-- TOP LEFT --> 
+   <!-- TOP LEFT --> 
    <!-- Distance to Next Manoeuvre --> 
    <osd enabled="yes" type="text" label="${navigation.item[1].length[named]}" x="0" y="0" font_size="350" w="75" h="30" align="0" background_color="#000000c8" osd_configuration="2" />
    <!-- Next Manoeuvre Icon --> 
