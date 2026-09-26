@@ -1044,80 +1044,38 @@ corrected soon.
 
 -  `Download skin <http://www.thomas0782.de/files/WM_VGA1.zip>`__
 
-+----------------------------------------------------------------------+
-| Layout XML                                                           |
-+======================================================================+
-| ::                                                                   |
-|                                                                      |
-|                                                                      |
-|    <!-- top-left elements -->                                        |
-|    <osd enabled="yes" type="text" label="${navigation.item.street_na |
-| me} ${navigation.item.street_name_systematic}"    x="3"  y="3"  w="4 |
-| 00" h="40" align="6" background_color="#00000000" font_size="250" /> |
-|    <osd enabled="yes" type="text" label="->" x="3" y="44" w="        |
-| 40" h="40" align="6" background_color="#00000000" font_size="250" /> |
-|                                                                      |
-| <osd enabled="yes" type="text" label="${navigation.item[1].street_na |
-| me} ${navigation.item[1].street_name_systematic}" x="45" y="44" w="4 |
-| 00" h="40" align="6" background_color="#00000000" font_size="250" /> |
-|    <osd enabled=                                                     |
-| "yes" type="navigation_next_turn" x="0"    y="86"  w="110" h="90" al |
-| ign="12" icon_src="%s_wh_64_64.png" background_color="#00000000" />  |
-|    <osd enabled="yes" type="t                                        |
-| ext" label="${navigation.item[1].length[named]}" x="0" y="178" w="11 |
-| 0" h="40" align="12"  background_color="#00000000" font_size="250"/> |
-|    <osd enabled="yes" type="scale" x="0" y                           |
-| ="210" w="114" h="30" font_size="150" background_color="#000000c8"/> |
-|    <!-- menu right/top-right -->                                     |
-|    <osd enabled="yes" type="gps_status"       x="-50" y="8"   w="    |
-| 50" h="50" align="0" background_color="#00000000" font_size="200" /> |
-|    <osd enabled="yes" type="b                                        |
-| utton"           x="-50" y="68"  w="50" h="50" command="zoom_out()"  |
-|      src="skins/WM_VGA1/zoom_out.png" background_color="#00000000"/> |
-|    <osd enabled="yes"                                                |
-| type="toggle_announcer" x="-50" y="118" w="50" h="50" icon_src="$NAV |
-| IT_SHAREDIR/xpm/skins/WM_VGA1/%s.png" background_color="#00000000"/> |
-|    <osd enabled="yes" type="but                                      |
-| ton"           x="-50" y="168" w="50" h="50" command="zoom_to_route( |
-| )" src="skins/WM_VGA1/zoom_route.png" background_color="#00000000"/> |
-|    <osd enabled="yes" type="                                         |
-| button"           x="-50" y="218" w="50" h="50" command="zoom_in()"  |
-|       src="skins/WM_VGA1/zoom_in.png" background_color="#00000000"/> |
-|    <!-- bottom-left -->                                              |
-|    <osd enabled="yes" type="text" label="ETA:"  x="3" y="-32" w="6   |
-| 5" h="30" align="6"  background_color="#00000000" font_size="230" /> |
-|    <osd enabled="yes" type="text" label="                            |
-| ${navigation.item.destination_time[arrival]}"   x="72" y="-32" w="12 |
-| 0" h="30" align="6"  background_color="#00000000" font_size="200" /> |
-|    <osd enabled="yes" type="text" label="TL:"   x="3" y="-63" w="6   |
-| 5" h="30" align="6"  background_color="#00000000" font_size="230" /> |
-|    <osd enabled="yes" type="text" label="                            |
-| ${navigation.item.destination_time[remaining]}" x="72" y="-63" w="12 |
-| 0" h="30" align="6"  background_color="#00000000" font_size="200" /> |
-|    <osd enabled="yes" type="text" label="Dist:" x="3" y="-94" w="6   |
-| 5" h="30" align="6"  background_color="#00000000" font_size="230" /> |
-|    <osd enabled="yes" type="text" label="                            |
-| ${navigation.item.destination_length[named]}"   x="72" y="-94" w="12 |
-| 0" h="30" align="6"  background_color="#00000000" font_size="200" /> |
-|    <!-- bottom-right -->                                             |
-|    <osd enabled="yes" typ                                            |
-| e="text" label="${tracking.item.route_speed}" x="-114" y="-43"  alig |
-| n="12" w="112" h="40" background_color="#00000000" font_size="250"/> |
-|    <osd enabled="yes" ty                                             |
-| pe="text" label="${vehicle.position_speed}"    x="-114" y="-90" alig |
-| n="12" w="112" h="40" background_color="#00000000" font_size="250"/> |
-|    <osd enabled="yes" type="compass" font_size="0" x="               |
-| 283" y="-90" w="80" h="80" align="15" background_color="#00000000"/> |
-|    <!-- background images -->                                        |
-|    <osd enabled="yes" type="button" x="0" y="0" align=               |
-| "10" w="394" h="152"  command="" src="skins/WM_VGA1/top-left.png" /> |
-|    <osd enabled="yes" type="button" x="-56" y="0" align=             |
-| "10" w="56" h="313"  command="" src="skins/WM_VGA1/top-right.png" /> |
-|    <osd enabled="yes" type="button" x="0" y                          |
-| ="-100" align="2"  command="" src="skins/WM_VGA1/bottom-left.png" /> |
-|    <osd enabled="yes" type="button" x="-200" y=                      |
-| "-100" align="2"  command="" src="skins/WM_VGA1/bottom-right.png" /> |
-+----------------------------------------------------------------------+
+.. code:: xml
+
+   <!-- top-left elements --> 
+   <osd enabled="yes" type="text" label="${navigation.item.street_name} ${navigation.item.street_name_systematic}"    x="3"  y="3"  w="400" h="40" align="6" background_color="#00000000" font_size="250" />
+   <osd enabled="yes" type="text" label="->" x="3" y="44" w="40" h="40" align="6" background_color="#00000000" font_size="250" />
+   <osd enabled="yes" type="text" label="${navigation.item[1].street_name} ${navigation.item[1].street_name_systematic}" x="45" y="44" w="400" h="40" align="6" background_color="#00000000" font_size="250" />
+   <osd enabled="yes" type="navigation_next_turn" x="0"    y="86"  w="110" h="90" align="12" icon_src="%s_wh_64_64.png" background_color="#00000000" />
+   <osd enabled="yes" type="text" label="${navigation.item[1].length[named]}" x="0" y="178" w="110" h="40" align="12"  background_color="#00000000" font_size="250"/>
+   <osd enabled="yes" type="scale" x="0" y="210" w="114" h="30" font_size="150" background_color="#000000c8"/>
+   <!-- menu right/top-right --> 
+   <osd enabled="yes" type="gps_status"       x="-50" y="8"   w="50" h="50" align="0" background_color="#00000000" font_size="200" />
+   <osd enabled="yes" type="button"           x="-50" y="68"  w="50" h="50" command="zoom_out()" src="skins/WM_VGA1/zoom_out.png" background_color="#00000000"/>
+   <osd enabled="yes" type="toggle_announcer" x="-50" y="118" w="50" h="50" icon_src="$NAVIT_SHAREDIR/xpm/skins/WM_VGA1/%s.png" background_color="#00000000"/>
+   <osd enabled="yes" type="button"           x="-50" y="168" w="50" h="50" command="zoom_to_route()" src="skins/WM_VGA1/zoom_route.png" background_color="#00000000"/>
+   <osd enabled="yes" type="button"           x="-50" y="218" w="50" h="50" command="zoom_in()" src="skins/WM_VGA1/zoom_in.png" background_color="#00000000"/>
+   <!-- bottom-left --> 
+   <osd enabled="yes" type="text" label="ETA:"  x="3" y="-32" w="65" h="30" align="6"  background_color="#00000000" font_size="230" />
+   <osd enabled="yes" type="text" label="${navigation.item.destination_time[arrival]}"   x="72" y="-32" w="120" h="30" align="6"  background_color="#00000000" font_size="200" />
+   <osd enabled="yes" type="text" label="TL:"   x="3" y="-63" w="65" h="30" align="6"  background_color="#00000000" font_size="230" />
+   <osd enabled="yes" type="text" label="${navigation.item.destination_time[remaining]}" x="72" y="-63" w="120" h="30" align="6"  background_color="#00000000" font_size="200" />
+   <osd enabled="yes" type="text" label="Dist:" x="3" y="-94" w="65" h="30" align="6"  background_color="#00000000" font_size="230" />
+   <osd enabled="yes" type="text" label="${navigation.item.destination_length[named]}"   x="72" y="-94" w="120" h="30" align="6"  background_color="#00000000" font_size="200" />
+   <!-- bottom-right --> 
+   <osd enabled="yes" type="text" label="${tracking.item.route_speed}" x="-114" y="-43"  align="12" w="112" h="40" background_color="#00000000" font_size="250"/>
+   <osd enabled="yes" type="text" label="${vehicle.position_speed}"    x="-114" y="-90" align="12" w="112" h="40" background_color="#00000000" font_size="250"/>
+   <osd enabled="yes" type="compass" font_size="0" x="283" y="-90" w="80" h="80" align="15" background_color="#00000000"/>
+   <!-- background images --> 
+   <osd enabled="yes" type="button" x="0" y="0" align="10" w="394" h="152"  command="" src="skins/WM_VGA1/top-left.png" />
+   <osd enabled="yes" type="button" x="-56" y="0" align="10" w="56" h="313"  command="" src="skins/WM_VGA1/top-right.png" />
+   <osd enabled="yes" type="button" x="0" y="-100" align="2"  command="" src="skins/WM_VGA1/bottom-left.png" />
+   <osd enabled="yes" type="button" x="-200" y="-100" align="2"  command="" src="skins/WM_VGA1/bottom-right.png" />
+
 
 To install just add include the xml content into your navit.xml (just
 where all the default/deactivated osd elements are) and fix the paths to
@@ -1127,10 +1085,6 @@ mentioned in http://trac.navit-project.org/ticket/554 or can `download a
 svn build
 (2010-09-05) <http://www.thomas0782.de/files/2010-09-05_navit_patched.zip>`__
 with patch included to run Navit with 480x640 pixels.
-
-.. raw:: html
-
-   <hr style="height: 4px; color:#AB4E3F; background-color:#AB4E3F;" />
 
 Dirk205's layout for landscape WVGA
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1165,70 +1119,32 @@ redraw_map();back_to_map()'> 3D
 a) To enable landscape mode on a HTC HD2 you need a tool, can be done
 with the "BsB Tweaks"!
 
-b) You need to have 64x64 sized navigation bitmaps (*wh_64_64.png)
+b) You need to have 64x64 sized navigation bitmaps (``*wh_64_64.png``)
 present in your xpm folder.
 
 c) Scaler can work for 2D view only.
 
-+----------------------------------------------------------------------+
-| Layout XML                                                           |
-+======================================================================+
-| ::                                                                   |
-|                                                                      |
-|                                                                      |
-|            <osd enabled="yes" typ                                    |
-| e="button"     x="0"   y="0" command=""  src="skins/Dirk1/sky3.png"  |
-|             background_color="#808080ff" />                          |
-|            <osd enabled="yes" type="gps_status" x="75                |
-| 0" y="3" w="50"  h="30" align="0"       background_color="#00000000" |
-|             font_size="300" />                                       |
-|            <osd enabled="                                            |
-| yes" type="scale"      x="0"   y="2" w="150" h="40" font_size="150"  |
-|             background_color="#000000c8"/>                           |
-|            <osd enabled="yes" type="text"  labe                      |
-| l="ETA: ${navigation.item.destination_time[arrival]}"        x="300" |
-|             y="390"  w="18                                           |
-| 0" h="70" align="4"  background_color="#00000000" font_size="250" /> |
-|            <osd enabled="yes" type="text"  labe                      |
-| l="Dist: ${navigation.item.destination_length[named]}"       x="300" |
-|             y="430"  w="18                                           |
-| 0" h="70" align="4"  background_color="#00000000" font_size="250" /> |
-|            <osd enabled="yes" type="text"  labe                      |
-| l="TL: ${navigation.item.destination_time[remaining]}"       x="505" |
-|             y="390"  w="29                                           |
-| 5" h="70" align="4"  background_color="#00000000" font_size="250" /> |
-|            <osd enabled="yes" type="text"  labe                      |
-| l="${vehicle.position_speed} - ${tracking.item.route_speed}" x="505" |
-|             y="430"  w="2                                            |
-| 95" h="70" align="4"  background_color="#00000000" font_size="250"/> |
-|            <osd enabled="yes" type="navig                            |
-| ation_next_turn" x="10" y="405" align="5" icon_src="%s_wh_64_64.png" |
-|             background_color="#00000000" />                          |
-|            <osd enabled="yes" type="text" label=                     |
-| "${navigation.item[1].length[named]}" x="80" y="410"  w="185" h="85" |
-|                                                                      |
-|            align="4"  background_color="#00000000" font_size="535"/> |
-|            <osd enabled="yes" type="button"  x="-53                  |
-| " y="100" command="zoom_in()"        src="skins/Dirk1/zoom_in.png"/> |
-|            <osd enabled="yes" type="button"  x="-53"                 |
-|  y="200" command="zoom_out()"       src="skins/Dirk1/zoom_out.png"/> |
-|            <osd enabled="yes" type="button"  x="-53" y               |
-| ="300" command="zoom_to_route()"  src="skins/Dirk1/zoom_route.png"/> |
-|            <osd enabled="yes" type                                   |
-| ="toggle_announcer"     x="  3" y="100"               icon_src="$NAV |
-| IT_SHAREDIR/xpm/skins/Dirk1/%s.png"  background_color="#00000000" /> |
-|            <osd enabled="yes" type="button"  x="0" y                 |
-| ="-85" w="800" h="85" command=""    src="skins/Dirk1/bottom2.png" /> |
-+----------------------------------------------------------------------+
+.. code:: xml
 
-.. raw:: html
+   <osd enabled="yes" type="button"     x="0"   y="0" command=""  src="skins/Dirk1/sky3.png" background_color="#808080ff" />
+   <osd enabled="yes" type="gps_status" x="750" y="3" w="50"  h="30" align="0"       background_color="#00000000" font_size="300" />
+   <osd enabled="yes" type="scale"      x="0"   y="2" w="150" h="40" font_size="150" background_color="#000000c8"/>
+   <osd enabled="yes" type="text"  label="ETA: ${navigation.item.destination_time[arrival]}"        x="300" y="390"  w="180" h="70" align="4"  background_color="#00000000" font_size="250" />
+   <osd enabled="yes" type="text"  label="Dist: ${navigation.item.destination_length[named]}"       x="300" y="430"  w="180" h="70" align="4"  background_color="#00000000" font_size="250" />
+   <osd enabled="yes" type="text"  label="TL: ${navigation.item.destination_time[remaining]}"       x="505" y="390"  w="295" h="70" align="4"  background_color="#00000000" font_size="250" />
+   <osd enabled="yes" type="text"  label="${vehicle.position_speed} - ${tracking.item.route_speed}" x="505" y="430"  w="295" h="70" align="4"  background_color="#00000000" font_size="250"/>
+   <osd enabled="yes" type="navigation_next_turn" x="10" y="405" align="5" icon_src="%s_wh_64_64.png" background_color="#00000000" />
+   <osd enabled="yes" type="text" label="${navigation.item[1].length[named]}" x="80" y="410"  w="185" h="85" align="4"  background_color="#00000000" font_size="535"/>
+   <osd enabled="yes" type="button"  x="-53" y="100" command="zoom_in()"        src="skins/Dirk1/zoom_in.png"/>
+   <osd enabled="yes" type="button"  x="-53" y="200" command="zoom_out()"       src="skins/Dirk1/zoom_out.png"/>
+   <osd enabled="yes" type="button"  x="-53" y="300" command="zoom_to_route()"  src="skins/Dirk1/zoom_route.png"/>
+   <osd enabled="yes" type="toggle_announcer"     x="  3" y="100"               icon_src="$NAVIT_SHAREDIR/xpm/skins/Dirk1/%s.png"  background_color="#00000000" />
+   <osd enabled="yes" type="button"  x="0" y="-85" w="800" h="85" command=""    src="skins/Dirk1/bottom2.png" />
 
-   <hr style="height: 4px; color:#AB4E3F; background-color:#AB4E3F;" />
 
 Asus Mypal A696 - QVGA 240x320
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
---------------
 
 Windows Mobile 6.0 Classic, Display 3.5 inch QVGA 240x320. Layout is
 design for Landscape (horizontal) display orientation. This layout
@@ -1265,72 +1181,36 @@ longitude latitude,
 
 add this to your navit.xml file:
 
-+----------------------------------------------------------------------+
-| Layout XML                                                           |
-+======================================================================+
-| ::                                                                   |
-|                                                                      |
-|                                                                      |
-|    <osd enabled="                                                    |
-| yes" type="compass" font_size="150" x="-80" y="-40" w="35" h="40" /> |
-|    <osd enabled="yes" type="eta" />                                  |
-|    <osd enabled="yes" type="navigation_distance_to_target" />        |
-|    <osd enabled="yes" type="navigation" />                           |
-|    <osd enabled="yes" type="navigation_distance_to_next" />          |
-|    <osd enabled="yes" type="navigation_n                             |
-| ext_turn" x="124" y="0" w="60" h="37" icon_src="%s_wh_32_32.png" />  |
-|    <                                                                 |
-| osd enabled="yes" type="gps_status" x="-45" y="-40" w="45" h="28"/>  |
-|    <osd e                                                            |
-| nabled="yes" type="text" font_size="140" label="${vehicle.position_s |
-| ats_used}/${vehicle.position_qual}" x="-45" y="-12" w="45" h="14" /> |
-|    <osd enable                                                       |
-| d="yes" x="0" y="30" w="240" h="26" font_size="150" type="scale" />n |
-|    <osd type="text"  w="90" h="45" x="0" y="-40" lab                 |
-| el="${vehicle.position_speed[nameosd enabled="yes" type="text"  labe |
-| l="Dist: ${navigation.item.destination_length[named]}"       x="300" |
-|             y="430"  w="18                                           |
-| 0" h="70" align="4"  background_color="#00000000" font_size="250" /> |
-|            d]}" font_size="350" />                                   |
-|    <osd enabled="yes" type="text" label="In  ${navigation.i          |
-| tem[1].length[named]}" font_size="300" x="0" y="0"  w="124" h="22"/> |
-|    <osd enabled="yes" type="text" la                                 |
-| bel="alt ${vehicle.position_height}m" x="90" y="-15" w="73" h="15"/> |
-|    <osd enabled="yes" type="t                                        |
-| ext" label="on ${navigation.item.street_name}/${navigation.item.stre |
-| et_name_systematic}" font_size="248" x="90" y="-33" w="150" h="18"/> |
-|    <osd enabled="yes" type="text" lab                                |
-| el="onto ${navigation.item[1].street_name}/${navigation.item[1].stre |
-| et_name_systematic}" font_size="200" x="184" y="0"  w="136" h="22"/> |
-|    <osd enabled="yes" type="text" label="dr ${navigati               |
-| on.item.destination_length[named]}" x="163" y="-15"  w="77" h="15"/> |
-|    <osd enabled="yes" type="text" lab                                |
-| el="da ${vehicle.position_direction}" x="270" y="22" w="50" h="15"/> |
-|    <osd enabled="!-- Zoom Out (shortcut: -)-->                       |
-|    yes" type="text" label="eta ${navi                                |
-| gation.item.destination_time[arrival]}" x="0" y="22" w="66" h="15"/> |
-|    <osd enabled="yes" type="text" label="tr ${navigat                |
-| ion.item.destination_time[remaining]}" x="66" y="22" w="58" h="15"/> |
-|    <osd enabled="yes" type="text" label="t ${vehic                   |
-| le.position_time_iso8601[+01:00;%X]}" x="184" y="22" w="86" h="15"/> |
-|    <osd enabled="yes" type="text" label="${vehicle                   |
-| .position_coord_geo}" font_size="113" x="90" y="-40" w="150" h="7"/> |
-|    <osd enabled="yes" type="speed_warner" w="25" h=                  |
-| "12"  x="0" y="-40"   font_size="248" speed_exceed_limit_offset="15" |
-|  speed_exceed_limit_percent="10" announce_on="1" label="text_only"/> |
-|    <osd enabled="no" type="button" x="0" y="0" com                   |
-| mand="gui.fullscreen=!gui.fullscreen" src="toggle_fullscreen.xpm"/>  |
-|    <osd enabled="n                                                   |
-| o" type="button" x="-96" y="0" command="gui.menu()" src="menu.xpm"/> |
-|    <osd enabled="yes" t                                              |
-| ype="button" x="-96" y="-96" command="zoom_in()" src="zoom_in.xpm"/> |
-|    <osd enabled="yes" ty                                             |
-| pe="button" x="0" y="-96" command="zoom_out()" src="zoom_out.xpm"/>  |
-+----------------------------------------------------------------------+
+.. code:: xml
 
-.. raw:: html
+   <osd enabled="yes" type="compass" font_size="150" x="-80" y="-40" w="35" h="40" />
+   <osd enabled="yes" type="eta" />
+   <osd enabled="yes" type="navigation_distance_to_target" />
+   <osd enabled="yes" type="navigation" />
+   <osd enabled="yes" type="navigation_distance_to_next" />
+   <osd enabled="yes" type="navigation_next_turn" x="124" y="0" w="60" h="37" icon_src="%s_wh_32_32.png" />
+   <osd enabled="yes" type="gps_status" x="-45" y="-40" w="45" h="28"/>
+   <osd enabled="yes" type="text" font_size="140" label="${vehicle.position_sats_used}/${vehicle.position_qual}" x="-45" y="-12" w="45" h="14" />
+   <osd enabled="yes" x="0" y="30" w="240" h="26" font_size="150" type="scale" />
+   <osd type="text"  w="90" h="45" x="0" y="-40" label="${vehicle.position_speed[name]}" font_size="350" />
+   <osd enabled="yes" type="text"  label="Dist: ${navigation.item.destination_length[named]}" x="300" y="430" w="180" h="70" align="4"  background_color="#00000000" font_size="250" />
+   <osd enabled="yes" type="text" label="In  ${navigation.item[1].length[named]}" font_size="300" x="0" y="0"  w="124" h="22"/>
+   <osd enabled="yes" type="text" label="alt ${vehicle.position_height}m" x="90" y="-15" w="73" h="15"/>
+   <osd enabled="yes" type="text" label="on ${navigation.item.street_name}/${navigation.item.street_name_systematic}" font_size="248" x="90" y="-33" w="150" h="18"/>
+   <osd enabled="yes" type="text" label="onto ${navigation.item[1].street_name}/${navigation.item[1].street_name_systematic}" font_size="200" x="184" y="0"  w="136" h="22"/>
+   <osd enabled="yes" type="text" label="dr ${navigation.item.destination_length[named]}" x="163" y="-15"  w="77" h="15"/>
+   <osd enabled="yes" type="text" label="da ${vehicle.position_direction}" x="270" y="22" w="50" h="15"/>
+   <!-- Zoom Out (shortcut: -)-->
+   <osd enabled="yes" type="text" label="eta ${navigation.item.destination_time[arrival]}" x="0" y="22" w="66" h="15"/>
+   <osd enabled="yes" type="text" label="tr ${navigation.item.destination_time[remaining]}" x="66" y="22" w="58" h="15"/>
+   <osd enabled="yes" type="text" label="t ${vehicle.position_time_iso8601[+01:00;%X]}" x="184" y="22" w="86" h="15"/>
+   <osd enabled="yes" type="text" label="${vehicle.position_coord_geo}" font_size="113" x="90" y="-40" w="150" h="7"/>
+   <osd enabled="yes" type="speed_warner" w="25" h="12"  x="0" y="-40"   font_size="248" speed_exceed_limit_offset="15"  speed_exceed_limit_percent="10" announce_on="1" label="text_only"/>
+   <osd enabled="no" type="button" x="0" y="0" command="gui.fullscreen=!gui.fullscreen" src="toggle_fullscreen.xpm"/>
+   <osd enabled="no" type="button" x="-96" y="0" command="gui.menu()" src="menu.xpm"/>
+   <osd enabled="yes" type="button" x="-96" y="-96" command="zoom_in()" src="zoom_in.xpm"/>
+   <osd enabled="yes" type="button" x="0" y="-96" command="zoom_out()" src="zoom_out.xpm"/>
 
-   <hr style="height: 4px; color:#AB4E3F; background-color:#AB4E3F;" />
 
 Treo 750 QVGA Square (240x240) (German)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1353,8 +1233,13 @@ code in your file "navit.xml".
 
 | This design provides a clear display with great functionality.
 
-`right|240px|text-top|navit GUI
-routing <image:Screen-Layout-navit-QVGA-240-240-routing-ok.png>`__
+.. figure:: Screen-Layout-navit-QVGA-240-240-routing-ok.png
+   :width: 240px
+   :align: right
+
+   navit GUI routing
+
+
 
 | **While routing:**
 | In the top part of the display you will see (from left to right):
@@ -1367,8 +1252,14 @@ routing <image:Screen-Layout-navit-QVGA-240-240-routing-ok.png>`__
 
 | If you are driving "slow enough" it will be colored **green**.
 | If you are driving too fast, it will be colored **red**.
-| `right|240px|text-top|navit GUI routing too
-  fast <image:Screen-Layout-navit-QVGA-240-240-routing-too-fast.png>`__
+
+.. figure:: Screen-Layout-navit-QVGA-240-240-routing-too-fast.png
+   :width: 240px
+   :align: right
+
+   navit GUI routing too fast
+
+
 | When there is an explizit tag "max_speed", navit will display this
   allowed speed.
 | When there is no explizit tag, navit will "guess" the maximum allowed
@@ -1382,10 +1273,16 @@ routing <image:Screen-Layout-navit-QVGA-240-240-routing-ok.png>`__
 | In small letters there is the name and/or reference of the street
   you´re actually on.
 
-|
-| `right|240px|text-top|navit GUI routing
-  Menu <image:Screen-Layout-navit-QVGA-240-240-routing-menu.png>`__
-  **Selecting "time delay"**
+
+.. figure:: Screen-Layout-navit-QVGA-240-240-routing-menu.png
+   :width: 240px
+   :align: right
+
+   navit GUI routing Menu
+
+
+**Selecting "time delay"**
+
 | Sometimes when scrolling on the map, the focus jumps back to
   GPS-position too fast.
 | Therefor I put in a small menu, where you can select the time, after
@@ -1399,31 +1296,35 @@ routing <image:Screen-Layout-navit-QVGA-240-240-routing-ok.png>`__
    for scrolling on the map while navigating and looking e.g. for some
    addresses.
 
-|
-| The time-delay starts after your osd enabled="yes" type="text"
-  label="ETA: ${navigation.item.destination_time[arrival]}" x="300"
 
-| ``        y="390"  w="180" h="70" align="4"  background_color="#00000000" font_size="250" />``
-| ``       osd enabled="yes" type="eta" /> ``
 
-last scrolling-action on the map.
+.. figure:: Screen-Layout-navit-QVGA-240-240-routing-indicator.png
+   :width: 240px
+   :align: right
 
-|
-| `right|240px|text-top|navit GUI routing
-  Indicator <image:Screen-Layout-navit-QVGA-240-240-routing-indicator.png>`__
-  **Time delay indicator**
+   navit GUI routing Indicator
+
+
+
+**Time delay indicator**
+
 | The small indicator shows you the selected value for the time-delay.
 | You can always switch between these to time-delays. Even while
   navigating.
-| <br
 
 You can **clear the screen** by tapping on the "next-action-arrow" in
 the bottom left corner.
 
-|
-| `right|240px|text-top|navit GUI
-  driving <image:Screen-Layout-navit-QVGA-240-240-driving.png>`__
-  **While driving without routing:**
+
+.. figure:: Screen-Layout-navit-QVGA-240-240-driving.png
+   :width: 240px
+   :align: right
+
+   navit GUI driving
+
+
+**While driving without routing:**
+
 | You will only see in small letters the name and/or reference of the
   street you´re actually on.
 | ...and for sure: your actual speed and the maximum speed allowed.
@@ -1441,107 +1342,41 @@ the bottom left corner.
 | :ref:`QVGA Square (240x240) Configuration 1 (German)
   <qvga_square_240x240_configuration_1_german>`
 
-+----------------------------------------------------------------------+
-| Layout XML for Treo 750 QVGA Square                                  |
-+======================================================================+
-| ::                                                                   |
-|                                                                      |
-|                                                                      |
-|    <!--  =============== OSD ===========================  -->        |
-|                                                                      |
-|                                                                      |
-|            <!-- background images oben, inklusiv                     |
-| e Menuaufruf "Auswahl des Wertes von timeout" = Konfiguration 2  --> |
-|    <osd enabled="yes" type="but                                      |
-| ton" x="0" y="0" w="240" h="30" src='JR-head-bg-x.png' command=""/>  |
-|    <osd enabled="yes" type="bu                                       |
-| tton" x="194" y="20" w="10" h="10" src='JR-ecke-or.png' command=""/> |
-|    <osd enabled='yes' type="button" x="204" y="20" w="36" h="        |
-| 50" src="JR-knopf-unten-details.png" command="osd_configuration=2"/> |
-|                                                                      |
-|                                                                      |
-|            <!-- background images unten, inklusive Funktio           |
-| n "Ausblenden des Menus zur Wahl von timeout" = Konfiguration 1  --> |
-|    <osd enabled="yes" type="button" x="0" y="-70" w=                 |
-| "65" h="70" src="JR-bottom-bg-x.png" command="osd_configuration=1"/> |
-|                                                                      |
-|            <!--  Zoom in/out  -->                                    |
-|    <osd enabled="yes" type="button" x="0" y="-                       |
-| 200" command="zoom_in()" src="zoom_in.png" w="60" h="60" align='0'/> |
-|    <osd enabled="yes" type="button" x="0" y="-12                     |
-| 0" command="zoom_out()" src="zoom_out.png" w="60" h="60" align='0'/> |
-|                                                                      |
-|                                                                      |
-|                                                                      |
-|            <!-- Geschwindigkeit  aktuell -->                         |
-|    <osd enabled="yes" type="text" label="${veh                       |
-| icle.position_speed}" x="173" y="-89" w="117" h="25" background_colo |
-| r="#00000099" align="8" font_size="350"  command='zoom_to_route()'/> |
-|    <osd enabled="yes" type="button" x                                |
-| ="170" y="-93" w="90" h="30" src="JR-geschw-klein.png" command=''/>  |
-|                                                                      |
-|            <!-- Geschwindigkeit  erlaubt = Speedwarner  -->          |
-|    <osd enabled="yes" t                                              |
-| ype="speed_warner" w="67" h="25" x="173" y="-59" font_size="350" ali |
-| gn="8" background_color="#00000099" speed_exceed_limit_offset="10" s |
-| peed_exceed_limit_percent="50"  announce_on="1" label='text_only' /> |
-|    <osd enabled="yes" type="button" x                                |
-| ="170" y="-63" w="90" h="30" src="JR-geschw-klein.png" command=''/>  |
-|                                                                      |
-|                                                                      |
-|            <!--  Navigationshinweise oben -->                        |
-|    <osd en                                                           |
-| abled="yes" type="text" x="0" y="0" w="80" h="19" label="${navigatio |
-| n.item.destination_length[value]} ${navigation.item.destination_leng |
-| th[unit]}" background_color="#000000FF" align="4" font_size='240'/>  |
-|    <osd enabled="yes" type="text" x="                                |
-| 80" y="0" w="80" h="19" label="${navigation.item.destination_time[re |
-| maining]}" background_color="#000000FF" align="0" font_size='240'/>  |
-|    <osd enabled="yes" type="text" x=                                 |
-| "160" y="0" w="80" h="19" label="${navigation.item.destination_time[ |
-| arrival]}" background_color="#000000FF" align="8" font_size='240'/>  |
-|                                                                      |
-|                                                                      |
-|            <!--  Navigationshinweise unten -->                       |
-|    <osd enabled="yes" type="text" label="${tracking.item.stre        |
-| et_name} ${tracking.item.street_name_systematic}" x="65" y="-32" w=" |
-| 175" h="12" align="4" font_size="160" background_color="#000000FF"/> |
-|                                                                      |
-| <osd enabled="yes" type="text" label="${navigation.item[1].street_na |
-| me} ${navigation.item[1].street_name_systematic}" x="65" y="-18" w=" |
-| 175" h="18" align="4" font_size="260" background_color="#000000FF"/> |
-|    <osd enabled="yes" type                                           |
-| ="text" label="${navigation.item[1].length[value]}" x="0" y="-16" w= |
-| "45" h="16" align="8" background_color="#000000FF" font_size="260"/> |
-|    <osd enabled="yes" type                                           |
-| ="text" label="${navigation.item[1].length[unit]}" x="45" y="-16" w= |
-| "15" h="16" align="2" background_color="#000000FF" font_size="150"/> |
-|    <osd                                                              |
-| enabled="yes" type="navigation_next_turn"  x="10" y="-54"  w="32"  h |
-| ="32"  align="0" icon_src="%s_JR.png" background_color="#FFFFFFFF"/> |
-|                                                                      |
-|            <!-- Menu zum Einblenden und Auswahl von "timeout"  = Kon |
-| figuration 4 mit 5 Sekunden und Konfiguration 8 mit 30 Sekunden  --> |
-|    <osd enabled="yes" type="te                                       |
-| xt"  osd_configuration="2" label='5' x="100" y="23" w="40" h="30" ba |
-| ckground_color="#88888899" command="osd_configuration=4;timeout=8"/> |
-|    <osd enabled="yes" type="text                                     |
-| "  osd_configuration="2" label='30' x="150" y="23" w="40" h="30" bac |
-| kground_color="#88888899" command="osd_configuration=8;timeout=32"/> |
-|                                                                      |
-|            <!                                                        |
-| -- eingeblendete Indikatoren fuer gewaehlten Wert von "timeout"  --> |
-|                                                                      |
-|  <osd enabled="yes" type="text"  osd_configuration="8" label='30' x= |
-| "210" y="70" w="20" h="20" background_color="#88888899" command=""/> |
-|                                                                      |
-|   <osd enabled="yes" type="text"  osd_configuration="4" label='5' x= |
-| "210" y="70" w="20" h="20" background_color="#88888899" command=""/> |
-+----------------------------------------------------------------------+
+.. code:: xml
 
-.. raw:: html
+   <!--  =============== OSD ===========================  --> 
+   <!-- background images oben, inklusive Menuaufruf " Auswahl des Wertes von timeout" = Konfiguration 2  --> 
+   <osd enabled="yes" type="button" x="0" y="0" w="240" h="30" src='JR-head-bg-x.png' command=""/>
+   <osd enabled="yes" type="button" x="194" y="20" w="10" h="10" src='JR-ecke-or.png' command=""/>
+   <osd enabled='yes' type="button" x="204" y="20" w="36" h="50" src="JR-knopf-unten-details.png" command="osd_configuration=2"/>
+   <!-- background images unten, inklusive Funktion " Ausblenden des Menus zur Wahl von timeout" = Konfiguration 1  --> 
+   <osd enabled="yes" type="button" x="0" y="-70" w="65" h="70" src="JR-bottom-bg-x.png" command="osd_configuration=1"/>
+   <!--  Zoom in/out  --> 
+   <osd enabled="yes" type="button" x="0" y="-200" command="zoom_in()" src="zoom_in.png" w="60" h="60" align='0'/>
+   <osd enabled="yes" type="button" x="0" y="-120" command="zoom_out()" src="zoom_out.png" w="60" h="60" align='0'/>
+   <!-- Geschwindigkeit  aktuell --> 
+   <osd enabled="yes" type="text" label="${vehicle.position_speed}" x="173" y="-89" w="117" h="25" background_color="#00000099" align="8" font_size="350"  command='zoom_to_route()'/>
+   <osd enabled="yes" type="button" x="170" y="-93" w="90" h="30" src="JR-geschw-klein.png" command=''/>
+   <!-- Geschwindigkeit  erlaubt = Speedwarner  --> 
+   <osd enabled="yes" type="speed_warner" w="67" h="25" x="173" y="-59" font_size="350" align="8" background_color="#00000099" speed_exceed_limit_offset="10" speed_exceed_limit_percent="50"  announce_on="1" label='text_only' />
+   <osd enabled="yes" type="button" x="170" y="-63" w="90" h="30" src="JR-geschw-klein.png" command=''/>
+   <!--  Navigationshinweise oben --> 
+   <osd enabled="yes" type="text" x="0" y="0" w="80" h="19" label="${navigation.item.destination_length[value]} ${navigation.item.destination_length[unit]}" background_color="#000000FF" align="4" font_size='240'/>
+   <osd enabled="yes" type="text" x="80" y="0" w="80" h="19" label="${navigation.item.destination_time[remaining]}" background_color="#000000FF" align="0" font_size='240'/>
+   <osd enabled="yes" type="text" x="160" y="0" w="80" h="19" label="${navigation.item.destination_time[arrival]}" background_color="#000000FF" align="8" font_size='240'/>
+   <!--  Navigationshinweise unten --> 
+   <osd enabled="yes" type="text" label="${tracking.item.street_name} ${tracking.item.street_name_systematic}" x="65" y="-32" w="175" h="12" align="4" font_size="160" background_color="#000000FF"/>
+   <osd enabled="yes" type="text" label="${navigation.item[1].street_name} ${navigation.item[1].street_name_systematic}" x="65" y="-18" w="175" h="18" align="4" font_size="260" background_color="#000000FF"/>
+   <osd enabled="yes" type="text" label="${navigation.item[1].length[value]}" x="0" y="-16" w="45" h="16" align="8" background_color="#000000FF" font_size="260"/>
+   <osd enabled="yes" type="text" label="${navigation.item[1].length[unit]}" x="45" y="-16" w="15" h="16" align="2" background_color="#000000FF" font_size="150"/>
+   <osd enabled="yes" type="navigation_next_turn"  x="10" y="-54"  w="32"  h="32"  align="0" icon_src="%s_JR.png" background_color="#FFFFFFFF"/>
+   <!-- Menu zum Einblenden und Auswahl von " timeout"  = Konfiguration 4 mit 5 Sekunden und Konfiguration 8 mit 30 Sekunden  --> 
+   <osd enabled="yes" type="text"  osd_configuration="2" label='5' x="100" y="23" w="40" h="30" background_color="#88888899" command="osd_configuration=4;timeout=8"/>
+   <osd enabled="yes" type="text"  osd_configuration="2" label='30' x="150" y="23" w="40" h="30" background_color="#88888899" command="osd_configuration=8;timeout=32"/>
+   <!-- eingeblendete Indikatoren fuer gewaehlten Wert von " timeout"  --> 
+   <osd enabled="yes" type="text"  osd_configuration="8" label='30' x="210" y="70" w="20" h="20" background_color="#88888899" command=""/>
+   <osd enabled="yes" type="text"  osd_configuration="4" label='5' x="210" y="70" w="20" h="20" background_color="#88888899" command=""/>
 
-   <hr style="height: 4px; color:#AB4E3F; background-color:#AB4E3F;" />
 
 Yakumo Delta 5 X
 ~~~~~~~~~~~~~~~~
