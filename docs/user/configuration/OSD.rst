@@ -5,9 +5,6 @@ The On Screen Display (OSD) provides status information and controls
 blended directly onto the map. These can be implemented using the ``<osd
 ... />`` tag inside navit.xml `Configuration <Configuration>`__.
 
-You might try `NavitConfigurator <NavitConfigurator>`__ as a WYSIWYG
-testing environment for customizing your screen setup.
-
 Examples
 ========
 
