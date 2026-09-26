@@ -37,33 +37,28 @@ aside. So it may differ a bit.**
 #. Change directory to where DVD is mounted
 #. Unpack data2.cab with
 
-      ``unshield x travel/data2.cab``
+   ``unshield x travel/data2.cab``
 
 #. Now, you should get a directory named like DIRLAN_GER. It contains:
-   :\* The dem.map folder with all the majors roads and towns of
-   Europe...
 
-   :\* ...and five smpX.smp folders, which contain the details of
-   countries:
+    - The ``dem.map`` folder with all the major roads and towns of
+      Europe...
 
-   :*\* smp1: DK,S,N,IS,FIN,N
+    ...and five ``smpX.smp`` folders, which contain the details of
+    countries:
 
-   :*\* smp2: F,E,GBZ,P,AND,MC
+    -  ``smp1``: DK,S,N,IS,FIN,N
 
-   :*\* smp3: Germany
+    -  ``smp2``: F,E,GBZ,P,AND,MC
 
-   :*\* smp4:
-   CZ,SK,RSM,EST,GEO,LV,LT,MD,RUS,UA,BY,GR,H,I,RO,CH,A,PL,AL,MT,CY,BG,FL,SRB,MNE,HR,SLO,BIH,MK,TR,AZ,AM,V
+    -  ``smp3``: Germany
 
-   :*\* smp5: NL,B,GB,L,IRL
+    -  ``smp4``:
+       CZ,SK,RSM,EST,GEO,LV,LT,MD,RUS,UA,BY,GR,H,I,RO,CH,A,PL,AL,MT,CY,BG,FL,SRB,MNE,HR,SLO,BIH,MK,TR,AZ,AM,V
 
-      Update your `Configuration <Configuration>`__ accordingly. A sample
-      for Germany would be:
+    -  ``smp5``: NL,B,GB,L,IRL
 
-|
-| ``        ``\
-| ``        ``\
-|
+   Update your configuration accordingly.
 
 Optional: You can save some space (up to 2G) by deleting all the \*d60\*
 files. They are not needed.
