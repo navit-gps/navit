@@ -340,30 +340,7 @@ Features
 Screenshots
 ^^^^^^^^^^^
 
-+------------------------------------+------------------------------------+
-| .. fi                              | .. fi                              |
-| gure:: neo-cs_1.0_screenshot1.png  | gure:: neo-cs_1.0_screenshot4.png  |
-|                                    |                                    |
-|  :alt: neo-cs_1.0_screenshot1.png  |  :alt: neo-cs_1.0_screenshot4.png  |
-|                                    |                                    |
-|    neo-cs_1.0_screenshot1.png      |    neo-cs_1.0_screenshot4.png      |
-+------------------------------------+------------------------------------+
-| without gps fix                    | with gps fix in tracking mode      |
-+------------------------------------+------------------------------------+
-| .. fi                              | .. fi                              |
-| gure:: neo-cs_1.0_screenshot2.png  | gure:: neo-cs_1.0_screenshot3.png  |
-|                                    |                                    |
-|  :alt: neo-cs_1.0_screenshot2.png  |  :alt: neo-cs_1.0_screenshot3.png  |
-|                                    |                                    |
-|    neo-cs_1.0_screenshot2.png      |    neo-cs_1.0_screenshot3.png      |
-+------------------------------------+------------------------------------+
-| in routing mode                    | in routing mode with active        |
-|                                    | odometer in the second line of     |
-|                                    | the bottom bar                     |
-+------------------------------------+------------------------------------+
-|                                    |                                    |
-+------------------------------------+------------------------------------+
-
+The screenshots from the original wiki page are no longer available.
 Skin description
 ^^^^^^^^^^^^^^^^
 
@@ -448,31 +425,23 @@ place. There are some things to be mentioned:
 
 -  Some attribute under the *navit* tag in *navit.xml* should be set:
 
-+-----------------------------+---------------------------------------+
-| | ``osd_configuration="1"`` | |                                     |
-| | ``tracking="1"``          | ``otherwise osd elements that should  |
-| | ``timeout="1"``           | be not visibe by default are shown.`` |
-| | ``radius="27"``           | | ``to snap on to roads.``            |
-|                             | | ``to immediately                    |
-|                             | resume the map dragging by the vehicle |
-|                             | , since we have a button if we really |
-|                             |  want to look something on the map.`` |
-|                             | | ``a sligh                           |
-|                             | tly increased distance between the ve |
-|                             | hicle cursor and the display edges.`` |
-+-----------------------------+---------------------------------------+
+-  ``osd_configuration="1"`` otherwise osd elements that should be shown
+   by default are not visible.
+-  ``tracking="1"`` to snap on to roads.
+-  ``timeout="1"`` to immediately resume the map dragging by the vehicle,
+   since we have a button if we really want to look something on the map.
+-  ``radius="27"`` a slightly increased distance between the vehicle cursor
+   and the display edges.
+
 
 -  Some attribute under the *vehicle* tag in *navit.xml* my also be set
    by default:
 
-+-------------------------+-------------------------------------------+
-| | ``follow="1"``        | | ``how often the map is updated, should  |
-| | ``lag="15"``          |  be on a lower level for gta02 i.e. "8"`` |
-| | ``follow_cursor="1"`` | | ``a practical value                     |
-|                         | I tested for the gps lag (in 1/10 sec.)`` |
-|                         | | ``to enable t                           |
-|                         | he map following the vehicle by default`` |
-+-------------------------+-------------------------------------------+
+-  ``follow="1"`` how often the map is updated, should be on a lower level
+   for gta02 i.e. "8".
+-  ``lag="15"`` a practical value I tested for the gps lag (in 1/10 sec.).
+-  ``follow_cursor="1"`` to enable the map following the vehicle by default.
+
 
 I've put my configuration files in the tarball as they might be useful
 as a starting point. The included navit.xml isn't a complete
@@ -499,13 +468,6 @@ Known issues, bugs and TODO
 -  The positioning of the odometer isn't that nice, since all the values
    (distance, time and avg. speed) can only be placed as one object.
 
-|
-
-.. raw:: html
-
-   <hr style="height: 10px; color:#AB4E3F; background-color:#AB4E3F;" />
-
-|
 
 PC Layouts
 ----------
