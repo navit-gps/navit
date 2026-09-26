@@ -171,7 +171,7 @@ Linux, Mac, ... "/".
    lines (at approx line number 370)
 
 |
-| ``   ``\
+| ``   ``
 |
 
 | It seems you need to specify the bin name in newer versions of navit.
@@ -182,7 +182,7 @@ Linux, Mac, ... "/".
   pre-installed sample maps at line 370 in ``navit.xml``.
 
 |
-| ``   ``\
+| ``   ``
 |
 
 -  You may want to customize the initial location displayed on the map.

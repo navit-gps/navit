@@ -185,7 +185,7 @@ My final GOCE.c31 script for the C210 looks like:
 | ``Favorites RegEdit "\Storage Card\Programs\Utils\RegEdit.exe"``
 | ``Favorites Restart "\Storage Card\Programs\Utils\Restart.exe"``
 | ``Favorites TaskMgr "\Storage Card\Programs\Utils\ITaskMgr.exe"``
-| ``#Here you can create your shortcuts to the programs ``
+| ``#Here you can create your shortcuts to the programs``
 | ``Programs  RegEdit "\Storage Card\Programs\Utils\RegEdit.exe"``
 | ``Programs  ResInfo "\Storage Card\Programs\Utils\ResInfo.exe"``
 | ``#Set the taskbar to AutoHide``

@@ -257,7 +257,9 @@ Includes:
 Once your telesphoreo source code is patched with additional libs and
 Navit. Just enter below command
 
-``./package.sh navit ``
+.. code:: bash
+
+   ./package.sh navit
 
 It will build navit and all other dependencies (above libs).
 
@@ -294,7 +296,7 @@ Speech
 Get **festival** library + **Erica utilities** on Cydia. Then change
 your speech configuration in "/var/mobile/.navit/navit.xml" to
 
-`` ``\
+`` ``
 
 .. _test_feedback:
 
