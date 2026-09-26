@@ -1473,296 +1473,312 @@ attribute of OSD items by specifying the function name as shown below.
 If you want to call them from elsewhere (e.g. from internal GUI menu
 items), prefix them with **navit.** (e.g. **navit.zoom_in()**):
 
-+---------------------------------+----------------------------------------------------------------------------+
-| Command                         | Meaning                                                                    |
-+=================================+============================================================================+
-| **announcer_toggle()**          | Enables/disables speech output                                             |
-+---------------------------------+----------------------------------------------------------------------------+
-| **fmt_coordinates()**           | Formats coordinates as string                                              |
-|                                 | (but as of r5904 seems to return                                           |
-|                                 | only "Fix me").                                                            |
-+---------------------------------+----------------------------------------------------------------------------+
-| **say(**                        | Use to produce speech output;                                              |
-| text                            | sends ``text`` to the                                                      |
-| **)**                           | text-to-speech engine. (The text                                           |
-|                                 | argument of **say** must be                                                |
-|                                 | enclosed in **"** (quotes),                                                |
-|                                 | the containing command attribute                                           |
-|                                 | in **'** (ticks). String                                                   |
-|                                 | concatenation with **+** (plus)                                            |
-|                                 | works. Several **say** can                                                 |
-|                                 | be executed in a command                                                   |
-|                                 | sequence, enabling dynamic                                                 |
-|                                 | composition of spoken text.                                                |
-|                                 | There is a non-obvious                                                     |
-|                                 | limitations: Judging from                                                  |
-|                                 | experiments and code review the                                            |
-|                                 | argument to **say** can                                                    |
-|                                 | **not** interpolate of navit,                                              |
-|                                 | vehicle, and position                                                      |
-|                                 | attributes.                                                                |
-|                                 | --`Nezmi <User:Nezmi>`__                                                   |
-|                                 | (`talk <User_talk:Nezmi>`__)                                               |
-|                                 | 18:43, 15 July 2014 (CEST))                                                |
-+---------------------------------+----------------------------------------------------------------------------+
-| **set_center()**                | center the map view to the given                                           |
-|                                 | coordinates, see coord_parse()                                             |
-|                                 | in coord.c for the formatting of                                           |
-|                                 | the coordinates                                                            |
-+---------------------------------+----------------------------------------------------------------------------+
-| **set_center_cursor()**         | Recalculates the map view so                                               |
-|                                 | that the vehicle cursor is                                                 |
-|                                 | visible                                                                    |
-+---------------------------------+----------------------------------------------------------------------------+
-| **set_destination()**           | FIXME: description to be                                                   |
-|                                 | completed                                                                  |
-+---------------------------------+----------------------------------------------------------------------------+
-| **set_position()**              | FIXME: description to be                                                   |
-|                                 | completed                                                                  |
-+---------------------------------+----------------------------------------------------------------------------+
-| **switch_layout_day_night()**   | call with "manual", "auto",                                                |
-|                                 | "manual_toggle", "manual_day" or                                           |
-|                                 | "manual_night"                                                             |
-|                                 |                                                                            |
-|                                 | .. code:: xml                                                              |
-|                                 |                                                                            |
-|                                 |    command="switch_layout_day_night('manual_day')"                         |
-|                                 |                                                                            |
-+---------------------------------+----------------------------------------------------------------------------+
-| **zoom_in()**                   | Zoom into the map (dividing the                                            |
-|                                 | current zoom level by 2).                                                  |
-+---------------------------------+----------------------------------------------------------------------------+
-| **zoom_out()**                  | Zoom out of the map (multiplying                                           |
-|                                 | the current zoom level by 2).                                              |
-+---------------------------------+----------------------------------------------------------------------------+
-| **zoom_to_route()**             | Zoom the entire route into view                                            |
-+---------------------------------+----------------------------------------------------------------------------+
-| **toggle_layer()**              | Toggles active state of a named                                            |
-|                                 | layer within current layout.                                               |
-|                                 |                                                                            |
-|                                 | .. code:: xml                                                              |
-|                                 |                                                                            |
-|                                 |    <osd                                                                    |
-|                                 |    enabled="yes" type="button" x="0"                                       |
-|                                 |    y="-175" command="toggle_layer(&amp;quot;streets&amp;quot;)"            |
-|                                 |    src="gui_display_48_48.png"  />                                         |
-|                                 |                                                                            |
-|                                 | If you want the layer to be                                                |
-|                                 | hidden by default, set the                                                 |
-|                                 | active="0" tag in the layer                                                |
-|                                 | opening tag of the targeted                                               |
-|                                 | layer.                                                                     |
-|                                 |                                                                            |
-|                                 | .. code:: xml                                                              |
-|                                 |                                                                            |
-|                                 |    <layer name="streets" active="0">                                       |
-|                                 |                                                                            |
-+---------------------------------+----------------------------------------------------------------------------+
-| **set_int_var(**                | Creates or updates an integer                                              |
-| variable_name, int_value        | variable that can be accessed                                              |
-| **)**                           | from the command subsystem. This                                           |
-|                                 | command requires a name string                                             |
-|                                 | (between ``&quot;``) and value                                             |
-|                                 | (integer types) be given as                                                |
-|                                 | arguments. If the named variable                                           |
-|                                 | does not exist it is created,                                              |
-|                                 | otherwise the value is updated.                                            |
-|                                 |                                                                            |
-|                                 | For example, this command can be                                           |
-|                                 | used to store the value of                                                 |
-|                                 | ``osd_configuration`` before                                               |
-|                                 | changing it, as shown in the                                               |
-|                                 | example below:                                                             |
-|                                 |                                                                            |
-|                                 | .. code:: xml                                                              |
-|                                 |                                                                            |
-|                                 |    <osd enabled="yes"                                                      |
-|                                 |    type="button" x="0"  y="-175"                                           |
-|                                 |    command="set_int_var('last_osd_cfg',                                    |
-|                                 |    osd_configuration);                                                     |
-|                                 |    osd_configuration = 16"                                                 |
-|                                 |    src="gui_display_48_48.png"  />                                         |
-|                                 |                                                                            |
-|                                 | This command sets the variable                                             |
-|                                 | ``last_osd_cfg`` to the value of                                           |
-|                                 | ``osd_configuration``, before                                              |
-|                                 | changing ``osd_configuration``                                             |
-|                                 | to *16*.                                                                   |
-+---------------------------------+----------------------------------------------------------------------------+
-| **get_int_var(**                | Returns the value of a                                                     |
-| variable_name                   | previously set command subsystem                                           |
-| **)**                           | variable (set with                                                         |
-|                                 | ``set_int_var``) or 0 if it does                                           |
-|                                 | not exists. Accepts a variable                                             |
-|                                 | name (surrounded by ``&quot;``)                                            |
-|                                 | as a textual argument.                                                     |
-|                                 |                                                                            |
-|                                 | .. code:: xml                                                              |
-|                                 |                                                                            |
-|                                 |    <source lang="xml">                                                     |
-|                                 |    <osd enabled="yes" type="button"                                        |
-|                                 |    x="0"  y="-175" command="osd_configuration=get_int_var('last_osd_cfg');"|
-|                                 |    src="gui_display_48_48.png"  />                                         |
-+---------------------------------+----------------------------------------------------------------------------+
-| **push_int(**int_value**)**     | Pushes an integer variable onto                                            |
-|                                 | a stack (LIFO container). This                                             |
-|                                 | can be used to set some                                                    |
-|                                 | parameter several times, after                                             |
-|                                 | which (for example) the                                                    |
-|                                 | parameter values can be                                                    |
-|                                 | reversed. For example, popping                                             |
-|                                 | up windows on the top of each                                              |
-|                                 | other can be implemented this                                              |
-|                                 | way using OSD's.                                                           |
-|                                 |                                                                            |
-|                                 | .. code:: xml                                                              |
-|                                 |                                                                            |
-|                                 |    <osd enabled="yes"                                                      |
-|                                 |    type="button" x="0" y="-175"                                            |
-|                                 |    command="push_int(osd_configuration);osd_configuration = 16"            |
-|                                 |    src="gui_display_48_48.png"  />                                         |
-+---------------------------------+----------------------------------------------------------------------------+
-| **pop_int()**                   | Retrieves a value from the top                                             |
-|                                 | of the previously created stack.                                           |
-|                                 | The following example retrieves                                            |
-|                                 | the top value and assigns it to                                            |
-|                                 | osd_configuration.                                                         |
-|                                 |                                                                            |
-|                                 | .. code:: xml                                                              |
-|                                 |                                                                            |
-|                                 |    <osd enabled="yes" type="button"                                        |
-|                                 |    x="0" y="-175"                                                          |
-|                                 |    command="osd_configuration=pop_int()"                                   |
-|                                 |    src="gui_display_48_48.png" />                                          |
-+---------------------------------+----------------------------------------------------------------------------+
-| **int_stack_size()**            | returns the size of the intstack                                           |
-+---------------------------------+----------------------------------------------------------------------------+
-| **map_add_curr_pos(**           | Creates an item on the named map                                           |
-| map_name, item_type             | and returns an item attribute.                                             |
-| **)**                           | ``Currently only csv maps su                                               |
-|                                 | pport adding items by command.``                                           |
-|                                 | The returned item attribute can                                            |
-|                                 | be used to add attributes to the                                           |
-|                                 | item with subsequent                                                       |
-|                                 | *map_item_set_attr* commands.                                              |
-|                                 | Therefore it is a good idea to                                             |
-|                                 | save its value using the                                                   |
-|                                 | *set_attr_var* command (see the                                            |
-|                                 | example below) and use it later                                            |
-|                                 | using the *set_attr_var*                                                   |
-|                                 | command. The example is fitted                                             |
-|                                 | to the csv extract below:                                                  |
-|                                 |                                                                            |
-|                                 | .. code::                                                                  |
-|                                 |                                                                            |
-|                                 |    19.168051,47.565806,test2,Germany                                       |
-|                                 |    19.168375,47.565526,test,Hungary                                        |
-|                                 |                                                                            |
-|                                 | The following map definition                                               |
-|                                 | will handle this csv data as                                               |
-|                                 | speed camera (tec_common) typed                                            |
-|                                 | items (see navit csv driver)                                               |
-|                                 |                                                                            |
-|                                 | .. code:: xml                                                              |
-|                                 |                                                                            |
-|                                 |    <map type="csv"                                                         |
-|                                 |    enabled="yes"                                                           |
-|                                 |    data="/home/dandor/test.csv"                                            |
-|                                 |    item_type="tec_common"                                                  |
-|                                 |    attr_types="position_longitude,position_latitude,label,country_name"    |
-|                                 |    name="csv_test_map" />                                                  |
-|                                 |                                                                            |
-|                                 | the following osd definition                                               |
-|                                 | will allow you to add new items                                            |
-|                                 | to the map and set its                                                     |
-|                                 | attributes runtime and save the                                            |
-|                                 | changes on exit. The commands                                              |
-|                                 | below do the following:                                                    |
-|                                 |                                                                            |
-|                                 | -  create an empty item (one                                               |
-|                                 |    without attributes) of type                                             |
-|                                 |    specified as command                                                    |
-|                                 |    parameter on the actual                                                 |
-|                                 |    vehicle coordinate                                                      |
-|                                 | -  store the returned item                                                 |
-|                                 |    attribute with name                                                     |
-|                                 |    "item_attr"                                                             |
-|                                 | -  load the stored attribute of                                            |
-|                                 |    the newly created item and                                              |
-|                                 |    use it to set item attribute                                            |
-|                                 |    "label" to value "test" and                                             |
-|                                 |    item attribute "country_name"                                           |
-|                                 |    to value "Hungary"                                                      |
-|                                 |                                                                            |
-|                                 | One can use the supported                                                  |
-|                                 | attributes of navit objects as                                             |
-|                                 | function parameters. For example                                           |
-|                                 | to store the gps timedate one                                              |
-|                                 | can use                                                                    |
-|                                 | vehicle.position_time_iso8601                                              |
-|                                 | (for details see:`command                                                  |
-|                                 | interface <command_interface>`__)                                          |
-|                                 | as the value parameter of                                                  |
-|                                 | *map_item_set_attr* .                                                      |
-|                                 |                                                                            |
-|                                 | In case of csv maps the changes                                            |
-|                                 | will be written to the map file                                            |
-|                                 | on exit. Note that you will need                                           |
-|                                 | the name attribute set to a                                                |
-|                                 | unique value for your map, since                                           |
-|                                 | item creation and item attribute                                           |
-|                                 | manipulation commands refer to                                             |
-|                                 | the map by name.                                                           |
-|                                 |                                                                            |
-|                                 | .. code:: xml                                                              |
-|                                 |                                                                            |
-|                                 |    <osd enabled="yes"                                                      |
-|                                 |    type="button" command='                                                 |
-|                                 |    set_attr_var("item_attr",                                               |
-|                                 |    map_add_curr_pos("csv_test_map","tec_common") ) ;                       |
-|                                 |    map_item_set_attr("csv_test_map",                                       |
-|                                 |    get_attr_var("item_attr") , "label"  , "test" ),                        |
-|                                 |    map_item_set_attr("csv_test_map",                                       |
-|                                 |    get_attr_var("item_attr"),                                              |
-|                                 |    "country_name"  , "Hungary" )'                                          |
-|                                 |    x="150" y="100" w="50" h="50"                                           |
-|                                 |    src="zoom_in.xpm"  />                                                   |
-+---------------------------------+----------------------------------------------------------------------------+
-| **map_item_set_attr(**          | sets an attribute of a given                                               |
-| map_name, item_attribute,       | item. See the example above.                                               |
-| attr_name, attr_value           |                                                                            |
-| **)**                           |                                                                            |
-+---------------------------------+----------------------------------------------------------------------------+
-| **set_attr_var(**               | Stores an attribute (for example                                           |
-| variable_name, any attribute    | an attribute that stores an                                                |
-| returned by another command     | item) with a name to be used                                               |
-| **)**                           | later by the command system.                                               |
-|                                 | (see example at                                                            |
-|                                 | *map_add_curr_pos* command)                                                |
-+---------------------------------+----------------------------------------------------------------------------+
-| **get_attr_var(**               | Retrieves an attribute (for                                                |
-| variable_name                   | example an attribute that stores                                           |
-| **)**                           | an item) by name to be used by                                             |
-|                                 | the caller command. (see example                                           |
-|                                 | at *map_add_curr_pos* command)                                             |
-+---------------------------------+----------------------------------------------------------------------------+
-| **spawn(**                      | Spawns an external command.                                                |
-| command, arguments...           |                                                                            |
-| **)**                           | .. code:: xml                                                              |
-|                                 |                                                                            |
-|                                 |    <osd enabled="yes"                                                      |
-|                                 |    type="button"                                                           |
-|                                 |    x="-96" y="-96"                                                         |
-|                                 |    command='spawn("ls","/bin")'                                            |
-|                                 |    src="zoom_in.png"/>                                                     |
-|                                 |                                                                            |
-+---------------------------------+----------------------------------------------------------------------------+
-| **route_remove_next_waypoint()**| Removes the next waypoint of the                                           |
-|                                 | current route with waypoints.                                              |
-+---------------------------------+----------------------------------------------------------------------------+
-| **route_remove_last_waypoint()**| Removes the last waypoint of the                                           |
-|                                 | current route with waypoints.                                              |
-+---------------------------------+----------------------------------------------------------------------------+
+.. list-table::
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Command
+     - Meaning
+   * - **announcer_toggle()**
+     - Enables/disables speech output
+   * - **fmt_coordinates()**
+     - Formats coordinates as string
+       (but as of r5904 seems to return
+       only "Fix me").
+   * - **say(**
+       text
+       **)**
+     - Use to produce speech output;
+       sends ``text`` to the
+       text-to-speech engine. (The text
+       argument of **say** must be
+       enclosed in **"** (quotes),
+       the containing command attribute
+       in **'** (ticks). String
+       concatenation with **+** (plus)
+       works. Several **say** can
+       be executed in a command
+       sequence, enabling dynamic
+       composition of spoken text.
+       There is a non-obvious
+       limitations: Judging from
+       experiments and code review the
+       argument to **say** can
+       **not** interpolate of navit,
+       vehicle, and position
+       attributes.
+       --`Nezmi <User:Nezmi>`__
+       (`talk <User_talk:Nezmi>`__)
+       18:43, 15 July 2014 (CEST))
+   * - **set_center()**
+     - center the map view to the given
+       coordinates, see coord_parse()
+       in coord.c for the formatting of
+       the coordinates
+   * - **set_center_cursor()**
+     - Recalculates the map view so
+       that the vehicle cursor is
+       visible
+   * - **set_destination()**
+     - FIXME: description to be
+       completed
+   * - **set_position()**
+     - FIXME: description to be
+       completed
+   * - **switch_layout_day_night()**
+     - call with "manual", "auto",
+       "manual_toggle", "manual_day" or
+       "manual_night"
+
+       .. code:: xml
+
+          command="switch_layout_day_night('manual_day')"
+   * - **zoom_in()**
+     - Zoom into the map (dividing the
+       current zoom level by 2).
+   * - **zoom_out()**
+     - Zoom out of the map (multiplying
+       the current zoom level by 2).
+   * - **zoom_to_route()**
+     - Zoom the entire route into view
+   * - **toggle_layer()**
+     - Toggles active state of a named
+       layer within current layout.
+
+       .. code:: xml
+
+          <osd
+          enabled="yes" type="button" x="0"
+          y="-175" command="toggle_layer(&amp;quot;streets&amp;quot;)"
+          src="gui_display_48_48.png"  />
+
+       If you want the layer to be
+       hidden by default, set the
+       active="0" tag in the layer
+       opening tag of the targeted                                               |
+       layer.
+
+       .. code:: xml
+
+          <layer name="streets" active="0">
+   * - **set_int_var(**
+       variable_name, int_value
+       **)**
+     - Creates or updates an integer
+       variable that can be accessed
+       from the command subsystem. This
+       command requires a name string
+       (between ``&quot;``) and value
+       (integer types) be given as
+       arguments. If the named variable
+       does not exist it is created,
+       otherwise the value is updated.
+
+       For example, this command can be
+       used to store the value of
+       ``osd_configuration`` before
+       changing it, as shown in the
+       example below:
+
+       .. code:: xml
+
+          <osd enabled="yes"
+          type="button" x="0"  y="-175"
+          command="set_int_var('last_osd_cfg',
+          osd_configuration);
+          osd_configuration = 16"
+          src="gui_display_48_48.png"  />
+
+       This command sets the variable
+       ``last_osd_cfg`` to the value of
+       ``osd_configuration``, before
+       changing ``osd_configuration``
+       to *16*.
+   * - **get_int_var(**
+       variable_name
+       **)**
+     - Returns the value of a
+       previously set command subsystem
+       variable (set with
+       ``set_int_var``) or 0 if it does
+       not exists. Accepts a variable
+       name (surrounded by ``&quot;``)
+       as a textual argument.
+
+       .. code:: xml
+
+          <source lang="xml">
+          <osd enabled="yes" type="button"
+          x="0"  y="-175" command="osd_configuration=get_int_var('last_osd_cfg');"
+          src="gui_display_48_48.png"  />
+   * - **push_int(**int_value**)**
+     - Pushes an integer variable onto
+       a stack (LIFO container). This
+       can be used to set some
+       parameter several times, after
+       which (for example) the
+       parameter values can be
+       reversed. For example, popping
+       up windows on the top of each
+       other can be implemented this
+       way using OSD's.
+
+       .. code:: xml
+
+          <osd enabled="yes"
+          type="button" x="0" y="-175"
+          command="push_int(osd_configuration);osd_configuration = 16"
+          src="gui_display_48_48.png"  />
+   * - **pop_int()**
+     - Retrieves a value from the top
+       of the previously created stack.
+       The following example retrieves
+       the top value and assigns it to
+       osd_configuration.
+
+       .. code:: xml
+
+          <osd enabled="yes" type="button"
+          x="0" y="-175"
+          command="osd_configuration=pop_int()"
+          src="gui_display_48_48.png" />
+   * - **int_stack_size()**
+     - returns the size of the intstack
+   * - **map_add_curr_pos(**
+       map_name, item_type
+       **)**
+     - Creates an item on the named map
+       and returns an item attribute.
+       ``Currently only csv maps su
+       pport adding items by command.``
+       The returned item attribute can
+       be used to add attributes to the
+       item with subsequent
+       *map_item_set_attr* commands.
+       Therefore it is a good idea to
+       save its value using the
+       *set_attr_var* command (see the
+       example below) and use it later
+       using the *set_attr_var*
+       command. The example is fitted
+       to the csv extract below:
+
+       .. code::
+
+          19.168051,47.565806,test2,Germany
+          19.168375,47.565526,test,Hungary
+
+       The following map definition
+       will handle this csv data as
+       speed camera (tec_common) typed
+       items (see navit csv driver)
+
+       .. code:: xml
+
+          <map type="csv"
+          enabled="yes"
+          data="/home/dandor/test.csv"
+          item_type="tec_common"
+          attr_types="position_longitude,position_latitude,label,country_name"
+          name="csv_test_map" />
+
+       the following osd definition
+       will allow you to add new items
+       to the map and set its
+       attributes runtime and save the
+       changes on exit. The commands
+       below do the following:
+
+       -  create an empty item (one
+          without attributes) of type
+          specified as command
+          parameter on the actual
+          vehicle coordinate
+       -  store the returned item
+          attribute with name
+          "item_attr"
+       -  load the stored attribute of
+          the newly created item and
+          use it to set item attribute
+          "label" to value "test" and
+          item attribute "country_name"
+          to value "Hungary"
+
+       One can use the supported
+       attributes of navit objects as
+       function parameters. For example
+       to store the gps timedate one
+       can use
+       vehicle.position_time_iso8601
+       (for details see:`command
+       interface <command_interface>`__)
+       as the value parameter of
+       *map_item_set_attr* .
+
+       In case of csv maps the changes
+       will be written to the map file
+       on exit. Note that you will need
+       the name attribute set to a
+       unique value for your map, since
+       item creation and item attribute
+       manipulation commands refer to
+       the map by name.
+
+       .. code:: xml
+
+          <osd enabled="yes"
+          type="button" command='
+          set_attr_var("item_attr",
+          map_add_curr_pos("csv_test_map","tec_common") ) ;
+          map_item_set_attr("csv_test_map",
+          get_attr_var("item_attr") , "label"  , "test" ),
+          map_item_set_attr("csv_test_map",
+          get_attr_var("item_attr"),
+          "country_name"  , "Hungary" )'
+          x="150" y="100" w="50" h="50"
+          src="zoom_in.xpm"  />
+   * - **map_item_set_attr(**
+       map_name, item_attribute,
+       attr_name, attr_value
+       **)**
+     - sets an attribute of a given
+       item. See the example above.
+   * - **set_attr_var(**
+       variable_name, any attribute
+       returned by another command
+       **)**
+     - Stores an attribute (for example
+       an attribute that stores an
+       item) with a name to be used
+       later by the command system.
+       (see example at
+       *map_add_curr_pos* command)
+   * - **get_attr_var(**
+       variable_name
+       **)**
+     - Retrieves an attribute (for
+       example an attribute that stores
+       an item) by name to be used by
+       the caller command. (see example
+       at *map_add_curr_pos* command)
+   * - **spawn(**
+       command, arguments...
+       **)**
+     - Spawns an external command.
+
+       .. code:: xml
+
+          <osd enabled="yes"
+          type="button"
+          x="-96" y="-96"
+          command='spawn("ls","/bin")'
+          src="zoom_in.png"/>
+   * - **route_remove_next_waypoint()**
+     - Removes the next waypoint of the
+       current route with waypoints.
+   * - **route_remove_last_waypoint()**
+     - Removes the last waypoint of the
+       current route with waypoints.
 
 .. _gui_commands:
 
