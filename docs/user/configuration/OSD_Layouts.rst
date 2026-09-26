@@ -223,6 +223,9 @@ laptop as well. See the Nokia specific page for further configuration.
    <!--osd enabled="yes" type="text" label="${navigation.item.street_name}" x="180" y="-60" font_size="500" w="580" h="30" align="0" background_color="#000000c8"/-->
 
 
+Neo FreeRunner
+--------------
+
 FreeRunner Layout 1
 ~~~~~~~~~~~~~~~~~~~
 
@@ -232,55 +235,20 @@ FreeRunner Layout 1
 
    FR-3D-OSD2.png
 
-+----------------------------------------------------------------------+
-| Layout XML                                                           |
-+======================================================================+
-| ::                                                                   |
-|                                                                      |
-|     <gui                                                             |
-|  type="internal" font_size="350" icon_xs="60" icon_s="70" icon_l="70 |
-| "/>                                                                  |
-|     <osd enabled="yes" type="text" label="${naviga                   |
-| tion.item.street_name} ${navigation.item[1].street_name_systematic}" |
-|      x="0" y="0" w="42                                               |
-| 5" h="30" align="0" background_color="#000000cc" font_size="300" />  |
-|     <osd enabled="yes"                                               |
-| type="gps_status"                                                    |
-|      x="425" y="0" w="6                                              |
-| 5" h="30" align="0" background_color="#000000cc" font_size="300" />  |
-|     <osd enabled="yes" ty                                            |
-| pe="text" label="ETA:${navigation.item.destination_time[arrival]}"   |
-|      x="0" y="-25" w="16                                             |
-| 0" h="25" align="4" background_color="#000000cc" font_size="350" />  |
-|     <osd enabled="yes" typ                                           |
-| e="text" label="TL:${navigation.item.destination_time[remaining]}"   |
-|      x="160" y="-25" w="1                                            |
-| 60" h="25"align="4" background_color="#000000cc" font_size="350" />  |
-|     <osd enabled="yes" type="te                                      |
-| xt" label="Dist:${navigation.item.destination_length[named]}"        |
-|      x="320" y="-25" w="160" h                                       |
-| ="25" align="4" background_color="#000000cc" font_size="350" />      |
-|     <osd enabled="yes" type="te                                      |
-| xt" label="${vehicle.position_speed} / ${tracking.item.route_speed}" |
-|      x="0" y="30" w="                                                |
-| 180" h="25" align="4" background_color="#000000cc" font_size="280"/> |
-|     <osd enabled="yes"                                               |
-| type="navigation_next_turn"                                          |
-|      x="320" y="30"  w                                               |
-| ="160" h="60"  background_color="#000000cc" />                       |
-|     <osd enabled="yes"                                               |
-| type="text" label="${navigation.item[1].length[named]}"              |
-|      x="320" y="90" w="1                                             |
-| 60" h="40" align="" background_color="#000000cc" font_size="450"/>   |
-|     <osd enabled="yes" type="button" x="-96" y="-1                   |
-| 06" command="zoom_in()" src="zoom_in.xpm"/>                          |
-|     <osd enabled="yes" ty                                            |
-| pe="button" x="0" y="-106" command="zoom_out()" src="zoom_out.xpm"/> |
-+----------------------------------------------------------------------+
+.. code:: xml
 
-.. raw:: html
+   <gui type="internal" font_size="350" icon_xs="60" icon_s="70" icon_l="70"/>
+   <osd enabled="yes" type="text" label="${navigation.item.street_name} ${navigation.item[1].street_name_systematic}" x="0" y="0" w="425" h="30" align="0" background_color="#000000cc" font_size="300" />
+   <osd enabled="yes" type="gps_status" x="425" y="0" w="65" h="30" align="0" background_color="#000000cc" font_size="300" />
+   <osd enabled="yes" type="text" label="ETA:${navigation.item.destination_time[arrival]}" x="0" y="-25" w="160" h="25" align="4" background_color="#000000cc" font_size="350" />
+   <osd enabled="yes" type="text" label="TL:${navigation.item.destination_time[remaining]}" x="160" y="-25" w="160" h="25" align="4" background_color="#000000cc" font_size="350" />
+   <osd enabled="yes" type="text" label="Dist:${navigation.item.destination_length[named]}" x="320" y="-25" w="160" h="25" align="4" background_color="#000000cc" font_size="350" />
+   <osd enabled="yes" type="text" label="${vehicle.position_speed} / ${tracking.item.route_speed}" x="0" y="30" w="180" h="25" align="4" background_color="#000000cc" font_size="280"/>
+   <osd enabled="yes" type="navigation_next_turn" x="320" y="30"  w="160" h="60"  background_color="#000000cc" />
+   <osd enabled="yes" type="text" label="${navigation.item[1].length[named]}" x="320" y="90" w="160" h="40" align="" background_color="#000000cc" font_size="450"/>
+   <osd enabled="yes" type="button" x="-96" y="-106" command="zoom_in()" src="zoom_in.xpm"/>
+   <osd enabled="yes" type="button" x="0" y="-106" command="zoom_out()" src="zoom_out.xpm"/>
 
-   <hr style="height: 4px; color:#AB4E3F; background-color:#AB4E3F;" />
 
 FreeRunner Layout 2
 ~~~~~~~~~~~~~~~~~~~
@@ -291,45 +259,19 @@ FreeRunner Layout 2
 
    Navit-FR-OSD-POI-Firenze.png
 
-+----------------------------------------------------------------------+
-| Layout XML                                                           |
-+======================================================================+
-| ::                                                                   |
-|                                                                      |
-|     <osd enabled="yes" type="text" label="${navigat                  |
-| ion.item.street_name} ${navigation.item[1].street_name_systematic}"  |
-|      x="0" y="0" w="4                                                |
-| 80" h="30" align="0" background_color="#000000cc" font_size="300" /> |
-|     <osd enabled="yes" type="gps_status" x="430" y="0" w="           |
-| 65" h="30" align="0" background_color="#000000cc" font_size="300" /> |
-|     <osd enabled="yes" type="navigation_next_turn"                   |
-|       x="165" y="30" w="150" h="60"  background_color="#000000cc" /> |
-|     <osd enabled="yes" type="text" label="${naviga                   |
-| tion.item[1].length[named]}" x="165" y="90" w="150" h="40" align=""  |
-|      background_color="#000000cc" font_size="450"/>                  |
-|     <osd enabled="yes" type=                                         |
-| "button" x="-55" y="-90" command="zoom_in()" src="gui_zoom_in.svg"/> |
-|     <osd enabled="yes" type=                                         |
-| "button" x="5" y="-90" command="zoom_out()" src="gui_zoom_out.svg"/> |
-|     <osd enabled="yes" type="text" label="                           |
-| ${vehicle.position_speed}" x="120" y="-50" w="240" h="25" align="0"  |
-|      background_color="#000000cc" font_size="280"/>                  |
-|     <osd enabled="yes" type="text" label="ETA:${navi                 |
-| gation.item.destination_time[arrival]}" x="0" y="-25" w="160" h="25" |
-|      align="4" background_color="#000000cc" font_size="350" />       |
-|     <osd enabled="yes" type="text" label="TL:${na                    |
-| vigation.item.destination_time[remaining]}" x="160" y="-25" w="160"  |
-|                                                                      |
-|     h="25" align="4" background_color="#000000cc" font_size="350" /> |
-|     <osd enabled="yes" type="text" label="Dist:${                    |
-| navigation.item.destination_length[named]}" x="320" y="-25" w="160"  |
-|                                                                      |
-|     h="25" align="4" background_color="#000000cc" font_size="350" /> |
-+----------------------------------------------------------------------+
+.. code:: xml
 
-.. raw:: html
+   <osd enabled="yes" type="text" label="${navigation.item.street_name} ${navigation.item[1].street_name_systematic}" x="0" y="0" w="480" h="30" align="0" background_color="#000000cc" font_size="300" />
+   <osd enabled="yes" type="gps_status" x="430" y="0" w="65" h="30" align="0" background_color="#000000cc" font_size="300" />
+   <osd enabled="yes" type="navigation_next_turn" x="165" y="30" w="150" h="60"  background_color="#000000cc" />
+   <osd enabled="yes" type="text" label="${navigation.item[1].length[named]}" x="165" y="90" w="150" h="40" align="" background_color="#000000cc" font_size="450"/>
+   <osd enabled="yes" type="button" x="-55" y="-90" command="zoom_in()" src="gui_zoom_in.svg"/>
+   <osd enabled="yes" type="button" x="5" y="-90" command="zoom_out()" src="gui_zoom_out.svg"/>
+   <osd enabled="yes" type="text" label="${vehicle.position_speed}" x="120" y="-50" w="240" h="25" align="0" background_color="#000000cc" font_size="280"/>
+   <osd enabled="yes" type="text" label="ETA:${navigation.item.destination_time[arrival]}" x="0" y="-25" w="160" h="25" align="4" background_color="#000000cc" font_size="350" />
+   <osd enabled="yes" type="text" label="TL:${navigation.item.destination_time[remaining]}" x="160" y="-25" w="160" h="25" align="4" background_color="#000000cc" font_size="350" />
+   <osd enabled="yes" type="text" label="Dist:${navigation.item.destination_length[named]}" x="320" y="-25" w="160" h="25" align="4" background_color="#000000cc" font_size="350" />
 
-   <hr style="height: 4px; color:#AB4E3F; background-color:#AB4E3F;" />
 
 FreeRunner Layout 3
 ~~~~~~~~~~~~~~~~~~~
@@ -340,85 +282,37 @@ FreeRunner Layout 3
 
    Navit-FR-OSD-POI-Firenze2.png
 
-+----------------------------------------------------------------------+
-| Layout XML                                                           |
-+======================================================================+
-| ::                                                                   |
-|                                                                      |
-|     <osd enabled="yes" type="text" label="${navigat                  |
-| ion.item.street_name} ${navigation.item[1].street_name_systematic}"  |
-|      x="0" y="0" w="4                                                |
-| 80" h="30" align="0" background_color="#000000cc" font_size="300" /> |
-|     <osd enabled="yes" type="gps_status" x="430" y="0" w="           |
-| 65" h="30" align="0" background_color="#000000cc" font_size="300" /> |
-|     <osd enabled="yes" type="compass" align="0" font_size            |
-| ="350" x="0" y="30" w="150" h="100"  background_color="#000000cc" /> |
-|     <osd enabled="yes" type="navigation_next_t                       |
-| urn" x="-150" y="30" w="150" h="60"  background_color="#000000cc" /> |
-|     <osd enabled="yes" type="text" label="${navigati                 |
-| on.item[1].length[named]}" x="-150" y="90" w="150" h="40" align="0"  |
-|      background_color="#000000cc" font_size="450"/>                  |
-|     <osd enabled="yes" type=                                         |
-| "button" x="-55" y="-90" command="zoom_in()" src="gui_zoom_in.svg"/> |
-|     <osd enabled="yes" type=                                         |
-| "button" x="5" y="-90" command="zoom_out()" src="gui_zoom_out.svg"/> |
-|     <osd enabled="yes" type="text" label="                           |
-| ${vehicle.position_speed}" x="120" y="-50" w="240" h="25" align="0"  |
-|      background_color="#000000cc" font_size="280"/>                  |
-|     <osd enabled="yes"                                               |
-| type="text" label="ETA:${navigation.item.destination_time[arrival]}" |
-|      x="0" y="-25" w="1                                              |
-| 60" h="25" align="4" background_color="#000000cc" font_size="350" /> |
-|     <osd enabled="yes" t                                             |
-| ype="text" label="TL:${navigation.item.destination_time[remaining]}" |
-|      x="160" y="-25" w="1                                            |
-| 60" h="25" align="4" background_color="#000000cc" font_size="350" /> |
-|     <osd enabled="yes" t                                             |
-| ype="text" label="Dist:${navigation.item.destination_length[named]}" |
-|      x="320" y="-25" w="1                                            |
-| 60" h="25" align="4" background_color="#000000cc" font_size="350" /> |
-+----------------------------------------------------------------------+
+.. code:: xml
 
-.. raw:: html
+   <osd enabled="yes" type="text" label="${navigation.item.street_name} ${navigation.item[1].street_name_systematic}" x="0" y="0" w="480" h="30" align="0" background_color="#000000cc" font_size="300" />
+   <osd enabled="yes" type="gps_status" x="430" y="0" w="65" h="30" align="0" background_color="#000000cc" font_size="300" />
+   <osd enabled="yes" type="compass" align="0" font_size="350" x="0" y="30" w="150" h="100"  background_color="#000000cc" />
+   <osd enabled="yes" type="navigation_next_turn" x="-150" y="30" w="150" h="60"  background_color="#000000cc" />
+   <osd enabled="yes" type="text" label="${navigation.item[1].length[named]}" x="-150" y="90" w="150" h="40" align="0" background_color="#000000cc" font_size="450"/>
+   <osd enabled="yes" type="button" x="-55" y="-90" command="zoom_in()" src="gui_zoom_in.svg"/>
+   <osd enabled="yes" type="button" x="5" y="-90" command="zoom_out()" src="gui_zoom_out.svg"/>
+   <osd enabled="yes" type="text" label="${vehicle.position_speed}" x="120" y="-50" w="240" h="25" align="0" background_color="#000000cc" font_size="280"/>
+   <osd enabled="yes" type="text" label="ETA:${navigation.item.destination_time[arrival]}" x="0" y="-25" w="160" h="25" align="4" background_color="#000000cc" font_size="350" />
+   <osd enabled="yes" type="text" label="TL:${navigation.item.destination_time[remaining]}" x="160" y="-25" w="160" h="25" align="4" background_color="#000000cc" font_size="350" />
+   <osd enabled="yes" type="text" label="Dist:${navigation.item.destination_length[named]}" x="320" y="-25" w="160" h="25" align="4" background_color="#000000cc" font_size="350" />
 
-   <hr style="height: 4px; color:#AB4E3F; background-color:#AB4E3F;" />
 
 FreeRunner Layout 4
 ~~~~~~~~~~~~~~~~~~~
 
-+----------------------------------------------------------------------+
-| Layout XML                                                           |
-+======================================================================+
-| ::                                                                   |
-|                                                                      |
-|     <osd enabled="yes" type="text"                                   |
-| label="Currently On ${navigation.item.street_name} ${navigation.item |
-| [1].street_name_systematic}" x="0" y="0" w="590" h="30" align="4" /> |
-|     <osd enabled="yes" type="                                        |
-| gps_status" x="-50" y="0" w="50" h="30" align="8" font_size="300" /> |
-|     <osd enab                                                        |
-| led="yes" type="text" label="ETA:${navigation.item.destination_time[ |
-| arrival]}" x="0" y="-25" w="160" h="25" align="4" font_size="350" /> |
-|     <osd enable                                                      |
-| d="yes" type="text" label="Dist:${navigation.item.destination_length |
-| [named]}" x="160" y="-25" w="160" h="25" align="4" font_size="350"/> |
-|     <osd enabled="yes" type="text" label="${navigation.item[         |
-| 1].length[named]}" x="-160" y="-30" w="160" h="30" font_size="500"/> |
-|     <osd enabled="yes" type="navigation_next_turn" x="-160" y="-1    |
-| 26" w="160" h="96"  icon_src="$NAVIT_SHAREDIR/xpm/%s_wh_96_96.png"/> |
-|     <osd enabled="yes" type="button" x="-96" y="30" co               |
-| mmand="gui.fullscreen=!gui.fullscreen" src="toggle_fullscreen.xpm"/> |
-|     <osd enabled="yes" t                                             |
-| ype="button" x="-96" y="126" command="zoom_in()" src="zoom_in.xpm"/> |
-|     <osd enabled="yes" typ                                           |
-| e="button" x="-96" y="222" command="zoom_out()" src="zoom_out.xpm"/> |
-|     <osd enabled="yes" type="toggle_announcer" x="0"                 |
-|  y="30" w="96" h="96" icon_src="$NAVIT_SHAREDIR/xpm/%s_96_96.png" /> |
-+----------------------------------------------------------------------+
+.. code:: xml
 
-.. raw:: html
+   <osd enabled="yes" type="text" label="Currently On ${navigation.item.street_name} ${navigation.item[1].street_name_systematic}" x="0" y="0" w="590" h="30" align="4" />
+   <osd enabled="yes" type="gps_status" x="-50" y="0" w="50" h="30" align="8" font_size="300" />
+   <osd enabled="yes" type="text" label="ETA:${navigation.item.destination_time[arrival]}" x="0" y="-25" w="160" h="25" align="4" font_size="350" />
+   <osd enabled="yes" type="text" label="Dist:${navigation.item.destination_length[named]}" x="160" y="-25" w="160" h="25" align="4" font_size="350"/>
+   <osd enabled="yes" type="text" label="${navigation.item[1].length[named]}" x="-160" y="-30" w="160" h="30" font_size="500"/>
+   <osd enabled="yes" type="navigation_next_turn" x="-160" y="-126" w="160" h="96"  icon_src="$NAVIT_SHAREDIR/xpm/%s_wh_96_96.png"/>
+   <osd enabled="yes" type="button" x="-96" y="30" command="gui.fullscreen=!gui.fullscreen" src="toggle_fullscreen.xpm"/>
+   <osd enabled="yes" type="button" x="-96" y="126" command="zoom_in()" src="zoom_in.xpm"/>
+   <osd enabled="yes" type="button" x="-96" y="222" command="zoom_out()" src="zoom_out.xpm"/>
+   <osd enabled="yes" type="toggle_announcer" x="0" y="30" w="96" h="96" icon_src="$NAVIT_SHAREDIR/xpm/%s_96_96.png" />
 
-   <hr style="height: 4px; color:#AB4E3F; background-color:#AB4E3F;" />
 
 neo-cs
 ~~~~~~
