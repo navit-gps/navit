@@ -19,9 +19,8 @@ Notes
 -  If you would like instructions on how to modify OSD layouts you can
    refer to the :doc:`OSD page </user/configuration/OSD>`.
 
--  If you would like to share your own layout please contact us on the
-   IRC Freenode Channel #navit and let us know. You can also try the
-   `web-based chat <http://webchat.freenode.net/?channels=navit>`__
+-  If you would like to share your own layout please let us know via the
+   channels listed on the :doc:`Contacts </user/community/contacts>` page.
 
 Tip
 ---
@@ -70,8 +69,6 @@ Usage: Create scaled layout with:
    ./scale.pl 50 ~/.navit/nibbler01/
 
 then include the -scaled-XX xml file instead of the original.
-
-get it `here <http://www.wandersleb.net/navit/scale-0.1.tar.gz>`__
 
 Nokia NSeries Tablets
 ---------------------
@@ -576,9 +573,6 @@ solved the problem. Actually I do use now
 
    nibbler01-0.2.png
 
--  `Download
-   skin <http://www.wandersleb.net/navit/nibbler01-0.2.tar.gz>`__
-
 To install just add
 
 to your navit.xml (just where all the default/deactivated osd elements
@@ -608,8 +602,6 @@ button was avoiding users to actually click/drag the map.
    :width: 600px
 
    lcars-0.1.png
-
--  `Download skin <http://www.wandersleb.net/navit/lcars-0.2.tar.gz>`__
 
 To install just add
 
