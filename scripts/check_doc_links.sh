@@ -48,17 +48,26 @@ if ! mb="$(git merge-base "$base" HEAD 2>/dev/null)" || [ -z "$mb" ]; then
 fi
 
 changed="$(git diff --name-only "$mb..HEAD" -- '*.rst')"
-if [ -z "$changed" ]; then
-    echo "No .rst files changed since $mb ($base), nothing to check."
-    exit 0
-fi
 
+# Build unconditionally. Sphinx has to see the whole tree to resolve
+# references, and a branch that touches only docs/conf.py, the requirements
+# or an image can still break every page. Returning early when no .rst
+# changed reported those as a pass, which is exactly the case the gate
+# exists to catch.
 sphinx-build -q --keep-going -b html docs "$outdir" 2> "$log"
 code=$?
 if [ $code -ne 0 ]; then
     echo "sphinx-build failed with exit code $code." >&2
     cat "$log" >&2
     exit $code
+fi
+
+# Only the warning check is scoped to the branch: trunk still carries
+# warnings in pages nobody has cleaned up, and demanding zero of them would
+# mean every documentation change had to fix the whole set first.
+if [ -z "$changed" ]; then
+    echo "No .rst files changed since $mb ($base); the documentation set still builds."
+    exit 0
 fi
 
 if [ ! -s "$log" ]; then
