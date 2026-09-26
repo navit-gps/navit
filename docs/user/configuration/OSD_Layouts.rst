@@ -637,24 +637,15 @@ are:
    rectangle was actually made by me, so here it is:
    |Transparent_rectangle.png|.
 
-|
 | The first screenshot shows Navit in tracking mode - i.e. there is no
   route defined, so Navit just follows the driver around, displaying
   current road names, speeds and distances to speed cameras. The second
   screenshot shows Navit in the more familiar routing or navigating
   mode, with a destination set, and the current and next road names
   displayed, and navigations manoeuvres and distances shown. The map is
-  rendered using the `OSM Mapnik layout style <Layout/mapnik>`__.
-
-.. raw:: html
-
-   <center>
+  rendered using the :doc:`OSM Mapnik layout style </user/configuration/Layout_mapnik>`.
 
 |350px|   |image1|
-
-.. raw:: html
-
-   </center>
 
 Tracking Mode
 ^^^^^^^^^^^^^
@@ -665,43 +656,28 @@ features:
 -  Top right:
 
    -  Distance to next nearest camera
-      (`OSD#speed_cam <OSD#speed_cam>`__)
-   -  Average speed (`OSD#odometer <OSD#odometer>`__)
+      (:ref:`speed cam <osd_speed_cam>`)
+   -  Average speed (:ref:`odometer <osd_odometer>`)
 
 -  Bottom left:
 
    -  Compass OSD, displaying bearing and Northing arrow relative to
-      current direction of travel (`OSD#compass <OSD#compass>`__)
-   -  Current altitude of the vehicle, using `OSD#text <OSD#text>`__'s
+      current direction of travel (:ref:`compass <osd_compass>`)
+   -  Current altitude of the vehicle, using :ref:`text <osd_text>`'s
       ``vehicle.position_height``
 
 -  Bottom centre:
 
    -  Current road name and/or reference number (if available) using
-      `OSD#text <OSD#text>`__'s ``tracking.item.street_name`` and
+      :ref:`text <osd_text>`'s ``tracking.item.street_name`` and
       ``tracking.item.street_name_systematic``
    -  Maximum allowable speed on the road using
-      `OSD#speed_warner <OSD#speed_warner>`__
+      :ref:`speed warning <osd_speed_warner>`
 
--  Bottom righxi:include
-   href="/home/sven/.navit/skins/nibbler01/nibbler01.xml" />
+-  Bottom right:
 
-to your navit.xml (just where all the default/deactivated osd elements
-are) and fix the paths to the pics within nibbler01.xml and your
-navit.xml.
 
-From version 0.2 on: For the buttons to work, you need to copy the
-empty.svg to your image directory (/usr/share/navit/xpm/ in my case) or
-fix the path to them in the nibbler01.xml.
-
-The .cxf files are now included in the download, so feel free to alter
-them under the terms of CC-SA.
-
-t:
-
--
-
-   -  Current vehicle speed using `OSD#text <OSD#text>`__'s
+   -  Current vehicle speed using :ref:`text <osd_text>`'s
       ``vehicle.position_speed``
 
 -  Right (icons, top to bottom):
@@ -730,27 +706,27 @@ following:
 -  Top right:
 
    -  Total distance remaining to destination using
-      `OSD#text <OSD#text>`__'s
+      :ref:`text <osd_text>`'s
       ``navigation.item.destination_length[named]``
 
 -  Top left:
 
    -  Distance left to next navigating manoeuvre using
-      `OSD#text <OSD#text>`__'s ``navigation.item[1].length[named]``
+      :ref:`text <osd_text>`'s ``navigation.item[1].length[named]``
    -  Next navigation manoeuvre icon using
-      `OSD#navigation_next_turn <OSD#navigation_next_turn>`__
+      :ref:`navigation-turn indicator <osd_navigation_next_turn>`
 
 -  Top centre:
 
    -  Next road name and/or number (if available) to turn onto during
-      the next manoeuvre. Uses `OSD#text <OSD#text>`__'s
+      the next manoeuvre. Uses :ref:`text <osd_text>`'s
       ``navigation.item[1].street_name`` and
       ``navigation.item[1].street_name_systematic``
 
 Keybindings
 ^^^^^^^^^^^
 
-This layout uses `OSD#Keybindings <OSD#Keybindings>`__ to bind keys to
+This layout uses :ref:`keybindings <osd_keybindings>` to bind keys to
 specific OSD elements. This is currently only available using the latest
 SVN builds of Navit. The following are defined:
 
@@ -785,122 +761,66 @@ SVN builds of Navit. The following are defined:
 XML
 ^^^
 
+
 To use, copy and paste the following markup to Navit.xml. Don't forget
 to disable any other OSD items which may have been there before! **NOTE:
 There are some hard-coded paths in the markup, especially to the
 'special icons'. These will obviously have to be changed**.
 
-+----------------------------------------------------------------------+
-| Layout XML                                                           |
-+======================================================================+
-| ::                                                                   |
-|                                                                      |
-|    <!-- TOP LEFT -->                                                 |
-|    <!-- Distance to Next Manoeuvre -->                               |
-|    <osd enabled="yes" type="text" label="${navi                      |
-| gation.item[1].length[named]}" x="0" y="0" font_size="350" w="75" h= |
-| "30" align="0" background_color="#000000c8" osd_configuration="2" /> |
-|    <!-- Next Manoeuvre Icon -->                                      |
-|    <osd enabled="yes" type="navigation_next_turn" x="0"              |
-|  y="30" background_color="#000000c8" w="75" osd_configuration="2" /> |
-|    <!-- Next Road -->                                                |
-|    <osd enabled="yes" ty                                             |
-| pe="text" label="${navigation.item[1].street_name} ${navigation.item |
-| [1].street_name_systematic}" x="75" y="0" font_size="450" w="400" h= |
-| "40" align="4" background_color="#000000c8" osd_configuration="2" /> |
-|                                                                      |
-|    <!-- TOP RIGHT -->                                                |
-|    <!--<osd type="image" x="-160" y="0" h="20" w="15"                |
-| src="$HOME/.navit/poi/png/traffic_camera.png" color="#FFFFFFc8"/>--> |
-|    <!-- Speed Cameras -->                                            |
-|    <osd enabled="yes" typ                                            |
-| e="speed_cam" w="125" h="20" x="-125" y="0" label="${distance}" anno |
-| unce_on="1" font_size="300" background_color="#000000c8" align="8"/> |
-|    <!-- Odometer -->                                                 |
-|    <osd enabled="yes" type="odometer" w                              |
-| ="125" h="20"  x="-125" y="20" font_size="300" label="${avg_spd}" ba |
-| ckground_color="#000000c8" align="8" name="persistent_odometer_1" /> |
-|    <!-- Route Distance -->                                           |
-|    <osd enabled="yes" type="text" label="DTG ${navigation.item.dest  |
-| ination_length[named]}" w="125" h="20"  x="-125" y="40"  font_size=" |
-| 300" align="8" background_color="#000000c8" osd_configuration="2" /> |
-|    <!-- Route Time -->                                               |
-|    <!--                                                              |
-| <osd enabled="yes" type="text" label="TTG ${navigation.item.destinat |
-| ion_time[remaining]}" x="-125" y="40"  font_size="300" w="125" h="20 |
-| " align="8" background_color="#000000c8" osd_configuration="2" />--> |
-|    <!-- Arrival Time -->                                             |
-|    <!                                                                |
-| --<osd enabled="yes" type="text" label="ETA ${navigation.item.destin |
-| ation_time[arrival]}" x="-125" y="60"  font_size="300" w="125" h="20 |
-| " align="8" background_color="#000000c8" osd_configuration="2" />--> |
-|                                                                      |
-|    <!-- BOTTOM -->                                                   |
-|    <!-- Compass -->                                                  |
-|    <osd enabled="yes" type="                                         |
-| compass" x="0" y="-120" w="60" h="80" background_color="#000000c8"/> |
-|    <!-- Current Altitude -->                                         |
-|    <osd enabled="yes"                                                |
-| type="text" label="ALT ${vehicle.position_height}" x="0" y="-20"  fo |
-| nt_size="200" w="60" h="20" align="0" background_color="#000000c8"/> |
-|    <!-- Current Direction -->                                        |
-|    <osd enabled="yes"                                                |
-| type="text" label="${vehicle.position_direction}°" x="0" y="-40"  fo |
-| nt_size="200" w="60" h="20" align="0" background_color="#000000c8"/> |
-|    <!-- Current Street -->                                           |
-|    <osd enabled="yes" type="text" label="${tracking.item.stree       |
-| t_name} ${tracking.item.street_name_systematic}" x="60" y="-40"  fon |
-| t_size="500" w="764" h="40" align="0" background_color="#000000c8"/> |
-|    <!-- Speed Warner -->                                             |
-|    <osd enabled="yes" t                                              |
-| ype="speed_warner" w="100" h="40" x="-300" y="-40" font_size="500" s |
-| peed_exceed_limit_offset="15" speed_exceed_limit_percent="10" announ |
-| ce_on="1" background_color="#00000000" label="text_only" align="8"/> |
-|    <!-- Current Speed -->                                            |
-|    <osd enabled="yes                                                 |
-| " type="text" label="${vehicle.position_speed}" x="-200" y="-40" fon |
-| t_size="500" w="150" h="40" align="0" background_color="#000000c8"/> |
-|    <!-- GPS Status -->                                               |
-|    <osd enabled="yes" type="gps_                                     |
-| status" x="-50" y="-40" w="50" h="40" background_color="#000000c8"/> |
-|                                                                      |
-|    <!-- RIGHT CONTROLS -->                                           |
-|    <!-- Fullscreen (shortcut: f)-->                                  |
-|    <osd                                                              |
-| type="button" x="-80" y="100" command="gui.fullscreen=!gui.fullscree |
-| n" src="toggle_fullscreen.xpm" use_overlay="1" accesskey="&#102;" /> |
-|    <!-- Zoom In (shortcut: =)-->                                     |
-|    <osd type="button" x="-80" y="200" comman                         |
-| d="zoom_in()" src="zoom_in.xpm" use_overlay="1" accesskey="&#61;" /> |
-|    <!-- Scale -->                                                    |
-|    <osd enabled="yes" typ                                            |
-| e="scale" x="-90" y="290" font_size="150" w="100" h="30" align="0"/> |
-|    <!-- Zoom Out (shortcut: -)-->                                    |
-|    <osd type="button" x="-80" y="300" command=                       |
-| "zoom_out()" src="zoom_out.xpm" use_overlay="1" accesskey="&#45;" /> |
-|    <!-- Zoom Route -->                                               |
-|    <osd type=                                                        |
-| "button" x="-80" y="380" command="zoom_to_route()" src="menu.xpm" /> |
-|    <!-- Enable/Disable Routing Information (shortcut: i)-->          |
-|    <osd type="button" x="-60" y="-100                                |
-| " command="osd_configuration=osd_configuration==1?2:1" src="$HOME/.n |
-| avit/xpm/information_icon.xpm" use_overlay="1" accesskey="&#105;" /> |
-|    <!-- Enable/Disable 3D View (shortcut: SPACE) -->                 |
-|    <osd enabled                                                      |
-| ="yes" type="button" command="pitch=pitch==0?20:0;orientation=pitch= |
-| =0?0:-1;zoom=pitch==0?200:15" x="-140" y="-105" w="60" h="60" src="$ |
-| HOME/.navit/xpm/navit_icon.xpm" use_overlay="1" accesskey="&#32;" /> |
-|    <!-- Enable/Disable Speech (shortcut: s) -->                      |
-|    <osd enabled="yes" type="button" command="speech.ac               |
-| tive=!speech.active" x="-200" y="-50" w="1" h="1" src="$HOME/.navit/ |
-| xpm/transparent_rectangle.png" use_overlay="1" accesskey="&#115;" /> |
-+----------------------------------------------------------------------+
+.. code:: xml
 
-.. raw:: html
+   <!-- TOP LEFT --> 
+   <!-- Distance to Next Manoeuvre --> 
+   <osd enabled="yes" type="text" label="${navigation.item[1].length[named]}" x="0" y="0" font_size="350" w="75" h="30" align="0" background_color="#000000c8" osd_configuration="2" />
+   <!-- Next Manoeuvre Icon --> 
+   <osd enabled="yes" type="navigation_next_turn" x="0" y="30" background_color="#000000c8" w="75" osd_configuration="2" />
+   <!-- Next Road --> 
+   <osd enabled="yes" type="text" label="${navigation.item[1].street_name} ${navigation.item[1].street_name_systematic}" x="75" y="0" font_size="450" w="400" h="40" align="4" background_color="#000000c8" osd_configuration="2" />
+   <!-- TOP RIGHT --> 
+   <!--<osd type="image" x="-160" y="0" h="20" w="15" src="$HOME/.navit/poi/png/traffic_camera.png" color="#FFFFFFc8"/>--> 
+   <!-- Speed Cameras --> 
+   <osd enabled="yes" type="speed_cam" w="125" h="20" x="-125" y="0" label="${distance}" announce_on="1" font_size="300" background_color="#000000c8" align="8"/>
+   <!-- Odometer --> 
+   <osd enabled="yes" type="odometer" w="125" h="20"  x="-125" y="20" font_size="300" label="${avg_spd}" background_color="#000000c8" align="8" name="persistent_odometer_1" />
+   <!-- Route Distance --> 
+   <osd enabled="yes" type="text" label="DTG ${navigation.item.destination_length[named]}" w="125" h="20"  x="-125" y="40"  font_size="300" align="8" background_color="#000000c8" osd_configuration="2" />
+   <!-- Route Time --> 
+   <!--<osd enabled="yes" type="text" label="TTG ${navigation.item.destination_time[remaining]}" x="-125" y="40"  font_size="300" w="125" h="20" align="8" background_color="#000000c8" osd_configuration="2" />--> 
+   <!-- Arrival Time --> 
+   <!--<osd enabled="yes" type="text" label="ETA ${navigation.item.destination_time[arrival]}" x="-125" y="60"  font_size="300" w="125" h="20" align="8" background_color="#000000c8" osd_configuration="2" />--> 
+   <!-- BOTTOM --> 
+   <!-- Compass --> 
+   <osd enabled="yes" type="compass" x="0" y="-120" w="60" h="80" background_color="#000000c8"/>
+   <!-- Current Altitude --> 
+   <osd enabled="yes" type="text" label="ALT ${vehicle.position_height}" x="0" y="-20"  font_size="200" w="60" h="20" align="0" background_color="#000000c8"/>
+   <!-- Current Direction --> 
+   <osd enabled="yes" type="text" label="${vehicle.position_direction}°" x="0" y="-40"  font_size="200" w="60" h="20" align="0" background_color="#000000c8"/>
+   <!-- Current Street --> 
+   <osd enabled="yes" type="text" label="${tracking.item.street_name} ${tracking.item.street_name_systematic}" x="60" y="-40"  font_size="500" w="764" h="40" align="0" background_color="#000000c8"/>
+   <!-- Speed Warner --> 
+   <osd enabled="yes" type="speed_warner" w="100" h="40" x="-300" y="-40" font_size="500" speed_exceed_limit_offset="15" speed_exceed_limit_percent="10" announce_on="1" background_color="#00000000" label="text_only" align="8"/>
+   <!-- Current Speed --> 
+   <osd enabled="yes" type="text" label="${vehicle.position_speed}" x="-200" y="-40" font_size="500" w="150" h="40" align="0" background_color="#000000c8"/>
+   <!-- GPS Status --> 
+   <osd enabled="yes" type="gps_status" x="-50" y="-40" w="50" h="40" background_color="#000000c8"/>
+   <!-- RIGHT CONTROLS --> 
+   <!-- Fullscreen (shortcut: f)--> 
+   <osd type="button" x="-80" y="100" command="gui.fullscreen=!gui.fullscreen" src="toggle_fullscreen.xpm" use_overlay="1" accesskey="&#102;" />
+   <!-- Zoom In (shortcut: =)--> 
+   <osd type="button" x="-80" y="200" command="zoom_in()" src="zoom_in.xpm" use_overlay="1" accesskey="&#61;" />
+   <!-- Scale --> 
+   <osd enabled="yes" type="scale" x="-90" y="290" font_size="150" w="100" h="30" align="0"/>
+   <!-- Zoom Out (shortcut: -)--> 
+   <osd type="button" x="-80" y="300" command="zoom_out()" src="zoom_out.xpm" use_overlay="1" accesskey="&#45;" />
+   <!-- Zoom Route --> 
+   <osd type="button" x="-80" y="380" command="zoom_to_route()" src="menu.xpm" />
+   <!-- Enable/Disable Routing Information (shortcut: i)--> 
+   <osd type="button" x="-60" y="-100" command="osd_configuration=osd_configuration==1?2:1" src="$HOME/.navit/xpm/information_icon.xpm" use_overlay="1" accesskey="&#105;" />
+   <!-- Enable/Disable 3D View (shortcut: SPACE) --> 
+   <osd enabled="yes" type="button" command="pitch=pitch==0?20:0;orientation=pitch==0?0:-1;zoom=pitch==0?200:15" x="-140" y="-105" w="60" h="60" src="$HOME/.navit/xpm/navit_icon.xpm" use_overlay="1" accesskey="&#32;" />
+   <!-- Enable/Disable Speech (shortcut: s) --> 
+   <osd enabled="yes" type="button" command="speech.active=!speech.active" x="-200" y="-50" w="1" h="1" src="$HOME/.navit/xpm/transparent_rectangle.png" use_overlay="1" accesskey="&#115;" />
 
-   <hr style="height: 10px; color:#AB4E3F; background-color:#AB4E3F;" />
-
-|
 
 Netbook Layout 2
 ~~~~~~~~~~~~~~~~
