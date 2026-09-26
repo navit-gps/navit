@@ -176,48 +176,48 @@ laptop as well. See the NSeries layouts above for further configuration.
 
 .. code:: xml
 
-   <!-- Upper left corner and button --> 
-   <!-- Distance to and type of the next turn --> 
+   <!-- Upper left corner and button -->
+   <!-- Distance to and type of the next turn -->
    <osd enabled="yes" type="text" label="In ${navigation.item[1].length[named]} " x="0" y="0" font_size="500" w="200" h="40" align="4" background_color="#000000c8"/>
    <osd enabled="yes" type="navigation_next_turn" x="200" y="0" font_size="500" w="60" h="40" background_color="#000000c8" icon_src="$NAVIT_SHAREDIR/xpm/%s_wh_48_48.png" />
-   <!-- ETA  --> 
+   <!-- ETA  -->
    <osd enabled="yes" type="text" label="ETA:" x="0" y="40" font_size="200" w="35" h="40" align="4" background_color="#000000c8"/>
    <osd enabled="yes" type="text" label="${navigation.item.destination_time[arrival]}" x="35" y="40" font_size="500" w="150" h="40" align="4" background_color="#000000c8"/>
-   <!-- Distance to destination --> 
+   <!-- Distance to destination -->
    <osd enabled="yes" type="text" label="${navigation.item.destination_length[named]}" x="0" y="80" font_size="500" w="130" h="40" align="4" background_color="#000000c8"/>
-   <!-- Time to destination --> 
+   <!-- Time to destination -->
    <osd enabled="yes" type="text" label="${navigation.item.destination_time[remaining]}" x="0" y="120" font_size="500" w="110" h="40" align="4" background_color="#000000c8"/>
-   <!--Scale--> 
+   <!--Scale-->
    <osd enabled="yes" x="260" y="0" w="200" h="60" font_size="500" type="scale"/>
-   <!--Quit Navit--> 
+   <!--Quit Navit-->
    <osd enabled="yes" type="button" x="0" y="160" command="gui.quit()" src="gui_quit_64_64.png"/>
-   <!-- Upper right corner and buttons --> 
-   <!-- Current time --> 
+   <!-- Upper right corner and buttons -->
+   <!-- Current time -->
    <osd enabled="yes" type="text" label="${vehicle.position_time_iso8601[local;%H:%M]}" x="-110" y="0" font_size="500" w="110" h="40" align="4" background_color="#000000c8"/>
-   <!-- Zoom in --> 
+   <!-- Zoom in -->
    <osd enabled="yes" type="button" x="-96" y="40" command="zoom_in()" src="gui_zoom_in_96_96.png"/>
-   <!-- Menu --> 
+   <!-- Menu -->
    <osd enabled="yes" type="button" x="-206" y="0" command="gui.menu()" src="gui_menu_96_96.png"/>
-   <!-- Lower left corner and buttons --> 
-   <!-- Full screen --> 
+   <!-- Lower left corner and buttons -->
+   <!-- Full screen -->
    <osd name="my_fullscreen_status" enabled="yes" type="button" x="0" y="-156" src="/opt/navit/share/navit/xpm/gui_leave_fullscreen_96_96.png" command='gui.fullscreen=!gui.fullscreen;osd[@name=="my_fullscreen_status"].src= gui.fullscreen==0?"/opt/navit/share/navit/xpm/gui_fullscreen_96_96.png":"/opt/navit/share/navit/xpm/gui_leave_fullscreen_96_96.png"'/>
-   <!-- GPS speed --> 
+   <!-- GPS speed -->
    <osd enabled="yes" type="text" label="${vehicle.position_speed[value]}" x="0" y="-60" font_size="1000" w="170" h="60" align="4" background_color="#000000c8"/>
-   <!-- Toggle speech --> 
+   <!-- Toggle speech -->
    <osd name="my_speech_status" enabled="yes" type="button" src="gui_sound_96_96.png" x="170" y="-96" command='speech.active=!speech.active;osd[@name=="my_speech_status"].src =speech.active==0?"gui_sound_off_96_96.png":"gui_sound_96_96.png"'/>
-   <!-- Lower right corner and buttons --> 
-   <!-- Zoom out --> 
+   <!-- Lower right corner and buttons -->
+   <!-- Zoom out -->
    <osd enabled="yes" type="button" x="-96" y="-192" command="zoom_out()" src="gui_zoom_out_96_96.png"/>
-   <!-- Switch 3D and 2D, orientation north, autozoom and when switching to 2D, zooms out to whole route --> 
+   <!-- Switch 3D and 2D, orientation north, autozoom and when switching to 2D, zooms out to whole route -->
    <osd enabled="yes" type="button" x="-252" y="-96" command="orientation=orientation==0?-1:0;pitch=pitch==0?30:0;autozoom_active=autozoom_active==0?1:0;pitch==0?zoom_to_route()" src="gui_map_92_92.png"/>
-   <!-- Compass  --> 
+   <!-- Compass  -->
    <osd enabled="yes" type="compass" x="-156" y="-96" font_size="350" w="96" h="96" background_color="#000000c8"/>
-   <!-- GPS status --> 
+   <!-- GPS status -->
    <osd enabled="yes" type="gps_status" x="-60" y="-96" w="60" h="64" background_color="#000000c8"/>
-   <!-- Satellites --> 
+   <!-- Satellites -->
    <osd enabled="yes" type="text" label="${vehicle.position_sats_signal}/${vehicle.position_qual}" x="-60" y="-32" font_size="350" w="60" h="32" align="0" background_color="#000000c8"/>
-   <!-- Name of the current and next street --> 
-   <!--osd enabled="yes" type="text" label="Onto ${navigation.item[1].street_name}" x="305" y="0" font_size="500" w="495" h="40" align="4" background_color="#000000c8"/--> 
+   <!-- Name of the current and next street -->
+   <!--osd enabled="yes" type="text" label="Onto ${navigation.item[1].street_name}" x="305" y="0" font_size="500" w="495" h="40" align="4" background_color="#000000c8"/-->
    <!--osd enabled="yes" type="text" label="${navigation.item.street_name}" x="180" y="-60" font_size="500" w="580" h="30" align="0" background_color="#000000c8"/-->
 
 
@@ -762,56 +762,56 @@ There are some hard-coded paths in the markup, especially to the
 
 .. code:: xml
 
-   <!-- TOP LEFT --> 
-   <!-- Distance to Next Manoeuvre --> 
+   <!-- TOP LEFT -->
+   <!-- Distance to Next Manoeuvre -->
    <osd enabled="yes" type="text" label="${navigation.item[1].length[named]}" x="0" y="0" font_size="350" w="75" h="30" align="0" background_color="#000000c8" osd_configuration="2" />
-   <!-- Next Manoeuvre Icon --> 
+   <!-- Next Manoeuvre Icon -->
    <osd enabled="yes" type="navigation_next_turn" x="0" y="30" background_color="#000000c8" w="75" osd_configuration="2" />
-   <!-- Next Road --> 
+   <!-- Next Road -->
    <osd enabled="yes" type="text" label="${navigation.item[1].street_name} ${navigation.item[1].street_name_systematic}" x="75" y="0" font_size="450" w="400" h="40" align="4" background_color="#000000c8" osd_configuration="2" />
-   <!-- TOP RIGHT --> 
-   <!--<osd type="image" x="-160" y="0" h="20" w="15" src="$HOME/.navit/poi/png/traffic_camera.png" color="#FFFFFFc8"/>--> 
-   <!-- Speed Cameras --> 
+   <!-- TOP RIGHT -->
+   <!--<osd type="image" x="-160" y="0" h="20" w="15" src="$HOME/.navit/poi/png/traffic_camera.png" color="#FFFFFFc8"/>-->
+   <!-- Speed Cameras -->
    <osd enabled="yes" type="speed_cam" w="125" h="20" x="-125" y="0" label="${distance}" announce_on="1" font_size="300" background_color="#000000c8" align="8"/>
-   <!-- Odometer --> 
+   <!-- Odometer -->
    <osd enabled="yes" type="odometer" w="125" h="20"  x="-125" y="20" font_size="300" label="${avg_spd}" background_color="#000000c8" align="8" name="persistent_odometer_1" />
-   <!-- Route Distance --> 
+   <!-- Route Distance -->
    <osd enabled="yes" type="text" label="DTG ${navigation.item.destination_length[named]}" w="125" h="20"  x="-125" y="40"  font_size="300" align="8" background_color="#000000c8" osd_configuration="2" />
-   <!-- Route Time --> 
-   <!--<osd enabled="yes" type="text" label="TTG ${navigation.item.destination_time[remaining]}" x="-125" y="40"  font_size="300" w="125" h="20" align="8" background_color="#000000c8" osd_configuration="2" />--> 
-   <!-- Arrival Time --> 
-   <!--<osd enabled="yes" type="text" label="ETA ${navigation.item.destination_time[arrival]}" x="-125" y="60"  font_size="300" w="125" h="20" align="8" background_color="#000000c8" osd_configuration="2" />--> 
-   <!-- BOTTOM --> 
-   <!-- Compass --> 
+   <!-- Route Time -->
+   <!--<osd enabled="yes" type="text" label="TTG ${navigation.item.destination_time[remaining]}" x="-125" y="40"  font_size="300" w="125" h="20" align="8" background_color="#000000c8" osd_configuration="2" />-->
+   <!-- Arrival Time -->
+   <!--<osd enabled="yes" type="text" label="ETA ${navigation.item.destination_time[arrival]}" x="-125" y="60"  font_size="300" w="125" h="20" align="8" background_color="#000000c8" osd_configuration="2" />-->
+   <!-- BOTTOM -->
+   <!-- Compass -->
    <osd enabled="yes" type="compass" x="0" y="-120" w="60" h="80" background_color="#000000c8"/>
-   <!-- Current Altitude --> 
+   <!-- Current Altitude -->
    <osd enabled="yes" type="text" label="ALT ${vehicle.position_height}" x="0" y="-20"  font_size="200" w="60" h="20" align="0" background_color="#000000c8"/>
-   <!-- Current Direction --> 
+   <!-- Current Direction -->
    <osd enabled="yes" type="text" label="${vehicle.position_direction}°" x="0" y="-40"  font_size="200" w="60" h="20" align="0" background_color="#000000c8"/>
-   <!-- Current Street --> 
+   <!-- Current Street -->
    <osd enabled="yes" type="text" label="${tracking.item.street_name} ${tracking.item.street_name_systematic}" x="60" y="-40"  font_size="500" w="764" h="40" align="0" background_color="#000000c8"/>
-   <!-- Speed Warner --> 
+   <!-- Speed Warner -->
    <osd enabled="yes" type="speed_warner" w="100" h="40" x="-300" y="-40" font_size="500" speed_exceed_limit_offset="15" speed_exceed_limit_percent="10" announce_on="1" background_color="#00000000" label="text_only" align="8"/>
-   <!-- Current Speed --> 
+   <!-- Current Speed -->
    <osd enabled="yes" type="text" label="${vehicle.position_speed}" x="-200" y="-40" font_size="500" w="150" h="40" align="0" background_color="#000000c8"/>
-   <!-- GPS Status --> 
+   <!-- GPS Status -->
    <osd enabled="yes" type="gps_status" x="-50" y="-40" w="50" h="40" background_color="#000000c8"/>
-   <!-- RIGHT CONTROLS --> 
-   <!-- Fullscreen (shortcut: f)--> 
+   <!-- RIGHT CONTROLS -->
+   <!-- Fullscreen (shortcut: f)-->
    <osd type="button" x="-80" y="100" command="gui.fullscreen=!gui.fullscreen" src="toggle_fullscreen.xpm" use_overlay="1" accesskey="&#102;" />
-   <!-- Zoom In (shortcut: =)--> 
+   <!-- Zoom In (shortcut: =)-->
    <osd type="button" x="-80" y="200" command="zoom_in()" src="zoom_in.xpm" use_overlay="1" accesskey="&#61;" />
-   <!-- Scale --> 
+   <!-- Scale -->
    <osd enabled="yes" type="scale" x="-90" y="290" font_size="150" w="100" h="30" align="0"/>
-   <!-- Zoom Out (shortcut: -)--> 
+   <!-- Zoom Out (shortcut: -)-->
    <osd type="button" x="-80" y="300" command="zoom_out()" src="zoom_out.xpm" use_overlay="1" accesskey="&#45;" />
-   <!-- Zoom Route --> 
+   <!-- Zoom Route -->
    <osd type="button" x="-80" y="380" command="zoom_to_route()" src="menu.xpm" />
-   <!-- Enable/Disable Routing Information (shortcut: i)--> 
+   <!-- Enable/Disable Routing Information (shortcut: i)-->
    <osd type="button" x="-60" y="-100" command="osd_configuration=osd_configuration==1?2:1" src="$HOME/.navit/xpm/information_icon.xpm" use_overlay="1" accesskey="&#105;" />
-   <!-- Enable/Disable 3D View (shortcut: SPACE) --> 
+   <!-- Enable/Disable 3D View (shortcut: SPACE) -->
    <osd enabled="yes" type="button" command="pitch=pitch==0?20:0;orientation=pitch==0?0:-1;zoom=pitch==0?200:15" x="-140" y="-105" w="60" h="60" src="$HOME/.navit/xpm/navit_icon.xpm" use_overlay="1" accesskey="&#32;" />
-   <!-- Enable/Disable Speech (shortcut: s) --> 
+   <!-- Enable/Disable Speech (shortcut: s) -->
    <osd enabled="yes" type="button" command="speech.active=!speech.active" x="-200" y="-50" w="1" h="1" src="$HOME/.navit/xpm/transparent_rectangle.png" use_overlay="1" accesskey="&#115;" />
 
 
@@ -896,51 +896,51 @@ the png versions, make sure you change the path.
 
 .. code:: xml
 
-   <!-- TOP LEFT --> 
-   <!-- Distance to Next Manoeuvre --> 
+   <!-- TOP LEFT -->
+   <!-- Distance to Next Manoeuvre -->
    <osd enabled="yes" type="text" label="${navigation.item[1].length[named]}" x="0" y="0" font_size="350" w="75" h="30" align="0" background_color="#000000c8" osd_configuration="2" />
-   <!-- Next Manoeuvre Icon --> 
+   <!-- Next Manoeuvre Icon -->
    <osd enabled="yes" type="navigation_next_turn" x="0" y="30" background_color="#000000c8" w="75" osd_configuration="2" />
-   <!-- Next Road --> 
+   <!-- Next Road -->
    <osd enabled="yes" type="text" label="   ${navigation.item[1].street_name} ${navigation.item[1].street_name_systematic}" x="75" y="0" font_size="450" w="824" h="40" align="4" background_color="#000000c8" osd_configuration="2" />
-   <!-- TOP RIGHT --> 
-   <!-- Odometer --> 
+   <!-- TOP RIGHT -->
+   <!-- Odometer -->
    <osd enabled="yes" type="odometer" w="125" h="20"  x="-125" y="0" font_size="300" label="${avg_spd}mph" align="8" autostart="true" background_color="#000000c8"/>
-   <!-- Route Distance --> 
+   <!-- Route Distance -->
    <osd enabled="yes" type="text" label="DTG ${navigation.item.destination_length[named]}" w="125" h="20"  x="-125" y="20"  font_size="300" align="8" background_color="#000000c8" osd_configuration="2" />
-   <!-- Arrival Time --> 
+   <!-- Arrival Time -->
    <osd enabled="yes" type="text" label="ETA ${navigation.item.destination_time[arrival]}" x="-125" y="40"  font_size="300" w="125" h="20" align="8" background_color="#000000c8" osd_configuration="2" />
-   <!-- BOTTOM --> 
-   <!-- Current Altitude --> 
+   <!-- BOTTOM -->
+   <!-- Current Altitude -->
    <osd enabled="yes" type="text" label="ALT ${vehicle.position_height}" x="0" y="-20"  font_size="200" w="60" h="20" align="0" background_color="#000000c8"/>
-   <!-- Current Direction --> 
+   <!-- Current Direction -->
    <osd enabled="yes" type="text" label="${vehicle.position_direction}°" x="0" y="-40"  font_size="200" w="60" h="20" align="0" background_color="#000000c8"/>
-   <!-- Current Street --> 
+   <!-- Current Street -->
    <osd enabled="yes" type="text" label="${tracking.item.street_name} ${tracking.item.street_name_systematic}" x="60" y="-40"  font_size="500" w="764" h="40" align="0" background_color="#000000c8"/>
-   <!-- Speed Warner --> 
+   <!-- Speed Warner -->
    <osd enabled="yes" type="speed_warner" w="100" h="40" x="-300" y="-40" font_size="500" speed_exceed_limit_offset="15" speed_exceed_limit_percent="10" announce_on="1" background_color="#00000000" label="text_only" align="8"/>
-   <!-- Current Speed --> 
+   <!-- Current Speed -->
    <osd enabled="yes" type="text" label="${vehicle.position_speed}" x="-200" y="-40" font_size="500" w="150" h="40" align="0" background_color="#000000c8"/>
-   <!-- GPS Status --> 
+   <!-- GPS Status -->
    <osd enabled="yes" type="gps_status" x="-50" y="-40" w="50" h="40" background_color="#000000c8"/>
-   <!-- RIGHT CONTROLS --> 
-   <!-- Fullscreen (shortcut: f)--> 
+   <!-- RIGHT CONTROLS -->
+   <!-- Fullscreen (shortcut: f)-->
    <osd name="button_fullscreen" type="button" x="-80" y="100" src="toggle_fullscreen.xpm" use_overlay="1" accesskey="f" command='gui.fullscreen=!gui.fullscreen;osd[@name=="button_fullscreen"].src = gui.fullscreen==0?"toggle_fullscreen.xpm":"menu.xpm"' />
-   <!-- Zoom In (shortcut: =)--> 
+   <!-- Zoom In (shortcut: =)-->
    <osd type="button" x="-80" y="200" command="zoom_in()" src="zoom_in.xpm" use_overlay="1" accesskey="&#61;" />
-   <!-- Scale --> 
+   <!-- Scale -->
    <osd enabled="yes" type="scale" x="-90" y="290" font_size="150" w="100" h="30" align="0"/>
-   <!-- Zoom Out (shortcut: -)--> 
+   <!-- Zoom Out (shortcut: -)-->
    <osd type="button" x="-80" y="300" command="zoom_out()" src="zoom_out.xpm" use_overlay="1" accesskey="&#45;" />
-   <!-- RIGHT CORNER ICONS --> 
-   <!-- Enable/Disable 3D View (shortcut: SPACE) --> 
+   <!-- RIGHT CORNER ICONS -->
+   <!-- Enable/Disable 3D View (shortcut: SPACE) -->
    <osd name="button_3d" enabled="yes" type="button" x="-140" y="-105" src="$HOME/.navit/displays/3D.xpm" use_overlay="1" accesskey="&#32;" command='pitch=pitch==0?20:0;orientation=pitch==0?0:-1;osd[@name=="button_3d"].src = pitch==0?"$HOME/.navit/displays/3D.xpm":"$HOME/.navit/displays/2D.xpm";zoom=pitch==0?200:15;'/>
-   <!-- Display routing status--> 
+   <!-- Display routing status-->
    <osd name="my_osd_cmdif_1" h="1" w="1"  update_period="2"  enabled="yes" type="cmd_interface" x="-1"  y="-1" command='osd[@name=="icon_route_status"].src =route.route_status==1     ? "$HOME/.navit/displays/destination_set.xpm" :(route.route_status==0     ? "$HOME/.navit/displays/no_destination.xpm" :(route.route_status==3     ? "$HOME/.navit/displays/no_route.xpm" :(route.route_status==5     ? "$HOME/.navit/displays/calculating_route.xpm" :(route.route_status==13    ? "$HOME/.navit/displays/calculating_route.xpm" :(route.route_status==17    ? "$HOME/.navit/displays/route.xpm" :(route.route_status==33    ? "$HOME/.navit/displays/route.xpm" : "unhandled")))))))'  />
    <osd name="icon_route_status" enabled="yes" type="button" command="" src="$HOME/.navit/displays/no_destination.xpm" x="-65" y="-105" />
-   <!-- Enable/Disable routing information depending upon the route status --> 
+   <!-- Enable/Disable routing information depending upon the route status -->
    <osd name="my_osd_cmdif_2" h="1" w="1"  update_period="2"  enabled="yes" type="cmd_interface" x="-1"  y="-1" command='osd_configuration=route.route_status==1     ? 1 :(route.route_status==0     ? 1 :(route.route_status==3     ? 1 :(route.route_status==5     ? 1 :(route.route_status==13    ? 1 :(route.route_status==17    ? 2 :(route.route_status==33    ? 2 : 1)))))))' />
-   <!-- Enable/Disable speech --> 
+   <!-- Enable/Disable speech -->
    <osd name="my_speech_status" enabled="yes" type="button" src="$HOME/.navit/displays/speech_on.xpm" x="-65" y="-180" use_overlay="1" accesskey="s" command='speech.active=!speech.active;osd[@name=="my_speech_status"].src = speech.active==0?"$HOME/.navit/displays/speech_off.xpm":"$HOME/.navit/displays/speech_on.xpm"' />
 
 
@@ -972,48 +972,48 @@ the png versions, make sure you change the path.
 
 .. code:: xml
 
-   <!-- NAME OF THE FOLLOWING STREET --> 
+   <!-- NAME OF THE FOLLOWING STREET -->
    <osd enabled="yes" type="text" label="${navigation.item[1].street_name}${navigation.item[1].street_name_systematic}" font_size="600" x="181" y="0" w="660" h="65" background_color="#00000000" text_color="#00ff00"/>
-   <!-- GPS STATUS --> 
+   <!-- GPS STATUS -->
    <osd enabled="yes" type="gps_status" x="-200" y="5" w="70" h="45"  font_size="300" background_color="#00000000" align="2"/>
-   <!-- NUMBER OF SATELLITES USED --> 
+   <!-- NUMBER OF SATELLITES USED -->
    <osd enabled="yes" type="text" label="${vehicle.position_sats_used}/${vehicle.position_qual}" x="-200" y="40" w="70" h="30" font_size="250" background_color="#00000000" align="1" text_color="#00ff00"/>
-   <!--TIME --> 
+   <!--TIME -->
    <osd enabled="yes" type="text" label="${vehicle.position_time_iso8601[+02:00;%X}" x="-120" y="37" w="70" h="25" background_color="#00000000" text_color="#00ff00" font_size="250" />
-   <!-- HEIGH --> 
+   <!-- HEIGH -->
    <osd enabled="yes" type="text" label="   ${vehicle.position_height}m" x="-120" y="12" w="70" h="25" background_color="#00000000" text_color="#00ff00" font_size="250" />
-   <!-- DISTANCE UNTIL TURN--> 
+   <!-- DISTANCE UNTIL TURN-->
    <osd enabled="yes" type="text" label="${navigation.item[1].length[named]}" x="5" y="120" w="140" h="30" background_color="#00000000" font_size="600" text_color="#00ff00" />
-   <!-- ARROW --> 
+   <!-- ARROW -->
    <osd enabled="yes" type="navigation_next_turn" w="100" h="70" x="20" y="35" font_size="400" background_color="#00000000" />
-   <!-- SPEED --> 
+   <!-- SPEED -->
    <osd enabled="yes" type="text" label="${vehicle.position_speed}" x="-190" y="-85" font_size="550" w="200" h="45" background_color="#00000000" text_color="#00ff00" />
-   <!-- odo --> 
+   <!-- odo -->
    <osd enabled="yey" type="odometer" w="150" h="25"  x="-170" y="-40" text_color="#00ff00" background_color="#00000000"  font_size="400" label="~${avg_spd}km/h"   name="persistent_odometer_1" />
-   <!-- TIME UNTIL ARRIVAL --> 
+   <!-- TIME UNTIL ARRIVAL -->
    <osd enabled="yes" type="text" label="${navigation.item.destination_time[remaining]}" x="35" y="-40" w="150" h="25" background_color="#00000000" font_size="400" text_color="#00ff00" />
-   <!--ROUTE LENGTH --> 
+   <!--ROUTE LENGTH -->
    <osd enabled="yes" type="text" label="${navigation.item.destination_length[named]}" x="30" y="-85" w="180" h="45" background_color="#00000000" font_size="550" text_color="#00ff00"/>
-   <!-- SPEED CAM --> 
+   <!-- SPEED CAM -->
    <osd enabled="no" type="speed_cam" background_color="#00000000"  idle_color="#00ff00"  w="206" h="35" x="180" y="0" announce_on="1" font_size="400" label="${distance} | ${camera_type}" />
-   <!-- WARNER --> 
+   <!-- WARNER -->
    <osd enabled="yes" type="speed_warner" w="70" h="70"  x="-88" y="-193"  speed_exceed_limit_offset="3" speed_exceed_limit_percent="5" announce_on="0" font_size="600" idle_color="#ff0000" background_color="#00000000"  label="images:red_img.xpm:green_img.xpm:red_img.xpm:"/>
-   <!-- KEYBINDINGS --> 
+   <!-- KEYBINDINGS -->
    <osd enabled="yes" type="button" x="510" y="-1" use_overlay="1" command="zoom_in()" accesskey="&#120;" src="zoom_out.svg"/>
    <osd enabled="yes" type="button" x="514" y="-1" use_overlay="1" command="zoom_out()" accesskey="&#121;" src="zoom_out.svg"/>
    <osd enabled="yes" type="button" x="516" y="-1" w="1" h="1" use_overlay="1" command="gui.fullscreen=!gui.fullscreen" accesskey="f" src="zoom_in.svg"/>
-   <!-- ROUTING STATUS --> 
+   <!-- ROUTING STATUS -->
    <osd name="status" enabled="yes" use_overlay="1" w="102" h="102" type="button" command="" src="$HOME/.navit/buttons/def.png" x="2" y="-213" />
    <osd name="status1" h="1" w="1"  update_period="1"  enabled="yes" type="cmd_interface" x="11"  y="416" command='osd[@name=="status"].src = route.route_status==1     ? "$HOME/.navit/buttons/set.png" :(route.route_status==0     ? "$HOME/.navit/buttons/def.png" :(route.route_status==3     ? "$HOME/.navit/buttons/no_destination.png" :(route.route_status==5     ? "$HOME/.navit/buttons/calculate.png" :(route.route_status==13    ? "$HOME/.navit/buttons/calculate.png" :(route.route_status==17    ? "$HOME/.navit/buttons/up.png" :(route.route_status==33    ? "$HOME/.navit/buttons/route.png" : "unhandled"))))))'  />
-   <!-- AUTOZOOM --> 
+   <!-- AUTOZOOM -->
    <osd name="autozoom_button" enabled="yes" type="button" src="$HOME/.navit/buttons/autozoom.xpm" x="-68" y="235" use_overlay="1" accesskey="a" command='autozoom_active=autozoom_active==0?1:0;osd[@name=="autozoom_button"].src = autozoom_active==0?"$HOME/.navit/buttons/autozoom.xpm":"$HOME/.navit/buttons/autozoom2.xpm";' />
-   <!-- NORTHING --> 
+   <!-- NORTHING -->
    <osd name="northing_button" enabled="yes" type="button" src="$HOME/.navit/buttons/north.xpm" x="-68" y="75" use_overlay="1" accesskey="n" command='orientation=orientation==0?-1:0;osd[@name=="northing_button"].src = orientation==0?"$HOME/.navit/buttons/north2.xpm":"$HOME/.navit/buttons/north.xpm";' />
-   <!-- FOLLOW --> 
+   <!-- FOLLOW -->
    <osd name="follow_button" enabled="yes" type="button" src="$HOME/.navit/buttons/follow.xpm" x="-68" y="155" use_overlay="1" accesskey="&#32;" command='follow=follow>1?1:100000;zoom_to_route()=follow;osd[@name=="follow_button"].src = follow==1?"$HOME/.navit/buttons/follow.xpm":"$HOME/.navit/buttons/follow2.xpm";' />
-   <!-- 3D MODE --> 
+   <!-- 3D MODE -->
    <osd name="button3d" enabled="yes" type="button" x="-68" y="310" use_overlay="1" accesskey="&#09;" src="$HOME/.navit/buttons/3d.xpm" command='pitch=pitch==0?20:0;osd[@name=="button3d"].src = pitch==0?"$HOME/.navit/buttons/3d.xpm":"$HOME/.navit/buttons/2d.xpm";autozoom_active=pitch==0?0:1;osd[@name=="autozoom_button"].src = pitch==0?"$HOME/.navit/buttons/autozoom.xpm":"$HOME/.navit/buttons/autozoom2.xpm";zoom=pitch==0?40:15;'/>
-   <!-- LAYOUT --> 
+   <!-- LAYOUT -->
    <osd enabled="yes" type="button" x="0" y="0" w="1024" h="600" command="" src="$HOME/.navit/buttons/design2.png" />
 
 
@@ -1038,31 +1038,31 @@ corrected soon.
 
 .. code:: xml
 
-   <!-- top-left elements --> 
+   <!-- top-left elements -->
    <osd enabled="yes" type="text" label="${navigation.item.street_name} ${navigation.item.street_name_systematic}"    x="3"  y="3"  w="400" h="40" align="6" background_color="#00000000" font_size="250" />
    <osd enabled="yes" type="text" label="->" x="3" y="44" w="40" h="40" align="6" background_color="#00000000" font_size="250" />
    <osd enabled="yes" type="text" label="${navigation.item[1].street_name} ${navigation.item[1].street_name_systematic}" x="45" y="44" w="400" h="40" align="6" background_color="#00000000" font_size="250" />
    <osd enabled="yes" type="navigation_next_turn" x="0"    y="86"  w="110" h="90" align="12" icon_src="%s_wh_64_64.png" background_color="#00000000" />
    <osd enabled="yes" type="text" label="${navigation.item[1].length[named]}" x="0" y="178" w="110" h="40" align="12"  background_color="#00000000" font_size="250"/>
    <osd enabled="yes" type="scale" x="0" y="210" w="114" h="30" font_size="150" background_color="#000000c8"/>
-   <!-- menu right/top-right --> 
+   <!-- menu right/top-right -->
    <osd enabled="yes" type="gps_status"       x="-50" y="8"   w="50" h="50" align="0" background_color="#00000000" font_size="200" />
    <osd enabled="yes" type="button"           x="-50" y="68"  w="50" h="50" command="zoom_out()" src="skins/WM_VGA1/zoom_out.png" background_color="#00000000"/>
    <osd enabled="yes" type="toggle_announcer" x="-50" y="118" w="50" h="50" icon_src="$NAVIT_SHAREDIR/xpm/skins/WM_VGA1/%s.png" background_color="#00000000"/>
    <osd enabled="yes" type="button"           x="-50" y="168" w="50" h="50" command="zoom_to_route()" src="skins/WM_VGA1/zoom_route.png" background_color="#00000000"/>
    <osd enabled="yes" type="button"           x="-50" y="218" w="50" h="50" command="zoom_in()" src="skins/WM_VGA1/zoom_in.png" background_color="#00000000"/>
-   <!-- bottom-left --> 
+   <!-- bottom-left -->
    <osd enabled="yes" type="text" label="ETA:"  x="3" y="-32" w="65" h="30" align="6"  background_color="#00000000" font_size="230" />
    <osd enabled="yes" type="text" label="${navigation.item.destination_time[arrival]}"   x="72" y="-32" w="120" h="30" align="6"  background_color="#00000000" font_size="200" />
    <osd enabled="yes" type="text" label="TL:"   x="3" y="-63" w="65" h="30" align="6"  background_color="#00000000" font_size="230" />
    <osd enabled="yes" type="text" label="${navigation.item.destination_time[remaining]}" x="72" y="-63" w="120" h="30" align="6"  background_color="#00000000" font_size="200" />
    <osd enabled="yes" type="text" label="Dist:" x="3" y="-94" w="65" h="30" align="6"  background_color="#00000000" font_size="230" />
    <osd enabled="yes" type="text" label="${navigation.item.destination_length[named]}"   x="72" y="-94" w="120" h="30" align="6"  background_color="#00000000" font_size="200" />
-   <!-- bottom-right --> 
+   <!-- bottom-right -->
    <osd enabled="yes" type="text" label="${tracking.item.route_speed}" x="-114" y="-43"  align="12" w="112" h="40" background_color="#00000000" font_size="250"/>
    <osd enabled="yes" type="text" label="${vehicle.position_speed}"    x="-114" y="-90" align="12" w="112" h="40" background_color="#00000000" font_size="250"/>
    <osd enabled="yes" type="compass" font_size="0" x="283" y="-90" w="80" h="80" align="15" background_color="#00000000"/>
-   <!-- background images --> 
+   <!-- background images -->
    <osd enabled="yes" type="button" x="0" y="0" align="10" w="394" h="152"  command="" src="skins/WM_VGA1/top-left.png" />
    <osd enabled="yes" type="button" x="-56" y="0" align="10" w="56" h="313"  command="" src="skins/WM_VGA1/top-right.png" />
    <osd enabled="yes" type="button" x="0" y="-100" align="2"  command="" src="skins/WM_VGA1/bottom-left.png" />
@@ -1336,36 +1336,36 @@ the bottom left corner.
 
 .. code:: xml
 
-   <!--  =============== OSD ===========================  --> 
-   <!-- background images oben, inklusive Menuaufruf " Auswahl des Wertes von timeout" = Konfiguration 2  --> 
+   <!--  =============== OSD ===========================  -->
+   <!-- background images oben, inklusive Menuaufruf " Auswahl des Wertes von timeout" = Konfiguration 2  -->
    <osd enabled="yes" type="button" x="0" y="0" w="240" h="30" src='JR-head-bg-x.png' command=""/>
    <osd enabled="yes" type="button" x="194" y="20" w="10" h="10" src='JR-ecke-or.png' command=""/>
    <osd enabled='yes' type="button" x="204" y="20" w="36" h="50" src="JR-knopf-unten-details.png" command="osd_configuration=2"/>
-   <!-- background images unten, inklusive Funktion " Ausblenden des Menus zur Wahl von timeout" = Konfiguration 1  --> 
+   <!-- background images unten, inklusive Funktion " Ausblenden des Menus zur Wahl von timeout" = Konfiguration 1  -->
    <osd enabled="yes" type="button" x="0" y="-70" w="65" h="70" src="JR-bottom-bg-x.png" command="osd_configuration=1"/>
-   <!--  Zoom in/out  --> 
+   <!--  Zoom in/out  -->
    <osd enabled="yes" type="button" x="0" y="-200" command="zoom_in()" src="zoom_in.png" w="60" h="60" align='0'/>
    <osd enabled="yes" type="button" x="0" y="-120" command="zoom_out()" src="zoom_out.png" w="60" h="60" align='0'/>
-   <!-- Geschwindigkeit  aktuell --> 
+   <!-- Geschwindigkeit  aktuell -->
    <osd enabled="yes" type="text" label="${vehicle.position_speed}" x="173" y="-89" w="117" h="25" background_color="#00000099" align="8" font_size="350"  command='zoom_to_route()'/>
    <osd enabled="yes" type="button" x="170" y="-93" w="90" h="30" src="JR-geschw-klein.png" command=''/>
-   <!-- Geschwindigkeit  erlaubt = Speedwarner  --> 
+   <!-- Geschwindigkeit  erlaubt = Speedwarner  -->
    <osd enabled="yes" type="speed_warner" w="67" h="25" x="173" y="-59" font_size="350" align="8" background_color="#00000099" speed_exceed_limit_offset="10" speed_exceed_limit_percent="50"  announce_on="1" label='text_only' />
    <osd enabled="yes" type="button" x="170" y="-63" w="90" h="30" src="JR-geschw-klein.png" command=''/>
-   <!--  Navigationshinweise oben --> 
+   <!--  Navigationshinweise oben -->
    <osd enabled="yes" type="text" x="0" y="0" w="80" h="19" label="${navigation.item.destination_length[value]} ${navigation.item.destination_length[unit]}" background_color="#000000FF" align="4" font_size='240'/>
    <osd enabled="yes" type="text" x="80" y="0" w="80" h="19" label="${navigation.item.destination_time[remaining]}" background_color="#000000FF" align="0" font_size='240'/>
    <osd enabled="yes" type="text" x="160" y="0" w="80" h="19" label="${navigation.item.destination_time[arrival]}" background_color="#000000FF" align="8" font_size='240'/>
-   <!--  Navigationshinweise unten --> 
+   <!--  Navigationshinweise unten -->
    <osd enabled="yes" type="text" label="${tracking.item.street_name} ${tracking.item.street_name_systematic}" x="65" y="-32" w="175" h="12" align="4" font_size="160" background_color="#000000FF"/>
    <osd enabled="yes" type="text" label="${navigation.item[1].street_name} ${navigation.item[1].street_name_systematic}" x="65" y="-18" w="175" h="18" align="4" font_size="260" background_color="#000000FF"/>
    <osd enabled="yes" type="text" label="${navigation.item[1].length[value]}" x="0" y="-16" w="45" h="16" align="8" background_color="#000000FF" font_size="260"/>
    <osd enabled="yes" type="text" label="${navigation.item[1].length[unit]}" x="45" y="-16" w="15" h="16" align="2" background_color="#000000FF" font_size="150"/>
    <osd enabled="yes" type="navigation_next_turn"  x="10" y="-54"  w="32"  h="32"  align="0" icon_src="%s_JR.png" background_color="#FFFFFFFF"/>
-   <!-- Menu zum Einblenden und Auswahl von " timeout"  = Konfiguration 4 mit 5 Sekunden und Konfiguration 8 mit 30 Sekunden  --> 
+   <!-- Menu zum Einblenden und Auswahl von " timeout"  = Konfiguration 4 mit 5 Sekunden und Konfiguration 8 mit 30 Sekunden  -->
    <osd enabled="yes" type="text"  osd_configuration="2" label='5' x="100" y="23" w="40" h="30" background_color="#88888899" command="osd_configuration=4;timeout=8"/>
    <osd enabled="yes" type="text"  osd_configuration="2" label='30' x="150" y="23" w="40" h="30" background_color="#88888899" command="osd_configuration=8;timeout=32"/>
-   <!-- eingeblendete Indikatoren fuer gewaehlten Wert von " timeout"  --> 
+   <!-- eingeblendete Indikatoren fuer gewaehlten Wert von " timeout"  -->
    <osd enabled="yes" type="text"  osd_configuration="8" label='30' x="210" y="70" w="20" h="20" background_color="#88888899" command=""/>
    <osd enabled="yes" type="text"  osd_configuration="4" label='5' x="210" y="70" w="20" h="20" background_color="#88888899" command=""/>
 
@@ -1421,7 +1421,7 @@ also at similar devices (not tested). -- Bogo10 20:08,
 
 .. code:: xml
 
-   <!-- vertical --> 
+   <!-- vertical -->
    <osd osd_configuration="2" type="text" label="${navigation.item[1].street_name}/${navigation.item[1].street_name_systematic}" font_size="275" x="0" y="0" w="240" h="20"/>
    <osd osd_configuration="2" type="navigation_next_turn" x="0" y="20" w="65" h="34" icon_src="%s_wh_32_32.png" />
    <osd osd_configuration="2" type="text" label="${navigation.item[1].length[named]}" font_size="300" x="0" y="54" w="65" h="22"/>
@@ -1442,8 +1442,8 @@ also at similar devices (not tested). -- Bogo10 20:08,
    <osd osd_configuration="1" type="button" x="10" y="144" command="zoom_out()" src="zoom_out.png"/>
    <osd osd_configuration="8" type="toggle_announcer" x="208" y="228" w="32" h="32"/>
    <osd osd_configuration="1048576" type="speed_cam" w="0" h="0" x="320" y="320" font_size="250" text_color="#00FF00" background_color="#00000000" label="${distance} | ${camera_type} | ${speed_limit}"/>
-   <!-- end vertical --> 
-   <!-- horizontal--> 
+   <!-- end vertical -->
+   <!-- horizontal-->
    <osd osd_configuration="256" type="button" x="262" y="96" command="zoom_in()" src="zoom_in.png"/>
    <osd osd_configuration="256" type="button" x="10" y="96" command="zoom_out()" src="zoom_out.png"/>
    <osd osd_configuration="512" type="navigation_next_turn" x="0" y="0" w="34" h="34" icon_src="%s_wh_32_32.png" />
@@ -1482,22 +1482,22 @@ pixmaps, so should be easy to install
 
 .. code:: xml
 
-   <!-- Top center: speed cam warnings --> 
+   <!-- Top center: speed cam warnings -->
    <osd enabled="yes" type="speed_cam" w="100" h="50" x="190" y="0" font_size="400" background_color="#000000FF" text_color="#00FF00" label="Radar ${distance}" align=""/>
-   <!-- Bottom right area: speed warnings, vehicle speed display, arrival time, remaining time and gps signal strength --> 
+   <!-- Bottom right area: speed warnings, vehicle speed display, arrival time, remaining time and gps signal strength -->
    <osd enabled="yes" type="speed_warner" w="30" h="25"  x="315" y="-45" background_color="#000000FF" font_size="300" speed_exceed_limit_offset="5" speed_exceed_limit_percent="10" announce_on="1" label="text_only" />
    <osd enabled="yes" type="text" font_size="300" background_color="#000000FF" label="${vehicle.position_speed}" w="76" h="25" x="239" y="-45" align="4"/>
    <osd enabled="yes" type="text" font_size="300" background_color="#000000FF" label="${navigation.item.destination_time[arrival]}" w="95" h="25" x="345" y="-70" align="4"/>
    <osd enabled="yes" type="text" label="${navigation.item.destination_length[named]}" background_color="#000000FF" font_size="300" w="95" h="25" x="345" y="227" align="4" />
    <osd enabled="yes" type="gps_status" background_color="#000000FF" w="40" h="50" x="-40" y="-70"/>
    <osd enabled="yes" type="text" label="${navigation.item.destination_time[remaining]}" background_color="#000000FF" font_size="300" w="106" h="25" x="239" y="202" align="4" />
-   <!-- Bottom left area: Navigation next turn, and distance to next turn is displayed --> 
+   <!-- Bottom left area: Navigation next turn, and distance to next turn is displayed -->
    <osd enabled="yes" type="navigation_next_turn" background_color="#000000FF" w="50" h="50" x="0" y="202" icon_src="%s_wh_32_32.png" />
    <osd enabled="yes" type="text"  label="${navigation.item[1].length[named]}" background_color="#000000FF" font_size="300" w="191" h="50" x="50" y="202" />
-   <!-- Bottom Center: name of next road --> 
+   <!-- Bottom Center: name of next road -->
    <osd enabled="yes" type="text" label="${navigation.item[1].street_name}" w="480" h="22" x="0" y="250" background_color="#000000FF" font_size="300" align="0" />
    <osd enabled="no" type="text" label="${vehicle.position_time_iso8601[local;%X]}" background_color="#000000FF" w="100" h="50" x="-100" y="150" font_size="300" />
-   <!-- Top right and left corners: zoom in & out buttons --> 
+   <!-- Top right and left corners: zoom in & out buttons -->
    <osd enabled="yes" type="button" x="10" y="20" command="zoom_in()" src="zoom_in.png"/>
    <osd enabled="yes" type="button" x="450" y="20" command="zoom_out()" src="zoom_out.png"/>
 
@@ -1537,29 +1537,29 @@ Use osd_configuration="4" in the main navit tag for the initial display.
 
 .. code:: xml
 
-   <!-- Rechts oben :Navigationsanweisungen --> 
+   <!-- Rechts oben :Navigationsanweisungen -->
    <osd enabled="yes" type="navigation_next_turn" x="0" y="0"  w="100" h="90" align="0" icon_src="%s_wh_59_59.png" />
-   <!-- Links oben: GPS-Informationen --> 
+   <!-- Links oben: GPS-Informationen -->
    <osd enabled="yes" type="gps_status" x="-60" y="0" w="60" h="30" align="0" />
    <osd enabled="yes" type="text" label="${vehicle.position_sats_used}/${vehicle.position_qual}" x="-60" y="30" w="60" h="30" align="8" font_size="300" />
    <osd enabled="yes" type="text" label="${vehicle.position_direction}" x="-60" y="60" w="60" h="30" align="8" font_size="450" />
-   <!-- Oben Mitte: 2 Zeilen: (2) ETA und Zeit und (4) Hoehe und Entfernung --> 
-   <!-- Configuration 2 --> 
+   <!-- Oben Mitte: 2 Zeilen: (2) ETA und Zeit und (4) Hoehe und Entfernung -->
+   <!-- Configuration 2 -->
    <osd type="text" osd_configuration="2" label="ETA: ${navigation.item.destination_time[arrival]}" x="100" y="0" w="320" h="45" align="4" font_size="450" command="osd_configuration=4"/>
    <osd type="text" osd_configuration="2" label="TL:${navigation.item.destination_time[remaining]}" x="100" y="45" w="320" h="45" align="4" font_size="450" command="osd_configuration=4"/>
    <osd type="text" osd_configuration="2" label="in ${navigation.item[1].length[named]}" x="0" y="90" w="360" h="40" align="4" font_size="600"/>
    <osd type="text" osd_configuration="2" label=" auf" x="360" y="90" w="120" h="40" align="4" font_size="500"/>
    <osd type="text" osd_configuration="2" label="${navigation.item[1].street_name}" x="0" y="130" w="480" h="40" align="4" font_size="500"/>
-   <!-- Configuration 4 --> 
+   <!-- Configuration 4 -->
    <osd type="text" osd_configuration="4" label="Alt: ${vehicle.position_height}" x="100" y="0" w="320" h="45" align="4" font_size="450" command="osd_configuration=2"/>
    <osd type="text" osd_configuration="4" label="Dist: ${navigation.item.destination_length[named]}" x="100" y="45" w="320" h="45" align="4" font_size="450" command="osd_configuration=2"/>
    <osd enabled="yes" type="text" label="${tracking.item.street_name}" x="0" y="-90" w="390" h="60" align="4" font_size="600" />
    <osd enabled="yes" type="text" label="${vehicle.position_speed}" x="0" y="-30" w="390" h="30" align="8" font_size="450" />
    <osd enabled="yes" type="speed_warner" w="90" h="90" x="-90" y="-90" font_size="600" speed_exceed_limit_offset="10" announce_on="0" />
-   <!-- <osd enabled="yes" type="speed_warner" w="80" h="80" x="-80" y="-80" font_size="450" speed_exceed_limit_offset="5" speed_exceed_limit_percent="10" announce_on="0" label="text_only" />  --> 
-   <!--<osd enabled="yes" type="text" label="Max: ${tracking.item.route_speed}" x="240" y="-40" w="240" h="40" align="4" font_size="450" /> --> 
-   <!-- <osd enabled="yes" type="toggle_announcer" x="0" y="170" w="96" h="96" /> --> 
-   <!-- <osd enabled="yes" type="button" x="0" y="266" command="gui.fullscreen=!gui.fullscreen" src="toggle_fullscreen.png"/> --> 
+   <!-- <osd enabled="yes" type="speed_warner" w="80" h="80" x="-80" y="-80" font_size="450" speed_exceed_limit_offset="5" speed_exceed_limit_percent="10" announce_on="0" label="text_only" />  -->
+   <!--<osd enabled="yes" type="text" label="Max: ${tracking.item.route_speed}" x="240" y="-40" w="240" h="40" align="4" font_size="450" /> -->
+   <!-- <osd enabled="yes" type="toggle_announcer" x="0" y="170" w="96" h="96" /> -->
+   <!-- <osd enabled="yes" type="button" x="0" y="266" command="gui.fullscreen=!gui.fullscreen" src="toggle_fullscreen.png"/> -->
    <osd enabled="yes" type="button" x="0" y="-300" command="zoom_to_route()" src="mark_64_64.png"/>
    <osd enabled="yes" type="button" x="-96" y="-300" command="set_center_cursor()" src="gui_vehicle_64_64.png"/>
    <osd enabled="yes" type="button" x="-96" y="-180" command="zoom_in()" src="zoom_in_64_64.png"/>
@@ -1646,36 +1646,36 @@ free to contact me here.
 
 .. code:: xml
 
-   <!-- Change osd_configuration depending on route_status --> 
+   <!-- Change osd_configuration depending on route_status -->
    <osd name="ifroute" update_period="2" type="cmd_interface" h="1" w="1" x="-1" y="-1" command='osd_configuration=route.route_status==0 ? 3 : 5' />
-   <!-- Change route status images depending on route_status --> 
+   <!-- Change route status images depending on route_status -->
    <osd name="routestat" update_period="2" type="cmd_interface" h="1" w="1" x="-1" y="-1" osd_configuration="4" command='osd[@name=="show_route_status"].src =route.route_status==1 ? "/sdcard/navit/osd_graphics/route_status_dest_89_40.png" :(route.route_status==0 ? "" :(route.route_status==3 ? "/sdcard/navit/osd_graphics/route_status_no_89_40.png" :(route.route_status==5 ? "/sdcard/navit/osd_graphics/route_status_path_89_40.png" :(route.route_status==13 ? "/sdcard/navit/osd_graphics/route_status_graph_89_40.png" :(route.route_status==17 ? "/sdcard/navit/osd_graphics/route_status_done_89_40.png" :(route.route_status==33 ? "/sdcard/navit/osd_graphics/route_status_done_89_40.png" : "/sdcard/navit/osd_graphics/route_status_no_89_40.png"))))))' />
-   <!-- Change position accuracy images depending on position_radius --> 
+   <!-- Change position accuracy images depending on position_radius -->
    <osd name="accuracy" enabled="yes" update_period="5" type="cmd_interface" h="1" w="1" x="-1" y="-1" osd_configuration="1" command='osd[@name=="position_accuracy"].src =vehicle.position_radius==0 ? "/sdcard/navit/osd_graphics/gps_accuracy_1_80_40.png" :(vehicle.position_radius<=2 ? "/sdcard/navit/osd_graphics/gps_accuracy_9_80_40.png" :(vehicle.position_radius<=5 ? "/sdcard/navit/osd_graphics/gps_accuracy_8_80_40.png" :(vehicle.position_radius<=10 ? "/sdcard/navit/osd_graphics/gps_accuracy_7_80_40.png" :(vehicle.position_radius<=15 ? "/sdcard/navit/osd_graphics/gps_accuracy_6_80_40.png" :(vehicle.position_radius<=20 ? "/sdcard/navit/osd_graphics/gps_accuracy_5_80_40.png" :(vehicle.position_radius<=30 ? "/sdcard/navit/osd_graphics/gps_accuracy_4_80_40.png" :(vehicle.position_radius<=50 ? "/sdcard/navit/osd_graphics/gps_accuracy_3_80_40.png" :(vehicle.position_radius<=100 ? "/sdcard/navit/osd_graphics/gps_accuracy_2_80_40.png" : "/sdcard/navit/osd_graphics/gps_accuracy_1_80_40.png"))))))))' />
-   <!-- OSD Elements --> 
-   <!-- Buttons --> 
+   <!-- OSD Elements -->
+   <!-- Buttons -->
    <osd type="button" src="/sdcard/navit/osd_graphics/zoom_in_64_64.png" command="zoom_in()" x="1" y="95" osd_configuration="1"/>
    <osd type="button" src="/sdcard/navit/osd_graphics/zoom_out_64_64.png" command="zoom_out()" x="-66" y="95" osd_configuration="1"/>
    <osd type="button" src="/sdcard/navit/osd_graphics/back_start_64_64.png" command="follow=0;set_center_cursor()" x="1" y="165" enable_expression="follow&gt;1" osd_configuration="1"/>
    <osd type="button" src="/sdcard/navit/osd_graphics/abort_64_64.png" command="gui.abort_navigation()" x="-66" y="165" osd_configuration="4"/>
-   <!-- head --> 
+   <!-- head -->
    <osd type="text" label="${tracking.item.street_name} ${tracking.item.street_name_systematic}" x="0" y="0" w="854" h="40" font_size="400" text_color="#ffffffff" background_color="#00000000" align="4" osd_configuration="6"/>
    <osd type="button" command="" src="/sdcard/navit/osd_graphics/upper_854_45.png" x="0" y="0" w="854" h="45" osd_configuration="1"/>
-   <!-- head left --> 
+   <!-- head left -->
    <osd name="position_accuracy" type="button" command="" src="/sdcard/navit/osd_graphics/gps_accuracy_1_80_40.png" x="0" y="45" w="80" h="40" osd_configuration="1"/>
    <osd name="show_route_status" command="" enabled="yes" type="button" x="71" y="45" w="89" h="40" src="/sdcard/navit/osd_graphics/route_status_dest_89_40.png" osd_configuration="4"/>
-   <!-- head right --> 
+   <!-- head right -->
    <osd type="text" label="${navigation.item.destination_length[named]}" x="-120" y="0" w="120" h="40" font_size="400" align="0" background_color="#00000000" osd_configuration="4"/>
    <osd type="text" label="H:${vehicle.position_height}m " x="-120" y="0" w="120" h="40" font_size="375" align="8" text_color="#ffffffff" background_color="#00000000" osd_configuration="2"/>
    <osd type="text" label="${navigation.item.destination_time[arrival]} / ${navigation.item.destination_time[remaining]}" x="-170" y="45" w="180" h="40" align="4" font_size="400" background_color="#00000000" osd_configuration="4"/>
    <osd type="button" command="follow=80000;zoom_to_route();" src="/sdcard/navit/osd_graphics/upper_right_190_45.png" x="-190" y="45" w="190" h="45" osd_configuration="4" />
-   <!-- foot --> 
+   <!-- foot -->
    <osd type="text" label="auf ${navigation.item[1].street_name} ${navigation.item[1].street_name_systematic}" x="128" y="-40" w="726" h="40" font_size="400" align="4" background_color="#00000000" osd_configuration="4"/>
    <osd type="button" command="" src="/sdcard/navit/osd_graphics/lower_route_854_140.png" x="0" y="-140" w="854" h="140" osd_configuration="4" />
-   <!-- foot left --> 
+   <!-- foot left -->
    <osd type="navigation_next_turn" x="0" y="-135" w="128" h="90" icon_src="%s_wh_64_64.png" background_color="#00000000" osd_configuration="4"/>
    <osd type="text" label="in ${navigation.item[1].length[named]}" x="0" y="-40" w="128" h="40" font_size="400" align="4" background_color="#00000000" osd_configuration="4"/>
-   <!-- foot right --> 
+   <!-- foot right -->
    <osd type="text" label="${vehicle.position_speed[value]}" x="-160" y="-105" w="90" h="60" font_size="600" background_color="#00000000" osd_configuration="1"/>
    <osd type="text" label="${tracking.item.route_speed[value]}" x="-70" y="-105" w="70" h="60" font_size="500" background_color="#00000000" osd_configuration="1"/>
    <osd type="speed_warner" x="-69" y="-105" w="70"  h="60" font_size="500" text_color="#FF000000" background_color="#00000000" osd_configuration="1"/>
