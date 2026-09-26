@@ -178,7 +178,7 @@ laptop as well. See the Nokia specific page for further configuration.
 
 .. code:: xml
 
-   <!-- Upper left corneriand button --> 
+   <!-- Upper left corner and button --> 
    <!-- Distance to and type of the next turn --> 
    <osd enabled="yes" type="text" label="In ${navigation.item[1].length[named]} " x="0" y="0" font_size="500" w="200" h="40" align="4" background_color="#000000c8"/>
    <osd enabled="yes" type="navigation_next_turn" x="200" y="0" font_size="500" w="60" h="40" background_color="#000000c8" icon_src="$NAVIT_SHAREDIR/xpm/%s_wh_48_48.png" />
