@@ -163,23 +163,3 @@ See also
 
 .. |First run of Navit| image:: Andoidscreenshot_001.png
    :width: 150px
-.. |0606_osd_screenshot_portrait.png| image:: 0606_osd_screenshot_portrait.png
-.. |0606_osd_screenshot_landscape.png| image:: 0606_osd_screenshot_landscape.png
-.. |350px| image:: AndroidAntenna2D.png
-.. |image1| image:: AndroidAntenna.png
-.. |navitArch2.png| image:: navitArch2.png
-.. |navitArch3.png| image:: navitArch3.png
-.. |Carspeed.png| image:: Carspeed.png
-.. |Compas.png| image:: Compas.png
-.. |Down.png| image:: Down.png
-.. |Minus2.png| image:: Minus2.png
-.. |Next.png| image:: Next.png
-.. |Odom.png| image:: Odom.png
-.. |Plus2.png| image:: Plus2.png
-.. |Poioff.png| image:: Poioff.png
-.. |Trid.png| image:: Trid.png
-.. |Upp.png| image:: Upp.png
-.. |androidLayout800x480_H.png| image:: androidLayout800x480_H.png
-   :width: 360px
-.. |androidLayout800x480_V.png| image:: androidLayout800x480_V.png
-   :width: 140px
