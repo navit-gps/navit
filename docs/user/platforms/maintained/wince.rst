@@ -121,7 +121,9 @@ To use the `navigation_next_turn <OSD#navigation_next_turn>`__ OSD item
 on WinCE, the icon must be explicitly sourced. In ``navit.xml`` it
 should something like:
 
-\ `` ``
+.. code:: xml
+
+   <osd enabled="yes" type="navigation_next_turn" x="140" y="0" font_size="500" w="60" h="40" background_color="#000000c8" icon_src="%s_wh_32_32.png" />
 
 See http://trac.navit-project.org/ticket/498 for more information.
 
@@ -131,7 +133,9 @@ Speech
 Speech output should work out of the box on WinCE. In navit.xml which
 comes with the WinCE Navit-build you can find:
 
-\ `` ``
+.. code:: xml
+
+   <speech type="espeak" cps="15"/>
 
 All files are included and no additional installation/configuration (and
 no espeak.exe) is necessary!
@@ -170,9 +174,11 @@ Linux, Mac, ... "/".
 -  Add and enable the map for the application in navit by changing the
    lines (at approx line number 370)
 
-|
-| ``   ``\
-|
+.. code:: xml
+
+   <mapset enabled="yes">
+      <map type="binfile" enabled="yes" data="\StorageCard\maps\\specificmapfilename.bin"/>
+   </mapset>
 
 | It seems you need to specify the bin name in newer versions of navit.
   I also had to add two backslashes before the bin name running 0.2.0,
@@ -181,13 +187,19 @@ Linux, Mac, ... "/".
 | Disable unused mapset sections by setting enabled to ``no``, e.g. the
   pre-installed sample maps at line 370 in ``navit.xml``.
 
-|
-| ``   ``\
-|
+.. code:: xml
+
+   <mapset enabled="no">
+      <xi:include href="$NAVIT_SHAREDIR/maps/*.xml"/>
+   </mapset>
 
 -  You may want to customize the initial location displayed on the map.
    Example below for 4123 N 1234 E (this string means 41.23 North and
    12.34 East):
+
+.. code:: xml
+
+   <navit center="4123 N 1234 E" zoom="256" tracking="1" cursor="1" orientation="-1" recent_dest="10">
 
 Running Navit
 -------------
