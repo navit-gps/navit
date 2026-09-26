@@ -84,7 +84,6 @@ Basic Configuration
 Currently Navit doesn't provide a graphical tool to change settings, so you have to do the changes manually using a texteditor.
 Please open your current **navit.xml** file and do the following steps:
 
-
 Setup proper startup-position
 -----------------------------
 On Navit's very first startup, it needs a **center** to look at on the map. By default this is set to Munich in Germany (at latitude 48.08 and longitude, which is conveniently covered by the sample map created on installation).
