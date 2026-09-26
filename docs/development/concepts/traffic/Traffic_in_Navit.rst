@@ -296,19 +296,23 @@ The only function to edit traffic distortions is found in *route.c*:
    static void
    route_graph_set_traffic_distortion(struct route_graph *this, struct route_graph_segment *seg, int delay);
 
-   **Sets or clears a traffic distortion for a segment.**
+**Sets or clears a traffic distortion for a segment.**
 
-   This sets a delay (setting speed is not supported) or clears an
-   existing traffic distortion. Note that, although setting a speed is
-   not supported, calling this function with a delay of 0 will also
-   clear an existing speed constraint.
+This sets a delay (setting speed is not supported) or clears an
+existing traffic distortion. Note that, although setting a speed is
+not supported, calling this function with a delay of 0 will also
+clear an existing speed constraint.
 
-   {\| class="wikitable"
+.. list-table::
+   :widths: 15 85
+   :header-rows: 0
 
-!colspan="2" style="text-align:left;"|Parameters \|- \|\ ``this`` \|\|
-The route graph \|- \|\ ``seg`` \|\| The segment to which the traffic
-distortion applies \|- \|\ ``delay`` \|\| Delay in tenths of a second,
-or 0 to clear an existing traffic distortion \|- \|}
+   * - ``this``
+     - The route graph
+   * - ``seg``
+     - The segment to which the traffic distortion applies
+   * - ``delay``
+     - Delay in tenths of a second, or 0 to clear an existing traffic distortion
 
 Limitations:
 
