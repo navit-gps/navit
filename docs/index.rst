@@ -69,7 +69,6 @@ Main Features
    :glob:
    :caption: Old Wiki
 
-   user/configuration/NavitConfigurator
    user/configuration/OSD_Layouts
    user/configuration/QML_GUI
    user/configuration/QML2_GUI
