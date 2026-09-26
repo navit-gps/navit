@@ -133,6 +133,46 @@ jobs:
       - uses: crate-ci/typos@v1.50.3
         with:
           files: docs/
+  docs_build:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.12-slim
+    steps:
+      - name: Install git for checkout
+        run: apt-get update && apt-get install -y git
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Install Sphinx toolchain
+        run: |
+          apt-get update && apt-get install -y imagemagick
+          pip install --upgrade pip
+          pip install -r docs/requirements.txt
+      - name: Check docs warnings in files touched by this branch
+        env:
+          DOCS_BASE: ${{ github.event.pull_request.base.sha }}
+        run: bash scripts/check_doc_links.sh
+  docs_linkcheck:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.12-slim
+    steps:
+      - name: Install git for checkout
+        run: apt-get update && apt-get install -y git
+      - uses: actions/checkout@v7
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Install Sphinx toolchain
+        run: |
+          apt-get update && apt-get install -y imagemagick
+          pip install --upgrade pip
+          pip install -r docs/requirements.txt
+      - name: Check external links (informational only)
+        continue-on-error: true
+        run: |
+          sphinx-build -q -b linkcheck docs docs/_build/linkcheck || true
+          echo "=== broken/timeout links ==="
+          grep -E '\[(broken|timeout)\]' docs/_build/linkcheck/output.txt || echo "(none)"
   build_sailfish:
     # FIXME: use a specific docker image, so we can build this at home
     runs-on: ubuntu-latest
