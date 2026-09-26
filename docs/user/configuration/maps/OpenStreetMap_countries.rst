@@ -3,8 +3,8 @@ OpenStreetMap/countries
 
 In order for search to work properly, Navit assigns
 villages/towns/cities (anything with a
-```http://wiki.openstreetmap.org/wiki/Place``\ ````\ ``place`` <http://wiki.openstreetmap.org/wiki/Place_place>`__
-OSM tag) to a country. It does this by looking at the
+`place tag <https://wiki.openstreetmap.org/wiki/Key:place>`__ OSM tag)
+to a country. It does this by looking at the
 ```is_in`` <http://wiki.openstreetmap.org/wiki/Key:is_in>`__ or
 ``is_in:country`` tag attached to the same ``place`` node for
 information on what country it is in. Navit will compare the country
