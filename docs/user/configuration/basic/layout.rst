@@ -96,6 +96,94 @@ offset the icon within the item, and ``rotation`` rotates it:
 Navit does not scale map icons automatically, so it is up to the style to
 use different sizes at different zoom levels.
 
+Available shipped layouts
+-------------------------
+Navit ships with a set of ready-made layouts that cover the most common
+scenarios. They are installed as ``navit_layout_*.xml`` files (usually in
+``/usr/share/navit/``) and can be selected from the GUI
+(Internal GUI -> Settings -> Display -> Layout) or picked as the default
+via the ``default_layout`` attribute (see :doc:`the related section
+</user/configuration/basic/general>`).
+
+The screenshots below show each layout rendering the sample OSM map that
+ships with Navit (around Munich) at the default zoom level.
+
+Car
+^^^
+The default layout used by Navit. It comes with a matching
+:ref:`night layout <day_and_night>` ``Car-dark`` (see
+``nightlayout``/``daylayout``).
+
+.. figure:: Car.png
+   :alt: Screenshot of the Car layout
+   :width: 300px
+
+   The ``Car`` layout
+
+Car-dark
+^^^^^^^^
+A dark theme with the same structure as ``Car``, intended to be used as
+the night layout for ``Car`` (``daylayout="Car"``).
+
+.. figure:: Car-dark.png
+   :alt: Screenshot of the Car-dark layout
+   :width: 300px
+
+   The ``Car-dark`` layout
+
+Car-simple
+^^^^^^^^^^
+A heavily reduced variant of the ``Car`` layout: it draws only the most
+important map items with larger fonts, which makes it fast on devices
+with limited resources. Its source is ``navit_layout_car_simple_shipped.xml``.
+
+.. figure:: Car-simple.png
+   :alt: Screenshot of the Car-simple layout
+   :width: 300px
+
+   The ``Car-simple`` layout
+
+Car-Android
+^^^^^^^^^^^
+A variant of the ``Car`` layout that is shipped for Navit's Android app.
+Its source is ``navit_layout_car_android_shipped.xml``.
+
+.. figure:: Car-Android.png
+   :alt: Screenshot of the Car-Android layout
+   :width: 300px
+
+   The ``Car-Android`` layout
+
+T@H
+^^^
+A compact car layout with a reduced set of map items.
+Its source is ``navit_layout_th_shipped.xml``.
+
+.. figure:: T@H.png
+   :alt: Screenshot of the T@H layout
+   :width: 300px
+
+   The ``T@H`` layout
+
+Bike
+^^^^
+A simple layout for cyclists that favours bike paths:
+bike paths are shown in green, less comfortable but still rideable
+roads in brown, everything else is much like the ``Car`` layout.
+Its source is ``navit_layout_bike_shipped.xml`` (installed as
+``navit_layout_bike.xml``).
+
+.. figure:: Bike.png
+   :alt: Screenshot of the Bike layout
+   :width: 300px
+
+   The ``Bike`` layout
+
+.. note::
+   The shipped ``navit.xml`` also defines a small ``Route`` layout that
+   draws the currently calculated route (``street_route_`` items) on top
+   of whichever layout is selected; it is not a map theme itself.
+
 Overriding default (shipped) layouts
 ------------------------------------
 When the XML config file is parsed, layouts are taken in the order they come, and a layout whose name already exists is discarded; the first definition of a name wins.
@@ -111,6 +199,8 @@ Alternatively, a layout tag can carry an ``active="1"`` attribute;
 irrespective of where the layout appears in the XML file, that layout
 becomes the default. ``default_layout`` is the preferred way to select a
 default layout.
+
+.. _day_and_night:
 
 Day and night layouts
 ---------------------
