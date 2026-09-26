@@ -422,44 +422,40 @@ returns:
 set_attr
 ~~~~~~~~
 
-+------------------+--------------------------------------------------+
-| **Path:**        | .navit                                           |
-+------------------+--------------------------------------------------+
-| **Arguments:**   | string:``attribute`` variant:``value``           |
-+------------------+--------------------------------------------------+
-| **Return:**      | *none*                                           |
-+------------------+--------------------------------------------------+
-| **Description:** | Sets the specified attribute value. The          |
-|                  | attribute can be anything from attr_def.h. As    |
-|                  | shown in the example below, this can be useful   |
-|                  | to zoom to a specific zoom level, instead of just |
-|                  | zooming by a factor as with the                  |
-|                  | ```zoom`` <#zoom>`__ method.                     |
-+------------------+--------------------------------------------------+
-| **Example:**     | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_project.navi                        |
-|                  | t.navit.set_attr string:"zoom" variant:int32:500 |
-+------------------+--------------------------------------------------+
+**Path:** ``.navit``
+
+**Arguments:** string: ``attribute`` variant: ``value``
+
+**Return:** *none*
+
+**Description:** Sets the specified attribute value. The attribute can
+be anything from attr_def.h. As shown in the example below, this can be
+useful to zoom to a specific zoom level, instead of just zooming by a
+factor as with the ``zoom`` method.
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.navit.set_attr string:"zoom" variant:int32:500
 
 export_as_gpx
 ~~~~~~~~~~~~~
 
-+------------------+--------------------------------------------------+
-| **Path:**        | .navit                                           |
-+------------------+--------------------------------------------------+
-| **Arguments:**   | string:``filename``                              |
-+------------------+--------------------------------------------------+
-| **Return:**      | *none*                                           |
-+------------------+--------------------------------------------------+
-| **Description:** | Dump the current route, if any, into the file    |
-|                  | specified in the argument in the GPX format.     |
-+------------------+--------------------------------------------------+
-| **Example:**     | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_project.n                           |
-|                  | avit.navit.export_as_gpx string:"/tmp/route.gpx" |
-+------------------+--------------------------------------------------+
+**Path:** ``.navit``
+
+**Arguments:** string: ``filename``
+
+**Return:** *none*
+
+**Description:** Dump the current route, if any, into the file specified
+in the argument in the GPX format.
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.navit.export_as_gpx string:"/tmp/route.gpx"
 
 org.navit_project.navit.vehicleprofile
 ======================================
@@ -479,68 +475,60 @@ must be prefixed by:
 get_attr
 ~~~~~~~~
 
-+------------------+--------------------------------------------------+
-| **Path:**        | .vehicleprofile                                  |
-+------------------+--------------------------------------------------+
-| **Arguments:**   | string:``attribute``                             |
-+------------------+--------------------------------------------------+
-| **Return:**      | string:``attribute`` variant:``value``           |
-+------------------+--------------------------------------------------+
-| **Description:** | Gets the specified attribute value for the       |
-|                  | ``vehicleprofile``.                              |
-+------------------+--------------------------------------------------+
-| **Example:**     | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_pro                                 |
-|                  | ject.navit.vehicleprofile.get_attr string:"name" |
-|                  |                                                  |
-|                  | returns:                                         |
-|                  |                                                  |
-|                  | .. code:: bash                                   |
-|                  |                                                  |
-|                  |       string "name"                              |
-|                  |       variant       string "car"                 |
-|                  |                                                  |
-|                  | .. raw:: html                                    |
-|                  |                                                  |
-|                  |    <hr>                                          |
-|                  |                                                  |
-|                  | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_project.nav                         |
-|                  | it.vehicleprofile.get_attr string:"static_speed" |
-|                  |                                                  |
-|                  | returns:                                         |
-|                  |                                                  |
-|                  | .. code:: bash                                   |
-|                  |                                                  |
-|                  |       string "static_speed"                      |
-|                  |       variant       int32 5                      |
-+------------------+--------------------------------------------------+
+**Path:** ``.vehicleprofile``
+
+**Arguments:** string: ``attribute``
+
+**Return:** string: ``attribute`` variant: ``value``
+
+**Description:** Gets the specified attribute value for the
+``vehicleprofile``.
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.vehicleprofile.get_attr string:"name"
+
+returns:
+
+.. code:: bash
+
+   string "name"
+   variant    string "car"
+
+.. code:: bash
+
+   org.navit_project.navit.vehicleprofile.get_attr string:"static_speed"
+
+returns:
+
+.. code:: bash
+
+   string "static_speed"
+   variant    int32 5
 
 .. _set_attr_1:
 
 set_attr
 ~~~~~~~~
 
-+------------------+--------------------------------------------------+
-| **Path:**        | .vehicleprofile                                  |
-+------------------+--------------------------------------------------+
-| **Arguments:**   | string:``attribute`` variant:``value``           |
-+------------------+--------------------------------------------------+
-| **Return:**      | *none*                                           |
-+------------------+--------------------------------------------------+
-| **Description:** | Sets the specified attribute value. The example  |
-|                  | below *renames* the current ``vehicleprofile``.  |
-|                  | To actually *change* the ``vehicleprofile``, use |
-|                  | the ``set_attr`` method in the ``.vehicle`` path |
-|                  | (see below).                                     |
-+------------------+--------------------------------------------------+
-| **Example:**     | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_project.navit.vehicleprof           |
-|                  | ile.set_attr string:"name" variant:string:"bike" |
-+------------------+--------------------------------------------------+
+**Path:** ``.vehicleprofile``
+
+**Arguments:** string: ``attribute`` variant: ``value``
+
+**Return:** *none*
+
+**Description:** Sets the specified attribute value. The example below
+*renames* the current ``vehicleprofile``. To actually *change* the
+``vehicleprofile``, use the ``set_attr`` method in the ``.vehicle`` path
+(see below).
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.vehicleprofile.set_attr string:"name" variant:string:"bike"
 
 org.navit_project.navit.vehicle
 ===============================
@@ -560,22 +548,20 @@ must be prefixed by:
 set_attr
 ~~~~~~~~
 
-+------------------+--------------------------------------------------+
-| **Path:**        | .vehicle                                         |
-+------------------+--------------------------------------------------+
-| **Arguments:**   | string:``attribute`` variant:``value``           |
-+------------------+--------------------------------------------------+
-| **Return:**      | *none*                                           |
-+------------------+--------------------------------------------------+
-| **Description:** | Sets the specified attribute value. The example  |
-|                  | below changes the current ``vehicleprofile`` to  |
-|                  | ``"bike"`` .                                     |
-+------------------+--------------------------------------------------+
-| **Example:**     | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_project.navit.vehicle.set           |
-|                  | _attr string:"profilename" variant:string:"bike" |
-+------------------+--------------------------------------------------+
+**Path:** ``.vehicle``
+
+**Arguments:** string: ``attribute`` variant: ``value``
+
+**Return:** *none*
+
+**Description:** Sets the specified attribute value. The example below
+changes the current ``vehicleprofile`` to ``"bike"``.
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.vehicle.set_attr string:"profilename" variant:string:"bike"
 
 org.navit_project.navit.route
 =============================
@@ -595,29 +581,27 @@ must be prefixed by:
 get_attr
 ~~~~~~~~
 
-+------------------+--------------------------------------------------+
-| **Path:**        | .route                                           |
-+------------------+--------------------------------------------------+
-| **Arguments:**   | string:``attribute``                             |
-+------------------+--------------------------------------------------+
-| **Return:**      | string:``attribute`` variant:``value``           |
-+------------------+--------------------------------------------------+
-| **Description:** | Gets the specified attribute value. The          |
-|                  | attribute can be anything from route_get_attr()  |
-|                  | in navit/route.c                                 |
-+------------------+--------------------------------------------------+
-| **Example:**     | .. code:: bash                                   |
-|                  |                                                  |
-|                  |    org.navit_project.                            |
-|                  | navit.route.get_attr string:"destination_length" |
-|                  |                                                  |
-|                  | returns:                                         |
-|                  |                                                  |
-|                  | .. code:: bash                                   |
-|                  |                                                  |
-|                  |      string "destination_length"                 |
-|                  |      variant       int32 338111                  |
-+------------------+--------------------------------------------------+
+**Path:** ``.route``
+
+**Arguments:** string: ``attribute``
+
+**Return:** string: ``attribute`` variant: ``value``
+
+**Description:** Gets the specified attribute value. The attribute can
+be anything from route_get_attr() in navit/route.c
+
+**Example:**
+
+.. code:: bash
+
+   org.navit_project.navit.route.get_attr string:"destination_length"
+
+returns:
+
+.. code:: bash
+
+   string "destination_length"
+   variant    int32 338111
 
 Signals
 =======
@@ -629,16 +613,18 @@ add bookmark signal
 
 Setup the callback:
 
-| `` dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit org.navit_project.navit.callback_attr_new string:my_signal string:bookmark_map ``
-| `` object path "/org/navit_project/navit/callback/0"``
-| `` dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit org.navit_project.navit.navit.add_attr string:callback ``
-| `` variant:objpath:/org/navit_project/navit/callback/0``
+.. code:: bash
+
+   dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit org.navit_project.navit.callback_attr_new string:my_signal string:bookmark_map object path "/org/navit_project/navit/callback/0"
+   dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit org.navit_project.navit.navit.add_attr string:callback variant:objpath:/org/navit_project/navit/callback/0
 
 Replace "my_signal" with a signal name of your choice.
 
 Now add a bookmark and you should see this in dbus-monitor --session:
 
-`` signal sender=:1.927 -> dest=(null destination) path=/org/navit_project/navit; interface=org.navit_project.navit; member=my_signal``
+.. code:: bash
+
+   signal sender=:1.927 -> dest=(null destination) path=/org/navit_project/navit; interface=org.navit_project.navit; member=my_signal
 
 .. _undocumented_methods:
 
@@ -686,6 +672,3 @@ The following code comes from /binding/dbus/binding_dbus.c
        {".search_list","search",          "svi",     "attribute,value,partial",                 "",   "",      request_search_list_search},
        {".search_list","select",          "sii",     "attribute_type,id,mode",                  "",   "",      request_search_list_select},
        {".tracking","get_attr",           "s",       "attribute",                               "",   "",      request_tracking_get_attr},
-
-`category: navit dbus <category:_navit_dbus>`__ `category:
-Development <category:_Development>`__
