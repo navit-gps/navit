@@ -149,14 +149,6 @@ pedestrian navigation purposes.
 File:pns-1-small.jpg File:pns-2-small.jpg
 
 
-Menu Integration
-----------------
-
-An integration in the `Menu <Menu>`__ is possible as extension on the
-top level of the navit menu, because it can be regarded as a main view
-of navigation of pedestrians.
-
-
 **Download Android .apk Package**
 ---------------------------------
 
