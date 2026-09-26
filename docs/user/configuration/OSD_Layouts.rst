@@ -1383,11 +1383,21 @@ Yakumo Delta 5 X
 
 -  fits for resolution 320x240 and 240x320
 
-`320px|Yakumo Delta 5 X
-horizontal <image:WM_YAKUMO_DELTAX5_screen2.png>`__
+.. figure:: WM_YAKUMO_DELTAX5_screen2.png
+   :width: 320px
+   :align: center
 
-`right|240px|Yakumo Delta 5 X
-vertical <image:WM_YAKUMO_DELTAX5_screen1.png>`__
+   Yakumo Delta 5 X horizontal
+
+
+
+.. figure:: WM_YAKUMO_DELTAX5_screen1.png
+   :width: 240px
+   :align: right
+
+   Yakumo Delta 5 X vertical
+
+
 
 This configuration contains 2 layouts. One for horizontal view and one
 for vertical view. In order to only show one of them, you have to set up
@@ -1414,267 +1424,56 @@ Note when editing: negatives (such as x="-10", y=-10") seems not to work
 well on this device. I only use absolute coordinates.
 
 Vertical layout fits also at a bluemedia BM 6280 PocketPC and should do
-also at similar devices (not tested). --`Bogo10 <User:Bogo10>`__ 20:08,
+also at similar devices (not tested). -- Bogo10 20:08,
 11 November 2011 (CET)
 
-+----------------------------------------------------------------------+
-| Layout XML for Yakumo Delta 5 X                                      |
-+======================================================================+
-| ::                                                                   |
-|                                                                      |
-|    <!-- vertical -->                                                 |
-|        <osd osd_configuration="2" type="t                            |
-| ext" label="${navigation.item[1].street_name}/${navigation.item[1].s |
-| treet_name_systematic}" font_size="275" x="0" y="0" w="240" h="20"/> |
-|                                                                      |
-|        <osd osd_configuration="2" type="navigation_                  |
-| next_turn" x="0" y="20" w="65" h="34" icon_src="%s_wh_32_32.png" />  |
-|        <osd osd_configuration="2" type="text" label="${navigation.   |
-| item[1].length[named]}" font_size="300" x="0" y="54" w="65" h="22"/> |
-|                                                                      |
-|        <osd osd_configura                                            |
-| tion="8" x="70" y="30" w="90" h="26" font_size="150" type="scale" /> |
-|                                                                      |
-|        <osd osd_confi                                                |
-| guration="4" type="text" label="${navigation.item.destination_length |
-| [named]} " font_size="250" x="163" y="20"  w="77" h="16" align="8"/> |
-|        <osd osd_config                                               |
-| uration="4" type="text" label="${navigation.item.destination_time[re |
-| maining]}h" font_size="250" x="173" y="36" w="67" h="16" align="8"/> |
-|        <osd osd_configuratio                                         |
-| n="8" type="compass" font_size="150" x="206" y="52" w="34" h="43" /> |
-|                                                                      |
-|        <osd osd_configuration="8" type                               |
-| ="text" label="${navigation.item.street_name}/${navigation.item.stre |
-| et_name_systematic}" font_size="250" x="25" y="260" w="215" h="18"/> |
-|                                                                      |
-|        <osd osd_configuration="4" type="speed_warner" w="25          |
-| " h="18" x="0" y="260" font_size="248" speed_exceed_limit_offset="9" |
-|  speed_exceed_limit_percent="10" announce_on="0" label="text_only"/> |
-|        <osd osd_configuration="4" type="text" w="100" h="32" x="0"   |
-|  y="278" label="${vehicle.position_speed[named]}" font_size="350" /> |
-|                                                                      |
-|        <osd osd_configuration="8" type="text" label="${vehicl        |
-| e.position_height}m" x="100" y="278" w="56" h="12" font_size="200"/> |
-|        <osd osd_configuration="8" type="text" label="${vehicle.p     |
-| osition_direction}d" x="156" y="278" w="50" h="12" font_size="200"/> |
-|                                                                      |
-|        <os                                                           |
-| d osd_configuration="8" type="text" label="${vehicle.position_time_i |
-| so8601[+01:00;%X]}" x="100" y="290" w="106" h="20" font_size="250"/> |
-|                                                                      |
-|        <osd osd_configuration="8" type="text" label="${vehicle       |
-| .position_coord_geo}" x="0" y="310" w="240" h="10" font_size="200"/> |
-|                                                                      |
-|        <osd osd_                                                     |
-| configuration="4" type="gps_status" x="206" y="278" w="34" h="32"/>  |
-|        <osd osd_configuration="4" type="text" font_size="140" labe   |
-| l=" ${vehicle.position_sats_used}/${vehicle.position_qual}" x="208"  |
-| y="310" w="28" h="10" font_size="150" background_color="#00000000"/> |
-|                                                                      |
-|        <osd osd_configuration="1" t                                  |
-| ype="button" x="182" y="144" command="zoom_in()" src="zoom_in.png"/> |
-|        <osd osd_configuration="1" typ                                |
-| e="button" x="10" y="144" command="zoom_out()" src="zoom_out.png"/>  |
-|                                                                      |
-|        <osd osd_configurati                                          |
-| on="8" type="toggle_announcer" x="208" y="228" w="32" h="32"/>       |
-|                                                                      |
-|        <osd osd_configu                                              |
-| ration="1048576" type="speed_cam" w="0" h="0" x="320" y="320" font_s |
-| ize="250" text_color="#00FF00" background_color="#00000000" label="$ |
-| {distance} | ${camera_type} | ${speed_limit}"/>                      |
-|                                                                      |
-|    <!-- end vertical -->                                             |
-|                                                                      |
-|    <!-- horizontal-->                                                |
-|        <osd osd_configuration="256"                                  |
-| type="button" x="262" y="96" command="zoom_in()" src="zoom_in.png"/> |
-|        <osd osd_configuration="256" ty                               |
-| pe="button" x="10" y="96" command="zoom_out()" src="zoom_out.png"/>  |
-|                                                                      |
-|        <osd osd_configuration="512" type="navigation                 |
-| _next_turn" x="0" y="0" w="34" h="34" icon_src="%s_wh_32_32.png" />  |
-|        <osd osd_configuration="512" type="text" label="${naviga      |
-| tion.item[1].street_name}/${navigation.item[1].street_name_systemati |
-| c}" font_size="275" x="34" y="14" w="254" h="20" align="4"/>         |
-|        <os                                                           |
-| d osd_configuration="512" type="text" label="${navigation.item[1].le |
-| ngth[named]}" x="34" y="0" w="65" h="14" font_size="275" align="4"/> |
-|                                                                      |
-|                                                                      |
-|       <osd osd_configuration="1024" type="text" label="${navigation. |
-| item.destination_length[named]} ${navigation.item.destination_time[r |
-| emaining]}h" x="99" y="0" w="189" h="14" font_size="250" align="8"/> |
-|                                                                      |
-|        <osd osd_configuration="                                      |
-| 2048" type="compass" font_size="150" x="288" y="34" w="32" h="43" /> |
-|                                                                      |
-|        <osd osd_c                                                    |
-| onfiguration="1024" type="gps_status" x="288" y="0" w="32" h="34"/>  |
-|                                                                      |
-|  <osd osd_configuration="1024" type="text" font_size="140" label="${ |
-| vehicle.position_sats_used}/${vehicle.position_qual}" x="288" y="0"  |
-| w="25" h="8" background_color="#00000000" align="4" font_size="75"/> |
-|                                                                      |
-|        <osd osd_configuration="1024" type="text" w="98" h="28" x="0" |
-|  y="212" label="${vehicle.position_speed[named]}" font_size="350" /> |
-|        <osd osd_configuration="1024" type="speed_warner" w="25"      |
-| h="12"  x="0" y="200"  font_size="248" speed_exceed_limit_offset="9" |
-|  speed_exceed_limit_percent="10" announce_on="0" label="text_only"/> |
-|                                                                      |
-|        <osd osd_configuration="2048" type                            |
-| ="text" label="${navigation.item.street_name}/${navigation.item.stre |
-| et_name_systematic}" font_size="248" x="98" y="212" w="222" h="18"/> |
-|                                                                      |
-|        <osd osd_configuration="2048"                                 |
-|  type="text" label="${vehicle.position_coord_geo} ${vehicle.position |
-| _height}m" x="98" y="230" w="222" h="10" font_size="150" align="4"/> |
-|        <osd osd_configuration="2048" type="text" la                  |
-| bel="${vehicle.position_time_iso8601[+01:00;%X]}" x="265" y="230" w= |
-| "60" h="10" font_size="200" background_color="#00000000" align="8"/> |
-|                                                                      |
-|                                                                      |
-|        <osd osd_configuration="                                      |
-| 2048" type="toggle_announcer" x="288" y="180" w="32" h="32"/>        |
-|                                                                      |
-|    <!-- end horizontal-->                                            |
-+----------------------------------------------------------------------+
+.. code:: xml
 
-+----------------------------------------------------------------------+
-| Menu XML for Yakumo Delta 5 X                                        |
-+======================================================================+
-| ::                                                                   |
-|                                                                      |
-|                                                                      |
-|    <gui type="internal" fullscreen="1" enabled="yes"><![CDATA[       |
-|        <html>                                                        |
-|            <a name='Main Menu'><text>Main menu</text>                |
-|                                                                      |
-|         <img src='gui_town' onclick='town()'><text>Town</text></img> |
-|                <img src=                                             |
-| 'gui_bookmark' onclick='bookmarks()'><text>Eigene Ziele</text></img> |
-|                                                                      |
-|          <a href='#Actions'><img src='gui_actions'>Actions</img></a> |
-|                <a href                                               |
-| ='#Settings'><img src='gui_settings'><text>Settings</text></img></a> |
-|                <img s                                                |
-| rc='gui_map' onclick='back_to_map()'><text>Karte zeigen</text></img> |
-|                                                                      |
-|     <a href='#Info'><img src='gui_about'><text>Info</text></img></a> |
-|                <img cond='navit.route.route_status&amp;52'           |
-| src='gui_stop' onclick='abort_navigation();back_to_map()'><text>Stop |
-|    Navigation</text></img>                                           |
-|                                                                      |
-|         <img src='gui_quit' onclick='quit()'><text>Quit</text></img> |
-|            </a>                                                      |
-|        <a name='Actions'><text>Actions</text>                        |
-|            <img s                                                    |
-| rc='gui_bookmark' onclick='bookmarks()'><text>Bookmarks</text></img> |
-|            <img cond='click_                                         |
-| coord_geo' src='gui_map' onclick='position(click_coord_geo,_("Map Po |
-| int"),8|16|32|64|256)'><script>write(click_coord_geo)</script></img> |
-|            <img cond='position_coord_geo' src='gu                    |
-| i_vehicle' onclick='position(position_coord_geo,_("Vehicle Position" |
-| ),8|32|64|128|256)'><script>write(position_coord_geo)</script></img> |
-|                                                                      |
-|         <img src='gui_town' onclick='town()'><text>Town</text></img> |
-|                                                                      |
-|         <img src='gui_quit' onclick='quit()'><text>Quit</text></img> |
-|            <img cond='navit.route.route_status&amp;52'               |
-| src='gui_stop' onclick='abort_navigation();back_to_map()'><text>Stop |
-|    Navigation</text></img>                                           |
-|        </a>                                                          |
-|        <a name='Settings'><text>Settings</text>                      |
-|                                                                      |
-| <img src='gui_maps' onclick='setting_maps()'><text>Maps</text></img> |
-|            <im                                                       |
-| g src='gui_rules' onclick='setting_rules()'><text>Rules</text></img> |
-|            <img src=                                                 |
-| 'gui_vehicle' onclick='setting_vehicle()'><text>Vehicle</text></img> |
-|            <a href='#Set                                             |
-| tings Display'><img src='gui_display'><text>Display</text></img></a> |
-|            <img src='gui_sound' onclick='navit.a                     |
-| nnouncer_toggle();back_to_map()'><text>Toggle announcer</text></img> |
-|        </a>                                                          |
-|        <a name='Settings Display'><text>Display</text>               |
-|            <img sr                                                   |
-| c='gui_display' onclick='setting_layout()'><text>Layout</text></img> |
-|            <img cond='fullscreen==0' src='                           |
-| gui_fullscreen' onclick='fullscreen=1'><text>Fullscreen</text></img> |
-|            <img cond='fullscreen==1' src='gui_lea                    |
-| ve_fullscreen' onclick='fullscreen=0'><text>Window Mode</text></img> |
-|            <img cond='navit.pitch==0' src='gui_map' onclick=         |
-| 'navit.pitch=pitch;redraw_map();back_to_map()'><text>3D</text></img> |
-|            <img cond='navit.pitch!=0' src='gui_map' oncl             |
-| ick='navit.pitch=0;redraw_map();back_to_map()'><text>2D</text></img> |
-|            <i                                                        |
-| mg cond='navit.orientation==-1' src='cursor' onclick='navit.orientat |
-| ion=0;redraw_map();back_to_map()'><text>Karte ausnorden</text></img> |
-|            <im                                                       |
-| g cond='navit.orientation!=-1' src='cursor' onclick='navit.orientati |
-| on=-1;redraw_map();back_to_map()'><text>in Fahrrichtung</text></img> |
-|            <img cond=                                                |
-| 'navit.autozoom_active==0' src='gui_zoom_in' onclick='navit.autozoom |
-| _active=1;redraw_map();back_to_map()'><text>Autozoom an</text></img> |
-|            <img cond='                                               |
-| navit.autozoom_active!=0' src='gui_zoom_in' onclick='navit.autozoom_ |
-| active=0;redraw_map();back_to_map()'><text>Autozoom aus</text></img> |
-|            <a href='#OS                                              |
-| D'><img src='gui_display'><text>OSD</text></img></a>                 |
-|        </a>                                                          |
-|        <a name='OSD'><text>OSD</text>                                |
-|            <img cond_off='!(n                                        |
-| avit.osd_configuration&257)' src='gui_display' onclick='navit.osd_co |
-| nfiguration=(navit.osd_configuration&255?1:256)+(navit.osd_configura |
-| tion&1048576);redraw_map();back_to_map()'><text>OSD off</text></img> |
-|            <img cond_off='!(n                                        |
-| avit.osd_configuration&514)' src='gui_display' onclick='navit.osd_co |
-| nfiguration=(navit.osd_configuration&255?3:768)+(navit.osd_configura |
-| tion&1048576);redraw_map();back_to_map()'><text>OSD Min</text></img> |
-|            <img cond_off='!(navi                                     |
-| t.osd_configuration&1028)' src='gui_display' onclick='navit.osd_conf |
-| iguration=(navit.osd_configuration&255?7:1792)+(navit.osd_configurat |
-| ion&1048576);redraw_map();back_to_map()'><text>OSD Min+</text></img> |
-|            <img cond_off='!(navit                                    |
-| .osd_configuration&2056)' src='gui_display' onclick='navit.osd_confi |
-| guration=(navit.osd_configuration&255?15:3840)+(navit.osd_configurat |
-| ion&1048576);redraw_map();back_to_map()'><text>OSD Full</text></img> |
-|            <img cond='!(navit.osd_configuration&1048576)' s          |
-| rc='tec_common' onclick='navit.osd_configuration=navit.osd_configura |
-| tion|1048576;redraw_map();back_to_map()'><text>show cam</text></img> |
-|            <img cond='navit.osd_configuration&1048576' s             |
-| rc='tec_common' onclick='navit.osd_configuration=navit.osd_configura |
-| tion&1048575;redraw_map();back_to_map()'><text>hide cam</text></img> |
-|        </a>                                                          |
-|        <a name='Info'><text>Info</text>                              |
-|                                                                      |
-|  <img src='gui_log' onclick='route_description()'><text>Beschreibung |
-|    Route</text></img>                                                |
-|            <img src='gui_town                                        |
-| ' onclick='route_height_profile()'><text>Height Profile</text></img> |
-|            <img src='gui_maps' onclick='navit.zoom_                  |
-| to_route();redraw_map();back_to_map()'><text>zoom route</text></img> |
-|            <img cond='position_coord_geo' src='gu                    |
-| i_vehicle' onclick='position(position_coord_geo,_("Vehicle Position" |
-| ),8|32|64|128|256)'><script>write(position_coord_geo)</script></img> |
-|            <img src                                                  |
-| ='attraction' onclick='navit.locale()'><text>local info</text></img> |
-|            <img src='gui_action                                      |
-| s' onclick='locale()'><text>Lokalisierung</text></img>               |
-|                                                                      |
-|     <img src='gui_about'  onclick='about()'><text>About</text></img> |
-|                                                                      |
-|        </a>                                                          |
-|        </html>                                                       |
-|    ]]></gui>                                                         |
-+----------------------------------------------------------------------+
+   <!-- vertical --> 
+   <osd osd_configuration="2" type="text" label="${navigation.item[1].street_name}/${navigation.item[1].street_name_systematic}" font_size="275" x="0" y="0" w="240" h="20"/>
+   <osd osd_configuration="2" type="navigation_next_turn" x="0" y="20" w="65" h="34" icon_src="%s_wh_32_32.png" />
+   <osd osd_configuration="2" type="text" label="${navigation.item[1].length[named]}" font_size="300" x="0" y="54" w="65" h="22"/>
+   <osd osd_configuration="8" x="70" y="30" w="90" h="26" font_size="150" type="scale" />
+   <osd osd_configuration="4" type="text" label="${navigation.item.destination_length[named]} " font_size="250" x="163" y="20"  w="77" h="16" align="8"/>
+   <osd osd_configuration="4" type="text" label="${navigation.item.destination_time[remaining]}h" font_size="250" x="173" y="36" w="67" h="16" align="8"/>
+   <osd osd_configuration="8" type="compass" font_size="150" x="206" y="52" w="34" h="43" />
+   <osd osd_configuration="8" type="text" label="${navigation.item.street_name}/${navigation.item.street_name_systematic}" font_size="250" x="25" y="260" w="215" h="18"/>
+   <osd osd_configuration="4" type="speed_warner" w="25" h="18" x="0" y="260" font_size="248" speed_exceed_limit_offset="9" speed_exceed_limit_percent="10" announce_on="0" label="text_only"/>
+   <osd osd_configuration="4" type="text" w="100" h="32" x="0" y="278" label="${vehicle.position_speed[named]}" font_size="350" />
+   <osd osd_configuration="8" type="text" label="${vehicle.position_height}m" x="100" y="278" w="56" h="12" font_size="200"/>
+   <osd osd_configuration="8" type="text" label="${vehicle.position_direction}d" x="156" y="278" w="50" h="12" font_size="200"/>
+   <osd osd_configuration="8" type="text" label="${vehicle.position_time_iso8601[+01:00;%X]}" x="100" y="290" w="106" h="20" font_size="250"/>
+   <osd osd_configuration="8" type="text" label="${vehicle.position_coord_geo}" x="0" y="310" w="240" h="10" font_size="200"/>
+   <osd osd_configuration="4" type="gps_status" x="206" y="278" w="34" h="32"/>
+   <osd osd_configuration="4" type="text"  label=" ${vehicle.position_sats_used}/${vehicle.position_qual}" x="208" y="310" w="28" h="10" font_size="150" background_color="#00000000"/>
+   <osd osd_configuration="1" type="button" x="182" y="144" command="zoom_in()" src="zoom_in.png"/>
+   <osd osd_configuration="1" type="button" x="10" y="144" command="zoom_out()" src="zoom_out.png"/>
+   <osd osd_configuration="8" type="toggle_announcer" x="208" y="228" w="32" h="32"/>
+   <osd osd_configuration="1048576" type="speed_cam" w="0" h="0" x="320" y="320" font_size="250" text_color="#00FF00" background_color="#00000000" label="${distance} | ${camera_type} | ${speed_limit}"/>
+   <!-- end vertical --> 
+   <!-- horizontal--> 
+   <osd osd_configuration="256" type="button" x="262" y="96" command="zoom_in()" src="zoom_in.png"/>
+   <osd osd_configuration="256" type="button" x="10" y="96" command="zoom_out()" src="zoom_out.png"/>
+   <osd osd_configuration="512" type="navigation_next_turn" x="0" y="0" w="34" h="34" icon_src="%s_wh_32_32.png" />
+   <osd osd_configuration="512" type="text" label="${navigation.item[1].street_name}/${navigation.item[1].street_name_systematic}" font_size="275" x="34" y="14" w="254" h="20" align="4"/>
+   <osd osd_configuration="512" type="text" label="${navigation.item[1].length[named]}" x="34" y="0" w="65" h="14" font_size="275" align="4"/>
+   <osd osd_configuration="1024" type="text" label="${navigation.item.destination_length[named]} ${navigation.item.destination_time[remaining]}h" x="99" y="0" w="189" h="14" font_size="250" align="8"/>
+   <osd osd_configuration="2048" type="compass" font_size="150" x="288" y="34" w="32" h="43" />
+   <osd osd_configuration="1024" type="gps_status" x="288" y="0" w="32" h="34"/>
+   <osd osd_configuration="1024" type="text"  label="${vehicle.position_sats_used}/${vehicle.position_qual}" x="288" y="0" w="25" h="8" background_color="#00000000" align="4" font_size="75"/>
+   <osd osd_configuration="1024" type="text" w="98" h="28" x="0" y="212" label="${vehicle.position_speed[named]}" font_size="350" />
+   <osd osd_configuration="1024" type="speed_warner" w="25" h="12"  x="0" y="200"  font_size="248" speed_exceed_limit_offset="9" speed_exceed_limit_percent="10" announce_on="0" label="text_only"/>
+   <osd osd_configuration="2048" type="text" label="${navigation.item.street_name}/${navigation.item.street_name_systematic}" font_size="248" x="98" y="212" w="222" h="18"/>
+   <osd osd_configuration="2048" type="text" label="${vehicle.position_coord_geo} ${vehicle.position_height}m" x="98" y="230" w="222" h="10" font_size="150" align="4"/>
+   <osd osd_configuration="2048" type="text" label="${vehicle.position_time_iso8601[+01:00;%X]}" x="265" y="230" w="60" h="10" font_size="200" background_color="#00000000" align="8"/>
+   <osd osd_configuration="2048" type="toggle_announcer" x="288" y="180" w="32" h="32"/>
+   <!-- end horizontal-->
 
-.. raw:: html
 
-   <hr style="height: 10px; color:#AB4E3F; background-color:#AB4E3F;" />
+.. code:: xml
 
-|
+   <gui type="internal" fullscreen="1" enabled="yes"><![CDATA[<html><a name='Main Menu'><text>Main menu</text><img src='gui_town' onclick='town()'><text>Town</text></img><img src='gui_bookmark' onclick='bookmarks()'><text>Eigene Ziele</text></img><a href='#Actions'><img src='gui_actions'>Actions</img></a><a href='#Settings'><img src='gui_settings'><text>Settings</text></img></a><img src='gui_map' onclick='back_to_map()'><text>Karte zeigen</text></img><a href='#Info'><img src='gui_about'><text>Info</text></img></a><img cond='navit.route.route_status&amp;52'src='gui_stop' onclick='abort_navigation();back_to_map()'><text>StopNavigation</text></img><img src='gui_quit' onclick='quit()'><text>Quit</text></img></a><a name='Actions'><text>Actions</text><img src='gui_bookmark' onclick='bookmarks()'><text>Bookmarks</text></img><img cond='click_coord_geo' src='gui_map' onclick='position(click_coord_geo,_("Map Point"),8|16|32|64|256)'><script>write(click_coord_geo)</script></img><img cond='position_coord_geo' src='gui_vehicle' onclick='position(position_coord_geo,_("Vehicle Position"),8|32|64|128|256)'><script>write(position_coord_geo)</script></img><img src='gui_town' onclick='town()'><text>Town</text></img><img src='gui_quit' onclick='quit()'><text>Quit</text></img><img cond='navit.route.route_status&amp;52'src='gui_stop' onclick='abort_navigation();back_to_map()'><text>StopNavigation</text></img></a><a name='Settings'><text>Settings</text><img src='gui_maps' onclick='setting_maps()'><text>Maps</text></img><img src='gui_rules' onclick='setting_rules()'><text>Rules</text></img><img src='gui_vehicle' onclick='setting_vehicle()'><text>Vehicle</text></img><a href='#Settings Display'><img src='gui_display'><text>Display</text></img></a><img src='gui_sound' onclick='navit.announcer_toggle();back_to_map()'><text>Toggle announcer</text></img></a><a name='Settings Display'><text>Display</text><img src='gui_display' onclick='setting_layout()'><text>Layout</text></img><img cond='fullscreen==0' src='gui_fullscreen' onclick='fullscreen=1'><text>Fullscreen</text></img><img cond='fullscreen==1' src='gui_leave_fullscreen' onclick='fullscreen=0'><text>Window Mode</text></img><img cond='navit.pitch==0' src='gui_map' onclick='navit.pitch=pitch;redraw_map();back_to_map()'><text>3D</text></img><img cond='navit.pitch!=0' src='gui_map' onclick='navit.pitch=0;redraw_map();back_to_map()'><text>2D</text></img><img cond='navit.orientation==-1' src='cursor' onclick='navit.orientation=0;redraw_map();back_to_map()'><text>Karte ausnorden</text></img><img cond='navit.orientation!=-1' src='cursor' onclick='navit.orientation=-1;redraw_map();back_to_map()'><text>in Fahrrichtung</text></img><img cond='navit.autozoom_active==0' src='gui_zoom_in' onclick='navit.autozoom_active=1;redraw_map();back_to_map()'><text>Autozoom an</text></img><img cond='navit.autozoom_active!=0' src='gui_zoom_in' onclick='navit.autozoom_active=0;redraw_map();back_to_map()'><text>Autozoom aus</text></img><a href='#OSD'><img src='gui_display'><text>OSD</text></img></a></a><a name='OSD'><text>OSD</text><img cond_off='!(navit.osd_configuration&257)' src='gui_display' onclick='navit.osd_configuration=(navit.osd_configuration&255?1:256)+(navit.osd_configuration&1048576);redraw_map();back_to_map()'><text>OSD off</text></img><img cond_off='!(navit.osd_configuration&514)' src='gui_display' onclick='navit.osd_configuration=(navit.osd_configuration&255?3:768)+(navit.osd_configuration&1048576);redraw_map();back_to_map()'><text>OSD Min</text></img><img cond_off='!(navit.osd_configuration&1028)' src='gui_display' onclick='navit.osd_configuration=(navit.osd_configuration&255?7:1792)+(navit.osd_configuration&1048576);redraw_map();back_to_map()'><text>OSD Min+</text></img><img cond_off='!(navit.osd_configuration&2056)' src='gui_display' onclick='navit.osd_configuration=(navit.osd_configuration&255?15:3840)+(navit.osd_configuration&1048576);redraw_map();back_to_map()'><text>OSD Full</text></img><img cond='!(navit.osd_configuration&1048576)' src='tec_common' onclick='navit.osd_configuration=navit.osd_configuration|1048576;redraw_map();back_to_map()'><text>show cam</text></img><img cond='navit.osd_configuration&1048576' src='tec_common' onclick='navit.osd_configuration=navit.osd_configuration&1048575;redraw_map();back_to_map()'><text>hide cam</text></img></a><a name='Info'><text>Info</text><img src='gui_log' onclick='route_description()'><text>BeschreibungRoute</text></img><img src='gui_town' onclick='route_height_profile()'><text>Height Profile</text></img><img src='gui_maps' onclick='navit.zoom_to_route();redraw_map();back_to_map()'><text>zoom route</text></img><img cond='position_coord_geo' src='gui_vehicle' onclick='position(position_coord_geo,_("Vehicle Position"),8|32|64|128|256)'><script>write(position_coord_geo)</script></img><img src='attraction' onclick='navit.locale()'><text>local info</text></img><img src='gui_actions' onclick='locale()'><text>Lokalisierung</text></img><img src='gui_about'  onclick='about()'><text>About</text></img></a></html>]]></gui>
+
 
 Layout for Sony nav-u92T
 ~~~~~~~~~~~~~~~~~~~~~~~~
