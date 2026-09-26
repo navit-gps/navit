@@ -17,6 +17,7 @@ The rest of this webpage is meant for advanced/power users who'd like to fiddle 
    Internal_GUI
    Layout
    OSD
+   OSD_Layouts
    Vehicleprofile
    Coordinate_format
 
