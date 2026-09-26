@@ -57,8 +57,8 @@ Or here an example with decimal coordinates :
 
 | ``type=image label=/image/raster001.jpg debug="raster001"``
 | ``0.02527076695 47.22659264``
-| ``0.09127025553 47.22659264 ``
-| ``0.02527076695 47.27285604  ``
+| ``0.09127025553 47.22659264``
+| ``0.02527076695 47.27285604``
 
 And here is one to display a point of interest:
 

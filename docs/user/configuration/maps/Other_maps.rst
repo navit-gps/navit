@@ -18,9 +18,9 @@ map-Files. It is possible to convert waypoints and tracks.
 
 Insert the text map Files into the navit.xml like this:
 
-| ``        ``\
-| ``               ``\
-| ``               ``\
+| ``        ``
+| ``               ``
+| ``               ``
 
 and you will get the poi-data on the map.
 

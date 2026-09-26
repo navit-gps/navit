@@ -33,7 +33,7 @@ of the default navit.xml
 enabled**
 
 |
-| `` ``\
+| `` ``
 |
 
 **Note : do not include the ".shp" extension** otherwise Navit will
