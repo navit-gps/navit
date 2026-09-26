@@ -1508,9 +1508,7 @@ items), prefix them with **navit.** (e.g. **navit.zoom_in()**):
        **not** interpolate of navit,
        vehicle, and position
        attributes.
-       --`Nezmi <User:Nezmi>`__
-       (`talk <User_talk:Nezmi>`__)
-       18:43, 15 July 2014 (CEST))
+       -- Nezmi, 18:43, 15 July 2014 (CEST)
    * - **set_center()**
      - center the map view to the given
        coordinates, see coord_parse()
@@ -1556,7 +1554,7 @@ items), prefix them with **navit.** (e.g. **navit.zoom_in()**):
        If you want the layer to be
        hidden by default, set the
        active="0" tag in the layer
-       opening tag of the targeted                                               |
+       opening tag of the targeted
        layer.
 
        .. code:: xml
