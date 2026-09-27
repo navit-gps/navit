@@ -92,10 +92,8 @@ jobs:
       - name: Install doxygen and essentials
         run: |
           apt-get update
-          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends doxygen ca-certificates git rsync
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends doxygen ca-certificates git
       - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
       - name: Run doxygen
         run: cd navit && doxygen
       - name: Prepare webroot
