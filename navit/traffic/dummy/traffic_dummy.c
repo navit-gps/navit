@@ -160,11 +160,20 @@ struct traffic_message **traffic_dummy_get_messages(struct traffic_priv *this_) 
 }
 
 /**
+ * @brief Destroys a dummy traffic plugin instance
+ *
+ * @param this_ The plugin instance
+ */
+static void traffic_dummy_destroy(struct traffic_priv *this_) {
+    g_free(this_);
+}
+
+/**
  * @brief The methods implemented by this plugin
  */
 static struct traffic_methods traffic_dummy_meth = {
     traffic_dummy_get_messages,
-    NULL,
+    traffic_dummy_destroy,
 };
 
 /**
