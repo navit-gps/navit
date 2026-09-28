@@ -76,6 +76,10 @@ do
       # Get hexadecimal color
       coll=$(echo $l | cut -d# -f2 | cut -c-6)
 
+      # Keep the traffic congestion orange (#ff9000) unchanged, so congestion
+      # stays clearly visible in the dark layout.
+      if [[ $coll != "ff9000" ]]; then
+
       # Get color values in decimal
       cr=$(printf "%d" 0x${coll:0:2})
       cg=$(printf "%d" 0x${coll:2:2})
@@ -93,6 +97,8 @@ do
 
       # Replace old color with new hexadecimal color values
       l=$(echo $l | sed "s/#$coll/#$cold/")
+
+      fi
 
      fi
 

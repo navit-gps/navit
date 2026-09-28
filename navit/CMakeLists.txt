@@ -11,7 +11,7 @@ set(NAVIT_SRC announcement.c atom.c attr.c cache.c callback.c command.c config_.
 	event.c file.c geom.c graphics.c gui.c item.c layout.c log.c main.c map.c maps.c
 	linguistics.c mapset.c maptype.c menu.c messages.c bookmarks.c navit.c navit_nls.c navigation.c osd.c param.c plugin.c popup.c
 	profile.c profile_option.c projection.c roadprofile.c route.c script.c search.c speech.c start_real.c sunriset.c transform.c track.c
-	search_houseno_interpol.c traffic.c util.c vehicle.c vehicleprofile.c xmlconfig.c )
+	search_houseno_interpol.c thread.c traffic.c util.c vehicle.c vehicleprofile.c xmlconfig.c )
 
 if(NOT USE_PLUGINS)
 	list(APPEND NAVIT_SRC  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c)
@@ -67,7 +67,6 @@ foreach (CURRENT_MODULE ${ALL_PLUGINS} ${ALL_MODULE_PLUGINS} ${ALL_MODULES})
 	endif()
 endforeach()
 
-
 if(NOT ANDROID)
 	set(NAVIT_START_SRC start.c)
 	if(WIN32 OR WINCE AND NOT WIN_OMIT_RESOURCES)
@@ -112,6 +111,13 @@ if(NOT MSVC AND NOT WINCE)
 	SET(NAVIT_LIBS ${NAVIT_LIBS} m)
 endif(NOT MSVC AND NOT WINCE)
 target_link_libraries(${NAVIT_LIBNAME} ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} ${NAVIT_LIBS} )
+# The navit target is C-only, so the NDK does not inject the C++ runtime via
+# CMAKE_CXX_STANDARD_LIBRARIES. The curl prefab (boringssl/nghttp2) is built as
+# C++ and its static archives need operator delete / std::sort etc., so link the
+# C++ static runtime explicitly or the final link of libnavit.so fails.
+if(ANDROID)
+	target_link_libraries(${NAVIT_LIBNAME} c++_static c++abi)
+endif(ANDROID)
 set_target_properties(${NAVIT_LIBNAME} PROPERTIES COMPILE_DEFINITIONS "MODULE=navit;LIBDIR=\"${CMAKE_INSTALL_PREFIX}/${LIB_DIR}\";PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
 if (DEFINED NAVIT_COMPILE_FLAGS)
 	set_target_properties(${NAVIT_LIBNAME} PROPERTIES COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS}")

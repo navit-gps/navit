@@ -532,6 +532,15 @@
 		<itemgra item_types="street_nopass,street_0,street_1_city,street_1_land,footway" order="13-18">
 			<text text_size="9"/>
 		</itemgra>
+		<itemgra item_types="traffic_distortion" order="2">
+			<polyline color="#ff9000" width="2"/>
+		</itemgra>
+		<itemgra item_types="traffic_distortion" order="3-5">
+			<polyline color="#ff9000" width="4"/>
+		</itemgra>
+		<itemgra item_types="traffic_distortion" order="6">
+			<polyline color="#ff9000" width="5"/>
+		</itemgra>
 		<itemgra item_types="traffic_distortion" order="7-8">
 			<polyline color="#ff9000" width="8"/>
 		</itemgra>
