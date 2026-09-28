@@ -81,6 +81,7 @@ void navit_add_message(struct navit *this_, const char *message);
 struct message *navit_get_messages(struct navit *this_);
 struct graphics *navit_get_graphics(struct navit *this_);
 struct vehicleprofile *navit_get_vehicleprofile(struct navit *this_);
+GList *navit_get_voiceprofiles(struct navit *this_);
 GList *navit_get_vehicleprofiles(struct navit *this_);
 void navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async);
 void navit_set_destinations(struct navit *this_, struct pcoord *c, int count, const char *description, int async);
