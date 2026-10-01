@@ -57,3 +57,25 @@ Once reaching the origin, the lowest-value points are followed to the destinatio
 
 the (experimental) traffic module re-evaluates route-graph portions as segment costs change. \
 It can process traffic reports and find a way around problems.
+
+Testing
+=======
+
+Regression tests
+----------------
+
+The barrier routing regression test asserts that bollards, cycle barriers and
+lift gates block restricted vehicle profiles while leaving unrestricted ones
+unaffected:
+
+	build the code first:
+	make -C build -j5 maptool navit_core
+
+	then run the test from the repository root:
+	test/run_barrier_test.sh
+
+The script generates small binfile maps from the OSM fixtures in test/barrier,
+compiles the routing harness from test/routetest_main.c against the freshly
+built navit_core and reports an error if a restricted profile crosses a
+barrier or an unrestricted profile cannot pass. To use a build directory other
+than ./build, pass it as the first argument, e.g. test/run_barrier_test.sh ../build.

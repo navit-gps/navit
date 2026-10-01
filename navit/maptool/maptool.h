@@ -121,6 +121,7 @@ struct node_item {
     struct coord c;
     unsigned long long int nd_id : NODE_ID_BITS;
     char ref_way;
+    char is_barrier; /**< Whether this node is tagged as a barrier (e.g. bollard) */
 };
 
 struct zip_info;
