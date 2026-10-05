@@ -3767,6 +3767,24 @@ static struct osd_priv *osd_scale_new(struct navit *nav, struct osd_methods *met
     meth->set_attr = set_std_osd_attr;
 
     osd_set_std_attr(attrs, &opc->osd_item, TRANSPARENT_BG | ITEM_HAS_TEXT);
+    if (!attr_search(attrs, attr_foreground_color)) {
+        opc->osd_item.color_fg.r = 0xffff - opc->osd_item.text_color.r;
+        opc->osd_item.color_fg.g = 0xffff - opc->osd_item.text_color.g;
+        opc->osd_item.color_fg.b = 0xffff - opc->osd_item.text_color.b;
+        opc->osd_item.color_fg.a = 0xffff;
+        if (COLOR_IS_SAME(opc->osd_item.color_fg, opc->osd_item.text_color)) {
+            opc->osd_item.color_fg.r = 0x1111;
+            opc->osd_item.color_fg.g = 0x1111;
+            opc->osd_item.color_fg.b = 0x1111;
+            opc->osd_item.color_fg.a = 0xffff;
+        }
+        if (opc->osd_item.color_fg.a == 0) {
+            opc->osd_item.color_fg.a = 0xffff;
+            opc->osd_item.color_fg.r = 0x1111;
+            opc->osd_item.color_fg.g = 0x1111;
+            opc->osd_item.color_fg.b = 0x1111;
+        }
+    }
 
     navit_add_callback(nav, this->navit_init_cb =
                                 callback_new_attr_1(callback_cast(osd_scale_init), attr_graphics_ready, opc));
