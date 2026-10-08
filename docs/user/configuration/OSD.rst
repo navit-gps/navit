@@ -612,6 +612,26 @@ the current map. This updates as you zoom in or out. For example:
 
    <osd enabled="yes" x="0" y="-84" w="240" h="26" font_size="150" type="scale"/>
 
+The parts of the ruler can be themed separately:
+
+* ``background_color`` fills the whole ``w`` x ``h`` box and is also
+  used as the background of the distance label.
+* ``text_color`` is used for the thin scale line, its end ticks and the
+  distance label.
+* ``foreground_color`` is used for the thick bar drawn underneath the
+  thin line. If omitted, it defaults to the opaque complement of
+  ``text_color`` (with a conservative fallback) to preserve contrast
+  between the bar/caps/ticks and the thin line and label.
+
+The scale always draws into an overlay of its own, so ``use_overlay``
+has no effect on it and ``osd_configuration`` works without it.
+
+For example:
+
+.. code:: xml
+
+   <osd enabled="yes" x="0" y="-84" w="240" h="26" font_size="150" type="scale" background_color="#000000aa" text_color="#ffffffff" foreground_color="#ffcc00"/>
+
 .. _osd_speed_cam:
 
 speed_cam

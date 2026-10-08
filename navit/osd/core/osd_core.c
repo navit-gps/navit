@@ -3638,7 +3638,6 @@ static struct osd_priv *osd_volume_new(struct navit *nav, struct osd_methods *me
 struct osd_scale {
     int use_overlay;
     struct callback *draw_cb, *navit_init_cb;
-    struct graphics_gc *black;
 };
 
 static int round_to_nice_value(double value) {
@@ -3676,10 +3675,9 @@ static void osd_scale_draw(struct osd_priv_common *opc, struct navit *nav, struc
     if (!navit_get_attr(nav, attr_transformation, &transformation, NULL))
         return;
 
-    graphics_draw_mode(opc->osd_item.gr, draw_mode_begin);
+    osd_fill_with_bgcolor(&opc->osd_item);
     item_pos.x = 0;
     item_pos.y = 0;
-    graphics_draw_rectangle(opc->osd_item.gr, opc->osd_item.graphic_bg, &item_pos, opc->osd_item.w, opc->osd_item.h);
 
     scale_line_start = item_pos;
     scale_line_start.y += opc->osd_item.h / 2;
@@ -3722,11 +3720,10 @@ static void osd_scale_draw(struct osd_priv_common *opc, struct navit *nav, struc
     graphics_get_text_bbox(opc->osd_item.gr, opc->osd_item.font, text, 0x10000, 0, bbox, 0);
     p[0].x = (opc->osd_item.w - bbox[2].x) / 2 + item_pos.x;
     p[0].y = item_pos.y + opc->osd_item.h - opc->osd_item.h / 10;
-    graphics_draw_text(opc->osd_item.gr, opc->osd_item.graphic_fg_text, opc->osd_item.graphic_fg, opc->osd_item.font,
-                       text, &p[0], 0x10000, 0);
+    graphics_draw_text(opc->osd_item.gr, opc->osd_item.graphic_fg_text, NULL, opc->osd_item.font, text, &p[0], 0x10000,
+                       0);
     g_free(text);
-    if (this->use_overlay)
-        graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
+    graphics_draw_mode(opc->osd_item.gr, draw_mode_end);
 }
 
 static void osd_scale_init(struct osd_priv_common *opc, struct navit *nav) {
@@ -3767,6 +3764,24 @@ static struct osd_priv *osd_scale_new(struct navit *nav, struct osd_methods *met
     meth->set_attr = set_std_osd_attr;
 
     osd_set_std_attr(attrs, &opc->osd_item, TRANSPARENT_BG | ITEM_HAS_TEXT);
+    if (!attr_search(attrs, attr_foreground_color)) {
+        opc->osd_item.color_fg.r = 0xffff - opc->osd_item.text_color.r;
+        opc->osd_item.color_fg.g = 0xffff - opc->osd_item.text_color.g;
+        opc->osd_item.color_fg.b = 0xffff - opc->osd_item.text_color.b;
+        opc->osd_item.color_fg.a = 0xffff;
+        if (COLOR_IS_SAME(opc->osd_item.color_fg, opc->osd_item.text_color)) {
+            opc->osd_item.color_fg.r = 0x1111;
+            opc->osd_item.color_fg.g = 0x1111;
+            opc->osd_item.color_fg.b = 0x1111;
+            opc->osd_item.color_fg.a = 0xffff;
+        }
+        if (opc->osd_item.color_fg.a == 0) {
+            opc->osd_item.color_fg.a = 0xffff;
+            opc->osd_item.color_fg.r = 0x1111;
+            opc->osd_item.color_fg.g = 0x1111;
+            opc->osd_item.color_fg.b = 0x1111;
+        }
+    }
 
     navit_add_callback(nav, this->navit_init_cb =
                                 callback_new_attr_1(callback_cast(osd_scale_init), attr_graphics_ready, opc));
