@@ -36,7 +36,17 @@ set(NAVIT_VERSION_MAJOR "0")
 set(NAVIT_VERSION_MINOR "5")
 set(NAVIT_VERSION_PATCH "7")
 
-set(CMAKE_C_FLAGS_DEBUG "-g -O0 -fno-omit-frame-pointer")
+foreach(_lang C CXX)
+	if(CMAKE_${_lang}_COMPILER_LOADED AND NOT MSVC AND NOT WINCE)
+		string(STRIP "${CMAKE_${_lang}_FLAGS_DEBUG_INIT}" _default_debug_flags)
+		if(CMAKE_${_lang}_FLAGS_DEBUG STREQUAL "${_default_debug_flags}")
+			set(CMAKE_${_lang}_FLAGS_DEBUG "-g -O0 -fno-omit-frame-pointer"
+				CACHE STRING "Flags used by the ${_lang} compiler during Debug builds." FORCE)
+		endif()
+		unset(_default_debug_flags)
+	endif()
+endforeach()
+unset(_lang)
 
 if(ANDROID)
     set(PACKAGE_VERSION "${NAVIT_VERSION_MAJOR}.${NAVIT_VERSION_MINOR}.${NAVIT_VERSION_PATCH}.${ANDROID_ABI}")
