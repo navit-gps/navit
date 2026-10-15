@@ -1,37 +1,40 @@
 Layout
 ======
 
-The way a `map <map>`__ and `cursor <cursor>`__ (the thing that shows
-your current location) is rendered in Navit is controlled by the
-particular Layout which has been selected. As with almost everything
-else in Navit, Layouts are highly configurable. Below are user-submitted
-examples of Navit Layouts.
-
+The way a map and the cursor (the thing that shows your current
+location) is rendered in Navit is controlled by the particular Layout
+which has been selected. As with almost everything else in Navit,
+Layouts are highly configurable. For a description of the available
+layout configuration options, see :doc:`Layout Options
+</user/configuration/basic/layout>`. Below are user-submitted examples of
+Navit Layouts.
 
 Adding a Layout
 ---------------
 
 If you want to share a layout with other Navit users, please do so using
-this page. Leave this page as an introduction to your layout (use the
-other layout descriptions as a template), and link to a new page in the
-Layout/ namespace where you can include extra images and the relevant
-xml code
-
+this page. Leave this page as an introduction to your layout, use the
+other layout descriptions below as a template, and add the full XML code
+of your layout. For any questions or feedback, you can reach the Navit
+team via the channels listed on the :doc:`/user/community/contacts` page.
 
 Alternate Layouts
 -----------------
 
-`Mapnik <Layout/mapnik>`__
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Mapnik
+~~~~~~
 
-`right|300px|text-top|thumb|Mapnik-style map
-layout <image:Layout_osm_2.png>`__ This layout tries to closely mimic
-the Mapnik rendering style used by default over at
-`OpenStreetMap <http://www.openstreetmap.org>`__. It even uses the same
-icon styles where available (this means you will have to download the
-relevant icons - a link is provided).
+.. figure:: layout_osm_2.png
+   :alt: Mapnik-style map layout
+   :width: 300px
 
-`Go to layout <Layout/mapnik>`__
+   Mapnik-style map layout
+
+This layout tries to closely mimic the Mapnik rendering style used by
+default over at `OpenStreetMap <http://www.openstreetmap.org>`__. It even
+uses the same icon styles where available (this means you will have to
+download the relevant icons - a link is provided). See
+:doc:`Layout_mapnik` for the full description and XML.
 
 Features
 ^^^^^^^^
@@ -62,24 +65,22 @@ Features
    actually get converted from OSM and won't currently appear in the
    Navit data) have been removed.
 
-|
-
-
 Mapnik for small screens
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-`right|300px|text-top|thumb|Mapnik-style map layout for small screens.
-This image uses
-the <image:0606_Screenshot_2012-02-27-22-07-03.png>`__\ `0606.at <OSD_Layouts#0606.at_Android_Layout>`__\ `OSD
-layout. <image:0606_Screenshot_2012-02-27-22-07-03.png>`__ Based upon
-the original Mapnik style, these map layouts are optimised for devices
-with smaller screens. There are two layouts available:
+.. figure:: 0606_Screenshot_2012-02-27-22-07-03.png
+   :alt: Mapnik-style map layout for small screens
+   :width: 300px
 
--  HDPI - for high definition small screens. `Go to
-   layout <Layout/mapnik-for-hdpi>`__
--  MDPI - for medium definition small screens. `Go to
-   layout <Layout/mapnik-for-mdpi>`__
+   Mapnik-style map layout for small screens
 
+Based upon the original Mapnik style, these map layouts are optimised
+for devices with smaller screens. There are two layouts available:
+
+-  HDPI - for high definition small screens. See
+   :doc:`Layout_mapnik-for-hdpi`.
+-  MDPI - for medium definition small screens. See
+   :doc:`Layout_mapnik-for-mdpi`.
 
 Features
 ^^^^^^^^
@@ -88,38 +89,40 @@ Features
 -  Reduced the number of visible elements at higher zoom levels
 -  Increased font sizes for town and street names
 
-
 See also
 ^^^^^^^^
 
-This map layout was developed together with the `0606.at OSD layout for
-Android <OSD_Layouts#0606.at_Android_Layout>`__. Check out the OSD
-layout for a simple download package to install both this map layout and
-the OSD layout, and all associated icons and POI image files.
+This map layout was developed together with the 0606.at OSD layout for
+Android (see :ref:`at_android_gui` on the :doc:`Internal GUI
+</user/configuration/Internal_GUI>` page). Check out the OSD layout for a
+simple download package to install both this map layout and the OSD
+layout, and all associated icons and POI image files.
 
-|
+Snow
+~~~~
 
-`Snow <Layout/snow>`__
-~~~~~~~~~~~~~~~~~~~~~~
+.. figure:: Snow.png
+   :alt: Snow-style map layout
+   :width: 300px
 
-`right|300px|text-top|thumb|Snow-style map layout <image:Snow.png>`__
-Snow style theme, optimised for the iPod/iPhone.
+   Snow-style map layout
 
-`Go to layout <Layout/snow>`__
+Snow style theme, optimised for the iPod/iPhone. See
+:doc:`Layout_snow` for the full description and XML.
 
-|
+High-Visibility
+~~~~~~~~~~~~~~~
 
+.. figure:: Hi_vis2.jpg
+   :alt: Hi-Vis style layout
+   :width: 300px
 
-`High-Visibility <Layout/hi_vis>`__
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   Hi-Vis style layout
 
-`right|300px|text-top|thumb|Hi-Vis style layout <image:Hi_vis2.jpg>`__
 Trying to read a computer screen in full sun with aging eyes and
 sunglasses on while driving is difficult - this high-visibility layout
-attempts to address those problems.
-
-`Go to layout <Layout/hi_vis>`__
-
+attempts to address those problems. See :doc:`Layout_hi_vis` for the
+full description and XML.
 
 Features
 ^^^^^^^^
@@ -138,37 +141,28 @@ Features
 
 -  Changed activation zoom levels for airport POI icons
 
-
-`Detailed Camping Biker <Layout/detailedcampingbike>`__
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. figure:: Layout_Detailed_Camping_Biker.png
-   :alt: Layout_Detailed_Camping_Biker.png
-   :width: 300px
-
-   Layout_Detailed_Camping_Biker.png
-
-
-Features
-^^^^^^^^
-
-| Many pois are visible like housenumbers, Camping, Restaurants,
-  Bakerys, Shops for food, Peaks (with names), Unknown (points with
-  names).
-| Tracks, Paths, hiking paths and so on have different colors to
-  distinguish them. `Go to layout <Layout/detailedcampingbike>`__
-
-`bike <Layout/bike>`__
+Detailed Camping Biker
 ~~~~~~~~~~~~~~~~~~~~~~
 
-`right|300px|text-top|thumb|bike layout <image:bike.jpg>`__ because all
-other layouts are not displaying bike paths properly on winCE devices,
-i've rolled my own. it is simple and needs fixing and refining. most
-POI's are hidden - this is one of things which should be changed. it is
-also not independent from car layout - another problem
+.. figure:: Layout_Detailed_Camping_Biker.png
+   :alt: Detailed Camping Biker layout
+   :width: 300px
 
-`Go to layout <Layout/bike>`__
+   Detailed Camping Biker layout
 
+Many POIs are visible like housenumbers, Camping, Restaurants, Bakerys,
+Shops for food, Peaks (with names), Unknown (points with names). Tracks,
+Paths, hiking paths and so on have different colors to distinguish them.
+See :doc:`Layout_detailedcampingbike` for the full description and XML.
+
+bike
+~~~~
+
+Because all other layouts are not displaying bike paths properly on
+winCE devices, this layout was rolled on its own. It is simple and needs
+fixing and refining. Most POIs are hidden - this is one of the things
+which should be changed. It is also not independent from the car layout
+- another problem. See :doc:`Layout_bike` for the full XML.
 
 Features
 ^^^^^^^^
@@ -178,7 +172,6 @@ Features
 -  everything else is much like car layout
 -  no dashed lines - suitable for winCE
 
-
 Alternate Cursors
 -----------------
 
@@ -186,11 +179,14 @@ The cursor is also defined in the layout, and alternate cursors are
 shown below. If you would like to share your alternate cursor design,
 but haven't really changed the rest of the layout, add it below!
 
-
 2D Car
 ~~~~~~
 
-`left|300px|text-top|thumb|2D car cursor <image:NavitScreenshot.jpg>`__
+.. figure:: NavitScreenshot.jpg
+   :alt: 2D car cursor
+   :width: 300px
+
+   2D car cursor
 
 +----------------------------------------------------------+
 | Layout XML                                               |
@@ -296,7 +292,11 @@ but haven't really changed the rest of the layout, add it below!
 2D Car black for 10,2"
 ~~~~~~~~~~~~~~~~~~~~~~
 
-`left|300px <image:Green.png>`__
+.. figure:: Green.png
+   :alt: 2D car black cursor for 10,2" screens
+   :width: 300px
+
+   2D car black cursor for 10,2" screens
 
 +------------------------------------------------------------------+
 | Layout XML                                                       |
@@ -428,7 +428,11 @@ but haven't really changed the rest of the layout, add it below!
 2D cursor tangoGPS-like
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-`left|200px <image:TangoGPS_cursor.png>`__
+.. figure:: TangoGPS_cursor.png
+   :alt: 2D cursor tangoGPS-like
+   :width: 200px
+
+   2D cursor tangoGPS-like
 
 +------------------------------------------------------------+
 | Layout XML                                                 |
@@ -462,16 +466,25 @@ but haven't really changed the rest of the layout, add it below!
 |    </cursor>                                               |
 +------------------------------------------------------------+
 
-|
 
 3D Arrow-head
 ~~~~~~~~~~~~~
 
 Note that the screenshot below left was taken on an Android - not all
 graphics drivers support the drop shadow underneath the arrow, as shown
-by the screenshot from Navit on Windows Vista () `300px|text-top|3D
-Arrow-head cursor <image:3D-arrow-head.png>`__   `500px|text-top|3D
-Arrow-head cursor on Windows <image:3D-arrow-head-windows.png>`__
+by the screenshot from Navit on Windows Vista:
+
+.. figure:: 3D-arrow-head.png
+   :alt: 3D Arrow-head cursor
+   :width: 300px
+
+   3D Arrow-head cursor
+
+.. figure:: 3D-arrow-head-windows.png
+   :alt: 3D Arrow-head cursor on Windows
+   :width: 500px
+
+   3D Arrow-head cursor on Windows
 
 +------------------------------------------------------------+
 | Layout XML                                                 |
@@ -529,4 +542,19 @@ Arrow-head cursor on Windows <image:3D-arrow-head-windows.png>`__
 |    </cursor>                                               |
 +------------------------------------------------------------+
 
-|
+Layout Gallery
+--------------
+
+The complete XML for the layouts presented above is kept in dedicated
+pages:
+
+.. toctree::
+   :maxdepth: 1
+
+   Layout_mapnik
+   Layout_mapnik-for-hdpi
+   Layout_mapnik-for-mdpi
+   Layout_snow
+   Layout_hi_vis
+   Layout_detailedcampingbike
+   Layout_bike

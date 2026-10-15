@@ -843,7 +843,9 @@ static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widge
     }
     if (cmd) {
 #ifdef HAVE_SYSTEM
-        system(cmd);
+        int rc = system(cmd);
+        if (rc == -1)
+            dbg(lvl_error, "Error: Failed to execute external command '%s'.", cmd);
 #else
         dbg(lvl_error, "Error: External commands were disabled during compilation, cannot call '%s'.", cmd);
 #endif
@@ -2850,8 +2852,8 @@ struct gui_internal_show_coord_args {
     struct pcoord coord; /*!< The geographical coordinates to use */
 };
 
-static int gui_internal_show_coord_actions(struct gui_priv *this, struct pcoord *c,
-                                           char *description); /* Forward declaration */
+static int gui_internal_show_coord_actions(struct gui_priv *this, const struct pcoord *c,
+                                           const char *description); /* Forward declaration */
 
 /**
  * @brief Takes a context (as a pointer to a gui_internal_show_coord_args structure) and run
@@ -2885,7 +2887,7 @@ static void gui_internal_deferred_show_coord_actions(struct gui_priv *this,
  *
  * @return 0 on failure, 1 on success, -1 if argument c is NULL
  */
-static int gui_internal_show_coord_actions(struct gui_priv *this, struct pcoord *c, char *description) {
+static int gui_internal_show_coord_actions(struct gui_priv *this, const struct pcoord *c, const char *description) {
     struct widget w;
 
     dbg(lvl_debug, "enter");
@@ -2916,7 +2918,7 @@ static int gui_internal_show_coord_actions(struct gui_priv *this, struct pcoord 
     pcoord_format_degree_short(c, w.text, 32, " ");
 
     if (description)
-        w.name = description;
+        w.name = (char *)description;
     else
         w.name = w.text;
 

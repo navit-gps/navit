@@ -758,9 +758,8 @@ static void navigation_set_turnaround(struct navigation *this_, int val) {
 }
 
 int navigation_set_attr(struct navigation *this_, struct attr *attr) {
-    struct attr name_attr;
+    struct attr name_attr = {0};
 
-    name_attr.type == attr_name;
     switch (attr->type) {
     case attr_speech:
         this_->speech = attr->u.speech;
@@ -773,7 +772,7 @@ int navigation_set_attr(struct navigation *this_, struct attr *attr) {
         break;
     case attr_nav_status:
         this_->nav_status = attr->u.num;
-        dbg(lvl_debug, "nav_status = %i", attr->u.num);
+        dbg(lvl_debug, "nav_status = %ld", attr->u.num);
         break;
     default:
         break;

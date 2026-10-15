@@ -67,7 +67,7 @@ typedef int (*object_func_init)(void *);
 typedef void (*object_func_destroy)(void *);
 typedef void *(*object_func_dup)(void *);
 typedef void *(*object_func_ref)(void *);
-typedef void *(*object_func_unref)(void *);
+typedef void (*object_func_unref)(void *);
 
 /**
  * @brief Basic functions for Navit objects
@@ -112,7 +112,7 @@ struct object_func {
     void *(*ref)(void *);                          /**< Function to increase the reference count for an
                                                     *  object instance, set to `navit_object_ref` for
                                                     *  default behavior, can be NULL for some object types */
-    void *(*unref)(void *);                        /**< Function to decrease the reference count for an
+    void (*unref)(void *);                         /**< Function to decrease the reference count for an
                                                     *  object instance, set to `navit_object_unref` for
                                                     *  default behavior, can be NULL for some object types */
 };
@@ -135,7 +135,7 @@ struct navit_object {
 int navit_object_set_methods(void *in, int in_size, void *out, int out_size);
 struct navit_object *navit_object_new(struct attr **attrs, struct object_func *func, int size);
 struct navit_object *navit_object_ref(struct navit_object *obj);
-void *navit_object_unref(struct navit_object *obj);
+void navit_object_unref(struct navit_object *obj);
 struct attr_iter *navit_object_attr_iter_new(void *unused);
 void navit_object_attr_iter_destroy(struct attr_iter *iter);
 int navit_object_get_attr(struct navit_object *obj, enum attr_type type, struct attr *attr, struct attr_iter *iter);

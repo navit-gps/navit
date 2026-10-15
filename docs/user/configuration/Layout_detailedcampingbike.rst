@@ -14,8 +14,8 @@ rename this folder to "icons".
 
 --------------
 
-`How to install (on Android) <Android>`__ `how to add the Mapdata of
-OpenStreetMap <OpenStreetMap#Quick_Start>`__
+:doc:`How to install Navit on Android </user/platforms/maintained/android>`
+:doc:`How to add the Mapdata of OpenStreetMap </user/configuration/maps/osm>`
 
 --------------
 

@@ -69,11 +69,8 @@ Main Features
    :glob:
    :caption: Old Wiki
 
-   user/configuration/Internal_GUI_Menu_configurations
-   user/configuration/Layout
    user/configuration/Menu
    user/configuration/NavitConfigurator
-   user/configuration/OSD
    user/configuration/OSD_Layouts
    user/configuration/QML_GUI
    user/configuration/QML2_GUI

@@ -489,8 +489,6 @@ static int binfile_attr_get(void *priv_data, enum attr_type attr_type, struct at
                 attr->u.attrs = mr->attrs;
             } else {
                 attr_data_set_le(attr, t->pos_attr + 1);
-                if (type == attr_flags)
-                    attr->u.num |= AF_CAR;
             }
             t->pos_attr += size;
             return 1;

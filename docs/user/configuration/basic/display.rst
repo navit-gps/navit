@@ -93,11 +93,10 @@ An example ``gui`` tag using the previous options is shown below:
 	<gui type="internal" enabled="yes" font_size="250" icon_xs="48" icon_s="48" icon_l="64" keyboard="0" menu_on_map_click="0">
 
 Besides the attributes above, the menu itself is defined using an
-HTML-like syntax inside the ``<gui>`` element; ready-made configurations
-are listed under :doc:`Internal GUI/Menu configurations
-</user/configuration/Internal_GUI_Menu_configurations>`. A walkthrough of
-the resulting menus can be found on the :doc:`Internal GUI
-</user/configuration/Internal_GUI>` page.
+HTML-like syntax inside the ``<gui>`` element; see :ref:`Customizing the
+menu <internal_guimenu_configurations>` for details and ready-made
+configurations. A walkthrough of the resulting menus can be found on the
+:doc:`Internal GUI </user/configuration/Internal_GUI>` page.
 
 GTK GUI
 ~~~~~~~

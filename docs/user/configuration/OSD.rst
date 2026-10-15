@@ -213,24 +213,24 @@ An osd type is implemented using:
 
    <osd enabled="yes" x="10" y="10" type="OSD_TYPE" />
 
-Current OSD types (from ):
+Current OSD types (from the Navit source code) :
 
--  `auxmap <#auxmap>`__
--  `button <#button>`__
--  `compass <#compass>`__
--  `cmd_interface <#cmd_interface>`__
--  `gps_status <#gps_status>`__
--  `image <#image>`__
--  `navigation_next_turn <#navigation_next_turn>`__
--  `navigation_status <#navigation_status>`__
--  `odometer <#odometer>`__
--  `route_guard <#route_guard>`__
--  `scale <#scale>`__
--  `speed_cam <#speed_cam>`__
--  `speed_warner <#speed_warner>`__
--  `stopwatch <#stopwatch>`__
--  `text <#text>`__
--  `toggle_announcer <#toggle_announcer>`__
+-  :ref:`auxmap <osd_auxmap>`
+-  :ref:`button <osd_button>`
+-  :ref:`compass <osd_compass>`
+-  :ref:`cmd_interface <osd_cmd_interface>`
+-  :ref:`gps_status <osd_gps_status>`
+-  :ref:`image <osd_image>`
+-  :ref:`navigation_next_turn <osd_navigation_next_turn>`
+-  :ref:`navigation_status <osd_navigation_status>`
+-  :ref:`odometer <osd_odometer>`
+-  :ref:`route_guard <osd_route_guard>`
+-  :ref:`scale <osd_scale>`
+-  :ref:`speed_cam <osd_speed_cam>`
+-  :ref:`speed_warner <osd_speed_warner>`
+-  :ref:`stopwatch <osd_stopwatch>`
+-  :ref:`text <osd_text>`
+-  :ref:`toggle_announcer <osd_toggle_announcer>`
 -  volume
 
 For example:
@@ -247,6 +247,8 @@ You can determine the supported xml options for each OSD type by reading
 types have at least an "x" and "y" option that determine the location of
 their OSD.
 
+.. _osd_auxmap:
+
 auxmap
 ------
 
@@ -258,12 +260,14 @@ Example `Configuration <Configuration>`__ contents:
 
    <osd enabled="yes" type="auxmap" x="48"  y="48" w="400" h="600"/>
 
+.. _osd_button:
+
 button
 ------
 
 |osd-button.png| The button type creates a placeholder in which a
 specified image is clickable; this is usually accompanied by a
-`command <#command>`__.
+:ref:`command <osd_command>`.
 
 Example `Configuration <Configuration>`__ contents:
 
@@ -302,6 +306,8 @@ attributes:
 
    <osd enabled="yes" type="button" x="48"  y="48" use_overlay="1" background_color="#ddddddca" command="gui.fullscreen=!gui.fullscreen" src="toggle_fullscreen.xpm" />
 
+.. _osd_compass:
+
 compass
 -------
 
@@ -324,6 +330,8 @@ customization:
 .. code:: xml
 
    <osd enabled="yes" type="compass" font_size="150" x="-68" y="-58" w="36" h="45" destination_dir_color="#ff00ff" north_color="#00a0a0"/>
+
+.. _osd_cmd_interface:
 
 cmd_interface
 -------------
@@ -354,6 +362,8 @@ Every second (**update_period**), the command specified in **command**
 will be run. In this case, the route status is evaluated and the
 **text** attribute of the text element is updated accordingly.
 
+.. _osd_gps_status:
+
 gps_status
 ----------
 
@@ -364,19 +374,23 @@ strength. Example:
 
    <osd enabled="yes" type="gps_status" x="-32" y="-58"/>
 
+.. _osd_image:
+
 image
 -----
 
 This draws a static image on the screen, useful for creating fancy
 layouts or for displaying status icons (which can be updated using a
-`cmd_interface <#cmd_interface>`__ control). It behaves like a
-`button <#button>`__ but without the ability to run a command on click.
+:ref:`cmd_interface <osd_cmd_interface>` control). It behaves like a
+:ref:`button <osd_button>` but without the ability to run a command on click.
 
 Example `Configuration <Configuration>`__ contents:
 
 .. code:: xml
 
    <osd enabled="yes" type="image" x="48"  y="48" src="image.png" />
+
+.. _osd_navigation_next_turn:
 
 navigation_next_turn
 --------------------
@@ -426,6 +440,8 @@ following ``enable_expression``:
 
 ``   enable_expression="navigation.nav_status&gt;=3"``
 
+.. _osd_navigation_status:
+
 navigation_status
 -----------------
 
@@ -452,6 +468,8 @@ will show you either the next maneuver, or the status of the routing
 engine. (This is the default configuration since the introduction of
 ``navigation_status``.)
 
+.. _osd_odometer:
+
 odometer
 --------
 
@@ -477,7 +495,7 @@ as a format string. In this format string:
    Navit <http://download.navit-project.org/navit/>`__ greater or equal
    to .
 
-The ``idle_color`` attribute defines the `text color <#Text_Color>`__ in
+The ``idle_color`` attribute defines the :ref:`text color <text_color>` in
 idle state. The ``idle_color`` attribute defaults to orange and can be
 helpful in combination with the standard attributes
 ```text_color`` <#Text_Color>`__ and
@@ -520,6 +538,8 @@ When ``disable_reset`` is enabled you can reset odometer by creating
 button with command:
 
 ``   command="odometer_reset(&quot;``\ *``odometer_name``*\ ``&quot;)"``
+
+.. _osd_route_guard:
 
 route_guard
 -----------
@@ -580,6 +600,8 @@ An example textfile mapthat can be used with route_guard is shown below:
 | ``   19.30257 47.63170 ``
 | ``   19.30312 47.63075``
 
+.. _osd_scale:
+
 scale
 -----
 
@@ -589,6 +611,8 @@ the current map. This updates as you zoom in or out. For example:
 .. code:: xml
 
    <osd enabled="yes" x="0" y="-84" w="240" h="26" font_size="150" type="scale"/>
+
+.. _osd_speed_cam:
 
 speed_cam
 ---------
@@ -761,6 +785,8 @@ CAM_RAIL         32
 CAM_TRAFFIPAX    64
 ================ ==
 
+.. _osd_speed_warner:
+
 speed_warner
 ------------
 
@@ -794,6 +820,8 @@ After *"images:"* the image filenames are listed for red green and grey
 states in this order. The filenames are separated by colon (:) character
 (see example above).
 
+.. _osd_stopwatch:
+
 stopwatch
 ---------
 
@@ -801,10 +829,10 @@ This OSD displays a stopwatch which can be useful for measuring time
 needed to take certain paths. Pausing, restarting and resetting counter
 is supported. Single click toggles counting, double click resets the
 counter. The osd accepts the standard osd attributes. The idle_color
-attribute defines the `text color <#Text_Color>`__ in idle state. The
+attribute defines the :ref:`text color <text_color>` in idle state. The
 idle_color attribute defaults to orange and can be helpful in
-combination with the standard attributes `text_color <#Text_Color>`__
-and `background_color <#Background_Color>`__. The following example
+combination with the standard attributes :ref:`text_color <text_color>`
+and :ref:`background_color <background_color>`. The following example
 shows how to enable stopwatch osd:
 
 .. code:: xml
@@ -815,6 +843,8 @@ It is also possible to disable resetting a stopwatch by setting the
 disable_reset attribute (see example). This can be used to prevent
 accidental reset on certain touchscreen devices where it is easy to send
 double click by misadventure.
+
+.. _osd_text:
 
 text
 ----
@@ -1066,6 +1096,8 @@ Examples:
    <!-- Time remaining until destination is reached (HH:mm) -->
    <osd enabled="yes" type="text" label="TR ${navigation.item.destination_time[remaining]}" x="-85" y="-90" />
 
+.. _osd_toggle_announcer:
+
 toggle_announcer
 ----------------
 
@@ -1137,7 +1169,9 @@ non-visible osd will still consume memory and cpu cycles.
 Note that ``osd_configuration`` cannot be used together with
 ``enable_expression``: when both are specified for the same OSD item,
 only the ``enable_expression`` will take effect. See
-`#enable_expression <#enable_expression>`__ for a workaround.
+:ref:`#enable_expression <osd_enable_expression>` for a workaround.
+
+.. _osd_enable_expression:
 
 enable_expression
 =================
@@ -1152,8 +1186,8 @@ true) with the following syntax:
 In this example the OSD will be shown only when Navit is in routing
 mode.
 
-Expressions use the syntax described in `#command <#command>`__ and can
-use the attributes in `#Attributes <#Attributes>`__ (currently not an
+Expressions use the syntax described in :ref:`#command <osd_command>` and can
+use the attributes in :ref:`#Attributes <osd_Attributes>` (currently not an
 exhaustive list).
 
 Not all OSD elements honor this command. Those that do currently (as of
@@ -1187,6 +1221,8 @@ This even allows you to do things which are not possible with a simple
    requires both conditions to be true in order for the OSD item to
    show.
 
+.. _osd_command:
+
 command
 =======
 
@@ -1200,7 +1236,7 @@ An osd item can contain a command as in those examples:
 The command will be called when the item is clicked.
 
 Commands can contain expressions or one of the commands listed under
-`Commands <#Commands>`__.
+:ref:`Commands <osd_commands>`.
 
 Expressions may use the following operators:
 
@@ -1238,7 +1274,7 @@ description (text-version)
    <osd type="text" label="sth" command="osd_configuration=32,gui.route_description()/>
 
 Available attributes for use in expressions are listed under
-`Attributes <#Attributes>`__.
+:ref:`Attributes <osd_attributes>`.
 
 .. _section_1:
 
@@ -1256,6 +1292,8 @@ Available attributes for use in expressions are listed under
    otherwise set it to 0.
 -  osd.src means: if autozoom_active equals 0, then use autozoom.xpm,
    otherwise use autozoom.2xpm.
+
+.. _osd_keybindings:
 
 Keybindings
 ===========
@@ -1423,6 +1461,8 @@ If you don't have the .png files already, you can create them this way:
 Please note that the OSD layer is still under development, and content
 on this page may be out-of-date.
 
+.. _osd_commands:
+
 Commands
 ========
 
@@ -1431,7 +1471,7 @@ Commands
 Navit commands
 --------------
 
-The following commands (from ) can be used in the **command**
+The following commands (from the Navit source code) can be used in the **command**
 attribute of OSD items by specifying the function name as shown below.
 If you want to call them from elsewhere (e.g. from internal GUI menu
 items), prefix them with **navit.** (e.g. **navit.zoom_in()**):
@@ -1735,7 +1775,7 @@ GUI commands
 GUI commands can be used within from GUI menu items by specifying the
 function name as shown below. If you want to call them from elsewhere
 (e.g. from OSD items), prefix them with **gui**. (e.g.
-**gui.menu()**) The following are available (from ):
+**gui.menu()**) The following are available (from the Navit source code) :
 
 +----------------------------+-----------------------------------+
 | Command                    | Meaning                           |
@@ -1906,6 +1946,8 @@ function name as shown below. If you want to call them from elsewhere
 |                            | ''' to display the content of an  |
 |                            | attribute in a menu item.         |
 +----------------------------+-----------------------------------+
+
+.. _osd_attributes:
 
 Attributes
 ==========

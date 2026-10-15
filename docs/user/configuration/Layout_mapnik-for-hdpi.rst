@@ -6,16 +6,16 @@ Layout/mapnik-for-hdpi
 Mapnik/OpenStreetMap Style Layout
 =================================
 
-Based upon the `Mapnik <Layout/mapnik>`__ layout, this layout improves
-the map for high definition small screens, such as those for smartphones
-and netbooks.
+Based upon the :doc:`Layout Mapnik <Layout_mapnik>` layout, this layout
+improves the map for high definition small screens, such as those for
+smartphones and netbooks.
 
 
 See also
 --------
 
-A Mapnik-based layout optimised for medium definition `small screens is
-also available <Layout/mapnik-for-mdpi>`__.
+A Mapnik-based layout optimised for medium definition small screens is
+:doc:`also available <Layout_mapnik-for-mdpi>`.
 
 XML
 ---
