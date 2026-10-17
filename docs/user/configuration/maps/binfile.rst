@@ -1,13 +1,15 @@
+.. _binfile:
+
 Binfile
--------
+=======
 
 Navit has its own map format, called **binfile** format. It's a binary format, optimized for use with Navit (rendering, search, routing on embedded devices).
 
 Dividing the world into tiles
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The map coordinates of binfile are in meters, measured from equator and null meridian, with a merkator projection. The limit of this world is about 20000 km in each direction from this null point. This doesn't cover polar regions, but it's ok for now.
+The map coordinates of binfile are in meters, measured from equator and null meridian, with a Mercator projection. The limit of this world is about 20000 km in each direction from this null point. This doesn't cover polar regions, but it's ok for now.
 
-So, the world gives a 40000x40000km rectangle (tile). This rectangle is divided into 4 equally-sized sub-rectangles (tiles) called a,b,c and d counter clockwise ...
+So, the world gives a 40000x40000km rectangle (tile). This rectangle is divided into 4 equally-sized sub-rectangles (tiles) called a,b,c and d:
 
 * a is top right
 * b top left
@@ -21,7 +23,7 @@ This is continued further up to 14 levels (but the number of levels might be var
 A Navit binfile is actually a ZIP file; each tile is a member file in a zip file. So to extract an area of this file, you just read the zip file sequentially.
 
 If you extract a small binfile using a zip tool, you will see member files
-adbdbbbbadcacd, adbdbbbbadcacd, ... . Each file contains the data for one tile.
+adbdbbbbadcacd, adbdbbbbadcacc, ... . Each file contains the data for one tile.
 
 Projection
 ~~~~~~~~~~
@@ -39,25 +41,30 @@ As declared in `navit/map/binfile/binfile.c`__, a tile is represented in memory 
 .. code-block:: c
 
  struct tile {
-   int *start;           /* Memory address of the whole data structure */
-   int *end;             /* Memory address of first memory address not belonging to tile
-                          * thus tile->end - tile->start represents the size of the tile
+   int *start;           /* Memory address of the buffer containing the tile data */
+   int *end;             /* First memory address not belonging to the tile data.
+                          * Thus tile->end - tile->start represents the size of the tile
                           * in multiples of 4 Bytes */
-   int *pos;             /* current position inside the tile */
-   int *pos_coord_start; /* pointer to the first element inside the tile that is a
-                          * coordinate. That is the first position after the header of a
-                          * tile. The header holds 3 entries each 32bit wide integers.
-                          * header[0] holds the size of the whole data-structure.
+   int *pos;             /* current position inside the tile data */
+   int *pos_coord_start; /* pointer to the first element inside the current item that is a
+                          * coordinate. That is the first position after the header of an
+                          * item. The header holds 3 entries each 32bit wide integers.
+                          * header[0] holds the size of the whole item (excluding this size field).
                           * header[1] holds the type of the item
                           * header[2] holds the size of the coordinates in the tile */
-   int *pos_coord;       /* current position inside the coordinates region within the tile */
-   int *pos_attr_start;  /* pointer to the first attr //TODO explain attr format// data
-                          * structure inside the tile's memory region */
-   int *pos_attr;        /* current position inside the attr region */
-   int *pos_next;        /* link to the next tile */
+   int *pos_coord;       /* current position inside the coordinates region of the current item */
+   int *pos_attr_start;  /* pointer to the first attr data structure of the current item */
+   int *pos_attr;        /* current position inside the attr region of the current item */
+   int *pos_next;        /* pointer to the next item */
+   struct file *fi;      /* the file from which this tile was loaded */
    int zipfile_num;
+   int mode;
  }
 
+The binary layout of the attribute data structure pointed to by ``pos_attr_start`` is described in the :ref:`Content <binfile_content>` section below.
+
+
+.. _binfile_content:
 
 Content
 ~~~~~~~
@@ -112,7 +119,7 @@ An object is placed inside of a tile using the following approach
 
 An object 'fits' inside of a tile if the coordinates of the object (min lat, min lon, max lat, max lon) lie inside of the coordinates of the tile (tile_min_lat, tile_min_lon, tile_max_lat, tile_max_lon)
 
-Any object that cross the equator or the poles is placed in the top-most tile because it can not fit inside of any sub-tile.
+Any object that crosses the equator or the poles is placed in the top-most tile because it can not fit inside of any sub-tile.
 
 Some important objects are placed into upper level tiles despite of their length to be easier reachable for routing or display purposes. This is done by specifying maximum tile name length for them in item_order_by_type() function in `navit/maptool/misc.c`__.
 

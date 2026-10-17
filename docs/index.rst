@@ -84,7 +84,6 @@ Main Features
    user/configuration/vehicleprofile/vehicleprofile_car_no_highway
    user/configuration/vehicleprofile/vehicleprofile_hike_bike_hard
    user/configuration/vehicleprofile/vehicleprofile_hike_bike_on_ground_gravel
-   user/configuration/maps/binfile
 
 
 .. Indices and tables
