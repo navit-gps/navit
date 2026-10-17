@@ -19,14 +19,14 @@ Optimal routes and directions spoken in 70+ languages. \
 Points of interest (POIs) in many formats.
 
 Help and more info can be found in [the docs](https://navit.readthedocs.io/en/latest/). \
-The [Reporting Bugs](https://navit.readthedocs.io/en/latest/user/community/Reporting%20Bugs.html) document helps you file issues.
+The [Reporting Bugs](https://navit.readthedocs.io/en/latest/user/community/Reporting_Bugs.html) document helps you file issues.
 
 Maps
 ====
 
 [OpenStreetMap](https://navit.readthedocs.io/en/latest/user/configuration/maps/OpenStreetMap.html) — display, routing, incomplete street-name search. \
-[Grosser Reiseplaner](https://navit.readthedocs.io/en/latest/user/configuration/maps/Marco%20Polo%20Grosser%20Reiseplaner.html) and compliant maps — full support. \
-[Garmin maps](https://navit.readthedocs.io/en/latest/user/configuration/maps/Garmin%20maps.html) —display, routing, search is being worked on.
+[Grosser Reiseplaner](https://navit.readthedocs.io/en/latest/user/configuration/maps/Marco_Polo_Grosser_Reiseplaner.html) and compliant maps — full support. \
+[Garmin maps](https://navit.readthedocs.io/en/latest/user/configuration/maps/Garmin_maps.html) —display, routing, search is being worked on.
 
 GPS Support
 ===========
