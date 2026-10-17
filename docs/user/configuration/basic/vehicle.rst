@@ -260,6 +260,7 @@ Bit    Value (hex)  Flag
 12     0x00001000   ``AF_UNPAVED``
 13     0x00002000   ``AF_FORD``
 14     0x00004000   ``AF_UNDERGROUND``
+15     0x00008000   ``AF_CYCLE_DISMOUNT``
 18     0x00040000   ``AF_HIGH_OCCUPANCY_CAR_ONLY``
 19     0x00080000   ``AF_DANGEROUS_GOODS``
 20     0x00100000   ``AF_EMERGENCY_VEHICLES``
@@ -276,7 +277,7 @@ Bit    Value (hex)  Flag
 31     0x80000000   ``AF_PEDESTRIAN``
 ====== ============ ==============================
 
-Bits 15, 16 and 17 are unused.
+Bits 16 and 17 are unused.
 
 The names above are C constants from ``attr.h``; the configuration file
 only accepts numeric values, written in decimal or hexadecimal
