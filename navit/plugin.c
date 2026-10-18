@@ -215,6 +215,7 @@ void plugin_unload(struct plugin *pl) {
 }
 
 void plugin_destroy(struct plugin *pl) {
+    g_free(pl->name);
     g_free(pl);
 }
 
