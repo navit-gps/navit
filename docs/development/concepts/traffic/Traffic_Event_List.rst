@@ -43,28 +43,22 @@ Events in the CONGESTION Class
 This class has different event types for different degrees of
 congestion, giving an indication of average speed:
 
--  Heavy traffic, traffic [much] heavier than normal, (ES: tráfico
-   verde, DE: reger Verkehr, [sehr viel] dichterer Verkehr als normal):
-   Road is close to saturation. Ability to change lanes is somewhat
-   restricted but average speed is close to the posted limit.
--  Slow traffic (ES: tráfico amarillo, DE: dichter Verkehr): Capacity of
-   the road is reached. Speed may vary rapidly and rarely reaches normal
-   speed. Average speed is significantly lower than the posted limit but
-   traffic is still moving.
--  Queue (ES: tráfico rojo, DE: stockender Verkehr): Average speed 10–30
-   km/h.
--  Stationary traffic (ES: tráfico rojo, DE: Stau): Average speed is
-   less than 10 km/h.
--  Long queues (ES: tráfico retenido, DE: lange Staus): Significant
-   periods of standstill in which drivers turn off their engines and
-   some leave their vehicles.
--  Congestion (ES: congestión, DE: Verkehrsstörung): Generic category
-   covering all of the previous four. Speed is significantly lower than
-   the posted limit, anywhere between steadily moving traffic and long
-   standstills. This event should be used when no accurate
-   quantification is possible (as in the case of drivers observing a
-   congestion without being in it, typically in the opposite direction
-   of a dual-carriageway road).
+-  Heavy traffic, traffic [much] heavier than normal: Road is close to
+   saturation. Ability to change lanes is somewhat restricted but average
+   speed is close to the posted limit.
+-  Slow traffic: Capacity of the road is reached. Speed may vary rapidly
+   and rarely reaches normal speed. Average speed is significantly lower
+   than the posted limit but traffic is still moving.
+-  Queue: Average speed 10–30 km/h.
+-  Stationary traffic: Average speed is less than 10 km/h.
+-  Long queues: Significant periods of standstill in which drivers turn
+   off their engines and some leave their vehicles.
+-  Congestion: Generic category covering all of the previous four. Speed
+   is significantly lower than the posted limit, anywhere between
+   steadily moving traffic and long standstills. This event should be
+   used when no accurate quantification is possible (as in the case of
+   drivers observing a congestion without being in it, typically in the
+   opposite direction of a dual-carriageway road).
 
 If an explicit speed attribute is given, it takes precedence over the
 speed implied by the event. However, sources should keep the event
