@@ -70,6 +70,8 @@
 <!ATTLIST cursor h CDATA #REQUIRED>
 <!ELEMENT traffic EMPTY>
 <!ATTLIST traffic type CDATA #REQUIRED>
+<!ATTLIST traffic interval CDATA #IMPLIED>
+<!ATTLIST traffic source CDATA #IMPLIED>
 <!ELEMENT tracking ANY>
 <!ATTLIST tracking cdf_histsize CDATA #IMPLIED>
 <!ELEMENT route EMPTY>
@@ -95,6 +97,9 @@
 <!ATTLIST speech vocabulary_name CDATA #IMPLIED>
 <!ATTLIST speech vocabulary_name_systematic CDATA #IMPLIED>
 <!ATTLIST speech vocabulary_distances CDATA #IMPLIED>
+<!ATTLIST speech sample_suffix CDATA #IMPLIED>
+<!ATTLIST speech cache_size CDATA #IMPLIED>
+<!ATTLIST speech subtype CDATA #IMPLIED>
 <!ELEMENT mapset (map*,xi:include*)>
 <!ATTLIST mapset enabled CDATA #IMPLIED>
 <!ELEMENT map EMPTY>

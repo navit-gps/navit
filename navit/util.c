@@ -518,6 +518,13 @@ gchar *g_strconcat_printf(gchar *buffer, gchar *fmt, ...) {
     return ret;
 }
 
+/**
+ * Calculates the number of digits in a given long long integer.
+ *
+ * @param l The long long integer to calculate the number of digits for.
+ * @return The number of digits in the input integer.
+ */
+
 #ifndef HAVE_GLIB
 int g_utf8_strlen_force_link(gchar *buffer, int max);
 int g_utf8_strlen_force_link(gchar *buffer, int max) {

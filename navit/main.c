@@ -17,6 +17,21 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include "main.h"
+#include "callback.h"
+#include "config.h"
+#include "coord.h"
+#include "debug.h"
+#include "event.h"
+#include "file.h"
+#include "gui.h"
+#include "item.h"
+#include "navigation.h"
+#include "navit.h"
+#include "navit_nls.h"
+#include "route.h"
+#include "util.h"
+#include "xmlconfig.h"
 #include <glib.h>
 #include <locale.h>
 #include <signal.h>
@@ -24,8 +39,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
-
-#include "config.h"
 
 #ifdef HAVE_UNISTD_H
 #    include <unistd.h>
@@ -36,20 +49,6 @@
 #    include <sys/wait.h>
 #endif
 
-#include "callback.h"
-#include "coord.h"
-#include "debug.h"
-#include "event.h"
-#include "file.h"
-#include "gui.h"
-#include "item.h"
-#include "main.h"
-#include "navigation.h"
-#include "navit.h"
-#include "navit_nls.h"
-#include "route.h"
-#include "util.h"
-#include "xmlconfig.h"
 #ifdef HAVE_API_WIN32_BASE
 #    include <windows.h>
 #endif

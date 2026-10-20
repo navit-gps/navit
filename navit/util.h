@@ -21,6 +21,7 @@
 #define __NAVIT_types_H
 
 #include "config.h"
+#include "coord.h"
 #include <ctype.h>
 #include <glib.h>
 #include <time.h>

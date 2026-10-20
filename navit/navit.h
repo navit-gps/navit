@@ -32,6 +32,10 @@ extern struct gui *main_loop_gui;
 
 #include <glib.h>
 
+/** Fully-initialized state of a navit instance: the initialization callback has run
+ *  (bit 0 of the ready value) and the display has been sized (bit 1). */
+#define NAVIT_READY_FULL 3
+
 /* prototypes */
 enum attr_type;
 struct attr;
