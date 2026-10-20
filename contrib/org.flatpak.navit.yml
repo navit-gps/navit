@@ -1,0 +1,24 @@
+id: org.flatpak.navit
+runtime: org.gnome.Platform
+runtime-version: '48'
+sdk: org.gnome.Sdk
+command: navit
+finish-args:
+  - --socket=x11
+  - --socket=wayland
+  - --share=network
+  - --socket=pulseaudio
+  - --device=dri
+  - --filesystem=home
+modules:
+  - name: navit
+    buildsystem: cmake
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - -DBUILD_MAPTOOL=OFF
+      - -DSAMPLE_MAP=OFF
+      - -DDISABLE_QT=ON
+    sources:
+      - type: dir
+        path: .
