@@ -35,6 +35,7 @@ Main Features
    user/platforms/index
    user/configuration/basic
    user/configuration/advanced
+   user/plugins/index
    user/community/index
    user/faq/index
 
