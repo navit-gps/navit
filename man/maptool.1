@@ -2,19 +2,28 @@
 .SH NAME
 maptool \- parse osm textfile and convert to Navit binfile format
 .SH SYNOPSIS
-.B For OSM XML data:
-.B bzcat planet.osm.bz2 | maptool mymap.bin
-[\-h] [\-6] [\-a <level>] [\-c] -[\-d <connect string]
-[\-e <phase>] [\-i <file>] [\-k] [\-M] [\-N] [\-o] [\-r <file>] [\-s <phase>]
+.B maptool \-i planet.osm.pbf planet.bin
+[\-h] [\-6] [\-a <level>] [\-c] [\-d <connect string>]
+[\-e <phase>] [\-k] [\-M] [\-N] [\-o] [\-P] [\-r <file>] [\-s <phase>]
 [\-S <size>] [\-w] [\-W] [\-U] [\-z <level>]
 
-.B For OSM Protobuf/PBF data:
-.B maptool \-\-protobuf \-i planet.osm.pbf planet.bin
-[\-h] [\-6] [\-a <level>] [\-c] [\-e <phase>]
-[\-i <file>] [\-k] [\-M] [\-N] [\-o] [\-P] [\-r <file>] [\-s <phase>]
-[\-S <size>] [\-w] [\-W] [\-U] [\-z <level>]
+.B bzcat planet.osm.bz2 | maptool planet.bin
 .SH DESCRIPTION
-maptool parses osm textfile and converts it to Navit binfile format
+maptool reads OSM data and converts it to Navit binfile format.
+
+If you give an input file with \-i, maptool detects the format from the file
+name. maptool recognizes
+.BR .osm ,
+.BR .osm.gz ,
+.BR .osm.bz2 ,
+.B .pbf
+and
+.BR .o5m .
+The options \-P and \-M are not necessary for these files.
+
+maptool cannot detect the format of data from standard input. For standard
+input, maptool assumes OSM XML. The \-P option selects pbf data. The \-M option
+selects o5m data.
 .SH OPTIONS
 .TP
 \-h (\-\-help)
@@ -43,13 +52,15 @@ end at specified phase
 enable experimental features (if available)
 .TP
 \-i (\-\-input-file) <file>
-specify the input file name (OSM), overrules default stdin
+specify the input file name (OSM), overrules default stdin. maptool detects the
+format from the file name suffix
 .TP
 \-k (\-\-keep-tmpfiles)
 do not delete tmp files after processing. useful to reuse them
 .TP
 \-M (\-\-o5m)
-input data is in o5m format
+the data from standard input is in o5m format. With \-i, maptool detects the
+format, and this option is not necessary
 .TP
 \-n (\-\-ignore-unknown)
 do not output ways and nodes with unknown type
@@ -58,7 +69,8 @@ do not output ways and nodes with unknown type
 process only nodes
 .TP
 \-P (\-\-protobuf)
-input data is in pbf (Protocol Buffer) format
+the data from standard input is in pbf (Protocol Buffer) format. With \-i,
+maptool detects the format, and this option is not necessary
 .TP
 \-r (\-\-rule-file) <file>
 read mapping rules from specified file

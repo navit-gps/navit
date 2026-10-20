@@ -269,10 +269,10 @@ static void usage(void) {
     /* DEVELOPERS : don't forget to update the manpage if you modify theses options */
     fprintf(f, "\n");
     fprintf(f, "maptool - parse osm textfile and convert to Navit binfile format\n\n");
-    fprintf(f, "Usage (for OSM XML data):\n");
-    fprintf(f, "bzcat planet.osm.bz2 | maptool mymap.bin\n");
-    fprintf(f, "Usage (for OSM Protobuf/PBF data):\n");
-    fprintf(f, "maptool --protobuf -i planet.osm.pbf planet.bin\n");
+    fprintf(f, "Usage:\n");
+    fprintf(f, "maptool -i planet.osm.pbf planet.bin\n");
+    fprintf(f, "(format is detected from the file suffix: .osm, .osm.gz, .osm.bz2, .pbf, .o5m)\n");
+    fprintf(f, "cat mymap.osm | maptool mymap.bin\n");
     fprintf(f, "Available switches:\n");
     fprintf(f, "-h (--help)                       : this screen\n");
     fprintf(f, "-3 (--32bit)                      : set zip 32 bit compression\n");
@@ -289,10 +289,10 @@ static void usage(void) {
             experimental_feature_description ? experimental_feature_description : "-not available in this version-");
     fprintf(f, "-i (--input-file) <file>          : specify the input file name (OSM), overrules default stdin\n");
     fprintf(f, "-k (--keep-tmpfiles)              : do not delete tmp files after processing. useful to reuse them\n");
-    fprintf(f, "-M (--o5m)                        : input data is in o5m format\n");
+    fprintf(f, "-M (--o5m)                        : input data (stdin) is in o5m format\n");
     fprintf(f, "-n (--ignore-unknown)             : do not output ways and nodes with unknown type\n");
     fprintf(f, "-N (--nodes-only)                 : process only nodes\n");
-    fprintf(f, "-P (--protobuf)                   : input data is in pbf (Protocol Buffer) format\n");
+    fprintf(f, "-P (--protobuf)                   : input data (stdin) is in pbf (Protocol Buffer) format\n");
     fprintf(f, "-r (--rule-file) <file>           : read mapping rules from specified file\n");
     fprintf(f, "-s (--start) <phase>              : start at specified phase\n");
     fprintf(f,
@@ -309,9 +309,7 @@ static void usage(void) {
     fprintf(f, "-z (--compression-level) <level>  : set the compression level\n");
     fprintf(f, "Internal options (undocumented):\n");
     fprintf(f, "-b (--binfile)\n");
-    fprintf(f, "-B \n");
     fprintf(f, "-m (--map) \n");
-    fprintf(f, "-O \n");
     fprintf(f, "-p (--plugin) \n");
     fprintf(f, "-u (--url) \n");
 
@@ -324,8 +322,7 @@ struct maptool_params {
     int process_nodes;
     int process_ways;
     int process_relations;
-    char *protobufdb;
-    char *protobufdb_operation;
+    char *input_filename;
     int start;
     int end;
     int dump;
@@ -390,7 +387,7 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
         {0,                   0, 0, 0  }
     };
     c = getopt_long(argc, argv,
-                    "36B:DEMNO:PS:Wa:bc"
+                    "36DEMNPS:Wa:bc"
 #ifdef HAVE_POSTGRESQL
                     "d:"
 #endif
@@ -404,9 +401,6 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
         break;
     case '6':
         p->zip64 = 1;
-        break;
-    case 'B':
-        p->protobufdb = optarg;
         break;
     case 'D':
         p->dump = 1;
@@ -422,10 +416,6 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
         break;
     case 'R':
         p->process_relations = 0;
-        break;
-    case 'O':
-        p->protobufdb_operation = optarg;
-        p->dump = 1;
         break;
     case 'P':
         p->protobuf = 1;
@@ -513,6 +503,7 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
             fprintf(stderr, "\nInput file (%s) not found\n", optarg);
             exit(1);
         }
+        p->input_filename = optarg;
         break;
     case 'r':
         p->rule_file = fopen(optarg, "r");
@@ -589,16 +580,15 @@ static void osm_read_input_data(struct maptool_params *p, char *suffix) {
             map_destroy(l->data);
             l = g_list_next(l);
         }
-    } else if (p->protobuf) {
-#ifdef _MSC_VER
-        exit_with_error("Option -P not yet supported on MSVC\n");
-#else
-        map_collect_data_osm_protobuf(p->input_file, &p->osm);
-#endif
-    } else if (p->o5m)
-        map_collect_data_osm_o5m(p->input_file, &p->osm);
-    else
-        map_collect_data_osm(p->input_file, &p->osm);
+    } else {
+        const char *format = "";
+        if (p->protobuf)
+            format = "pbf";
+        else if (p->o5m)
+            format = "o5m";
+        if (map_collect_data_osmium(p->input_filename, format, &p->osm) < 0)
+            exit_with_error("Failed to read OSM input data\n");
+    }
 
     if (node_buffer.size == 0 && !p->map_handles) {
         fprintf(stderr, "No nodes found - looks like an invalid input file.\n");
@@ -979,14 +969,6 @@ int main(int argc, char **argv) {
 
     // initialize plugins and OSM mappings
     maptool_init(p.rule_file);
-    if (p.protobufdb_operation) {
-#ifdef _MSC_VER
-        exit_with_error("Option -O not yet supported on MSVC\n");
-#else
-        osm_protobufdb_load(p.input_file, p.protobufdb);
-        return 0;
-#endif
-    }
     phase = 0;
 
     // input from an OSM file
