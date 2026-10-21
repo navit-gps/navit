@@ -158,9 +158,35 @@ struct selector selectors[] = {
  * @return  Pointer to graphics_image object, or NULL if no picture available.
  */
 
+static struct graphics_image *gui_internal_poi_icon_custom(struct gui_priv *this, struct item *item,
+                                                           struct element *el) {
+    struct attr icon_src;
+    char *src;
+    char *icon;
+    struct graphics_image *img;
+    struct map_rect *mr = map_rect_new(item->map, NULL);
+    item = map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
+    if (item && item_attr_get(item, attr_icon_src, &icon_src)) {
+        src = el->u.icon.src;
+        if (!src || !src[0])
+            src = "%s";
+        icon = g_strdup_printf(src, map_convert_string_tmp(item->map, icon_src.u.str));
+    } else {
+        icon = g_strdup(el->u.icon.src);
+    }
+    map_rect_destroy(mr);
+
+    char *dot = g_strrstr(icon, ".");
+    dbg(lvl_debug, "%s %s", item_to_name(item->type), icon);
+    if (dot)
+        *dot = 0;
+    img = image_new_xs(this, icon);
+    g_free(icon);
+    return img;
+}
+
 static struct graphics_image *gui_internal_poi_icon(struct gui_priv *this, struct item *item) {
     struct attr layout;
-    struct attr icon_src;
     GList *layer;
     navit_get_attr(this->nav, attr_layout, &layout, NULL);
     layer = layout.u.layout->layers;
@@ -174,29 +200,18 @@ static struct graphics_image *gui_internal_poi_icon(struct gui_priv *this, struc
                     while (element) {
                         struct element *el = element->data;
                         if (el->type == element_icon) {
-                            char *src;
-                            char *icon;
                             struct graphics_image *img;
                             if (item_is_custom_poi(*item)) {
-                                struct map_rect *mr = map_rect_new(item->map, NULL);
-                                item = map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
-                                if (item && item_attr_get(item, attr_icon_src, &icon_src)) {
-                                    src = el->u.icon.src;
-                                    if (!src || !src[0])
-                                        src = "%s";
-                                    icon = g_strdup_printf(src, map_convert_string_tmp(item->map, icon_src.u.str));
-                                } else {
-                                    icon = g_strdup(el->u.icon.src);
-                                }
+                                img = gui_internal_poi_icon_custom(this, item, el);
                             } else {
-                                icon = g_strdup(el->u.icon.src);
+                                char *icon = g_strdup(el->u.icon.src);
+                                char *dot = g_strrstr(icon, ".");
+                                dbg(lvl_debug, "%s %s", item_to_name(item->type), icon);
+                                if (dot)
+                                    *dot = 0;
+                                img = image_new_xs(this, icon);
+                                g_free(icon);
                             }
-                            char *dot = g_strrstr(icon, ".");
-                            dbg(lvl_debug, "%s %s", item_to_name(item->type), icon);
-                            if (dot)
-                                *dot = 0;
-                            img = image_new_xs(this, icon);
-                            g_free(icon);
                             if (img)
                                 return img;
                         }
