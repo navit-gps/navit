@@ -79,5 +79,5 @@ Now if you want to view how the result would look like you can:
 
  * [programming guidelines](https://navit.readthedocs.io/en/trunk/development/programming_guidelines.html)
  * [commit message guidelines](https://navit.readthedocs.io/en/trunk/development/commit_guidelines.html)
- * [Reporting Bugs](https://navit.readthedocs.io/en/latest/user/community/Reporting%20Bugs.html)
+ * [Reporting Bugs](https://navit.readthedocs.io/en/latest/user/community/Reporting_Bugs.html)
  * [Translations](https://navit.readthedocs.io/en/latest/user/community/Translations.html)

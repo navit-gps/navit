@@ -177,7 +177,7 @@ Defines the behaviour of the routing and are usually linked to a vehicle section
     <roadprofile item_types="ferry" speed="40" />
   </vehicleprofile>
 
-For details on the flags, see :doc:`Vehicle profile flags </user/configuration/Vehicle_profile_flags>`.
+For details on the flags, see :ref:`vehicle_profile_flags` below.
 The speeds are in km/h.
 
 Only the vehicle profile names "car", "bike" and "pedestrian" are translated in the GUI. Others appear as-is from the XML config file.
@@ -191,8 +191,8 @@ The ``vehicleprofile`` tag supports the following routing attributes:
   attribute inside the ``vehicle`` tag.
 * **flags** - the road flags (as defined by the AF\_\* constants in
   ``attr.h``) that must be set for a way to be passable for this
-  profile. See :doc:`Vehicle profile flags </user/configuration/Vehicle_profile_flags>` for a
-  comprehensive list of bit values.
+  profile. See :ref:`vehicle_profile_flags` for a comprehensive list of
+  bit values.
 * **flags_forward_mask** - the bits that, in addition to ``flags``, a
   way must *not* have set in order to be used in the forward direction.
   More technically: a way's ``flags`` are ANDed with this mask; the
@@ -227,9 +227,71 @@ The ``vehicleprofile`` tag supports the following routing attributes:
   place. Making the values smaller makes Navit more sensitive to
   movement (it will detect motion sooner).
 
+.. _vehicle_profile_flags:
+
+Vehicle profile flags
+^^^^^^^^^^^^^^^^^^^^^
+
+The bits used by the ``flags``, ``flags_forward_mask`` and
+``flags_reverse_mask`` attributes are defined by the ``AF_*`` constants in
+``attr.h``:
+
+====== ============ ==============================
+Bit    Value (hex)  Flag
+====== ============ ==============================
+0      0x00000001   ``AF_ONEWAY``
+1      0x00000002   ``AF_ONEWAYREV``
+2      0x00000004   ``AF_SEGMENTED``
+3      0x00000008   ``AF_ROUNDABOUT``
+4      0x00000010   ``AF_ROUNDABOUT_VALID``
+5      0x00000020   ``AF_ONEWAY_EXCEPTION``
+6      0x00000040   ``AF_SPEED_LIMIT``
+7      0x00000080   ``AF_RESERVED1``
+8      0x00000100   ``AF_SIZE_OR_WEIGHT_LIMIT``
+9      0x00000200   ``AF_THROUGH_TRAFFIC_LIMIT``
+10     0x00000400   ``AF_TOLL``
+11     0x00000800   ``AF_SEASONAL``
+12     0x00001000   ``AF_UNPAVED``
+13     0x00002000   ``AF_FORD``
+14     0x00004000   ``AF_UNDERGROUND``
+18     0x00040000   ``AF_HIGH_OCCUPANCY_CAR_ONLY``
+19     0x00080000   ``AF_DANGEROUS_GOODS``
+20     0x00100000   ``AF_EMERGENCY_VEHICLES``
+21     0x00200000   ``AF_TRANSPORT_TRUCK``
+22     0x00400000   ``AF_DELIVERY_TRUCK``
+23     0x00800000   ``AF_PUBLIC_BUS``
+24     0x01000000   ``AF_TAXI``
+25     0x02000000   ``AF_HIGH_OCCUPANCY_CAR``
+26     0x04000000   ``AF_CAR``
+27     0x08000000   ``AF_MOTORCYCLE``
+28     0x10000000   ``AF_MOPED``
+29     0x20000000   ``AF_HORSE``
+30     0x40000000   ``AF_BIKE``
+31     0x80000000   ``AF_PEDESTRIAN``
+====== ============ ==============================
+
+Bits 15, 16 and 17 are unused.
+
+The names above are C constants from ``attr.h``; the configuration file
+only accepts numeric values, written in decimal or hexadecimal
+(``0x…``). The following composite masks are handy when a set of vehicles
+should share a profile -- use their numeric values in the configuration:
+
+* ``AF_PBH`` = ``0xE0000000`` - pedestrian, bike or horse
+  (``AF_PEDESTRIAN | AF_BIKE | AF_HORSE``)
+* ``AF_MOTORIZED_FAST`` = ``0x0FF00000`` - all fast motorized vehicles
+  (motorcycle, car, high occupancy car, taxi, public bus, delivery truck,
+  transport truck and emergency vehicles)
+* ``AF_ALL`` = ``0xFFF00000`` - all vehicles
+  (``AF_PBH | AF_MOPED | AF_MOTORIZED_FAST``)
+* ``AF_NOPASS`` = ``0x00000003`` - both directions of a one-way street
+  (``AF_ONEWAY | AF_ONEWAYREV``, also ``AF_ONEWAYMASK``)
+
+For example, ``AF_CAR`` is ``0x04000000`` and ``AF_BIKE`` is
+``0x40000000``.
+
 Roadprofile attributes
 ^^^^^^^^^^^^^^^^^^^^^^
-
 Routing behaviour of different road types is described by ``roadprofile``
 elements nested inside a ``vehicleprofile`` (see the example above):
 

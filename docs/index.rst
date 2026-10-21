@@ -69,22 +69,18 @@ Main Features
    :glob:
    :caption: Old Wiki
 
-   user/configuration/Menu
-   user/configuration/NavitConfigurator
    user/configuration/OSD_Layouts
    user/configuration/QML_GUI
    user/configuration/QML2_GUI
    user/configuration/QML2_GUI_WIP
    user/configuration/Skinning_the_SDL_GUI
    user/configuration/Speech
-   user/configuration/Vehicle_profile_flags
    user/configuration/Vehicleprofile
    user/configuration/vehicleprofile/vehicleprofile_bike_cycleway
    user/configuration/vehicleprofile/vehicleprofile_bike_on_asphalt
    user/configuration/vehicleprofile/vehicleprofile_car_no_highway
    user/configuration/vehicleprofile/vehicleprofile_hike_bike_hard
    user/configuration/vehicleprofile/vehicleprofile_hike_bike_on_ground_gravel
-   user/configuration/maps/binfile
 
 
 .. Indices and tables

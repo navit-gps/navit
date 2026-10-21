@@ -2100,8 +2100,11 @@ code in your file "navit.xml".
 
 | This design provides a clear display with great functionality.
 
-`right|240px|text-top|navit GUI
-routing <image:Screen-Layout-navit-QVGA-240-240-routing-ok.png>`__
+.. figure:: Screen-Layout-navit-QVGA-240-240-routing-ok.png
+   :width: 240px
+   :align: right
+
+   Navit GUI routing
 
 | **While routing:**
 | In the top part of the display you will see (from left to right):
@@ -2114,8 +2117,14 @@ routing <image:Screen-Layout-navit-QVGA-240-240-routing-ok.png>`__
 
 | If you are driving "slow enough" it will be colored **green**.
 | If you are driving too fast, it will be colored **red**.
-| `right|240px|text-top|navit GUI routing too
-  fast <image:Screen-Layout-navit-QVGA-240-240-routing-too-fast.png>`__
+
+.. figure:: Screen-Layout-navit-QVGA-240-240-routing-too-fast.png
+   :width: 240px
+   :align: right
+
+   Navit GUI routing too fast
+
+
 | When there is an explizit tag "max_speed", navit will display this
   allowed speed.
 | When there is no explizit tag, navit will "guess" the maximum allowed
@@ -2129,10 +2138,15 @@ routing <image:Screen-Layout-navit-QVGA-240-240-routing-ok.png>`__
 | In small letters there is the name and/or reference of the street
   you´re actually on.
 
-|
-| `right|240px|text-top|navit GUI routing
-  Menu <image:Screen-Layout-navit-QVGA-240-240-routing-menu.png>`__
-  **Selecting "time delay"**
+.. figure:: Screen-Layout-navit-QVGA-240-240-routing-menu.png
+   :width: 240px
+   :align: right
+
+   Navit GUI routing Menu
+
+
+**Selecting "time delay"**
+
 | Sometimes when scrolling on the map, the focus jumps back to
   GPS-position too fast.
 | Therefor I put in a small menu, where you can select the time, after
@@ -2155,10 +2169,15 @@ routing <image:Screen-Layout-navit-QVGA-240-240-routing-ok.png>`__
 
 last scrolling-action on the map.
 
-|
-| `right|240px|text-top|navit GUI routing
-  Indicator <image:Screen-Layout-navit-QVGA-240-240-routing-indicator.png>`__
-  **Time delay indicator**
+.. figure:: Screen-Layout-navit-QVGA-240-240-routing-indicator.png
+   :width: 240px
+   :align: right
+
+   Navit GUI routing Indicator
+
+
+**Time delay indicator**
+
 | The small indicator shows you the selected value for the time-delay.
 | You can always switch between these to time-delays. Even while
   navigating.
@@ -2167,10 +2186,15 @@ last scrolling-action on the map.
 You can **clear the screen** by tapping on the "next-action-arrow" in
 the bottom left corner.
 
-|
-| `right|240px|text-top|navit GUI
-  driving <image:Screen-Layout-navit-QVGA-240-240-driving.png>`__
-  **While driving without routing:**
+.. figure:: Screen-Layout-navit-QVGA-240-240-driving.png
+   :width: 240px
+   :align: right
+
+   Navit GUI driving
+
+
+**While driving without routing:**
+
 | You will only see in small letters the name and/or reference of the
   street you´re actually on.
 | ...and for sure: your actual speed and the maximum speed allowed.
@@ -2295,11 +2319,21 @@ Yakumo Delta 5 X
 
 -  fits for resolution 320x240 and 240x320
 
-`320px|Yakumo Delta 5 X
-horizontal <image:WM_YAKUMO_DELTAX5_screen2.png>`__
+.. figure:: WM_YAKUMO_DELTAX5_screen2.png
+   :width: 320px
+   :align: center
 
-`right|240px|Yakumo Delta 5 X
-vertical <image:WM_YAKUMO_DELTAX5_screen1.png>`__
+   Yakumo Delta 5 X horizontal
+
+
+
+.. figure:: WM_YAKUMO_DELTAX5_screen1.png
+   :width: 240px
+   :align: right
+
+   Yakumo Delta 5 X vertical
+
+
 
 This configuration contains 2 layouts. One for horizontal view and one
 for vertical view. In order to only show one of them, you have to set up
