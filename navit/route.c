@@ -1196,17 +1196,19 @@ char *route_get_destination_description(struct route *this, int n) {
 
     type = g_strdup(item_to_name(dst->street->item.type));
 
-    while (item_attr_get(item, attr_any, &attr)) {
-        if (attr.type == attr_street_name_systematic) {
-            g_free(type);
-            type = attr_to_text(&attr, item->map, 1);
-        } else if (attr.type == attr_label) {
-            g_free(label);
-            label = attr_to_text(&attr, item->map, 1);
-        } else if (attr.type == attr_osm_wayid && !label) {
-            char *tmp = attr_to_text(&attr, item->map, 1);
-            label = g_strdup_printf("WayID %s", tmp);
-            g_free(tmp);
+    if (item) {
+        while (item_attr_get(item, attr_any, &attr)) {
+            if (attr.type == attr_street_name_systematic) {
+                g_free(type);
+                type = attr_to_text(&attr, item->map, 1);
+            } else if (attr.type == attr_label) {
+                g_free(label);
+                label = attr_to_text(&attr, item->map, 1);
+            } else if (attr.type == attr_osm_wayid && !label) {
+                char *tmp = attr_to_text(&attr, item->map, 1);
+                label = g_strdup_printf("WayID %s", tmp);
+                g_free(tmp);
+            }
         }
     }
 

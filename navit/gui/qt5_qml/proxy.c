@@ -34,7 +34,7 @@ char *get_icon(struct navit *nav, struct item *item) {
                             if (item_is_custom_poi(*item)) {
                                 struct map_rect *mr = map_rect_new(item->map, NULL);
                                 item = map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
-                                if (item_attr_get(item, attr_icon_src, &icon_src)) {
+                                if (item && item_attr_get(item, attr_icon_src, &icon_src)) {
                                     src = el->u.icon.src;
                                     if (!src || !src[0])
                                         src = "%s";

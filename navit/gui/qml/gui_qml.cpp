@@ -138,7 +138,7 @@ static void gui_qml_dbus_signal(struct gui_priv *this_, struct point *p) {
             struct map_rect *mr = map_rect_new(item->map, NULL);
             struct item *itemo = map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
             struct attr attr;
-            if (item_attr_get(itemo, attr_data, &attr)) {
+            if (itemo && item_attr_get(itemo, attr_data, &attr)) {
                 struct attr cb, *attr_list[2];
                 int valid = 0;
                 attr.type = attr_data;

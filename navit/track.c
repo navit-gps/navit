@@ -371,7 +371,7 @@ int tracking_get_attr(struct tracking *_this, enum attr_type type, struct attr *
         item = &_this->curr_line->street->item;
         mr = map_rect_new(item->map, NULL);
         item = map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
-        if (item_attr_get(item, type, attr)) {
+        if (item && item_attr_get(item, type, attr)) {
             _this->attr = attr_dup(attr);
             *attr = *_this->attr;
             result = 1;
