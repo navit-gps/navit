@@ -73,8 +73,10 @@ static void popup_traffic_distortion(struct item *item, char *attr) {
             fprintf(map, "type=traffic_distortion %s\n", attr);
             mr = map_rect_new(item->map, NULL);
             item = map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
-            while (item_coord_get(item, &c, 1)) {
-                fprintf(map, "0x%x 0x%x\n", c.x, c.y);
+            if (item) {
+                while (item_coord_get(item, &c, 1)) {
+                    fprintf(map, "0x%x 0x%x\n", c.x, c.y);
+                }
             }
             fclose(map);
         } else {
@@ -266,8 +268,10 @@ static void popup_item_dump(struct item *item) {
     struct map_rect *mr;
     mr = map_rect_new(item->map, NULL);
     item = map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
-    dbg(lvl_debug, "item=%p", item);
-    item_dump_filedesc(item, item->map, stdout);
+    if (item) {
+        dbg(lvl_debug, "item=%p", item);
+        item_dump_filedesc(item, item->map, stdout);
+    }
     map_rect_destroy(mr);
 }
 
