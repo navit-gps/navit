@@ -318,7 +318,7 @@ neo-cs
 About the skin
 ^^^^^^^^^^^^^^
 
-This skin was developed for the relatvely small screen (in comparison to
+This skin was developed for the relatively small screen (in comparison to
 todays smartphones) of the neo freerunner featuring a resolution of 480
 x 640 pixel. I haven't tested the more recent version only on the gta04
 hardware regarding the performance. The skin should work in portrait and
@@ -1252,12 +1252,12 @@ code in your file "navit.xml".
    Navit GUI routing too fast
 
 
-| When there is an explizit tag "max_speed", navit will display this
+| When there is an explicit tag "max_speed", navit will display this
   allowed speed.
-| When there is no explizit tag, navit will "guess" the maximum allowed
+| When there is no explicit tag, navit will "guess" the maximum allowed
   speed from the Highway type. In this case you will see a "~" in front
   of the speed..
-| (Don´t wonder: Sometimes it will be a little bit funny e.g. to be
+| (Don't wonder: Sometimes it will be a little bit funny e.g. to be
   allowed to drive 100 km/h inside a village.)
 | In the bottom of the display you will see:
 | Next action (as an arrow) with distance to next action below and the
@@ -1337,35 +1337,35 @@ the bottom left corner.
 .. code:: xml
 
    <!--  =============== OSD ===========================  -->
-   <!-- background images oben, inklusive Menuaufruf " Auswahl des Wertes von timeout" = Konfiguration 2  -->
+   <!-- background images top, including menu call " selection of timeout value" = Configuration 2  -->
    <osd enabled="yes" type="button" x="0" y="0" w="240" h="30" src='JR-head-bg-x.png' command=""/>
    <osd enabled="yes" type="button" x="194" y="20" w="10" h="10" src='JR-ecke-or.png' command=""/>
    <osd enabled='yes' type="button" x="204" y="20" w="36" h="50" src="JR-knopf-unten-details.png" command="osd_configuration=2"/>
-   <!-- background images unten, inklusive Funktion " Ausblenden des Menus zur Wahl von timeout" = Konfiguration 1  -->
+   <!-- background images bottom, including function " hide menu for timeout selection" = Configuration 1  -->
    <osd enabled="yes" type="button" x="0" y="-70" w="65" h="70" src="JR-bottom-bg-x.png" command="osd_configuration=1"/>
    <!--  Zoom in/out  -->
    <osd enabled="yes" type="button" x="0" y="-200" command="zoom_in()" src="zoom_in.png" w="60" h="60" align='0'/>
    <osd enabled="yes" type="button" x="0" y="-120" command="zoom_out()" src="zoom_out.png" w="60" h="60" align='0'/>
-   <!-- Geschwindigkeit  aktuell -->
+   <!-- Current speed -->
    <osd enabled="yes" type="text" label="${vehicle.position_speed}" x="173" y="-89" w="117" h="25" background_color="#00000099" align="8" font_size="350"  command='zoom_to_route()'/>
    <osd enabled="yes" type="button" x="170" y="-93" w="90" h="30" src="JR-geschw-klein.png" command=''/>
-   <!-- Geschwindigkeit  erlaubt = Speedwarner  -->
+   <!-- Allowed speed = Speed warner  -->
    <osd enabled="yes" type="speed_warner" w="67" h="25" x="173" y="-59" font_size="350" align="8" background_color="#00000099" speed_exceed_limit_offset="10" speed_exceed_limit_percent="50"  announce_on="1" label='text_only' />
    <osd enabled="yes" type="button" x="170" y="-63" w="90" h="30" src="JR-geschw-klein.png" command=''/>
-   <!--  Navigationshinweise oben -->
+   <!--  Navigation hints top -->
    <osd enabled="yes" type="text" x="0" y="0" w="80" h="19" label="${navigation.item.destination_length[value]} ${navigation.item.destination_length[unit]}" background_color="#000000FF" align="4" font_size='240'/>
    <osd enabled="yes" type="text" x="80" y="0" w="80" h="19" label="${navigation.item.destination_time[remaining]}" background_color="#000000FF" align="0" font_size='240'/>
    <osd enabled="yes" type="text" x="160" y="0" w="80" h="19" label="${navigation.item.destination_time[arrival]}" background_color="#000000FF" align="8" font_size='240'/>
-   <!--  Navigationshinweise unten -->
+   <!--  Navigation hints bottom -->
    <osd enabled="yes" type="text" label="${tracking.item.street_name} ${tracking.item.street_name_systematic}" x="65" y="-32" w="175" h="12" align="4" font_size="160" background_color="#000000FF"/>
    <osd enabled="yes" type="text" label="${navigation.item[1].street_name} ${navigation.item[1].street_name_systematic}" x="65" y="-18" w="175" h="18" align="4" font_size="260" background_color="#000000FF"/>
    <osd enabled="yes" type="text" label="${navigation.item[1].length[value]}" x="0" y="-16" w="45" h="16" align="8" background_color="#000000FF" font_size="260"/>
    <osd enabled="yes" type="text" label="${navigation.item[1].length[unit]}" x="45" y="-16" w="15" h="16" align="2" background_color="#000000FF" font_size="150"/>
    <osd enabled="yes" type="navigation_next_turn"  x="10" y="-54"  w="32"  h="32"  align="0" icon_src="%s_JR.png" background_color="#FFFFFFFF"/>
-   <!-- Menu zum Einblenden und Auswahl von " timeout"  = Konfiguration 4 mit 5 Sekunden und Konfiguration 8 mit 30 Sekunden  -->
+   <!-- Menu for showing and selecting " timeout"  = Configuration 4 with 5 seconds and Configuration 8 with 30 seconds  -->
    <osd enabled="yes" type="text"  osd_configuration="2" label='5' x="100" y="23" w="40" h="30" background_color="#88888899" command="osd_configuration=4;timeout=8"/>
    <osd enabled="yes" type="text"  osd_configuration="2" label='30' x="150" y="23" w="40" h="30" background_color="#88888899" command="osd_configuration=8;timeout=32"/>
-   <!-- eingeblendete Indikatoren fuer gewaehlten Wert von " timeout"  -->
+   <!-- Displayed indicators for selected " timeout" value  -->
    <osd enabled="yes" type="text"  osd_configuration="8" label='30' x="210" y="70" w="20" h="20" background_color="#88888899" command=""/>
    <osd enabled="yes" type="text"  osd_configuration="4" label='5' x="210" y="70" w="20" h="20" background_color="#88888899" command=""/>
 
@@ -1537,13 +1537,13 @@ Use osd_configuration="4" in the main navit tag for the initial display.
 
 .. code:: xml
 
-   <!-- Rechts oben :Navigationsanweisungen -->
+   <!-- Top right: Navigation instructions -->
    <osd enabled="yes" type="navigation_next_turn" x="0" y="0"  w="100" h="90" align="0" icon_src="%s_wh_59_59.png" />
-   <!-- Links oben: GPS-Informationen -->
+   <!-- Top left: GPS information -->
    <osd enabled="yes" type="gps_status" x="-60" y="0" w="60" h="30" align="0" />
    <osd enabled="yes" type="text" label="${vehicle.position_sats_used}/${vehicle.position_qual}" x="-60" y="30" w="60" h="30" align="8" font_size="300" />
    <osd enabled="yes" type="text" label="${vehicle.position_direction}" x="-60" y="60" w="60" h="30" align="8" font_size="450" />
-   <!-- Oben Mitte: 2 Zeilen: (2) ETA und Zeit und (4) Hoehe und Entfernung -->
+   <!-- Top center: 2 lines: (2) ETA and time and (4) Altitude and distance -->
    <!-- Configuration 2 -->
    <osd type="text" osd_configuration="2" label="ETA: ${navigation.item.destination_time[arrival]}" x="100" y="0" w="320" h="45" align="4" font_size="450" command="osd_configuration=4"/>
    <osd type="text" osd_configuration="2" label="TL:${navigation.item.destination_time[remaining]}" x="100" y="45" w="320" h="45" align="4" font_size="450" command="osd_configuration=4"/>
@@ -1670,7 +1670,7 @@ free to contact me here.
    <osd type="text" label="${navigation.item.destination_time[arrival]} / ${navigation.item.destination_time[remaining]}" x="-170" y="45" w="180" h="40" align="4" font_size="400" background_color="#00000000" osd_configuration="4"/>
    <osd type="button" command="follow=80000;zoom_to_route();" src="/sdcard/navit/osd_graphics/upper_right_190_45.png" x="-190" y="45" w="190" h="45" osd_configuration="4" />
    <!-- foot -->
-   <osd type="text" label="auf ${navigation.item[1].street_name} ${navigation.item[1].street_name_systematic}" x="128" y="-40" w="726" h="40" font_size="400" align="4" background_color="#00000000" osd_configuration="4"/>
+   <osd type="text" label="on ${navigation.item[1].street_name} ${navigation.item[1].street_name_systematic}" x="128" y="-40" w="726" h="40" font_size="400" align="4" background_color="#00000000" osd_configuration="4"/>
    <osd type="button" command="" src="/sdcard/navit/osd_graphics/lower_route_854_140.png" x="0" y="-140" w="854" h="140" osd_configuration="4" />
    <!-- foot left -->
    <osd type="navigation_next_turn" x="0" y="-135" w="128" h="90" icon_src="%s_wh_64_64.png" background_color="#00000000" osd_configuration="4"/>
