@@ -405,6 +405,14 @@ void osd_std_config(struct osd_item *item, struct navit *navit) {
 
     dbg(lvl_debug, "enter, item=%p, enable_cs=%p", item, item->enable_cs);
     if (item->enable_cs) {
+        if (item->reconfig_cb) {
+            /* The saved command holds a reference to the callback, so it has
+             * to be released before the callback is destroyed.
+             */
+            command_saved_set_cb(item->enable_cs, NULL);
+            callback_destroy(item->reconfig_cb);
+            item->reconfig_cb = NULL;
+        }
         item->reconfig_cb = callback_new_1(callback_cast(osd_std_reconfigure), item);
         command_saved_set_cb(item->enable_cs, item->reconfig_cb);
 
@@ -543,6 +551,13 @@ void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_pr
 void osd_destroy_std_graphic(struct osd_item *item, struct navit *nav) {
     osd_teardown_std_graphic(item, nav);
     item->gr = NULL;
+    if (item->reconfig_cb) {
+        if (item->enable_cs) {
+            command_saved_set_cb(item->enable_cs, NULL);
+        }
+        callback_destroy(item->reconfig_cb);
+        item->reconfig_cb = NULL;
+    }
     if (item->enable_cs) {
         command_saved_destroy(item->enable_cs);
     }
