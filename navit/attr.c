@@ -637,8 +637,9 @@ struct attr **attr_generic_set_attr(struct attr **attrs, struct attr *attr) {
     dbg(lvl_debug, "enter, attrs=%p, attr=%p (%s)", attrs, attr, attr_to_name(attr->type));
     while (curr && *curr) {
         if ((*curr)->type == attr->type) {
+            struct attr *new_attr = attr_dup(attr);
             attr_free(*curr);
-            *curr = attr_dup(attr);
+            *curr = new_attr;
             return attrs;
         }
         curr++;
