@@ -4013,15 +4013,17 @@ static void graphics_process_selection_item(struct displaylist *dl, struct item 
     }
     mr=map_rect_new(item->map, NULL);
     item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
-    count=item_coord_get(item, ca, item->type < type_line ? 1: max);
-    if (!item_attr_get(item, attr_label, &attr))
-        attr.u.str=NULL;
-    if (dl->conv && attr.u.str && attr.u.str[0]) {
-        char *str=map_convert_string(item->map, attr.u.str);
-        display_add(dl, item, count, ca, &str, 1);
-        map_convert_free(str);
-    } else
-        display_add(dl, item, count, ca, &attr.u.str, 1);
+    if (item) {
+        count=item_coord_get(item, ca, item->type < type_line ? 1: max);
+        if (!item_attr_get(item, attr_label, &attr))
+            attr.u.str=NULL;
+        if (dl->conv && attr.u.str && attr.u.str[0]) {
+            char *str=map_convert_string(item->map, attr.u.str);
+            display_add(dl, item, count, ca, &str, 1);
+            map_convert_free(str);
+        } else
+            display_add(dl, item, count, ca, &attr.u.str, 1);
+    }
     map_rect_destroy(mr);
 #endif
 }

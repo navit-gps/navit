@@ -745,30 +745,32 @@ static void gui_internal_cmd_view_attribute_details(struct gui_priv *this, struc
     gui_internal_widget_append(wb, w);
     mr = map_rect_new(wm->item.map, NULL);
     item = map_rect_get_item_byid(mr, wm->item.id_hi, wm->item.id_lo);
-    for (i = 0; i < wm->datai; i++) {
-        item_attr_get(item, attr_any, &attr);
-    }
-    if (item_attr_get(item, attr_any, &attr)) {
-        url = NULL;
-        switch (attr.type) {
-        case attr_osm_nodeid:
-            url = g_strdup_printf("http://www.openstreetmap.org/browse/node/" LONGLONG_FMT "\n", *attr.u.num64);
-            break;
-        case attr_osm_wayid:
-            url = g_strdup_printf("http://www.openstreetmap.org/browse/way/" LONGLONG_FMT "\n", *attr.u.num64);
-            break;
-        case attr_osm_relationid:
-            url = g_strdup_printf("http://www.openstreetmap.org/browse/relation/" LONGLONG_FMT "\n", *attr.u.num64);
-            break;
-        default:
-            break;
+    if (item) {
+        for (i = 0; i < wm->datai; i++) {
+            item_attr_get(item, attr_any, &attr);
         }
-        if (url) {
-            gui_internal_widget_append(w, wb = gui_internal_button_new_with_callback(
-                                              this, _("View in Browser"), image_new_xs(this, "gui_active"),
-                                              gravity_left_center | orientation_horizontal | flags_fill,
-                                              gui_internal_cmd_view_in_browser, NULL));
-            wb->name = url;
+        if (item_attr_get(item, attr_any, &attr)) {
+            url = NULL;
+            switch (attr.type) {
+            case attr_osm_nodeid:
+                url = g_strdup_printf("http://www.openstreetmap.org/browse/node/" LONGLONG_FMT "\n", *attr.u.num64);
+                break;
+            case attr_osm_wayid:
+                url = g_strdup_printf("http://www.openstreetmap.org/browse/way/" LONGLONG_FMT "\n", *attr.u.num64);
+                break;
+            case attr_osm_relationid:
+                url = g_strdup_printf("http://www.openstreetmap.org/browse/relation/" LONGLONG_FMT "\n", *attr.u.num64);
+                break;
+            default:
+                break;
+            }
+            if (url) {
+                gui_internal_widget_append(w, wb = gui_internal_button_new_with_callback(
+                                                  this, _("View in Browser"), image_new_xs(this, "gui_active"),
+                                                  gravity_left_center | orientation_horizontal | flags_fill,
+                                                  gui_internal_cmd_view_in_browser, NULL));
+                wb->name = url;
+            }
         }
     }
     map_rect_destroy(mr);

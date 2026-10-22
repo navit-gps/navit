@@ -805,6 +805,8 @@ static int push_zipfile_tile(struct map_rect_priv *mr, int zipfile, int offset, 
     long long cdoffset = m->eoc64 ? m->eoc64->zip64eofst : m->eoc->zipeofst;
     struct zip_cd *cd = (struct zip_cd *)(file_data_read(f, cdoffset + zipfile * m->cde_size, m->cde_size));
     dbg(lvl_debug, "read from " LONGLONG_FMT " %d bytes", cdoffset + zipfile * m->cde_size, m->cde_size);
+    if (!cd)
+        return 1;
     cd_to_cpu(cd);
     if (!cd->zipcunc) {
         return 1;
@@ -1007,7 +1009,8 @@ static struct item *map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int
     if (mr->m->eoc) {
         while (pop_tile(mr))
             ;
-        push_zipfile_tile(mr, id_hi, 0, 0, 0);
+        if (push_zipfile_tile(mr, id_hi, 0, 0, 0))
+            return NULL;
     }
     t = mr->t;
     t->pos = t->start + id_lo;
