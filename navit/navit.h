@@ -116,6 +116,7 @@ int navit_add_attr(struct navit *this_, struct attr *attr);
 int navit_remove_attr(struct navit *this_, struct attr *attr);
 struct attr_iter *navit_attr_iter_new(void *unused);
 void navit_attr_iter_destroy(struct attr_iter *iter);
+const char **navit_get_lang_pref(struct navit *this_);
 void navit_add_callback(struct navit *this_, struct callback *cb);
 void navit_remove_callback(struct navit *this_, struct callback *cb);
 void navit_set_position(struct navit *this_, struct pcoord *c);
