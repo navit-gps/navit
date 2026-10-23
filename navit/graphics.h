@@ -242,6 +242,8 @@ struct graphics_font *graphics_named_font_new(struct graphics *gra, char *font, 
 void graphics_font_destroy(struct graphics_font *gra_font);
 void graphics_free(struct graphics *gra);
 void graphics_font_destroy_all(struct graphics *gra);
+void graphics_font_invalidate(struct graphics *gra);
+void graphics_font_validate(struct graphics *gra);
 struct graphics_gc *graphics_gc_new(struct graphics *gra);
 void graphics_gc_destroy(struct graphics_gc *gc);
 void graphics_gc_set_foreground(struct graphics_gc *gc, struct color *c);

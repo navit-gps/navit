@@ -2629,10 +2629,16 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
         dbg(lvl_debug, "setting attr_layout to %s", attr->u.layout->name);
         if (this_->layout_current != attr->u.layout) {
             navit_update_current_layout(this_, attr->u.layout);
-            graphics_font_destroy_all(this_->gra);
+            /* Invalidate fonts, rebuild the display list synchronously, then clear the
+             * invalidation: cached fonts are only destroyed while their size is being
+             * replaced inside the rebuild, so nothing in an in-flight frame can dangle.
+             * Eagerly destroying them here would use-after-free fonts that animation
+             * ticks still reference while the rebuild is in progress. */
+            graphics_font_invalidate(this_->gra);
             navit_set_cursors(this_);
             if (this_->ready == 3)
                 navit_draw(this_);
+            graphics_font_validate(this_->gra);
             attr_updated = 1;
         }
         break;
