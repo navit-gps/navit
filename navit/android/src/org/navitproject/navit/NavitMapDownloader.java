@@ -22,6 +22,8 @@ import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 
+import org.json.*;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -38,433 +40,406 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.lang.String;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+
 
 
 /*
+ * @author hoehnp
  * @author rikky
  *
  */
 public class NavitMapDownloader extends Thread {
 
+    // removed since not available in github-actions-mapserver
+    static int [] removed = new int[]{R.string.korea, R.string.uae_other, R.string.tasmania, R.string.victoria, R.string.new_south_wales, R.string.new_caledonia,
+            R.string.mittelfranken, R.string.oberfranken, R.string.unterfranken, R.string.oberbayern, R.string.niederbayern, R.string.oberpfalz, R.string.schwaben,
+            R.string.mallorca, R.string.galicia, R.string.wiltshire, R.string.surrey, R.string.suffolk, R.string.south_yorkshire, R.string.somerset,
+            R.string.shropshire, R.string.oxfordshire, R.string.nottinghamshire, R.string.norfolk, R.string.leicestershire, R.string.lancashire,
+            R.string.kent, R.string.herefordshire, R.string.essex, R.string.east_yorkshire_with_hull, R.string.cumbria, R.string.cambridgeshire, R.string.buckinghamshire,
+            R.string.crete, R.string.midwest, R.string.pacific, R.string.south, R.string.west, R.string.guyana
+    };
+
+    static String [] africa = new String[]{"africa-algeria", "africa-angola", "africa-benin", "africa-botswana", "africa-burkina-faso", "africa-burundi", "africa-cameroon", "africa-canary-islands", "africa-cape-verde", "africa-central-african-republic", "africa-chad", "africa-comores", "africa-congo-brazzaville", "africa-congo-democratic-republic", "africa-djibouti", "africa-egypt", "africa-equatorial-guinea", "africa-eritrea", "africa-ethiopia", "africa-gabon", "africa-ghana", "africa-guinea", "africa-guinea-bissau", "africa-ivory-coast", "africa-kenya", "africa-lesotho", "africa-liberia", "africa-libya", "africa-madagascar", "africa-malawi", "africa-mali", "africa-mauritania", "africa-mauritius", "africa-morocco", "africa-mozambique", "africa-namibia", "africa-niger", "africa-nigeria", "africa-rwanda", "africa-saint-helena-ascension-and-tristan-da-cunha", "africa-sao-tome-and-principe", "africa-senegal-and-gambia", "africa-seychelles", "africa-sierra-leone", "africa-somalia", "africa-south-africa", "africa-south-sudan", "africa-sudan", "africa-swaziland", "africa-tanzania", "africa-togo", "africa-tunisia", "africa-uganda", "africa-zambia", "africa-zimbabwe"};
+
+    static String[] asia = new String[]{"asia-afghanistan", "asia-armenia", "asia-azerbaijan", "asia-bangladesh", "asia-bhutan", "asia-cambodia", "asia-china", "asia-gcc-states", "asia-india", "asia-indonesia", "asia-iran", "asia-iraq", "asia-israel-and-palestine", "asia-japan", "asia-jordan", "asia-kazakhstan", "asia-kyrgyzstan", "asia-laos", "asia-lebanon", "asia-malaysia-singapore-brunei", "asia-maldives", "asia-mongolia", "asia-myanmar", "asia-nepal", "asia-north-korea", "asia-pakistan", "asia-philippines", "asia-south-korea", "asia-sri-lanka", "asia-syria", "asia-taiwan", "asia-tajikistan", "asia-thailand", "asia-turkmenistan", "asia-uzbekistan", "asia-vietnam", "asia-yemen"};
+
+    static String [] australia_oceania = new String[]{"australia-oceania-american-oceania", "australia-oceania-australia", "australia-oceania-cook-islands", "australia-oceania-fiji", "australia-oceania-ile-de-clipperton", "australia-oceania-kiribati", "australia-oceania-marshall-islands", "australia-oceania-micronesia", "australia-oceania-nauru", "australia-oceania-new-caledonia", "australia-oceania-new-zealand", "australia-oceania-niue", "australia-oceania-palau", "australia-oceania-papua-new-guinea", "australia-oceania-pitcairn-islands", "australia-oceania-polynesie-francaise", "australia-oceania-samoa", "australia-oceania-solomon-islands", "australia-oceania-tokelau", "australia-oceania-tonga", "australia-oceania-tuvalu", "australia-oceania-vanuatu", "australia-oceania-wallis-et-futuna"};
+
+    static String[] europe = new String[]{"europe-albania", "europe-andorra", "europe-austria", "europe-azores", "europe-belarus", "europe-belgium", "europe-bosnia_herzegovina", "europe-bulgaria", "europe-croatia", "europe-cyprus", "europe-czech_republic", "europe-denmark", "europe-estonia", "europe-faroe_islands", "europe-finland", "europe-france-alsace", "europe-france-aquitaine", "europe-france-auvergne", "europe-france-basse-normandie", "europe-france-bourgogne", "europe-france-bretagne", "europe-france-centre", "europe-france-champagne-ardenne", "europe-france-corse", "europe-france-franche-comte", "europe-france-guadeloupe", "europe-france-guyane", "europe-france-haute-normandie", "europe-france-ile-de-france", "europe-france-languedoc-roussillon", "europe-france-limousin", "europe-france-lorraine", "europe-france-martinique", "europe-france-mayotte", "europe-france-midi-pyrenees", "europe-france-nord-pas-de-calais", "europe-france-pays-de-la-loire", "europe-france-picardie", "europe-france-poitou-charentes", "europe-france-provence-alpes-cote-d-azur", "europe-france-reunion", "europe-france-rhone-alpes", "europe-georgia", "europe-germany-baden-wuerttemberg", "europe-germany-bayern", "europe-germany-berlin", "europe-germany-brandenburg", "europe-germany-bremen", "europe-germany-hamburg", "europe-germany-hessen", "europe-germany-mecklenburg-vorpommern", "europe-germany-niedersachsen", "europe-germany-nordrhein-westfalen", "europe-germany-rheinland-pfalz", "europe-germany-saarland", "europe-germany-sachsen-anhalt", "europe-germany-sachsen", "europe-germany-schleswig-holstein", "europe-germany-thueringen", "europe-greece", "europe-guernsey_jersey", "europe-hungary", "europe-iceland", "europe-ireland_and_northern_ireland", "europe-isle_of_man", "europe-italy-centro", "europe-italy-isole", "europe-italy-nord-est", "europe-italy-nord-ovest", "europe-italy-sud", "europe-kosovo", "europe-latvia", "europe-liechtenstein", "europe-lithuania", "europe-luxembourg", "europe-macedonia", "europe-malta", "europe-moldova", "europe-monaco", "europe-montenegro", "europe-netherlands-drenthe", "europe-netherlands-flevoland", "europe-netherlands-friesland", "europe-netherlands-gelderland", "europe-netherlands-groningen", "europe-netherlands-limburg", "europe-netherlands-noord-brabant", "europe-netherlands-noord-holland", "europe-netherlands-overijssel", "europe-netherlands-utrecht", "europe-netherlands-zeeland", "europe-netherlands-zuid-holland", "europe-norway", "europe-poland-dolnoslaskie", "europe-poland-kujawsko-pomorskie", "europe-poland-lodzkie", "europe-poland-lubelskie", "europe-poland-lubuskie", "europe-poland-malopolskie", "europe-poland-mazowieckie", "europe-poland-opolskie", "europe-poland-podkarpackie", "europe-poland-podlaskie", "europe-poland-pomorskie", "europe-poland-slaskie", "europe-poland-swietokrzyskie", "europe-poland-warminsko-mazurskie", "europe-poland-wielkopolskie", "europe-poland-zachodniopomorskie", "europe-portugal", "europe-romania", "europe-serbia", "europe-slovakia", "europe-slovenia", "europe-spain", "europe-sweden", "europe-switzerland", "europe-turkey", "europe-united-kingdom-england", "europe-united-kingdom-scotland", "europe-united-kingdom-wales", "europe-ukraine"};
+
+    static String[] scandinavia = new String[]{"europe-sweden", "europe-danmark", "europe-norway"};
+
+    static String[] north_america = new String[]{"north-america-canada-alberta", "north-america-canada-british-columbia", "north-america-canada-manitoba", "north-america-canada-new-brunswick", "north-america-canada-newfoundland-and-labrador", "north-america-canada-northwest-territories", "north-america-canada-nova-scotia", "north-america-canada-nunavut", "north-america-canada-ontario", "north-america-canada-prince-edward-island", "north-america-canada-quebec", "north-america-canada-saskatchewan", "north-america-canada-yukon", "north-america-greenland", "north-america-mexico", "north-america-us-alabama", "north-america-us-alaska", "north-america-us-arizona", "north-america-us-arkansas", "north-america-us-california", "north-america-us-colorado", "north-america-us-connecticut", "north-america-us-delaware", "north-america-us-district-of-columbia", "north-america-us-florida", "north-america-us-georgia", "north-america-us-hawaii", "north-america-us-idaho", "north-america-us-illinois", "north-america-us-indiana", "north-america-us-iowa", "north-america-us-kansas", "north-america-us-kentucky", "north-america-us-louisiana", "north-america-us-maine", "north-america-us-maryland", "north-america-us-massachusetts", "north-america-us-michigan", "north-america-us-minnesota", "north-america-us-mississippi", "north-america-us-missouri", "north-america-us-montana", "north-america-us-nebraska", "north-america-us-nevada", "north-america-us-new-hampshire", "north-america-us-new-jersey", "north-america-us-new-mexico", "north-america-us-new-york", "north-america-us-north-carolina", "north-america-us-north-dakota", "north-america-us-ohio", "north-america-us-oklahoma", "north-america-us-oregon", "north-america-us-pennsylvania", "north-america-us-puerto-rico", "north-america-us-rhode-island", "north-america-us-south-carolina", "north-america-us-south-dakota", "north-america-us-tennessee", "north-america-us-texas", "north-america-us-utah", "north-america-us-vermont", "north-america-us-virginia", "north-america-us-washington", "north-america-us-west-virginia", "north-america-us-wisconsin", "north-america-us-wyoming"};
+
+    static String[] south_middle_america = new String[]{"south-america-argentina", "south-america-bolivia", "south-america-brazil-centro_oeste", "south-america-brazil-nordeste", "south-america-brazil-norte", "south-america-brazil-sudeste", "south-america-brazil-sul", "south-america-chile", "south-america-colombia", "south-america-ecuador", "south-america-paraguay", "south-america-peru", "south-america-suriname", "south-america-uruguay", "south-america-venezuela", "central-america-bahamas", "central-america-belize", "central-america-costa_rica", "central-america-cuba", "central-america-el-salvador", "central-america-guatemala", "central-america-haiti-and-domrep", "central-america-honduras", "central-america-jamaica", "central-america-nicaragua"};
+
+    static String[] france = new String[]{"europe-france-alsace", "europe-france-aquitaine", "europe-france-auvergne", "europe-france-basse-normandie", "europe-france-bourgogne", "europe-france-bretagne", "europe-france-centre", "europe-france-champagne-ardenne", "europe-france-corse", "europe-france-franche-comte", "europe-france-guadeloupe", "europe-france-guyane", "europe-france-haute-normandie", "europe-france-ile-de-france", "europe-france-languedoc-roussillon", "europe-france-limousin", "europe-france-lorraine", "europe-france-martinique", "europe-france-mayotte", "europe-france-midi-pyrenees", "europe-france-nord-pas-de-calais", "europe-france-pays-de-la-loire", "europe-france-picardie", "europe-france-poitou-charentes", "europe-france-provence-alpes-cote-d-azur", "europe-france-reunion", "europe-france-rhone-alpes"};
+
+    static String[] germany = new String[]{"europe-germany-baden-wuerttemberg", "europe-germany-bayern", "europe-germany-berlin", "europe-germany-brandenburg", "europe-germany-bremen", "europe-germany-hamburg", "europe-germany-hessen", "europe-germany-mecklenburg-vorpommern", "europe-germany-niedersachsen", "europe-germany-nordrhein-westfalen", "europe-germany-rheinland-pfalz", "europe-germany-saarland", "europe-germany-sachsen-anhalt", "europe-germany-sachsen", "europe-germany-schleswig-holstein", "europe-germany-thueringen"};
+
+    static String[] united_kingdom = new String[]{"europe-united-kingdom-england", "europe-united-kingdom-scotland", "europe-united-kingdom-wales"};
+
+    static String[] italy = new String[]{"europe-italy-centro", "europe-italy-isole", "europe-italy-nord-est", "europe-italy-nord-ovest", "europe-italy-sud"};
+
+    static String[] netherlands = new String[]{"europe-netherlands-drenthe", "europe-netherlands-flevoland", "europe-netherlands-friesland", "europe-netherlands-gelderland", "europe-netherlands-groningen", "europe-netherlands-limburg", "europe-netherlands-noord-brabant", "europe-netherlands-noord-holland", "europe-netherlands-overijssel", "europe-netherlands-utrecht", "europe-netherlands-zeeland", "europe-netherlands-zuid-holland"};
+
+    static String[] poland = new String[]{"europe-poland-dolnoslaskie", "europe-poland-kujawsko-pomorskie", "europe-poland-lodzkie", "europe-poland-lubelskie", "europe-poland-lubuskie", "europe-poland-malopolskie", "europe-poland-mazowieckie", "europe-poland-opolskie", "europe-poland-podkarpackie", "europe-poland-podlaskie", "europe-poland-pomorskie", "europe-poland-slaskie", "europe-poland-swietokrzyskie", "europe-poland-warminsko-mazurskie", "europe-poland-wielkopolskie", "europe-poland-zachodniopomorskie"};
+
+    static String [] canada = new String[]{"north-america-canada-alberta", "north-america-canada-british-columbia", "north-america-canada-manitoba", "north-america-canada-new-brunswick", "north-america-canada-newfoundland-and-labrador", "north-america-canada-northwest-territories", "north-america-canada-nova-scotia", "north-america-canada-nunavut", "north-america-canada-ontario", "north-america-canada-prince-edward-island", "north-america-canada-quebec", "north-america-canada-saskatchewan", "north-america-canada-yukon"};
+
+    static String[] us = new String[]{"north-america-us-alabama", "north-america-us-arizona", "north-america-us-arkansas", "north-america-us-california", "north-america-us-colorado", "north-america-us-connecticut", "north-america-us-delaware", "north-america-us-district-of-columbia", "north-america-us-florida", "north-america-us-georgia", "north-america-us-idaho", "north-america-us-illinois", "north-america-us-indiana", "north-america-us-iowa", "north-america-us-kansas", "north-america-us-kentucky", "north-america-us-louisiana", "north-america-us-maine", "north-america-us-maryland", "north-america-us-massachusetts", "north-america-us-michigan", "north-america-us-minnesota", "north-america-us-mississippi", "north-america-us-missouri", "north-america-us-montana", "north-america-us-nebraska", "north-america-us-nevada", "north-america-us-new-hampshire", "north-america-us-new-jersey", "north-america-us-new-mexico", "north-america-us-new-york", "north-america-us-north-carolina", "north-america-us-north-dakota", "north-america-us-ohio", "north-america-us-oklahoma", "north-america-us-oregon", "north-america-us-pennsylvania", "north-america-us-puerto-rico", "north-america-us-rhode-island", "north-america-us-south-carolina", "north-america-us-south-dakota", "north-america-us-tennessee", "north-america-us-texas", "north-america-us-utah", "north-america-us-vermont", "north-america-us-virginia", "north-america-us-washington", "north-america-us-west-virginia", "north-america-us-wisconsin", "north-america-us-wyoming"};
+
+    static String[] brazil = new String[]{"south-america-brazil-centro_oeste", "south-america-brazil-nordeste", "south-america-brazil-norte", "south-america-brazil-sudeste", "south-america-brazil-sul"};
+
+    static String[] benelux = new String[]{"europe-luxembourg", "europe-belgium", "europe-netherlands-drenthe", "europe-netherlands-flevoland", "europe-netherlands-friesland", "europe-netherlands-gelderland", "europe-netherlands-groningen", "europe-netherlands-limburg", "europe-netherlands-noord-brabant", "europe-netherlands-noord-holland", "europe-netherlands-overijssel", "europe-netherlands-utrecht", "europe-netherlands-zeeland", "europe-netherlands-zuid-holland"};
+
+    static String[] world = {"africa-algeria", "africa-angola", "africa-benin", "africa-botswana", "africa-burkina-faso", "africa-burundi", "africa-cameroon", "africa-canary-islands", "africa-cape-verde", "africa-central-african-republic", "africa-chad", "africa-comores", "africa-congo-brazzaville", "africa-congo-democratic-republic", "africa-djibouti", "africa-egypt", "africa-equatorial-guinea", "africa-eritrea", "africa-ethiopia", "africa-gabon", "africa-ghana", "africa-guinea", "africa-guinea-bissau", "africa-ivory-coast", "africa-kenya", "africa-lesotho", "africa-liberia", "africa-libya", "africa-madagascar", "africa-malawi", "africa-mali", "africa-mauritania", "africa-mauritius", "africa-morocco", "africa-mozambique", "africa-namibia", "africa-niger", "africa-nigeria", "africa-rwanda", "africa-saint-helena-ascension-and-tristan-da-cunha", "africa-sao-tome-and-principe", "africa-senegal-and-gambia", "africa-seychelles", "africa-sierra-leone", "africa-somalia", "africa-south-africa", "africa-south-sudan", "africa-sudan", "africa-swaziland", "africa-tanzania", "africa-togo", "africa-tunisia", "africa-uganda", "africa-zambia", "africa-zimbabwe", "asia-afghanistan", "asia-armenia", "asia-azerbaijan", "asia-bangladesh", "asia-bhutan", "asia-cambodia", "asia-china", "asia-gcc-states", "asia-india", "asia-indonesia", "asia-iran", "asia-iraq", "asia-israel-and-palestine", "asia-japan", "asia-jordan", "asia-kazakhstan", "asia-kyrgyzstan", "asia-laos", "asia-lebanon", "asia-malaysia-singapore-brunei", "asia-maldives", "asia-mongolia", "asia-myanmar", "asia-nepal", "asia-north-korea", "asia-pakistan", "asia-philippines", "asia-south-korea", "asia-sri-lanka", "asia-syria", "asia-taiwan", "asia-tajikistan", "asia-thailand", "asia-turkmenistan", "asia-uzbekistan", "asia-vietnam", "asia-yemen", "australia-oceania-american-oceania", "australia-oceania-australia", "australia-oceania-cook-islands", "australia-oceania-fiji", "australia-oceania-ile-de-clipperton", "australia-oceania-kiribati", "australia-oceania-marshall-islands", "australia-oceania-micronesia", "australia-oceania-nauru", "australia-oceania-new-caledonia", "australia-oceania-new-zealand", "australia-oceania-niue", "australia-oceania-palau", "australia-oceania-papua-new-guinea", "australia-oceania-pitcairn-islands", "australia-oceania-polynesie-francaise", "australia-oceania-samoa", "australia-oceania-solomon-islands", "australia-oceania-tokelau", "australia-oceania-tonga", "australia-oceania-tuvalu", "australia-oceania-vanuatu", "australia-oceania-wallis-et-futuna", "central-america-bahamas", "central-america-belize", "central-america-costa_rica", "central-america-cuba", "central-america-el-salvador", "central-america-guatemala", "central-america-haiti-and-domrep", "central-america-honduras", "central-america-jamaica", "central-america-nicaragua", "europe-albania", "europe-andorra", "europe-austria", "europe-azores", "europe-belarus", "europe-belgium", "europe-bosnia_herzegovina", "europe-bulgaria", "europe-croatia", "europe-cyprus", "europe-czech_republic", "europe-denmark", "europe-estonia", "europe-faroe_islands", "europe-finland", "europe-france-alsace", "europe-france-aquitaine", "europe-france-auvergne", "europe-france-basse-normandie", "europe-france-bourgogne", "europe-france-bretagne", "europe-france-centre", "europe-france-champagne-ardenne", "europe-france-corse", "europe-france-franche-comte", "europe-france-guadeloupe", "europe-france-guyane", "europe-france-haute-normandie", "europe-france-ile-de-france", "europe-france-languedoc-roussillon", "europe-france-limousin", "europe-france-lorraine", "europe-france-martinique", "europe-france-mayotte", "europe-france-midi-pyrenees", "europe-france-nord-pas-de-calais", "europe-france-pays-de-la-loire", "europe-france-picardie", "europe-france-poitou-charentes", "europe-france-provence-alpes-cote-d-azur", "europe-france-reunion", "europe-france-rhone-alpes", "europe-georgia", "europe-germany-baden-wuerttemberg", "europe-germany-bayern", "europe-germany-berlin", "europe-germany-brandenburg", "europe-germany-bremen", "europe-germany-hamburg", "europe-germany-hessen", "europe-germany-mecklenburg-vorpommern", "europe-germany-niedersachsen", "europe-germany-nordrhein-westfalen", "europe-germany-rheinland-pfalz", "europe-germany-saarland", "europe-germany-sachsen-anhalt", "europe-germany-sachsen", "europe-germany-schleswig-holstein", "europe-germany-thueringen", "europe-greece", "europe-guernsey_jersey", "europe-hungary", "europe-iceland", "europe-ireland_and_northern_ireland", "europe-isle_of_man", "europe-italy-centro", "europe-italy-isole", "europe-italy-nord-est", "europe-italy-nord-ovest", "europe-italy-sud", "europe-kosovo", "europe-latvia", "europe-liechtenstein", "europe-lithuania", "europe-luxembourg", "europe-macedonia", "europe-malta", "europe-moldova", "europe-monaco", "europe-montenegro", "europe-netherlands-drenthe", "europe-netherlands-flevoland", "europe-netherlands-friesland", "europe-netherlands-gelderland", "europe-netherlands-groningen", "europe-netherlands-limburg", "europe-netherlands-noord-brabant", "europe-netherlands-noord-holland", "europe-netherlands-overijssel", "europe-netherlands-utrecht", "europe-netherlands-zeeland", "europe-netherlands-zuid-holland", "europe-norway", "europe-poland-dolnoslaskie", "europe-poland-kujawsko-pomorskie", "europe-poland-lodzkie", "europe-poland-lubelskie", "europe-poland-lubuskie", "europe-poland-malopolskie", "europe-poland-mazowieckie", "europe-poland-opolskie", "europe-poland-podkarpackie", "europe-poland-podlaskie", "europe-poland-pomorskie", "europe-poland-slaskie", "europe-poland-swietokrzyskie", "europe-poland-warminsko-mazurskie", "europe-poland-wielkopolskie", "europe-poland-zachodniopomorskie", "europe-portugal", "europe-romania", "europe-serbia", "europe-slovakia", "europe-slovenia", "europe-spain", "europe-sweden", "europe-switzerland", "europe-turkey", "europe-united-kingdom-england", "europe-united-kingdom-scotland", "europe-united-kingdom-wales", "europe-ukraine", "north-america-canada-alberta", "north-america-canada-british-columbia", "north-america-canada-manitoba", "north-america-canada-new-brunswick", "north-america-canada-newfoundland-and-labrador", "north-america-canada-northwest-territories", "north-america-canada-nova-scotia", "north-america-canada-nunavut", "north-america-canada-ontario", "north-america-canada-prince-edward-island", "north-america-canada-quebec", "north-america-canada-saskatchewan", "north-america-canada-yukon", "north-america-greenland", "north-america-mexico", "north-america-us-alabama", "north-america-us-alaska", "north-america-us-arizona", "north-america-us-arkansas", "north-america-us-california", "north-america-us-colorado", "north-america-us-connecticut", "north-america-us-delaware", "north-america-us-district-of-columbia", "north-america-us-florida", "north-america-us-georgia", "north-america-us-hawaii", "north-america-us-idaho", "north-america-us-illinois", "north-america-us-indiana", "north-america-us-iowa", "north-america-us-kansas", "north-america-us-kentucky", "north-america-us-louisiana", "north-america-us-maine", "north-america-us-maryland", "north-america-us-massachusetts", "north-america-us-michigan", "north-america-us-minnesota", "north-america-us-mississippi", "north-america-us-missouri", "north-america-us-montana", "north-america-us-nebraska", "north-america-us-nevada", "north-america-us-new-hampshire", "north-america-us-new-jersey", "north-america-us-new-mexico", "north-america-us-new-york", "north-america-us-north-carolina", "north-america-us-north-dakota", "north-america-us-ohio", "north-america-us-oklahoma", "north-america-us-oregon", "north-america-us-pennsylvania", "north-america-us-puerto-rico", "north-america-us-rhode-island", "north-america-us-south-carolina", "north-america-us-south-dakota", "north-america-us-tennessee", "north-america-us-texas", "north-america-us-utah", "north-america-us-vermont", "north-america-us-virginia", "north-america-us-washington", "north-america-us-west-virginia", "north-america-us-wisconsin", "north-america-us-wyoming", "south-america-argentina", "south-america-bolivia", "south-america-brazil-centro_oeste", "south-america-brazil-nordeste", "south-america-brazil-norte", "south-america-brazil-sudeste", "south-america-brazil-sul", "south-america-chile", "south-america-colombia", "south-america-ecuador", "south-america-paraguay", "south-america-peru", "south-america-suriname", "south-america-uruguay","south-america-venezuela"};
+
     static final OsmMapValues[] osm_maps = {
 
-        // size estimations updated 2019-10-28
         new OsmMapValues(R.string.whole_planet, "-180", "-90", "180", "90",
-                         35471336933L, 0),
+                         0, world),
         new OsmMapValues(R.string.africa, "-30.89", "-36.17", "61.68", "38.40",
-                         3941558472L, 0),
+                         0, africa) ,
         new OsmMapValues(R.string.angola, "11.4", "-18.1", "24.2", "-5.3",
-                         224809554L, 1),
+                         1, new String[]{"africa-angola"}),
         new OsmMapValues(R.string.burundi, "28.9", "-4.5", "30.9", "-2.2",
-                         201346208L, 1),
+                         1, new String[]{"africa-burundi"}),
         new OsmMapValues(R.string.canary_islands, "-18.69", "26.52", "-12.79", "29.99",
-                         191823973L, 1),
+                         1, new String[]{"africa-canary-islands"}),
         new OsmMapValues(R.string.congo, "11.7", "-13.6", "31.5", "5.7",
-                         558204116L, 1),
+                         1, new String[]{"africa-congo"}),
         new OsmMapValues(R.string.ethiopia, "32.89", "3.33", "48.07", "14.97",
-                         249153700L, 1),
+                         1, new String[]{"africa-ethiopia"}) ,
         new OsmMapValues(R.string.guinea, "-15.47", "7.12", "-7.58", "12.74",
-                         290456408L, 1),
+                         1, new String[]{"africa-guinea"}),
         new OsmMapValues(R.string.cotedivoire, "-8.72", "4.09", "-2.43", "10.80",
-                         220210996L, 1),
+                         1, new String[]{"africa-ivory-coast"}),
         new OsmMapValues(R.string.kenya, "33.8", "-5.2", "42.4", "4.9",
-                         402046406L, 1),
+                         1, new String[]{"africa-kenya"}),
         new OsmMapValues(R.string.lesotho, "26.9", "-30.7", "29.6", "-28.4",
-                         250430629L, 1),
+                         1, new String[]{"africa-lesotho"}),
         new OsmMapValues(R.string.liberia, "-15.00", "-0.73", "-7.20", "8.65",
-                         220130148L, 1),
+                         1, new String[]{"africa-liberia"}),
         new OsmMapValues(R.string.libya, "9.32", "19.40", "25.54", "33.63",
-                         202766153L, 1),
+                         1, new String[]{"africa-lybia"}),
         new OsmMapValues(R.string.madagascar, "42.25", "-26.63", "51.20", "-11.31",
-                         231793632L, 1),
-        new OsmMapValues(R.string.namibia, R.string.botswana, "11.4", "-29.1", "29.5", "-16.9",
-                         355183133L, 1),
+                         1, new String[]{"africa-madagascar"}),
+        new OsmMapValues(R.string.namibia,"11.4", "-29.1", "29.5", "-16.9",
+                         1, new String[]{"africa-namibia"}),
+        new OsmMapValues(R.string.botswana, "11.4", "-29.1", "29.5", "-16.9",
+                         1, new String[]{"africa-botswana"}),
         new OsmMapValues(R.string.reunion, "55.2", "-21.4", "55.9", "-20.9",
-                         170953086L, 1),
+                         1, new String[]{"africa-reunion"}),
         new OsmMapValues(R.string.rwanda, "28.8", "-2.9", "30.9", "-1.0",
-                         213213966L, 1),
-        new OsmMapValues(R.string.south_africa, R.string.lesotho, "15.93", "-36.36", "33.65", "-22.08",
-                         412557227L, 1),
+                         1, new String[]{"africa-rwanda"}),
+        new OsmMapValues(R.string.south_africa, "15.93", "-36.36", "33.65", "-22.08",
+                         1, new String[]{"africa-south-africa"}),
         new OsmMapValues(R.string.tanzania, "29.19", "-11.87", "40.74", "-0.88",
-                         659878114L, 1),
+                         1, new String[]{"africa-tanzania"}),
         new OsmMapValues(R.string.uganda, "29.3", "-1.6", "35.1", "4.3",
-                         424948047L, 1),
+                         1, new String[]{"africa-uganda"}),
         new OsmMapValues(R.string.asia, "23.8", "0.1", "195.0", "82.4",
-                         8633755849L, 0),
+                         0, asia),
         new OsmMapValues(R.string.azerbaijan, "44.74", "38.34", "51.69", "42.37",
-                         208193716L, 1),
+                         1, new String[]{"asia-azerbaijan"}),
         new OsmMapValues(R.string.china, "67.3", "5.3", "135.0", "54.5",
-                         3071225422L, 1),
+                         1, new String[]{"asia-china"}),
         new OsmMapValues(R.string.cyprus, "32.0", "34.5", "34.9", "35.8",
-                         178895753L, 1),
-        new OsmMapValues(R.string.india, R.string.nepal, "67.9", "5.5", "89.6", "36.0",
-                         1046746656L, 1),
+                         1, new String[]{"europe-cyprus"}),
+        new OsmMapValues(R.string.india, "67.9", "5.5", "89.6", "36.0",
+                         1, new String[]{"asia-india"}),
+        new OsmMapValues(R.string.nepal, "67.9", "5.5", "89.6", "36.0",
+                         1, new String[]{"asia-nepal"}),
         new OsmMapValues(R.string.indonesia, "93.7", "-17.3", "155.5", "7.6",
-                         1182281967L, 1),
+                         1, new String[]{"asia-indonesia"}),
         new OsmMapValues(R.string.iran, "43.5", "24.4", "63.6", "40.4",
-                         391459887L, 1),
+                         1, new String[]{"asia-iran"}),
         new OsmMapValues(R.string.iraq, "38.7", "28.5", "49.2", "37.4",
-                         244896621L, 1),
+                         1, new String[]{"asia-iraq"}),
         new OsmMapValues(R.string.israel, "33.99", "29.8", "35.95", "33.4",
-                         236037295L, 1),
-        new OsmMapValues(R.string.japan, R.string.korea, "123.6", "25.2", "151.3", "47.1",
-                         1337474060L, 1),
+                         1, new String[]{"asia-israel"}),
+        new OsmMapValues(R.string.japan, "123.6", "25.2", "151.3", "47.1",
+                         1, new String[]{"asia-japan"}),
         new OsmMapValues(R.string.kazakhstan, "46.44", "40.89", "87.36", "55.45",
-                         661252271L, 1),
+                         1, new String[]{"asia-kazakhstan"}),
         new OsmMapValues(R.string.kyrgyzsyan, "69.23", "39.13", "80.33", "43.29",
-                         215786962L, 1),
-        new OsmMapValues(R.string.malaysia, R.string.singapore, "94.3", "-5.9", "108.6", "6.8",
-                         339511849L, 1),
+                         1, new String[]{"asia-kyrgyzsyan"}),
+        new OsmMapValues(R.string.malaysia, "94.3", "-5.9", "108.6", "6.8",
+                         1, new String[]{"asia-malaysia"}),
         new OsmMapValues(R.string.mongolia, "87.5", "41.4", "120.3", "52.7",
-                         231652214L, 1),
+                         1, new String[]{"asia-mongolia"}),
         new OsmMapValues(R.string.pakistan, "60.83", "23.28", "77.89", "37.15",
-                         316649335L, 1),
+                         1, new String[]{"asia-pakistan"}),
         new OsmMapValues(R.string.philippines, "115.58", "4.47", "127.85", "21.60",
-                         417733117L, 1),
+                         1, new String[]{"asia-philippines"}),
         new OsmMapValues(R.string.saudi_arabia, "33.2", "16.1", "55.9", "33.5",
-                         374101149L, 1),
+                         1, new String[]{"asia-saudi-arabia"}),
         new OsmMapValues(R.string.taiwan, "119.1", "21.5", "122.5", "25.2",
-                         213310839L, 1),
+                         1, new String[]{"asia-taiwan"}),
         new OsmMapValues(R.string.thailand, "97.5", "5.7", "105.2", "19.7",
-                         345327944L, 1),
+                         1, new String[]{"asia-thailand"}),
         new OsmMapValues(R.string.turkey, "25.1", "35.8", "46.4", "42.8",
-                         547969022L, 1),
+                         1, new String[]{"europe-turkey"}),
         new OsmMapValues(R.string.turkmenistan, "51.78", "35.07", "66.76", "42.91",
-                         197833565L, 1),
-        new OsmMapValues(R.string.uae_other, "51.5", "22.6", "56.7", "26.5",
-                         188885191L, 1),
+                         1, new String[]{"asia-turkmenistan"}),
         new OsmMapValues(R.string.australia, R.string.oceania, "89.84", "-57.39", "179.79", "7.26",
-                         1767156679L, 0),
+                         0, australia_oceania),
         new OsmMapValues(R.string.australia, "110.5", "-44.2", "154.9", "-9.2",
-                         550526915L, 0),
-        new OsmMapValues(R.string.tasmania, "144.0", "-45.1", "155.3", "-24.8",
-                         377084650L, 1),
-        new OsmMapValues(R.string.victoria, R.string.new_south_wales, "140.7", "-39.4", "153.7", "-26.9",
-                         364316999L, 1),
-        new OsmMapValues(R.string.new_caledonia, "157.85", "-25.05", "174.15", "-16.85",
-                         164225513L, 1),
+                         0, new String[]{"australia-oceania-australia"}),
         new OsmMapValues(R.string.newzealand, "165.2", "-47.6", "179.1", "-33.7",
-                         350750954L, 1),
+                         1, new String[]{"australia-oceania-new-zeeland"}),
         new OsmMapValues(R.string.europe, "-12.97", "33.59", "34.15", "72.10",
-                         15902268761L, 0),
-        // Is more than 'Europe' from above where 'western europe' should be smaller than europe
-        //new OsmMapValues(R.string.western_europe, "-17.6", "34.5", "42.9", "70.9",
-        //           16879410713L, 1),
+                         0, europe),
         new OsmMapValues(R.string.austria, "9.4", "46.32", "17.21", "49.1",
-                         1184302570L, 1),
+                         1, new String[]{"europe-austria"}),
         new OsmMapValues(R.string.azores, "-31.62", "36.63", "-24.67", "40.13",
-                         171415530L, 1),
+                         1, new String[]{"europe-azores"}),
         new OsmMapValues(R.string.belgium, "2.3", "49.5", "6.5", "51.6",
-                         866194492L, 1),
+                         1, new String[]{"europe-belgium"}),
         new OsmMapValues(R.string.benelux, "2.08", "48.87", "7.78", "54.52",
-                         2075973265L, 1),
+                         1, benelux),
         new OsmMapValues(R.string.netherlands, "3.07", "50.75", "7.23", "53.73",
-                         1388530557L, 1),
+                         1, netherlands),
         new OsmMapValues(R.string.denmark, "7.65", "54.32", "15.58", "58.07",
-                         552080821L, 1),
+                         1, new String[]{"europe-denmark"}),
         new OsmMapValues(R.string.faroe_islands, "-7.8", "61.3", "-6.1", "62.5",
-                         162933852L, 1),
-        new OsmMapValues(R.string.france, R.string.belgium, R.string.luxembourg,
-                         "-5.20", "42.20", "8.20", "51.68",
-                         4575442134L, 1),
-        new OsmMapValues(R.string.france, R.string.luxembourg,"-5.20", "42.20", "8.20", "51.10",
-                         3984216361L, 1),
+                         1, new String[]{"europe-faroe-islands"}),
+        new OsmMapValues(R.string.france, "-5.20", "42.20", "8.20", "51.68",
+                         1, france),
         new OsmMapValues(R.string.alsace, "6.79", "47.27", "8.48", "49.17",
-                         457980795L, 2),
+                         2, new String[]{"europe-france-alsace"}),
         new OsmMapValues(R.string.aquitaine, "-2.27", "42.44", "1.50", "45.76",
-                         590247901L, 2),
+                         2, new String[]{"europe-france-aquitaine"}),
         new OsmMapValues(R.string.auvergne, "2.01", "44.57", "4.54", "46.85",
-                         404857899L, 2),
+                         2, new String[]{"europe-france-auvergne"}),
         new OsmMapValues(R.string.basse_normandie, "-2.09", "48.13", "1.03", "49.98",
-                         350392952L, 2),
+                         2, new String[]{"europe-france-basse-normandie"}),
         new OsmMapValues(R.string.bourgogne, "2.80", "46.11", "5.58", "48.45",
-                         429259997L, 2),
+                         2, new String[]{"europe-france-bourgogne"}),
         new OsmMapValues(R.string.bretagne, "-5.58", "46.95", "-0.96", "48.99",
-                         506377685L, 2),
+                         2, new String[]{"europe-france-bretagne"}),
         new OsmMapValues(R.string.centre, "0.01", "46.29", "3.18", "48.99",
-                         620373774L, 2),
+                         2, new String[]{"europe-france-centre"}),
         new OsmMapValues(R.string.champagne_ardenne, "3.34", "47.53", "5.94", "50.28",
-                         404110051L, 2),
+                         2, new String[]{"europe-france-champagne-ardenne"}),
         new OsmMapValues(R.string.corse, "8.12", "41.32", "9.95", "43.28",
-                         196000318L, 2),
+                         2, new String[]{"europe-france-corse"}),
         new OsmMapValues(R.string.franche_comte, "5.20", "46.21", "7.83", "48.07",
-                         448854594L, 2),
+                         2, new String[]{"europe-france-franche-comte"}),
         new OsmMapValues(R.string.haute_normandie, "-0.15", "48.62", "1.85", "50.18",
-                         291794192L, 2),
-        new OsmMapValues(R.string.ile_de_france, "1.40", "48.07", "3.61", "49.29",
-                         404250888L, 2),
+                         2, new String[]{"europe-france-haute-normandie"}),
+            new OsmMapValues(R.string.ile_de_france, "1.40", "48.07", "3.61", "49.29",
+                         2, new String[]{"europe-france-ile-de-france"}),
         new OsmMapValues(R.string.languedoc_roussillon, "1.53", "42.25", "4.89", "45.02",
-                         509739604L, 2),
+                         2, new String[]{"europe-france-languedoc-roussillon"}),
         new OsmMapValues(R.string.limousin, "0.58", "44.87", "2.66", "46.50",
-                         315805128L, 2),
+                         2, new String[]{"europe-france-limousin"}),
         new OsmMapValues(R.string.lorraine, "4.84", "47.77", "7.72", "49.73",
-                         433828147L, 2),
+                         2, new String[]{"europe-france-lorraine"}),
         new OsmMapValues(R.string.midi_pyrenees, "-0.37", "42.18", "3.50", "45.10",
-                         609387039L, 2),
+                         2, new String[]{"europe-france-midi-pyrenees"}),
         new OsmMapValues(R.string.nord_pas_de_calais, "1.42", "49.92", "4.49", "51.31",
-                         480042491L, 2),
+                         2, new String[]{"europe-france-nord-pas-de-calais"}),
         new OsmMapValues(R.string.pays_de_la_loire, "-2.88", "46.20", "0.97", "48.62",
-                         638031978L, 2),
+                         2, new String[]{"europe-france-pays-de-la-loire"}),
         new OsmMapValues(R.string.picardie, "1.25", "48.79", "4.31", "50.43",
-                         480802771L, 2),
+                         2, new String[]{"europe-france-picardie"}),
         new OsmMapValues(R.string.poitou_charentes, "-1.69", "45.04", "1.26", "47.23",
-                         459723694L, 2),
+                         2, new String[]{"europe-france-poitou-charentes"}),
         new OsmMapValues(R.string.provence_alpes_cote_d_azur, "4.21", "42.91", "7.99", "45.18",
-                         491232080L, 2),
+                         2, new String[]{"europe-france-provence-alpes-cote-d-azur"}),
         new OsmMapValues(R.string.rhone_alpes, "3.65", "44.07", "7.88", "46.64",
-                         656454467L, 2),
+                         2, new String[]{"europe-france-rhone-alpes"}),
         new OsmMapValues(R.string.luxembourg, "5.7", "49.4", "6.5", "50.2",
-                         207870816L, 1),
+                         1, new String[]{"europe-luxembourg"}),
         new OsmMapValues(R.string.germany, "5.18", "46.84", "15.47", "55.64",
-                         4258366162L, 1),
+                         1, germany),
         new OsmMapValues(R.string.baden_wuerttemberg, "7.32", "47.14", "10.57", "49.85",
-                         859363389L, 2),
+                         2, new String[]{"europe-germany-baden-wuerttemberg"}),
         new OsmMapValues(R.string.bayern, "8.92", "47.22", "13.90", "50.62",
-                         1089590692L, 2),
-        new OsmMapValues(R.string.mittelfranken, "9.86", "48.78", "11.65", "49.84",
-                         278839689L, 2),
-        new OsmMapValues(R.string.niederbayern, "11.55", "47.75", "14.12", "49.42",
-                         409234523L, 2),
-        new OsmMapValues(R.string.oberbayern, "10.67", "47.05", "13.57", "49.14",
-                         494705080L, 2),
-        new OsmMapValues(R.string.oberfranken, "10.31", "49.54", "12.49", "50.95",
-                         320127656L, 2),
-        new OsmMapValues(R.string.oberpfalz, "11.14", "48.71", "13.47", "50.43",
-                         345835711L, 2),
-        new OsmMapValues(R.string.schwaben, "9.27", "47.10", "11.36", "49.09",
-                         425231381L, 2),
-        new OsmMapValues(R.string.unterfranken, "8.59", "49.16", "10.93", "50.67",
-                         407153157L, 2),
+                         2, new String[]{"europe-germany-bayern"}),
         new OsmMapValues(R.string.berlin, "13.03", "52.28", "13.81", "52.73",
-                         232299113L, 2),
+                         2, new String[]{"europe-germany-berlin"}),
         new OsmMapValues(R.string.brandenburg, "11.17", "51.30", "14.83", "53.63",
-                         429938728L, 2),
+                         2, new String[]{"europe-germany-brandenburg"}),
         new OsmMapValues(R.string.bremen, "8.43", "52.96", "9.04", "53.66",
-                         210480663L, 2),
+                         2, new String[]{"europe-germany-berlin"}),
         new OsmMapValues(R.string.hamburg, "9.56", "53.34", "10.39", "53.80",
-                         215777707L, 2),
+                         2, new String[]{"europe-germany-hamburg"}),
         new OsmMapValues(R.string.hessen, "7.72", "49.34", "10.29", "51.71",
-                         549304606L, 2),
+                         2, new String[]{"europe-germany-hessen"}),
         new OsmMapValues(R.string.mecklenburg_vorpommern, "10.54", "53.05", "14.48", "55.05",
-                         298273965L, 2),
+                         2, new String[]{"europe-germany-mecklenburg-vorpommern"}),
         new OsmMapValues(R.string.niedersachsen, "6.40", "51.24", "11.69", "54.22",
-                         973888436L, 2),
+                         2, new String[]{"europe-germany-niedersachsen"}),
         new OsmMapValues(R.string.nordrhein_westfalen, "5.46", "50.26", "9.52", "52.59",
-                         1121091906L, 2),
+                         2, new String[]{"europe-germany-nordrhein-westfalen"}),
         new OsmMapValues(R.string.rheinland_pfalz, "6.06", "48.91", "8.56", "51.00",
-                         562406978L, 2),
+                         2, new String[]{"europe-germany-rheinland-pfalz"}),
         new OsmMapValues(R.string.saarland, "6.30", "49.06", "7.46", "49.69",
-                         223614951L, 2),
+                         2, new String[]{"europe-germany-saarland"}),
         new OsmMapValues(R.string.sachsen_anhalt, "10.50", "50.88", "13.26", "53.11",
-                         380652800L, 2),
+                         2, new String[]{"europe-germany-sachsen-anhalt"}),
         new OsmMapValues(R.string.sachsen, "11.82", "50.11", "15.10", "51.73",
-                         452296960L, 2),
+                         2, new String[]{"europe-germany-sachsen"}),
         new OsmMapValues(R.string.schleswig_holstein, "7.41", "53.30", "11.98", "55.20",
-                         375552150L, 2),
+                         2, new String[]{"europe-germany-schleswig-holstein"}),
         new OsmMapValues(R.string.thueringen, "9.81", "50.15", "12.72", "51.70",
-                         362501525L, 2),
+                         2, new String[]{"europe-germany-thueringen"}),
         new OsmMapValues(R.string.iceland, "-25.3", "62.8", "-11.4", "67.5",
-                         198263647L, 1),
+                         1, new String[]{"europe-iceland"}),
         new OsmMapValues(R.string.ireland, "-11.17", "51.25", "-5.23", "55.9",
-                         326472032L, 1),
+                         1, new String[]{"europe-ireland"}),
         new OsmMapValues(R.string.italy, "6.52", "36.38", "18.96", "47.19",
-                         2199756999L, 1),
-        new OsmMapValues(R.string.spain, R.string.portugal, "-11.04", "34.87", "4.62", "44.41",
-                         1442482175L, 1),
-        new OsmMapValues(R.string.mallorca, "2.2", "38.8", "4.7", "40.2",
-                         246286923L, 2),
-        new OsmMapValues(R.string.galicia, "-10.0", "41.7", "-6.3", "44.1",
-                         269729717L, 2),
+                         1, italy),
+        new OsmMapValues(R.string.portugal, "-11.04", "34.87", "4.62", "44.41",
+                         1, new String[]{"europe-portugal"}),
+        new OsmMapValues(R.string.spain, "-11.04", "34.87", "4.62", "44.41",
+                         1, new String[]{"europe-spain"}),
         new OsmMapValues(R.string.scandinavia, "4.0", "54.4", "32.1", "71.5",
-                         2545082361L, 1),
+                         1, scandinavia),
         new OsmMapValues(R.string.finland, "18.6", "59.2", "32.3", "70.3",
-                         919020354L, 1),
+                         1, new String[]{"europe-finland"}),
         new OsmMapValues(R.string.denmark, "7.49", "54.33", "13.05", "57.88",
-                         488352770L, 1),
+                         1, new String[]{"europe-denmark"}),
         new OsmMapValues(R.string.switzerland, "5.79", "45.74", "10.59", "47.84",
-                         731538216L, 1),
+                         1, new String[]{"europe-switzerland"}),
         new OsmMapValues(R.string.united_kingdom, "-9.7", "49.6", "2.2", "61.2",
-                         1205714793L, 1),
+                         1, united_kingdom),
         new OsmMapValues(R.string.england, "-7.80", "48.93", "2.41", "56.14",
-                         1234829532L, 1),
-        new OsmMapValues(R.string.buckinghamshire, "-1.19", "51.44", "-0.43", "52.25",
-                         216717402L, 2),
-        new OsmMapValues(R.string.cambridgeshire, "-0.55", "51.96", "0.56", "52.79",
-                         216306889L, 2),
-        new OsmMapValues(R.string.cumbria, "-3.96", "53.85", "-2.11", "55.24",
-                         227066588L, 2),
-        new OsmMapValues(R.string.east_yorkshire_with_hull, "-1.16", "53.50", "0.54", "54.26",
-                         214532411L, 2),
-        new OsmMapValues(R.string.essex, "-0.07", "51.40", "1.36", "52.14",
-                         242803228L, 2),
-        new OsmMapValues(R.string.herefordshire, "-3.19", "51.78", "-2.29", "52.45",
-                         201746914L, 2),
-        new OsmMapValues(R.string.kent, "-0.02", "50.81", "1.65", "51.53",
-                         222224232L, 2),
-        new OsmMapValues(R.string.lancashire, "-3.20", "53.43", "-2.00", "54.29",
-                         231719236L, 2),
-        new OsmMapValues(R.string.leicestershire, "-1.65", "52.34", "-0.61", "53.03",
-                         231608922L, 2),
-        new OsmMapValues(R.string.norfolk, "0.10", "52.30", "2.04", "53.41",
-                         220583805L, 2),
-        new OsmMapValues(R.string.nottinghamshire, "-1.39", "52.73", "-0.62", "53.55",
-                         222001309L, 2),
-        new OsmMapValues(R.string.oxfordshire, "-1.77", "51.41", "-0.82", "52.22",
-                         215858382L, 2),
-        new OsmMapValues(R.string.shropshire, "-3.29", "52.26", "-2.18", "53.05",
-                         210489688L, 2),
-        new OsmMapValues(R.string.somerset, "-3.89", "50.77", "-2.20", "51.40",
-                         221498821L, 2),
-        new OsmMapValues(R.string.south_yorkshire, "-1.88", "53.25", "-0.80", "53.71",
-                         217566765L, 2),
-        new OsmMapValues(R.string.suffolk, "0.29", "51.88", "1.81", "52.60",
-                         218109848L, 2),
-        new OsmMapValues(R.string.surrey, "-0.90", "51.02", "0.10", "51.52",
-                         238058353L, 2),
-        new OsmMapValues(R.string.wiltshire, "-2.41", "50.90", "-1.44", "51.76",
-                         212963156L, 2),
+                         2, new String[]{"europe-united-kingdom-england"}),
         new OsmMapValues(R.string.scotland, "-8.13", "54.49", "-0.15", "61.40",
-                         372486133L, 2),
+                         2, new String[]{"europe-united-kingdom-scotland"}),
         new OsmMapValues(R.string.wales, "-5.56", "51.28", "-2.60", "53.60",
-                         281554024L, 2),
+                         2, new String[]{"europe-united-kingdom-wales"}),
         new OsmMapValues(R.string.albania, "19.09", "39.55", "21.12", "42.72",
-                         227718134L, 1),
+                         1, new String[]{"europe-albania"}),
         new OsmMapValues(R.string.belarus, "23.12", "51.21", "32.87", "56.23",
-                         475885189L, 1),
-        new OsmMapValues(R.string.russian_federation, "27.9", "41.5", "190.4", "77.6",
-                         3368130201L, 1),
+                         1, new String[]{"europe-belarus"}),
         new OsmMapValues(R.string.bulgaria, "24.7", "42.1", "24.8", "42.1",
-                         162974147L, 1),
+                         1, new String[]{"europe-bulgaria"}),
         new OsmMapValues(R.string.bosnia_and_herzegovina, "15.69", "42.52", "19.67", "45.32",
-                         272871917L, 1),
+                         1, new String[]{"europe-bosnia-and-herzegovina"}),
         new OsmMapValues(R.string.czech_republic, "11.91", "48.48", "19.02", "51.17",
-                         1100792845L, 1),
+                         1, new String[]{"europe-czech-republic"}),
         new OsmMapValues(R.string.croatia, "13.4", "42.1", "19.4", "46.9",
-                         718506859L, 1),
+                         1, new String[]{"europe-croatia"}),
         new OsmMapValues(R.string.estonia, "21.5", "57.5", "28.2", "59.6",
-                         239147853L, 1),
+                         1, new String[]{"europe-estonia"}),
         new OsmMapValues(R.string.greece, "28.9", "37.8", "29.0", "37.8",
-                         165328625L, 1),
-        new OsmMapValues(R.string.crete, "23.3", "34.5", "26.8", "36.0",
-                         174905198L, 1),
+                         1, new String[]{"europe-greece"}),
         new OsmMapValues(R.string.hungary, "16.08", "45.57", "23.03", "48.39",
-                         499823508L, 1),
+                         1, new String[]{"europe-hungary"}),
         new OsmMapValues(R.string.latvia, "20.7", "55.6", "28.3", "58.1",
-                         272931650L, 1),
+                         1, new String[]{"europe-latvia"}),
         new OsmMapValues(R.string.lithuania, "20.9", "53.8", "26.9", "56.5",
-                         332328437L, 1),
+                         1, new String[]{"europe-lithuania"}),
         new OsmMapValues(R.string.poland, "13.6", "48.8", "24.5", "55.0",
-                         1849496038L, 1),
+                         1, poland),
         new OsmMapValues(R.string.romania, "20.3", "43.5", "29.9", "48.4",
-                         497623904L, 1),
+                         1, new String[]{"europe-romania"}),
         new OsmMapValues(R.string.slovakia, "16.8", "47.7", "22.6", "49.7",
-                         518251489L, 1),
+                         1, new String[]{"europe-slovakia"}),
         new OsmMapValues(R.string.ukraine, "22.0", "44.3", "40.4", "52.4",
-                         1105659895L, 1),
+                         1, new String[]{"europe-ukraine"}),
         new OsmMapValues(R.string.north_america, "-178.1", "6.5", "-10.4", "84.0",
-                         7727821782L, 0),
+                         0, north_america),
         new OsmMapValues(R.string.alaska, "-179.5", "49.5", "-129", "71.6",
-                         309103093L, 1),
+                         1, new String[]{"north-america-us-alaska"}),
         new OsmMapValues(R.string.canada, "-141.3", "41.5", "-52.2", "70.2",
-                         3564630901L, 1),
+                         1, canada),
         new OsmMapValues(R.string.hawaii, "-161.07", "18.49", "-154.45", "22.85",
-                         170132156L, 1),
-        new OsmMapValues(R.string.usa, R.string.except_alaska_and_hawaii, "-125.4", "24.3", "-66.5", "49.3",
-                         5533181627L, 1),
-        new OsmMapValues(R.string.midwest, "-104.11", "35.92", "-80.46", "49.46",
-                         1565753619L, 2),
+                         1, new String[]{"north-america-us-hawaii"}),
+        new OsmMapValues(R.string.usa+R.string.except_alaska_and_hawaii, "-125.4", "24.3", "-66.5", "49.3",
+                         1, us),
         new OsmMapValues(R.string.michigan, "-90.47", "41.64", "-79.00", "49.37",
-                         794434442L, 2),
+                         2, new String[]{"north-america-us-michigan"}),
         new OsmMapValues(R.string.ohio, "-84.87", "38.05", "-79.85", "43.53",
-                         428282496L, 2),
-        new OsmMapValues(R.string.northeast, "-80.58", "38.72", "-66.83", "47.53",
-                         1391521085L, 2),
+                         2, new String[]{"north-america-us-ohio"}),
         new OsmMapValues(R.string.massachusetts, "-73.56", "40.78", "-68.67", "42.94",
-                         438012615L, 2),
+                         2, new String[]{"north-america-us-massachusettts"}),
         new OsmMapValues(R.string.vermont, "-73.49", "42.68", "-71.41", "45.07",
-                         206957907L, 2),
-        new OsmMapValues(R.string.pacific, "-180.05", "15.87", "-129.75", "73.04",
-                         309809468L, 2),
-        new OsmMapValues(R.string.south, "-106.70", "23.98", "-71.46", "40.70",
-                         2466350986L, 2),
+                         2, new String[]{"north-america-us-vermont"}),
         new OsmMapValues(R.string.arkansas, "-94.67", "32.95", "-89.59", "36.60",
-                         223752575L, 2),
+                         2, new String[]{"north-america-us-arkansas"}),
         new OsmMapValues(R.string.district_of_columbia, "-77.17", "38.74", "-76.86", "39.05",
-                         201055647L, 2),
+                         2, new String[]{"north-america-us-district-of-columbia"}),
         new OsmMapValues(R.string.florida, "-88.75", "23.63", "-77.67", "31.05",
-                         372359367L, 2),
+                         2, new String[]{"north-america-us-florida"}),
         new OsmMapValues(R.string.louisiana, "-94.09", "28.09", "-88.62", "33.07",
-                         290673534L, 2),
+                         2, new String[]{"north-america-us-louisiana"}),
         new OsmMapValues(R.string.maryland, "-79.54", "37.83", "-74.99", "40.22",
-                         409820479L, 2),
+                         2, new String[]{"north-america-us-maryland"}),
         new OsmMapValues(R.string.mississippi, "-91.71", "29.99", "-88.04", "35.05",
-                         246036091L, 2),
+                         2, new String[]{"north-america-us-mississippi"}),
         new OsmMapValues(R.string.oklahoma, "-103.41", "33.56", "-94.38", "37.38",
-                         265042769L, 2),
+                         2, new String[]{"north-america-us-oklahoma"}),
         new OsmMapValues(R.string.texas, "-106.96", "25.62", "-92.97", "36.58",
-                         625570538L, 2),
+                         2, new String[]{"north-america-us-texas"}),
         new OsmMapValues(R.string.virginia, "-83.73", "36.49", "-74.25", "39.52",
-                         546119530L, 2),
+                         2, new String[]{"north-america-us-virginia"}),
         new OsmMapValues(R.string.west_virginia, "-82.70", "37.15", "-77.66", "40.97",
-                         319698480L, 2),
-        new OsmMapValues(R.string.west, "-133.11", "31.28", "-101.99", "49.51",
-                         1501540635L, 2),
+                         2, new String[]{"north-america-us-west-virginia"}),
         new OsmMapValues(R.string.arizona, "-114.88", "30.01", "-108.99", "37.06",
-                         276838815L, 2),
+                         2, new String[]{"north-america-us-arizona"}),
         new OsmMapValues(R.string.california, "-125.94", "32.43", "-114.08", "42.07",
-                         725286705L, 2),
+                         2, new String[]{"north-america-us-california"}),
         new OsmMapValues(R.string.colorado, "-109.11", "36.52", "-100.41", "41.05",
-                         328730867L, 2),
+                         2, new String[]{"north-america-us-colorado"}),
         new OsmMapValues(R.string.idaho, "-117.30", "41.93", "-110.99", "49.18",
-                         241725898L, 2),
+                         2, new String[]{"north-america-us-idaho"}),
         new OsmMapValues(R.string.montana, "-116.10", "44.31", "-102.64", "49.74",
-                         246850772L, 2),
+                         2, new String[]{"north-america-us-montana"}),
         new OsmMapValues(R.string.new_mexico, "-109.10", "26.98", "-96.07", "37.05",
-                         542205524L, 2),
+                         2, new String[]{"north-america-us-new-mexico"}),
         new OsmMapValues(R.string.nevada, "-120.2", "35.0", "-113.8", "42.1",
-                         269630259L, 2),
+                         2, new String[]{"north-america-us-nevada"}),
         new OsmMapValues(R.string.oregon, "-124.8", "41.8", "-116.3", "46.3",
-                         290552225L, 2),
+                         2, new String[]{"north-america-us-oregon"}),
         new OsmMapValues(R.string.utah, "-114.11", "36.95", "-108.99", "42.05",
-                         222549404L, 2),
+                         2, new String[]{"north-america-us-utah"}),
         new OsmMapValues(R.string.washington_state, "-125.0", "45.5", "-116.9", "49.0",
-                         323577562L, 2),
+                         2, new String[]{"north-america-us-washington"}),
         new OsmMapValues(R.string.south_middle_america, "-83.5", "-56.3", "-30.8", "13.7",
-                         1803470489L, 0),
+                         0, south_middle_america),
         new OsmMapValues(R.string.argentina, "-73.9", "-57.3", "-51.6", "-21.0",
-                         640249385L, 1),
-        new OsmMapValues(R.string.argentina, R.string.chile, "-77.2", "-56.3", "-52.7", "-16.1",
-                         713424629L, 1),
+                         1, new String[]{"south-america-argentinia"}),
+        new OsmMapValues(R.string.chile, "-77.2", "-56.3", "-52.7", "-16.1",
+                         1, new String[]{"south-america-chile"}),
         new OsmMapValues(R.string.bolivia, "-70.5", "-23.1", "-57.3", "-9.3",
-                         257531768L, 1),
+                         1, new String[]{"south-america-bolivia"}),
         new OsmMapValues(R.string.brazil, "-71.4", "-34.7", "-32.8", "5.4",
-                         1275564517L, 1),
-        new OsmMapValues(R.string.chile, "-81.77", "-58.50", "-65.46", "-17.41",
-                         400742681L, 1),
+                         1, brazil),
         new OsmMapValues(R.string.cuba, "-85.3", "19.6", "-74.0", "23.6",
-                         190849399L, 1),
+                         1, new String[]{"south-america-cuba"}),
         new OsmMapValues(R.string.colombia, "-79.1", "-4.0", "-66.7", "12.6",
-                         337606776L, 1),
+                         1, new String[]{"south-america-columbia"}),
         new OsmMapValues(R.string.ecuador, "-82.6", "-5.4", "-74.4", "2.3",
-                         231183832L, 1),
-        new OsmMapValues(R.string.guyana, R.string.suriname, R.string.guyane_francaise,
-                         "-62.0", "1.0", "-51.2", "8.9",
-                         123000072L, 1),
-        new OsmMapValues(R.string.haiti, R.string.dominican_republic, "-74.8", "17.3", "-68.2", "20.1",
-                         213013324L, 1),
+                         1, new String[]{"south-america-ecuador"}),
+        new OsmMapValues(R.string.suriname, "-62.0", "1.0", "-51.2", "8.9",
+                         1, new String[]{"south-america-suriname"}),
+        new OsmMapValues(R.string.guyane_francaise, "-62.0", "1.0", "-51.2", "8.9",
+                         1, new String[]{"europe-france-guyane"}),
+        new OsmMapValues(R.string.haiti, "-74.8", "17.3", "-68.2", "20.1",
+                         1, new String[]{"south-america-haiti"}),
+        new OsmMapValues(R.string.dominican_republic, "-74.8", "17.3", "-68.2", "20.1",
+                         1, new String[]{"south-america-dominican-republic"}),
         new OsmMapValues(R.string.jamaica, "-78.6", "17.4", "-75.9", "18.9",
-                         168748968L, 1),
+                         1, new String[]{"south-america-jamaica"}),
         new OsmMapValues(R.string.mexico, "-117.6", "14.1", "-86.4", "32.8",
-                         829539696L, 1),
+                         1, new String[]{"south-america-mexico"}),
         new OsmMapValues(R.string.paraguay, "-63.8", "-28.1", "-53.6", "-18.8",
-                         262841159L, 1),
+                         1, new String[]{"south-america-paraguay"}),
         new OsmMapValues(R.string.peru, "-82.4", "-18.1", "-67.5", "0.4",
-                         328138464L, 1),
+                         1, new String[]{"south-america-peru"}),
         new OsmMapValues(R.string.uruguay, "-59.2", "-36.5", "-51.7", "-29.7",
-                         227796557L, 1),
+                         1, new String[]{"south-america-uruguay"}),
         new OsmMapValues(R.string.venezuela, "-73.6", "0.4", "-59.7", "12.8",
-                         262760703L, 1)
-    };
+                         1, new String[]{"south-america-venezuela"}) };
     //we should try to resume
     private static final int SOCKET_CONNECT_TIMEOUT = 60000;          // 60 secs.
     private static final int SOCKET_READ_TIMEOUT = 120000;         // 120 secs.
@@ -476,6 +451,8 @@ public class NavitMapDownloader extends Thread {
     private static final String TAG = "NavitMapDownLoader";
     private final OsmMapValues mMapValues;
     private final int mMapId;
+
+    private String mGitHubMetadata;
     private Boolean mStopMe = false;
     private long mUiLastUpdated = -1;
     private Boolean mRetryDownload = false; //Download failed, but
@@ -484,6 +461,23 @@ public class NavitMapDownloader extends Thread {
     NavitMapDownloader(int mapId) {
         this.mMapValues = osm_maps[mapId];
         this.mMapId = mapId;
+
+        URL url;
+        try {
+            url = new URL("https://api.github.com/repositories/384098365/releases/latest");
+
+            InputStream is = url.openStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            this.mGitHubMetadata = br.readLine();
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "We failed to create a URL to download the github api file.");
+            e.printStackTrace();
+            this.mGitHubMetadata = "";
+        } catch (IOException e) {
+            Log.e(TAG, "We failed to download the github api file.");
+            e.printStackTrace();
+            this.mGitHubMetadata = "";
+        }
     }
 
     static NavitMap[] getAvailableMaps() {
@@ -509,41 +503,48 @@ public class NavitMapDownloader extends Thread {
 
     @Override
     public void run() {
-        mStopMe = false;
-        mRetryCounter = 0;
 
         Log.v(TAG, "start download " + mMapValues.mMapName);
-        updateProgress(0, mMapValues.mEstSizeBytes,
+        updateProgress(0, getMapSize(mMapId),
                        getTstring(R.string.map_downloading) + ": " + mMapValues.mMapName);
 
-        boolean success;
-        do {
-            try {
-                Thread.sleep(10 + mRetryCounter * 1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        boolean success=false;
+	for (int subMapIndex = 0; subMapIndex < this.mMapValues.mSubMaps.length; subMapIndex++) {
+            mStopMe = false;
+            mRetryCounter = 0;
+            do {
+                try {
+                    Thread.sleep(10 + mRetryCounter * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                mRetryDownload = false;
+                success = download_osm_map(subMapIndex);
+            } while (!success
+                     && mRetryDownload
+                     && mRetryCounter < MAX_RETRIES
+                     && !mStopMe);
+
+            if (success) {
+                toast(mMapValues.mSubMaps[subMapIndex] + " " + getTstring(R.string.map_download_ready));
+                getMapInfoFile(subMapIndex).delete();
+                Log.d(TAG, "success");
             }
-            mRetryDownload = false;
-            success = download_osm_map();
-        } while (!success
-                 && mRetryDownload
-                 && mRetryCounter < MAX_RETRIES
-                 && !mStopMe);
+
+    	}
+        if (success || mStopMe) {
+            NavitDialogs.sendDialogMessage(NavitDialogs.MSG_MAP_DOWNLOAD_FINISHED,
+                    Navit.sMapFilenamePath + mMapValues.mSubMaps[0] + ".bin",
+                    null,
+                    -1,
+                    success ? 1 : 0,
+                    mMapId);
+        }
 
         if (success) {
             toast(mMapValues.mMapName + " " + getTstring(R.string.map_download_ready));
-            getMapInfoFile().delete();
-            Log.d(TAG, "success");
         }
 
-        if (success || mStopMe) {
-            NavitDialogs.sendDialogMessage(NavitDialogs.MSG_MAP_DOWNLOAD_FINISHED,
-                                           Navit.sMapFilenamePath + mMapValues.mMapName + ".bin",
-                                           null,
-                                           -1,
-                                           success ? 1 : 0,
-                                           mMapId);
-        }
     }
 
     void stop_thread() {
@@ -575,8 +576,8 @@ public class NavitMapDownloader extends Thread {
         return true;
     }
 
-    private boolean deleteMap() {
-        File finalOutputFile = getMapFile();
+    private boolean deleteMap(int subMapIndex) {
+        File finalOutputFile = getMapFile(subMapIndex);
 
         if (finalOutputFile.exists()) {
             Message msg = Message.obtain(NavitCallbackHandler.sCallbackHandler,
@@ -590,8 +591,7 @@ public class NavitMapDownloader extends Thread {
         return false;
     }
 
-
-    private boolean download_osm_map() {
+    private boolean download_osm_map(int subMapIndex) {
         long alreadyRead = 0;
         long realSizeBytes;
         boolean resume = true;
@@ -601,15 +601,14 @@ public class NavitMapDownloader extends Thread {
 
         URL url = null;
         if (oldDownloadSize > 0) {
-            url = readFileInfo();
+            url = readFileInfo(subMapIndex);
         }
 
         if (url == null) {
             resume = false;
-            url = getDownloadURL();
+            url = getDownloadURL(subMapIndex);
         }
 
-        // URL url = new URL("http://192.168.2.101:8080/zweibruecken.bin");
         URLConnection c = initConnection(url);
         if (c != null) {
 
@@ -627,11 +626,11 @@ public class NavitMapDownloader extends Thread {
 
             if (!resume) {
                 outputFile.delete();
-                writeFileInfo(c, realSizeBytes);
+                writeFileInfo(c, realSizeBytes, subMapIndex);
             }
 
             if (realSizeBytes <= 0) {
-                realSizeBytes = mMapValues.mEstSizeBytes;
+                realSizeBytes = getEstSizeBytes(this.mMapId, subMapIndex, this.mGitHubMetadata);
             }
 
             Log.d(TAG, "size: " + realSizeBytes + ", read: " + alreadyRead + ", timestamp: "
@@ -639,9 +638,9 @@ public class NavitMapDownloader extends Thread {
                     + ", Connection ref: " + c.getURL());
 
             if (checkFreeSpace(realSizeBytes - alreadyRead)
-                    && downloadData(c, alreadyRead, realSizeBytes, resume, outputFile)) {
+                    && downloadData(c, alreadyRead, resume, outputFile, subMapIndex)) {
 
-                File finalOutputFile = getMapFile();
+                File finalOutputFile = getMapFile(subMapIndex);
                 // delete an already existing file first
                 finalOutputFile.delete();
                 // rename file to its final name
@@ -658,14 +657,13 @@ public class NavitMapDownloader extends Thread {
         return outputFile;
     }
 
-    private boolean downloadData(URLConnection c, long alreadyRead, long realSizeBytes, boolean resume,
-                                 File outputFile) {
+    private boolean downloadData(URLConnection c, long alreadyRead, boolean resume, File outputFile, int subMapIndex) {
         boolean success = false;
         BufferedOutputStream buf = getOutputStream(outputFile, resume);
-        BufferedInputStream bif = getInputStream(c);
+        BufferedInputStream bif = getInputStream(c, subMapIndex);
 
         if (buf != null && bif != null) {
-            success = readData(buf, bif, alreadyRead, realSizeBytes);
+            success = readData(buf, bif, alreadyRead, subMapIndex);
             // always cleanup, as we might get errors when trying to resume
             try {
                 buf.flush();
@@ -679,13 +677,70 @@ public class NavitMapDownloader extends Thread {
         return success;
     }
 
-    private URL getDownloadURL() {
-        URL url;
+    private String getLatestDate() {
+        if (this.mGitHubMetadata != "") {
+            try {
+                JSONObject objectFile = (JSONObject) new JSONTokener(this.mGitHubMetadata).nextValue();
+                return objectFile.getString("tag_name");
+            } catch (JSONException e) {
+                Log.e(TAG, "We failed to retrieve the date. ");
+                e.printStackTrace();
+                return (String) "";
+            }
+
+        } else {
+                Log.e(TAG, "We failed to retrieve the date. ");
+                return (String) "";
+        }
+    }
+    ba521c5dfbb9f75e8549a003cba7a4c759c9bef5
+            ba521c5dfbb9f75e8549a003cba7a4c759c9bef5
+    private static long getEstSizeBytes(int mapId, int subMapIndex, String githubMetadata) {
+            if (subMapIndex < osm_maps[mapId].mSubMaps.length) {
+                try {
+                    JSONObject objectFile = (JSONObject) new JSONTokener(githubMetadata).nextValue();
+                    JSONArray objectAssets = objectFile.getJSONArray("assets");
+                    JSONArray objectMap = objectAssets.getJSONArray("");
+                } catch (JSONException e) {
+                    return 0;
+                }
+
+                int ind_dataset = githubMetadata.indexOf(osm_maps[mapId].mSubMaps[subMapIndex]);
+                int ind_colon = githubMetadata.indexOf("size", ind_dataset) + 6;
+                int ind_comma = githubMetadata.indexOf(",", ind_colon);
+                return Math.max(Long.valueOf(githubMetadata.substring(ind_colon, ind_comma)), 0);
+            } else {
+                return 0;
+            }
+    }
+
+    private long getMapSize(int mapId) {
+        long size = 0;
+
+        for (int subMapIndex = 0; subMapIndex < osm_maps[mapId].mSubMaps.length; subMapIndex++) {
+            size += getEstSizeBytes(mapId, subMapIndex, this.mGitHubMetadata);
+        }
+        return size;
+    }
+
+    public static long getMapSize(int mapId, String githubMetadata) {
+        long size = 0;
+
+        for (int subMapIndex = 0; subMapIndex < osm_maps[mapId].mSubMaps.length; subMapIndex++) {
+            size += getEstSizeBytes(mapId, subMapIndex, githubMetadata);
+        }
+        return size;
+    }
+
+    private URL getDownloadURL(int subMapIndex) {
+        URL url=null;
         try {
-            url =
-                new URL("http://maps.navit-project.org/api/map/?bbox=" + mMapValues.mLon1 + ","
-                        + mMapValues.mLat1
-                        + "," + mMapValues.mLon2 + "," + mMapValues.mLat2);
+	    String date = getLatestDate();
+	    if (date != "") {
+                    url =
+                        new URL("https://github.com/navit-gps/gh-actions-mapserver/releases/download/" + date + "/"
+                                + mMapValues.mSubMaps[subMapIndex] + "-" + date + ".bin");
+                }
         } catch (MalformedURLException e) {
             Log.e(TAG, "We failed to create a URL to " + mMapValues.mMapName);
             e.printStackTrace();
@@ -696,14 +751,14 @@ public class NavitMapDownloader extends Thread {
     }
 
 
-    private BufferedInputStream getInputStream(URLConnection c) {
+    private BufferedInputStream getInputStream(URLConnection c, int subMapIndex) {
         BufferedInputStream bif;
         try {
             bif = new BufferedInputStream(c.getInputStream(), MAP_READ_FILE_BUFFER);
         } catch (FileNotFoundException e) {
             Log.e(TAG, "File not found on server: " + e);
             if (mRetryCounter > 0) {
-                getMapInfoFile().delete();
+                getMapInfoFile(subMapIndex).delete();
             }
             enableRetry();
             bif = null;
@@ -715,12 +770,12 @@ public class NavitMapDownloader extends Thread {
         return bif;
     }
 
-    private File getMapFile() {
-        return new File(Navit.sMapFilenamePath, mMapValues.mMapName + ".bin");
+    private File getMapFile(int subMapIndex) {
+        return new File(Navit.sMapFilenamePath, mMapValues.mSubMaps[subMapIndex] + ".bin");
     }
 
-    private File getMapInfoFile() {
-        return new File(Navit.sMapFilenamePath, mMapValues.mMapName + ".tmp.info");
+    private File getMapInfoFile(int subMapIndex) {
+        return new File(Navit.sMapFilenamePath, mMapValues.mSubMaps[subMapIndex] + ".tmp.info");
     }
 
     private static BufferedOutputStream getOutputStream(File outputFile, boolean resume) {
@@ -751,32 +806,39 @@ public class NavitMapDownloader extends Thread {
     }
 
     private boolean readData(OutputStream buf, InputStream bif, long alreadyRead,
-                             long realSizeBytes) {
+                             int subMapIndex) {
         long startTimestamp = System.nanoTime();
         byte[] buffer = new byte[MAP_WRITE_MEM_BUFFER];
         int len1;
         long startOffset = alreadyRead;
         boolean success = false;
 
+
+        long totalSize = getEstSizeBytes(this.mMapId, subMapIndex, this.mGitHubMetadata);
+        if (totalSize==0) {
+            return false;
+        }
+
         try {
             while (!mStopMe && (len1 = bif.read(buffer)) != -1) {
                 alreadyRead += len1;
-                updateProgress(startTimestamp, startOffset, alreadyRead, realSizeBytes);
+
+                updateProgress(startTimestamp, startOffset, alreadyRead, totalSize);
 
                 try {
                     buf.write(buffer, 0, len1);
                 } catch (IOException e) {
                     Log.d(TAG, "Error: " + e);
-                    if (!checkFreeSpace(realSizeBytes - alreadyRead + MAP_WRITE_FILE_BUFFER)) {
-                        if (deleteMap()) {
+                    if (!checkFreeSpace(totalSize - alreadyRead + MAP_WRITE_FILE_BUFFER)) {
+                        if (deleteMap(subMapIndex)) {
                             enableRetry();
                         } else {
-                            updateProgress(alreadyRead, realSizeBytes,
+                            updateProgress(alreadyRead, totalSize,
                                            getTstring(R.string.map_download_download_error) + "\n"
                                            + getTstring(R.string.map_download_not_enough_free_space));
                         }
                     } else {
-                        updateProgress(alreadyRead, realSizeBytes,
+                        updateProgress(alreadyRead, totalSize,
                                        getTstring(R.string.map_download_error_writing_map));
                     }
 
@@ -785,9 +847,9 @@ public class NavitMapDownloader extends Thread {
             }
 
             if (mStopMe) {
-                toast(getTstring(R.string.map_download_download_aborted));
-            } else if (alreadyRead < realSizeBytes) {
-                Log.d(TAG, "Server send only " + alreadyRead + " bytes of " + realSizeBytes);
+                //toast(getTstring(R.string.map_download_download_aborted));
+            } else if (alreadyRead < totalSize) {
+                Log.d(TAG, "Server send only " + alreadyRead + " bytes of " + totalSize);
                 enableRetry();
             } else {
                 success = true;
@@ -796,27 +858,27 @@ public class NavitMapDownloader extends Thread {
             Log.d(TAG, "Error: " + e);
 
             enableRetry();
-            updateProgress(alreadyRead, realSizeBytes,
+            updateProgress(alreadyRead, totalSize,
                            getTstring(R.string.map_download_download_error));
         }
 
         return success;
     }
 
-    private URL readFileInfo() {
+    private URL readFileInfo(int subMapIndex) {
         URL url = null;
         try {
             ObjectInputStream infoStream = new ObjectInputStream(
-                    new FileInputStream(getMapInfoFile()));
+                    new FileInputStream(getMapInfoFile(subMapIndex)));
             infoStream.readUTF(); // read the host name (unused for now)
             String resumeFile = infoStream.readUTF();
             infoStream.close();
             // looks like the same file, try to resume
             Log.v(TAG, "Try to resume download");
-            String resumeProto = infoStream.readUTF();
-            url = new URL(resumeProto + "://" + "maps.navit-project.org" + resumeFile);
+
+            url = new URL("https://" + "maps.navit-project.org" + resumeFile);
         } catch (Exception e) {
-            getMapInfoFile().delete();
+            getMapInfoFile(subMapIndex).delete();
         }
         return url;
     }
@@ -862,10 +924,10 @@ public class NavitMapDownloader extends Thread {
                                        (int) (positionBytes / 1024));
     }
 
-    private void writeFileInfo(URLConnection c, long sizeInBytes) {
+    private void writeFileInfo(URLConnection c, long sizeInBytes, int subMapIndex) {
         ObjectOutputStream infoStream;
         try {
-            infoStream = new ObjectOutputStream(new FileOutputStream(getMapInfoFile()));
+            infoStream = new ObjectOutputStream(new FileOutputStream(getMapInfoFile(subMapIndex)));
             infoStream.writeUTF(c.getURL().getProtocol());
             infoStream.writeUTF(c.getURL().getHost());
             infoStream.writeUTF(c.getURL().getFile());
@@ -891,38 +953,31 @@ public class NavitMapDownloader extends Thread {
         String mLon2;
         String mLat2;
         final String mMapName;
-        long mEstSizeBytes;
+	String [] mSubMaps;
         int mLevel;
 
-        private void setMapValues(String lon1, String lat1, String lon2, String lat2, long bytesEst, int level) {
+        private void setMapValues(String lon1, String lat1, String lon2, String lat2, int level) {
             this.mLon1 = lon1;
             this.mLat1 = lat1;
             this.mLon2 = lon2;
             this.mLat2 = lat2;
-            this.mEstSizeBytes = bytesEst;
             this.mLevel = level;
         }
 
         private OsmMapValues(int id1, String lon1, String lat1, String lon2, String lat2,
-                             long bytesEst, int level) {
+                             int level, String[] subMaps) {
 
             this.mMapName = getTstring(id1);
-            setMapValues(lon1, lat1, lon2, lat2, bytesEst, level);
+            setMapValues(lon1, lat1, lon2, lat2, level);
+	    this.mSubMaps = subMaps;
         }
 
-        private OsmMapValues(int id1, int id2, String lon1, String lat1, String lon2, String lat2,
-                             long bytesEst, int level) {
+	private OsmMapValues(int id1, int id2, String lon1, String lat1, String lon2, String lat2,
+                             int level, String[] subMaps) {
 
             this.mMapName = getTstring(id1) + " + " + getTstring(id2);
-            setMapValues(lon1, lat1, lon2, lat2, bytesEst, level);
-        }
-
-
-        private OsmMapValues(int id1, int id2, int id3, String lon1, String lat1, String lon2, String lat2,
-                             long bytesEst, int level) {
-
-            mMapName = getTstring(id1) + " + " + getTstring(id2) + " + " + getTstring(id3);
-            setMapValues(lon1, lat1, lon2, lat2, bytesEst, level);
+            setMapValues(lon1, lat1, lon2, lat2, level);
+	    this.mSubMaps = subMaps;
         }
 
 
@@ -941,3 +996,4 @@ public class NavitMapDownloader extends Thread {
         }
     }
 }
+
