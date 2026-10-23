@@ -218,6 +218,6 @@ static struct vehicle_priv *vehicle_geoclue_new(struct vehicle_methods *meth, st
  * @returns nothing
  */
 void plugin_init(void) {
-    dbg(lvl_error, "enter");
+    dbg(lvl_debug, "enter");
     plugin_register_category_vehicle("geoclue", vehicle_geoclue_new);
 };
