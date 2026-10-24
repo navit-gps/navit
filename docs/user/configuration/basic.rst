@@ -6,12 +6,20 @@ Basics
 
 This page aims to point out the most common options which a first-time user may want to change - power users may want to consult the :doc:`advanced`.
 
+The ideal Navit setup consists of:
+
+1. A device running Navit (see :doc:`../platforms/index` if you haven't already)
+2. A display to show the map and navigation instructions
+3. A GPS receiver to let Navit know where you are
+
 Setting up Navit is done by editing a configuration file called "**navit.xml**".
 
 Navit comes **shipped** with a default ``navit.xml`` together with ``navit_layout_*.xml`` files that are stored at various locations (depending on your system).
 
-Editing XML configurations files in a text editor is simple, they are just plain text XML files, that can be edited with any editor.
-Just remember to ''turn off 'save UTF8 byte mark' in Preferences'' or navit may complain very much on the first byte of the file.
+Currently Navit doesn't provide a graphical tool to change settings, so you have to edit the configuration manually with a text editor.
+
+Editing XML configuration files is simple - they are just plain text XML files that can be edited with any editor.
+Just remember to turn off 'save UTF8 byte mark' in Preferences or navit may complain very much on the first byte of the file.
 
 .. hint::
     If you are unfamiliar with XML files you can take a look at `Learn XML in Y minutes <https://learnxinyminutes.com/docs/xml/>`__
@@ -57,7 +65,7 @@ Navit can use different :doc:`maps/index` formats, including free `OpenStreetMap
 
 Install TTS
 -----------
-To get speech support, you need to install a text-to-speech tool such as **espeak**, **mbrola** or **festival**. These tools can be invoked from the command line. Test your setup by invoking the tools manually e.g.
+To get speech support, you need to install a text-to-speech tool such as **espeak**, **mbrola**, **festival**, **pico2wave** or **piper-tts**. These tools can be invoked from the command line. Test your setup by invoking the tools manually, e.g.:
 
 .. code-block:: bash
 
@@ -67,21 +75,21 @@ On some systems Navit comes with integrated espeak support, so you don't need to
 
 Connect GPS
 -----------
-Now connect your GPS. The exact procedure for this varies depending on the type of GPS device you are using and how you connect it to your computer. On Linux / Unix systems, your GPS should typically show up as a character device, i.e., you will find an entry in the /dev folder corresponding to your GPS device. Again, the file name depends on the type and connection method of your GPS receiver. See [[Connecting a GPS receiver]] for details.
 
-Most GPS receiver will output the position in ``NMEA`` format, which can be used directly in Navit or using a GPS daemon program such as **gpsd**. A simple way to test whether your GPS receiver works and outputs NMEA data is to dump its output to a console. For example, if your GPS receiver can be found at **/dev/rfcomm0**, you can dump its output using
+Connect your GPS receiver. The exact procedure depends on the type of GPS device and how you connect it to your computer. On Linux/Unix systems, your GPS should typically show up as a character device in the ``/dev`` folder. Most GPS receivers output position in NMEA format, which can be used directly in Navit or via a GPS daemon such as **gpsd**.
+
+A simple way to test whether your GPS receiver works and outputs NMEA data is to dump its output to a console. For example, if your GPS receiver is at ``/dev/rfcomm0``:
 
 .. code-block:: bash
 
    cat /dev/rfcomm0
 
-The output should give you steady NMEA position updates. You can feed this information into **gpsd** / **xgps** or **QLandkarte** to see a graphical representation of your position and to check whether the output corresponds to your current position.
+The output should give you steady NMEA position updates. You can feed this information into **gpsd**/**xgps** or **QLandkarte** to see a graphical representation of your position.
 
 *******************
 Basic Configuration
 *******************
 
-Currently Navit doesn't provide a graphical tool to change settings, so you have to do the changes manually using a texteditor.
 Please open your current **navit.xml** file and do the following steps:
 
 Setup proper startup-position
