@@ -313,7 +313,7 @@ object contains following properties:
 
 | ``   * width - current width of gui's window``
 | ``   * height - current height of gui's window``
-| ``   * localeName *langName *ctryName - Name of POSIX locale and WIN32 language and country names (READ ONLY)``
+| ``   * localeName \*langName \*ctryName - Name of POSIX locale and WIN32 language and country names (READ ONLY)``
 | ``   * iconPath - Directory for icons (READ ONLY)``
 | ``   * commandFunction - name of a command to execute, see commands section for details (READ ONLY)``
 
@@ -387,7 +387,7 @@ provides access to the Navit's search API.
 To search something, we need to set a
 
 | ``   * 'searchContext' property to one of the search targets: ``\ **``country``**\ ``,``\ **``town``**\ ``,``\ **``street``**\ ``,``\ **``number``**
-| ``   * put your query into corresponding *Name property``
+| ``   * put your query into corresponding *Name* property``
 | ``   * call searchXML``
 
 the **searchXML** return search result in the following format
