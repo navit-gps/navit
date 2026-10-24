@@ -334,8 +334,6 @@ This had been contributors for a long time, but the had to quit
 See also
 --------
 
--  :ref:`Contacts <contacts>`__
--  https://github.com/navit-gps/navit/graphs/contributors - Full list of
-   contributors
--  https://launchpad.net/navit/+topcontributors - Full list of
-   translators
+- :ref:`Contacts <contacts>`
+- https://github.com/navit-gps/navit/graphs/contributors - Full list of contributors
+- https://launchpad.net/navit/+topcontributors - Full list of translators
