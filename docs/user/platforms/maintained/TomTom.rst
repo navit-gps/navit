@@ -1,6 +1,8 @@
 TomTom
 ======
 
+.. _tomtom:
+
 .. figure:: TomTom-Navi.png
    :alt: Screenshot from a TomTom GO 910 running Navit.
    :width: 240px
