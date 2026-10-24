@@ -1520,16 +1520,6 @@ items), prefix them with **navit.** (e.g. **navit.zoom_in()**):
        be executed in a command
        sequence, enabling dynamic
        composition of spoken text.
-       There is a non-obvious
-       limitations: Judging from
-       experiments and code review the
-       argument to **say** can
-       **not** interpolate of navit,
-       vehicle, and position
-       attributes.
-       --`Nezmi <User:Nezmi>`__
-       (`talk <User_talk:Nezmi>`__)
-       18:43, 15 July 2014 (CEST))
    * - **set_center()**
      - center the map view to the given
        coordinates, see coord_parse()
