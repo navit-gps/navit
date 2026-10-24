@@ -247,7 +247,7 @@ allowed
 * Add:layout:add textures for quarry and scrub. (#997) [Stefan Wildemann]
 * Add:Core:Add mapfeatures (#990) [Stefan Wildemann]
 * Add:Core+Graphics+Qt5:Add support for textured polygons (#989) [Stefan Wildemann]
-* Add:build:Android build and signing. Also add fastlane for metadata. Set execute on scripts/\*.sh. [jkoan]
+* Add:build:Android build and signing. Also add fastlane for metadata. Set execute on scripts/\\*.sh. [jkoan]
 * Add:cmake: add compilation flags to harden the security of navit (#969) [Joseph Herlant]
 
 ### Changed
