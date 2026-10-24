@@ -115,7 +115,7 @@ guys!
      -
      -
    * - Xenos198
-     - :ref:`tomtom` port
+     - :ref:`TomTom <tomtom>` port
      - Manuel Hohmann
      -
      -
@@ -206,7 +206,7 @@ guys!
      -
      -
    * - Kamikaaze
-     - :ref:`Android` port
+     - :ref:`Android <android>` port
      -
      -
      -

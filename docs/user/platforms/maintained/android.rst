@@ -1,6 +1,8 @@
 Android
 =======
 
+.. _android:
+
 .. note::
    Developers wanted! To maintain this port, the build and implementing new features. See :doc:`/development/targets/android`
 
