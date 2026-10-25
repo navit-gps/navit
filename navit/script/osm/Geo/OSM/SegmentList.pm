@@ -493,7 +493,7 @@ Geo::OSM::SegmentList
 
 =head1 COPYRIGHT
 
-Copyright 2006, Jörg Ostertag
+Copyright 2006, JÃ¶rg Ostertag
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -511,7 +511,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 =head1 AUTHOR
 
-Jörg Ostertag (planet-count-for-openstreetmap@ostertag.name)
+JÃ¶rg Ostertag (planet-count-for-openstreetmap@ostertag.name)
 
 =head1 SEE ALSO
 
