@@ -6,79 +6,276 @@ Team
 All the people here helped to make Navit what it is today. Thank you
 guys!
 
-+---------+-----------+---------+---------+--------+---------+---------+
-| nick    | Tasks     | Full    | SVN     | Devices| OS      | state   |
-|         |           | Name    | name    |        |         |         |
-+=========+===========+=========+=========+========+=========+=========+
-| Cp15    | main      | Martin  | m       |        |         | busy    |
-|         | tainer,   |S        |artin-s  |        |         |         |
-|         | server    |challer  |         |        |         |         |
-|         | admin,    |         |         |        |         |         |
-|         | dev, ...  |         |         |        |         |         |
-+---------+-----------+---------+---------+--------+---------+---------+
-| KaZeR   | trac      | Pierre  | kazer\_ | Epi    | Gentoo  | busy    |
-|         | admin,    | Grandin |         | aM1000,|         |         |
-|         | la        |         |         | Free   |         |         |
-|         | unchpad   |         |         | runner,|         |         |
-|         | admin     |         |         | Cubox, |         |         |
-|         |           |         |         | ra     |         |         |
-|         |           |         |         | spberry|         |         |
-|         |           |         |         | pi,    |         |         |
-|         |           |         |         | iphone |         |         |
-+---------+-----------+---------+---------+--------+---------+---------+
-|Xenos198 | :ref:`    | Manuel  |         |        |         | busy    |
-|         |tomtom`    | Hohmann |         |        |         |         |
-|         |port       |         |         |        |         |         |
-+---------+-----------+---------+---------+--------+---------+---------+
-| tryagain|           |         | mdankov |        |         | ?       |
-+---------+-----------+---------+---------+--------+---------+---------+
-| sleske  | `t        | Se      | sleske  |        | Debian  | ?       |
-|         |rac <tr    |bastian  |         |        | Linux   |         |
-|         |ac>`__,    |Leske    |         |        |         |         |
-|         |code       |         |         |        |         |         |
-|         |           |         |         |        |         |         |
-+---------+-----------+---------+---------+--------+---------+---------+
-| Number6 | t         | Nick    | ge      | WinCE, | WinCE,  | ?       |
-|         | witter,   | Ge      | oghegan | WinMo, | Op      |         |
-|         | press,    | oghegan |         | iPhone | enSUSE, |         |
-|         | media,    |         |         |        | Debian, |         |
-|         | patc      |         |         |        | Ubuntu, |         |
-|         | hes,...   |         |         |        | W       |         |
-|         |           |         |         |        | indows, |         |
-|         |           |         |         |        | OSX     |         |
-+---------+-----------+---------+---------+--------+---------+---------+
-| Korrosa | Wiki      |         |         | Ubuntu |         | ?       |
-|         | Trac      |         |         | 32     |         |         |
-|         |           |         |         | Netbook|         |         |
-|         |           |         |         | Remix  |         |         |
-+---------+-----------+---------+---------+--------+---------+---------+
-| Usul    | Wiki      |         |         | Ubuntu |         | pending |
-|         | Trac      |         |         | 64     |         |         |
-|         | planning  |         |         | laptop,|         |         |
-|         |           |         |         | `      |         |         |
-|         |           |         |         | OpenPan|         |         |
-|         |           |         |         | dora <O|         |         |
-|         |           |         |         | penPand|         |         |
-|         |           |         |         | ora>`__|         |         |
-+---------+-----------+---------+---------+--------+---------+---------+
-| pini    | official  |         |         |        |         | busy    |
-|         |debian     |         |         |        |         |         |
-|         |packager   |         |         |        |         |         |
-+---------+-----------+---------+---------+--------+---------+---------+
-| Kamikaaz| :ref:`And |         |         |        |         | ?       |
-|e        |roid`      |         |         |        |         |         |
-|         | port      |         |         |        |         |         |
-+---------+-----------+---------+---------+--------+---------+---------+
-| Horwitz |           | Michael |         |        |         | ?       |
-|         |           | Fa      |         |        |         |         |
-|         |           |rmbauer  |         |        |         |         |
-+---------+-----------+---------+---------+--------+---------+---------+
-| jkoan   | everything|         |         | TomTom |Android  |         |
-|         |           |         |         |WinCE   |Manajaro |         |
-|         |           |         |         |        |Windows  |         |
-|         |           |         |         |        |         |         |
-|         |           |         |         |        |         |         |
-+---------+-----------+---------+---------+--------+---------+---------+
+.. list-table::
+   :header-rows: 1
+
+   * - nick
+     - Tasks
+     - Full Name
+     - SVN name
+     - Devices
+     - OS
+     - state
+   * - nick
+     - Tasks
+     - Full
+     - SVN
+     - Devices
+     - OS
+     - state
+   * -
+     -
+     - Name
+     - name
+     -
+     -
+     -
+   * - Cp15
+     - maintainer,
+     - Martin
+     - martin-s
+     -
+     -
+     - busy
+   * -
+     - server
+     - Schaller
+     -
+     -
+     -
+     -
+   * -
+     - admin,
+     -
+     -
+     -
+     -
+     -
+   * -
+     - dev, ...
+     -
+     -
+     -
+     -
+     -
+   * - KaZeR
+     - trac admin,
+     - Pierre
+     - kazer\_
+     - Epi
+     - Gentoo
+     - busy
+   * -
+     - launchpad
+     - Grandin
+     -
+     - aM1000,
+     -
+     -
+   * -
+     - admin
+     -
+     -
+     - Free
+     -
+     -
+   * -
+     -
+     -
+     -
+     - runner,
+     -
+     -
+   * -
+     -
+     -
+     -
+     - Cubox,
+     -
+     -
+   * -
+     -
+     -
+     -
+     - raspberry
+     -
+     -
+   * -
+     -
+     -
+     -
+     - pi,
+     -
+     -
+   * -
+     -
+     -
+     -
+     - iphone
+     -
+     -
+   * - Xenos198
+     - :ref:`TomTom <tomtom>` port
+     - Manuel Hohmann
+     -
+     -
+     -
+     - busy
+   * - tryagain
+     -
+     -
+     - mdankov
+     -
+     -
+     - ?
+   * - sleske
+     - `trac <trac>`__,
+     - Sebastian
+     - sleske
+     -
+     - Debian
+     - ?
+   * -
+     - code
+     - Leske
+     -
+     -
+     - Linux
+     -
+   * - Number6
+     - twitter, press, media, patches,...
+     - Nick Geoghegan
+     - geoghegan
+     - WinCE, WinMo, iPhone
+     - WinCE, OpenSUSE, Debian, Ubuntu, Windows, OSX
+     - ?
+   * - Korrosa
+     - Wiki
+     -
+     -
+     - Ubuntu
+     -
+     - ?
+   * -
+     - Trac
+     -
+     -
+     - 32
+     -
+     -
+   * -
+     -
+     -
+     -
+     - Netbook
+     -
+     -
+   * -
+     -
+     -
+     -
+     - Remix
+     -
+     -
+   * - Usul
+     - Wiki Trac planning
+     -
+     -
+     - Ubuntu 64 laptop, `OpenPandora <OpenPandora>`__
+     -
+     - pending
+   * - pini
+     - official
+     -
+     -
+     -
+     -
+     - busy
+   * -
+     - debian
+     -
+     -
+     -
+     -
+     -
+   * -
+     - packager
+     -
+     -
+     -
+     -
+     -
+   * - Kamikaaze
+     - :ref:`Android <android>` port
+     -
+     -
+     -
+     -
+     - ?
+   * - Horwitz
+     -
+     - Michael
+     -
+     -
+     -
+     - ?
+   * -
+     -
+     - Fa
+     -
+     -
+     -
+     -
+   * -
+     -
+     - rmbauer
+     -
+     -
+     -
+     -
+   * - jkoan
+     - everything
+     -
+     -
+     - TomTom, WinCE
+     - Android, Manajaro, Windows
+     -
+   * - `User:Mineque <User:Mineque>`__
+     - Design `Internal GUI <Internal_GUI>`__ / `OSD <OSD>`__
+     - Michael Madej
+     -
+     - Vista 32bit, Ubuntu 64bit
+     -
+     -
+   * - `User:rphlx <User:rphlx>`__ / bcr
+     -
+     - Bryan Rittmeyer
+     -
+     -
+     -
+     -
+   * - `user:Zaxl <user:Zaxl>`__
+     -
+     - Alexander Atanasov
+     -
+     -
+     -
+     -
+   * - `User:Zilux <User:Zilux>`__
+     - `Openmoko <Openmoko>`__ port
+     - Gilles Casse
+     -
+     -
+     -
+     -
+   * - `User:Afaber <User:Afaber>`__
+     - `Windows <Windows>`__ port
+     -
+     -
+     -
+     -
+     -
+
 
 .. _hall_of_fame:
 
@@ -90,33 +287,15 @@ This had been contributors for a long time, but the had to quit
 +-----------+-----------+-----------+----------+-----------+----+
 | nick      | Tasks     | Full Name | SVN name | Devices   | OS |
 +===========+===========+===========+==========+===========+====+
-| `Use      | Design    | Michael   |          | Vista     |    |
-| r:Mineque | `Internal | Madej     |          | 32bit,    |    |
-|  <User:Mi | GUI       |           |          | Ubuntu    |    |
-| neque>`__ |  <Interna |           |          | 64bit     |    |
-|           | l_GUI>`__ |           |          |           |    |
-|           | /         |           |          |           |    |
-|           | `OSD      |           |          |           |    |
-|           |  <OSD>`__ |           |          |           |    |
+| `User:Mineque <User:Mineque>`__ | Design `Internal GUI <Internal_GUI>`__ / `OSD <OSD>`__ | Michael Madej | | Vista 32bit, Ubuntu 64bit | | |
 +-----------+-----------+-----------+----------+-----------+----+
-| `User:rph |           | Bryan     |          |           |    |
-| lx <User: |           | Rittmeyer |          |           |    |
-| rphlx>`__ |           |           |          |           |    |
-| / bcr     |           |           |          |           |    |
+| `User:rphlx <User:rphlx>`__ / bcr | | Bryan Rittmeyer | | | | |
 +-----------+-----------+-----------+----------+-----------+----+
-| `user:Z   |           | lexander  |          |           |    |
-| axl <user |           | Atanasov  |          |           |    |
-| :Zaxl>`__ |           |           |          |           |    |
+| `user:Zaxl <user:Zaxl>`__ | | Alexander Atanasov | | | | |
 +-----------+-----------+-----------+----------+-----------+----+
-| `User:Zil | \ `Open   | Gilles    |          |           |    |
-| ux <User: | moko <Ope | Casse     |          |           |    |
-| Zilux>`__ | nmoko>`__ |           |          |           |    |
-|           | port      |           |          |           |    |
+| `User:Zilux <User:Zilux>`__ | `Openmoko <Openmoko>`__ port | Gilles Casse | | | | |
 +-----------+-----------+-----------+----------+-----------+----+
-| `U        | `Wi       |           |          |           |    |
-| ser:Afabe | ndows <Wi |           |          |           |    |
-| r <User:A | ndows>`__ |           |          |           |    |
-| faber>`__ | port      |           |          |           |    |
+| `User:Afaber <User:Afaber>`__ | `Windows <Windows>`__ port | | | | | |
 +-----------+-----------+-----------+----------+-----------+----+
 | `Us       | `MacOS <  | Andrea    |          |           |    |
 | er:Sanzog | MacOS>`__ | Ghensi    |          |           |    |
@@ -155,8 +334,6 @@ This had been contributors for a long time, but the had to quit
 See also
 --------
 
--  :ref:`Contacts <contacts>`__
--  https://github.com/navit-gps/navit/graphs/contributors - Full list of
-   contributors
--  https://launchpad.net/navit/+topcontributors - Full list of
-   translators
+- :doc:`Contacts </user/community/contacts>`
+- https://github.com/navit-gps/navit/graphs/contributors - Full list of contributors
+- https://launchpad.net/navit/+topcontributors - Full list of translators
