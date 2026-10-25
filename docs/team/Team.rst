@@ -16,104 +16,20 @@ guys!
      - Devices
      - OS
      - state
-   * - nick
-     - Tasks
-     - Full
-     - SVN
-     - Devices
-     - OS
-     - state
-   * -
-     -
-     - Name
-     - name
-     -
-     -
-     -
    * - Cp15
-     - maintainer,
-     - Martin
+     - maintainer, server, admin, dev
+     - Martin Schaller
      - martin-s
      -
      -
      - busy
-   * -
-     - server
-     - Schaller
-     -
-     -
-     -
-     -
-   * -
-     - admin,
-     -
-     -
-     -
-     -
-     -
-   * -
-     - dev, ...
-     -
-     -
-     -
-     -
-     -
    * - KaZeR
-     - trac admin,
-     - Pierre
+     - launchpad
+     - Pierre Grandin
      - kazer\_
      - Epi
-     - Gentoo
+     - Gentoo, aM1000, Free runner, Cubox, raspberry Pi, iPhone
      - busy
-   * -
-     - launchpad
-     - Grandin
-     -
-     - aM1000,
-     -
-     -
-   * -
-     - admin
-     -
-     -
-     - Free
-     -
-     -
-   * -
-     -
-     -
-     -
-     - runner,
-     -
-     -
-   * -
-     -
-     -
-     -
-     - Cubox,
-     -
-     -
-   * -
-     -
-     -
-     -
-     - raspberry
-     -
-     -
-   * -
-     -
-     -
-     -
-     - pi,
-     -
-     -
-   * -
-     -
-     -
-     -
-     - iphone
-     -
-     -
    * - Xenos198
      - :ref:`TomTom <tomtom>` port
      - Manuel Hohmann
@@ -129,19 +45,12 @@ guys!
      -
      - ?
    * - sleske
-     - `trac <trac>`__,
-     - Sebastian
+     - `trac <trac>`__, code
+     - Sebastian Leske
      - sleske
      -
-     - Debian
+     - Debian Linux
      - ?
-   * -
-     - code
-     - Leske
-     -
-     -
-     - Linux
-     -
    * - Number6
      - twitter, press, media, patches,...
      - Nick Geoghegan
@@ -153,30 +62,9 @@ guys!
      - Wiki
      -
      -
-     - Ubuntu
+     - Ubuntu 32, Netbook, Remix
      -
      - ?
-   * -
-     - Trac
-     -
-     -
-     - 32
-     -
-     -
-   * -
-     -
-     -
-     -
-     - Netbook
-     -
-     -
-   * -
-     -
-     -
-     -
-     - Remix
-     -
-     -
    * - Usul
      - Wiki Trac planning
      -
@@ -185,26 +73,12 @@ guys!
      -
      - pending
    * - pini
-     - official
+     - official debian packager
      -
      -
      -
      -
      - busy
-   * -
-     - debian
-     -
-     -
-     -
-     -
-     -
-   * -
-     - packager
-     -
-     -
-     -
-     -
-     -
    * - Kamikaaze
      - :ref:`Android <android>` port
      -
@@ -214,25 +88,11 @@ guys!
      - ?
    * - Horwitz
      -
-     - Michael
+     - Michael Farmbauer
      -
      -
      -
      - ?
-   * -
-     -
-     - Fa
-     -
-     -
-     -
-     -
-   * -
-     -
-     - rmbauer
-     -
-     -
-     -
-     -
    * - jkoan
      - everything
      -
