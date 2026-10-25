@@ -13,8 +13,8 @@ RUN ./scripts/setup_common_requirements.sh && apt-get install -y libpng-dev libf
 
 # Build the project
 RUN mkdir build && cd build && \
-    cmake -Dsvg2png_scaling=-1 -Dsvg2png_scaling_flag=-1 -Dsvg2png_scaling_nav=-1 -Dsvg2png_scaling_textures=-1 .. && \
-    make maptool&& \
+    cmake -Dsvg2png_scaling=-1 -Dsvg2png_scaling_flag=-1 -Dsvg2png_scaling_nav=-1 -Dsvg2png_scaling_textures=-1  -DSAMPLE_MAP=FALSE .. && \
+    make -j$(nproc) maptool&& \
     cpack -G DEB
 
 # Runtime container
