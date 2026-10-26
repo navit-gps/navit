@@ -1919,21 +1919,17 @@ function name as shown below. If you want to call them from elsewhere
 |                            |                                   |
 |                            | EXAMPLE:                          |
 |                            |                                   |
-|                            | .. raw:: html                     |
+|                            | ::                                |
 |                            |                                   |
-|                            |    <script>                       |
-|                            |                                   |
-|                            | img("centry",                     |
-|                            | navit.waypoint_flag ?             |
-|                            | "gui_active" : "gui_inactive",    |
-|                            | "Activate waypoints", "",         |
-|                            | "navit.waypoints_flag=%{d}*",     |
-|                            | !navit.waypoints_flag,            |
-|                            | "refresh();");                    |
-|                            |                                   |
-|                            | .. raw:: html                     |
-|                            |                                   |
-|                            |    </script>                      |
+|                            |    img("centry",                  |
+|                            |    navit.waypoint_flag ?          |
+|                            |    "gui_active" :                 |
+|                            |    "gui_inactive",                |
+|                            |    "Activate waypoints",          |
+|                            |    "",                            |
+|                            |    "navit.waypoints_flag=%{d}*",  |
+|                            |    !navit.waypoints_flag,         |
+|                            |    "refresh();");                 |
 |                            |                                   |
 |                            | In this example, gui_active and   |
 |                            | gui_inactive images are used to   |
@@ -1960,15 +1956,10 @@ function name as shown below. If you want to call them from elsewhere
 |                            | town.                             |
 +----------------------------+-----------------------------------+
 | **write(**                 | Writes an attribute. Used by the  |
-| attribute                  | GUI menu in conjunction with '''  |
-| **)**                      |                                   |
-|                            |                                   |
-|                            | .. raw:: html                     |
-|                            |                                   |
-|                            |    <script>                       |
-|                            |                                   |
-|                            | ''' to display the content of an  |
-|                            | attribute in a menu item.         |
+| attribute                  | GUI menu in conjunction with      |
+| **)**                      | ``<script>`` to display the       |
+|                            | content of an attribute in a      |
+|                            | menu item.                        |
 +----------------------------+-----------------------------------+
 
 .. _osd_attributes:
