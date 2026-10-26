@@ -18,6 +18,9 @@ year = datetime.now().year
 author = 'The Navit Team'
 html_theme = "sphinx_rtd_theme"
 
+html_static_path = ['_static']
+html_css_files = ['css/navit.css']
+
 # Fix Unicode characters in latex
 latex_engine = "xelatex"
 latex_use_xindy = False
