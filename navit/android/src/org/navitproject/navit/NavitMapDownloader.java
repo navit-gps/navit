@@ -46,7 +46,7 @@ import java.io.BufferedReader;
 
 
 
-/*
+/**
  * @author hoehnp
  * @author rikky
  *
@@ -125,7 +125,7 @@ public class NavitMapDownloader extends Thread {
         new OsmMapValues(R.string.liberia, "-15.00", "-0.73", "-7.20", "8.65",
                          1, new String[]{"africa-liberia"}),
         new OsmMapValues(R.string.libya, "9.32", "19.40", "25.54", "33.63",
-                         1, new String[]{"africa-lybia"}),
+                         1, new String[]{"africa-libya"}),
         new OsmMapValues(R.string.madagascar, "42.25", "-26.63", "51.20", "-11.31",
                          1, new String[]{"africa-madagascar"}),
         new OsmMapValues(R.string.namibia,"11.4", "-29.1", "29.5", "-16.9",
@@ -167,7 +167,7 @@ public class NavitMapDownloader extends Thread {
         new OsmMapValues(R.string.kazakhstan, "46.44", "40.89", "87.36", "55.45",
                          1, new String[]{"asia-kazakhstan"}),
         new OsmMapValues(R.string.kyrgyzsyan, "69.23", "39.13", "80.33", "43.29",
-                         1, new String[]{"asia-kyrgyzsyan"}),
+                         1, new String[]{"asia-kyrgyzstan"}),
         new OsmMapValues(R.string.malaysia, "94.3", "-5.9", "108.6", "6.8",
                          1, new String[]{"asia-malaysia"}),
         new OsmMapValues(R.string.mongolia, "87.5", "41.4", "120.3", "52.7",
@@ -677,6 +677,343 @@ public class NavitMapDownloader extends Thread {
         return success;
     }
 
+    public static int getIndex(String mapName){
+        switch (mapName) {
+            case "africa-algeria": return 1;
+            case "africa-angola": return 2;
+            case "africa-benin": return 3;
+            case "africa-botswana": return 4;
+            case "africa-burkina-faso": return 5;
+            case "africa-burundi": return 6;
+            case "africa-cameroon": return 7;
+            case "africa-canary-islands": return 8;
+            case "africa-cape-verde": return 9;
+            case "africa-central-african-republic": return 10;
+            case "africa-chad": return  11;
+            case "africa-comores": return 12;
+            case "africa-congo-brazzaville": return 13;
+            case "africa-congo-democratic-republic": return 14;
+            case "africa-djibouti": return 15;
+            case "africa-egypt": return 16;
+            case "africa-equatorial-guinea": return 17;
+            case "africa-eritrea": return 18;
+            case "africa-ethiopia": return 19;
+            case "africa-gabon": return 20;
+            case "africa-ghana": return 21;
+            case "africa-guinea": return 22;
+            case "africa-guinea-bissau": return 23;
+            case "africa-ivory-coast": return 24;
+            case "africa-kenya": return 25;
+            case "africa-lesotho": return 26;
+            case "africa-liberia": return 27;
+            case "africa-libya": return 28;
+            case "africa-madagascar": return 29;
+            case "africa-malawi": return 30;
+            case "africa-mali": return 31;
+            case "africa-mauritania": return 32;
+            case "africa-mauritius":  return 33;
+            case "africa-morocco": return 34;
+            case "africa-mozambique": return 35;
+            case "africa-namibia": return 36;
+            case "africa-niger": return 37;
+            case "africa-nigeria": return 38;
+            case "africa-rwanda": return 39;
+            case "africa-saint-helena-ascension-and-tristan-da-cunha": return 40;
+            case "africa-sao-tome-and-principe": return 41;
+            case "africa-senegal-and-gambia": return 42;
+            case "africa-seychelles": return 43;
+            case "africa-sierra-leone": return 44;
+            case "africa-somalia": return 45;
+            case "africa-south-africa": return 46;
+            case "africa-south-sudan": return 47;
+            case "africa-sudan": return 48;
+            case "africa-swaziland": return 49;
+            case "africa-tanzania": return 50;
+            case "africa-togo": return 51;
+            case "africa-tunisia": return 52;
+            case "africa-uganda": return 53;
+            case "africa-zambia": return 54;
+            case "africa-zimbabwe": return 55;
+            case "antarctica": return 56;
+            case "asia-afghanistan": return 57;
+            case "asia-armenia": return 58;
+            case "asia-azerbaijan": return 59;
+            case "asia-bangladesh": return 60;
+            case "asia-bhutan": return 61;
+            case "asia-cambodia": return 62;
+            case "asia-china": return 63;
+            case "asia-gcc-states": return 64;
+            case "asia-india": return 65;
+            case "asia-indonesia": return 66;
+            case "asia-iran": return 67;
+            case "asia-iraq": return 68;
+            case "asia-israel-and-palestine": return 69;
+            case "asia-japan": return 70;
+            case "asia-jordan": return 71;
+            case "asia-kazakhstan": return 72;
+            case "asia-kyrgyzstan": return 73;
+            case "asia-laos": return 74;
+            case "asia-lebanon": return 75;
+            case "asia-malaysia-singapore-brunei": return 76;
+            case "asia-maldives": return 77;
+            case "asia-mongolia": return 78;
+            case "asia-myanmar": return 79;
+            case "asia-nepal": return 80;
+            case "asia-north-korea": return 81;
+            case "asia-pakistan": return 82;
+            case "asia-philippines": return 83;
+            case "asia-south-korea": return 84;
+            case "asia-sri-lanka": return 85;
+            case "asia-syria": return 86;
+            case "asia-taiwan": return 87;
+            case "asia-tajikistan": return 88;
+            case "asia-thailand": return 89;
+            case "asia-turkmenistan": return 90;
+            case "asia-uzbekistan": return 91;
+            case "asia-vietnam": return 92;
+            case "asia-yemen": return 93;
+            case "australia-oceania-american-oceania": return 94;
+            case "australia-oceania-australia": return 95;
+            case "australia-oceania-cook-islands": return 96;
+            case "australia-oceania-fiji": return 97;
+            case "australia-oceania-ile-de-clipperton": return 98;
+            case "australia-oceania-kiribati": return 99;
+            case "australia-oceania-marshall-islands": return 100;
+            case "australia-oceania-micronesia": return 101;
+            case "australia-oceania-nauru": return 102;
+            case "australia-oceania-new-caledonia": return 103;
+            case "australia-oceania-new-zealand": return 104;
+            case "australia-oceania-niue": return 105;
+            case "australia-oceania-palau": return 106;
+            case "australia-oceania-papua-new-guinea": return 107;
+            case "australia-oceania-pitcairn-islands": return 108;
+            case "australia-oceania-polynesie-francaise": return 109;
+            case "australia-oceania-samoa": return 110;
+            case "australia-oceania-solomon-islands": return 111;
+            case "australia-oceania-tokelau": return 112;
+            case "australia-oceania-tonga": return 113;
+            case "australia-oceania-tuvalu": return 114;
+            case "australia-oceania-vanuatu": return 115;
+            case "australia-oceania-wallis-et-futuna": return 116;
+            case "central-america-bahamas": return 117;
+            case "central-america-belize": return 118;
+            case "central-america-costa-rica": return 119;
+            case "central-america-cuba": return 120;
+            case "central-america-el-salvador": return 121;
+            case "central-america-guatemala": return 122;
+            case "central-america-haiti-and-domrep": return 123;
+            case "central-america-honduras": return 124;
+            case "central-america-jamaica": return 125;
+            case "central-america-nicaragua": return 126;
+            case "europe-albania": return 127;
+            case "europe-andorra": return 128;
+            case "europe-austria": return 129;
+            case "europe-azores": return 130;
+            case "europe-belarus": return 131;
+            case "europe-belgium": return 132;
+            case "europe-bosnia-herzegovina": return 133;
+            case "europe-bulgaria": return 134;
+            case "europe-croatia": return 135;
+            case "europe-cyprus": return 136;
+            case "europe-czech-republic": return 137;
+            case "europe-denmark": return 138;
+            case "europe-estonia": return 139;
+            case "europe-faroe-islands": return 140;
+            case "europe-finland": return 141;
+            case "europe-france-alsace": return 142;
+            case "europe-france-aquitaine": return 143;
+            case "europe-france-auvergne": return 144;
+            case "europe-france-basse-normandie": return 145;
+            case "europe-france-bourgogne": return 146;
+            case "europe-france-bretagne": return 147;
+            case "europe-france-centre": return 148;
+            case "europe-france-champagne-ardenne": return 149;
+            case "europe-france-corse": return 150;
+            case "europe-france-franche-comte": return 151;
+            case "europe-france-guadeloupe": return 152;
+            case "europe-france-guyane": return 153;
+            case "europe-france-haute-normandie": return 154;
+            case "europe-france-ile-de-france": return 155;
+            case "europe-france-languedoc-roussillon": return 156;
+            case "europe-france-limousin": return 157;
+            case "europe-france-lorraine": return 158;
+            case "europe-france-martinique": return 159;
+            case "europe-france-mayotte": return 160;
+            case "europe-france-midi-pyrenees": return 161;
+            case "europe-france-nord-pas-de-calais": return 162;
+            case "europe-france-pays-de-la-loire": return 163;
+            case "europe-france-picardie": return 164;
+            case "europe-france-poitou-charentes": return 165;
+            case "europe-france-provence-alpes-cote-d-azur": return 166;
+            case "europe-france-reunion": return 167;
+            case "europe-france-rhone-alpes": return 168;
+            case "europe-georgia": return 169;
+            case "europe-germany-baden-wuerttemberg": return 170;
+            case "europe-germany-bayern": return 171;
+            case "europe-germany-berlin": return 172;
+            case "europe-germany-brandenburg": return 173;
+            case "europe-germany-bremen": return 174;
+            case "europe-germany-hamburg": return 175;
+            case "europe-germany-hessen": return 176;
+            case "europe-germany-mecklenburg-vorpommern": return 177;
+            case "europe-germany-niedersachsen": return 178;
+            case "europe-germany-nordrhein-westfalen": return 179;
+            case "europe-germany-rheinland-pfalz": return 180;
+            case "europe-germany-saarland": return 181;
+            case "europe-germany-sachsen": return 182;
+            case "europe-germany-sachsen-anhalt": return 183;
+            case "europe-germany-schleswig-holstein": return 184;
+            case "europe-germany-thueringen": return 185;
+            case "europe-greece": return 186;
+            case "europe-guernsey-jersey": return 187;
+            case "europe-hungary": return 188;
+            case "europe-iceland": return 189;
+            case "europe-ireland-and-northern-ireland": return 190;
+            case "europe-isle-of-man": return 191;
+            case "europe-italy-centro": return 192;
+            case "europe-italy-isole": return 193;
+            case "europe-italy-nord-est": return 194;
+            case "europe-italy-nord-ovest": return 195;
+            case "europe-italy-sud": return 196;
+            case "europe-kosovo": return 197;
+            case "europe-latvia": return 198;
+            case "europe-liechtenstein": return 199;
+            case "europe-lithuania": return 200;
+            case "europe-luxembourg": return 201;
+            case "europe-macedonia": return 202;
+            case "europe-malta": return 203;
+            case "europe-moldova": return 204;
+            case "europe-monaco": return 205;
+            case "europe-montenegro": return 206;
+            case "europe-netherlands-drenthe": return 207;
+            case "europe-netherlands-flevoland": return 208;
+            case "europe-netherlands-friesland": return 209;
+            case "europe-netherlands-gelderland": return 210;
+            case "europe-netherlands-groningen": return 211;
+            case "europe-netherlands-limburg": return 212;
+            case "europe-netherlands-noord-brabant": return 213;
+            case "europe-netherlands-noord-holland": return 214;
+            case "europe-netherlands-overijssel": return 215;
+            case "europe-netherlands-utrecht": return 216;
+            case "europe-netherlands-zeeland": return 217;
+            case "europe-netherlands-zuid-holland": return 218;
+            case "europe-norway ": return 219;
+            case "europe-poland-dolnoslaskie": return 220;
+            case "europe-poland-kujawsko-pomorskie": return 221;
+            case "europe-poland-lodzkie": return 222;
+            case "europe-poland-lubelskie": return 223;
+            case "europe-poland-lubuskie": return 224;
+            case "europe-poland-malopolskie": return 225;
+            case "europe-poland-mazowieckie": return 226;
+            case "europe-poland-opolskie": return 227;
+            case "europe-poland-podkarpackie": return 228;
+            case "europe-poland-podlaskie": return 229;
+            case "europe-poland-pomorskie": return 230;
+            case "europe-poland-slaskie": return 231;
+            case "europe-poland-swietokrzyskie": return 232;
+            case "europe-poland-warminsko-mazurskie": return 233;
+            case "europe-poland-wielkopolskie": return 234;
+            case "europe-poland-zachodniopomorskie": return 235;
+            case "europe-portugal": return 236;
+            case "europe-romania": return 237;
+            case "europe-serbia": return 238;
+            case "europe-slovakia": return 239;
+            case "europe-slovenia": return 240;
+            case "europe-spain": return 241;
+            case "europe-sweden": return 242;
+            case "europe-switzerland": return 243;
+            case "europe-turkey": return 244;
+            case "europe-ukraine": return 245;
+            case "europe-united-kingdom-england": return 246;
+            case "europe-united-kingdom-scotland": return 247;
+            case "europe-united-kingdom-wales": return 248;
+            case "north-america-canada-alberta": return 249;
+            case "north-america-canada-british-columbia": return 250;
+            case "north-america-canada-manitoba": return 251;
+            case "north-america-canada-new-brunswick": return 252;
+            case "north-america-canada-newfoundland-and-labrador": return 253;
+            case "north-america-canada-northwest-territories": return 254;
+            case "north-america-canada-nova-scotia": return 255;
+            case "north-america-canada-nunavut": return 256;
+            case "north-america-canada-ontario": return 257;
+            case "north-america-canada-prince-edward-island": return 258;
+            case "north-america-canada-quebec": return 259;
+            case "north-america-canada-saskatchewan": return 260;
+            case "north-america-canada-yukon": return 261;
+            case "north-america-greenland": return 262;
+            case "north-america-mexico": return 263;
+            case "north-america-us-alabama": return 264;
+            case "north-america-us-alaska": return 265;
+            case "north-america-us-arizona": return 266;
+            case "north-america-us-arkansas": return 267;
+            case "north-america-us-california": return 268;
+            case "north-america-us-colorado": return 269;
+            case "north-america-us-connecticut": return 270;
+            case "north-america-us-delaware": return 271;
+            case "north-america-us-district-of-columbia": return 272;
+            case "north-america-us-florida": return 273;
+            case "north-america-us-georgia": return 274;
+            case "north-america-us-hawaii": return 275;
+            case "north-america-us-idaho": return 276;
+            case "north-america-us-illinois": return 277;
+            case "north-america-us-indiana": return 278;
+            case "north-america-us-iowa": return 279;
+            case "north-america-us-kansas": return 280;
+            case "north-america-us-kentucky": return 281;
+            case "north-america-us-louisiana": return 282;
+            case "north-america-us-maine": return 283;
+            case "north-america-us-maryland": return 284;
+            case "north-america-us-massachusetts": return 285;
+            case "north-america-us-michigan": return 286;
+            case "north-america-us-minnesota": return 287;
+            case "north-america-us-mississippi": return 288;
+            case "north-america-us-missouri": return 289;
+            case "north-america-us-montana": return 290;
+            case "north-america-us-nebraska": return 291;
+            case "north-america-us-nevada": return 292;
+            case "north-america-us-new-hampshire": return 293;
+            case "north-america-us-new-jersey": return 294;
+            case "north-america-us-new-mexico": return 295;
+            case "north-america-us-new-york": return 296;
+            case "north-america-us-north-carolina": return 297;
+            case "north-america-us-north-dakota": return 298;
+            case "north-america-us-ohio": return 299;
+            case "north-america-us-oklahoma": return 300;
+            case "north-america-us-oregon": return 301;
+            case "north-america-us-pennsylvania": return 302;
+            case "north-america-us-puerto-rico": return 303;
+            case "north-america-us-rhode-island": return 304;
+            case "north-america-us-south-carolina": return 305;
+            case "north-america-us-south-dakota": return 306;
+            case "north-america-us-tennessee": return 307;
+            case "north-america-us-texas": return 308;
+            case "north-america-us-utah": return 309;
+            case "north-america-us-vermont": return 310;
+            case "north-america-us-virginia": return 311;
+            case "north-america-us-washington": return 312;
+            case "north-america-us-west-": return 313;
+            case "north-america-us-wisconsin": return 314;
+            case "north-america-us-wyoming": return 315;
+            case "south-america-argentina": return 316;
+            case "south-america-bolivia": return 317;
+            case "south-america-brazil-centro-oeste": return 318;
+            case "south-america-brazil-nordeste": return 319;
+            case "south-america-brazil-norte": return 320;
+            case "south-america-brazil-sudeste": return 321;
+            case "south-america-brazil-sul": return 322;
+            case "south-america-chile": return 323;
+            case "south-america-colombia": return 324;
+            case "south-america-ecuador": return 325;
+            case "south-america-paraguay": return 326;
+            case "south-america-peru": return 327;
+            case "south-america-suriname": return 328;
+            case "south-america-uruguay": return 329;
+            case "south-america-venezuela": return 330;
+        }
+        return 0;
+    }
+
+
     private String getLatestDate() {
         if (this.mGitHubMetadata != "") {
             try {
@@ -693,22 +1030,22 @@ public class NavitMapDownloader extends Thread {
                 return (String) "";
         }
     }
-    ba521c5dfbb9f75e8549a003cba7a4c759c9bef5
-            ba521c5dfbb9f75e8549a003cba7a4c759c9bef5
+
     private static long getEstSizeBytes(int mapId, int subMapIndex, String githubMetadata) {
             if (subMapIndex < osm_maps[mapId].mSubMaps.length) {
                 try {
                     JSONObject objectFile = (JSONObject) new JSONTokener(githubMetadata).nextValue();
-                    JSONArray objectAssets = objectFile.getJSONArray("assets");
-                    JSONArray objectMap = objectAssets.getJSONArray("");
+                    JSONArray arrayAssets = objectFile.getJSONArray("assets");
+                    JSONObject arrayMap = arrayAssets.getJSONObject(getIndex(osm_maps[mapId].mSubMaps[subMapIndex]));
+                    return Math.max(arrayMap.getLong("size"), 0);
                 } catch (JSONException e) {
                     return 0;
                 }
 
-                int ind_dataset = githubMetadata.indexOf(osm_maps[mapId].mSubMaps[subMapIndex]);
+                /*int ind_dataset = githubMetadata.indexOf(osm_maps[mapId].mSubMaps[subMapIndex]);
                 int ind_colon = githubMetadata.indexOf("size", ind_dataset) + 6;
                 int ind_comma = githubMetadata.indexOf(",", ind_colon);
-                return Math.max(Long.valueOf(githubMetadata.substring(ind_colon, ind_comma)), 0);
+                return Math.max(Long.valueOf(githubMetadata.substring(ind_colon, ind_comma)), 0);*/
             } else {
                 return 0;
             }
@@ -945,7 +1282,6 @@ public class NavitMapDownloader extends Thread {
         mRetryCounter++;
     }
 
-
     static class OsmMapValues {
 
         String mLon1;
@@ -983,16 +1319,16 @@ public class NavitMapDownloader extends Thread {
 
         boolean isInMap(Location location) {
 
-            if (location.getLongitude() < Double.valueOf(this.mLon1)) {
+            if (location.getLongitude() < Double.parseDouble(this.mLon1)) {
                 return false;
             }
-            if (location.getLongitude() > Double.valueOf(this.mLon2)) {
+            if (location.getLongitude() > Double.parseDouble(this.mLon2)) {
                 return false;
             }
-            if (location.getLatitude() < Double.valueOf(this.mLat1)) {
+            if (location.getLatitude() < Double.parseDouble(this.mLat1)) {
                 return false;
             }
-            return !(location.getLatitude() > Double.valueOf(this.mLat2));
+            return !(location.getLatitude() > Double.parseDouble(this.mLat2));
         }
     }
 }
