@@ -2024,23 +2024,13 @@ elsewhere (e.g. in internal GUI menu items), prefix them with
      - Flags for the route status. See also
        route.h (enum route_status):
 
-       +------------------------------------+-------+
-       | Const                              | Value |
-       +====================================+=======+
-       | route_status_no_destination        | 0     |
-       +------------------------------------+-------+
-       | route_status_destination_set       | 1     |
-       +------------------------------------+-------+
-       | route_status_not_found             | 1/2   |
-       +------------------------------------+-------+
-       | route_status_Building_path         | 1/4   |
-       +------------------------------------+-------+
-       | route_status_building_graph        | 1/4/8 |
-       +------------------------------------+-------+
-       | route_status_path_done_new         | 1/16  |
-       +------------------------------------+-------+
-       | route_status_path_done_incremental | 1/32  |
-       +------------------------------------+-------+
+       -  route_status_no_destination: 0
+       -  route_status_destination_set: 1
+       -  route_status_not_found: 1/2
+       -  route_status_Building_path: 1/4
+       -  route_status_building_graph: 1/4/8
+       -  route_status_path_done_new: 1/16
+       -  route_status_path_done_incremental: 1/32
    * - **osd_configuration**
      - Set the osd_configuration flags for
        navit. With the command
