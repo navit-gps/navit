@@ -1979,18 +1979,20 @@ GUI Attributes
 These have to be prefixed with **gui.** when used in an OSD item. In
 menu items they can be used directly.
 
-+---------------+------------------------------------------------+
-| Attribute     | Meaning                                        |
-+===============+================================================+
-| **flags**     | GUI flags. FIXME: complete description         |
-|               |                                                |
-|               | -  **2** (if set, the menu should offer Show   |
-|               |    Map)                                        |
-+---------------+------------------------------------------------+
-| **fullscreen**| Nonzero if full-screen mode is active, zero    |
-|               | otherwise. Use **fullscreen=!fullscreen**      |
-|               | to toggle between window and fullscreen mode.  |
-+---------------+------------------------------------------------+
+.. list-table::
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Attribute
+     - Meaning
+   * - **flags**
+     - GUI flags. FIXME: complete description
+
+       -  **2** (if set, the menu should offer Show Map)
+   * - **fullscreen**
+     - Nonzero if full-screen mode is active, zero otherwise. Use
+       **fullscreen=!fullscreen** to toggle between window and fullscreen
+       mode.
 
 .. _navit_attributes:
 
