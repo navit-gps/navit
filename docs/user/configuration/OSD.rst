@@ -1799,166 +1799,128 @@ function name as shown below. If you want to call them from elsewhere
 (e.g. from OSD items), prefix them with **gui**. (e.g.
 **gui.menu()**) The following are available (from the Navit source code) :
 
-+----------------------------+-----------------------------------+
-| Command                    | Meaning                           |
-+============================+===================================+
-| **abort_navigation()**     | Cancels navigation: The route is  |
-|                            | cleared and Navit switches to     |
-|                            | tracking mode.                    |
-+----------------------------+-----------------------------------+
-| **about()**                | Displays the About screen.        |
-+----------------------------+-----------------------------------+
-| **back()**                 | FIXME: description to be          |
-|                            | completed.                        |
-+----------------------------+-----------------------------------+
-| **back_to_map()**          | Leaves the menu and returns to    |
-|                            | map view.                         |
-+----------------------------+-----------------------------------+
-| **bookmarks()**            | Shows bookmarks.                  |
-+----------------------------+-----------------------------------+
-| **get_data()**             | FIXME: description to be          |
-|                            | completed                         |
-+----------------------------+-----------------------------------+
-| **locale()**               | Shows locale information.         |
-+----------------------------+-----------------------------------+
-| **log**                    | FIXME: description to be          |
-|                            | completed                         |
-+----------------------------+-----------------------------------+
-| **menu()**                 | Brings up the menu (used as       |
-|                            | **gui.menu()** in OSD items       |
-|                            | in order to have a dedicated      |
-|                            | menu button).                     |
-+----------------------------+-----------------------------------+
-| **position(**              | Presents possible operations on   |
-| position, text, flags **)**| a position (set as current        |
-|                            | location, set as destination      |
-|                            | etc.). ``position`` is a          |
-|                            | coordinate-type attribute (e.g.   |
-|                            | **position_coord_geo**).          |
-+----------------------------+-----------------------------------+
-| **quit()**                 | Closes Navit.                     |
-+----------------------------+-----------------------------------+
-| **refresh()**              | Redraws the currently active      |
-|                            | menu. Typically used by menu      |
-|                            | items which change parameters     |
-|                            | used in ``cond``\ s in order to   |
-|                            | reflect those changes.            |
-+----------------------------+-----------------------------------+
-| **route_description()**    | Shows a turn-by-turn description  |
-|                            | of the active route when in       |
-|                            | navigation mode.                  |
-+----------------------------+-----------------------------------+
-| **route_height_profile()** | Shows a height profile of the     |
-|                            | active route when in navigation   |
-|                            | mode.                             |
-+----------------------------+-----------------------------------+
-| **set(**                   | Save an option to be recovered    |
-| pattern, args              | next time navit is opened.        |
-| **)**                      | Pattern is used to search the     |
-|                            | old value to delete it, and also  |
-|                            | it's used to write the new        |
-|                            | value. The '*' character inside   |
-|                            | pattern will match with any       |
-|                            | string when searching for the     |
-|                            | old value, and it will also be    |
-|                            | substituted by the values from    |
-|                            | 'args' when writing the new       |
-|                            | value. For example:               |
-|                            |                                   |
-|                            | - set("navit.pitch=*", 60) will   |
-|                            |   remove the previous saved value |
-|                            |   of navit.pitch and will save the|
-|                            |   new one as navit.pitch=60.      |
-|                            |                                   |
-|                            | - set("navit.layout.layer[@name=  |
-|                            |   =\"*\"].active=*","POI symbols" |
-|                            |   , 1)                            |
-|                            |   will set the new value as       |
-|                            |   navit.layout.layer[@name=="POI s|
-|                            |   ymbols"].active=1               |
-+----------------------------+-----------------------------------+
-| **img(** class,            | Generate and print the code of a  |
-| src, text,                 | button with the selected image,   |
-| onclick_pre,               | text and actions                  |
-| onclick_set_pattern,       |                                   |
-| [onclick_set_replaces...,] | - class: the class to style the   |
-| onclick_post **)**         |   image (for example, "centry"    |
-|                            |   class is used for lists of      |
-|                            |   options, once per line, with a  |
-|                            |   small image at the beginning of |
-|                            |   the line)                       |
-|                            |                                   |
-|                            | - src: the image source           |
-|                            |                                   |
-|                            | - text: the text                  |
-|                            |                                   |
-|                            | - onclick_pre: commands to be     |
-|                            |   executed first (this must be a  |
-|                            |   string just like a normal       |
-|                            |   onclick command into an tag)    |
-|                            |                                   |
-|                            | - onclick_set_pattern: after      |
-|                            |   onclick_pre action, a 'set'     |
-|                            |   command is executed ('set' is   |
-|                            |   explained above), and this      |
-|                            |   string will be passed to this   |
-|                            |   'set' command as first argument |
-|                            |                                   |
-|                            | - onclick_set_replaces: the rest  |
-|                            |   of the arguments for 'set'      |
-|                            |   action (the replacement         |
-|                            |   strings). There must be as much |
-|                            |   arguments as replacements to be |
-|                            |   done in onclick_set_pattern.    |
-|                            |                                   |
-|                            | - onclick_post: after the 'set'   |
-|                            |   command is executed, one or more|
-|                            |   additional commands are executed|
-|                            |                                   |
-|                            | EXAMPLE:                          |
-|                            |                                   |
-|                            | ::                                |
-|                            |                                   |
-|                            |    img("centry",                  |
-|                            |    navit.waypoint_flag ?          |
-|                            |    "gui_active" :                 |
-|                            |    "gui_inactive",                |
-|                            |    "Activate waypoints",          |
-|                            |    "",                            |
-|                            |    "navit.waypoints_flag=%{d}*",  |
-|                            |    !navit.waypoints_flag,         |
-|                            |    "refresh();");                 |
-|                            |                                   |
-|                            | In this example, gui_active and   |
-|                            | gui_inactive images are used to   |
-|                            | indicate if the option is         |
-|                            | enabled or not. No onclick_pre    |
-|                            | command is executed, set is used  |
-|                            | to save user choice and finally   |
-|                            | refresh command is executed.      |
-+----------------------------+-----------------------------------+
-| **setting_layout()**       | Presents a selection of           |
-|                            | available screen layouts.         |
-+----------------------------+-----------------------------------+
-| **setting_maps()**         | Presents a dialog to switch       |
-|                            | between available mapsets.        |
-+----------------------------+-----------------------------------+
-| **setting_rules()**        | Presents a dialog for setting     |
-|                            | various internal options.         |
-+----------------------------+-----------------------------------+
-| **setting_vehicle()**      | Presents a dialog for selecting   |
-|                            | the active vehicle.               |
-+----------------------------+-----------------------------------+
-| **town()**                 | Presents a dialog for selecting   |
-|                            | an address, starting with a       |
-|                            | town.                             |
-+----------------------------+-----------------------------------+
-| **write(**                 | Writes an attribute. Used by the  |
-| attribute                  | GUI menu in conjunction with      |
-| **)**                      | ``<script>`` to display the       |
-|                            | content of an attribute in a      |
-|                            | menu item.                        |
-+----------------------------+-----------------------------------+
+.. list-table::
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Command
+     - Meaning
+   * - **abort_navigation()**
+     - Cancels navigation: The route is cleared and Navit switches to
+       tracking mode.
+   * - **about()**
+     - Displays the About screen.
+   * - **back()**
+     - FIXME: description to be completed.
+   * - **back_to_map()**
+     - Leaves the menu and returns to map view.
+   * - **bookmarks()**
+     - Shows bookmarks.
+   * - **get_data()**
+     - FIXME: description to be completed
+   * - **locale()**
+     - Shows locale information.
+   * - **log**
+     - FIXME: description to be completed
+   * - **menu()**
+     - Brings up the menu (used as **gui.menu()** in OSD items in order to
+       have a dedicated menu button).
+   * - **position(**
+       position, text, flags **)**
+     - Presents possible operations on a position (set as current location,
+       set as destination etc.). ``position`` is a coordinate-type attribute
+       (e.g. **position_coord_geo**).
+   * - **quit()**
+     - Closes Navit.
+   * - **refresh()**
+     - Redraws the currently active menu. Typically used by menu items which
+       change parameters used in ``cond``\ s in order to reflect those
+       changes.
+   * - **route_description()**
+     - Shows a turn-by-turn description of the active route when in
+       navigation mode.
+   * - **route_height_profile()**
+     - Shows a height profile of the active route when in navigation mode.
+   * - **set(**
+       pattern, args
+       **)**
+     - Save an option to be recovered next time navit is opened. Pattern is
+       used to search the old value to delete it, and also it's used to write
+       the new value. The '*' character inside pattern will match with any
+       string when searching for the old value, and it will also be
+       substituted by the values from 'args' when writing the new value. For
+       example:
+
+       -  set("navit.pitch=*", 60) will remove the previous saved value of
+          navit.pitch and will save the new one as navit.pitch=60.
+
+       -  set("navit.layout.layer[@name==\"*\"].active=*","POI symbols", 1)
+          will set the new value as
+          navit.layout.layer[@name=="POI symbols"].active=1
+   * - **img(** class,
+       src, text,
+       onclick_pre,
+       onclick_set_pattern,
+       [onclick_set_replaces...,]
+       onclick_post **)**
+     - Generate and print the code of a button with the selected image, text
+       and actions
+
+       -  class: the class to style the image (for example, "centry" class is
+          used for lists of options, once per line, with a small image at the
+          beginning of the line)
+
+       -  src: the image source
+
+       -  text: the text
+
+       -  onclick_pre: commands to be executed first (this must be a string
+          just like a normal onclick command into an tag)
+
+       -  onclick_set_pattern: after onclick_pre action, a 'set' command is
+          executed ('set' is explained above), and this string will be passed
+          to this 'set' command as first argument
+
+       -  onclick_set_replaces: the rest of the arguments for 'set' action
+          (the replacement strings). There must be as much arguments as
+          replacements to be done in onclick_set_pattern.
+
+       -  onclick_post: after the 'set' command is executed, one or more
+          additional commands are executed
+
+       EXAMPLE:
+
+       ::
+
+          img("centry",
+          navit.waypoint_flag ?
+          "gui_active" :
+          "gui_inactive",
+          "Activate waypoints",
+          "",
+          "navit.waypoints_flag=%{d}*",
+          !navit.waypoints_flag,
+          "refresh();");
+
+       In this example, gui_active and gui_inactive images are used to
+       indicate if the option is enabled or not. No onclick_pre command is
+       executed, set is used to save user choice and finally refresh command
+       is executed.
+   * - **setting_layout()**
+     - Presents a selection of available screen layouts.
+   * - **setting_maps()**
+     - Presents a dialog to switch between available mapsets.
+   * - **setting_rules()**
+     - Presents a dialog for setting various internal options.
+   * - **setting_vehicle()**
+     - Presents a dialog for selecting the active vehicle.
+   * - **town()**
+     - Presents a dialog for selecting an address, starting with a town.
+   * - **write(**
+       attribute
+       **)**
+     - Writes an attribute. Used by the GUI menu in conjunction with
+       ``<script>`` to display the content of an attribute in a menu item.
 
 .. _osd_attributes:
 
