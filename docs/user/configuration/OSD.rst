@@ -793,15 +793,13 @@ enabled for each camera types. *flags* should be the sum of the required
 camera types' values from the table below. (Eg. to enable warnings for
 fixed, and section cams the value should be 9 (1 + 8) )
 
-================ ==
-CAM_FIXED        1
-CAM_TRAFFIC_LAMP 2
-CAM_RED          4
-CAM_SECTION      8
-CAM_MOBILE       16
-CAM_RAIL         32
-CAM_TRAFFIPAX    64
-================ ==
+-  ``CAM_FIXED``: 1
+-  ``CAM_TRAFFIC_LAMP``: 2
+-  ``CAM_RED``: 4
+-  ``CAM_SECTION``: 8
+-  ``CAM_MOBILE``: 16
+-  ``CAM_RAIL``: 32
+-  ``CAM_TRAFFIPAX``: 64
 
 .. _osd_speed_warner:
 
