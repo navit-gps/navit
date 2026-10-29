@@ -887,191 +887,122 @@ each item, in addition to aligning the text using the 'align' attribute.
 Placeholders are specified as **${section.attribute}**. Attributes
 which can be used in labels include:
 
-+----------------------------------+--------------------------------------------+
-| Attribute                        | Value                                      |
-+==================================+============================================+
-| navigation                       | Section containing routing                 |
-|                                  | information, available only when           |
-|                                  | routing                                    |
-+----------------------------------+--------------------------------------------+
-| navigation.item                  | Information related to the                 |
-|                                  | entire route                               |
-+----------------------------------+--------------------------------------------+
-| navigatio                        | Remaining distance to                      |
-| n.item.destination_length[named] | destination. Use                           |
-|                                  | navigatio                                  |
-|                                  | n.item.destination_length[value]           |
-|                                  | to get the bare value (without             |
-|                                  | units) or                                  |
-|                                  | navigati                                   |
-|                                  | on.item.destination_length[unit]           |
-|                                  | to get just the unit. Useful for           |
-|                                  | displaying the value and the               |
-|                                  | unit in two rows, or in                    |
-|                                  | different font sizes.                      |
-+----------------------------------+--------------------------------------------+
-| navigatio                        | Estimated time of arrival                  |
-| n.item.destination_time[arrival] |                                            |
-+----------------------------------+--------------------------------------------+
-| navigation.                      | Estimated remaining time                   |
-| item.destination_time[remaining] |                                            |
-+----------------------------------+--------------------------------------------+
-| navigation.item.street_name      | Name of the road which the                 |
-|                                  | vehicle is currently on (e.g.              |
-|                                  | Via Gallarate)                             |
-+----------------------------------+--------------------------------------------+
-| naviga                           | Number/reference of the road               |
-| tion.item.street_name_systematic | which the vehicle is currently             |
-|                                  | on, if available (e.g. SS33)               |
-+----------------------------------+--------------------------------------------+
-| navigation.item[1]               | Information related to the next            |
-|                                  | navigation item (from the next             |
-|                                  | maneuver to the one following              |
-|                                  | it)                                        |
-+----------------------------------+--------------------------------------------+
-| navigation.item[1].length[named] | Distance to next maneuver. Use             |
-|                                  | navigation.item[1].length[value]           |
-|                                  | and                                        |
-|                                  | navigation.item[1].length[unit]            |
-|                                  | in the same manner as for                  |
-|                                  | nav                                        |
-|                                  | igation.item.destination_length.           |
-+----------------------------------+--------------------------------------------+
-| navigation.item[1].street_name   | Name of the road following the             |
-|                                  | next maneuver (cf.                         |
-|                                  | navigation.item.street_name)               |
-+----------------------------------+--------------------------------------------+
-| navigatio                        | Name of the road following the             |
-| n.item[1].street_name_systematic | next maneuver (cf.                         |
-|                                  | navigat                                    |
-|                                  | ion.item.street_name_systematic)           |
-+----------------------------------+--------------------------------------------+
-| navigati                         | Sentence explaining the next               |
-| on.item[1].navigation_long_exact | maneuver (e.g. 'Turn left in 2.2           |
-|                                  | miles into Main Street')                   |
-+----------------------------------+--------------------------------------------+
-| navit                            |                                            |
-+----------------------------------+--------------------------------------------+
-| navit.messages                   |                                            |
-+----------------------------------+--------------------------------------------+
-| tracking                         | Section containing information             |
-|                                  | on current track, available                |
-|                                  | whenever valid GPS information             |
-|                                  | and corresponding map data is              |
-|                                  | available. The difference to               |
-|                                  | navigation is that tracking data           |
-|                                  | is also available when not                 |
-|                                  | routing. Ensure that                       |
-|                                  | tracking="1" is set in the tag             |
-|                                  | to use these attributes.                   |
-+----------------------------------+--------------------------------------------+
-| tracking.item                    | Information related to the road            |
-|                                  | the vehicle is currently                   |
-|                                  | traveling along                            |
-+----------------------------------+--------------------------------------------+
-| tracking.item.route_speed        | Speed limit on the road which              |
-|                                  | the vehicle is currently on                |
-+----------------------------------+--------------------------------------------+
-| tracking.item.street_name        | Name of the road which the                 |
-|                                  | vehicle is currently on (cf.               |
-|                                  | navigation.item.street_name)               |
-+----------------------------------+--------------------------------------------+
-| trac                             | Number/reference of the road               |
-| king.item.street_name_systematic | which the vehicle is currently             |
-|                                  | on (cf.                                    |
-|                                  | navigat                                    |
-|                                  | ion.item.street_name_systematic)           |
-+----------------------------------+--------------------------------------------+
-| vehicle                          | Section containing GPS                     |
-|                                  | information, available whenever            |
-|                                  | valid GPS information is                   |
-|                                  | available                                  |
-+----------------------------------+--------------------------------------------+
-| vehicle.position_coord_geo       | Current position. Use                      |
-|                                  | vehi                                       |
-|                                  | cle.position_coord_geo[*format*]           |
-|                                  | to control the output format of            |
-|                                  | the coordinates (works reliably            |
-|                                  | from onwards). Valid *format*              |
-|                                  | values are:                                |
-|                                  |                                            |
-|                                  | -  pos_deg: Latitude and                   |
-|                                  |    longitude in decimal degrees            |
-|                                  | -  pos_degmin: Latitude and                |
-|                                  |    longitude in degrees, minutes           |
-|                                  |    and fractions of minutes                |
-|                                  |    (similar to NMEA style)                 |
-|                                  | -  pos_degminsec: Latitude and             |
-|                                  |    longitude in degrees, minutes           |
-|                                  |    and seconds                             |
-|                                  | -  lat_deg, lat_degmin,                    |
-|                                  |    lat_degminsec: Only the                 |
-|                                  |    latitude in one of the                  |
-|                                  |    formats described above                 |
-|                                  | -  lng_deg, lng_degmin,                    |
-|                                  |    lng_degminsec: Only the                 |
-|                                  |    longitude in one of the                 |
-|                                  |    formats described above                 |
-|                                  |                                            |
-|                                  | If omitted, pos_degminsec will             |
-|                                  | be assumed.                                |
-+----------------------------------+--------------------------------------------+
-| vehicle.position_direction       | Current orientation (direction             |
-|                                  | of travel) in degrees                      |
-+----------------------------------+--------------------------------------------+
-| vehicle.position_height          | Current altitude in m                      |
-+----------------------------------+--------------------------------------------+
-| vehicle.position_qual            | Number of satellites which your            |
-|                                  | GPS receiver can see. However,             |
-|                                  | your receiver may not be using             |
-|                                  | all of them for positioning due            |
-|                                  | to low signal etc...                       |
-+----------------------------------+--------------------------------------------+
-| vehicle.position_sats_used       | Number of satellites used                  |
-+----------------------------------+--------------------------------------------+
-| vehicle.position_speed           | Current speed in km/h                      |
-+----------------------------------+--------------------------------------------+
-| vehicle.position_time_iso8601    | Current GPS time (roughly the              |
-|                                  | same as UTC, with a few seconds            |
-|                                  | of difference)                             |
-+----------------------------------+--------------------------------------------+
-| vehicle                          | Current GPS time with formatting           |
-| .position_time_iso8601[*string*] | string: { iso8601 \| [ local; \|           |
-|                                  | *offset* ; ] *format* }                    |
-|                                  |                                            |
-|                                  | -  local; retrieves the timezone           |
-|                                  |    setting of the system                   |
-|                                  | -  *offset* is a literal offset            |
-|                                  |    such as +02:00 (sign, hours,            |
-|                                  |    colon, minutes)                         |
-|                                  | -  *format* is a time format               |
-|                                  |    string which follows the                |
-|                                  |    syntax for the C strftime               |
-|                                  |    function                                |
-|                                  |                                            |
-|                                  | Examples:                                  |
-|                                  |                                            |
-|                                  | -  vehicl                                  |
-|                                  |    e.position_tim                          |
-|                                  |    e_iso8601[iso8601]                      |
-|                                  |    --> Current GPS time (default           |
-|                                  |    as without qualifier)                   |
-|                                  | -  vehicle.                                |
-|                                  |    position_time_iso8601                   |
-|                                  |    [local;%Y-%m-%d%X]                      |
-|                                  |    --> Current GPS date and                |
-|                                  |    time at local timezone of the           |
-|                                  |    system (tested on WinCE), %X            |
-|                                  |    gives time using the system's           |
-|                                  |    time format                             |
-|                                  | -  vehicl                                  |
-|                                  |    e.position_time_iso8601[iso8601]        |
-|                                  |    --> Current GPS time (default           |
-|                                  |    as without qualifier)                   |
-|                                  | -  vehicle.position_time_iso8601[+01:00;%X]|
-|                                  |    --> time of the UTC+01:00               |
-|                                  |    time zone                               |
-+----------------------------------+--------------------------------------------+
+.. list-table::
+   :widths: 40 60
+   :header-rows: 1
+
+   * - Attribute
+     - Value
+   * - navigation
+     - Section containing routing information, available only when routing
+   * - navigation.item
+     - Information related to the entire route
+   * - navigation.item.destination_length[named]
+     - Remaining distance to destination. Use
+       navigation.item.destination_length[value] to get the bare value
+       (without units) or navigation.item.destination_length[unit] to get
+       just the unit. Useful for displaying the value and the unit in two
+       rows, or in different font sizes.
+   * - navigation.item.destination_time[arrival]
+     - Estimated time of arrival
+   * - navigation.item.destination_time[remaining]
+     - Estimated remaining time
+   * - navigation.item.street_name
+     - Name of the road which the vehicle is currently on (e.g. Via Gallarate)
+   * - navigation.item.street_name_systematic
+     - Number/reference of the road which the vehicle is currently on, if
+       available (e.g. SS33)
+   * - navigation.item[1]
+     - Information related to the next navigation item (from the next
+       maneuver to the one following it)
+   * - navigation.item[1].length[named]
+     - Distance to next maneuver. Use navigation.item[1].length[value] and
+       navigation.item[1].length[unit] in the same manner as for
+       navigation.item.destination_length.
+   * - navigation.item[1].street_name
+     - Name of the road following the next maneuver (cf.
+       navigation.item.street_name)
+   * - navigation.item[1].street_name_systematic
+     - Name of the road following the next maneuver (cf.
+       navigation.item.street_name_systematic)
+   * - navigation.item[1].navigation_long_exact
+     - Sentence explaining the next maneuver (e.g. 'Turn left in 2.2 miles
+       into Main Street')
+   * - navit
+     -
+   * - navit.messages
+     -
+   * - tracking
+     - Section containing information on current track, available whenever
+       valid GPS information and corresponding map data is available. The
+       difference to navigation is that tracking data is also available when
+       not routing. Ensure that tracking="1" is set in the tag to use these
+       attributes.
+   * - tracking.item
+     - Information related to the road the vehicle is currently traveling along
+   * - tracking.item.route_speed
+     - Speed limit on the road which the vehicle is currently on
+   * - tracking.item.street_name
+     - Name of the road which the vehicle is currently on (cf.
+       navigation.item.street_name)
+   * - tracking.item.street_name_systematic
+     - Number/reference of the road which the vehicle is currently on (cf.
+       navigation.item.street_name_systematic)
+   * - vehicle
+     - Section containing GPS information, available whenever valid GPS
+       information is available
+   * - vehicle.position_coord_geo
+     - Current position. Use vehicle.position_coord_geo[*format*] to control
+       the output format of the coordinates (works reliably from onwards).
+       Valid *format* values are:
+
+       -  pos_deg: Latitude and longitude in decimal degrees
+       -  pos_degmin: Latitude and longitude in degrees, minutes and
+          fractions of minutes (similar to NMEA style)
+       -  pos_degminsec: Latitude and longitude in degrees, minutes and
+          seconds
+       -  lat_deg, lat_degmin, lat_degminsec: Only the latitude in one of
+          the formats described above
+       -  lng_deg, lng_degmin, lng_degminsec: Only the longitude in one of
+          the formats described above
+
+       If omitted, pos_degminsec will be assumed.
+   * - vehicle.position_direction
+     - Current orientation (direction of travel) in degrees
+   * - vehicle.position_height
+     - Current altitude in m
+   * - vehicle.position_qual
+     - Number of satellites which your GPS receiver can see. However, your
+       receiver may not be using all of them for positioning due to low
+       signal etc...
+   * - vehicle.position_sats_used
+     - Number of satellites used
+   * - vehicle.position_speed
+     - Current speed in km/h
+   * - vehicle.position_time_iso8601
+     - Current GPS time (roughly the same as UTC, with a few seconds of
+       difference)
+   * - vehicle.position_time_iso8601[*string*]
+     - Current GPS time with formatting string: { iso8601 \| [ local; \|
+       *offset* ; ] *format* }
+
+       -  local; retrieves the timezone setting of the system
+       -  *offset* is a literal offset such as +02:00 (sign, hours, colon,
+          minutes)
+       -  *format* is a time format string which follows the syntax for the
+          C strftime function
+
+       Examples:
+
+       -  vehicle.position_time_iso8601[iso8601] --> Current GPS time
+          (default as without qualifier)
+       -  vehicle.position_time_iso8601[local;%Y-%m-%d%X] --> Current GPS
+          date and time at local timezone of the system (tested on WinCE), %X
+          gives time using the system's time format
+       -  vehicle.position_time_iso8601[iso8601] --> Current GPS time
+          (default as without qualifier)
+       -  vehicle.position_time_iso8601[+01:00;%X] --> time of the UTC+01:00
+          time zone
 
 Examples:
 
