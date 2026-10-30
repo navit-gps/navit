@@ -559,7 +559,7 @@ int destination_address(struct navit *nav) {
     gtk_widget_show_all(window2);
 
 #ifndef _WIN32
-    gtk_socket_steal(GTK_SOCKET(keyboard), spawn_xkbd("xkbd", "-geometry 200x100"));
+    gtk_socket_add_id(GTK_SOCKET(keyboard), spawn_xkbd("xkbd", "-geometry 200x100"));
 #endif
 
     country_attr = country_default();
