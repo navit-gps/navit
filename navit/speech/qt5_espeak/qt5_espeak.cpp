@@ -33,7 +33,11 @@ extern "C" {
 #include "speech.h"
 #include "util.h"
 }
-#include <espeak/speak_lib.h>
+#ifdef HAVE_ESPEAK_NG
+#    include <espeak-ng/speak_lib.h>
+#else
+#    include <espeak/speak_lib.h>
+#endif
 
 #include "Qt5EspeakAudioOut.h"
 
