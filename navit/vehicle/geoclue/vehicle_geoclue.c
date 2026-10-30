@@ -137,7 +137,13 @@ static void on_simple_ready(GObject *source_object, GAsyncResult *res, gpointer 
     client = gclue_simple_get_client(priv->simple);
     if (client) {
         g_object_ref(client);
-        dbg(lvl_debug, "Client object: %s\n", g_dbus_proxy_get_object_path(G_DBUS_PROXY(client)));
+
+        const gchar *object_path = g_dbus_proxy_get_object_path(G_DBUS_PROXY(client));
+        if (object_path == NULL || g_strcmp0(object_path, "") == 0 || object_path[0] != '/') {
+            dbg(lvl_error, "Invalid GeoClue DBus object path: %s", object_path ? object_path : "(null)");
+        } else {
+            dbg(lvl_debug, "Client object: %s\n", object_path);
+        }
 
         g_signal_connect(client, "notify::active", G_CALLBACK(on_client_active_notify), NULL);
     }
