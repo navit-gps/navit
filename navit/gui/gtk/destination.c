@@ -399,6 +399,39 @@ static void parse_xkbd_args(const char *cmd, char **argv) {
 
 int kbd_pid;
 
+/* Search PATH for prog (or use it directly if it already contains a '/') and
+   return the first executable, absolute match in out. Returns 1 on success. */
+static int resolve_xkbd_path(const char *prog, char *out, size_t outsz) {
+    if (strchr(prog, '/')) {
+        if (access(prog, X_OK) == 0 && strlen(prog) < outsz) {
+            strcpy(out, prog);
+            return 1;
+        }
+        return 0;
+    }
+    const char *path = getenv("PATH");
+    if (!path)
+        path = "/usr/bin:/bin";
+    size_t prog_len = strlen(prog);
+    const char *p = path;
+    while (*p) {
+        const char *end = strchr(p, ':');
+        size_t dir_len = end ? (size_t)(end - p) : strlen(p);
+        if (dir_len && dir_len + 1 + prog_len + 1 < outsz) {
+            size_t n = dir_len;
+            memcpy(out, p, n);
+            out[n] = '/';
+            memcpy(out + n + 1, prog, prog_len + 1);
+            if (access(out, X_OK) == 0)
+                return 1;
+        }
+        if (!end)
+            break;
+        p = end + 1;
+    }
+    return 0;
+}
+
 static int spawn_xkbd(char *xkbd_path, char *xkbd_str) {
 #ifdef _WIN32  // AF FIXME for WIN32
 #    ifndef F_SETFD
@@ -411,9 +444,19 @@ static int spawn_xkbd(char *xkbd_path, char *xkbd_str) {
     char c;
     int a = 0;
     size_t n;
+    char resolved[512];
 
     if (pipe(fd) < 0) {
         dbg(lvl_error, "Unable to create pipe (%s). Do not try to spawn keyboard.", strerror(errno));
+        return 0;
+    }
+    /* Resolve the keyboard to an absolute path before forking: execvp() would
+       search PATH for a bare name and could run an attacker-planted binary
+       instead of the intended keyboard (CWE-78). */
+    if (!resolve_xkbd_path(xkbd_path, resolved, sizeof(resolved))) {
+        dbg(lvl_error, "Keyboard %s not found, not spawning.", xkbd_path);
+        close(fd[0]);
+        close(fd[1]);
         return 0;
     }
     kbd_pid = fork();
@@ -424,14 +467,14 @@ static int spawn_xkbd(char *xkbd_path, char *xkbd_str) {
         close(fd[1]);
         if (fcntl(1, F_SETFD, 0))
             perror("fcntl");
-        xkbd_args[0] = (char *)xkbd_path;
+        xkbd_args[0] = resolved;
         xkbd_args[1] = "-xid";
         if (xkbd_str)
             parse_xkbd_args(xkbd_str, xkbd_args + 2);
         else
             xkbd_args[2] = NULL;
-        execvp(xkbd_path, xkbd_args);
-        perror(xkbd_path);
+        execv(resolved, xkbd_args);
+        perror(resolved);
         _exit(1);
     }
     close(fd[1]);
