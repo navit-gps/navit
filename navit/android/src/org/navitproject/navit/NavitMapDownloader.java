@@ -1053,7 +1053,7 @@ public class NavitMapDownloader extends Thread {
         long size = 0;
 
         for (int subMapIndex = 0; subMapIndex < osm_maps[mapId].mSubMaps.length; subMapIndex++) {
-            if (this.mGitHubMetadata != "")
+            if (gitHubMetadata != "")
                 size += getEstSizeBytes(mapId, subMapIndex, githubMetadata);
         }
         return size;
