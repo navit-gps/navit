@@ -884,7 +884,7 @@ public class NavitMapDownloader extends Thread {
             case "europe-netherlands-utrecht": return 215;
             case "europe-netherlands-zeeland": return 216;
             case "europe-netherlands-zuid-holland": return 217;
-            case "europe-norway ": return 218;
+            case "europe-norway": return 218;
             case "europe-poland-dolnoslaskie": return 219;
             case "europe-poland-kujawsko-pomorskie": return 220;
             case "europe-poland-lodzkie": return 221;
