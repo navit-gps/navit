@@ -1053,7 +1053,8 @@ public class NavitMapDownloader extends Thread {
         long size = 0;
 
         for (int subMapIndex = 0; subMapIndex < osm_maps[mapId].mSubMaps.length; subMapIndex++) {
-            size += getEstSizeBytes(mapId, subMapIndex, githubMetadata);
+            if (this.mGitHubMetadata != "")
+                size += getEstSizeBytes(mapId, subMapIndex, githubMetadata);
         }
         return size;
     }
@@ -1063,10 +1064,10 @@ public class NavitMapDownloader extends Thread {
         try {
 	        String date = getLatestDate(this.mGitHubMetadata);
 	    if (date != "") {
-                    url =
+                 url =
                         new URL("https://github.com/navit-gps/gh-actions-mapserver/releases/download/" + date + "/"
                                 + mMapValues.mSubMaps[subMapIndex] + "-" + date + ".bin");
-                }
+            }
         } catch (MalformedURLException e) {
             Log.e(TAG, "We failed to create a URL to " + mMapValues.mMapName);
             e.printStackTrace();
