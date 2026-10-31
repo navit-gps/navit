@@ -36,6 +36,11 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,8 +61,7 @@ public class NavitDownloadSelectMapActivity extends ExpandableListActivity {
     private static boolean sCurrentLocationKnown = false;
     private static final String TAG = "DownloadSelectMapAct";
 
-    private static String githubMetadata = "";
-
+    public static String githubMetadata = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
