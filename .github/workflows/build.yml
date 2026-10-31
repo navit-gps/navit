@@ -135,7 +135,7 @@ jobs:
           files: docs/
   build_sailfish:
     # FIXME: use a specific docker image, so we can build this at home
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: sanity_check
     steps:
       - uses: actions/checkout@v7
