@@ -1,0 +1,25 @@
+.wy-nav-content {
+    max-width: 92% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.wy-table-responsive {
+    overflow-x: visible !important;
+}
+
+.wy-table-responsive table {
+    width: 100% !important;
+}
+
+.wy-table-responsive table td,
+.wy-table-responsive table th {
+    white-space: normal !important;
+    word-break: break-word;
+}
+
+.wy-table-responsive table pre,
+.wy-table-responsive table code {
+    white-space: pre-wrap !important;
+    word-break: break-word;
+}

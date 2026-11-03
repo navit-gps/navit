@@ -3,13 +3,14 @@ OSD
 
 The On Screen Display (OSD) provides status information and controls
 blended directly onto the map. These can be implemented using the ``<osd
-... />`` tag inside navit.xml `Configuration <Configuration>`__.
+... />`` tag inside ``navit.xml`` (see the :doc:`configuration section
+</user/configuration/advanced>`).
 
 Examples
 ========
 
 To see example layouts for a variety of platforms and screen sizes, see
-`OSD_Layouts <OSD_Layouts>`__.
+:doc:`OSD layouts </user/configuration/OSD_Layouts>`.
 
 Enable/Disable
 ==============
@@ -82,7 +83,7 @@ Example 2:
 This will create an item of width 50% of the screen width and height 10%
 of the screen height from the top-left corner of the item.
 
-Example `Configuration <Configuration>`__ contents, based on osd items
+Example configuration contents, based on osd items
 mentioned so far:
 
 .. code:: xml
@@ -251,7 +252,7 @@ auxmap
 
 The auxmap creates an additional map on the screen.
 
-Example `Configuration <Configuration>`__ contents:
+Example configuration contents:
 
 .. code:: xml
 
@@ -266,7 +267,7 @@ button
 specified image is clickable; this is usually accompanied by a
 :ref:`command <osd_command>`.
 
-Example `Configuration <Configuration>`__ contents:
+Example configuration contents:
 
 .. code:: xml
 
@@ -381,7 +382,7 @@ layouts or for displaying status icons (which can be updated using a
 :ref:`cmd_interface <osd_cmd_interface>` control). It behaves like a
 :ref:`button <osd_button>` but without the ability to run a command on click.
 
-Example `Configuration <Configuration>`__ contents:
+Example configuration contents:
 
 .. code:: xml
 
@@ -411,13 +412,13 @@ further in the route :
 
    <osd x="0" y="120"  w="80" h="80" type="navigation_next_turn" level="1" />
 
-`WinCE <WinCE>`__ users require a slightly more verbose line:
+:doc:`WinCE </user/platforms/maintained/wince>` users require a slightly more verbose line:
 
 .. code:: xml
 
    <osd enabled="yes" type="navigation_next_turn" x="0" y="-75" icon_src="%s_wh_32_32.png" />
 
-`Android <Android>`__ users may need to explicitly specify the size of
+:doc:`Android </user/platforms/maintained/android>` users may need to explicitly specify the size of
 the images for this osd item.
 
 .. code:: xml
@@ -645,7 +646,7 @@ or (perhaps the easiest) directly from IGO8 files themselves.
 IGO8 Format
 ~~~~~~~~~~~
 
-An `IGO8 <IGO8>`__ file is a type of `csv <csv>`__. The format defines
+An IGO8 file is a type of csv. The format defines
 the latitude and longitude of a speed camera, the type of camera,
 speed-limit and direction in which the camera is facing.
 Country-specific IGO8 files can be downloaded from
@@ -792,15 +793,13 @@ enabled for each camera types. *flags* should be the sum of the required
 camera types' values from the table below. (Eg. to enable warnings for
 fixed, and section cams the value should be 9 (1 + 8) )
 
-================ ==
-CAM_FIXED        1
-CAM_TRAFFIC_LAMP 2
-CAM_RED          4
-CAM_SECTION      8
-CAM_MOBILE       16
-CAM_RAIL         32
-CAM_TRAFFIPAX    64
-================ ==
+-  ``CAM_FIXED``: 1
+-  ``CAM_TRAFFIC_LAMP``: 2
+-  ``CAM_RED``: 4
+-  ``CAM_SECTION``: 8
+-  ``CAM_MOBILE``: 16
+-  ``CAM_RAIL``: 32
+-  ``CAM_TRAFFIPAX``: 64
 
 .. _osd_speed_warner:
 
@@ -888,191 +887,122 @@ each item, in addition to aligning the text using the 'align' attribute.
 Placeholders are specified as **${section.attribute}**. Attributes
 which can be used in labels include:
 
-+----------------------------------+--------------------------------------------+
-| Attribute                        | Value                                      |
-+==================================+============================================+
-| navigation                       | Section containing routing                 |
-|                                  | information, available only when           |
-|                                  | routing                                    |
-+----------------------------------+--------------------------------------------+
-| navigation.item                  | Information related to the                 |
-|                                  | entire route                               |
-+----------------------------------+--------------------------------------------+
-| navigatio                        | Remaining distance to                      |
-| n.item.destination_length[named] | destination. Use                           |
-|                                  | navigatio                                  |
-|                                  | n.item.destination_length[value]           |
-|                                  | to get the bare value (without             |
-|                                  | units) or                                  |
-|                                  | navigati                                   |
-|                                  | on.item.destination_length[unit]           |
-|                                  | to get just the unit. Useful for           |
-|                                  | displaying the value and the               |
-|                                  | unit in two rows, or in                    |
-|                                  | different font sizes.                      |
-+----------------------------------+--------------------------------------------+
-| navigatio                        | Estimated time of arrival                  |
-| n.item.destination_time[arrival] |                                            |
-+----------------------------------+--------------------------------------------+
-| navigation.                      | Estimated remaining time                   |
-| item.destination_time[remaining] |                                            |
-+----------------------------------+--------------------------------------------+
-| navigation.item.street_name      | Name of the road which the                 |
-|                                  | vehicle is currently on (e.g.              |
-|                                  | Via Gallarate)                             |
-+----------------------------------+--------------------------------------------+
-| naviga                           | Number/reference of the road               |
-| tion.item.street_name_systematic | which the vehicle is currently             |
-|                                  | on, if available (e.g. SS33)               |
-+----------------------------------+--------------------------------------------+
-| navigation.item[1]               | Information related to the next            |
-|                                  | navigation item (from the next             |
-|                                  | maneuver to the one following              |
-|                                  | it)                                        |
-+----------------------------------+--------------------------------------------+
-| navigation.item[1].length[named] | Distance to next maneuver. Use             |
-|                                  | navigation.item[1].length[value]           |
-|                                  | and                                        |
-|                                  | navigation.item[1].length[unit]            |
-|                                  | in the same manner as for                  |
-|                                  | nav                                        |
-|                                  | igation.item.destination_length.           |
-+----------------------------------+--------------------------------------------+
-| navigation.item[1].street_name   | Name of the road following the             |
-|                                  | next maneuver (cf.                         |
-|                                  | navigation.item.street_name)               |
-+----------------------------------+--------------------------------------------+
-| navigatio                        | Name of the road following the             |
-| n.item[1].street_name_systematic | next maneuver (cf.                         |
-|                                  | navigat                                    |
-|                                  | ion.item.street_name_systematic)           |
-+----------------------------------+--------------------------------------------+
-| navigati                         | Sentence explaining the next               |
-| on.item[1].navigation_long_exact | maneuver (e.g. 'Turn left in 2.2           |
-|                                  | miles into Main Street')                   |
-+----------------------------------+--------------------------------------------+
-| navit                            |                                            |
-+----------------------------------+--------------------------------------------+
-| navit.messages                   |                                            |
-+----------------------------------+--------------------------------------------+
-| tracking                         | Section containing information             |
-|                                  | on current track, available                |
-|                                  | whenever valid GPS information             |
-|                                  | and corresponding map data is              |
-|                                  | available. The difference to               |
-|                                  | navigation is that tracking data           |
-|                                  | is also available when not                 |
-|                                  | routing. Ensure that                       |
-|                                  | tracking="1" is set in the tag             |
-|                                  | to use these attributes.                   |
-+----------------------------------+--------------------------------------------+
-| tracking.item                    | Information related to the road            |
-|                                  | the vehicle is currently                   |
-|                                  | traveling along                            |
-+----------------------------------+--------------------------------------------+
-| tracking.item.route_speed        | Speed limit on the road which              |
-|                                  | the vehicle is currently on                |
-+----------------------------------+--------------------------------------------+
-| tracking.item.street_name        | Name of the road which the                 |
-|                                  | vehicle is currently on (cf.               |
-|                                  | navigation.item.street_name)               |
-+----------------------------------+--------------------------------------------+
-| trac                             | Number/reference of the road               |
-| king.item.street_name_systematic | which the vehicle is currently             |
-|                                  | on (cf.                                    |
-|                                  | navigat                                    |
-|                                  | ion.item.street_name_systematic)           |
-+----------------------------------+--------------------------------------------+
-| vehicle                          | Section containing GPS                     |
-|                                  | information, available whenever            |
-|                                  | valid GPS information is                   |
-|                                  | available                                  |
-+----------------------------------+--------------------------------------------+
-| vehicle.position_coord_geo       | Current position. Use                      |
-|                                  | vehi                                       |
-|                                  | cle.position_coord_geo[*format*]           |
-|                                  | to control the output format of            |
-|                                  | the coordinates (works reliably            |
-|                                  | from onwards). Valid *format*              |
-|                                  | values are:                                |
-|                                  |                                            |
-|                                  | -  pos_deg: Latitude and                   |
-|                                  |    longitude in decimal degrees            |
-|                                  | -  pos_degmin: Latitude and                |
-|                                  |    longitude in degrees, minutes           |
-|                                  |    and fractions of minutes                |
-|                                  |    (similar to NMEA style)                 |
-|                                  | -  pos_degminsec: Latitude and             |
-|                                  |    longitude in degrees, minutes           |
-|                                  |    and seconds                             |
-|                                  | -  lat_deg, lat_degmin,                    |
-|                                  |    lat_degminsec: Only the                 |
-|                                  |    latitude in one of the                  |
-|                                  |    formats described above                 |
-|                                  | -  lng_deg, lng_degmin,                    |
-|                                  |    lng_degminsec: Only the                 |
-|                                  |    longitude in one of the                 |
-|                                  |    formats described above                 |
-|                                  |                                            |
-|                                  | If omitted, pos_degminsec will             |
-|                                  | be assumed.                                |
-+----------------------------------+--------------------------------------------+
-| vehicle.position_direction       | Current orientation (direction             |
-|                                  | of travel) in degrees                      |
-+----------------------------------+--------------------------------------------+
-| vehicle.position_height          | Current altitude in m                      |
-+----------------------------------+--------------------------------------------+
-| vehicle.position_qual            | Number of satellites which your            |
-|                                  | GPS receiver can see. However,             |
-|                                  | your receiver may not be using             |
-|                                  | all of them for positioning due            |
-|                                  | to low signal etc...                       |
-+----------------------------------+--------------------------------------------+
-| vehicle.position_sats_used       | Number of satellites used                  |
-+----------------------------------+--------------------------------------------+
-| vehicle.position_speed           | Current speed in km/h                      |
-+----------------------------------+--------------------------------------------+
-| vehicle.position_time_iso8601    | Current GPS time (roughly the              |
-|                                  | same as UTC, with a few seconds            |
-|                                  | of difference)                             |
-+----------------------------------+--------------------------------------------+
-| vehicle                          | Current GPS time with formatting           |
-| .position_time_iso8601[*string*] | string: { iso8601 \| [ local; \|           |
-|                                  | *offset* ; ] *format* }                    |
-|                                  |                                            |
-|                                  | -  local; retrieves the timezone           |
-|                                  |    setting of the system                   |
-|                                  | -  *offset* is a literal offset            |
-|                                  |    such as +02:00 (sign, hours,            |
-|                                  |    colon, minutes)                         |
-|                                  | -  *format* is a time format               |
-|                                  |    string which follows the                |
-|                                  |    syntax for the C strftime               |
-|                                  |    function                                |
-|                                  |                                            |
-|                                  | Examples:                                  |
-|                                  |                                            |
-|                                  | -  vehicl                                  |
-|                                  |    e.position_tim                          |
-|                                  |    e_iso8601[iso8601]                      |
-|                                  |    --> Current GPS time (default           |
-|                                  |    as without qualifier)                   |
-|                                  | -  vehicle.                                |
-|                                  |    position_time_iso8601                   |
-|                                  |    [local;%Y-%m-%d%X]                      |
-|                                  |    --> Current GPS date and                |
-|                                  |    time at local timezone of the           |
-|                                  |    system (tested on WinCE), %X            |
-|                                  |    gives time using the system's           |
-|                                  |    time format                             |
-|                                  | -  vehicl                                  |
-|                                  |    e.position_time_iso8601[iso8601]        |
-|                                  |    --> Current GPS time (default           |
-|                                  |    as without qualifier)                   |
-|                                  | -  vehicle.position_time_iso8601[+01:00;%X]|
-|                                  |    --> time of the UTC+01:00               |
-|                                  |    time zone                               |
-+----------------------------------+--------------------------------------------+
+.. list-table::
+   :widths: 40 60
+   :header-rows: 1
+
+   * - Attribute
+     - Value
+   * - navigation
+     - Section containing routing information, available only when routing
+   * - navigation.item
+     - Information related to the entire route
+   * - navigation.item.destination_length[named]
+     - Remaining distance to destination. Use
+       navigation.item.destination_length[value] to get the bare value
+       (without units) or navigation.item.destination_length[unit] to get
+       just the unit. Useful for displaying the value and the unit in two
+       rows, or in different font sizes.
+   * - navigation.item.destination_time[arrival]
+     - Estimated time of arrival
+   * - navigation.item.destination_time[remaining]
+     - Estimated remaining time
+   * - navigation.item.street_name
+     - Name of the road which the vehicle is currently on (e.g. Via Gallarate)
+   * - navigation.item.street_name_systematic
+     - Number/reference of the road which the vehicle is currently on, if
+       available (e.g. SS33)
+   * - navigation.item[1]
+     - Information related to the next navigation item (from the next
+       maneuver to the one following it)
+   * - navigation.item[1].length[named]
+     - Distance to next maneuver. Use navigation.item[1].length[value] and
+       navigation.item[1].length[unit] in the same manner as for
+       navigation.item.destination_length.
+   * - navigation.item[1].street_name
+     - Name of the road following the next maneuver (cf.
+       navigation.item.street_name)
+   * - navigation.item[1].street_name_systematic
+     - Name of the road following the next maneuver (cf.
+       navigation.item.street_name_systematic)
+   * - navigation.item[1].navigation_long_exact
+     - Sentence explaining the next maneuver (e.g. 'Turn left in 2.2 miles
+       into Main Street')
+   * - navit
+     -
+   * - navit.messages
+     -
+   * - tracking
+     - Section containing information on current track, available whenever
+       valid GPS information and corresponding map data is available. The
+       difference to navigation is that tracking data is also available when
+       not routing. Ensure that tracking="1" is set in the tag to use these
+       attributes.
+   * - tracking.item
+     - Information related to the road the vehicle is currently traveling along
+   * - tracking.item.route_speed
+     - Speed limit on the road which the vehicle is currently on
+   * - tracking.item.street_name
+     - Name of the road which the vehicle is currently on (cf.
+       navigation.item.street_name)
+   * - tracking.item.street_name_systematic
+     - Number/reference of the road which the vehicle is currently on (cf.
+       navigation.item.street_name_systematic)
+   * - vehicle
+     - Section containing GPS information, available whenever valid GPS
+       information is available
+   * - vehicle.position_coord_geo
+     - Current position. Use vehicle.position_coord_geo[*format*] to control
+       the output format of the coordinates (works reliably from onwards).
+       Valid *format* values are:
+
+       -  pos_deg: Latitude and longitude in decimal degrees
+       -  pos_degmin: Latitude and longitude in degrees, minutes and
+          fractions of minutes (similar to NMEA style)
+       -  pos_degminsec: Latitude and longitude in degrees, minutes and
+          seconds
+       -  lat_deg, lat_degmin, lat_degminsec: Only the latitude in one of
+          the formats described above
+       -  lng_deg, lng_degmin, lng_degminsec: Only the longitude in one of
+          the formats described above
+
+       If omitted, pos_degminsec will be assumed.
+   * - vehicle.position_direction
+     - Current orientation (direction of travel) in degrees
+   * - vehicle.position_height
+     - Current altitude in m
+   * - vehicle.position_qual
+     - Number of satellites which your GPS receiver can see. However, your
+       receiver may not be using all of them for positioning due to low
+       signal etc...
+   * - vehicle.position_sats_used
+     - Number of satellites used
+   * - vehicle.position_speed
+     - Current speed in km/h
+   * - vehicle.position_time_iso8601
+     - Current GPS time (roughly the same as UTC, with a few seconds of
+       difference)
+   * - vehicle.position_time_iso8601[*string*]
+     - Current GPS time with formatting string: { iso8601 \| [ local; \|
+       *offset* ; ] *format* }
+
+       -  local; retrieves the timezone setting of the system
+       -  *offset* is a literal offset such as +02:00 (sign, hours, colon,
+          minutes)
+       -  *format* is a time format string which follows the syntax for the
+          C strftime function
+
+       Examples:
+
+       -  vehicle.position_time_iso8601[iso8601] --> Current GPS time
+          (default as without qualifier)
+       -  vehicle.position_time_iso8601[local;%Y-%m-%d%X] --> Current GPS
+          date and time at local timezone of the system (tested on WinCE), %X
+          gives time using the system's time format
+       -  vehicle.position_time_iso8601[iso8601] --> Current GPS time
+          (default as without qualifier)
+       -  vehicle.position_time_iso8601[+01:00;%X] --> time of the UTC+01:00
+          time zone
 
 Examples:
 
@@ -1384,7 +1314,7 @@ An example implementation is shown below.
    label="${navigation.item.destination_time[arrival]}" and
    label="${navigation.item.destination_length[named]}"
 
-More osd layouts can be found at `OSD_Layouts <OSD_Layouts>`__.
+More osd layouts can be found at :doc:`OSD_Layouts </user/configuration/OSD_Layouts>`.
 
 .. _toggle_daynight_layout:
 
@@ -1800,175 +1730,128 @@ function name as shown below. If you want to call them from elsewhere
 (e.g. from OSD items), prefix them with **gui**. (e.g.
 **gui.menu()**) The following are available (from the Navit source code) :
 
-+----------------------------+-----------------------------------+
-| Command                    | Meaning                           |
-+============================+===================================+
-| **abort_navigation()**     | Cancels navigation: The route is  |
-|                            | cleared and Navit switches to     |
-|                            | tracking mode.                    |
-+----------------------------+-----------------------------------+
-| **about()**                | Displays the About screen.        |
-+----------------------------+-----------------------------------+
-| **back()**                 | FIXME: description to be          |
-|                            | completed.                        |
-+----------------------------+-----------------------------------+
-| **back_to_map()**          | Leaves the menu and returns to    |
-|                            | map view.                         |
-+----------------------------+-----------------------------------+
-| **bookmarks()**            | Shows bookmarks.                  |
-+----------------------------+-----------------------------------+
-| **get_data()**             | FIXME: description to be          |
-|                            | completed                         |
-+----------------------------+-----------------------------------+
-| **locale()**               | Shows locale information.         |
-+----------------------------+-----------------------------------+
-| **log**                    | FIXME: description to be          |
-|                            | completed                         |
-+----------------------------+-----------------------------------+
-| **menu()**                 | Brings up the menu (used as       |
-|                            | **gui.menu()** in OSD items       |
-|                            | in order to have a dedicated      |
-|                            | menu button).                     |
-+----------------------------+-----------------------------------+
-| **position(**              | Presents possible operations on   |
-| position, text, flags **)**| a position (set as current        |
-|                            | location, set as destination      |
-|                            | etc.). ``position`` is a          |
-|                            | coordinate-type attribute (e.g.   |
-|                            | **position_coord_geo**).          |
-+----------------------------+-----------------------------------+
-| **quit()**                 | Closes Navit.                     |
-+----------------------------+-----------------------------------+
-| **refresh()**              | Redraws the currently active      |
-|                            | menu. Typically used by menu      |
-|                            | items which change parameters     |
-|                            | used in ``cond``\ s in order to   |
-|                            | reflect those changes.            |
-+----------------------------+-----------------------------------+
-| **route_description()**    | Shows a turn-by-turn description  |
-|                            | of the active route when in       |
-|                            | navigation mode.                  |
-+----------------------------+-----------------------------------+
-| **route_height_profile()** | Shows a height profile of the     |
-|                            | active route when in navigation   |
-|                            | mode.                             |
-+----------------------------+-----------------------------------+
-| **set(**                   | Save an option to be recovered    |
-| pattern, args              | next time navit is opened.        |
-| **)**                      | Pattern is used to search the     |
-|                            | old value to delete it, and also  |
-|                            | it's used to write the new        |
-|                            | value. The '*' character inside   |
-|                            | pattern will match with any       |
-|                            | string when searching for the     |
-|                            | old value, and it will also be    |
-|                            | substituted by the values from    |
-|                            | 'args' when writing the new       |
-|                            | value. For example:               |
-|                            |                                   |
-|                            | - set("navit.pitch=*", 60) will   |
-|                            |   remove the previous saved value |
-|                            |   of navit.pitch and will save the|
-|                            |   new one as navit.pitch=60.      |
-|                            |                                   |
-|                            | - set("navit.layout.layer[@name=  |
-|                            |   =\"*\"].active=*","POI symbols" |
-|                            |   , 1)                            |
-|                            |   will set the new value as       |
-|                            |   navit.layout.layer[@name=="POI s|
-|                            |   ymbols"].active=1               |
-+----------------------------+-----------------------------------+
-| **img(** class,            | Generate and print the code of a  |
-| src, text,                 | button with the selected image,   |
-| onclick_pre,               | text and actions                  |
-| onclick_set_pattern,       |                                   |
-| [onclick_set_replaces...,] | - class: the class to style the   |
-| onclick_post **)**         |   image (for example, "centry"    |
-|                            |   class is used for lists of      |
-|                            |   options, once per line, with a  |
-|                            |   small image at the beginning of |
-|                            |   the line)                       |
-|                            |                                   |
-|                            | - src: the image source           |
-|                            |                                   |
-|                            | - text: the text                  |
-|                            |                                   |
-|                            | - onclick_pre: commands to be     |
-|                            |   executed first (this must be a  |
-|                            |   string just like a normal       |
-|                            |   onclick command into an tag)    |
-|                            |                                   |
-|                            | - onclick_set_pattern: after      |
-|                            |   onclick_pre action, a 'set'     |
-|                            |   command is executed ('set' is   |
-|                            |   explained above), and this      |
-|                            |   string will be passed to this   |
-|                            |   'set' command as first argument |
-|                            |                                   |
-|                            | - onclick_set_replaces: the rest  |
-|                            |   of the arguments for 'set'      |
-|                            |   action (the replacement         |
-|                            |   strings). There must be as much |
-|                            |   arguments as replacements to be |
-|                            |   done in onclick_set_pattern.    |
-|                            |                                   |
-|                            | - onclick_post: after the 'set'   |
-|                            |   command is executed, one or more|
-|                            |   additional commands are executed|
-|                            |                                   |
-|                            | EXAMPLE:                          |
-|                            |                                   |
-|                            | .. raw:: html                     |
-|                            |                                   |
-|                            |    <script>                       |
-|                            |                                   |
-|                            | img("centry",                     |
-|                            | navit.waypoint_flag ?             |
-|                            | "gui_active" : "gui_inactive",    |
-|                            | "Activate waypoints", "",         |
-|                            | "navit.waypoints_flag=%{d}*",     |
-|                            | !navit.waypoints_flag,            |
-|                            | "refresh();");                    |
-|                            |                                   |
-|                            | .. raw:: html                     |
-|                            |                                   |
-|                            |    </script>                      |
-|                            |                                   |
-|                            | In this example, gui_active and   |
-|                            | gui_inactive images are used to   |
-|                            | indicate if the option is         |
-|                            | enabled or not. No onclick_pre    |
-|                            | command is executed, set is used  |
-|                            | to save user choice and finally   |
-|                            | refresh command is executed.      |
-+----------------------------+-----------------------------------+
-| **setting_layout()**       | Presents a selection of           |
-|                            | available screen layouts.         |
-+----------------------------+-----------------------------------+
-| **setting_maps()**         | Presents a dialog to switch       |
-|                            | between available mapsets.        |
-+----------------------------+-----------------------------------+
-| **setting_rules()**        | Presents a dialog for setting     |
-|                            | various internal options.         |
-+----------------------------+-----------------------------------+
-| **setting_vehicle()**      | Presents a dialog for selecting   |
-|                            | the active vehicle.               |
-+----------------------------+-----------------------------------+
-| **town()**                 | Presents a dialog for selecting   |
-|                            | an address, starting with a       |
-|                            | town.                             |
-+----------------------------+-----------------------------------+
-| **write(**                 | Writes an attribute. Used by the  |
-| attribute                  | GUI menu in conjunction with '''  |
-| **)**                      |                                   |
-|                            |                                   |
-|                            | .. raw:: html                     |
-|                            |                                   |
-|                            |    <script>                       |
-|                            |                                   |
-|                            | ''' to display the content of an  |
-|                            | attribute in a menu item.         |
-+----------------------------+-----------------------------------+
+.. list-table::
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Command
+     - Meaning
+   * - **abort_navigation()**
+     - Cancels navigation: The route is cleared and Navit switches to
+       tracking mode.
+   * - **about()**
+     - Displays the About screen.
+   * - **back()**
+     - FIXME: description to be completed.
+   * - **back_to_map()**
+     - Leaves the menu and returns to map view.
+   * - **bookmarks()**
+     - Shows bookmarks.
+   * - **get_data()**
+     - FIXME: description to be completed
+   * - **locale()**
+     - Shows locale information.
+   * - **log**
+     - FIXME: description to be completed
+   * - **menu()**
+     - Brings up the menu (used as **gui.menu()** in OSD items in order to
+       have a dedicated menu button).
+   * - **position(**
+       position, text, flags **)**
+     - Presents possible operations on a position (set as current location,
+       set as destination etc.). ``position`` is a coordinate-type attribute
+       (e.g. **position_coord_geo**).
+   * - **quit()**
+     - Closes Navit.
+   * - **refresh()**
+     - Redraws the currently active menu. Typically used by menu items which
+       change parameters used in ``cond``\ s in order to reflect those
+       changes.
+   * - **route_description()**
+     - Shows a turn-by-turn description of the active route when in
+       navigation mode.
+   * - **route_height_profile()**
+     - Shows a height profile of the active route when in navigation mode.
+   * - **set(**
+       pattern, args
+       **)**
+     - Save an option to be recovered next time navit is opened. Pattern is
+       used to search the old value to delete it, and also it's used to write
+       the new value. The '*' character inside pattern will match with any
+       string when searching for the old value, and it will also be
+       substituted by the values from 'args' when writing the new value. For
+       example:
+
+       -  set("navit.pitch=*", 60) will remove the previous saved value of
+          navit.pitch and will save the new one as navit.pitch=60.
+
+       -  set("navit.layout.layer[@name==\"*\"].active=*","POI symbols", 1)
+          will set the new value as
+          navit.layout.layer[@name=="POI symbols"].active=1
+   * - **img(** class,
+       src, text,
+       onclick_pre,
+       onclick_set_pattern,
+       [onclick_set_replaces...,]
+       onclick_post **)**
+     - Generate and print the code of a button with the selected image, text
+       and actions
+
+       -  class: the class to style the image (for example, "centry" class is
+          used for lists of options, once per line, with a small image at the
+          beginning of the line)
+
+       -  src: the image source
+
+       -  text: the text
+
+       -  onclick_pre: commands to be executed first (this must be a string
+          just like a normal onclick command into an tag)
+
+       -  onclick_set_pattern: after onclick_pre action, a 'set' command is
+          executed ('set' is explained above), and this string will be passed
+          to this 'set' command as first argument
+
+       -  onclick_set_replaces: the rest of the arguments for 'set' action
+          (the replacement strings). There must be as much arguments as
+          replacements to be done in onclick_set_pattern.
+
+       -  onclick_post: after the 'set' command is executed, one or more
+          additional commands are executed
+
+       EXAMPLE:
+
+       ::
+
+          img("centry",
+          navit.waypoint_flag ?
+          "gui_active" :
+          "gui_inactive",
+          "Activate waypoints",
+          "",
+          "navit.waypoints_flag=%{d}*",
+          !navit.waypoints_flag,
+          "refresh();");
+
+       In this example, gui_active and gui_inactive images are used to
+       indicate if the option is enabled or not. No onclick_pre command is
+       executed, set is used to save user choice and finally refresh command
+       is executed.
+   * - **setting_layout()**
+     - Presents a selection of available screen layouts.
+   * - **setting_maps()**
+     - Presents a dialog to switch between available mapsets.
+   * - **setting_rules()**
+     - Presents a dialog for setting various internal options.
+   * - **setting_vehicle()**
+     - Presents a dialog for selecting the active vehicle.
+   * - **town()**
+     - Presents a dialog for selecting an address, starting with a town.
+   * - **write(**
+       attribute
+       **)**
+     - Writes an attribute. Used by the GUI menu in conjunction with
+       ``<script>`` to display the content of an attribute in a menu item.
 
 .. _osd_attributes:
 
@@ -1987,18 +1870,20 @@ GUI Attributes
 These have to be prefixed with **gui.** when used in an OSD item. In
 menu items they can be used directly.
 
-+---------------+------------------------------------------------+
-| Attribute     | Meaning                                        |
-+===============+================================================+
-| **flags**     | GUI flags. FIXME: complete description         |
-|               |                                                |
-|               | -  **2** (if set, the menu should offer Show   |
-|               |    Map)                                        |
-+---------------+------------------------------------------------+
-| **fullscreen**| Nonzero if full-screen mode is active, zero    |
-|               | otherwise. Use **fullscreen=!fullscreen**      |
-|               | to toggle between window and fullscreen mode.  |
-+---------------+------------------------------------------------+
+.. list-table::
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Attribute
+     - Meaning
+   * - **flags**
+     - GUI flags. FIXME: complete description
+
+       -  **2** (if set, the menu should offer Show Map)
+   * - **fullscreen**
+     - Nonzero if full-screen mode is active, zero otherwise. Use
+       **fullscreen=!fullscreen** to toggle between window and fullscreen
+       mode.
 
 .. _navit_attributes:
 
@@ -2009,122 +1894,107 @@ These can be used as shown below in OSD items. If you want to use them
 elsewhere (e.g. in internal GUI menu items), prefix them with
 **navit.** (e.g. **navit.route.route_status**):
 
-+--------------------------+------------------------------------------+
-| Attribute                | Description                              |
-+==========================+==========================================+
-| **layout_name**          | Change the map `layout <layout>`__       |
-|                          | and/or cursor configuration. The         |
-|                          | following command changes the layout     |
-|                          | to Car-dark.                             |
-|                          |                                          |
-|                          | .. code:: xml                            |
-|                          |                                          |
-|                          |    <osd enabled="yes"                    |
-|                          |    type="button"                         |
-|                          |    src="gui_display_48_48.png"           |
-|                          |    command="layout_name='Car-dark'       |
-|                          |    />                                    |
-+--------------------------+------------------------------------------+
-| **route.route_status**   | Flags for the route status. See also     |
-|                          | route.h (enum route_status):             |
-|                          |                                          |
-|                          | +-------------------------+-------+      |
-|                          | | Const                   | Value |      |
-|                          | +=========================+=======+      |
-|                          | | rout                    | 0     |      |
-|                          | | e_status_no_destination |       |      |
-|                          | +-------------------------+-------+      |
-|                          | | route                   | 1     |      |
-|                          | | _status_destination_set |       |      |
-|                          | +-------------------------+-------+      |
-|                          | | route_status_not_found  | 1/2   |      |
-|                          | +-------------------------+-------+      |
-|                          | | rou                     | 1/4   |      |
-|                          | | te_status_building_path |       |      |
-|                          | +-------------------------+-------+      |
-|                          | | rout                    | 1/4/8 |      |
-|                          | | e_status_building_graph |       |      |
-|                          | +-------------------------+-------+      |
-|                          | | rou                     | 1/16  |      |
-|                          | | te_status_path_done_new |       |      |
-|                          | +-------------------------+-------+      |
-|                          | | route_statu             | 1/32  |      |
-|                          | | s_path_done_incremental |       |      |
-|                          | +-------------------------+-------+      |
-|                          | |                         |       |      |
-|                          | +-------------------------+-------+      |
-+--------------------------+------------------------------------------+
-| **osd_configuration**    | Set the osd_configuration flags for      |
-|                          | navit. With the command                  |
-|                          | osd_configuration=2 all osds where the   |
-|                          | condition (osd_configuration & 2) != 0   |
-|                          | is true will get visible, all others     |
-|                          | non-visible.                             |
-+--------------------------+------------------------------------------+
-| **orientation**          | Use this attribute to switch between a   |
-|                          | north-oriented map, or a map which is    |
-|                          | oriented in the direction of vehicle     |
-|                          | travel (same as "Northing" in the        |
-|                          | menu). This example toggles between a    |
-|                          | northing and vehicle oriented map.       |
-|                          |                                          |
-|                          | ``comma                                  |
-|                          | nd="orientation=orientation==0?-1:0"``   |
-+--------------------------+------------------------------------------+
-| **pitch**                | Use this attribute to vary the pitch     |
-|                          | of view (i.e. switch between 2D and 3D   |
-|                          | view). The following example toggles     |
-|                          | between 2D view and 3D view angled at    |
-|                          | 20 degrees.                              |
-|                          |                                          |
-|                          | ``command="pitch=pitch==0?20:0"``        |
-+--------------------------+------------------------------------------+
-| **speech.active**        | The following example toggles speech     |
-|                          | enabled/disabled.                        |
-|                          |                                          |
-|                          | ``co                                     |
-|                          | mmand="speech.active=!speech.active"``   |
-+--------------------------+------------------------------------------+
-| **zoom**                 | Use this attribute to vary the zoom      |
-|                          | level. The following example sets the    |
-|                          | zoom to level 15.                        |
-|                          |                                          |
-|                          | ``command="zoom=15"``                    |
-|                          |                                          |
-|                          | The following example toggles between    |
-|                          | zoom level 100 and zoom level 15.        |
-|                          |                                          |
-|                          | ``command="zoom=zoom==15?100:15"``       |
-+--------------------------+------------------------------------------+
-| **follow**               | Use this attribute to change the         |
-|                          | number of gps updates to wait before     |
-|                          | map is refreshed. A value of zero        |
-|                          | means vehicle will leave the edge of     |
-|                          | the map before the map is refreshed.     |
-|                          |                                          |
-|                          | ``command="follow=follow>1?1:10000"``    |
-+--------------------------+------------------------------------------+
-| **timeout**              | When the user scrolls the map, it        |
-|                          | stays there. After ``timeout`` number    |
-|                          | of GPS updates the map jumps back to     |
-|                          | the current location of the active       |
-|                          | vehicle.                                 |
-|                          |                                          |
-|                          | ``command="timeout=8"``                  |
-+--------------------------+------------------------------------------+
-| **follow_cursor**        | Use to set map followmode, follow=1      |
-|                          | means autocentering. Example will        |
-|                          | switch between autofollow on and off     |
-|                          |                                          |
-|                          | ::                                       |
-|                          |                                          |
-|                          |    <source lang="xml">                   |
-|                          |    <o                                    |
-|                          |    sd type="button" src="/sdcard/navit/to|
-|                          |    gglefollow.png" command="follow_cursor|
-|                          |    =follow_cursor==0?1:0" x="-64" y="0"/>|
-|                          |    </source>                             |
-+--------------------------+------------------------------------------+
+.. list-table::
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Attribute
+     - Description
+   * - **layout_name**
+     - Change the map :doc:`layout <Layout>`
+       and/or cursor configuration. The
+       following command changes the layout
+       to Car-dark.
+
+       .. code:: xml
+
+          <osd enabled="yes"
+          type="button"
+          src="gui_display_48_48.png"
+          command="layout_name='Car-dark'
+          />
+   * - **route.route_status**
+     - Flags for the route status. See also
+       route.h (enum route_status):
+
+       -  route_status_no_destination: 0
+       -  route_status_destination_set: 1
+       -  route_status_not_found: 1/2
+       -  route_status_Building_path: 1/4
+       -  route_status_building_graph: 1/4/8
+       -  route_status_path_done_new: 1/16
+       -  route_status_path_done_incremental: 1/32
+   * - **osd_configuration**
+     - Set the osd_configuration flags for
+       navit. With the command
+       osd_configuration=2 all osds where the
+       condition (osd_configuration & 2) != 0
+       is true will get visible, all others
+       non-visible.
+   * - **orientation**
+     - Use this attribute to switch between a
+       north-oriented map, or a map which is
+       oriented in the direction of vehicle
+       travel (same as "Northing" in the
+       menu). This example toggles between a
+       northing and vehicle oriented map.
+
+       ``comma
+       nd="orientation=orientation==0?-1:0"``
+   * - **pitch**
+     - Use this attribute to vary the pitch
+       of view (i.e. switch between 2D and 3D
+       view). The following example toggles
+       between 2D view and 3D view angled at
+       20 degrees.
+
+       ``command="pitch=pitch==0?20:0"``
+   * - **speech.active**
+     - The following example toggles speech
+       enabled/disabled.
+
+       ``co
+       mmand="speech.active=!speech.active"``
+   * - **zoom**
+     - Use this attribute to vary the zoom
+       level. The following example sets the
+       zoom to level 15.
+
+       ``command="zoom=15"``
+
+       The following example toggles between
+       zoom level 100 and zoom level 15.
+
+       ``command="zoom=zoom==15?100:15"``
+   * - **follow**
+     - Use this attribute to change the
+       number of gps updates to wait before
+       map is refreshed. A value of zero
+       means vehicle will leave the edge of
+       the map before the map is refreshed.
+
+       ``command="follow=follow>1?1:10000"``
+   * - **timeout**
+     - When the user scrolls the map, it
+       stays there. After ``timeout`` number
+       of GPS updates the map jumps back to
+       the current location of the active
+       vehicle.
+
+       ``command="timeout=8"``
+   * - **follow_cursor**
+     - Use to set map followmode, follow=1
+       means autocentering. Example will
+       switch between autofollow on and off
+
+       ::
+
+          <source lang="xml">
+          <o
+          sd type="button" src="/sdcard/navit/to
+          gglefollow.png" command="follow_cursor
+          =follow_cursor==0?1:0" x="-64" y="0"/>
+          </source>
 
 .. |osd-button.png| image:: osd-button.png
 .. |osd-compass.png| image:: osd-compass.png
