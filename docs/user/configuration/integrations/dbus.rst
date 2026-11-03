@@ -161,301 +161,197 @@ where ``Proj`` must be ``geo``. For example:
 
 ``geo: 24.0 65.0``
 
-draw
-~~~~
-
-**Path:** ``.navit``
-
-**Arguments:** *none*
-
-**Return:** *none*
-
-**Description:** Forces a redraw of the current view of the map.
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.navit.draw
-
-add_message
-~~~~~~~~~~~
-
-**Path:** ``.navit``
-
-**Arguments:** string: "message"
-
-**Return:** *none*
-
-**Description:** FIXME. Adds a message to the messages label.
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.navit.add_message string:"My Message"
-
-set_center_by_string
-~~~~~~~~~~~~~~~~~~~~
-
-**Path:** ``.navit``
-
-**Arguments:** string: ``coordinates``
-
-**Return:** *none*
-
-**Description:** Centres the map over the specified position.
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.navit.set_center_by_string string:"geo: 24.0 65.0"
-
-set_center
-~~~~~~~~~~
-
-**Path:** ``.navit``
-
-**Arguments:** integer: ``projection`` string: ``coordinates``
-
-**Return:** *none*
-
-**Description:** Centres the map over the specified position.
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.navit.set_center int32:1 string:"geo: 24.0 65.0"
-   org.navit_project.navit.navit.set_center int32:1 int32:0x138a4a int32:0x5d773f
-
-set_center_screen
-~~~~~~~~~~~~~~~~~
-
-**Path:** ``.navit``
-
-**Arguments:** integer: ``pixel_x`` integer: ``pixel_y``
-
-**Return:** *none*
-
-**Description:** Centers the map to a specific position on the screen.
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.navit.set_center_screen int32:200 int32:400
-
-set_layout
-~~~~~~~~~~
-
-**Path:** ``.navit``
-
-**Arguments:** string: ``layoutname``
-
-**Return:** *none*
-
-**Description:** Changes the active map layout.
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.navit.set_layout string:"car-dark"
-
-zoom
-~~~~
-
-**Path:** ``.navit``
-
-**Arguments:** integer: ``factor`` (integer: ``pixel_x`` integer: ``pixel_y``)
-
-**Return:** *none*
-
-**Description:** Zooms into the map (positive ``factor``) or out of the
-map (negative ``factor``) by the factor specified. The factor must be
-integers greater than 1 (zoom in) or less than -1 (zoom out).
-Optionally, a screen position can be specified in ``pixel_x`` and
-``pixel_y`` and the function will zoom into that particular position.
-In order to zoom to a specific zoom-level, use the ``set_attr`` method.
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.navit.zoom int32:2
-
-.. code:: bash
-
-   org.navit_project.navit.navit.zoom int32:6 int32:200 int32:400
-
-block
-~~~~~
-
-**Path:** ``.navit``
-
-**Arguments:** integer: ``mode``
-
-**Return:** *none*
-
-**Description:** FIXME.
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.navit.block int32:1
-
-set_position
-~~~~~~~~~~~~
-
-**Path:** ``.navit``
-
-**Arguments:**
-
--  string: ``coordinates``
--  integer: ``projection`` string: ``coordinates``
--  integer: ``projection`` integer: ``longitude`` integer: ``latitude``
-
-**Return:** *none*
-
-**Description:** Sets the current position (useful if no gps position
-is available).
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.navit.set_position string:"geo: 24.0 65.0"
-
-.. code:: bash
-
-   org.navit_project.navit.navit.set_position int32:1 string:"geo: 24.0 65.0"
-
-.. code:: bash
-
-   org.navit_project.navit.navit.set_position int32:1 int32:0x138a4a int32:0x5d773f
-
-set_destination
-~~~~~~~~~~~~~~~
-
-**Path:** ``.navit``
-
-**Arguments:**
-
--  string: ``coordinates`` string:"comment"
--  integer: ``projection`` string: ``coordinates`` string:"comment"
--  integer: ``projection`` integer: ``longitude`` integer: ``latitude`` string:"comment"
-
-**Return:** *none*
-
-**Description:** Sets the destination for routing.
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.navit.set_destination string:"geo: 24.0 65.0"
-
-.. code:: bash
-
-   org.navit_project.navit.navit.set_destination int32:1 string:"geo: 24.0 65.0"
-
-.. code:: bash
-
-   org.navit_project.navit.navit.set_destination int32:1 int32:0x138a4a int32:0x5d773f
-
-clear_destination
-~~~~~~~~~~~~~~~~~
-
-**Path:** ``.navit``
-
-**Arguments:** *none*
-
-**Return:** *none*
-
-**Description:** Removes the destination and stops routing.
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.navit.clear_destination
-
-get_attr
-~~~~~~~~
-
-**Path:** ``.navit``
-
-**Arguments:** string: ``attribute``
-
-**Return:** string: ``attribute`` variant: ``value``
-
-**Description:** Gets the specified attribute value. The attribute can
-be anything from attr_def.h.
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.navit.get_attr string:"zoom"
-
-returns:
-
-.. code:: bash
-
-   string "zoom"
-   variant    int32 10
-
-.. code:: bash
-
-   org.navit_project.navit.navit.get_attr string:"orientation"
-
-returns:
-
-.. code:: bash
-
-   string "orientation"
-   variant    int32 1
-
-set_attr
-~~~~~~~~
-
-**Path:** ``.navit``
-
-**Arguments:** string: ``attribute`` variant: ``value``
-
-**Return:** *none*
-
-**Description:** Sets the specified attribute value. The attribute can
-be anything from attr_def.h. As shown in the example below, this can be
-useful to zoom to a specific zoom level, instead of just zooming by a
-factor as with the ``zoom`` method.
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.navit.set_attr string:"zoom" variant:int32:500
-
-export_as_gpx
-~~~~~~~~~~~~~
-
-**Path:** ``.navit``
-
-**Arguments:** string: ``filename``
-
-**Return:** *none*
-
-**Description:** Dump the current route, if any, into the file specified
-in the argument in the GPX format.
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.navit.export_as_gpx string:"/tmp/route.gpx"
+.. list-table:: org.navit_project.navit.navit methods
+   :widths: 12 8 18 10 25 27
+   :header-rows: 1
+
+   * - Method
+     - Path
+     - Arguments
+     - Return
+     - Description
+     - Example
+   * - .. _dbus_method_draw:
+       **draw**
+     - ``.navit``
+     - *none*
+     - *none*
+     - Forces a redraw of the current view of the map.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.draw
+   * - .. _dbus_method_add_message:
+       **add_message**
+     - ``.navit``
+     - string: "message"
+     - *none*
+     - FIXME. Adds a message to the messages label.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.add_message string:"My Message"
+   * - .. _dbus_method_set_center_by_string:
+       **set_center_by_string**
+     - ``.navit``
+     - string: ``coordinates``
+     - *none*
+     - Centres the map over the specified position.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.set_center_by_string string:"geo: 24.0 65.0"
+   * - .. _dbus_method_set_center:
+       **set_center**
+     - ``.navit``
+     - | int: projection, string: coordinates
+       | int: projection, int: longitude, int: latitude
+     - *none*
+     - Centres the map over the specified position.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.set_center int32:1 string:"geo: 24.0 65.0"
+          org.navit_project.navit.navit.set_center int32:1 int32:0x138a4a int32:0x5d773f
+   * - .. _dbus_method_set_center_screen:
+       **set_center_screen**
+     - ``.navit``
+     - | integer: ``pixel_x``, integer: ``pixel_y``
+     - *none*
+     - Centers the map to a specific position on the screen.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.set_center_screen int32:200 int32:400
+   * - .. _dbus_method_set_layout:
+       **set_layout**
+     - ``.navit``
+     - string: ``layoutname``
+     - *none*
+     - Changes the active map layout.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.set_layout string:"car-dark"
+   * - .. _dbus_method_zoom:
+       **zoom**
+     - ``.navit``
+     - integer: ``factor`` (integer: ``pixel_x``, integer: ``pixel_y``)
+     - *none*
+     - Zooms into the map (positive ``factor``) or out of the
+       map (negative ``factor``) by the factor specified. The factor must be
+       integers greater than 1 (zoom in) or less than -1 (zoom out).
+       Optionally, a screen position can be specified in ``pixel_x`` and
+       ``pixel_y`` and the function will zoom into that particular position.
+       In order to zoom to a specific zoom-level, use the ``set_attr`` method.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.zoom int32:2
+
+       .. code:: bash
+
+          org.navit_project.navit.navit.zoom int32:6 int32:200 int32:400
+   * - .. _dbus_method_block:
+       **block**
+     - ``.navit``
+     - integer: ``mode``
+     - *none*
+     - FIXME.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.block int32:1
+   * - .. _dbus_method_set_position:
+       **set_position**
+     - ``.navit``
+     - | string: ``coordinates``
+       | integer: ``projection``, string: ``coordinates``
+       | integer: ``projection``, integer: ``longitude``, integer: ``latitude``
+     - *none*
+     - Sets the current position (useful if no gps position
+       is available).
+     - .. code:: bash
+
+          org.navit_project.navit.navit.set_position string:"geo: 24.0 65.0"
+
+       .. code:: bash
+
+          org.navit_project.navit.navit.set_position int32:1 string:"geo: 24.0 65.0"
+
+       .. code:: bash
+
+          org.navit_project.navit.navit.set_position int32:1 int32:0x138a4a int32:0x5d773f
+   * - .. _dbus_method_set_destination:
+       **set_destination**
+     - ``.navit``
+     - | string: ``coordinates``, string: ``"comment"``
+       | integer: ``projection``, string: ``coordinates``, string: ``"comment"``
+       | integer: ``projection``, integer: ``longitude``, integer: ``latitude``, string: ``"comment"``
+     - *none*
+     - Sets the destination for routing.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.set_destination string:"geo: 24.0 65.0"
+
+       .. code:: bash
+
+          org.navit_project.navit.navit.set_destination int32:1 string:"geo: 24.0 65.0"
+
+       .. code:: bash
+
+          org.navit_project.navit.navit.set_destination int32:1 int32:0x138a4a int32:0x5d773f
+   * - .. _dbus_method_clear_destination:
+       **clear_destination**
+     - ``.navit``
+     - *none*
+     - *none*
+     - Removes the destination and stops routing.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.clear_destination
+   * - .. _dbus_method_get_attr:
+       **get_attr**
+     - ``.navit``
+     - string: ``attribute``
+     - string: ``attribute`` variant: ``value``
+     - Gets the specified attribute value. The attribute can
+       be anything from attr_def.h.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.get_attr string:"zoom"
+
+       returns:
+
+       .. code:: bash
+
+          string "zoom"
+          variant    int32 10
+
+       .. code:: bash
+
+          org.navit_project.navit.navit.get_attr string:"orientation"
+
+       returns:
+
+       .. code:: bash
+
+          string "orientation"
+          variant    int32 1
+   * - .. _dbus_method_set_attr:
+       **set_attr**
+     - ``.navit``
+     - string: ``attribute``, variant: ``value``
+     - *none*
+     - Sets the specified attribute value. The attribute can
+       be anything from attr_def.h. As shown in the example below, this can be
+       useful to zoom to a specific zoom level, instead of just zooming by a
+       factor as with the ``zoom`` method.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.set_attr string:"zoom" variant:int32:500
+   * - .. _dbus_method_export_as_gpx:
+       **export_as_gpx**
+     - ``.navit``
+     - string: ``filename``
+     - *none*
+     - Dump the current route, if any, into the file specified
+       in the argument in the GPX format.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.export_as_gpx string:"/tmp/route.gpx"
 
 org.navit_project.navit.vehicleprofile
 ======================================
@@ -470,65 +366,55 @@ must be prefixed by:
 
 ``dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit/default_vehicleprofile``
 
-.. _get_attr_1:
+.. list-table:: org.navit_project.navit.vehicleprofile methods
+   :widths: 12 8 18 10 25 27
+   :header-rows: 1
 
-get_attr
-~~~~~~~~
+   * - Method
+     - Path
+     - Arguments
+     - Return
+     - Description
+     - Example
+   * - .. _dbus_method_vehicleprofile_get_attr:
+       **get_attr**
+     - ``.vehicleprofile``
+     - string: ``attribute``
+     - string: ``attribute`` variant: ``value``
+     - Gets the specified attribute value for the ``vehicleprofile``.
+     - .. code:: bash
 
-**Path:** ``.vehicleprofile``
+          org.navit_project.navit.vehicleprofile.get_attr string:"name"
 
-**Arguments:** string: ``attribute``
+       returns:
 
-**Return:** string: ``attribute`` variant: ``value``
+       .. code:: bash
 
-**Description:** Gets the specified attribute value for the
-``vehicleprofile``.
+          string "name"
+          variant    string "car"
 
-**Example:**
+       .. code:: bash
 
-.. code:: bash
+          org.navit_project.navit.vehicleprofile.get_attr string:"static_speed"
 
-   org.navit_project.navit.vehicleprofile.get_attr string:"name"
+       returns:
 
-returns:
+       .. code:: bash
 
-.. code:: bash
+          string "static_speed"
+          variant    int32 5
+   * - .. _dbus_method_vehicleprofile_set_attr:
+       **set_attr**
+     - ``.vehicleprofile``
+     - string: ``attribute``, variant: ``value``
+     - *none*
+     - Sets the specified attribute value. The example below
+       *renames* the current ``vehicleprofile``. To actually *change* the
+       ``vehicleprofile``, use the ``set_attr`` method in the ``.vehicle`` path
+       (see below).
+     - .. code:: bash
 
-   string "name"
-   variant    string "car"
-
-.. code:: bash
-
-   org.navit_project.navit.vehicleprofile.get_attr string:"static_speed"
-
-returns:
-
-.. code:: bash
-
-   string "static_speed"
-   variant    int32 5
-
-.. _set_attr_1:
-
-set_attr
-~~~~~~~~
-
-**Path:** ``.vehicleprofile``
-
-**Arguments:** string: ``attribute`` variant: ``value``
-
-**Return:** *none*
-
-**Description:** Sets the specified attribute value. The example below
-*renames* the current ``vehicleprofile``. To actually *change* the
-``vehicleprofile``, use the ``set_attr`` method in the ``.vehicle`` path
-(see below).
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.vehicleprofile.set_attr string:"name" variant:string:"bike"
+          org.navit_project.navit.vehicleprofile.set_attr string:"name" variant:string:"bike"
 
 org.navit_project.navit.vehicle
 ===============================
@@ -543,25 +429,26 @@ must be prefixed by:
 
 ``dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit/default_vehicle``
 
-.. _set_attr_2:
+.. list-table:: org.navit_project.navit.vehicle methods
+   :widths: 12 8 18 10 25 27
+   :header-rows: 1
 
-set_attr
-~~~~~~~~
+   * - Method
+     - Path
+     - Arguments
+     - Return
+     - Description
+     - Example
+   * - .. _dbus_method_vehicle_set_attr:
+       **set_attr**
+     - ``.vehicle``
+     - string: ``attribute``, variant: ``value``
+     - *none*
+     - Sets the specified attribute value. The example below
+       changes the current ``vehicleprofile`` to ``"bike"``.
+     - .. code:: bash
 
-**Path:** ``.vehicle``
-
-**Arguments:** string: ``attribute`` variant: ``value``
-
-**Return:** *none*
-
-**Description:** Sets the specified attribute value. The example below
-changes the current ``vehicleprofile`` to ``"bike"``.
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.vehicle.set_attr string:"profilename" variant:string:"bike"
+          org.navit_project.navit.vehicle.set_attr string:"profilename" variant:string:"bike"
 
 org.navit_project.navit.route
 =============================
@@ -576,32 +463,33 @@ must be prefixed by:
 
 ``dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit/default_route``
 
-.. _get_attr_2:
+.. list-table:: org.navit_project.navit.route methods
+   :widths: 12 8 18 10 25 27
+   :header-rows: 1
 
-get_attr
-~~~~~~~~
+   * - Method
+     - Path
+     - Arguments
+     - Return
+     - Description
+     - Example
+   * - .. _dbus_method_route_get_attr:
+       **get_attr**
+     - ``.route``
+     - string: ``attribute``
+     - string: ``attribute`` variant: ``value``
+     - Gets the specified attribute value. The attribute can
+       be anything from route_get_attr() in navit/route.c
+     - .. code:: bash
 
-**Path:** ``.route``
+          org.navit_project.navit.route.get_attr string:"destination_length"
 
-**Arguments:** string: ``attribute``
+       returns:
 
-**Return:** string: ``attribute`` variant: ``value``
+       .. code:: bash
 
-**Description:** Gets the specified attribute value. The attribute can
-be anything from route_get_attr() in navit/route.c
-
-**Example:**
-
-.. code:: bash
-
-   org.navit_project.navit.route.get_attr string:"destination_length"
-
-returns:
-
-.. code:: bash
-
-   string "destination_length"
-   variant    int32 338111
+          string "destination_length"
+          variant    int32 338111
 
 Signals
 =======
