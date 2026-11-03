@@ -106,32 +106,40 @@ org.navit_project.navit.navit
 
 DBUS Object Path: /org/navit_project/navit/navit/[]
 
-The way navit use dbus is not really the usual way. If you want to
-control your navit instance (set_destination, zoom,…), you have first to
-do the following (examples are in python) : 1) get the navit general
-object
+The way navit uses DBus is not the usual way. To control your navit
+instance (set_destination, zoom, …), you must first obtain the navit
+object path. The following complete Python example demonstrates the
+process:
 
-`` object = bus.get_object("org.navit_project.navit","/org/navit_project/navit")``
+.. code:: python
 
-2) get the interface of this object :
+   import dbus
 
-`` iface = dbus.Interface(object,dbus_interface="org.navit_project.navit")``
+   # 1) Connect to the session bus
+   bus = dbus.SessionBus()
 
-3) get an iterator through navit instances :
+   # 2) Get the navit general object
+   obj = bus.get_object("org.navit_project.navit", "/org/navit_project/navit")
 
-`` iter=iface.attr_iter()``
+   # 3) Get the interface
+   iface = dbus.Interface(obj, dbus_interface="org.navit_project.navit")
 
-4) get the object path of the navit instance in your iterator :
+   # 4) Get an iterator through navit instances
+   iter = iface.attr_iter()
 
-`` path = object.get_attr_wi("navit",iter)``
+   # 5) Get the object path of the navit instance
+   path = obj.get_attr_wi("navit", iter)
+   # path is a tuple: ("navit", "/org/navit_project/navit/default_navit")
 
-5) get the navit instance you are interested in :
+   # 6) Get the navit instance you are interested in
+   navit = bus.get_object('org.navit_project.navit', path[1])
 
-`` navit=bus.get_object('org.navit_project.navit', path[1])``
+   # 7) Destroy the iterator when done
+   iface.attr_iter_destroy(iter)
 
-6) destroy the iter :
-
-`` iface.attr_iter_destroy(iter)``
+   # Now you can call methods on the navit object
+   navit_iface = dbus.Interface(navit, dbus_interface="org.navit_project.navit.navit")
+   navit_iface.zoom(2)  # Zoom in by factor of 2
 
 The following methods have to be applied on the navit object.
 
