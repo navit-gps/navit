@@ -31,7 +31,361 @@ allowed
 ### patch
 `x.y.Z` (patch): only bug fixes or refactoring, no changes in functionality
 
-## [0.5.7] - 2026-01-30
+## [0.5.8] - unreleased
+
+### 🚀 Features
+
+- Android: New Map Downloader
+- Icons: tram icon added
+- *(navit)* Display map while panning via prefetched wide display list
+- *(support/glib)* G_list_free_full() added for compatibility with glib 2.28
+- *(build)* Add CMake check and compat fallback for g_list_free_full on old GLib
+- Charging_Station display on map and searchable as POI
+- *(core)* Synthesize NMEA sentences from structured position data
+- *(navit)* Add LZMA decompression for binfile map reading
+- *(maptool)* Add LZMA compression and refactored zip writing
+- *(maptool)* Add --compression-method CLI option
+- *(maptool)* Add threaded tile processing
+
+### 🐛 Bug Fixes
+
+- *(workflow)* Update all checkout actions to v6 and use fetch-depth: 0 to have everything including tags fetched
+- *(android)* Replace grgit by executing git directly
+- Add DTD validation for osd data attribute (#1437)
+- *(gui_internal)* Pass HAVE_SYSTEM as preprocessor flag to support calling browser
+- *(gui_internal)* Document usage of navit-browser.sh
+- *(maptool)* For Germany allow town search
+- *(maptool)* Correct remove_countryfiles tempfile prefix
+- *(maptool/tile)* Free tile_hash2 GHashTable in tile_collector_finish
+- *(maptool/coastline)* Destroy tile_edges hash table and free sorted_segments on early return
+- *(maptool)* Destroy zip_info in maptool_generate_tiles
+- *(maptool)* Plug leak of relations_func structs
+- *(maptool)* Free house number interpolation structs and boundary list nodes
+- *(maptool)* Guard against empty node_buffer in ordered list search
+- *(attr)* Fix uninitialized item_types terminator and prevent g_free of inline range data
+- *(leak)* Free str_escape result in write_former_destinations
+- *(leak)* Destroy log_to_cb hash table in vehicle_destroy
+- *(leak)* Free g_convert result when map_search_new fails
+- *(xmlconfig)* Free attrs only on create() error; plug xi_end_element leak
+- *(graphics)* Free display items, GCs, and callback list; guard zero-count polygon draw
+- *(graphics/gtk_drawing_area)* Free cairo context, overlays, dashes on destroy and unlink from parent
+- *(gui/gtk)* Free GtkTreePath in row_activated to fix memory leak
+- *(font/freetype)* Free strdup'd fontfile in face_requester on all paths
+- *(search)* Uncomment hash table destroy in search_list_search_free
+- *(leak)* Free linguistics_expand_special result in find_next_possible_key
+- *(leak)* Free temporary GList in gui_internal_top_bar
+- *(track)* Free CDF history data in tracking_destroy
+- *(speech-cmdline)* Fix memory leak and infinite loop on destroy
+- *(uaf)* Prevent transform_copy from sharing map_selection pointers
+- *(uaf)* Guard callback_list iteration against list destruction during callback
+- *(layout)* Add layout_destroy and proper destructors for layout subsystem types
+- *(pedestrian)* Remove unused polygoncoord1 variable
+- *(vehicleprofile)* Add vehicleprofile_destroy and free all allocated members
+- *(navigation)* Free command list, fix dangling hash pointer, and plug way name string leak
+- *(route)* Free route_graph_done_cb and cbl2 callback list on destroy
+- *(shutdown)* Replace exit(0) with event loop quit and remove premature navit cleanup
+- *(gui)* Add destroy method and free all gui_internal and gui resources on shutdown
+- *(gui-internal)* Free intermediate string in gui_internal_cmd_write
+- *(navit)* Comprehensive navit_destroy cleanup
+- *(cleanup)* Simplify navit_destroy()
+- *(search)* Free postal_mask in search_list_common_destroy to fix memory leak
+- *(maptool)* Track associated_street allocation to prevent use-after-free
+- *(gui)* Prevent out-of-bounds read in search completion
+- *(graphics/gtk)* Destroy widget before parent window on shutdown
+- *(graphics/gtk)* Remove unbalanced gtk_widget_ref causing GObject leak
+- *(track)* Extract tracking_destroy_map for external callers
+- *(navit)* Unref old speech object on runtime replacement
+- *(file)* Add file_deinit to free global hash table and cache on shutdown
+- *(search)* Clean up search levels in search_list_destroy to prevent leaks
+- *(navigation)* Plug memory leaks in destroy and update
+- *(route)* Destroy route_graph_flood_done_cb in route_destroy to prevent leak
+- *(gpsd)* Guard attr_search against NULL priv->attrs
+- *(maptool)* Avoid leaks on temp filenames and clean up temporary files after use
+- *(binfile)* Nullify freed pointers in map_binfile_close
+- *(gpsd)* Keep gpsd host string alive for libgps internal reference
+- *(gypsy)* Use g_object_unref instead of g_free for GObject pointers
+- *(geoclue)* Prevent use-after-free of callback list on vehicle destroy
+- *(cleanup)* Prevent use-after-free by refcounting vehicles in navit_destroy
+- *(gui)* Restart box_resize iteration when children list is modified by on_resize
+- *(maptool)* Limit fscanf width to prevent buffer overflow (CWE-120)
+- *(event)* Prevent use-after-free of GMainLoop in SIGTERM handler
+- *(shutdown)* Remove dbg() call from SIGTERM handler to avoid deadlock
+- *(signal)* Use self-pipe trick instead of calling g_main_loop_quit from signal handler
+- *(xmlconfig,log)* Brace consistency and missing attr_data diagnostic
+- *(gui/internal)* Prevent infinite loop when on_resize replaces children
+- *(navit)* Add announcement thresholds for bicycle road types
+- *(traffic)* Null plugin disabled in default config
+- *(docs)* Maps: outdated known issue removed
+- *(xmlconfig)* Free attrs list after successful create
+- *(vehicle)* Dup attrs in plugins that store them
+- *(navit)* Free coord buffer on early return
+- *(cache)* Free remaining entries on cache_destroy
+- *(file)* Use cache_flush_data on compressed read error
+- *(navit)* Move callback_list_destroy after attr_list_free to prevent UAF
+- *(traffic)* Free leaked memory in traffic processing and destroy
+- *(vehicle)* Free NMEA buffers in vehicle_file_destroy
+- *(navigation)* Free distance string before reassignment in show_maneuver
+- *(SHPRead)* Increase buffer size to prevent format truncation
+- *(coord)* Handle degenerate rects gracefully instead of asserting
+- *(graphics)* Bounds-check multiline_label_draw before writing label_lines
+- *(maptool)* Avoid invalid free of -t timestamp
+- *(maptool)* Keep tmp files with -k
+- *(route)* Prevent integer overflow in route_rect
+- *(build)* Support C99 on the tomtom target
+- *(ci)* Do not install deprecated Android SDK tools package
+- *(graphics)* Suppress duplicate labels on screen
+- *(binfile)* Stop forcing AF_CAR into attr_flags
+- *(gui-internal)* Surface failure to execute external command
+- *(navigation)* Remove leftover no-op name_attr statement
+- *(nav,route)* Log long numeric attribute values with %ld
+- *(osd/core)* Theme the scale bar with foreground_color
+- *(osd/core)* Unconditionally end the draw mode of the scale
+- *(maptool)* Write tiles in zipnum order after threaded compression
+- *(glib/fake)* Include windows.h and define USE_POSIX_THREADS for Win32/CE builds
+- *(build)* Add missing includes and rename near/far for wince
+- *(build)* Sailfish USE_SAMPLE_MAP aligned with linux, set to n
+- *(map)* Guard against failed tile reads and missing items
+- *(route)* Detect cyclic segment chains in path walk
+- *(plugins)* Log plugin_init traces at debug level
+- *(gui)* Show waypoint menu items always when routing
+- *(maptool)* Reset the access policy state for each node
+- *(qt)* crash prevented when transformation is not possible # 1553
+- *(qt)* delete syntax corrected
+- *(vehicleprofile bike)* unused parameter distance_metric removed
+- *(graphics_svg_debug): plugin_init syntax fixed
+
+### 💼 Other
+
+- Dead Code Removed: browserplugin
+- *(github)* Add funding button on github
+- Svg_debug: sprintf replaced with snprintf to make Codefactor happy
+- Include added
+- Include: speech.h missing include to attr.h added for struct attr
+- Gui_internal_poi: include guard and missing include added
+- Maptool: do not include stdio.h and adhere to warnings of navit_lfs.h
+- Buffer.c: Ensure navit_lfs.h is included first
+- Gui_internal.h: include guards added
+- Gui_internal_widget: missing include to gui_internal.h added
+- Gui.h: duplicate prototype pcoord removed
+- Gui_internal_widget: missing includes added
+- Csv.h: missing include added item.h, includes sorted
+- Whitespace: Format all remaining c and h-files
+- Help git blame by naming commits that did whitespace changes exclusively
+- Windows build fixed by ordering windows includes
+- Gui_internal_html: include guard added
+- Traffic.h: missing includes to route.h and time.h added
+- *(osm.c)* Missing include to file.h added
+- *(build)* Use G_PI from glibc as universal pi constant
+- *(build)* Most headers and C files processed with iwyu
+- *(Update)* Cimg/base Docker tag to v2026 (#1453)
+- *(Update)* Dependency checkstyle to v13 (#1454)
+- *(Update)* Dependency com.android.support.test.espresso:espresso-core to v3 (#1455)
+- *(Update)* Android-actions/setup-android action to v3 (#1452)
+- *(update)* Actions/upload-artifact action to v6 (#1451)
+- *(Update)* Devmasx/merge-branch action to v1.4.0 (#1450)
+- *(Update)* Dependency sphinx_rtd_theme to v3 (#1458)
+- Translations update from Hosted Weblate (#1461)
+- *(ci)* Fix merge in main
+- *(sanity_check)* Ensure sanity_check fails on po-file problems
+- Translated using Weblate (Tamil)
+- Translated using Weblate (Dutch)
+- Fixed Neline in Translated Strings
+- Remove broken Translations
+- Translation comment was translated, not the msgid
+- Core:Replaced debug flag with log statement
+- Doc:Explain MODULE:function format in debug configuration
+- Doc:Replace astyle references with clang-format in programming guidelines
+- Docs:typos in table
+- Docs(itemgra): item type list displayed as list
+- Translated using Weblate (English (United Kingdom))
+- Translated using Weblate (Dutch)
+- Gui/internal:Removed function save_vehicle_xml (See #1403)
+- Translated using Weblate (Estonian)
+- Correct icon name for android
+- Docs:Removed route_weight (#1514)
+- Update to APG 8.13.2
+- *(Android)* Replace acra by propper support lib instead of relying on transient dependencies
+- Update to APG 9.0.1
+- *(android)* Build Debug APK under different AppID
+- Scan if we have stdlib.h and include it in the config.h.in.
+- *(android)* Add support for 16k Page Size
+- *(support/glib)* Fix Types in support glib to be able to compile on android ndk 27.3
+- Fix missing includes
+- Fix Pointer Types
+- *(android)* Remove Javadoc
+- Remove manual installation of ndk
+- Update to APG 9.1.9
+- Remove sharedUserId on none Release builds
+- Fix Import order
+- Core:Update navit.dtd with existing attributes of speech element
+- Core:Update navit.dtd with existing attributes of speech element
+- WinCE: add stdlib.h wrapper to override broken inline stubs
+- Update actions/checkout action to v7 (#1560)
+- Update dependency checkstyle to v13.6.0 (#1554)
+- Update dependency gradle to v9.6.1 (#1563)
+- Update dependency checkstyle to v13.7.0 (#1567)
+- Update cimg/base Docker tag to v2026.07 (#1578)
+- Core:Add debug statements for route_status
+- Core:Some debug statements
+- Translated using Weblate (Georgian)
+- Core:Add debug statements in navigation.c
+- Drop unused announce unit attribute
+- Declare roadprofile maxspeed attribute
+- Remove dead announcement element
+- Order warning flags so the -Wno-* switches win on clang
+- *(cmake)* Let users and toolchains supply their own Debug flags
+- Script: Update some files to modern Unicode
+- Remove test with sample map because of network dependency
+
+### 🚜 Refactor
+
+- *(vehicle/demo)* Remove native NMEA generation from demo vehicle
+- *(maptool)* Remove Download Feature from Binfile driver
+- Silence compiler warnings
+- *(shapefile)* Align calloc arguments and avoid strncpy truncation
+- *(xmlconfig)* Drop unused return value of unref
+- *(gui)* Constify show_coord_actions arguments
+- *(svg-debug)* Drop unimplemented overlay stubs
+- *(ci)* Align the remaining container jobs' package install
+- *(maptool)* Split write_tiles_for_slice into single-purpose helpers
+- Extract custom POI icon handling to reduce function complexity
+
+### 📚 Documentation
+
+- *(release)* Update Release doc to reflect the 0.5.7 Release
+- fix Reporting Bugs link in issue template and readme and contribution guide
+- Remove outdates donation targets
+- *(cmake)* Highlight -DSAMPLE_MAP=n for offline building
+- *(development)* Remove duplicate Linux_development.rst
+- Consolidate dev landing pages and add architecture diagrams
+- *(community)* IRC reference removed
+- Fix dead/broken links in community pages
+- Clean up community page navigation
+- Remove old wiki duplicates and deduplicate images
+- *(community)* Contact options hierarchy cleaned up, discord chapters merged
+- Rewrite submitting_patches.rst - fix all broken refs and polish language
+- Unreachable page Main_page_support_box removed
+- *(contacts)* Bring back the rules of engagement from the IRC page, slightly reworded. They are relevant on discord too
+- *(faq)* Migrate segfault reporting to Reporting Bugs page
+- *(faq)* Remove obsolete graphics-to-gui error page
+- *(faq)* Remove obsolete GPSd troubleshooting page
+- *(configuration)* Migrate maps options page into basic/maps.rst
+- *(configuration)* Add config file loading order to general options
+- Remove dangling toctree entries from index.rst
+- Migrate layout rendering guidance to basic/layout.rst
+- Document day/night layout switching
+- Migrate gpx log reference and vehicle notes to basic/vehicle.rst
+- Remove obsolete Configuration_(old) page
+- *(vehicleprofiles)* Duplicate empty header Vehicleprofiles/Vehicleprofile removed
+- Fix dead link to icons page in basic/layout.rst
+- Fold icons page into basic/layout.rst
+- Fold Configuration_Layout_Options into basic/layout.rst
+- Fold Configuration_Display_Options into basic/display.rst
+- *(layout)* Correct icon directory references
+- *(vehicle)* Mark all device-dependent attr_types
+- Convert remaining wiki links in configuration pages
+- Fix Vehicleprofile links
+- Correct layout override semantics
+- *(Brainstorming)* Remove outdated page
+- *(mapserver)* Update references to use the github mapserver
+- Fold Configuration_Full_list_of_options into basic/advanced pages
+- Clarify default config before XML structure
+- Migrate Configuration_General_Options into basic/general.rst
+- Migrate Configuration_Vehicle_Options into basic/vehicle.rst
+- Reclassify Coordinate_format as reference page
+- Fix contents of migrated pages to match the source code
+- Drop deprecated Gui_internal page, port View-in-Browser note
+- Migrate Internal_GUI page, fold config into basic/display.rst
+- *(typos)* Fix spelling errors in the documentation
+- Migrate OSD page from old wiki
+- *(maptool)* Document -C, -T and update -z in man page
+- *(maps)* Update binfile page for accuracy, drop old-wiki duplicate listing
+- *(vehicle)* Fold vehicle profile flags reference into vehicle options
+- *(osd-layouts)* Render the restored QVGA and Yakumo screenshots
+- *(menu)* Drop the speculative Menu page
+- *(concepts)* Drop the canceled Augmented Reality concept
+- *(navitconfigurator)* Drop the page and its remaining references
+- *(osd-layouts)* Move the page under the advanced configuration toctree
+- *(osd-layouts)* Fix the references and the usage block in the preamble
+- *(osd-layouts)* Rebuild the Nokia NSeries layout examples as literal blocks
+- *(osd-layouts)* Rebuild the Neo FreeRunner layout examples as literal blocks
+- *(osd-layouts)* Unwrap the neo-cs screenshots and attribute tables
+- *(osd-layouts)* Rewrite the PC layout instructions as prose
+- *(osd-layouts)* Drop the raw HTML rules and the broken LCARS resizer link
+- *(osd-layouts)* Rebuild Netbook Layout 1 and fix its cross-references
+- *(osd-layouts)* Rebuild Netbook Layout 2 and fix its cross-references
+- *(osd-layouts)* Rebuild the Windows Mobile layouts and restore screenshots
+- *(osd-layouts)* Rebuild the Yakumo Delta 5 X layout and restore screenshots
+- *(osd-layouts)* Render the Sony nav-u92T and Palm Pre layouts as literal blocks
+- *(osd-layouts)* Fix the garbled comment in the Nokia N900 layout
+- *(osd-layouts)* Drop the dead Freenode and wandersleb links
+- *(osd-layouts)* Replace the dangling wiki references
+- *(osd-layouts)* Repair the doubled sentence and stray directive
+- *(osd-layouts)* Translate German comments and labels to English
+- Consolidate Vehicleprofile examples into single page
+- *(wishlist)* Remove empty wishlist
+- *(osd)* Convert the Navit commands table to a list-table
+- *(osd)* Say() unclear description of limitation removed
+- *(QML_GUI)* Syntax error on incorrect use of emphasis resolved
+- *(Changelog)* Sphinx render error resolved on Changelog
+- *(team)* Convert team-table to list-table
+- *(team)* Fix reference syntax
+- *(team)* Fix contacts reference
+- *(team)* Undefined references to tomtom and android fixed
+- *(layouts)* Drop the bike layout page
+- *(layouts)* Document the layouts that ship with Navit
+- *(team)* Fix of misplaced text in team-table
+- *(Changelog)* Preliminary changelog added for topics since 0.5.7
+
+### ⚙️ Miscellaneous Tasks
+
+- Translations update from Hosted Weblate (#1428)
+- Translations update from Hosted Weblate
+- *(workflow)* Update cimg/base Docker tag to v2020.12 (#1444)
+- *(Update)* Dependency readthedocs-sphinx-search to v0.3.2 (#1443)
+- *(CI)* Update actions/upload-artifact action to v7 (#1466)
+- *(CI)* Update cimg/base Docker tag to v2026.03 (#1470)
+- Remove unused code (#1497)
+- *(translation)* Translated using Weblate (Estonian) (#1527)
+- *(whitespace)* All CPP files formatted
+- Icons for 2D/3D toggle button
+- *(android)* Update NDK to last LTS
+- Map author arno to adevoss
+- *(AUTHORS)* Update AUTHORS-File with generate_contributors.sh
+- Update dependency com.android.tools.build:gradle to v9.2.1 (#1456)
+- Update dependency checkstyle to v13.5.0 (#1547)
+- Update cimg/base Docker tag to v2026.06 (#1548)
+- *(navit_destroy)* Extracting helper functions for clarity
+- *(boundaries)* Extract helper functions from process_boundaries_finish
+- Remove stray blank line in navit_destroy
+- *(treewide)* Replace deprecated g_memdup with g_memdup2
+- *(ci)* Finalize migration from CircleCI to GitHub Actions
+- *(ci)* Sailfish OS build fixed
+- *(ci)* Deploy doxygen via Pages artifact
+- *(ci)* Add typos spell check for the docs
+- *(docs)* Deduplicate internal GUI menu configurations page
+- *(docs)* Migrate Layout page from old wiki
+- Install the container jobs' tooling before actions/checkout
+- Stop fetching history and installing rsync for the doxygen job
+- *(docs)* Pin the line endings of the documentation
+- *(Changelog)* Cliff.toml updated to exclude merge commits
+
+## [0.5.7] - 2026-02-08
+
+### 💼 Other
+
+- Switch from pocketpc-cab to gcab
+- WinCE: offer cab as separate download
+
+### 📚 Documentation
+
+- Update Releas Process to not forget to reset Release on spec next time
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Update to 0.5.7 for release
+
+## [0.5.7-rc1] - 2026-01-30
 
 ### 🚀 Features
 
