@@ -1001,3 +1001,258 @@ Additional methods on the navit object.
      - .. code:: bash
 
           org.navit_project.navit.navit.evaluate string:"zoom(2)"
+   * - .. _dbus_method_navit_quit:
+       **quit**
+     - ``.navit``
+     - *none*
+     - *none*
+     - Quits the navit application.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.quit
+   * - .. _dbus_method_navit_traffic_export_gpx:
+       **traffic_export_gpx**
+     - ``.navit``
+     - string: ``filename``
+     - *none*
+     - Exports traffic data to a GPX file.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.traffic_export_gpx string:"/tmp/traffic.gpx"
+   * - .. _dbus_method_navit_traffic_inject:
+       **traffic_inject**
+     - ``.navit``
+     - string: ``filename``
+     - *none*
+     - Injects traffic data from a file.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.traffic_inject string:"/tmp/traffic.gpx"
+   * - .. _dbus_method_navit_zoom_to_route:
+       **zoom_to_route**
+     - ``.navit``
+     - *none*
+     - *none*
+     - Zooms the map to fit the current route.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.zoom_to_route
+   * - .. _dbus_method_navit_export_as_geojson:
+       **export_as_geojson**
+     - ``.navit``
+     - string: ``filename``
+     - *none*
+     - Exports the current route to a GeoJSON file.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.export_as_geojson string:"/tmp/route.geojson"
+
+org.navit_project.navit.layout
+-------------------------------
+
+.. list-table:: org.navit_project.navit.layout methods
+   :widths: 12 8 18 10 25 27
+   :header-rows: 1
+
+   * - Method
+     - Path
+     - Arguments
+     - Return
+     - Description
+     - Example
+   * - .. _dbus_method_layout_get_attr:
+       **get_attr**
+     - ``.layout``
+     - string: ``attribute``
+     - string: ``attribute`` variant: ``value``
+     - Gets a layout attribute value.
+     - .. code:: bash
+
+          org.navit_project.navit.layout.get_attr string:"name"
+
+org.navit_project.navit.map
+----------------------------
+
+.. list-table:: org.navit_project.navit.map methods (additional)
+   :widths: 12 8 18 10 25 27
+   :header-rows: 1
+
+   * - Method
+     - Path
+     - Arguments
+     - Return
+     - Description
+     - Example
+   * - .. _dbus_method_map_dump:
+       **dump**
+     - ``.map``
+     - string: ``file``
+     - *none*
+     - Dumps the map data to a file.
+     - .. code:: bash
+
+          org.navit_project.navit.map.dump string:"/tmp/map.bin"
+
+org.navit_project.navit.osd
+----------------------------
+
+.. list-table:: org.navit_project.navit.osd methods
+   :widths: 12 8 18 10 25 27
+   :header-rows: 1
+
+   * - Method
+     - Path
+     - Arguments
+     - Return
+     - Description
+     - Example
+   * - .. _dbus_method_osd_get_attr:
+       **get_attr**
+     - ``.osd``
+     - string: ``attribute``
+     - string: ``attribute`` variant: ``value``
+     - Gets an OSD attribute value.
+     - .. code:: bash
+
+          org.navit_project.navit.osd.get_attr string:"enabled"
+   * - .. _dbus_method_osd_set_attr:
+       **set_attr**
+     - ``.osd``
+     - string: ``attribute`` variant: ``value``
+     - *none*
+     - Sets an OSD attribute value.
+     - .. code:: bash
+
+          org.navit_project.navit.osd.set_attr string:"enabled" variant:boolean:true
+
+org.navit_project.navit.roadprofile
+------------------------------------
+
+.. list-table:: org.navit_project.navit.roadprofile methods
+   :widths: 12 8 18 10 25 27
+   :header-rows: 1
+
+   * - Method
+     - Path
+     - Arguments
+     - Return
+     - Description
+     - Example
+   * - .. _dbus_method_roadprofile_get_attr:
+       **get_attr**
+     - ``.roadprofile``
+     - string: ``attribute``
+     - string: ``attribute`` variant: ``value``
+     - Gets a road profile attribute value.
+     - .. code:: bash
+
+          org.navit_project.navit.roadprofile.get_attr string:"speed"
+   * - .. _dbus_method_roadprofile_get_attr_wi:
+       **get_attr_wi**
+     - ``.roadprofile``
+     - string: ``attribute``, ``o`` (attr_iter)
+     - string: ``attribute`` variant: ``value``
+     - Gets a road profile attribute value using an iterator.
+     - .. code:: bash
+
+          org.navit_project.navit.roadprofile.get_attr_wi string:"speed" object_path:"/org/navit_project/navit/roadprofile/attr_iter/0"
+   * - .. _dbus_method_roadprofile_set_attr:
+       **set_attr**
+     - ``.roadprofile``
+     - string: ``attribute`` variant: ``value``
+     - *none*
+     - Sets a road profile attribute value.
+     - .. code:: bash
+
+          org.navit_project.navit.roadprofile.set_attr string:"speed" variant:int32:50
+   * - .. _dbus_method_roadprofile_attr_iter:
+       **attr_iter**
+     - ``.roadprofile``
+     - *none*
+     - ``o`` (object path)
+     - Returns an iterator for road profile attributes.
+     - .. code:: bash
+
+          org.navit_project.navit.roadprofile.attr_iter
+   * - .. _dbus_method_roadprofile_attr_iter_destroy:
+       **attr_iter_destroy**
+     - ``.roadprofile``
+     - ``o`` (attr_iter)
+     - *none*
+     - Destroys a road profile attribute iterator.
+     - .. code:: bash
+
+          org.navit_project.navit.roadprofile.attr_iter_destroy object_path:"/org/navit_project/navit/roadprofile/attr_iter/0"
+
+org.navit_project.navit.route (additional)
+-------------------------------------------
+
+.. list-table:: org.navit_project.navit.route methods (additional)
+   :widths: 12 8 18 10 25 27
+   :header-rows: 1
+
+   * - Method
+     - Path
+     - Arguments
+     - Return
+     - Description
+     - Example
+   * - .. _dbus_method_route_destroy:
+       **destroy**
+     - ``.route``
+     - *none*
+     - *none*
+     - Destroys the route object.
+     - .. code:: bash
+
+          org.navit_project.navit.route.destroy
+   * - .. _dbus_method_route_dup:
+       **dup**
+     - ``.route``
+     - *none*
+     - ``o`` (object path)
+     - Duplicates the route object.
+     - .. code:: bash
+
+          org.navit_project.navit.route.dup
+
+org.navit_project.navit.vehicleprofile (additional)
+----------------------------------------------------
+
+.. list-table:: org.navit_project.navit.vehicleprofile methods (additional)
+   :widths: 12 8 18 10 25 27
+   :header-rows: 1
+
+   * - Method
+     - Path
+     - Arguments
+     - Return
+     - Description
+     - Example
+   * - .. _dbus_method_vehicleprofile_attr_iter:
+       **attr_iter**
+     - ``.vehicleprofile``
+     - *none*
+     - ``o`` (object path)
+     - Returns an iterator for vehicle profile attributes.
+     - .. code:: bash
+
+          org.navit_project.navit.vehicleprofile.attr_iter
+   * - .. _dbus_method_vehicleprofile_attr_iter_destroy:
+       **attr_iter_destroy**
+     - ``.vehicleprofile``
+     - ``o`` (attr_iter)
+     - *none*
+     - Destroys a vehicle profile attribute iterator.
+     - .. code:: bash
+
+          org.navit_project.navit.vehicleprofile.attr_iter_destroy object_path:"/org/navit_project/navit/vehicleprofile/attr_iter/0"
+   * - .. _dbus_method_vehicleprofile_get_attr_wi:
+       **get_attr_wi**
+     - ``.vehicleprofile``
+     - string: ``attribute``, ``o`` (attr_iter)
+     - string: ``attribute`` variant: ``value``
+     - Gets a vehicle profile attribute value using an iterator.
+     - .. code:: bash
+
+          org.navit_project.navit.vehicleprofile.get_attr_wi string:"name" object_path:"/org/navit_project/navit/vehicleprofile/attr_iter/0"
