@@ -3,13 +3,10 @@ Commit guidelines
 ======================
 
 Here are the current guidelines if you want to commit something. Please also read the [programming guidelines](../programming_guidelines.html)
-
-'Core' components changes
-=========================
-
-Do not modify a 'core' component without discussing it first with the project leads.
-
-Core components include data structures, configuration handling. If you are unsure, just ask.
+We are using conventional commits because when the release comes we want to be
+the process of creating a changelog as simple as possible. That is why, commit
+message conventions are enforced at PR-time via the same tool, that is also used in
+assembling the changelog: git-cliff.
 
 Commit per feature
 ==================
@@ -23,32 +20,7 @@ Format of the commit log
 ========================
 
 Since we are too lazy to maintain a Changelog, we have a script which parses the commit logs and generate a Changelog for us.
+For this to work, the (https://www.conventionalcommits.org/en/v1.0.0/)[conventional commit standard] is enforced.
 
-We have agreed about using the following syntax : `<Action>:<component>:<log message>[|Optional comments]`
-
-Examples :
- * Fix:Core:Fixed nasty bug in ticket #134
- * Fix:GTK:Fixed nasty bug about destination button|Thanks someguy for the patch!
-
-Action can be something like:
- * Fix (bug fix)
- * Add (new feature)
- * Patch
- * Refactoring (does not change behavior of the program)
-
-It allows the changes to be sorted by categories
-
-The most common components are:
- * core
- * gui/gtk
- * gui/internal
- * graphics/gtk
- * graphics/qt_qpainter
- * graphics/opengl
- * mapdriver
- * tools
-
-The comment part is optional. Useful for when applying a patch for example, and giving credits.
-The part after `|` will not appear in the wiki.
-
-About the log message, it's up to you :)
+In the message body, try to explain the reason for the change rather than how
+the change was implemented.
