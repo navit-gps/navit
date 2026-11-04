@@ -151,23 +151,28 @@ must be prefixed by:
 
 ``dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit``
 
-When a coordinate is specified, the coordinate can be formatted like:
+.. _coordinate-format-reference:
 
+Coordinate Format Reference
+===========================
+
+DBus methods accept coordinates in several formats:
+
+**MG/Garmin format:**
 ``[Proj:]-0xX [-]0xX``
 
-where ``Proj`` can be ``mg`` or ``garmin``. Default: ``mg``. For
-example:
+where ``Proj`` can be ``mg`` or ``garmin``. Default: ``mg``.
+Example: ``mg: 0x138a4a 0x5d773f``
 
-``mg: 0x138a4a 0x5d773f``
-
-Or
-
+**Geo format:**
 | ``[Proj:][D][D]Dmm.ss[S][S] N/S [D][D]DMM.ss[S][S]... E/W``
 | ``[Proj:][-][D]D.d[d]... [-][D][D]D.d[d]``
 
-where ``Proj`` must be ``geo``. For example:
+where ``Proj`` must be ``geo``.
+Example: ``geo: 24.0 65.0``
 
-``geo: 24.0 65.0``
+The default projection is MG. All coordinates are converted internally to the
+navit native format.
 
 .. list-table:: org.navit_project.navit.navit methods
    :widths: 12 8 18 10 25 27
@@ -205,7 +210,7 @@ where ``Proj`` must be ``geo``. For example:
      - ``.navit``
      - string: ``coordinates``
      - *none*
-     - Centres the map over the specified position.
+     - Centres the map over the specified position. See :ref:`coordinate-format-reference` for supported formats.
      - .. code:: bash
 
           org.navit_project.navit.navit.set_center_by_string string:"geo: 24.0 65.0"
@@ -216,7 +221,7 @@ where ``Proj`` must be ``geo``. For example:
      - | int: projection, string: coordinates
        | int: projection, int: longitude, int: latitude
      - *none*
-     - Centres the map over the specified position.
+     - Centres the map over the specified position. See :ref:`coordinate-format-reference` for supported formats.
      - .. code:: bash
 
           org.navit_project.navit.navit.set_center int32:1 string:"geo: 24.0 65.0"
@@ -279,7 +284,7 @@ where ``Proj`` must be ``geo``. For example:
        | integer: ``projection``, integer: ``longitude``, integer: ``latitude``
      - *none*
      - Sets the current position (useful if no gps position
-       is available).
+       is available). See :ref:`coordinate-format-reference` for supported formats.
      - .. code:: bash
 
           org.navit_project.navit.navit.set_position string:"geo: 24.0 65.0"
@@ -299,7 +304,7 @@ where ``Proj`` must be ``geo``. For example:
        | integer: ``projection``, string: ``coordinates``, string: ``"comment"``
        | integer: ``projection``, integer: ``longitude``, integer: ``latitude``, string: ``"comment"``
      - *none*
-     - Sets the destination for routing.
+     - Sets the destination for routing. See :ref:`coordinate-format-reference` for supported formats.
      - .. code:: bash
 
           org.navit_project.navit.navit.set_destination string:"geo: 24.0 65.0"
@@ -374,6 +379,126 @@ where ``Proj`` must be ``geo``. For example:
      - .. code:: bash
 
           org.navit_project.navit.navit.export_as_gpx string:"/tmp/route.gpx"
+   * - .. _dbus_method_navit_resize:
+
+       **resize**
+     - ``.navit``
+     - int32: ``upperleft``, int32: ``lowerright``
+     - *none*
+     - Resizes the navit display area.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.resize int32:0 int32:0 int32:800 int32:480
+   * - .. _dbus_method_navit_attr_iter:
+
+       **attr_iter**
+     - ``.navit``
+     - *none*
+     - ``o`` (object path)
+     - Returns an iterator for navit attributes.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.attr_iter
+   * - .. _dbus_method_navit_attr_iter_destroy:
+
+       **attr_iter_destroy**
+     - ``.navit``
+     - ``o`` (attr_iter)
+     - *none*
+     - Destroys a navit attribute iterator.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.attr_iter_destroy object_path:"/org/navit_project/navit/navit/attr_iter/0"
+   * - .. _dbus_method_navit_get_attr_wi:
+
+       **get_attr_wi**
+     - ``.navit``
+     - string: ``attribute``, ``o`` (attr_iter)
+     - string: ``attribute`` variant: ``value``
+     - Gets a navit attribute value using an iterator.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.get_attr_wi string:"zoom" object_path:"/org/navit_project/navit/navit/attr_iter/0"
+   * - .. _dbus_method_navit_add_attr:
+
+       **add_attr**
+     - ``.navit``
+     - string: ``attribute`` variant: ``value``
+     - *none*
+     - Adds a navit attribute.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.add_attr string:"callback" variant:object_path:"/org/navit_project/navit/callback/0"
+   * - .. _dbus_method_navit_remove_attr:
+
+       **remove_attr**
+     - ``.navit``
+     - string: ``attribute`` variant: ``value``
+     - *none*
+     - Removes a navit attribute.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.remove_attr string:"callback" variant:object_path:"/org/navit_project/navit/callback/0"
+   * - .. _dbus_method_navit_evaluate:
+
+       **evaluate**
+     - ``.navit``
+     - string: ``command``
+     - string: ``result``
+     - Evaluates a navit command string.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.evaluate string:"zoom(2)"
+   * - .. _dbus_method_navit_quit:
+
+       **quit**
+     - ``.navit``
+     - *none*
+     - *none*
+     - Quits the navit application.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.quit
+   * - .. _dbus_method_navit_traffic_export_gpx:
+
+       **traffic_export_gpx**
+     - ``.navit``
+     - string: ``filename``
+     - *none*
+     - Exports traffic data to a GPX file.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.traffic_export_gpx string:"/tmp/traffic.gpx"
+   * - .. _dbus_method_navit_traffic_inject:
+
+       **traffic_inject**
+     - ``.navit``
+     - string: ``filename``
+     - *none*
+     - Injects traffic data from a file.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.traffic_inject string:"/tmp/traffic.gpx"
+   * - .. _dbus_method_navit_zoom_to_route:
+
+       **zoom_to_route**
+     - ``.navit``
+     - *none*
+     - *none*
+     - Zooms the map to fit the current route.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.zoom_to_route
+   * - .. _dbus_method_navit_export_as_geojson:
+
+       **export_as_geojson**
+     - ``.navit``
+     - string: ``filename``
+     - *none*
+     - Exports the current route to a GeoJSON file.
+     - .. code:: bash
+
+          org.navit_project.navit.navit.export_as_geojson string:"/tmp/route.geojson"
 
 org.navit_project.navit.vehicleprofile
 ======================================
@@ -386,7 +511,7 @@ Methods
 Examples are shown for each command, and when using on the command line
 must be prefixed by:
 
-``dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit/default_vehicleprofile``
+``dbus-send  --print-reply --session --dest=org.navit_project.navit /org/navit_project/navit/default_navit``
 
 .. list-table:: org.navit_project.navit.vehicleprofile methods
    :widths: 12 8 18 10 25 27
@@ -439,6 +564,36 @@ must be prefixed by:
      - .. code:: bash
 
           org.navit_project.navit.vehicleprofile.set_attr string:"name" variant:string:"bike"
+   * - .. _dbus_method_vehicleprofile_attr_iter:
+
+       **attr_iter**
+     - ``.vehicleprofile``
+     - *none*
+     - ``o`` (object path)
+     - Returns an iterator for vehicle profile attributes.
+     - .. code:: bash
+
+          org.navit_project.navit.vehicleprofile.attr_iter
+   * - .. _dbus_method_vehicleprofile_attr_iter_destroy:
+
+       **attr_iter_destroy**
+     - ``.vehicleprofile``
+     - ``o`` (attr_iter)
+     - *none*
+     - Destroys a vehicle profile attribute iterator.
+     - .. code:: bash
+
+          org.navit_project.navit.vehicleprofile.attr_iter_destroy object_path:"/org/navit_project/navit/vehicleprofile/attr_iter/0"
+   * - .. _dbus_method_vehicleprofile_get_attr_wi:
+
+       **get_attr_wi**
+     - ``.vehicleprofile``
+     - string: ``attribute``, ``o`` (attr_iter)
+     - string: ``attribute`` variant: ``value``
+     - Gets a vehicle profile attribute value using an iterator.
+     - .. code:: bash
+
+          org.navit_project.navit.vehicleprofile.get_attr_wi string:"name" object_path:"/org/navit_project/navit/vehicleprofile/attr_iter/0"
 
 org.navit_project.navit.vehicle
 ===============================
@@ -516,6 +671,56 @@ must be prefixed by:
 
           string "destination_length"
           variant    int32 338111
+   * - .. _dbus_method_route_set_attr:
+
+       **set_attr**
+     - ``.route``
+     - string: ``attribute`` variant: ``value``
+     - *none*
+     - Sets a route attribute value.
+     - .. code:: bash
+
+          org.navit_project.navit.route.set_attr string:"avoid_tolls" variant:boolean:true
+   * - .. _dbus_method_route_add_attr:
+
+       **add_attr**
+     - ``.route``
+     - string: ``attribute`` variant: ``value``
+     - *none*
+     - Adds a route attribute.
+     - .. code:: bash
+
+          org.navit_project.navit.route.add_attr string:"waypoint" variant:object_path:"/org/navit_project/navit/waypoint/0"
+   * - .. _dbus_method_route_remove_attr:
+
+       **remove_attr**
+     - ``.route``
+     - string: ``attribute`` variant: ``value``
+     - *none*
+     - Removes a route attribute.
+     - .. code:: bash
+
+          org.navit_project.navit.route.remove_attr string:"waypoint" variant:object_path:"/org/navit_project/navit/waypoint/0"
+   * - .. _dbus_method_route_destroy:
+
+       **destroy**
+     - ``.route``
+     - *none*
+     - *none*
+     - Destroys the route object.
+     - .. code:: bash
+
+          org.navit_project.navit.route.destroy
+   * - .. _dbus_method_route_dup:
+
+       **dup**
+     - ``.route``
+     - *none*
+     - ``o`` (object path)
+     - Duplicates the route object.
+     - .. code:: bash
+
+          org.navit_project.navit.route.dup
 
 Signals
 =======
@@ -542,11 +747,6 @@ Now add a bookmark and you should see this in dbus-monitor --session:
 
 .. _undocumented_methods:
 
-Additional interfaces
-=====================
-
-The following interfaces are available but were not previously documented.
-
 org.navit_project.navit.config
 ------------------------------
 
@@ -565,7 +765,7 @@ These methods are available on the root config object (path: ``/org/navit_projec
    * - .. _dbus_method_config_attr_iter:
 
        **attr_iter**
-     - 
+     -
      - *none*
      - ``o`` (object path)
      - Returns an iterator for config attributes.
@@ -575,7 +775,7 @@ These methods are available on the root config object (path: ``/org/navit_projec
    * - .. _dbus_method_config_attr_iter_destroy:
 
        **attr_iter_destroy**
-     - 
+     -
      - ``o`` (attr_iter)
      - *none*
      - Destroys a config attribute iterator.
@@ -585,7 +785,7 @@ These methods are available on the root config object (path: ``/org/navit_projec
    * - .. _dbus_method_config_get_attr:
 
        **get_attr**
-     - 
+     -
      - string: ``attrname``
      - string: ``attrname`` variant: ``value``
      - Gets a config attribute value.
@@ -595,7 +795,7 @@ These methods are available on the root config object (path: ``/org/navit_projec
    * - .. _dbus_method_config_get_attr_wi:
 
        **get_attr_wi**
-     - 
+     -
      - string: ``attrname``, ``o`` (attr_iter)
      - string: ``attrname`` variant: ``value``
      - Gets a config attribute value using an iterator.
@@ -605,7 +805,7 @@ These methods are available on the root config object (path: ``/org/navit_projec
    * - .. _dbus_method_config_callback_new:
 
        **callback_new**
-     - 
+     -
      - string: ``signalname``
      - ``o`` (object path)
      - Creates a new callback for a signal.
@@ -615,7 +815,7 @@ These methods are available on the root config object (path: ``/org/navit_projec
    * - .. _dbus_method_config_callback_attr_new:
 
        **callback_attr_new**
-     - 
+     -
      - string: ``signalname``, string: ``attribute``
      - ``o`` (object path)
      - Creates a new callback for a signal with attribute filter.
@@ -625,7 +825,7 @@ These methods are available on the root config object (path: ``/org/navit_projec
    * - .. _dbus_method_config_search_list_new:
 
        **search_list_new**
-     - 
+     -
      - ``o`` (mapset)
      - ``o`` (object path)
      - Creates a new search list for a mapset.
@@ -768,6 +968,16 @@ org.navit_project.navit.map
      - .. code:: bash
 
           org.navit_project.navit.map.set_attr string:"enabled" variant:boolean:true
+   * - .. _dbus_method_map_dump:
+
+       **dump**
+     - ``.map``
+     - string: ``file``
+     - *none*
+     - Dumps the map data to a file.
+     - .. code:: bash
+
+          org.navit_project.navit.map.dump string:"/tmp/map.bin"
 
 org.navit_project.navit.mapset
 -------------------------------
@@ -847,50 +1057,6 @@ org.navit_project.navit.navigation
 
           org.navit_project.navit.navigation.get_attr string:"destination_length"
 
-org.navit_project.navit.route
-------------------------------
-
-.. list-table:: org.navit_project.navit.route methods (additional)
-   :widths: 12 8 18 10 25 27
-   :header-rows: 1
-
-   * - Method
-     - Path
-     - Arguments
-     - Return
-     - Description
-     - Example
-   * - .. _dbus_method_route_set_attr:
-
-       **set_attr**
-     - ``.route``
-     - string: ``attribute`` variant: ``value``
-     - *none*
-     - Sets a route attribute value.
-     - .. code:: bash
-
-          org.navit_project.navit.route.set_attr string:"avoid_tolls" variant:boolean:true
-   * - .. _dbus_method_route_add_attr:
-
-       **add_attr**
-     - ``.route``
-     - string: ``attribute`` variant: ``value``
-     - *none*
-     - Adds a route attribute.
-     - .. code:: bash
-
-          org.navit_project.navit.route.add_attr string:"waypoint" variant:object_path:"/org/navit_project/navit/waypoint/0"
-   * - .. _dbus_method_route_remove_attr:
-
-       **remove_attr**
-     - ``.route``
-     - string: ``attribute`` variant: ``value``
-     - *none*
-     - Removes a route attribute.
-     - .. code:: bash
-
-          org.navit_project.navit.route.remove_attr string:"waypoint" variant:object_path:"/org/navit_project/navit/waypoint/0"
-
 org.navit_project.navit.search_list
 ------------------------------------
 
@@ -969,142 +1135,6 @@ org.navit_project.navit.tracking
 
           org.navit_project.navit.tracking.get_attr string:"position"
 
-org.navit_project.navit.navit (additional)
--------------------------------------------
-
-Additional methods on the navit object.
-
-.. list-table:: org.navit_project.navit.navit methods (additional)
-   :widths: 12 8 18 10 25 27
-   :header-rows: 1
-
-   * - Method
-     - Path
-     - Arguments
-     - Return
-     - Description
-     - Example
-   * - .. _dbus_method_navit_resize:
-
-       **resize**
-     - ``.navit``
-     - int32: ``upperleft``, int32: ``lowerright``
-     - *none*
-     - Resizes the navit display area.
-     - .. code:: bash
-
-          org.navit_project.navit.navit.resize int32:0 int32:0 int32:800 int32:480
-   * - .. _dbus_method_navit_attr_iter:
-
-       **attr_iter**
-     - ``.navit``
-     - *none*
-     - ``o`` (object path)
-     - Returns an iterator for navit attributes.
-     - .. code:: bash
-
-          org.navit_project.navit.navit.attr_iter
-   * - .. _dbus_method_navit_attr_iter_destroy:
-
-       **attr_iter_destroy**
-     - ``.navit``
-     - ``o`` (attr_iter)
-     - *none*
-     - Destroys a navit attribute iterator.
-     - .. code:: bash
-
-          org.navit_project.navit.navit.attr_iter_destroy object_path:"/org/navit_project/navit/navit/attr_iter/0"
-   * - .. _dbus_method_navit_get_attr_wi:
-
-       **get_attr_wi**
-     - ``.navit``
-     - string: ``attribute``, ``o`` (attr_iter)
-     - string: ``attribute`` variant: ``value``
-     - Gets a navit attribute value using an iterator.
-     - .. code:: bash
-
-          org.navit_project.navit.navit.get_attr_wi string:"zoom" object_path:"/org/navit_project/navit/navit/attr_iter/0"
-   * - .. _dbus_method_navit_add_attr:
-
-       **add_attr**
-     - ``.navit``
-     - string: ``attribute`` variant: ``value``
-     - *none*
-     - Adds a navit attribute.
-     - .. code:: bash
-
-          org.navit_project.navit.navit.add_attr string:"callback" variant:object_path:"/org/navit_project/navit/callback/0"
-   * - .. _dbus_method_navit_remove_attr:
-
-       **remove_attr**
-     - ``.navit``
-     - string: ``attribute`` variant: ``value``
-     - *none*
-     - Removes a navit attribute.
-     - .. code:: bash
-
-          org.navit_project.navit.navit.remove_attr string:"callback" variant:object_path:"/org/navit_project/navit/callback/0"
-   * - .. _dbus_method_navit_evaluate:
-
-       **evaluate**
-     - ``.navit``
-     - string: ``command``
-     - string: ``result``
-     - Evaluates a navit command string.
-     - .. code:: bash
-
-          org.navit_project.navit.navit.evaluate string:"zoom(2)"
-   * - .. _dbus_method_navit_quit:
-
-       **quit**
-     - ``.navit``
-     - *none*
-     - *none*
-     - Quits the navit application.
-     - .. code:: bash
-
-          org.navit_project.navit.navit.quit
-   * - .. _dbus_method_navit_traffic_export_gpx:
-
-       **traffic_export_gpx**
-     - ``.navit``
-     - string: ``filename``
-     - *none*
-     - Exports traffic data to a GPX file.
-     - .. code:: bash
-
-          org.navit_project.navit.navit.traffic_export_gpx string:"/tmp/traffic.gpx"
-   * - .. _dbus_method_navit_traffic_inject:
-
-       **traffic_inject**
-     - ``.navit``
-     - string: ``filename``
-     - *none*
-     - Injects traffic data from a file.
-     - .. code:: bash
-
-          org.navit_project.navit.navit.traffic_inject string:"/tmp/traffic.gpx"
-   * - .. _dbus_method_navit_zoom_to_route:
-
-       **zoom_to_route**
-     - ``.navit``
-     - *none*
-     - *none*
-     - Zooms the map to fit the current route.
-     - .. code:: bash
-
-          org.navit_project.navit.navit.zoom_to_route
-   * - .. _dbus_method_navit_export_as_geojson:
-
-       **export_as_geojson**
-     - ``.navit``
-     - string: ``filename``
-     - *none*
-     - Exports the current route to a GeoJSON file.
-     - .. code:: bash
-
-          org.navit_project.navit.navit.export_as_geojson string:"/tmp/route.geojson"
-
 org.navit_project.navit.layout
 -------------------------------
 
@@ -1128,30 +1158,6 @@ org.navit_project.navit.layout
      - .. code:: bash
 
           org.navit_project.navit.layout.get_attr string:"name"
-
-org.navit_project.navit.map
-----------------------------
-
-.. list-table:: org.navit_project.navit.map methods (additional)
-   :widths: 12 8 18 10 25 27
-   :header-rows: 1
-
-   * - Method
-     - Path
-     - Arguments
-     - Return
-     - Description
-     - Example
-   * - .. _dbus_method_map_dump:
-
-       **dump**
-     - ``.map``
-     - string: ``file``
-     - *none*
-     - Dumps the map data to a file.
-     - .. code:: bash
-
-          org.navit_project.navit.map.dump string:"/tmp/map.bin"
 
 org.navit_project.navit.osd
 ----------------------------
@@ -1251,80 +1257,3 @@ org.navit_project.navit.roadprofile
 
           org.navit_project.navit.roadprofile.attr_iter_destroy object_path:"/org/navit_project/navit/roadprofile/attr_iter/0"
 
-org.navit_project.navit.route (additional)
--------------------------------------------
-
-.. list-table:: org.navit_project.navit.route methods (additional)
-   :widths: 12 8 18 10 25 27
-   :header-rows: 1
-
-   * - Method
-     - Path
-     - Arguments
-     - Return
-     - Description
-     - Example
-   * - .. _dbus_method_route_destroy:
-
-       **destroy**
-     - ``.route``
-     - *none*
-     - *none*
-     - Destroys the route object.
-     - .. code:: bash
-
-          org.navit_project.navit.route.destroy
-   * - .. _dbus_method_route_dup:
-
-       **dup**
-     - ``.route``
-     - *none*
-     - ``o`` (object path)
-     - Duplicates the route object.
-     - .. code:: bash
-
-          org.navit_project.navit.route.dup
-
-org.navit_project.navit.vehicleprofile (additional)
-----------------------------------------------------
-
-.. list-table:: org.navit_project.navit.vehicleprofile methods (additional)
-   :widths: 12 8 18 10 25 27
-   :header-rows: 1
-
-   * - Method
-     - Path
-     - Arguments
-     - Return
-     - Description
-     - Example
-   * - .. _dbus_method_vehicleprofile_attr_iter:
-
-       **attr_iter**
-     - ``.vehicleprofile``
-     - *none*
-     - ``o`` (object path)
-     - Returns an iterator for vehicle profile attributes.
-     - .. code:: bash
-
-          org.navit_project.navit.vehicleprofile.attr_iter
-   * - .. _dbus_method_vehicleprofile_attr_iter_destroy:
-
-       **attr_iter_destroy**
-     - ``.vehicleprofile``
-     - ``o`` (attr_iter)
-     - *none*
-     - Destroys a vehicle profile attribute iterator.
-     - .. code:: bash
-
-          org.navit_project.navit.vehicleprofile.attr_iter_destroy object_path:"/org/navit_project/navit/vehicleprofile/attr_iter/0"
-   * - .. _dbus_method_vehicleprofile_get_attr_wi:
-
-       **get_attr_wi**
-     - ``.vehicleprofile``
-     - string: ``attribute``, ``o`` (attr_iter)
-     - string: ``attribute`` variant: ``value``
-     - Gets a vehicle profile attribute value using an iterator.
-     - .. code:: bash
-
-          org.navit_project.navit.vehicleprofile.get_attr_wi string:"name" object_path:"/org/navit_project/navit/vehicleprofile/attr_iter/0"
