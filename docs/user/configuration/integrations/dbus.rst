@@ -180,6 +180,7 @@ where ``Proj`` must be ``geo``. For example:
      - Description
      - Example
    * - .. _dbus_method_draw:
+
        **draw**
      - ``.navit``
      - *none*
@@ -189,6 +190,7 @@ where ``Proj`` must be ``geo``. For example:
 
           org.navit_project.navit.navit.draw
    * - .. _dbus_method_add_message:
+
        **add_message**
      - ``.navit``
      - string: "message"
@@ -198,6 +200,7 @@ where ``Proj`` must be ``geo``. For example:
 
           org.navit_project.navit.navit.add_message string:"My Message"
    * - .. _dbus_method_set_center_by_string:
+
        **set_center_by_string**
      - ``.navit``
      - string: ``coordinates``
@@ -207,6 +210,7 @@ where ``Proj`` must be ``geo``. For example:
 
           org.navit_project.navit.navit.set_center_by_string string:"geo: 24.0 65.0"
    * - .. _dbus_method_set_center:
+
        **set_center**
      - ``.navit``
      - | int: projection, string: coordinates
@@ -218,6 +222,7 @@ where ``Proj`` must be ``geo``. For example:
           org.navit_project.navit.navit.set_center int32:1 string:"geo: 24.0 65.0"
           org.navit_project.navit.navit.set_center int32:1 int32:0x138a4a int32:0x5d773f
    * - .. _dbus_method_set_center_screen:
+
        **set_center_screen**
      - ``.navit``
      - | integer: ``pixel_x``, integer: ``pixel_y``
@@ -227,6 +232,7 @@ where ``Proj`` must be ``geo``. For example:
 
           org.navit_project.navit.navit.set_center_screen int32:200 int32:400
    * - .. _dbus_method_set_layout:
+
        **set_layout**
      - ``.navit``
      - string: ``layoutname``
@@ -236,6 +242,7 @@ where ``Proj`` must be ``geo``. For example:
 
           org.navit_project.navit.navit.set_layout string:"car-dark"
    * - .. _dbus_method_zoom:
+
        **zoom**
      - ``.navit``
      - integer: ``factor`` (integer: ``pixel_x``, integer: ``pixel_y``)
@@ -254,6 +261,7 @@ where ``Proj`` must be ``geo``. For example:
 
           org.navit_project.navit.navit.zoom int32:6 int32:200 int32:400
    * - .. _dbus_method_block:
+
        **block**
      - ``.navit``
      - integer: ``mode``
@@ -263,6 +271,7 @@ where ``Proj`` must be ``geo``. For example:
 
           org.navit_project.navit.navit.block int32:1
    * - .. _dbus_method_set_position:
+
        **set_position**
      - ``.navit``
      - | string: ``coordinates``
@@ -283,6 +292,7 @@ where ``Proj`` must be ``geo``. For example:
 
           org.navit_project.navit.navit.set_position int32:1 int32:0x138a4a int32:0x5d773f
    * - .. _dbus_method_set_destination:
+
        **set_destination**
      - ``.navit``
      - | string: ``coordinates``, string: ``"comment"``
@@ -302,6 +312,7 @@ where ``Proj`` must be ``geo``. For example:
 
           org.navit_project.navit.navit.set_destination int32:1 int32:0x138a4a int32:0x5d773f
    * - .. _dbus_method_clear_destination:
+
        **clear_destination**
      - ``.navit``
      - *none*
@@ -311,6 +322,7 @@ where ``Proj`` must be ``geo``. For example:
 
           org.navit_project.navit.navit.clear_destination
    * - .. _dbus_method_get_attr:
+
        **get_attr**
      - ``.navit``
      - string: ``attribute``
@@ -339,6 +351,7 @@ where ``Proj`` must be ``geo``. For example:
           string "orientation"
           variant    int32 1
    * - .. _dbus_method_set_attr:
+
        **set_attr**
      - ``.navit``
      - string: ``attribute``, variant: ``value``
@@ -351,6 +364,7 @@ where ``Proj`` must be ``geo``. For example:
 
           org.navit_project.navit.navit.set_attr string:"zoom" variant:int32:500
    * - .. _dbus_method_export_as_gpx:
+
        **export_as_gpx**
      - ``.navit``
      - string: ``filename``
@@ -385,6 +399,7 @@ must be prefixed by:
      - Description
      - Example
    * - .. _dbus_method_vehicleprofile_get_attr:
+
        **get_attr**
      - ``.vehicleprofile``
      - string: ``attribute``
@@ -412,6 +427,7 @@ must be prefixed by:
           string "static_speed"
           variant    int32 5
    * - .. _dbus_method_vehicleprofile_set_attr:
+
        **set_attr**
      - ``.vehicleprofile``
      - string: ``attribute``, variant: ``value``
@@ -448,6 +464,7 @@ must be prefixed by:
      - Description
      - Example
    * - .. _dbus_method_vehicle_set_attr:
+
        **set_attr**
      - ``.vehicle``
      - string: ``attribute``, variant: ``value``
@@ -482,6 +499,7 @@ must be prefixed by:
      - Description
      - Example
    * - .. _dbus_method_route_get_attr:
+
        **get_attr**
      - ``.route``
      - string: ``attribute``
@@ -545,8 +563,9 @@ These methods are available on the root config object (path: ``/org/navit_projec
      - Description
      - Example
    * - .. _dbus_method_config_attr_iter:
+
        **attr_iter**
-     - ````
+     - 
      - *none*
      - ``o`` (object path)
      - Returns an iterator for config attributes.
@@ -554,8 +573,9 @@ These methods are available on the root config object (path: ``/org/navit_projec
 
           org.navit_project.navit.config.attr_iter
    * - .. _dbus_method_config_attr_iter_destroy:
+
        **attr_iter_destroy**
-     - ````
+     - 
      - ``o`` (attr_iter)
      - *none*
      - Destroys a config attribute iterator.
@@ -563,8 +583,9 @@ These methods are available on the root config object (path: ``/org/navit_projec
 
           org.navit_project.navit.config.attr_iter_destroy object_path:"/org/navit_project/navit/attr_iter/0"
    * - .. _dbus_method_config_get_attr:
+
        **get_attr**
-     - ````
+     - 
      - string: ``attrname``
      - string: ``attrname`` variant: ``value``
      - Gets a config attribute value.
@@ -572,8 +593,9 @@ These methods are available on the root config object (path: ``/org/navit_projec
 
           org.navit_project.navit.config.get_attr string:"zoom"
    * - .. _dbus_method_config_get_attr_wi:
-       **get_attr_wi</
-     - ````
+
+       **get_attr_wi**
+     - 
      - string: ``attrname``, ``o`` (attr_iter)
      - string: ``attrname`` variant: ``value``
      - Gets a config attribute value using an iterator.
@@ -581,8 +603,9 @@ These methods are available on the root config object (path: ``/org/navit_projec
 
           org.navit_project.navit.config.get_attr_wi string:"zoom" object_path:"/org/navit_project/navit/attr_iter/0"
    * - .. _dbus_method_config_callback_new:
+
        **callback_new**
-     - ````
+     - 
      - string: ``signalname``
      - ``o`` (object path)
      - Creates a new callback for a signal.
@@ -590,8 +613,9 @@ These methods are available on the root config object (path: ``/org/navit_projec
 
           org.navit_project.navit.config.callback_new string:"my_signal"
    * - .. _dbus_method_config_callback_attr_new:
+
        **callback_attr_new**
-     - ````
+     - 
      - string: ``signalname``, string: ``attribute``
      - ``o`` (object path)
      - Creates a new callback for a signal with attribute filter.
@@ -599,8 +623,9 @@ These methods are available on the root config object (path: ``/org/navit_projec
 
           org.navit_project.navit.config.callback_attr_new string:"my_signal" string:"zoom"
    * - .. _dbus_method_config_search_list_new:
+
        **search_list_new**
-     - ````
+     - 
      - ``o`` (mapset)
      - ``o`` (object path)
      - Creates a new search list for a mapset.
@@ -622,6 +647,7 @@ org.navit_project.navit.callback
      - Description
      - Example
    * - .. _dbus_method_callback_destroy:
+
        **destroy**
      - ``.callback``
      - *none*
@@ -645,6 +671,7 @@ org.navit_project.navit.graphics
      - Description
      - Example
    * - .. _dbus_method_graphics_get_data:
+
        **get_data**
      - ``.graphics``
      - string: ``type``
@@ -654,6 +681,7 @@ org.navit_project.navit.graphics
 
           org.navit_project.navit.graphics.get_data string:"screenshot"
    * - .. _dbus_method_graphics_set_attr:
+
        **set_attr**
      - ``.graphics``
      - string: ``attribute`` variant: ``value``
@@ -677,6 +705,7 @@ org.navit_project.navit.gui
      - Description
      - Example
    * - .. _dbus_method_gui_get_attr:
+
        **get_attr**
      - ``.gui``
      - string: ``attribute``
@@ -686,7 +715,8 @@ org.navit_project.navit.gui
 
           org.navit_project.navit.gui.get_attr string:"active"
    * - .. _dbus_method_gui_command_parameter:
-       **command_parameter</
+
+       **command_parameter**
      - ``.gui``
      - string: ``command``, dict: ``parameter``
      - dict: ``return``
@@ -695,6 +725,7 @@ org.navit_project.navit.gui
 
           org.navit_project.navit.gui.command_parameter string:"menu" dict:{}
    * - .. _dbus_method_gui_command:
+
        **command**
      - ``.gui``
      - string: ``command``
@@ -718,6 +749,7 @@ org.navit_project.navit.map
      - Description
      - Example
    * - .. _dbus_method_map_get_attr:
+
        **get_attr**
      - ``.map``
      - string: ``attribute``
@@ -727,6 +759,7 @@ org.navit_project.navit.map
 
           org.navit_project.navit.map.get_attr string:"name"
    * - .. _dbus_method_map_set_attr:
+
        **set_attr**
      - ``.map``
      - string: ``attribute`` variant: ``value``
@@ -750,6 +783,7 @@ org.navit_project.navit.mapset
      - Description
      - Example
    * - .. _dbus_method_mapset_attr_iter:
+
        **attr_iter**
      - ``.mapset``
      - *none*
@@ -759,6 +793,7 @@ org.navit_project.navit.mapset
 
           org.navit_project.navit.mapset.attr_iter
    * - .. _dbus_method_mapset_attr_iter_destroy:
+
        **attr_iter_destroy**
      - ``.mapset``
      - ``o`` (attr_iter)
@@ -768,6 +803,7 @@ org.navit_project.navit.mapset
 
           org.navit_project.navit.mapset.attr_iter_destroy object_path:"/org/navit_project/navit/mapset/attr_iter/0"
    * - .. _dbus_method_mapset_get_attr:
+
        **get_attr**
      - ``.mapset``
      - string: ``attribute``
@@ -777,7 +813,8 @@ org.navit_project.navit.mapset
 
           org.navit_project.navit.mapset.get_attr string:"name"
    * - .. _dbus_method_mapset_get_attr_wi:
-       **get_attr_wi</
+
+       **get_attr_wi**
      - ``.mapset``
      - string: ``attribute``, ``o`` (attr_iter)
      - string: ``attribute`` variant: ``value``
@@ -800,6 +837,7 @@ org.navit_project.navit.navigation
      - Description
      - Example
    * - .. _dbus_method_navigation_get_attr:
+
        **get_attr**
      - ``.navigation``
      - string: ``attribute``
@@ -823,6 +861,7 @@ org.navit_project.navit.route
      - Description
      - Example
    * - .. _dbus_method_route_set_attr:
+
        **set_attr**
      - ``.route``
      - string: ``attribute`` variant: ``value``
@@ -832,6 +871,7 @@ org.navit_project.navit.route
 
           org.navit_project.navit.route.set_attr string:"avoid_tolls" variant:boolean:true
    * - .. _dbus_method_route_add_attr:
+
        **add_attr**
      - ``.route``
      - string: ``attribute`` variant: ``value``
@@ -841,6 +881,7 @@ org.navit_project.navit.route
 
           org.navit_project.navit.route.add_attr string:"waypoint" variant:object_path:"/org/navit_project/navit/waypoint/0"
    * - .. _dbus_method_route_remove_attr:
+
        **remove_attr**
      - ``.route``
      - string: ``attribute`` variant: ``value``
@@ -864,6 +905,7 @@ org.navit_project.navit.search_list
      - Description
      - Example
    * - .. _dbus_method_search_list_destroy:
+
        **destroy**
      - ``.search_list``
      - *none*
@@ -873,6 +915,7 @@ org.navit_project.navit.search_list
 
           org.navit_project.navit.search_list.destroy
    * - .. _dbus_method_search_list_get_result:
+
        **get_result**
      - ``.search_list``
      - *none*
@@ -882,6 +925,7 @@ org.navit_project.navit.search_list
 
           org.navit_project.navit.search_list.get_result
    * - .. _dbus_method_search_list_search:
+
        **search**
      - ``.search_list``
      - string: ``attribute`` variant: ``value`` int32: ``partial``
@@ -891,6 +935,7 @@ org.navit_project.navit.search_list
 
           org.navit_project.navit.search_list.search string:"name" variant:string:"Berlin" int32:1
    * - .. _dbus_method_search_list_select:
+
        **select**
      - ``.search_list``
      - string: ``attribute_type`` int32: ``id`` int32: ``mode``
@@ -914,6 +959,7 @@ org.navit_project.navit.tracking
      - Description
      - Example
    * - .. _dbus_method_tracking_get_attr:
+
        **get_attr**
      - ``.tracking``
      - string: ``attribute``
@@ -939,6 +985,7 @@ Additional methods on the navit object.
      - Description
      - Example
    * - .. _dbus_method_navit_resize:
+
        **resize**
      - ``.navit``
      - int32: ``upperleft``, int32: ``lowerright``
@@ -948,6 +995,7 @@ Additional methods on the navit object.
 
           org.navit_project.navit.navit.resize int32:0 int32:0 int32:800 int32:480
    * - .. _dbus_method_navit_attr_iter:
+
        **attr_iter**
      - ``.navit``
      - *none*
@@ -957,6 +1005,7 @@ Additional methods on the navit object.
 
           org.navit_project.navit.navit.attr_iter
    * - .. _dbus_method_navit_attr_iter_destroy:
+
        **attr_iter_destroy**
      - ``.navit``
      - ``o`` (attr_iter)
@@ -966,7 +1015,8 @@ Additional methods on the navit object.
 
           org.navit_project.navit.navit.attr_iter_destroy object_path:"/org/navit_project/navit/navit/attr_iter/0"
    * - .. _dbus_method_navit_get_attr_wi:
-       **get_attr_wi</
+
+       **get_attr_wi**
      - ``.navit``
      - string: ``attribute``, ``o`` (attr_iter)
      - string: ``attribute`` variant: ``value``
@@ -975,6 +1025,7 @@ Additional methods on the navit object.
 
           org.navit_project.navit.navit.get_attr_wi string:"zoom" object_path:"/org/navit_project/navit/navit/attr_iter/0"
    * - .. _dbus_method_navit_add_attr:
+
        **add_attr**
      - ``.navit``
      - string: ``attribute`` variant: ``value``
@@ -984,6 +1035,7 @@ Additional methods on the navit object.
 
           org.navit_project.navit.navit.add_attr string:"callback" variant:object_path:"/org/navit_project/navit/callback/0"
    * - .. _dbus_method_navit_remove_attr:
+
        **remove_attr**
      - ``.navit``
      - string: ``attribute`` variant: ``value``
@@ -993,6 +1045,7 @@ Additional methods on the navit object.
 
           org.navit_project.navit.navit.remove_attr string:"callback" variant:object_path:"/org/navit_project/navit/callback/0"
    * - .. _dbus_method_navit_evaluate:
+
        **evaluate**
      - ``.navit``
      - string: ``command``
@@ -1002,6 +1055,7 @@ Additional methods on the navit object.
 
           org.navit_project.navit.navit.evaluate string:"zoom(2)"
    * - .. _dbus_method_navit_quit:
+
        **quit**
      - ``.navit``
      - *none*
@@ -1011,6 +1065,7 @@ Additional methods on the navit object.
 
           org.navit_project.navit.navit.quit
    * - .. _dbus_method_navit_traffic_export_gpx:
+
        **traffic_export_gpx**
      - ``.navit``
      - string: ``filename``
@@ -1020,6 +1075,7 @@ Additional methods on the navit object.
 
           org.navit_project.navit.navit.traffic_export_gpx string:"/tmp/traffic.gpx"
    * - .. _dbus_method_navit_traffic_inject:
+
        **traffic_inject**
      - ``.navit``
      - string: ``filename``
@@ -1029,6 +1085,7 @@ Additional methods on the navit object.
 
           org.navit_project.navit.navit.traffic_inject string:"/tmp/traffic.gpx"
    * - .. _dbus_method_navit_zoom_to_route:
+
        **zoom_to_route**
      - ``.navit``
      - *none*
@@ -1038,6 +1095,7 @@ Additional methods on the navit object.
 
           org.navit_project.navit.navit.zoom_to_route
    * - .. _dbus_method_navit_export_as_geojson:
+
        **export_as_geojson**
      - ``.navit``
      - string: ``filename``
@@ -1061,6 +1119,7 @@ org.navit_project.navit.layout
      - Description
      - Example
    * - .. _dbus_method_layout_get_attr:
+
        **get_attr**
      - ``.layout``
      - string: ``attribute``
@@ -1084,6 +1143,7 @@ org.navit_project.navit.map
      - Description
      - Example
    * - .. _dbus_method_map_dump:
+
        **dump**
      - ``.map``
      - string: ``file``
@@ -1107,6 +1167,7 @@ org.navit_project.navit.osd
      - Description
      - Example
    * - .. _dbus_method_osd_get_attr:
+
        **get_attr**
      - ``.osd``
      - string: ``attribute``
@@ -1116,6 +1177,7 @@ org.navit_project.navit.osd
 
           org.navit_project.navit.osd.get_attr string:"enabled"
    * - .. _dbus_method_osd_set_attr:
+
        **set_attr**
      - ``.osd``
      - string: ``attribute`` variant: ``value``
@@ -1139,6 +1201,7 @@ org.navit_project.navit.roadprofile
      - Description
      - Example
    * - .. _dbus_method_roadprofile_get_attr:
+
        **get_attr**
      - ``.roadprofile``
      - string: ``attribute``
@@ -1148,6 +1211,7 @@ org.navit_project.navit.roadprofile
 
           org.navit_project.navit.roadprofile.get_attr string:"speed"
    * - .. _dbus_method_roadprofile_get_attr_wi:
+
        **get_attr_wi**
      - ``.roadprofile``
      - string: ``attribute``, ``o`` (attr_iter)
@@ -1157,6 +1221,7 @@ org.navit_project.navit.roadprofile
 
           org.navit_project.navit.roadprofile.get_attr_wi string:"speed" object_path:"/org/navit_project/navit/roadprofile/attr_iter/0"
    * - .. _dbus_method_roadprofile_set_attr:
+
        **set_attr**
      - ``.roadprofile``
      - string: ``attribute`` variant: ``value``
@@ -1166,6 +1231,7 @@ org.navit_project.navit.roadprofile
 
           org.navit_project.navit.roadprofile.set_attr string:"speed" variant:int32:50
    * - .. _dbus_method_roadprofile_attr_iter:
+
        **attr_iter**
      - ``.roadprofile``
      - *none*
@@ -1175,6 +1241,7 @@ org.navit_project.navit.roadprofile
 
           org.navit_project.navit.roadprofile.attr_iter
    * - .. _dbus_method_roadprofile_attr_iter_destroy:
+
        **attr_iter_destroy**
      - ``.roadprofile``
      - ``o`` (attr_iter)
@@ -1198,6 +1265,7 @@ org.navit_project.navit.route (additional)
      - Description
      - Example
    * - .. _dbus_method_route_destroy:
+
        **destroy**
      - ``.route``
      - *none*
@@ -1207,6 +1275,7 @@ org.navit_project.navit.route (additional)
 
           org.navit_project.navit.route.destroy
    * - .. _dbus_method_route_dup:
+
        **dup**
      - ``.route``
      - *none*
@@ -1230,6 +1299,7 @@ org.navit_project.navit.vehicleprofile (additional)
      - Description
      - Example
    * - .. _dbus_method_vehicleprofile_attr_iter:
+
        **attr_iter**
      - ``.vehicleprofile``
      - *none*
@@ -1239,6 +1309,7 @@ org.navit_project.navit.vehicleprofile (additional)
 
           org.navit_project.navit.vehicleprofile.attr_iter
    * - .. _dbus_method_vehicleprofile_attr_iter_destroy:
+
        **attr_iter_destroy**
      - ``.vehicleprofile``
      - ``o`` (attr_iter)
@@ -1248,6 +1319,7 @@ org.navit_project.navit.vehicleprofile (additional)
 
           org.navit_project.navit.vehicleprofile.attr_iter_destroy object_path:"/org/navit_project/navit/vehicleprofile/attr_iter/0"
    * - .. _dbus_method_vehicleprofile_get_attr_wi:
+
        **get_attr_wi**
      - ``.vehicleprofile``
      - string: ``attribute``, ``o`` (attr_iter)
