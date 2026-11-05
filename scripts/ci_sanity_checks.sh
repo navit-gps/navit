@@ -14,6 +14,7 @@ set -u
 return_code=0
 GIT_DIFF_OUTPUT="${1:-/dev/stdout}"
 KEEPTEMP=${2:-false}
+TARGET_BRANCH=refs/remotes/origin/trunk
 
 cleanup() {
 	$KEEPTEMP || rm -rf build-locale
@@ -63,7 +64,7 @@ check_po || {
 git config --global --add safe.directory $(pwd)
 
 # List the files that are different from the trunk
-for f in $(git --no-pager diff --name-only refs/remotes/origin/trunk | sort -u); do
+for f in $(git --no-pager diff --name-only $TARGET_BRANCH | sort -u); do
     if [[ "${f}" =~ navit/support/ ]] || [[ "${f}" =~ navit/fib-1\.1/ ]] || [[ "${f}" =~ navit/traffic/permanentrestrictions/ ]] ; then
         echo "[DEBUG] Skipping file ${f} ..."
         continue
@@ -95,4 +96,15 @@ if ! find . -type f -name "*shipped.xml" -print0 | xargs -0L1 xmllint --noout --
 fi
 
 check_diff
+
+echo "[INFO] checking for compliance of git commit ruling: no warnings as per git cliff as that will be used to generate the Changelog."
+mergebase=$(git merge-base HEAD $TARGET_BRANCH)
+
+if ! git-cliff --config cliff.toml -s all $mergebase..HEAD
+then
+	echo "[ERROR] git cliff does not like the commits in this feature branch. Please rework them to conventional commits."
+	return_code=4
+fi
+
+
 exit $return_code

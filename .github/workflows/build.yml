@@ -9,11 +9,19 @@ jobs:
     container:
       image: ghcr.io/navit-gps/sanity_check:master
     steps:
+        - name: Install git-cliff
+          run: |
+            apt-get update
+            DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends pipx
+            pipx install git-cliff
         - uses: actions/checkout@v7
           with:
+            ref: ${{ github.event.pull_request.head.sha }}
             fetch-depth: 0
         - name: run sanity check script
-          run: bash scripts/ci_sanity_checks.sh ci_sanity_checks.diff
+          run: |
+            bash -c 'source /github/home/.local/share/pipx/venvs/git-cliff/bin/activate; \
+                     scripts/ci_sanity_checks.sh ci_sanity_checks.diff'
         - uses: actions/upload-artifact@v7
           if: failure()
           with:
