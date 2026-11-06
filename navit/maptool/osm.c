@@ -2467,11 +2467,32 @@ struct relation_member {
 };
 
 static void parse_relation_member_string(char *relation_member_string, struct relation_member *memb) {
-    int len;
     int type_numeric;
-    sscanf(relation_member_string, RELATION_MEMBER_PARSE_FORMAT, &type_numeric, &memb->id, &len);
+    long long id;
+    char *colon_pos;
+
+    /* Parse: type:id (e.g. "0:1234567890")
+     * Use sscanf without %n to avoid CWE-120 buffer overflow
+     */
+    if (sscanf(relation_member_string, "%d:" LONGLONG_FMT, &type_numeric, &id) != 2) {
+        return;
+    }
     memb->type = (enum relation_member_type)type_numeric;
-    memb->role = relation_member_string + len;
+    memb->id = id;
+
+    /* Find the colon position for the role field
+     * role starts after the second colon (or at end if no role)
+     */
+    colon_pos = strchr(relation_member_string, ':');
+    if (colon_pos) {
+        colon_pos = strchr(colon_pos + 1, ':');
+    }
+    /* If no second colon, role is empty; otherwise point past the second colon */
+    if (!colon_pos) {
+        memb->role = relation_member_string + strlen(relation_member_string);
+    } else {
+        memb->role = colon_pos + 1;
+    }
 }
 
 static int search_relation_member(struct item_bin *ib, char *role, struct relation_member *memb, int *min_count) {
