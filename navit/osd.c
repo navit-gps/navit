@@ -99,8 +99,19 @@ int osd_set_attr(struct osd *osd, struct attr *attr) {
 static void osd_destroy(struct osd *osd) {
     if (!osd)
         return;
-    if (osd->meth.destroy)
+    if (osd->meth.destroy) {
         osd->meth.destroy(osd->priv);
+    }
+    if (osd->attrs) {
+        struct attr **a = osd->attrs;
+        while (a && *a) {
+            if ((*a)->type == attr_callback_list) {
+                callback_list_destroy((*a)->u.callback_list);
+                (*a)->u.callback_list = NULL;
+            }
+            a++;
+        }
+    }
     attr_list_free(osd->attrs);
     g_free(osd);
 }
@@ -145,6 +156,78 @@ void osd_std_resize(struct osd_item *item) {
 }
 
 /**
+ * @brief Returns the padding of the graphics context an OSD item lives on.
+ *
+ * The padding of an overlay is inherited from the graphics context it is
+ * created on, so the padding of the item's own graphics is used whenever it is
+ * available. Before the overlay has been created the padding of the navit's
+ * graphics is used instead, so that the very first calculation already yields
+ * the same result as all subsequent ones.
+ *
+ * @param item The item to get the padding for
+ * @return The padding or NULL if the graphics driver does not support padding
+ */
+static struct padding *osd_get_padding(struct osd_item *item) {
+    struct graphics *gr;
+
+    if (item->gr) {
+        gr = item->gr;
+    } else if (item->navit) {
+        gr = navit_get_graphics(item->navit);
+    } else {
+        return NULL;
+    }
+
+    if (!gr) {
+        return NULL;
+    }
+
+    return graphics_get_data(gr, "padding");
+}
+
+/**
+ * @brief Calculates the size and position of an OSD item.
+ *
+ * @param item The item whose size and position are to be calculated
+ * @param w Available screen width in pixels
+ * @param h Available screen height in pixels
+ * @param padding The padding of the graphics context the item is drawn on, or NULL
+ */
+static void osd_calculate_sizes(struct osd_item *item, int w, int h, struct padding *padding) {
+    if (padding) {
+        dbg(lvl_debug, "Got padding=%p for item=%p: left=%d top=%d right=%d bottom=%d", padding, item, padding->left,
+            padding->top, padding->right, padding->bottom);
+    }
+
+    /* reduce w and h by total padding in the respective dimension */
+    if (padding) {
+        w -= (padding->left + padding->right);
+        h -= (padding->top + padding->bottom);
+    }
+
+    if (item->rel_w != ATTR_REL_RELSHIFT) {
+        item->w = attr_rel2real(item->rel_w, w, 1);
+    }
+    if (item->w < 0) {
+        item->w = 0;
+    }
+    if (item->rel_h != ATTR_REL_RELSHIFT) {
+        item->h = attr_rel2real(item->rel_h, h, 1);
+    }
+    if (item->h < 0) {
+        item->h = 0;
+    }
+    item->p.x = attr_rel2real(item->rel_x, w, 1);
+    item->p.y = attr_rel2real(item->rel_y, h, 1);
+
+    /* add left and top padding to item->p */
+    if (padding) {
+        item->p.x += padding->left;
+        item->p.y += padding->top;
+    }
+}
+
+/**
  * @brief Calculates the size and position of an OSD item.
  *
  * If the geometry of the OSD item is specified relative to screen dimensions,
@@ -166,41 +249,7 @@ void osd_std_resize(struct osd_item *item) {
  * @param h Available screen height in pixels
  */
 void osd_std_calculate_sizes(struct osd_item *item, int w, int h) {
-    struct padding *padding = NULL;
-
-    if (item->gr) {
-        padding = graphics_get_data(item->gr, "padding");
-        if (padding) {
-            dbg(lvl_debug, "Got padding=%p for item=%p (item->gr=%p): left=%d top=%d right=%d bottom=%d", padding, item,
-                item->gr, padding->left, padding->top, padding->right, padding->bottom);
-        } else {
-            dbg(lvl_debug, "Got padding=%p for item=%p (item->gr=%p)", padding, item, item->gr);
-        }
-    } else
-        dbg(lvl_warning, "cannot get padding for item=%p: item->gr is NULL", item);
-
-    /* reduce w and h by total padding in the respective dimension */
-    if (padding) {
-        w -= (padding->left + padding->right);
-        h -= (padding->top + padding->bottom);
-    }
-
-    if (item->rel_w != ATTR_REL_RELSHIFT)
-        item->w = attr_rel2real(item->rel_w, w, 1);
-    if (item->w < 0)
-        item->w = 0;
-    if (item->rel_h != ATTR_REL_RELSHIFT)
-        item->h = attr_rel2real(item->rel_h, h, 1);
-    if (item->h < 0)
-        item->h = 0;
-    item->p.x = attr_rel2real(item->rel_x, w, 1);
-    item->p.y = attr_rel2real(item->rel_y, h, 1);
-
-    /* add left and top padding to item->p */
-    if (padding) {
-        item->p.x += padding->left;
-        item->p.y += padding->top;
-    }
+    osd_calculate_sizes(item, w, h, osd_get_padding(item));
 }
 
 /**
@@ -356,6 +405,14 @@ void osd_std_config(struct osd_item *item, struct navit *navit) {
 
     dbg(lvl_debug, "enter, item=%p, enable_cs=%p", item, item->enable_cs);
     if (item->enable_cs) {
+        if (item->reconfig_cb) {
+            /* The saved command holds a reference to the callback, so it has
+             * to be released before the callback is destroyed.
+             */
+            command_saved_set_cb(item->enable_cs, NULL);
+            callback_destroy(item->reconfig_cb);
+            item->reconfig_cb = NULL;
+        }
         item->reconfig_cb = callback_new_1(callback_cast(osd_std_reconfigure), item);
         command_saved_set_cb(item->enable_cs, item->reconfig_cb);
 
@@ -393,6 +450,57 @@ void osd_set_keypress(struct navit *nav, struct osd_item *item) {
 }
 
 /**
+ * @brief Tears down the graphics resources of an OSD item.
+ *
+ * Removes callbacks from the navit graphics, destroys GCs and font, and frees
+ * the overlay. Does NOT touch persistent config (enable_cs, command, etc.).
+ *
+ * @param item The OSD item
+ * @param nav The navit object
+ */
+static void osd_teardown_std_graphic(struct osd_item *item, struct navit *nav) {
+    struct graphics *navit_gr = navit_get_graphics(nav);
+    if (item->resize_cb) {
+        if (navit_gr) {
+            graphics_remove_callback(navit_gr, item->resize_cb);
+        }
+        callback_destroy(item->resize_cb);
+        item->resize_cb = NULL;
+    }
+    if (item->keypress_cb) {
+        if (navit_gr) {
+            graphics_remove_callback(navit_gr, item->keypress_cb);
+        }
+        callback_destroy(item->keypress_cb);
+        item->keypress_cb = NULL;
+    }
+    if (item->cb) {
+        navit_remove_callback(nav, item->cb);
+        callback_destroy(item->cb);
+        item->cb = NULL;
+    }
+    if (item->graphic_bg) {
+        graphics_gc_destroy(item->graphic_bg);
+    }
+    if (item->graphic_fg) {
+        graphics_gc_destroy(item->graphic_fg);
+    }
+    if (item->graphic_fg_text) {
+        graphics_gc_destroy(item->graphic_fg_text);
+    }
+    if (item->font) {
+        graphics_font_destroy(item->font);
+    }
+    if (item->gr && !(item->flags & DISABLE_OVERLAY)) {
+        graphics_free(item->gr);
+    }
+    item->graphic_bg = NULL;
+    item->graphic_fg = NULL;
+    item->graphic_fg_text = NULL;
+    item->font = NULL;
+}
+
+/**
  * @brief Sets up the graphics for an item.
  *
  * This method creates a new graphics overlay for an item and initializes its attributes (colors, font
@@ -403,29 +511,19 @@ void osd_set_keypress(struct navit *nav, struct osd_item *item) {
  * @param priv The `struct osd_priv` for the OSD item
  */
 void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *priv) {
-    struct graphics *navit_gr;
-    int w, h;
-    struct padding *padding = NULL;
+    struct graphics *navit_gr = navit_get_graphics(nav);
+    struct padding *padding = navit_gr ? graphics_get_data(navit_gr, "padding") : NULL;
+    int w = navit_get_width(nav);
+    int h = navit_get_height(nav);
 
-    navit_gr = navit_get_graphics(nav);
-    w = navit_get_width(nav);
-    h = navit_get_height(nav);
+    /* Calculate the sizes with the padding of the navit graphics, so that the
+     * padding is applied exactly once, no matter whether the item is created
+     * for the first time or re-created.
+     */
+    osd_calculate_sizes(item, w, h, padding);
 
-    padding = graphics_get_data(navit_gr, "padding");
-
-    if (padding) {
-        dbg(lvl_debug, "Got padding=%p for item=%p: left=%d top=%d right=%d bottom=%d", padding, item, padding->left,
-            padding->top, padding->right, padding->bottom);
-        w -= (padding->left + padding->right);
-        h -= (padding->top + padding->bottom);
-    } else
-        dbg(lvl_debug, "Padding is NULL");
-
-    osd_std_calculate_sizes(item, w, h);
-
-    if (padding) {
-        item->p.x += padding->left;
-        item->p.y += padding->top;
+    if (item->gr) {
+        osd_teardown_std_graphic(item, nav);
     }
 
     item->gr = graphics_overlay_new(navit_gr, &item->p, item->w, item->h, 1);
@@ -448,6 +546,28 @@ void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_pr
     item->resize_cb = callback_new_attr_2(callback_cast(osd_std_calculate_sizes_and_redraw), attr_resize, item, priv);
     graphics_add_callback(navit_gr, item->resize_cb);
     osd_set_keypress(nav, item);
+}
+
+void osd_destroy_std_graphic(struct osd_item *item, struct navit *nav) {
+    osd_teardown_std_graphic(item, nav);
+    item->gr = NULL;
+    if (item->reconfig_cb) {
+        if (item->enable_cs) {
+            command_saved_set_cb(item->enable_cs, NULL);
+        }
+        callback_destroy(item->reconfig_cb);
+        item->reconfig_cb = NULL;
+    }
+    if (item->enable_cs) {
+        command_saved_destroy(item->enable_cs);
+    }
+    item->enable_cs = NULL;
+    g_free(item->command);
+    item->command = NULL;
+    g_free(item->accesskey);
+    item->accesskey = NULL;
+    g_free(item->font_name);
+    item->font_name = NULL;
 }
 
 void osd_fill_with_bgcolor(struct osd_item *item) {
