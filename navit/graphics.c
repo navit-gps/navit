@@ -82,6 +82,7 @@ struct graphics {
     char *default_font;
     int font_len;
     struct graphics_font **font;
+    int font_stale;
     struct graphics_gc *gc[3];
     struct attr **attrs;
     struct callback_list *cbl;
@@ -625,6 +626,28 @@ void graphics_font_destroy_all(struct graphics *gra) {
         g_free(gra->font[i]);
         gra->font[i] = NULL;
     }
+    gra->font_stale = 0;
+}
+
+/**
+ * Invalidate all cached per-size fonts so a subsequent frame rebuilds them.
+ *
+ * The actual destruction is deferred to {@link get_font}: an entry is only freed at the
+ * moment it is about to be replaced by a fresh font inside a drawing pass. This keeps
+ * cached fonts that an in-flight display list still references alive until the rebuild
+ * retires them, avoiding use-after-free when a layout is switched while the map is
+ * animating.
+ */
+void graphics_font_invalidate(struct graphics *gra) {
+    gra->font_stale = 1;
+}
+
+/**
+ * End a font invalidation once the display list has been fully rebuilt with the new
+ * fonts. Freshly cached fonts are kept; only entries that were replaced are gone.
+ */
+void graphics_font_validate(struct graphics *gra) {
+    gra->font_stale = 0;
 }
 
 /**
@@ -2759,6 +2782,10 @@ static struct graphics_font *get_font(struct graphics *gra, int size) {
         gra->font = g_renew(struct graphics_font *, gra->font, size + 1);
         while (gra->font_len <= size)
             gra->font[gra->font_len++] = NULL;
+    }
+    if (gra->font_stale && gra->font[size]) {
+        graphics_font_destroy(gra->font[size]);
+        gra->font[size] = NULL;
     }
     if (!gra->font[size])
         gra->font[size] = graphics_font_new(gra, size * gra->font_size, 0);
