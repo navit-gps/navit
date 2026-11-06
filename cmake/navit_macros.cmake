@@ -91,6 +91,22 @@ endmacro(message_error)
 
 include(CheckCCompilerFlag)
 include(CheckCXXCompilerFlag)
+
+macro(add_debug_compiler_flag_if_available FLAG)
+   set(VAR_FLAG_AVAILABLE_C "FLAG_AVAILABLE_C_${FLAG}")
+   check_c_compiler_flag(${FLAG} ${VAR_FLAG_AVAILABLE_C})
+   if (${${VAR_FLAG_AVAILABLE_C}})
+      add_compile_options("$<$<CONFIG:DEBUG>:${FLAG}>")
+   endif()
+   if(CMAKE_CXX_COMPILER_LOADED) # C++ compiler is optional
+      set(VAR_FLAG_AVAILABLE_CXX "FLAG_AVAILABLE_CXX_${FLAG}")
+      check_cxx_compiler_flag(${FLAG} ${VAR_FLAG_AVAILABLE_CXX})
+      if (${${VAR_FLAG_AVAILABLE_CXX}})
+	 add_compile_options("$<$<CONFIG:DEBUG>:${FLAG}>")
+      endif()
+   endif()
+endmacro(add_debug_compiler_flag_if_available)
+
 macro(add_compiler_flag_if_available FLAG)
    set(VAR_FLAG_AVAILABLE_C "FLAG_AVAILABLE_C_${FLAG}")
    check_c_compiler_flag(${FLAG} ${VAR_FLAG_AVAILABLE_C})
