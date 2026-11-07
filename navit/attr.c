@@ -346,6 +346,8 @@ static char *flags_to_text(int flags) {
         ret = g_strconcat_printf(ret, "%sAF_FORD", ret ? "|" : "");
     if (flags & AF_UNDERGROUND)
         ret = g_strconcat_printf(ret, "%sAF_UNDERGROUND", ret ? "|" : "");
+    if (flags & AF_CYCLE_DISMOUNT)
+        ret = g_strconcat_printf(ret, "%sAF_CYCLE_DISMOUNT", ret ? "|" : "");
     if (flags & AF_DANGEROUS_GOODS)
         ret = g_strconcat_printf(ret, "%sAF_DANGEROUS_GOODS", ret ? "|" : "");
     if ((flags & AF_ALL) == AF_ALL)
