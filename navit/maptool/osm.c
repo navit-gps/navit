@@ -23,6 +23,7 @@
 #    include <unistd.h>
 #endif
 #include <ctype.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
 #include <math.h>
@@ -2411,26 +2412,46 @@ void sort_countries(int keep_tmpfiles) {
     }
 }
 
-struct relation_member {
-    enum relation_member_type type;
-    long long id;
-    char *role;
-};
+int relation_member_parse(char *relation_member_string, struct relation_member *memb) {
+    char *type_end;
+    char *id_end;
+    gint64 type_numeric;
+    gint64 id;
 
-static void parse_relation_member_string(char *relation_member_string, struct relation_member *memb) {
-    int len;
-    int type_numeric;
-    sscanf(relation_member_string, RELATION_MEMBER_PARSE_FORMAT, &type_numeric, &memb->id, &len);
+    if (!memb)
+        return 0;
+    memb->type = UNUSED;
+    memb->id = 0;
+    memb->role = NULL;
+
+    if (!relation_member_string)
+        return 0;
+
+    errno = 0;
+    type_numeric = g_ascii_strtoll(relation_member_string, &type_end, 10);
+    if (type_end == relation_member_string || *type_end != ':' || errno == ERANGE)
+        return 0;
+    if (type_numeric < rel_member_node || type_numeric > rel_member_relation)
+        return 0;
+
+    errno = 0;
+    id = g_ascii_strtoll(type_end + 1, &id_end, 10);
+    if (id_end == type_end + 1 || *id_end != ':' || errno == ERANGE)
+        return 0;
+
     memb->type = (enum relation_member_type)type_numeric;
-    memb->role = relation_member_string + len;
+    memb->id = id;
+    memb->role = id_end + 1;
+    return 1;
 }
 
 static int search_relation_member(struct item_bin *ib, char *role, struct relation_member *memb, int *min_count) {
     char *str = NULL;
     int count = 0;
     while ((str = item_bin_get_attr(ib, attr_osm_member, str))) {
-        parse_relation_member_string(str, memb);
         count++;
+        if (!relation_member_parse(str, memb))
+            continue;
         if (!g_strcmp0(memb->role, role) && (!min_count || *min_count < count)) {
             if (min_count)
                 *min_count = count;
@@ -3885,9 +3906,9 @@ static void process_countries(FILE *way, FILE *ways_index) {
         char *str=NULL;
         struct relation_member member;
         while ((str=item_bin_get_attr(ib, attr_osm_member, str))) {
-            if (!parse_relation_member_string(str, &member))
+            if (!relation_member_parse(str, &member))
                 break;
-            if (member.type == 2) {
+            if (member.type == rel_member_way) {
                 if (!seek_to_way(way, ways_index, member.id)) {
                     fprintf(stderr,"not found in index");
                     break;
