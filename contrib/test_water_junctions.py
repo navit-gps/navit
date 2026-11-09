@@ -24,24 +24,35 @@ for kind, tags, item_type in [('lake', ('natural','water'), 'poly_water'),
             lon,lat=geo(x+.25,y+.25)
             ET.SubElement(root,'node',id=str(nid),version='1',lon=f'{lon:.12f}',lat=f'{lat:.12f}')
         ways = [[1,2,3,4,1], [5,6,7,8,9], [5,10,11,5], [11,12,9,11]]
-        if mode == 'gap': ways.pop()
-        if mode == 'spur': ways.append([6,13])
-        if mode == 'duplicate': ways.append(ways[2][:])
-        if mode == 'reverse': ways = [list(reversed(w)) for w in ways]
+        if mode == 'gap':
+            ways.pop()
+        if mode == 'spur':
+            ways.append([6,13])
+        if mode == 'duplicate':
+            ways.append(ways[2][:])
+        if mode == 'reverse':
+            ways = [list(reversed(w)) for w in ways]
         for wid,ids in enumerate(ways,1000):
             w=ET.SubElement(root,'way',id=str(wid),version='1')
-            for nid in ids: ET.SubElement(w,'nd',ref=str(nid))
+            for nid in ids:
+                ET.SubElement(w,'nd',ref=str(nid))
         r=ET.SubElement(root,'relation',id='2000',version='1')
         order=list(range(len(ways)))
-        if mode=='permuted': order=[3,2,1,0]
-        for i in order: ET.SubElement(r,'member',type='way',ref=str(1000+i),role='outer' if i==0 else 'inner')
-        for k,v in [('type','multipolygon'),tags]: ET.SubElement(r,'tag',k=k,v=v)
+        if mode=='permuted':
+            order=[3,2,1,0]
+        for i in order:
+            ET.SubElement(r,'member',type='way',ref=str(1000+i),role='outer' if i==0 else 'inner')
+        for k,v in [('type','multipolygon'),tags]:
+            ET.SubElement(r,'tag',k=k,v=v)
         # A separate valid relation proves rejection is local to the broken one.
         valid=ET.SubElement(root,'relation',id='2001',version='1')
         ET.SubElement(valid,'member',type='way',ref='1002',role='outer')
-        for k,v in [('type','multipolygon'),tags]:ET.SubElement(valid,'tag',k=k,v=v)
-        work=output/f'{kind}-{mode}';work.mkdir()
-        ET.indent(root);ET.ElementTree(root).write(work/'input.osm',encoding='utf-8',xml_declaration=True)
+        for k,v in [('type','multipolygon'),tags]:
+            ET.SubElement(valid,'tag',k=k,v=v)
+        work=output/f'{kind}-{mode}'
+        work.mkdir()
+        ET.indent(root)
+        ET.ElementTree(root).write(work/'input.osm',encoding='utf-8',xml_declaration=True)
         with (work/'conversion.log').open('w') as log:
             subprocess.run([str(binary),'-i',str(work/'input.osm'),str(work/'map.bin')],cwd=work,stdout=log,stderr=log,check=True)
         water=polygons(source,work/'map.bin',item_type)

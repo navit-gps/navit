@@ -28,12 +28,16 @@ for water_kind, tags, item_type in [('lake', ('natural','water'), 'poly_water'),
                     nid = len(nodes) + 1
                     # Stay within the intended projected integer cell on either side of zero.
                     lon, lat = geo(x + (.25 if x >= 0 else -.25), y + (.25 if y >= 0 else -.25))
-                    nodes.append((nid, lon, lat)); ids.append(nid)
+                    nodes.append((nid, lon, lat))
+                    ids.append(nid)
                 ids = ids[rotate:] + ids[:rotate]
-                if reverse: ids.reverse()
+                if reverse:
+                    ids.reverse()
                 return ids + ids[:1]
             def way(refs):
-                wid = 1000 + len(ways); ways.append((wid, refs)); return wid
+                wid = 1000 + len(ways)
+                ways.append((wid, refs))
+                return wid
             def relation(members):
                 relations.append(members)
             def square(x, y, size):
@@ -50,7 +54,8 @@ for water_kind, tags, item_type in [('lake', ('natural','water'), 'poly_water'),
                 ids = square(1000000+k*10000,1000000+k*10000,80000-k*20000)
                 for j in range(4):
                     refs = ids[j:j+2]
-                    if j%2: refs = list(reversed(refs))
+                    if j%2:
+                        refs = list(reversed(refs))
                     for_nested.append((way(refs),'inner' if j%2 else 'outer'))
             # Disjoint outer ring in the same relation must stay water.
             for_nested.append((way(square(1100000,1000000,20000)),'outer'))
@@ -65,10 +70,12 @@ for water_kind, tags, item_type in [('lake', ('natural','water'), 'poly_water'),
                 for x, y in coords:
                     if (x, y) not in shared:
                         lon, lat = geo(x + .25, y + .25)
-                        nodes.append((len(nodes) + 1, lon, lat)); shared[x, y] = len(nodes)
+                        nodes.append((len(nodes) + 1, lon, lat))
+                        shared[x, y] = len(nodes)
                     ids.append(shared[x, y])
                 ids = ids[rotate:] + ids[:rotate]
-                if reverse: ids.reverse()
+                if reverse:
+                    ids.reverse()
                 return ids + ids[:1]
             relation([(way(shared_ring([(2000000,1000000),(2100000,1000000),(2100000,1080000),(2100000,1100000),(2000000,1100000)])),'outer'),
                       (way(shared_ring([(2040000,1025000),(2050000,1025000),(2050000,1045000),(2040000,1045000)])),'inner'),
@@ -88,13 +95,18 @@ for water_kind, tags, item_type in [('lake', ('natural','water'), 'poly_water'),
                 ET.SubElement(root,'node',id=str(nid),version='1',lon=f'{lon:.12f}',lat=f'{lat:.12f}')
             for wid, ids in ways:
                 w=ET.SubElement(root,'way',id=str(wid),version='1')
-                for nid in ids: ET.SubElement(w,'nd',ref=str(nid))
+                for nid in ids:
+                    ET.SubElement(w,'nd',ref=str(nid))
             for rid, members in enumerate(relations,2000):
                 r=ET.SubElement(root,'relation',id=str(rid),version='1')
-                for wid, role in members: ET.SubElement(r,'member',type='way',ref=str(wid),role=role)
-                for k,v in [('type','multipolygon'),tags]: ET.SubElement(r,'tag',k=k,v=v)
-            folder=output/f'{water_kind}-r{rotate}-reverse{int(reverse)}-incomplete{int(incomplete)}';folder.mkdir()
-            ET.indent(root);ET.ElementTree(root).write(folder/'input.osm',encoding='utf-8',xml_declaration=True)
+                for wid, role in members:
+                    ET.SubElement(r,'member',type='way',ref=str(wid),role=role)
+                for k,v in [('type','multipolygon'),tags]:
+                    ET.SubElement(r,'tag',k=k,v=v)
+            folder=output/f'{water_kind}-r{rotate}-reverse{int(reverse)}-incomplete{int(incomplete)}'
+            folder.mkdir()
+            ET.indent(root)
+            ET.ElementTree(root).write(folder/'input.osm',encoding='utf-8',xml_declaration=True)
             with (folder/'conversion.log').open('w') as log:
                 subprocess.run([str(binary),'-i',str(folder/'input.osm'),str(folder/'map.bin')],cwd=folder,stdout=log,stderr=subprocess.STDOUT,check=True)
             water=polygons(source,folder/'map.bin',item_type)
@@ -106,13 +118,15 @@ for water_kind, tags, item_type in [('lake', ('natural','water'), 'poly_water'),
                     ((2092000,1082000),False),((2045000,1090000),False),((2060000,1080000),True),
                     ((2090000,1020000),True),((2020000,1095000),False)]
             omitted=sum(e for p,e in checks) if incomplete else 0
-            if incomplete:checks=[(p,False) for p,e in checks]
+            if incomplete:
+                checks=[(p,False) for p,e in checks]
             checks.append(((4010000,1010000),True))
             bad=[dict(point=p,expected=e,actual=is_water(water,p)) for p,e in checks if is_water(water,p)!=e]
             log=(folder/'conversion.log').read_text()
             for rid in (2000,2001,2002):
                 warning=f'www.openstreetmap.org/relation/{rid} multipolygon: incomplete inner boundary; skipping water relation'
-                if (warning in log)!=incomplete:bad.append(dict(relation=rid,expected_rejection=incomplete))
+                if (warning in log)!=incomplete:
+                    bad.append(dict(relation=rid,expected_rejection=incomplete))
             results.append(dict(case=folder.name,checks=len(checks)+3,rejected=incomplete,omitted_water_controls=omitted,failures=bad))
 (output/'results.json').write_text(json.dumps(results,indent=2)+'\n')
 print(json.dumps(results),flush=True)
