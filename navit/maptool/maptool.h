@@ -260,6 +260,7 @@ extern int bytes_read;
 extern int overlap;
 extern int unknown_country;
 extern int experimental;
+extern int coastline_preassembled;
 void sig_alrm(int sig);
 void sig_alrm_end(void);
 
