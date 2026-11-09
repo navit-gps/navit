@@ -176,13 +176,14 @@ int geom_poly_closest_point(struct coord *pl, int count, struct coord *p, struct
  */
 int geom_poly_point_inside(struct coord *cp, int count, struct coord *c) {
     int ret = 0;
-    struct coord *last = cp + count - 1;
-    while (cp < last) {
-        if ((cp[0].y > c->y) != (cp[1].y > c->y)
-            && c->x < ((long long)cp[1].x - cp[0].x) * (c->y - cp[0].y) / (cp[1].y - cp[0].y) + cp[0].x) {
+    int i, j;
+    /* Include the closing edge even when the first point is not repeated.
+     * Half-open crossings count a ray through a vertex exactly once. Keep
+     * the intersection fractional: truncation can move it onto the query. */
+    for (i = 0, j = count - 1; i < count; j = i++) {
+        if ((cp[i].y > c->y) != (cp[j].y > c->y)
+            && c->x < ((double)cp[j].x - cp[i].x) * ((double)c->y - cp[i].y) / ((double)cp[j].y - cp[i].y) + cp[i].x)
             ret = !ret;
-        }
-        cp++;
     }
     return ret;
 }

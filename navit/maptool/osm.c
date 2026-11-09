@@ -1877,6 +1877,13 @@ void osm_end_way(struct maptool_osm *osm) {
                 count_areas++;
         }
         item_bin = init_item(types[i]);
+        /* An open water way is not an area: implicitly closing it can flood
+         * land or islands. Keep its geometry for multipolygon assembly, but
+         * do not render it as a standalone water polygon. Check node identity
+         * before projection, which can round distinct endpoints together. */
+        if ((types[i] == type_poly_water || types[i] == type_poly_reservoir || types[i] == type_poly_basin)
+            && (coord_count < 4 || GET_REF(coord_buffer[0]) != GET_REF(coord_buffer[coord_count - 1])))
+            item_bin->type = type_none;
         item_bin_add_coord(item_bin, coord_buffer, coord_count);
         nodes_ref_item_bin(item_bin);
         def_flags = item_get_default_flags(types[i]);
@@ -2795,6 +2802,8 @@ struct multipolygon {
     osmid relid;
     struct item_bin *rel;
     int inner_count;
+    int missing_inner;
+    int *inner_seen;
     int outer_count;
     struct item_bin **inner;
     struct item_bin **outer;
@@ -2979,13 +2988,13 @@ int process_multipolygons_loop_dump(struct item_bin **bin, int scount, int *sequ
             pcount--;
         if ((buffer != NULL) && (direction != NULL)) {
             if (direction[sequence[a]] == 1) {
-                memcpy(&(buffer[points]), c, pcount * sizeof(struct coord));
+                memcpy(&(buffer[points]), c + (a != 0), pcount * sizeof(struct coord));
             } else {
                 int b;
                 struct coord *target = &(buffer[points]);
                 // fprintf(stderr,"R:");
                 for (b = 0; b < pcount; b++) {
-                    target[b] = c[(bin[sequence[a]]->clen / 2) - b - 1];
+                    target[b] = c[(bin[sequence[a]]->clen / 2) - b - 1 - (a != 0)];
                 }
             }
         }
@@ -3010,137 +3019,154 @@ int process_multipolygons_loop_count(struct item_bin **bin, int scount, int *seq
     return process_multipolygons_loop_dump(bin, scount, sequence, NULL, NULL);
 }
 
-static inline void dump_sequence(const char *string, int loop_count, int *scount, int **sequences, int *direction) {
-#if 0
-    int i;
-    int j;
-    for(j=0; j<loop_count; j++) {
-        fprintf(stderr,"loop %s :",string);
-        for(i=0; i < scount[j]; i ++) {
-            fprintf(stderr, "%s", (direction[sequences[j][i]]== 1)? "":"R");
-            fprintf(stderr, "%d ", sequences[j][i]);
-        }
-        fprintf(stderr, "\n");
+/* Roles are hints, not connections. Assemble exact endpoint matches first,
+ * then use containment to distinguish water, islands and lakes in islands. */
+struct multipolygon_ring {
+    struct coord *coords;
+    int count;
+    struct rect bbox;
+    long long area;
+    int parent;
+    int has_outer;
+    struct coord probe;
+};
+
+static int multipolygon_double_compare(const void *a, const void *b) {
+    double x = *(const double *)a, y = *(const double *)b;
+    return (x > y) - (x < y);
+}
+
+/* A ring's vertices can lie on another ring's boundary: at shared nodes, or
+ * after rounding to the metre grid where rings nearly touch. The crossing test
+ * is arbitrary there, so test containment with a point inside the ring: the
+ * middle of the widest span on its middle row. */
+static struct coord multipolygon_ring_interior(struct multipolygon_ring *ring) {
+    struct coord probe = ring->coords[0];
+    int y = ring->bbox.l.y + (ring->bbox.h.y - ring->bbox.l.y) / 2, i, j, n = 0;
+    double *x = g_new(double, ring->count), widest = 2;
+    for (i = 0, j = ring->count - 1; i < ring->count; j = i++) {
+        if ((ring->coords[i].y > y) != (ring->coords[j].y > y))
+            x[n++] = ((double)ring->coords[j].x - ring->coords[i].x) * ((double)y - ring->coords[i].y)
+                         / ((double)ring->coords[j].y - ring->coords[i].y)
+                     + ring->coords[i].x;
     }
-#endif
+    qsort(x, n, sizeof(double), multipolygon_double_compare);
+    /* ponytail: rings under 2 m wide keep their first vertex. */
+    for (i = 0; i + 1 < n; i += 2) {
+        if (x[i + 1] - x[i] >= widest) {
+            widest = x[i + 1] - x[i];
+            probe.x = (int)floor((x[i] + x[i + 1]) / 2);
+            probe.y = y;
+        }
+    }
+    g_free(x);
+    return probe;
 }
 
 static void process_multipolygons_finish(GList *tr, FILE *out) {
-    GList *l = tr;
-    // fprintf(stderr,"process_multipolygons_finish\n");
-    while (l) {
-        int a;
-        int b;
-        struct multipolygon *multipolygon = l->data;
-        int inner_loop_count = 0;
-        int *inner_scount = NULL;
-        int *inner_direction = NULL;
-        int **inner_sequences = NULL;
-        int outer_loop_count = 0;
-        int *outer_scount = NULL;
-        int *outer_direction = NULL;
-        int **outer_sequences = NULL;
-        /* combine outer to full loops */
-        outer_loop_count = process_multipolygons_find_loops(multipolygon->relid, multipolygon->outer_count,
-                                                            multipolygon->outer, &outer_scount, &outer_sequences,
-                                                            &outer_direction);
-
-        /* combine inner to full loops */
-        inner_loop_count = process_multipolygons_find_loops(multipolygon->relid, multipolygon->inner_count,
-                                                            multipolygon->inner, &inner_scount, &inner_sequences,
-                                                            &inner_direction);
-
-        dump_sequence("outer", outer_loop_count, outer_scount, outer_sequences, outer_direction);
-        dump_sequence("inner", inner_loop_count, inner_scount, inner_sequences, inner_direction);
-
-        for (b = 0; b < outer_loop_count; b++) {
-            struct rect outer_bbox;
-            /* write out */
-            struct item_bin *ib = tmp_item_bin;
-            int outer_length;
-            struct coord *outer_buffer;
-            if (outer_loop_count == 0) {
-                fprintf(stderr, "unresolved outer  %lld\n", multipolygon->relid);
-                /* seems this polygons "outer" could not be resolved. Skip it */
-                l = g_list_next(l);
-                continue;
+    GList *l;
+    for (l = tr; l; l = g_list_next(l)) {
+        struct multipolygon *mp = l->data;
+        int count = mp->outer_count + mp->inner_count;
+        struct item_bin **parts = g_new(struct item_bin *, count);
+        int *scount = NULL, **sequences = NULL, *direction = NULL;
+        struct multipolygon_ring *rings;
+        int loops, i, j, assembled_inner = 0;
+        for (i = 0; i < mp->outer_count; i++)
+            parts[i] = mp->outer[i];
+        for (i = 0; i < mp->inner_count; i++)
+            parts[mp->outer_count + i] = mp->inner[i];
+        loops = process_multipolygons_find_loops(mp->relid, count, parts, &scount, &sequences, &direction);
+        rings = g_new0(struct multipolygon_ring, loops);
+        for (i = 0; i < loops; i++) {
+            rings[i].count = process_multipolygons_loop_count(parts, scount[i], sequences[i]);
+            rings[i].coords = g_new(struct coord, rings[i].count);
+            process_multipolygons_loop_dump(parts, scount[i], sequences[i], direction, rings[i].coords);
+            for (j = 0; j < scount[i]; j++) {
+                if (sequences[i][j] < mp->outer_count)
+                    rings[i].has_outer = 1;
+                else
+                    assembled_inner++;
             }
-            // long long relid=item_bin_get_relationid(multipolygon->rel);
-            // fprintf(stderr,"process %lld\n", relid);
-            outer_length = process_multipolygons_loop_count(multipolygon->outer, outer_scount[b], outer_sequences[b])
-                           * sizeof(struct coord);
-            outer_buffer = (struct coord *)g_malloc0(outer_length);
-            outer_length = process_multipolygons_loop_dump(multipolygon->outer, outer_scount[b], outer_sequences[b],
-                                                           outer_direction, outer_buffer);
-            item_bin_init(ib, multipolygon->rel->type);
-            item_bin_add_coord(ib, outer_buffer, outer_length);
-            g_free(outer_buffer);
-            item_bin_copy_attr(ib, multipolygon->rel, attr_osm_relationid);
-            item_bin_copy_attr(ib, multipolygon->rel, attr_label);
-            /*calculate bbox*/
-            bbox((struct coord *)(ib + 1), (ib->clen / 2), &outer_bbox);
-
-            for (a = 0; a < inner_loop_count; a++) {
-                int d;
-                int hole_len;
-                char *buffer;
-                int used = 0;
-                int inner_len = 0;
-                int inside = 0;
-                struct coord *hole_coord;
-                hole_len = process_multipolygons_loop_count(multipolygon->inner, inner_scount[a], inner_sequences[a]);
-                inner_len = (hole_len * sizeof(struct coord));
-                inner_len += 4;
-                buffer = g_malloc0(inner_len);
-                memcpy(&(buffer[used]), &(hole_len), sizeof(int));
-                used += sizeof(int);
-                hole_coord = (struct coord *)&(buffer[used]);
-                used += process_multipolygons_loop_dump(multipolygon->inner, inner_scount[a], inner_sequences[a],
-                                                        inner_direction, (struct coord *)&(buffer[used]))
-                        * sizeof(struct coord);
-                /* check if at least one point is inside the outer */
-                for (d = 0; d < hole_len; d++)
-                    if (bbox_contains_coord(&outer_bbox, hole_coord))
-                        inside = 1;
-
-                if (inside)
-                    item_bin_add_attr_data(ib, attr_poly_hole, buffer, inner_len);
-                g_free(buffer);
+            g_free(sequences[i]);
+        }
+        if ((mp->missing_inner || assembled_inner < mp->inner_count)
+            && (mp->rel->type == type_poly_water || mp->rel->type == type_poly_reservoir
+                || mp->rel->type == type_poly_basin)) {
+            /* An unresolved hole can belong to any outer ring. Do not guess
+             * which fill is safe, or borrow boundaries from unrelated ways. */
+            osm_warning("relation", mp->relid, 0,
+                        "multipolygon: incomplete inner boundary; skipping water relation "
+                        "(%d missing members, %d unclosed inner segments); check source or extract completeness\n",
+                        mp->missing_inner, mp->inner_count - assembled_inner);
+            goto cleanup;
+        }
+        for (i = 0; i < loops; i++) {
+            bbox(rings[i].coords, rings[i].count, &rings[i].bbox);
+            rings[i].area = llabs(geom_poly_area(rings[i].coords, rings[i].count));
+            rings[i].parent = -1;
+            rings[i].probe = multipolygon_ring_interior(&rings[i]);
+        }
+        /* Assign each ring to its smallest enclosing ring. Bounding boxes
+         * alone cannot distinguish separate shores of a concave polygon. */
+        for (i = 0; i < loops; i++) {
+            for (j = 0; j < loops; j++) {
+                int parent = rings[i].parent;
+                if (rings[j].area > rings[i].area && (parent == -1 || rings[j].area < rings[parent].area)
+                    && bbox_contains_coord(&rings[j].bbox, &rings[i].bbox.l)
+                    && bbox_contains_coord(&rings[j].bbox, &rings[i].bbox.h)
+                    && geom_poly_point_inside(rings[j].coords, rings[j].count, &rings[i].probe))
+                    rings[i].parent = j;
+            }
+        }
+        for (i = 0; i < loops; i++) {
+            struct item_bin *ib = tmp_item_bin;
+            int depth = 0, root = i;
+            while (rings[root].parent != -1) {
+                root = rings[root].parent;
+                depth++;
+            }
+            /* A regional extract may lose the enclosing shore. An inner-only
+             * root is still an island, not a new water body. Anchor nesting to
+             * that role so lakes inside the orphaned island remain water. */
+            if (!rings[root].has_outer)
+                depth++;
+            if (depth % 2 || !rings[i].area)
+                continue;
+            item_bin_init(ib, mp->rel->type);
+            item_bin_add_coord(ib, rings[i].coords, rings[i].count);
+            item_bin_copy_attr(ib, mp->rel, attr_osm_relationid);
+            item_bin_copy_attr(ib, mp->rel, attr_label);
+            for (j = 0; j < loops; j++) {
+                if (rings[j].parent == i && rings[j].area)
+                    item_bin_add_hole(ib, rings[j].coords, rings[j].count);
             }
             item_bin_write(ib, out);
         }
-        /* just for fun...*/
+    cleanup:
         processed_relations++;
-        /* clean up the sequences */
-        for (a = 0; a < outer_loop_count; a++)
-            g_free(outer_sequences[a]);
-        g_free(outer_sequences);
-        g_free(outer_scount);
-        g_free(outer_direction);
-        for (a = 0; a < inner_loop_count; a++)
-            g_free(inner_sequences[a]);
-        g_free(inner_sequences);
-        g_free(inner_scount);
-        g_free(inner_direction);
-        /* clean up this item */
-        for (a = 0; a < multipolygon->inner_count; a++)
-            g_free(multipolygon->inner[a]);
-        g_free(multipolygon->inner);
-        for (a = 0; a < multipolygon->outer_count; a++)
-            g_free(multipolygon->outer[a]);
-        g_free(multipolygon->outer);
-        g_free(multipolygon->rel);
-        g_free(multipolygon);
-        /* next item */
-        l = g_list_next(l);
+        for (i = 0; i < loops; i++) {
+            g_free(rings[i].coords);
+        }
+        g_free(rings);
+        g_free(sequences);
+        g_free(scount);
+        g_free(direction);
+        for (i = 0; i < count; i++)
+            g_free(parts[i]);
+        g_free(parts);
+        g_free(mp->inner);
+        g_free(mp->inner_seen);
+        g_free(mp->outer);
+        g_free(mp->rel);
+        g_free(mp);
     }
-    /* done with that list. All items referred should be deleted already. */
     g_list_free(tr);
 }
 
 static void process_multipolygons_member(void *func_priv, void *relation_priv, struct item_bin *member,
                                          void *member_priv) {
-    int type = (long)member_priv;
+    int type = member_priv != NULL;
     int *dup;
     struct multipolygon *multipolygon = relation_priv;
     dup = item_bin_get_attr(member, attr_duplicate, NULL);
@@ -3150,6 +3176,14 @@ static void process_multipolygons_member(void *func_priv, void *relation_priv, s
     }
     // fprintf(stderr,"process_multipolygons_member id %lld, %s, outer %d, inner %d\n", multipolygon->relid,
     //         (type)?"inner": "outer", multipolygon->outer_count, multipolygon->inner_count);
+    if (member->clen < 4)
+        return;
+    /* Count each declared inner member once, even when a routable way has
+     * been split into several items. Missing members never reach this callback. */
+    if (type && !*(int *)member_priv) {
+        *(int *)member_priv = 1;
+        multipolygon->missing_inner--;
+    }
     /* we remeber the whole binary item, as we may want to have the attributes later on finalize */
     if (type) {
         /* copy the member as inner */
@@ -3177,68 +3211,60 @@ static void process_multipolygons_member(void *func_priv, void *relation_priv, s
  */
 static void process_multipolygons_setup_one(struct item_bin *ib, struct relations *relations,
                                             struct relations_func *relations_func, GList **multipolygons) {
-    if (ib != NULL) {
-        struct relation_member *outer = NULL;
-        int outer_count = 0;
-        struct relation_member *inner = NULL;
-        ;
-        int inner_count = 0;
-        long long relid;
-        int a;
-        int min_count;
-        struct multipolygon *p_multipolygon;
-        relid = item_bin_get_relationid(ib);
-        min_count = 0;
-        /* allocate a slot for inner and outer */
-        outer = g_malloc0(sizeof(struct relation_member));
-        inner = g_malloc0(sizeof(struct relation_member));
-        while (search_relation_member(ib, "outer", &(outer[outer_count]), &min_count)) {
-            if (outer[outer_count].type != rel_member_way)
-                osm_warning("relation", relid, 0, "multipolygon: wrong type for outer member\n");
-            outer_count++;
-            /*realloc outer to make space for next */
-            outer = g_realloc(outer, sizeof(struct relation_member) * (outer_count + 1));
-        }
-        /* in ancient times of OSM, multipolygons were created having no "role" for outer loop members.
-         * There are still such multipolygons. Rescue most of them, by treating the role less members
-         * as outer. These multiolygons are treated a mistake nowadays, but even now some editing tools
-         * seem to create such.*/
-        min_count = 0;
-        while (search_relation_member(ib, "", &(outer[outer_count]), &min_count)) {
-            // osm_warning("relation",relid,0,"multipolygon: using empty role type as outer\n");
-            if (outer[outer_count].type != rel_member_way)
-                osm_warning("relation", relid, 0, "multipolygon: wrong type for outer member\n");
-            outer_count++;
-            /*realloc outer to make space for next */
-            outer = g_realloc(outer, sizeof(struct relation_member) * (outer_count + 1));
-        }
-        min_count = 0;
-        while (search_relation_member(ib, "inner", &(inner[inner_count]), &min_count)) {
-            if (inner[inner_count].type != rel_member_way)
-                osm_warning("relation", relid, 0, "multipolygon: wrong type for inner member\n");
-            inner_count++;
-            /*realloc inner to make space for next */
-            inner = g_realloc(inner, sizeof(struct relation_member) * (inner_count + 1));
-        }
-        // fprintf(stderr,"Relid %lld: Got %d outer and %d inner\n", relid, outer_count, inner_count);
-        if (outer_count == 0) {
-            osm_warning("relation", relid, 0, "multipolygon: missing outer member\n");
-        } else {
-            p_multipolygon = g_new0(struct multipolygon, 1);
-            p_multipolygon->relid = relid;
-            p_multipolygon->rel = item_bin_dup(ib);
-            for (a = 0; a < outer_count; a++)
-                relations_add_relation_member_entry(relations, relations_func, p_multipolygon, (gpointer)0,
-                                                    outer[a].type, outer[a].id);
-            for (a = 0; a < inner_count; a++)
-                relations_add_relation_member_entry(relations, relations_func, p_multipolygon, (gpointer)1,
-                                                    inner[a].type, inner[a].id);
-            *multipolygons = g_list_append(*multipolygons, p_multipolygon);
-        }
-        /* clean up*/
-        g_free(inner);
-        g_free(outer);
+    GArray *members[3];
+    struct multipolygon *mp;
+    struct attr_bin *ab;
+    int *end;
+    osmid relid;
+    int role, i;
+    if (!ib)
+        return;
+    relid = item_bin_get_relationid(ib);
+    for (role = 0; role < 3; role++)
+        members[role] = g_array_new(FALSE, FALSE, sizeof(struct relation_member));
+    /* Read each attribute once. Repeated role searches restart at the first
+     * member and become prohibitively expensive for large water bodies.
+     * Preserve the historical outer, empty-role, inner registration order. */
+    ab = (struct attr_bin *)((int *)(ib + 1) + ib->clen);
+    end = (int *)ib + ib->len + 1;
+    for (; (int *)ab < end; ab = (struct attr_bin *)((int *)ab + ab->len + 1)) {
+        struct relation_member member;
+        if (ab->type != attr_osm_member)
+            continue;
+        parse_relation_member_string((char *)(ab + 1), &member);
+        if (!strcmp(member.role, "outer"))
+            role = 0;
+        else if (!member.role[0])
+            role = 1;
+        else if (!strcmp(member.role, "inner"))
+            role = 2;
+        else
+            continue;
+        if (member.type != rel_member_way)
+            osm_warning("relation", relid, 0, "multipolygon: wrong type for %s member\n",
+                        role == 2 ? "inner" : "outer");
+        g_array_append_val(members[role], member);
     }
+    if (!members[0]->len && !members[1]->len) {
+        osm_warning("relation", relid, 0,
+                    "multipolygon: missing outer member; skipping malformed relation, check source roles\n");
+    } else {
+        mp = g_new0(struct multipolygon, 1);
+        mp->relid = relid;
+        mp->rel = item_bin_dup(ib);
+        mp->missing_inner = members[2]->len;
+        mp->inner_seen = g_new0(int, members[2]->len);
+        for (role = 0; role < 3; role++) {
+            for (i = 0; i < members[role]->len; i++) {
+                struct relation_member *member = &g_array_index(members[role], struct relation_member, i);
+                relations_add_relation_member_entry(relations, relations_func, mp,
+                                                    role == 2 ? &mp->inner_seen[i] : NULL, member->type, member->id);
+            }
+        }
+        *multipolygons = g_list_append(*multipolygons, mp);
+    }
+    for (role = 0; role < 3; role++)
+        g_array_free(members[role], TRUE);
 }
 
 /**
