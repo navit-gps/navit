@@ -3031,15 +3031,25 @@ struct multipolygon_ring {
     struct coord probe;
 };
 
+/** @brief Compare two scanline intersections for qsort().
+ * @param a Pointer to the first double.
+ * @param b Pointer to the second double.
+ * @return Negative, zero or positive according to their order.
+ */
 static int multipolygon_double_compare(const void *a, const void *b) {
     double x = *(const double *)a, y = *(const double *)b;
     return (x > y) - (x < y);
 }
 
-/* A ring's vertices can lie on another ring's boundary: at shared nodes, or
+/** @brief Select an interior point for ring containment checks.
+ *
+ * A ring's vertices can lie on another ring's boundary: at shared nodes, or
  * after rounding to the metre grid where rings nearly touch. The crossing test
  * is arbitrary there, so test containment with a point inside the ring: the
- * middle of the widest span on its middle row. */
+ * middle of the widest span on its middle row.
+ * @param ring Closed ring with its bounding box already calculated.
+ * @return Interior point, or the first vertex if no metre-scale span exists.
+ */
 static struct coord multipolygon_ring_interior(struct multipolygon_ring *ring) {
     struct coord probe = ring->coords[0];
     int y = ring->bbox.l.y + (ring->bbox.h.y - ring->bbox.l.y) / 2, i, j, n = 0;
