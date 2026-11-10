@@ -138,7 +138,7 @@ jobs:
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates git jq wget
       - uses: actions/checkout@v7
-      - uses: crate-ci/typos@v1.52.0
+      - uses: crate-ci/typos@v1.52.1
         with:
           files: docs/
   build_sailfish:
