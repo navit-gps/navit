@@ -188,6 +188,7 @@ static void tile_extend(char *tile, struct item_bin *ib, GList **tiles_list) {
         th->zipnum = 0;
         th->zip_data = NULL;
         th->name = string_hash_lookup(tile);
+        tile_bbox(tile, &th->bbox, overlap);
         *th_get_subtile(th, 0) = th->name;
 
         if (tile_hash2)
@@ -284,6 +285,14 @@ static void write_item(char *tile, struct item_bin *ib, FILE *reference) {
     if (!th)
         th = g_hash_table_lookup(tile_hash, tile);
     if (th) {
+        /* Recompute extents during assembly, including tiles outside the
+         * current memory slice. This also works with a reloaded tilesdir. */
+        if (ib->clen) {
+            struct rect r;
+            bbox((struct coord *)(ib + 1), ib->clen / 2, &r);
+            bbox_extend(&r.l, &th->bbox);
+            bbox_extend(&r.h, &th->bbox);
+        }
         if (debug_itembin(ib)) {
             fprintf(stderr, "Match %s %d %s\n", tile, th->process, th->name);
             dump_itembin(ib);
@@ -471,6 +480,7 @@ void load_tilesdir(FILE *in) {
         th->zipnum = zipnum++;
         th->zip_data = NULL;
         th->name = string_hash_lookup(tile);
+        tile_bbox(tile, &th->bbox, overlap);
         while (fscanf(in, ":%[^:\n]", subtile) == 1) {
             th = g_realloc(th, sizeof(struct tile_head) + (th->num_subtiles + 1) * sizeof(char *));
             *th_get_subtile(th, th->num_subtiles) = string_hash_lookup(subtile);
@@ -647,6 +657,10 @@ void index_submap_add(struct tile_info *info, struct tile_head *th) {
     index_tile[len] = 0;
     strcat(index_tile, info->suffix);
     tile_bbox(th->name, &r, overlap);
+    /* Tile names retain the legacy grid, but its +/-20,000,000 square
+     * excludes valid Mercator geometry near the date line and poles. */
+    bbox_extend(&th->bbox.l, &r);
+    bbox_extend(&th->bbox.h, &r);
 
     item_bin = init_item(type_submap);
     item_bin_add_coord_rect(item_bin, &r);

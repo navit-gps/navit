@@ -294,6 +294,7 @@ static void usage(void) {
     fprintf(f, "-M (--o5m)                        : input data is in o5m format\n");
     fprintf(f, "-n (--ignore-unknown)             : do not output ways and nodes with unknown type\n");
     fprintf(f, "-N (--nodes-only)                 : process only nodes\n");
+    fprintf(f, "   (--ocean-polygons) <file>       : replace inferred ocean with prepared water polygon items\n");
     fprintf(f, "-P (--protobuf)                   : input data is in pbf (Protocol Buffer) format\n");
     fprintf(f, "-r (--rule-file) <file>           : read mapping rules from specified file\n");
     fprintf(f, "-s (--start) <phase>              : start at specified phase\n");
@@ -341,6 +342,7 @@ struct maptool_params {
     GList *map_handles;
     FILE *input_file;
     FILE *rule_file;
+    FILE *ocean_polygons;
     char *url;
     struct maptool_osm osm;
     FILE *ways_split;
@@ -377,6 +379,7 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
         {"help",               0, 0, 'h'},
         {"keep-tmpfiles",      0, 0, 'k'},
         {"nodes-only",         0, 0, 'N'},
+        {"ocean-polygons",     1, 0, 256},
         {"map",                1, 0, 'm'},
         {"o5m",                0, 0, 'M'},
         {"plugin",             1, 0, 'p'},
@@ -404,6 +407,14 @@ static int parse_option(struct maptool_params *p, char **argv, int argc, int *op
     if (c == -1)
         return 1;
     switch (c) {
+    case 256:
+        coastline_preassembled = 1;
+        p->ocean_polygons = fopen(optarg, "rb");
+        if (!p->ocean_polygons) {
+            fprintf(stderr, "Cannot open ocean polygons: %s\n", optarg);
+            return 0;
+        }
+        break;
     case '3':
         p->zip64 = 0;
         break;
@@ -728,8 +739,68 @@ static void osm_process_way2poi(struct maptool_params *p, char *suffix) {
     fclose(way2poi_result);
 }
 
+/** @brief Import prepared ocean coverage, preserving island holes.
+ *
+ * Prepared polygons already describe the ocean, including island holes. Do not
+ * run coastline inference on them or combine them with inferred tile fills.
+ * Bound and validate the native item stream before handing it to read_item().
+ * @param in Native item stream from contrib/coastline-polygons.py.
+ * @param out Coastline result stream for normal binfile assembly.
+ */
+static void import_ocean_polygons(FILE *in, FILE *out) {
+    unsigned int length;
+    size_t n;
+    while ((n = fread(&length, 1, sizeof(length), in)) != 0) {
+        struct item_bin *ib;
+        int *words, pos, end;
+        if (n != sizeof(length) || length < 10 || length >= 262144)
+            exit_with_error("Invalid ocean polygon item length\n");
+        ib = g_malloc((length + 1) * 4);
+        ib->len = length;
+        words = (int *)ib;
+        if (fread(words + 1, 4, length, in) != length)
+            exit_with_error("Truncated ocean polygon item\n");
+        end = length + 1;
+        if (ib->type != type_poly_water_tiled || ib->clen < 8 || ib->clen % 2 || ib->clen > (int)length - 2)
+            exit_with_error("Invalid ocean polygon coordinates or type\n");
+        pos = 3 + ib->clen;
+        if (words[3] != words[pos - 2] || words[4] != words[pos - 1])
+            exit_with_error("Ocean polygon outer ring is not closed\n");
+        while (pos < end) {
+            int len, count;
+            if (end - pos < 3)
+                exit_with_error("Truncated ocean polygon hole\n");
+            len = words[pos];
+            count = words[pos + 2];
+            if (len < 10 || len >= end - pos || words[pos + 1] != attr_poly_hole || count < 4 || count != (len - 2) / 2
+                || (len - 2) % 2)
+                exit_with_error("Invalid ocean polygon hole\n");
+            if (words[pos + 3] != words[pos + len - 1] || words[pos + 4] != words[pos + len])
+                exit_with_error("Ocean polygon hole is not closed\n");
+            pos += len + 1;
+        }
+        if (fwrite(ib, 4, length + 1, out) != length + 1)
+            exit_with_error("Cannot write ocean polygons\n");
+        g_free(ib);
+    }
+    if (ferror(in))
+        exit_with_error("Cannot read ocean polygons\n");
+}
+
 static void osm_process_coastlines(struct maptool_params *p, char *suffix) {
-    FILE *coastline = tempfile(suffix, "coastline", 0);
+    FILE *coastline;
+    if (p->ocean_polygons) {
+        FILE *out = tempfile(suffix, "coastline_result", 1);
+        if (!out)
+            exit_with_error("Cannot create ocean polygon output\n");
+        import_ocean_polygons(p->ocean_polygons, out);
+        if (fclose(out))
+            exit_with_error("Cannot finish ocean polygon output\n");
+        fclose(p->ocean_polygons);
+        p->ocean_polygons = NULL;
+        return;
+    }
+    coastline = tempfile(suffix, "coastline", 0);
     if (coastline) {
         FILE *coastline_result = tempfile(suffix, "coastline_result", 1);
         process_coastlines(coastline, coastline_result);
