@@ -70,6 +70,7 @@ extern struct tile_head {
     int total_size_used;
     int zipnum;
     int process;
+    struct rect bbox;
     struct tile_head *next;
     char *comp_data;
     int comp_size;
@@ -259,6 +260,7 @@ extern int bytes_read;
 extern int overlap;
 extern int unknown_country;
 extern int experimental;
+extern int coastline_preassembled;
 void sig_alrm(int sig);
 void sig_alrm_end(void);
 

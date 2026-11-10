@@ -152,6 +152,8 @@ void phase1_map(GList *maps, FILE *out_ways, FILE *out_nodes) {
     }
 }
 
+int coastline_preassembled;
+
 int item_order_by_type(enum item_type type) {
     int max = 14;
     switch (type) {
@@ -190,7 +192,12 @@ int item_order_by_type(enum item_type type) {
         max = 9;
         break;
     case type_poly_water_tiled:
-        if (experimental)
+        /* Complete ocean coverage must remain visible at every zoom. Index
+         * depth d has minimum display order d-4; tiny detached water polygons
+         * would otherwise vanish at overview zooms. Keep their full geometry. */
+        if (coastline_preassembled)
+            max = 4;
+        else if (experimental)
             max = 9;
         break;
     case type_street_4_land:

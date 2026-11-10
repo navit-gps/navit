@@ -91,6 +91,66 @@ From .pbf
 
  maptool --protobuf -i my_OSM_map.osm.pbf my_Navit_map.bin
 
+Complete coastlines for regional maps
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Regional extracts can omit coastline ways needed to distinguish land from
+ocean. The historical coastline inference can therefore flood land, including
+land in another loaded map. For complete ocean coverage, prepare water polygons
+from a full-resolution global land snapshot and supply them to maptool::
+
+    python3 -m pip install pyshp 'shapely>=2.0'
+    python3 contrib/coastline-polygons.py \
+        --land-shapefile /data/land-polygons-split-3857/land_polygons.shp \
+        --bounds=-5.883925,47.07722,-1.0145379,49.414549 /data/bretagne-water.items
+    maptool --protobuf -i /data/bretagne.osm.pbf \
+        --ocean-polygons /data/bretagne-water.items /data/bretagne.bin
+
+Download and extract ``land-polygons-split-3857.zip`` from
+https://osmdata.openstreetmap.de/download/land-polygons-split-3857.zip.
+Keep its README, projection and shapefile components together. Use the full
+resolution dataset; the simplified zoom 0–9 dataset can put water on small
+islands at navigation zooms. The data is copyright OpenStreetMap contributors,
+available under the ODbL: https://www.openstreetmap.org/copyright.
+
+Replace the example bounds with the desired ocean coverage rectangle, in
+west,south,east,north order. The PBF header bounds, visible with
+``osmium fileinfo --json``, are suitable for regional maps. The generator
+supports bounds between 85 degrees south and north; split coverage at the
+antimeridian. It computes ocean as coverage minus complete land, preserves
+island holes, and validates the polygons after rounding to Navit's metre grid.
+It records the source hash, date and output hash alongside the item file.
+
+Use one pinned global snapshot for adjoining maps. Invalid source geometry or
+an invalid item stream stops conversion; missing coverage never falls back to
+inferred ocean. The prepared items replace the regional coastline inference.
+Roads, inland water and other features still follow the ordinary conversion
+path, and the result is one normal searchable, routable binfile. Python and the
+geometry libraries are needed only on the conversion host.
+
+Existing binfiles must be rebuilt. Omitting ``--ocean-polygons`` retains the
+historical coastline inference. Ocean outside the requested coverage rectangle
+is not supplied by this map. Keep the option when resuming conversion phases.
+
+Incomplete inland water boundaries
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Open water, reservoir and basin ways are retained for multipolygon assembly,
+but are not filled independently. Connected rings are classified by containment,
+preserving islands and nested lakes. An inner ring without its enclosing shore
+remains land.
+
+When a water relation has a missing or unclosed inner boundary, maptool skips
+that relation and reports its OSM URL. This deliberately omits its water too:
+closing the gap or dropping the hole could flood an island. Check the full OSM
+object and whether the extract includes every member before fixing source data.
+No OSM object IDs are hardcoded, and boundaries are never borrowed from unrelated
+ways. Closed rings which collapse at metre precision do not invalidate a relation.
+
+Geometry near the date line and poles can extend beyond the legacy tile grid.
+Maptool retains it and expands its index bounds while preserving tile names.
+Rebuild existing binfiles to apply these inland water and map-edge fixes.
+
 Processing the whole Planet
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The OpenStreetMap wiki [http://wiki.openstreetmap.org/index.php/Planet.osm Planet.osm] page lists mirrors where Planet.osm can be downloaded. There are also downloads of smaller areas such as the UK and parts of Europe. These smaller excerpts are a lot quicker to download and process.
