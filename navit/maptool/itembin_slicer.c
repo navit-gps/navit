@@ -122,6 +122,76 @@ static void itembin_poly_intersection(struct coord *p1, struct coord *p2, struct
 }
 
 /**
+ * @brief calculate intersection point of line with x axis
+ *
+ * @param[in] p1 - one point of the line
+ * @param[in] p2 - another point of the line
+ * @param[in] x - x coordinate to check against
+ * @param[out y - returns y coordinate of intersection of line with x if intersecting
+ * @returns - 0 if not intersecting, 1 if y could be calculated.
+ */
+static int itembin_line_intersect_x(struct coord *p1, struct coord *p2, int x, int *y) {
+    struct rect r;
+    struct coord ret;
+    memset(&r, 0, sizeof(r));
+    r.l.x = x;
+    if (((p1->x > x) && (p2->x < x)) || ((p2->x > x) && (p1->x < x))) {
+        itembin_poly_intersection(p1, p2, &r, 0, &ret);
+        *y = ret.y;
+        return 1;
+    }
+    return 0;
+}
+
+/**
+ * @brief calculate if a point is inside a polygon
+ *
+ * This function calculates if a point is inside a polygon. To do this, it casts a ray along the
+ * points x axis through the polygon and counts the intersections. If the count is even the point
+ * is outside, if odd inside
+ * @param[in] pt - point to check
+ * @param[in] poly - polygon to check
+ * @param[in] ccount - number of coordinates in poly
+ * @return 0 if outside 1 if inside
+ */
+static int itembin_poly_is_in(struct coord *pt, struct coord *poly, int ccount) {
+    int intersect_count = 0;
+    /* p is first element in current buffer */
+    struct coord *p = poly;
+    /* s is lasst element in current buffer */
+    struct coord *s = poly + ccount - 1;
+    int i;
+
+    /* using x coordinate to trace. So pt is on trace */
+    for (i = 0; i < ccount; i++) {
+        if (p->x < pt->x) {
+            if (s->x > pt->x) {
+                int y = 0;
+                /* we crossed the ray. calculate crossing point*/
+                if (itembin_line_intersect_x(p, s, pt->x, &y))
+                    if (y < pt->y)
+                        intersect_count++;
+            }
+        } else {
+            if (s->x < pt->x) {
+                int y = 0;
+                /* we crossed the ray. calculate crossing point*/
+                if (itembin_line_intersect_x(p, s, pt->x, &y))
+                    if (y < pt->y)
+                        intersect_count++;
+            }
+        }
+        /* move one coordinate forward */
+        s = p;
+        p++;
+    }
+    if ((intersect_count % 2) == 0)
+        return 0;
+    else
+        return 1;
+}
+
+/**
  * @brief data structure to eas up slicing
  */
 struct slice_result {
@@ -544,7 +614,7 @@ static void itembin_write_slice_result(struct slicerpolygon *sp, struct slice_re
         item_bin_add_attr_string(out, attr_debug, buffer);
         /* add holes */
         for (h = 0; h < inner->count; h++) {
-            if (geom_poly_point_inside(outer->coord[i], outer->ccount[i], inner->coord[h]))
+            if (itembin_poly_is_in(inner->coord[h], outer->coord[i], outer->ccount[i]))
                 item_bin_add_hole(out, inner->coord[h], inner->ccount[h]);
         }
         tile_write_item_to_tile(sp->info, out, sp->reference, sp->buffer);
@@ -765,16 +835,6 @@ void itembin_nicer_slicer(struct tile_info *info, struct item_bin *ib, FILE *ref
          * overlapping tiles do not cover the same area per tile code than the
          * overlapping ones we cannot. This will look ugly. But there is no chance.*/
         tile_bbox(tilecode, &bbox, overlap);
-        /* The outermost cells also own geometry beyond the legacy grid.
-         * Extend only their outside edges, preserving all interior splits. */
-        if (bbox.l.x == world_bbox.l.x)
-            bbox.l.x = MIN(bbox.l.x, sp.bbox.l.x);
-        if (bbox.h.x == world_bbox.h.x)
-            bbox.h.x = MAX(bbox.h.x, sp.bbox.h.x);
-        if (bbox.l.y == world_bbox.l.y)
-            bbox.l.y = MIN(bbox.l.y, sp.bbox.l.y);
-        if (bbox.h.y == world_bbox.h.y)
-            bbox.h.y = MAX(bbox.h.y, sp.bbox.h.y);
 
         /* only process tiles which do intersect wit ib's bbox */
         if (!itembin_bbox_intersects(&sp.bbox, &bbox)) {

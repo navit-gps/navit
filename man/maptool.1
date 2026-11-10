@@ -61,27 +61,6 @@ do not output ways and nodes with unknown type
 \-N (\-\-nodes-only)
 process only nodes
 .TP
-\-\-ocean-polygons <file>
-Replace coastline inference with prepared ocean polygons, including island
-holes. The file is a native-endian Navit item stream containing only closed
-poly_water_tiled polygons and poly_hole attributes. Invalid or truncated items
-are fatal errors; an empty file represents a region with no ocean.
-.PP
-Prepare this file with contrib/coastline-polygons.py, using the full-resolution
-global land-polygons-split-3857 dataset from https://osmdata.openstreetmap.de/
-and the geographic bounds of the map. Use the same pinned global snapshot for
-maps loaded together. The preparation tool validates topology, converts the
-projection and preserves holes when rounding to Navit's integer coordinates.
-Its Python dependencies are needed only on the conversion host.
-Prepared ocean items are indexed at depth four or shallower so their coverage
-is available at every display order, including overview zooms.
-.PP
-This option replaces all ocean generated from the regional OSM coastlines.
-Roads, inland water, search indexes and other OSM features follow the normal
-conversion path. Without this option, the historical coastline inference is
-still used and can flood land when regional coastlines are incomplete.
-Use the option consistently when resuming maptool phases.
-.TP
 \-P (\-\-protobuf)
 input data is in pbf (Protocol Buffer) format
 .TP
@@ -116,20 +95,6 @@ set maximum country index size in bytes
 .TP
 \-z (\-\-compression-level) <level>
 set the compression level (1-9 for zlib, 1-9 for lzma, default 6)
-.SH WATER AREAS
-Standalone water areas must contain at least three vertices and return to the
-same OSM node. Open water, reservoir and basin ways are retained for
-multipolygon assembly, but are not filled independently. This avoids
-inventing water across land or islands by closing an incomplete boundary.
-Multipolygon rings are assembled from connected members and classified by
-containment, including nested islands and water bodies. Member roles do not
-prevent connected segments from forming a ring. Inner-only roots remain land
-when their enclosing shore is absent. Water relations with missing or unclosed
-inner members are skipped entirely, with their OSM relation URL in a warning.
-Open rings are not closed or repaired: check source data and extract completeness
-before correcting the source. There is no list of excluded OSM object IDs.
-Valid geometry beyond the legacy tile grid remains indexed without changing
-tile names. Existing binfiles must be rebuilt to apply these fixes.
 .SH BUGS
 Should you find one, please report it :
  http://trac.navit-project.org
