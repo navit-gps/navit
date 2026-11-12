@@ -38,7 +38,6 @@
 #define debug_itembin(x) 0
 
 #define RELATION_MEMBER_PRINT_FORMAT "%d:" LONGLONG_FMT ":%s"
-#define RELATION_MEMBER_PARSE_FORMAT "%d:" LONGLONG_FMT ":%n"
 
 struct tile_data {
     char buffer[1024];
@@ -127,6 +126,7 @@ struct node_item {
     struct coord c;
     unsigned long long int nd_id : NODE_ID_BITS;
     char ref_way;
+    char is_barrier; /**< Whether this node is tagged as a barrier (e.g. bollard) */
 };
 
 struct zip_info;
@@ -301,6 +301,14 @@ enum relation_member_type {
     rel_member_way,
     rel_member_relation,
 };
+
+struct relation_member {
+    enum relation_member_type type;
+    long long id;
+    char *role;
+};
+
+int relation_member_parse(char *relation_member_string, struct relation_member *memb);
 
 void osm_warning(char *type, osmid id, int cont, char *fmt, ...);
 void osm_info(char *type, osmid id, int cont, char *fmt, ...);

@@ -163,6 +163,7 @@ int item_coord_get_within_selection(struct item *it, struct coord *c, int count,
 int item_coord_get_within_range(struct item *i, struct coord *c, int max, struct coord *start, struct coord *end);
 int item_coord_get_pro(struct item *it, struct coord *c, int count, enum projection to);
 int item_coord_is_node(struct item *it);
+int item_barrier_default_flags(enum item_type type);
 void item_attr_rewind(struct item *it);
 int item_attr_get(struct item *it, enum attr_type attr_type, struct attr *attr);
 int item_attr_set(struct item *it, struct attr *attr, enum change_mode mode);
