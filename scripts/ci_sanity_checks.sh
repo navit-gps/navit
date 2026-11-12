@@ -58,7 +58,7 @@ check_po() {
 
 check_po || {
 	echo "[ERROR] found incorrect or outdated po-files. Please check the differences in the current source tree for po/*.po" >&2
-	exit 2
+	return_code=2
 }
 
 git config --global --add safe.directory $(pwd)
