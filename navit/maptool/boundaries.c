@@ -115,16 +115,16 @@ static GList *process_boundaries_setup(FILE *boundaries, struct relations *relat
 
         while ((member = item_bin_get_attr(ib, attr_osm_member, member))) {
             long long osm_id;
-            int read = 0;
             enum relation_member_type member_type;
-            int member_type_numeric;
             char *rolestr;
+            struct relation_member rm;
 
-            if (sscanf(member, RELATION_MEMBER_PARSE_FORMAT, &member_type_numeric, &osm_id, &read) < 2)
+            if (!relation_member_parse(member, &rm))
                 continue;
 
-            member_type = (enum relation_member_type)member_type_numeric;
-            rolestr = member + read;
+            member_type = rm.type;
+            osm_id = rm.id;
+            rolestr = rm.role;
 
             if (member_type == rel_member_node) {
                 if (!g_strcmp0(rolestr, "admin_centre") || !g_strcmp0(rolestr, "admin_center"))
