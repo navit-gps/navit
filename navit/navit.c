@@ -67,9 +67,8 @@
 struct log;
 struct vehicle;
 #ifdef HAVE_API_WIN32_BASE
-#    include <windows.h>
-
 #    include "util.h"
+#    include <windows.h>
 #endif
 #ifdef HAVE_API_WIN32_CE
 #    include "libc.h"
@@ -127,7 +126,11 @@ struct navit {
     struct navigation *navigation;
     struct speech *speech;
     struct tracking *tracking;
-    int ready;
+    int ready; /**< Flags for Navit ready state.
+                    1: Init has been done
+                    2: resize has been done to set window size from grafics plugin
+                    When 1&2 are combined navit is ready which has value 3
+                    */
     struct window *win;
     struct displaylist *displaylist;
     int tracking_flag;
@@ -161,7 +164,7 @@ struct navit {
                                       following flags:
                                       1: draw operations are blocked
                                       2: draw operations are pending, requiring a redraw once draw operations are
-                    unblocked */
+                                         unblocked */
     int w, h;
     int drag_bitmap;
     int use_mousewheel;
@@ -1626,49 +1629,67 @@ static void navit_mark_navigation_stopped(char *former_destination_file) {
 void navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async) {
     char *destination_file;
     destination_file = bookmarks_get_destination_file(TRUE);
-    if (c) {
-        this_->destination = *c;
-        this_->destination_valid = 1;
+    struct vehicleprofile *profile;
+    struct attr attr;
+    char *profilename;
 
-        dbg(lvl_debug, "c=(%i,%i)", c->x, c->y);
-        bookmarks_append_destinations(this_->former_destination, destination_file, c, 1, type_former_destination,
-                                      description, this_->recentdest_count);
+    profilename = NULL;
+    profile = navit_get_vehicleprofile(this_);
+    if (vehicleprofile_get_attr(profile, attr_name, &attr, NULL)) {
+        profilename = attr.u.str;
+    }
+
+    if (!profile) {
+        dbg(lvl_error,
+            "FATAL: No vehicle profile available. Please add a (valid) vehicle profile to your configuration.");
     } else {
-        this_->destination_valid = 0;
-        bookmarks_append_destinations(this_->former_destination, destination_file, NULL, 0, type_former_destination,
-                                      NULL, this_->recentdest_count);
-        navit_mark_navigation_stopped(destination_file);
-    }
-    g_free(destination_file);
+        if (c) {
+            this_->destination = *c;
+            this_->destination_valid = 1;
 
-    if (this_->route) {
-        struct attr attr;
-        int dstcount;
-        struct pcoord *pc;
-
-        navit_get_attr(this_, attr_waypoints_flag, &attr, NULL);
-        if (this_->waypoints_flag == 0 || route_get_destination_count(this_->route) == 0) {
-            route_set_destination(this_->route, c, async);
+            dbg(lvl_info, "Calculating route for destination '%s'.", description);
+            dbg(lvl_debug, "c=(%i,%i)", c->x, c->y);
+            dbg(lvl_info, "Calculating route using '%s' profile.", profilename);
+            bookmarks_append_destinations(this_->former_destination, destination_file, c, 1, type_former_destination,
+                                          description, this_->recentdest_count);
         } else {
-            route_append_destination(this_->route, c, async);
+            this_->destination_valid = 0;
+            bookmarks_append_destinations(this_->former_destination, destination_file, NULL, 0, type_former_destination,
+                                          NULL, this_->recentdest_count);
+            navit_mark_navigation_stopped(destination_file);
+        }
+        g_free(destination_file);
+
+        if (this_->route) {
+            struct attr attr;
+            int dstcount;
+            struct pcoord *pc;
+
+            navit_get_attr(this_, attr_waypoints_flag, &attr, NULL);
+            if (this_->waypoints_flag == 0 || route_get_destination_count(this_->route) == 0) {
+                route_set_destination(this_->route, c, async);
+            } else {
+                route_append_destination(this_->route, c, async);
+            }
+
+            dstcount = route_get_destination_count(this_->route);
+            if (dstcount > 0) {
+                destination_file = bookmarks_get_destination_file(TRUE);
+                pc = g_new(struct pcoord, dstcount);
+                route_get_destinations(this_->route, pc, dstcount);
+                bookmarks_append_destinations(this_->former_destination, destination_file, pc, dstcount,
+                                              type_former_itinerary, description, this_->recentdest_count);
+                g_free(pc);
+                g_free(destination_file);
+            }
         }
 
-        dstcount = route_get_destination_count(this_->route);
-        if (dstcount > 0) {
-            destination_file = bookmarks_get_destination_file(TRUE);
-            pc = g_new(struct pcoord, dstcount);
-            route_get_destinations(this_->route, pc, dstcount);
-            bookmarks_append_destinations(this_->former_destination, destination_file, pc, dstcount,
-                                          type_former_itinerary, description, this_->recentdest_count);
-            g_free(pc);
-            g_free(destination_file);
-        }
-    }
+        callback_list_call_attr_0(this_->attr_cbl, attr_destination);
 
-    callback_list_call_attr_0(this_->attr_cbl, attr_destination);
+        if (this_->route && this_->ready == 3 && !(this_->flags & 4))
+            navit_draw(this_);
 
-    if (this_->route && this_->ready == 3 && !(this_->flags & 4))
-        navit_draw(this_);
+    }  // vehicleprofile
 }
 
 /**
@@ -1752,12 +1773,6 @@ int navit_get_destination_count(struct navit *this_) {
     if (!this_->route)
         return 0;
     return route_get_destination_count(this_->route);
-}
-
-char *navit_get_destination_description(struct navit *this_, int n) {
-    if (!this_->route)
-        return NULL;
-    return route_get_destination_description(this_->route, n);
 }
 
 void navit_remove_nth_waypoint(struct navit *this_, int n) {
@@ -2144,6 +2159,11 @@ int navit_init(struct navit *this_) {
     dbg(lvl_info, "Initializing graphics");
     dbg(lvl_info, "Setting Vehicle");
     navit_set_vehicle(this_, this_->vehicle);
+    if (!this_->vehicleprofile) {
+        dbg(lvl_error, "FATAL: No vehicleprofile available.");
+        exit(1);
+    }
+
     dbg(lvl_info, "Adding dynamic maps to mapset %p", this_->mapsets);
     if (this_->mapsets) {
         struct mapset_handle *msh;
@@ -3428,15 +3448,31 @@ void navit_set_position(struct navit *this_, struct pcoord *c) {
 }
 
 static int navit_set_vehicleprofile(struct navit *this_, struct vehicleprofile *vp) {
-    if (this_->vehicleprofile == vp)
-        return 0;
-    this_->vehicleprofile = vp;
-    if (this_->route)
+    int ret = 0;
+    struct attr attr;
+    char *name;
+
+    name = NULL;
+    if (vehicleprofile_get_attr(vp, attr_name, &attr, NULL)) {
+        name = attr.u.str;
+    }
+
+    if (this_->vehicleprofile == vp) {
+        dbg(lvl_debug, "vehicleprofile already set to: '%s'", name);
+    } else {
+        this_->vehicleprofile = vp;
+        ret = 1;
+        dbg(lvl_info, "vehicleprofile set to: '%s'", name);
+    }
+    if (this_->route) {
         route_set_profile(this_->route, this_->vehicleprofile);
-    return 1;
+        dbg(lvl_debug, "route vehicleprofile set to: '%s'", name);
+    }
+    return ret;
 }
 
 int navit_set_vehicleprofile_name(struct navit *this_, char *name) {
+    int ret = 0;
     struct attr attr;
     GList *l;
     l = this_->vehicleprofiles;
@@ -3444,16 +3480,20 @@ int navit_set_vehicleprofile_name(struct navit *this_, char *name) {
         if (vehicleprofile_get_attr(l->data, attr_name, &attr, NULL)) {
             if (!strcmp(attr.u.str, name)) {
                 navit_set_vehicleprofile(this_, l->data);
-                return 1;
+                dbg(lvl_info, "vehicleprofile set to: '%s'", name);
+                ret = 1;
             }
         }
         l = g_list_next(l);
     }
-    return 0;
+    return ret;
 }
 
 static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv) {
     struct attr attr;
+    char *name;
+
+    name = NULL;
     this_->vehicle = nv;
     if (nv && vehicle_get_attr(nv->vehicle, attr_profilename, &attr, NULL)) {
         if (navit_set_vehicleprofile_name(this_, attr.u.str))
@@ -3462,19 +3502,29 @@ static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv) {
     if (!this_->vehicleprofile) {  // When deactivating vehicle, keep the last profile if any
         if (!navit_set_vehicleprofile_name(this_, "car")) {
             /* We do not have a fallback "car" profile
-             * so lets set any profile */
-            GList *l;
-            l = this_->vehicleprofiles;
-            if (l) {
-                this_->vehicleprofile = l->data;
-                if (this_->route)
-                    route_set_profile(this_->route, this_->vehicleprofile);
+             * so set profile to NULL */
+            this_->vehicleprofile = NULL;
+            dbg(lvl_error, "No vehicle profile enabled! Is it on purpose? Navit can't calculate a route.");
+            dbg(lvl_error, "Please check your navit.xml");
+            dbg(lvl_debug, "vehicleprofile is set to NULL");
+            if (this_->route) {
+                route_set_profile(this_->route, NULL);
+                dbg(lvl_debug, "Route vehicleprofile set to NULL");
             }
-        }
+        } else {
+            dbg(lvl_info, "vehicleprofile set to fallback profile 'car'");
+        }  // car
     } else {
-        if (this_->route)
+        if (vehicleprofile_get_attr(this_->vehicleprofile, attr_name, &attr, NULL)) {
+            name = g_strdup(attr.u.str);
+        }
+        dbg(lvl_debug, "vehicleprofile is set to '%s'", name);
+        if (this_->route) {
             route_set_profile(this_->route, this_->vehicleprofile);
-    }
+            dbg(lvl_debug, "route vehicleprofile is set to '%s'", name);
+        }  // route
+    }  // vehicleprofile
+    g_free(name);
 }
 
 /**
