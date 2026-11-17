@@ -70,6 +70,8 @@ struct search_list {
     struct house_number_interpolation inter;
     int use_address_results;
     GList *address_results, *address_results_pos;
+    struct coord_geo ref_pos;     /**< position used to rank equally good matches, e.g. the vehicle position */
+    int has_ref_pos;              /**< 1 if ref_pos holds a valid position */
 };
 
 static guint search_item_hash_hash(gconstpointer key) {
@@ -99,6 +101,24 @@ struct search_list *search_list_new(struct mapset *ms) {
     ret->ms = ms;
 
     return ret;
+}
+
+/**
+* @brief Set the position that equally good address matches are ranked by
+*
+* Without a reference position, matches of equal quality keep the order they
+* have always had. Passing NULL clears it again.
+*
+* @param this_ The search list
+* @param pos Reference position, or NULL to disable proximity ranking
+*/
+void search_list_set_reference_position(struct search_list *this_, const struct coord_geo *pos) {
+    if (pos) {
+        this_->ref_pos = *pos;
+        this_->has_ref_pos = 1;
+    } else {
+        this_->has_ref_pos = 0;
+    }
 }
 
 static void search_list_search_free(struct search_list *sl, int level);
@@ -227,6 +247,68 @@ static int search_phrase_used(struct phrase *p, GList *used_phrases) {
     return 0;
 }
 
+/**
+* @brief Squared distance of a coordinate from the reference position
+*
+* Computed in degrees with longitude scaled by the cosine of the mean latitude,
+* so the metric is roughly isotropic. The result is scaled by 1e4 to keep it
+* inside int for any pair of coordinates on earth (worst case ~1.6e9). Only the
+* ordering it produces is meaningful.
+*
+* @param sl The search list providing the reference position
+* @param c Coordinate of the result, or NULL
+* @return Scaled squared distance, or G_MAXINT if it cannot be computed
+*/
+static int search_ref_distance_sq(struct search_list *sl, struct pcoord *c) {
+    struct coord_geo g;
+    struct coord c1;
+    double dx, dy, dist_sq;
+
+    if (!sl->has_ref_pos || !c || c->pro == projection_none) {
+        return G_MAXINT;
+    }
+    c1.x = c->x;
+    c1.y = c->y;
+    transform_to_geo(c->pro, &c1, &g);
+    dx = (g.lng - sl->ref_pos.lng) * cos((g.lat + sl->ref_pos.lat) / 2 * M_PI / 180);
+    dy = g.lat - sl->ref_pos.lat;
+    dist_sq = dx * dx + dy * dy;
+    if (dist_sq > (double) G_MAXINT / 1e4) {
+        return G_MAXINT - 1;
+    }
+    return (int)(dist_sq * 1e4);
+}
+
+/**
+ * @brief Distance of a search result from the position set on the search list.
+ *
+ * Lets whoever presents results to a user break ties by proximity without
+ * duplicating the coordinate math: a completion list ordered by match quality
+ * and label can put the nearest equally good match first.  Returns G_MAXINT
+ * when there is no reference position or the result carries no coordinates, so
+ * unknown distances sort last.
+ *
+ * @param this_ The search list providing the reference position
+ * @param res The result to measure
+ * @return Scaled squared distance, or G_MAXINT if it cannot be computed
+ */
+int search_list_result_distance_sq(struct search_list *this_, struct search_list_result *res) {
+    if (!this_ || !res) {
+        return G_MAXINT;
+    }
+    return search_ref_distance_sq(this_, res->c);
+}
+
+
+/**
+* @brief Order address matches by quality, then by distance
+*
+* The id holds the number of matched words, which stays the primary key: a
+* nearer place matching fewer words must not beat a farther place matching more.
+* Distance from the reference position only breaks ties, and results for which
+* no distance could be computed go last among equally good matches. With no
+* reference position set this behaves exactly as before.
+**/
 static gint search_by_address_compare(gconstpointer a, gconstpointer b) {
     const struct search_list_result *slra = a;
     const struct search_list_result *slrb = b;

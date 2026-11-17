@@ -19,6 +19,7 @@
 #include "point.h"
 #include "search.h"
 #include "track.h"
+#include "vehicle.h"
 #include <glib.h>
 #include <stdlib.h>
 #ifdef HAVE_API_ANDROID
@@ -75,6 +76,10 @@ static int gui_internal_search_cmp(gconstpointer _a, gconstpointer _b) {
         return -1;
     if (r > 0)
         return 1;
+    /* equally good matches: nearest first, unknown distance last */
+    if (a->sort_distance_sq != b->sort_distance_sq) {
+        return a->sort_distance_sq < b->sort_distance_sq ? -1 : 1;
+    }
     sa = removecase(a->text);
     sb = removecase(b->text);
     r = strcmp(sa, sb);
@@ -390,6 +395,7 @@ static void gui_internal_search_idle(struct gui_priv *this, char *wm_name, struc
         resultlist_row->text = g_strdup_printf("%s %s", item_name, result_sublabel);
     int is_house_number_without_street = !strcmp(wm_name, "House number") && !res->street->name;
     resultlist_row->datai = gui_internal_get_match_quality(item_name, search_text, is_house_number_without_street);
+    resultlist_row->sort_distance_sq = search_list_result_distance_sq(this->sl, res);
     gui_internal_widget_insert_sorted(search_list, resultlist_row, gui_internal_search_cmp);
 
     resultlist_entry =
@@ -409,6 +415,63 @@ static void gui_internal_search_idle_start(struct gui_priv *this, char *wm_name,
     this->idle_cb = callback_new_4(callback_cast(gui_internal_search_idle), this, wm_name, search_list, param);
     this->idle = event_add_idle(50, this->idle_cb);
     callback_call_0(this->idle_cb);
+}
+
+/**
+* @brief Rank equally good address matches by distance from the vehicle
+*
+* The search list needs a reference position to prefer the match closest to the
+* user over others that match just as well. No position (or no fix yet) simply
+* leaves the previous ordering in place.
+*
+* @param this_ The GUI instance
+*/
+/*
+ * navit_get_attr() uses the iterator as an opaque list cursor; the definition
+ * mirrors the one in navit.c, as other modules that iterate attributes do.
+ */
+struct attr_iter {
+    void *iter;
+    union {
+        GList *list;
+    } u;
+};
+
+/**
+ * @brief Tell the address search where the vehicle currently is
+ *
+ * Several places share a name, and before this the completion list ordered
+ * equally good matches by match quality and label only, so which one appeared
+ * first depended on nothing a user could predict.  Passing the current position
+ * lets the nearest one come first, which is what someone searching for
+ * "Springfield" while driving in Massachusetts expects.
+ *
+ * The position is read from the vehicles rather than the GUI's cached copy:
+ * that cache is only refreshed when a menu is entered without a preceding map
+ * tap (see gui_internal_enter_setup), and tapping the map is the usual way into
+ * search.  Without any position the ranking is disabled and results are ordered
+ * as before.
+ *
+ * @param this_ The GUI instance
+ */
+static void gui_internal_search_set_reference_position(struct gui_priv *this_) {
+    struct attr_iter iter;
+    struct attr vehicle_attr, pos_attr;
+
+    iter.u.list = NULL;
+    while (1) {
+        vehicle_attr.type = attr_vehicle;
+        vehicle_attr.u.vehicle = NULL;
+        if (!navit_get_attr(this_->nav, attr_vehicle, &vehicle_attr, &iter)) {
+            break;
+        }
+        if (vehicle_attr.u.vehicle &&
+            vehicle_get_attr(vehicle_attr.u.vehicle, attr_position_coord_geo, &pos_attr, NULL)) {
+            search_list_set_reference_position(this_->sl, pos_attr.u.coord_geo);
+            return;
+        }
+    }
+    search_list_set_reference_position(this_->sl, NULL);
 }
 
 static void gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data) {
@@ -446,6 +509,7 @@ static void gui_internal_search_changed(struct gui_priv *this, struct widget *wm
         if (!strcmp(wm->name, "House number"))
             search_attr.type = attr_house_number;
         search_attr.u.str = wm->text;
+        gui_internal_search_set_reference_position(this);
         search_list_search(this->sl, &search_attr, 1);
         gui_internal_search_idle_start(this, wm->name, search_list, param);
     } else {
