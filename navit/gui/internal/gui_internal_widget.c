@@ -1085,6 +1085,7 @@ struct widget *gui_internal_widget_table_row_new(struct gui_priv *this, enum fla
     struct widget *widget = g_new0(struct widget, 1);
     widget->type = widget_table_row;
     widget->flags = flags;
+    widget->sort_distance_sq = G_MAXINT;
     return widget;
 }
 
