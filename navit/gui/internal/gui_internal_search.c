@@ -456,53 +456,58 @@ static void gui_internal_search_changed(struct gui_priv *this, struct widget *wm
     gui_internal_widget_render(this, l->data);
 }
 
-static void gui_internal_search_list_set_default_country(struct gui_priv *this) {
-    struct attr search_attr, country_name, country_iso2, *country_attr;
+/**
+ * @brief Make addresses in every country searchable and note the current one
+ *
+ * The country level of a search list is what town, street and house number
+ * results are filed under, so it used to decide where addresses could be found
+ * at all: with only the vehicle's country in it, searching for a town across a
+ * border returned nothing, however close that town was.  Filling the level with
+ * every country makes them all searchable; countries without map data are
+ * pruned by the country index and cost microseconds.  Explicitly picking a
+ * country still narrows the search to it, as before.
+ *
+ * The vehicle's own country is still resolved, but only to display its flag in
+ * the search field.
+ *
+ * @param this_ The GUI instance
+ */
+static void gui_internal_search_list_init_countries(struct gui_priv *this_) {
+    struct attr search_attr, country_iso2, *country_attr;
     struct item *item;
     struct country_search *cs;
     struct tracking *tracking;
     struct search_list_result *res;
 
     country_attr = country_default();
-    tracking = navit_get_tracking(this->nav);
+    tracking = navit_get_tracking(this_->nav);
     if (tracking && tracking_get_attr(tracking, attr_country_id, &search_attr, NULL))
         country_attr = &search_attr;
     if (country_attr) {
         cs = country_search_new(country_attr, 0);
         item = country_search_get_item(cs);
-        if (item && item_attr_get(item, attr_country_name, &country_name)) {
-            search_attr.type = attr_country_all;
-            dbg(lvl_debug, "country %s", country_name.u.str);
-            search_attr.u.str = country_name.u.str;
-            search_list_search(this->sl, &search_attr, 0);
-            while ((res = search_list_get_result(this->sl)))
-                ;
-            if (this->country_iso2) {
-                g_free(this->country_iso2);
-                this->country_iso2 = NULL;
-            }
-            if (item_attr_get(item, attr_country_iso2, &country_iso2))
-                this->country_iso2 = g_strdup(country_iso2.u.str);
+        if (item && item_attr_get(item, attr_country_iso2, &country_iso2)) {
+            g_free(this_->country_iso2);
+            this_->country_iso2 = g_strdup(country_iso2.u.str);
+            dbg(lvl_debug, "showing flag for country %s", country_iso2.u.str);
         }
         country_search_destroy(cs);
     } else {
-        dbg(lvl_error, "warning: no default country found");
-        if (this->country_iso2) {
-            dbg(lvl_debug, "attempting to use country '%s'", this->country_iso2);
-            search_attr.type = attr_country_iso2;
-            search_attr.u.str = this->country_iso2;
-            search_list_search(this->sl, &search_attr, 0);
-            while ((res = search_list_get_result(this->sl)))
-                ;
-        }
+        dbg(lvl_debug, "no current country known, keeping the last flag");
     }
+
+    search_attr.type = attr_country_all;
+    search_attr.u.str = "";
+    search_list_search(this_->sl, &search_attr, 0);
+    while ((res = search_list_get_result(this_->sl)))
+        ;
 }
 
 static void gui_internal_search_list_new(struct gui_priv *this) {
     struct mapset *ms = navit_get_mapset(this->nav);
     if (!this->sl) {
         this->sl = search_list_new(ms);
-        gui_internal_search_list_set_default_country(this);
+        gui_internal_search_list_init_countries(this);
     }
 }
 

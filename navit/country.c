@@ -353,6 +353,17 @@ struct item_methods country_meth = {
     country_attr_get, /* attr_get */
 };
 
+/**
+ * @brief Creates a search over the known countries
+ *
+ * An empty search string matches every country, which is how a caller asks for
+ * the full list instead of leaving it to partial matching to decide what an
+ * empty query means.
+ *
+ * @param search Attribute to search for, e.g. attr_country_name or attr_country_all
+ * @param partial Set to true to also match prefixes
+ * @return A new country search, to be destroyed with country_search_destroy()
+ */
 struct country_search *country_search_new(struct attr *search, int partial) {
     struct country_search *ret = g_new(struct country_search, 1);
     ret->search = *search;
@@ -379,6 +390,9 @@ static int match(struct country_search *this_, enum attr_type type, const char *
         return 0;
     if (this_->search.type != type && this_->search.type != attr_country_all)
         return 0;
+    if (!this_->search.u.str[0]) {
+        return 1;
+    }
     ret = linguistics_compare(name, this_->search.u.str,
                               linguistics_cmp_expand | (this_->partial ? linguistics_cmp_partial : 0)
                                   | linguistics_cmp_words)
