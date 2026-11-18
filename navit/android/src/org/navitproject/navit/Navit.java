@@ -710,8 +710,10 @@ public class Navit extends Activity {
         switch (requestCode) {
             case Navit.NavitDownloaderSelectMap_id :
                 if (resultCode == Activity.RESULT_OK) {
+                    int assetIndex = data.getIntExtra("asset_index", -1);
+                    int mapIndex = data.getIntExtra("map_index", -1);
                     Message msg = mDialogs.obtainMessage(NavitDialogs.MSG_START_MAP_DOWNLOAD,
-                            data.getIntExtra("map_index", -1), 0);
+                            assetIndex >= 0 ? assetIndex : mapIndex, 0);
                     msg.sendToTarget();
                 }
                 break;
