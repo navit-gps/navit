@@ -44,7 +44,9 @@
         <activity android:name=".NavitAddressSearchActivity"
             android:configChanges="orientation|screenSize|keyboardHidden">
         </activity>
-        <activity android:name=".NavitDownloadSelectMapActivity" />
+        <activity
+            android:name=".NavitDownloadSelectMapActivity"
+            android:theme="@style/NavitTheme" />
         <activity
             android:name="FileBrowserActivity"
             android:label="File browser"
