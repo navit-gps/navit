@@ -5471,6 +5471,8 @@ struct traffic_point *traffic_point_new_short(float lon, float lat) {
 }
 
 void traffic_point_destroy(struct traffic_point *this_) {
+    if (!this_)
+        return;
     if (this_->junction_name)
         g_free(this_->junction_name);
     if (this_->junction_ref)
@@ -5520,6 +5522,8 @@ struct traffic_location *traffic_location_new_short(struct traffic_point *at, st
 }
 
 void traffic_location_destroy(struct traffic_location *this_) {
+    if (!this_)
+        return;
     if (this_->at)
         traffic_point_destroy(this_->at);
     if (this_->from)
