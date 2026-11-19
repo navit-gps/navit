@@ -620,7 +620,7 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
     if (mode == draw_mode_end) {
         // Just invalidate the whole window. We could only the invalidate the area of
         // graphics_priv, but that is probably not significantly faster.
-        gdk_window_invalidate_rect(gr->widget->window, NULL, TRUE);
+        gdk_window_invalidate_rect(gtk_widget_get_window(gr->widget), NULL, TRUE);
     }
 }
 
@@ -628,13 +628,15 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode) {
 
 static gint configure(GtkWidget *widget, GdkEventConfigure *event, gpointer user_data) {
     struct graphics_priv *gra = user_data;
+    GtkAllocation allocation;
     if (!gra->visible)
         return TRUE;
 #ifndef _WIN32
-    dbg(lvl_debug, "window=%lu", GDK_WINDOW_XID(widget->window));
+    dbg(lvl_debug, "window=%lu", GDK_WINDOW_XID(gtk_widget_get_window(widget)));
 #endif
-    gra->width = widget->allocation.width;
-    gra->height = widget->allocation.height;
+    gtk_widget_get_allocation(widget, &allocation);
+    gra->width = allocation.width;
+    gra->height = allocation.height;
     cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, gra->width, gra->height);
     if (gra->cairo)
         cairo_destroy(gra->cairo);
@@ -654,7 +656,7 @@ static gint expose(GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
     if (!gra->cairo)
         configure(widget, NULL, user_data);
 
-    cairo_t *cairo = gdk_cairo_create(widget->window);
+    cairo_t *cairo = gdk_cairo_create(gtk_widget_get_window(widget));
     if (gra->p.x || gra->p.y) {
         set_drawing_color(cairo, background_gc->c);
         cairo_paint(cairo);
@@ -859,7 +861,7 @@ static void overlay_disable(struct graphics_priv *gr, int disabled) {
         if (gr->parent) {
             GdkRectangle r;
             overlay_rect(gr->parent, gr, &r);
-            gdk_window_invalidate_rect(gr->parent->widget->window, &r, TRUE);
+            gdk_window_invalidate_rect(gtk_widget_get_window(gr->parent->widget), &r, TRUE);
         }
     }
 }
@@ -1016,7 +1018,7 @@ static void *get_data(struct graphics_priv *this, char const *type) {
         return this->widget;
 #ifndef _WIN32
     if (!strcmp(type, "xwindow_id"))
-        return (void *)GDK_WINDOW_XID(this->win ? this->win->window : this->widget->window);
+        return (void *)GDK_WINDOW_XID(this->win ? gtk_widget_get_window(this->win) : gtk_widget_get_window(this->widget));
 #endif
     if (!strcmp(type, "window")) {
         char *cp = getenv("NAVIT_XID");
