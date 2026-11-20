@@ -23,8 +23,20 @@ Those enforce the coding style for our C and Java files. During this phase we ha
 
 .. note::
 
-  When you submit a PR make sure your branch is up-to-date with the trunk branch to avoid having checks on files you did
-  not modified.
+  Sanity checks derive the changed files and the commit range from the exact pull
+  request base (or the commit a push replaced) and its merge base with your branch.
+  Rebasing onto trunk is therefore not needed just to avoid checks on files you did
+  not modify.
+
+Running sanity checks locally
+-----------------------------
+
+Set ``BASE_COMMIT`` to the base commit SHA, or ``TARGET_BRANCH`` to a ref to diff
+against, before running ``scripts/ci_sanity_checks.sh``. When neither is set, the
+script falls back to ``origin/HEAD``, then the upstream trunk ref, then
+``origin/trunk``. Without any resolvable base the file-by-file checks are skipped
+and the commit-message check fails, so set one of the variables for a meaningful
+local run.
 
 Coding Style
 ============
