@@ -16,11 +16,17 @@ jobs:
             pipx install git-cliff
         - uses: actions/checkout@v7
           with:
-            ref: ${{ github.event.pull_request.head.sha }}
             fetch-depth: 0
+            ref: ${{ github.event.pull_request.head.sha || github.sha }}
         - name: run sanity check script
+          env:
+            # BASE_COMMIT is the exact PR base, or the commit a push replaced.
+            # Branch refs move after a PR is opened and fork trunks are often
+            # stale, so neither is a reliable baseline on its own.
+            BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before }}
+            TARGET_BRANCH: refs/remotes/origin/${{ github.base_ref || 'trunk' }}
           run: |
-            bash -c 'source /github/home/.local/share/pipx/venvs/git-cliff/bin/activate; \
+            bash -c 'source /github/home/.local/share/pipx/venvs/git-cliff/bin/activate || exit 1; \
                      scripts/ci_sanity_checks.sh ci_sanity_checks.diff'
         - uses: actions/upload-artifact@v7
           if: failure()
