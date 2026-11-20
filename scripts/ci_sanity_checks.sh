@@ -7,6 +7,15 @@ set -u
 # the path given. This can be used to provide the user with the diff from the on CI run of this script which the User
 # can then import and commit.
 #
+# Environment variables (set by GitHub Actions or manually):
+#   BASE_COMMIT    exact base commit SHA (PR base or the commit a push replaced)
+#   TARGET_BRANCH  ref to diff against when BASE_COMMIT is not available
+#
+# If neither variable is set, scripts/ci_base.sh falls back to origin/HEAD, an
+# upstream trunk ref, then origin/trunk. If no base can be determined, the
+# file-by-file checks are skipped but locale/DTD checks still run; the
+# commit-message check fails instead of passing vacuously.
+#
 # WARNING: make sure you commit ALL your changes before running it locally if you ever do it because it will run a git
 # checkout -- which will reset your changes on all files...
 # #####################################################################################################################
@@ -14,7 +23,19 @@ set -u
 return_code=0
 GIT_DIFF_OUTPUT="${1:-/dev/stdout}"
 KEEPTEMP=${2:-false}
-TARGET_BRANCH=refs/remotes/origin/trunk
+
+# Git refuses to touch the worktree in CI containers until the owner is listed
+# as safe, so do this before any other git invocation.
+git config --global --add safe.directory "$(pwd)"
+
+# Prefer the explicit base commit: branch refs move after a PR is opened and a
+# fork's trunk is often behind the target, so both would lint upstream commits
+# that are not part of this change.
+source "$(dirname "$0")/ci_base.sh"
+
+# Fork point of this branch. Diffing and linting from here covers only the
+# commits the branch introduces, not upstream commits the base has not merged.
+mergebase=$(resolve_mergebase) || mergebase=
 
 cleanup() {
 	$KEEPTEMP || rm -rf build-locale
@@ -61,32 +82,35 @@ check_po || {
 	return_code=2
 }
 
-git config --global --add safe.directory $(pwd)
 
-# List the files that are different from the trunk
-for f in $(git --no-pager diff --name-only $TARGET_BRANCH | sort -u); do
-    if [[ "${f}" =~ navit/support/ ]] || [[ "${f}" =~ navit/fib-1\.1/ ]] || [[ "${f}" =~ navit/traffic/permanentrestrictions/ ]] ; then
-        echo "[DEBUG] Skipping file ${f} ..."
-        continue
-    fi
-    if [[ -e "${f}" ]]; then
+# Check the files changed since the merge base, if one could be resolved.
+if [ -z "$mergebase" ]; then
+    echo "[WARN] No merge base found (set BASE_COMMIT or TARGET_BRANCH). Skipping file-by-file checks. Locale/DTD checks still run."
+else
+    while IFS= read -r -d '' f; do
+        if [[ "${f}" =~ navit/support/ ]] || [[ "${f}" =~ navit/fib-1\.1/ ]] || [[ "${f}" =~ navit/traffic/permanentrestrictions/ ]] ; then
+            echo "[DEBUG] Skipping file ${f} ..."
+            continue
+        fi
+        if [[ -e "${f}" ]]; then
 
-        # Checks for trailing spaces
-        if [[ "${f: -4}" != ".bat" ]]; then
-            echo "[INFO] Checking for trailing spaces on ${f}..."
-            if [[ "$(file -bi """${f}""")" =~ ^text ]]; then
-                sed 's/\s*$//' -i "${f}"
+            # Checks for trailing spaces
+            if [[ "${f: -4}" != ".bat" ]]; then
+                echo "[INFO] Checking for trailing spaces on ${f}..."
+                if [[ "$(file -bi """${f}""")" =~ ^text ]]; then
+                    sed 's/\s*$//' -i "${f}"
+                fi
             fi
-        fi
 
-        # Formats any *.h *.c and *.cpp files
-        if [[ "${f: -2}" == ".h" ]] || [[ "${f: -2}" == ".c" ]] || [[ "${f: -4}" == ".cpp" ]]; then
-            echo "[INFO] Checking for indentation and style compliance on ${f}..."
-            clang-format -i "${f}"
-        fi
+            # Formats any *.h *.c and *.cpp files
+            if [[ "${f: -2}" == ".h" ]] || [[ "${f: -2}" == ".c" ]] || [[ "${f: -4}" == ".cpp" ]]; then
+                echo "[INFO] Checking for indentation and style compliance on ${f}..."
+                clang-format -i "${f}"
+            fi
 
-       fi
-done
+        fi
+    done < <(git --no-pager diff --name-only -z "$mergebase" | sort -z -u)
+fi
 
 
 echo "[INFO] Checking for compliance with the DTD using xmllint on *shipped.xml"
@@ -98,12 +122,16 @@ fi
 check_diff
 
 echo "[INFO] checking for compliance of git commit ruling: no warnings as per git cliff as that will be used to generate the Changelog."
-mergebase=$(git merge-base HEAD $TARGET_BRANCH)
-
-if ! git-cliff --config cliff.toml -s all $mergebase..HEAD
-then
-	echo "[ERROR] git cliff does not like the commits in this feature branch. Please rework them to conventional commits."
-	return_code=4
+if [ -z "$mergebase" ]; then
+    echo "[ERROR] no merge base found; cannot validate commit messages (set BASE_COMMIT or TARGET_BRANCH)" >&2
+    if [ "$return_code" -eq 0 ]; then
+        return_code=4
+    fi
+elif ! git-cliff --config cliff.toml -s all "$mergebase..HEAD"; then
+    echo "[ERROR] git cliff does not like the commits in this feature branch. Please rework them to conventional commits as described on https://www.conventionalcommits.org/en/v1.0.0/" >&2
+    if [ "$return_code" -eq 0 ]; then
+        return_code=4
+    fi
 fi
 
 
