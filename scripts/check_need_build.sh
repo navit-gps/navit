@@ -14,29 +14,38 @@ if ! mergebase=$(resolve_mergebase); then
     exit 1
 fi
 
-# This block constructs the list of files that differ from the merge base of the branch.
-# Note that if you are on the trunk or master branch it will return the files modified by the last commit.
-declare -a file_list=$(git diff --name-only "$mergebase")
+# List the files that differ from the fork point of the branch.
+declare -a diff_files=()
+while IFS= read -r -d '' f; do
+    diff_files+=("$f")
+done < <(git diff --name-only -z "$mergebase")
+
 # If there is no diff that might just mean that you are on the trunk or master branch
 # so you just want to check the last commit. This way we still have that check more
 # or less working when pushing directly to trunk or when merging in master.
-if [[ -z "$file_list" ]]; then
-    file_list=$(git diff --name-only HEAD^)
+if [[ ${#diff_files[@]} -eq 0 ]]; then
+    while IFS= read -r -d '' f; do
+        diff_files+=("$f")
+    done < <(git diff --name-only -z HEAD^)
 fi
 
 # This block filters out those don't match the pattern we use to exclude files that should not trigger a build.
-declare -a filters=('^docs/.*' '.*\.md$' '.*\.rst$')
-for f in ${file_list[@]}; do
-    for filter in "${filters[@]}" ; do
+filters=('^docs/.*' '.*\.md$' '.*\.rst$')
+declare -a build_files=()
+for f in "${diff_files[@]}"; do
+    keep=true
+    for filter in "${filters[@]}"; do
         echo "checking $f with filter $filter"
         if [[ "$f" =~ $filter ]]; then
-            # This removes the element from the element matching the filter
-            file_list=(${file_list[@]/$f})
             echo "filtering out $f"
+            keep=false
             break
         fi
     done
+    if $keep; then
+        build_files+=("$f")
+    fi
 done
 
-# exits with a 0 if the list is empty
-[[ -z "${file_list}" ]]
+# exits with a 0 if no build-relevant file changed
+[[ ${#build_files[@]} -eq 0 ]]
