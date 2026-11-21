@@ -7,6 +7,7 @@ When we release Navit, here are the steps we have to follow:
 
 -  Update NAVIT_VERSION_MAJOR, NAVIT_VERSION_MINOR and
    NAVIT_VERSION_PATCH in **CMakeLists.txt**
+-  Update PROJECT_NUMBER in **navit/Doxyfile**
 -  Update Sailfish spec in ``contrib/sailfish/navit-sailfish.spec``
 
    - Version: Update to new Version number
