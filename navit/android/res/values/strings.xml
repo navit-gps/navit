@@ -35,6 +35,10 @@
     <string name="map_download_ready">ready</string>
     <string name="map_download_download_error">Error downloading map.</string>
     <string name="map_download_download_aborted">Map download aborted</string>
+    <string name="map_download_cancel">Cancel download</string>
+    <string name="map_download_cancelling">Cancelling…</string>
+    <string name="map_metadata_loading">Loading map list…</string>
+    <string name="map_metadata_failed">Could not load map list. Check your connection and try again later.</string>
     <string name="map_download_not_enough_free_space">Not enough free space</string>
     <string name="map_download_oversize">Sorry, we currently do not support maps above 3.8G on Android, please select a smaller one.</string>
     <string name="map_no_fix">No location. Reopen after location fix.</string>

@@ -1,0 +1,4 @@
+<resources>
+    <style name="NavitTheme" parent="android:Theme.Material.NoActionBar">
+    </style>
+</resources>

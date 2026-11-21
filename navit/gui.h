@@ -48,6 +48,7 @@ struct gui_methods {
     int (*add_attr)(struct gui_priv *priv, struct attr *attr);
     int (*set_attr)(struct gui_priv *priv, struct attr *attr);
     void (*destroy)(struct gui_priv *priv);
+    int (*redraw)(struct gui_priv *priv);
 };
 
 /* prototypes */
@@ -83,6 +84,7 @@ int gui_add_bookmark(struct gui *gui, struct pcoord *c, char *description);
 int gui_show_coord_actions(struct gui *this_, const struct pcoord *c, const char *description);
 int gui_set_graphics(struct gui *this_, struct graphics *gra);
 void gui_disable_suspend(struct gui *this_);
+int gui_redraw(struct gui *this_);
 int gui_has_main_loop(struct gui *this_);
 int gui_run_main_loop(struct gui *this_);
 void gui_destroy(struct gui *this_);

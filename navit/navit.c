@@ -3802,9 +3802,10 @@ void navit_disable_suspend() {
  * {@code blocked} member. If draw operations in progress were canceled, flag 2 is also set.
  *
  * {@code block = 0} unblocks redraw operations, resetting {@code blocked} to 0. If flag 2 was previously set,
- * indicating that draw operations had been previously canceled, a redraw is triggered.
+ * indicating that draw operations had been previously canceled, the active GUI is redrawn while keeping map drawing
+ * blocked, or the map if no GUI handles the redraw.
  *
- * {@code block < 0} unblocks redraw operations and forces a redraw. As above, {@code blocked} is reset to 0.
+ * {@code block < 0} forces a redraw. If a GUI handles it, map drawing remains blocked until the GUI closes.
  *
  * @param this_ The navit instance
  * @param block The operation to perform, see description
@@ -3819,6 +3820,11 @@ int navit_block(struct navit *this_, int block) {
         return 0;
     }
     if ((this_->blocked & 2) || block < 0) {
+        int redraw_pending = this_->blocked & 2;
+        if (gui_redraw(this_->gui)) {
+            this_->blocked = 1 | redraw_pending;
+            return 1;
+        }
         this_->blocked = 0;
         navit_draw(this_);
         return 1;

@@ -25,6 +25,10 @@
     <string name="map_download_ready">bereit</string>
     <string name="map_download_download_error">Fehler beim Herunterladen der Karte.</string>
     <string name="map_download_download_aborted">Herunterladen der Karte abgebrochen</string>
+    <string name="map_download_cancel">Download abbrechen</string>
+    <string name="map_download_cancelling">Wird abgebrochen…</string>
+    <string name="map_metadata_loading">Kartenliste wird geladen…</string>
+    <string name="map_metadata_failed">Kartenliste konnte nicht geladen werden. Bitte Verbindung prüfen und später erneut versuchen.</string>
     <string name="map_download_not_enough_free_space">Nicht genügend freier Speicherplatz</string>
     <string name="maps_installed">Installierte Karten</string>
     <string name="map_downloading">wird heruntergeladen</string>
