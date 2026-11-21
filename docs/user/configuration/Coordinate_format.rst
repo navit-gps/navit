@@ -108,8 +108,27 @@ the colon is optional, it names the projection to use. Possible values:
 -  mg - the projection used by Map&Guide (the default)
 -  garmin - "Garmin" projection (TODO: When would it be useful?)
 
-This format is used internally by Navit, but is probably not very useful
-for other purposes.
+This format is used internally by Navit and is also accepted by the
+DBus bindings for external control.
+
+.. _geo_format:
+
+Geo format (longitude/latitude with "geo:" prefix)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``geo:`` prefix can be used to explicitly specify longitude/latitude
+in decimal degrees. This format is used by the DBus bindings and other
+external interfaces.
+
+Format: ``geo: <longitude> <latitude>``
+
+Both values are signed decimal degrees. Longitude comes first (east/west),
+latitude second (north/south). Negative values indicate West and South.
+
+Example:
+``geo: 24.0 65.0``
+
+This corresponds to longitude 24.0° East, latitude 65.0° North.
 
 .. _utm_coordinates:
 
