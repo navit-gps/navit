@@ -31,7 +31,7 @@ allowed
 ### patch
 `x.y.Z` (patch): only bug fixes or refactoring, no changes in functionality
 
-## [0.5.8] - unreleased
+## [0.5.8] - 2026-11-21
 
 ### 🚀 Features
 
@@ -254,6 +254,7 @@ allowed
 
 ### 📚 Documentation
 
+- *(release)* Add Task for Doxygen
 - *(release)* Update Release doc to reflect the 0.5.7 Release
 - fix Reporting Bugs link in issue template and readme and contribution guide
 - Remove outdates donation targets
