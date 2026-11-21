@@ -49,6 +49,7 @@ allowed
 
 ### 🐛 Bug Fixes
 
+- *(font)*: defer cached-font teardown so layout switches cannot UAF
 - *(workflow)* Update all checkout actions to v6 and use fetch-depth: 0 to have everything including tags fetched
 - *(android)* Replace grgit by executing git directly
 - Add DTD validation for osd data attribute (#1437)
