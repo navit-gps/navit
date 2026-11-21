@@ -68,19 +68,6 @@ public class NavitDialogs extends Handler {
                                 NavitCallbackHandler.MsgType.CLB_LOAD_MAP.ordinal());
                     msgOut.setData(msg.getData());
                     msgOut.sendToTarget();
-
-                    msgOut = Message
-                        .obtain(NavitCallbackHandler.sCallbackHandler,
-                                NavitCallbackHandler.MsgType.CLB_CALL_CMD.ordinal());
-                    Bundle b = new Bundle();
-                    int mi = msg.getData().getInt("value2");
-                    double lon = (Double.parseDouble(NavitMapDownloader.osm_maps[mi].mLon1) + Double
-                            .parseDouble(NavitMapDownloader.osm_maps[mi].mLon2)) / 2.0;
-                    double lat = (Double.parseDouble(NavitMapDownloader.osm_maps[mi].mLat1) + Double
-                            .parseDouble(NavitMapDownloader.osm_maps[mi].mLat2)) / 2.0;
-                    b.putString("cmd", "set_center(\"" + lon + " " + lat + "\",1); zoom=256");
-                    msgOut.setData(b);
-                    msgOut.sendToTarget();
                 }
                 break;
             }
@@ -100,12 +87,16 @@ public class NavitDialogs extends Handler {
             case MSG_START_MAP_DOWNLOAD: {
                 int downloadMapId = msg.arg1;
                 Log.d(TAG, "PRI id=" + downloadMapId);
-                // set map id to download
-                // show the map download progressbar, and download the map
-                if (downloadMapId > -1) {
-                    mMapdownloader = new NavitMapDownloader(downloadMapId);
-                    mActivity.showDialog(NavitDialogs.DIALOG_MAPDOWNLOAD);
-                    mMapdownloader.start();
+                if (downloadMapId >= 0) {
+                    GithubMetadata.Artifact[] assets =
+                            NavitDownloadSelectMapActivity.getReleaseAssets();
+                    if (assets != null && downloadMapId < assets.length) {
+                        mMapdownloader = new NavitMapDownloader(assets[downloadMapId]);
+                        mActivity.showDialog(NavitDialogs.DIALOG_MAPDOWNLOAD);
+                        mMapdownloader.start();
+                    } else {
+                        Log.e(TAG, "Map asset index is unavailable: " + downloadMapId);
+                    }
                 }
             }
                 break;

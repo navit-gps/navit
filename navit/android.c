@@ -377,8 +377,8 @@ JNIEXPORT jobject JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callb
         navit_block(attr.u.navit, 1);
         break;
     case 4:
-        // unblock
-        navit_block(attr.u.navit, 0);
+        // unblock and redraw the view after returning from another activity
+        navit_block(attr.u.navit, -1);
         break;
     case 5:
         // cancel route

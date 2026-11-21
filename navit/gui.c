@@ -162,6 +162,12 @@ void gui_disable_suspend(struct gui *this_) {
         this_->meth.disable_suspend(this_->priv);
 }
 
+int gui_redraw(struct gui *this_) {
+    if (this_ && this_->meth.redraw)
+        return this_->meth.redraw(this_->priv);
+    return 0;
+}
+
 int gui_has_main_loop(struct gui *this_) {
     if (!this_->meth.run_main_loop)
         return 0;

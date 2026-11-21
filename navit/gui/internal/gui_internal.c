@@ -2943,6 +2943,15 @@ static void gui_internal_disable_suspend(struct gui_priv *this) {
         this->win->disable_suspend(this->win);
 }
 
+static int gui_internal_redraw(struct gui_priv *this) {
+    if (!this->root.children)
+        return 0;
+    graphics_draw_mode(this->gra, draw_mode_begin);
+    gui_internal_menu_render(this);
+    graphics_draw_mode(this->gra, draw_mode_end);
+    return 1;
+}
+
 static void gui_internal_destroy(struct gui_priv *this) {
     g_free(this->on_map_click);
     g_free(this->font_name);
@@ -2993,6 +3002,7 @@ struct gui_methods gui_internal_methods = {
     gui_internal_add_attr,
     gui_internal_set_attr,
     gui_internal_destroy,
+    gui_internal_redraw,
 };
 
 static void gui_internal_add_callback(struct gui_priv *priv, struct callback *cb) {
