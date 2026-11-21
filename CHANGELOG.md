@@ -49,6 +49,7 @@ allowed
 
 ### 🐛 Bug Fixes
 
+- *(build)*: preserve paths when filtering build-relevant files
 - *(font)*: defer cached-font teardown so layout switches cannot UAF
 - *(workflow)* Update all checkout actions to v6 and use fetch-depth: 0 to have everything including tags fetched
 - *(android)* Replace grgit by executing git directly
@@ -340,6 +341,7 @@ allowed
 
 ### ⚙️ Miscellaneous Tasks
 
+- *(build)*: resolve correct merge base for build detection
 - Translations update from Hosted Weblate (#1428)
 - Translations update from Hosted Weblate
 - *(workflow)* Update cimg/base Docker tag to v2020.12 (#1444)
