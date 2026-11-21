@@ -9,8 +9,8 @@
 Name: harbour-navit
 Summary: Open Source car navigation system
 #Version: %{navit_version}_%{git_version}
-Version: 0.5.7
-Release: 4
+Version: 0.5.8
+Release: 1
 License: GPL
 Group: Applications/Productivity
 URL: http://navit-project.org/
@@ -166,6 +166,9 @@ mkdir -p %{buildroot}%{_datadir}/harbour-navit/locale
 
 
 %changelog
+*Sat Nov 21 2026 jkoan 0.5.8-1
+- Release 0.5.8
+
 *Sun Feb 08 2026 jkoan 0.5.7-4
 - Release 0.5.7
 
