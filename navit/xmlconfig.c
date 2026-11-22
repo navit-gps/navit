@@ -1384,6 +1384,8 @@ int navit_object_add_attr(struct navit_object *obj, struct attr *attr) {
 }
 
 int navit_object_remove_attr(struct navit_object *obj, struct attr *attr) {
+    if (!obj || !attr)
+        return 0;
     if (attr->type == attr_callback) {
         if (obj->attrs && obj->attrs[0] && obj->attrs[0]->type == attr_callback_list) {
             callback_list_remove(obj->attrs[0]->u.callback_list, attr->u.callback);
