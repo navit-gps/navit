@@ -3943,6 +3943,30 @@ static void navit_vehicle_destroy(struct navit_vehicle *nv) {
         navit_object_unref((struct navit_object *)nv->vehicle);
     g_free(nv);
 }
+
+/* Child objects such as OSD items can hold callbacks registered on the navigation
+ * object. That object is kept alive by its attr, so it has to be released after all
+ * other attrs to prevent those callbacks from touching freed memory during teardown. */
+static void navit_attrs_free_navigation_last(struct attr **attrs) {
+    int i, count = 0;
+
+    while (attrs && attrs[count])
+        count++;
+    for (i = 0; i < count; i++) {
+        if (attrs[i] && attrs[i]->type != attr_navigation) {
+            attr_free(attrs[i]);
+            attrs[i] = NULL;
+        }
+    }
+    for (i = 0; i < count; i++) {
+        if (attrs[i]) {
+            attr_free(attrs[i]);
+            attrs[i] = NULL;
+        }
+    }
+    g_free(attrs);
+}
+
 void navit_destroy(struct navit *this_) {
     graphics_draw_cancel(this_->gra, this_->displaylist);
 
@@ -3958,7 +3982,7 @@ void navit_destroy(struct navit *this_) {
     navigation_destroy_map(this_->navigation);
     tracking_destroy_map(this_->tracking);
 
-    attr_list_free(this_->attrs);
+    navit_attrs_free_navigation_last(this_->attrs);
     callback_list_destroy(this_->attr_cbl);
     this_->navigation = NULL;
     this_->speech = NULL;
