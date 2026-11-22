@@ -254,6 +254,11 @@ effort.
 Letting Navit speak through KDEs kttsd in German
 ------------------------------------------------
 
+.. note::
+   This is a historical KDE 3 setup. Debian Trixie no longer ships
+   **kttsd**; its successor Jovie is unmaintained. Use a cmdline speech
+   engine as described above on current systems.
+
 When you get textsynthesis in KDE running with KDEs **kttsd**, you can
 also let Navit speak through **kttsd**. Use this line for it (using
 german as language):
@@ -271,12 +276,13 @@ german words.
 There is a good howto about setting **kttsd** up to speak german:
 `deutsche-sprachausgabe-in-kde <http://kanotix.wordpress.com/2006/08/14/deutsche-sprachausgabe-in-kde/>`__
 
-Running Debian Lenny, the mbrola-packages can be installed with apt-get
-(or synaptic, or aptitude, ...). I have just installed all the stuff
-with "*apt-get install kttsd kttsd-contrib-plugins kmouth ksayit mbrola
-mbrola-de6 mbrola-de7*" and installed and configured the "*txt2pho*"
-like described in the howto and got a full functioning, german speech
-synthesis in KDE. Which Navit (with the **) uses without problems.
+On Debian Trixie, **mbrola** is in contrib and the German voices
+**mbrola-de6** and **mbrola-de7** are in non-free. After enabling those
+components, install them with apt:
+
+::
+
+   apt install mbrola mbrola-de6 mbrola-de7
 
 .. _use_google_translate_online_to_speak_directions:
 
