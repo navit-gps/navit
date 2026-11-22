@@ -91,8 +91,8 @@
 /** Maximum textfile line size */
 #define TEXTFILE_LINE_SIZE 512
 
-/** Time slice for idle loops, in milliseconds */
-#define TIME_SLICE 40
+/** Time slice for idle loops, in milliseconds. Keep it below one frame budget so a chunk cannot stall rendering. */
+#define TIME_SLICE 10
 
 /** Idle callback priority for traffic processing (lower value = higher priority) */
 #define TRAFFIC_IDLE_PRIORITY 300
@@ -4700,6 +4700,14 @@ static int traffic_process_messages_int(struct traffic *this_, int flags) {
         dbg(lvl_debug, "processed %d message(s), %d still in queue", i, g_list_length(this_->shared->message_queue));
 
     if (this_->shared->message_queue) {
+        /* Continue in another idle cycle. When called directly (e.g. from the timer loop) no idle
+         * callback exists yet, so register one instead of leaving the rest of the queue to the next tick. */
+        if (!this_->idle_ev) {
+            if (this_->idle_cb)
+                callback_destroy(this_->idle_cb);
+            this_->idle_cb = callback_new_2(callback_cast(traffic_process_messages_int), this_, flags);
+            this_->idle_ev = event_add_idle(TRAFFIC_IDLE_PRIORITY, this_->idle_cb);
+        }
         /* if we're in the middle of the queue, trigger a redraw (if needed) and exit */
         traffic_redraw(this_->navit, this_->shared);
         return ret;
