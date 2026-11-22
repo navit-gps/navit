@@ -2066,8 +2066,11 @@ static void osd_navigation_status_draw_do(struct osd_priv_common *opc, int statu
     }
 
     if (do_draw) {
+        char *status_text = nav_status_to_text(status2);
+
         osd_fill_with_bgcolor(&opc->osd_item);
-        image = g_strdup_printf(this->icon_src, nav_status_to_text(status2));
+        image = g_strdup_printf(this->icon_src, status_text);
+        g_free(status_text);
         dbg(lvl_debug, "image=%s", image);
         gr_image = graphics_image_new_scaled(opc->osd_item.gr, image, this->icon_w, this->icon_h);
         if (!gr_image) {
