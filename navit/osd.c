@@ -35,6 +35,7 @@ struct osd {
     NAVIT_OBJECT
     struct osd_methods meth;
     struct osd_priv *priv;
+    struct callback_list *cbl;
 };
 
 int osd_set_methods(struct osd_methods *in, int in_size, struct osd_methods *out) {
@@ -56,7 +57,8 @@ struct osd *osd_new(struct attr *parent, struct attr **attrs) {
     o = g_new0(struct osd, 1);
     o->attrs = attr_list_dup(attrs);
     cbl.type = attr_callback_list;
-    cbl.u.callback_list = callback_list_new();
+    o->cbl = callback_list_new();
+    cbl.u.callback_list = o->cbl;
     o->attrs = attr_generic_prepend_attr(o->attrs, &cbl);
 
     o->priv = new (parent->u.navit, &o->meth, o->attrs);
@@ -64,6 +66,7 @@ struct osd *osd_new(struct attr *parent, struct attr **attrs) {
         o->func = &osd_func;
         navit_object_ref((struct navit_object *)o);
     } else {
+        callback_list_destroy(o->cbl);
         attr_list_free(o->attrs);
         g_free(o);
         o = NULL;
@@ -102,16 +105,7 @@ static void osd_destroy(struct osd *osd) {
     if (osd->meth.destroy) {
         osd->meth.destroy(osd->priv);
     }
-    if (osd->attrs) {
-        struct attr **a = osd->attrs;
-        while (a && *a) {
-            if ((*a)->type == attr_callback_list) {
-                callback_list_destroy((*a)->u.callback_list);
-                (*a)->u.callback_list = NULL;
-            }
-            a++;
-        }
-    }
+    callback_list_destroy(osd->cbl);
     attr_list_free(osd->attrs);
     g_free(osd);
 }
