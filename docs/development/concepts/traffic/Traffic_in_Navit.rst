@@ -30,7 +30,7 @@ Here is a brief overview of TraFF backends and platforms:
        v0.5.5
    * - ``traff_http``
      - Linux, possibly others
-     - Under development, still in a branch
+     - Experimental; built when libcurl and POSIX threads are available
 
 If a traffic plugin for your platform is included and enabled by
 default, you are ready to go. If it is included but not enabled, you can
@@ -117,12 +117,11 @@ traff_http
    Expect instability, breaking changes and incomplete functionality,
    and do not rely on this feature for safety-critical navigation.
 
-This plugin is still in early development stage. In order for
-``traff_http`` to work, your platform must currently support POSIX
-threads (support for Windows is under development), and
+In order for ``traff_http`` to work, your platform must support POSIX
+threads (support for Windows is not available yet), and
 `libcurl <https://curl.se/libcurl/>`__ must be available at build time
-and at run time. This works if you are building Navit on Linux and
-running it locally.
+and at run time. Host builds on Linux with both present include the
+plugin; otherwise CMake disables it and reports the reason.
 
 .. code:: xml
 
