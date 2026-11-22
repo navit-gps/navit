@@ -9,15 +9,12 @@ Feel free to add your own completed layout to this page. As the number
 of layouts expands this page will be broken into several sub sections
 for each device.
 
-Note: For an explanation of how to modify the OSD layouts reference
-:doc:`OSD </user/configuration/OSD>` section. Many of the layouts on this page were borrowed
-from the examples on that page.
-
 Notes
 -----
 
--  If you would like instructions on how to modify OSD layouts you can
-   refer to the :doc:`OSD page </user/configuration/OSD>`.
+-  For instructions on modifying OSD layouts, see the
+   :doc:`OSD page </user/configuration/OSD>`. Many layouts on this page
+   were borrowed from the examples there.
 
 -  If you would like to share your own layout please let us know via the
    channels listed on the :doc:`Contacts </user/community/contacts>` page.
@@ -28,15 +25,17 @@ Tip
 To make configuring Navit simpler it is recommended that you copy the
 navit.xml from "/usr/share/navit" to your home directory
 "/home/user/.navit" where "user" is the username you log into your
-computer with. Then to make changing OSD layouts, you can replace the
-OSD entries in navit.xml with:
+computer with. Then replace the OSD entries in ``navit.xml`` with an
+include:
 
-Then create a new file navitOSD.xml in which you place all the OSD
-items. This means you can create and share layouts by providing just the
-navitOSD.xml file and people can drop them into place without having to
-hand edit their navit.xml files. The same trick will work for any subset
-part of the navit.xml file. Remember to begin your file with and end it
-with , otherwise Navit won't be able to parse it properly.
+.. code-block:: xml
+
+   <xi:include href="navitOSD.xml" xpointer="xpointer(/config/navit/osd)"/>
+
+Create a new file ``navitOSD.xml`` containing all the OSD items. This
+means you can create and share layouts by providing just that file.
+Remember to begin it with ``<config>`` and end it with ``</config>``,
+otherwise Navit will not be able to parse it properly.
 
 This trick was contributed by Daniel Would.
 
@@ -720,8 +719,7 @@ Keybindings
 ^^^^^^^^^^^
 
 This layout uses :ref:`keybindings <osd_keybindings>` to bind keys to
-specific OSD elements. This is currently only available using the latest
-SVN builds of Navit. The following are defined:
+specific OSD elements. The following are defined:
 
 -  Key: =
 
@@ -861,8 +859,7 @@ Keybindings
 ^^^^^^^^^^^
 
 This layout uses :ref:`keybindings <osd_keybindings>` to bind keys to
-specific OSD elements. This is currently only available using the latest
-SVN builds of Navit. The following are defined:
+specific OSD elements. The following are defined:
 
 -  Key: =
 
