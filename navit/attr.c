@@ -723,9 +723,11 @@ struct attr **attr_generic_prepend_attr(struct attr **attrs, struct attr *attr) 
  */
 struct attr **attr_generic_remove_attr(struct attr **attrs, struct attr *attr) {
     struct attr **curr = attrs;
+    enum attr_type type = attr->type;
+    void *data = attr->u.data;
     int i, j, count = 0, found = 0;
     while (curr && *curr) {
-        if ((*curr)->type == attr->type && (*curr)->u.data == attr->u.data)
+        if ((*curr)->type == type && (*curr)->u.data == data)
             found = 1;
         curr++;
         count++;
@@ -735,7 +737,7 @@ struct attr **attr_generic_remove_attr(struct attr **attrs, struct attr *attr) {
     curr = g_new0(struct attr *, count);
     j = 0;
     for (i = 0; i < count; i++) {
-        if (attrs[i]->type != attr->type || attrs[i]->u.data != attr->u.data)
+        if (attrs[i]->type != type || attrs[i]->u.data != data)
             curr[j++] = attrs[i];
         else
             attr_free(attrs[i]);
