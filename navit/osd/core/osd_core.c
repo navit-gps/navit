@@ -89,6 +89,44 @@ static void osd_odometer_draw(struct osd_priv_common *opc, struct navit *nav, st
 static struct osd_text_item *oti_new(struct osd_text_item *parent);
 int osd_button_set_attr(struct osd_priv_common *opc, struct attr *attr);
 
+/**
+ * @brief Removes a callback from the list of callbacks of a navit and destroys it.
+ *
+ * @param nav The navit the callback has been registered with, may be NULL
+ * @param cb Pointer to the callback to be removed, set to NULL afterwards
+ */
+static void osd_remove_callback(struct navit *nav, struct callback **cb) {
+    if (!cb || !*cb) {
+        return;
+    }
+
+    if (nav) {
+        navit_remove_callback(nav, *cb);
+    }
+    callback_destroy(*cb);
+    *cb = NULL;
+}
+
+/**
+ * @brief Cancels a timeout and destroys the callback it calls.
+ *
+ * The event backends free the timeout but not the callback it calls, so both
+ * have to be released explicitly.
+ *
+ * @param timeout Pointer to the timeout to be cancelled, set to NULL afterwards
+ * @param cb Pointer to the callback called by the timeout, set to NULL afterwards
+ */
+static void osd_remove_timeout(struct event_timeout **timeout, struct callback **cb) {
+    if (timeout && *timeout) {
+        event_remove_timeout(*timeout);
+        *timeout = NULL;
+    }
+    if (cb && *cb) {
+        callback_destroy(*cb);
+        *cb = NULL;
+    }
+}
+
 static int b_commandtable_added = 0;
 
 struct compass {
@@ -98,6 +136,8 @@ struct compass {
     struct graphics_gc *destination_dir_gc; /*!< graphics_gc context used to draw the destination direction arrow */
     struct graphics_gc *north_gc;           /*!< graphics_gc context used to draw the north handle of the compass */
     struct callback *click_cb;              /*!< A callback to execute when clicking on the compass */
+    struct callback *draw_cb;               /*!< Callback for the position update */
+    struct callback *graphics_ready_cb;     /*!< Callback for the graphics initialization */
 };
 
 /**
@@ -350,6 +390,8 @@ struct route_guard {
     struct color active_color;
     struct graphics_gc *red;
     int width;
+    struct callback *draw_cb;           /*!< Callback for the position update */
+    struct callback *graphics_ready_cb; /*!< Callback for the graphics initialization */
 };
 
 static void osd_route_guard_draw(struct osd_priv_common *opc, struct navit *nav, struct vehicle *v) {
@@ -480,17 +522,32 @@ static void osd_route_guard_init(struct osd_priv_common *opc, struct navit *nav)
     graphics_gc_set_foreground(this->red, &red_color);
     graphics_gc_set_linewidth(this->red, this->width);
 
+    graphics_gc_destroy(opc->osd_item.graphic_fg);
     opc->osd_item.graphic_fg = graphics_gc_new(opc->osd_item.gr);
     graphics_gc_set_foreground(opc->osd_item.graphic_fg, &opc->osd_item.text_color);
     graphics_gc_set_linewidth(opc->osd_item.graphic_fg, this->width);
 
     // setup draw callback
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_route_guard_draw), attr_position_coord_geo, opc));
+    this->draw_cb = callback_new_attr_1(callback_cast(osd_route_guard_draw), attr_position_coord_geo, opc);
+    navit_add_callback(nav, this->draw_cb);
 }
 
-static void osd_route_guard_destroy(struct osd_priv_common *opc) {
+static void osd_route_guard_destroy(struct osd_priv *priv) {
+    struct osd_priv_common *opc = (struct osd_priv_common *)priv;
     struct route_guard *this = (struct route_guard *)opc->data;
+    struct navit *nav = opc->osd_item.navit;
+
+    osd_remove_callback(nav, &this->draw_cb);
+    osd_remove_callback(nav, &this->graphics_ready_cb);
+    osd_destroy_std_graphic(&opc->osd_item, nav);
+    if (this->red) {
+        graphics_gc_destroy(this->red);
+    }
     g_free(this->coords);
+    g_free(this->item_name);
+    g_free(this->map_name);
+    g_free(this);
+    g_free(opc);
 }
 
 static struct osd_priv *osd_route_guard_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
@@ -506,6 +563,7 @@ static struct osd_priv *osd_route_guard_new(struct navit *nav, struct osd_method
     opc->osd_item.navit = nav;
     opc->osd_item.font_size = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_route_guard_draw);
+    meth->destroy = osd_route_guard_destroy;
     meth->set_attr = set_std_osd_attr;
 
     osd_set_std_attr(attrs, &opc->osd_item, ITEM_HAS_TEXT);
@@ -540,8 +598,8 @@ static struct osd_priv *osd_route_guard_new(struct navit *nav, struct osd_method
     attr = attr_search(attrs, attr_width);
     this->width = attr ? attr->u.num : 2;
 
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_route_guard_init), attr_graphics_ready, opc));
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_route_guard_destroy), attr_destroy, opc));
+    this->graphics_ready_cb = callback_new_attr_1(callback_cast(osd_route_guard_init), attr_graphics_ready, opc);
+    navit_add_callback(nav, this->graphics_ready_cb);
 
     return (struct osd_priv *)opc;
 }
@@ -575,6 +633,11 @@ struct odometer {
     double last_speed;
     double max_speed;
     double acceleration;
+    struct callback *draw_cb;               /*!< Callback for the position update */
+    struct callback *graphics_ready_cb;     /*!< Callback for the graphics initialization */
+    struct callback *save_destroy_cb;       /*!< Callback for the destruction of the navit */
+    struct callback *autosave_cb;           /*!< Callback for the periodic autosave */
+    struct event_timeout *autosave_timeout; /*!< Timeout for the periodic autosave */
 };
 
 static int osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, struct attr ***out) {
@@ -999,18 +1062,26 @@ static void osd_odometer_init(struct osd_priv_common *opc, struct navit *nav) {
     graphics_gc_set_foreground(this->orange, &this->idle_color);
     graphics_gc_set_linewidth(this->orange, this->width);
 
+    graphics_gc_destroy(opc->osd_item.graphic_fg);
     opc->osd_item.graphic_fg = graphics_gc_new(opc->osd_item.gr);
     graphics_gc_set_foreground(opc->osd_item.graphic_fg, &opc->osd_item.text_color);
     graphics_gc_set_linewidth(opc->osd_item.graphic_fg, this->width);
 
     graphics_gc_set_linewidth(opc->osd_item.graphic_fg, this->width);
 
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_odometer_draw), attr_position_coord_geo, opc));
+    if (!this->draw_cb) {
+        this->draw_cb = callback_new_attr_1(callback_cast(osd_odometer_draw), attr_position_coord_geo, opc);
+        navit_add_callback(nav, this->draw_cb);
+    }
 
-    navit_add_callback(nav, this->click_cb = callback_new_attr_1(callback_cast(osd_odometer_click), attr_button, opc));
+    if (!this->click_cb) {
+        this->click_cb = callback_new_attr_1(callback_cast(osd_odometer_click), attr_button, opc);
+        navit_add_callback(nav, this->click_cb);
+    }
 
-    if (this->autosave_period > 0) {
-        event_add_timeout(this->autosave_period * 1000, 1, callback_new_1(callback_cast(osd_odometer_save), NULL));
+    if (this->autosave_period > 0 && !this->autosave_timeout) {
+        this->autosave_cb = callback_new_1(callback_cast(osd_odometer_save), NULL);
+        this->autosave_timeout = event_add_timeout(this->autosave_period * 1000, 1, this->autosave_cb);
     }
 
     if (this->bAutoStart) {
@@ -1019,11 +1090,38 @@ static void osd_odometer_init(struct osd_priv_common *opc, struct navit *nav) {
     osd_odometer_draw(opc, nav, NULL);
 }
 
-static void osd_odometer_destroy(struct navit *nav) {
+static void osd_odometer_save_destroy(struct navit *nav) {
     if (!odometers_saved) {
         odometers_saved = 1;
         osd_odometer_save(NULL);
     }
+}
+
+static void osd_odometer_destroy(struct osd_priv *priv) {
+    struct osd_priv_common *opc = (struct osd_priv_common *)priv;
+    struct odometer *this = (struct odometer *)opc->data;
+    struct navit *nav = opc->osd_item.navit;
+
+    osd_remove_callback(nav, &this->draw_cb);
+    osd_remove_callback(nav, &this->click_cb);
+    osd_remove_callback(nav, &this->graphics_ready_cb);
+    osd_remove_callback(nav, &this->save_destroy_cb);
+    osd_remove_timeout(&this->autosave_timeout, &this->autosave_cb);
+
+    /* Save the odometer while it is still part of the list of odometers, so
+     * that its data is not lost when it is removed before the navit is shut
+     * down.
+     */
+    osd_odometer_save(nav);
+    odometer_list = g_list_remove(odometer_list, opc);
+    osd_destroy_std_graphic(&opc->osd_item, nav);
+    if (this->orange) {
+        graphics_gc_destroy(this->orange);
+    }
+    g_free(this->text);
+    g_free(this->name);
+    g_free(this);
+    g_free(opc);
 }
 
 static struct osd_priv *osd_odometer_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
@@ -1043,6 +1141,7 @@ static struct osd_priv *osd_odometer_new(struct navit *nav, struct osd_methods *
     opc->osd_item.navit = nav;
     opc->osd_item.font_size = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_odometer_draw);
+    meth->destroy = osd_odometer_destroy;
     meth->set_attr = set_std_osd_attr;
 
     this->bActive = 0;  // do not count on init
@@ -1127,8 +1226,10 @@ static struct osd_priv *osd_odometer_new(struct navit *nav, struct osd_methods *
         navit_command_add_table(nav, commands, sizeof(commands) / sizeof(struct command_table));
         b_commandtable_added = 1;
     }
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_odometer_init), attr_graphics_ready, opc));
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_odometer_destroy), attr_destroy, nav));
+    this->graphics_ready_cb = callback_new_attr_1(callback_cast(osd_odometer_init), attr_graphics_ready, opc);
+    navit_add_callback(nav, this->graphics_ready_cb);
+    this->save_destroy_cb = callback_new_attr_1(callback_cast(osd_odometer_save_destroy), attr_destroy, nav);
+    navit_add_callback(nav, this->save_destroy_cb);
     odometer_list = g_list_append(odometer_list, opc);
 
     return (struct osd_priv *)opc;
@@ -1143,6 +1244,10 @@ struct cmd_interface {
     char *img_filename;
     char *command;
     int bReserved;
+    struct callback *click_cb;            /*!< Callback for the click on the osd */
+    struct callback *graphics_ready_cb;   /*!< Callback for the graphics initialization */
+    struct callback *update_cb;           /*!< Callback for the periodic update */
+    struct event_timeout *update_timeout; /*!< Timeout for the periodic update */
 };
 
 static void osd_cmd_interface_draw(struct osd_priv_common *opc, struct navit *nav, struct vehicle *v) {
@@ -1185,17 +1290,22 @@ static void osd_cmd_interface_init(struct osd_priv_common *opc, struct navit *na
 
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
 
+    graphics_gc_destroy(opc->osd_item.graphic_fg);
     opc->osd_item.graphic_fg = graphics_gc_new(opc->osd_item.gr);
     graphics_gc_set_foreground(opc->osd_item.graphic_fg, &opc->osd_item.text_color);
     graphics_gc_set_linewidth(opc->osd_item.graphic_fg, this->width);
 
     graphics_gc_set_linewidth(opc->osd_item.graphic_fg, this->width);
 
-    if (this->update_period > 0) {
-        event_add_timeout(this->update_period * 1000, 1, callback_new_1(callback_cast(osd_cmd_interface_draw), opc));
+    if (this->update_period > 0 && !this->update_timeout) {
+        this->update_cb = callback_new_1(callback_cast(osd_cmd_interface_draw), opc);
+        this->update_timeout = event_add_timeout(this->update_period * 1000, 1, this->update_cb);
     }
 
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item));
+    if (!this->click_cb) {
+        this->click_cb = callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item);
+        navit_add_callback(nav, this->click_cb);
+    }
 
     this->text = g_strdup("");
 }
@@ -1235,6 +1345,25 @@ static int osd_cmd_interface_set_attr(struct osd_priv_common *opc, struct attr *
     return 0;
 }
 
+static void osd_cmd_interface_destroy(struct osd_priv *priv) {
+    struct osd_priv_common *opc = (struct osd_priv_common *)priv;
+    struct cmd_interface *this = (struct cmd_interface *)opc->data;
+    struct navit *nav = opc->osd_item.navit;
+
+    osd_remove_callback(nav, &this->click_cb);
+    osd_remove_callback(nav, &this->graphics_ready_cb);
+    osd_remove_timeout(&this->update_timeout, &this->update_cb);
+    osd_destroy_std_graphic(&opc->osd_item, nav);
+    if (this->orange) {
+        graphics_gc_destroy(this->orange);
+    }
+    g_free(this->text);
+    g_free(this->img_filename);
+    g_free(this->command);
+    g_free(this);
+    g_free(opc);
+}
+
 static struct osd_priv *osd_cmd_interface_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
     struct cmd_interface *this = g_new0(struct cmd_interface, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common, 1);
@@ -1250,6 +1379,7 @@ static struct osd_priv *osd_cmd_interface_new(struct navit *nav, struct osd_meth
     opc->osd_item.meth.draw = osd_draw_cast(osd_cmd_interface_draw);
 
     opc->spec_set_attr_func = osd_cmd_interface_set_attr;
+    meth->destroy = osd_cmd_interface_destroy;
     meth->set_attr = set_std_osd_attr;
 
     osd_set_std_attr(attrs, &opc->osd_item, ITEM_HAS_TEXT);
@@ -1267,7 +1397,8 @@ static struct osd_priv *osd_cmd_interface_new(struct navit *nav, struct osd_meth
         navit_command_add_table(nav, commands, sizeof(commands) / sizeof(struct command_table));
         b_commandtable_added = 1;
     }
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_cmd_interface_init), attr_graphics_ready, opc));
+    this->graphics_ready_cb = callback_new_attr_1(callback_cast(osd_cmd_interface_init), attr_graphics_ready, opc);
+    navit_add_callback(nav, this->graphics_ready_cb);
     return (struct osd_priv *)opc;
 }
 
@@ -1278,10 +1409,13 @@ struct stopwatch {
     struct color idle_color;  // text color when counter is idle
 
     int bDisableReset;
-    int bActive;               // counting or not
-    time_t current_base_time;  // base time of currently measured time interval
-    time_t sum_time;           // sum of previous time intervals (except current intervals)
-    time_t last_click_time;    // time of last click (for double click handling)
+    int bActive;                        // counting or not
+    time_t current_base_time;           // base time of currently measured time interval
+    time_t sum_time;                    // sum of previous time intervals (except current intervals)
+    time_t last_click_time;             // time of last click (for double click handling)
+    struct callback *graphics_ready_cb; /*!< Callback for the graphics initialization */
+    struct callback *draw_cb;           /*!< Callback for the periodic update */
+    struct event_timeout *draw_timeout; /*!< Timeout for the periodic update */
 };
 
 static void osd_stopwatch_draw(struct osd_priv_common *opc, struct navit *nav, struct vehicle *v) {
@@ -1370,17 +1504,40 @@ static void osd_stopwatch_init(struct osd_priv_common *opc, struct navit *nav) {
     graphics_gc_set_foreground(this->orange, &this->idle_color);
     graphics_gc_set_linewidth(this->orange, this->width);
 
+    graphics_gc_destroy(opc->osd_item.graphic_fg);
     opc->osd_item.graphic_fg = graphics_gc_new(opc->osd_item.gr);
     graphics_gc_set_foreground(opc->osd_item.graphic_fg, &opc->osd_item.text_color);
     graphics_gc_set_linewidth(opc->osd_item.graphic_fg, this->width);
 
     graphics_gc_set_linewidth(opc->osd_item.graphic_fg, this->width);
 
-    event_add_timeout(500, 1, callback_new_1(callback_cast(osd_stopwatch_draw), opc));
+    if (!this->draw_timeout) {
+        this->draw_cb = callback_new_1(callback_cast(osd_stopwatch_draw), opc);
+        this->draw_timeout = event_add_timeout(500, 1, this->draw_cb);
+    }
 
-    navit_add_callback(nav, this->click_cb = callback_new_attr_1(callback_cast(osd_stopwatch_click), attr_button, opc));
+    if (!this->click_cb) {
+        this->click_cb = callback_new_attr_1(callback_cast(osd_stopwatch_click), attr_button, opc);
+        navit_add_callback(nav, this->click_cb);
+    }
 
     osd_stopwatch_draw(opc, nav, NULL);
+}
+
+static void osd_stopwatch_destroy(struct osd_priv *priv) {
+    struct osd_priv_common *opc = (struct osd_priv_common *)priv;
+    struct stopwatch *this = (struct stopwatch *)opc->data;
+    struct navit *nav = opc->osd_item.navit;
+
+    osd_remove_callback(nav, &this->click_cb);
+    osd_remove_callback(nav, &this->graphics_ready_cb);
+    osd_remove_timeout(&this->draw_timeout, &this->draw_cb);
+    osd_destroy_std_graphic(&opc->osd_item, nav);
+    if (this->orange) {
+        graphics_gc_destroy(this->orange);
+    }
+    g_free(this);
+    g_free(opc);
 }
 
 static struct osd_priv *osd_stopwatch_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
@@ -1397,6 +1554,7 @@ static struct osd_priv *osd_stopwatch_new(struct navit *nav, struct osd_methods 
     opc->osd_item.navit = nav;
     opc->osd_item.font_size = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_stopwatch_draw);
+    meth->destroy = osd_stopwatch_destroy;
     meth->set_attr = set_std_osd_attr;
 
     this->bActive = 0;  // do not count on init
@@ -1415,7 +1573,8 @@ static struct osd_priv *osd_stopwatch_new(struct navit *nav, struct osd_methods 
     else
         this->bDisableReset = 0;
 
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_stopwatch_init), attr_graphics_ready, opc));
+    this->graphics_ready_cb = callback_new_attr_1(callback_cast(osd_stopwatch_init), attr_graphics_ready, opc);
+    navit_add_callback(nav, this->graphics_ready_cb);
     return (struct osd_priv *)opc;
 }
 
@@ -1486,16 +1645,40 @@ static void osd_compass_init(struct osd_priv_common *opc, struct navit *nav) {
     graphics_gc_set_foreground(this->north_gc, &this->north_color);
     graphics_gc_set_linewidth(this->north_gc, this->width);
 
+    graphics_gc_destroy(opc->osd_item.graphic_fg);
     opc->osd_item.graphic_fg = graphics_gc_new(opc->osd_item.gr);
     graphics_gc_set_foreground(opc->osd_item.graphic_fg, &opc->osd_item.text_color);
     graphics_gc_set_linewidth(opc->osd_item.graphic_fg, this->width);
 
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_compass_draw), attr_position_coord_geo, opc));
-    if (opc->osd_item.command)
-        navit_add_callback(nav, this->click_cb =
-                                    callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item));
+    if (!this->draw_cb) {
+        this->draw_cb = callback_new_attr_1(callback_cast(osd_compass_draw), attr_position_coord_geo, opc);
+        navit_add_callback(nav, this->draw_cb);
+    }
+    if (opc->osd_item.command && !this->click_cb) {
+        this->click_cb = callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item);
+        navit_add_callback(nav, this->click_cb);
+    }
 
     osd_compass_draw(opc, nav, NULL);
+}
+
+static void osd_compass_destroy(struct osd_priv *priv) {
+    struct osd_priv_common *opc = (struct osd_priv_common *)priv;
+    struct compass *this = (struct compass *)opc->data;
+    struct navit *nav = opc->osd_item.navit;
+
+    osd_remove_callback(nav, &this->draw_cb);
+    osd_remove_callback(nav, &this->click_cb);
+    osd_remove_callback(nav, &this->graphics_ready_cb);
+    osd_destroy_std_graphic(&opc->osd_item, nav);
+    if (this->destination_dir_gc) {
+        graphics_gc_destroy(this->destination_dir_gc);
+    }
+    if (this->north_gc) {
+        graphics_gc_destroy(this->north_gc);
+    }
+    g_free(this);
+    g_free(opc);
 }
 
 static struct osd_priv *osd_compass_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
@@ -1513,6 +1696,7 @@ static struct osd_priv *osd_compass_new(struct navit *nav, struct osd_methods *m
     opc->osd_item.navit = nav;
     opc->osd_item.font_size = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_compass_draw);
+    meth->destroy = osd_compass_destroy;
     meth->set_attr = set_std_osd_attr;
     osd_set_std_attr(attrs, &opc->osd_item, ITEM_HAS_TEXT);
     attr = attr_search(attrs, attr_width);
@@ -1526,16 +1710,16 @@ static struct osd_priv *osd_compass_new(struct navit *nav, struct osd_methods *m
                             ? *attr->u.color
                             : red_color; /* Pick north handle color from configuration, default to red if unspecified */
 
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_compass_init), attr_graphics_ready, opc));
+    this->graphics_ready_cb = callback_new_attr_1(callback_cast(osd_compass_init), attr_graphics_ready, opc);
+    navit_add_callback(nav, this->graphics_ready_cb);
     return (struct osd_priv *)opc;
 }
 
 struct osd_button {
     int use_overlay;
-    /* FIXME: do we need navit_init_cb? It is set in two places but never read.
-     * osd_button_new sets it to osd_button_init (init callback), and
-     * osd_button_init sets it to osd_std_click (click callback). */
-    struct callback *draw_cb, *navit_init_cb;
+    struct callback *draw_cb;  /*!< Callback for the postdraw event */
+    struct callback *init_cb;  /*!< Callback for the graphics initialization */
+    struct callback *click_cb; /*!< Callback for the click on the button */
     struct graphics_image *img;
     char *src_dir, *src;
 };
@@ -1642,11 +1826,13 @@ static void osd_button_init(struct osd_priv_common *opc, struct navit *nav) {
         osd_set_keypress(nav, &opc->osd_item);
         opc->osd_item.gr = gra;
         opc->osd_item.graphic_bg = graphics_gc_new(opc->osd_item.gr);
-        graphics_add_callback(gra, this->draw_cb =
-                                       callback_new_attr_2(callback_cast(osd_button_draw), attr_postdraw, opc, nav));
+        this->draw_cb = callback_new_attr_2(callback_cast(osd_button_draw), attr_postdraw, opc, nav);
+        graphics_add_callback(gra, this->draw_cb);
     }
-    navit_add_callback(nav, this->navit_init_cb =
-                                callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item));
+    if (!this->click_cb) {
+        this->click_cb = callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item);
+        navit_add_callback(nav, this->click_cb);
+    }
     osd_button_draw(opc, nav, NULL);
 }
 
@@ -1690,6 +1876,26 @@ int osd_button_set_attr(struct osd_priv_common *opc, struct attr *attr) {
     return 0;
 }
 
+static void osd_button_destroy(struct osd_priv *priv) {
+    struct osd_priv_common *opc = (struct osd_priv_common *)priv;
+    struct osd_button *this = (struct osd_button *)opc->data;
+    struct navit *nav = opc->osd_item.navit;
+    osd_destroy_std_graphic(&opc->osd_item, nav);
+    osd_remove_callback(nav, &this->click_cb);
+    osd_remove_callback(nav, &this->init_cb);
+    if (this->draw_cb) {
+        if (nav) {
+            graphics_remove_callback(navit_get_graphics(nav), this->draw_cb);
+        }
+        callback_destroy(this->draw_cb);
+        this->draw_cb = NULL;
+    }
+    g_free(this->src);
+    g_free(this->src_dir);
+    g_free(this);
+    g_free(opc);
+}
+
 static struct osd_priv *osd_button_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
     struct osd_button *this = g_new0(struct osd_button, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common, 1);
@@ -1704,6 +1910,7 @@ static struct osd_priv *osd_button_new(struct navit *nav, struct osd_methods *me
     opc->osd_item.rel_h = ATTR_REL_RELSHIFT;
 
     meth->set_attr = set_std_osd_attr;
+    meth->destroy = osd_button_destroy;
     opc->spec_set_attr_func = osd_button_set_attr;
 
     attr = attr_search(attrs, attr_use_overlay);
@@ -1729,8 +1936,8 @@ static struct osd_priv *osd_button_new(struct navit *nav, struct osd_methods *me
 
     this->src = osd_button_icon_path(this, attr->u.str);
 
-    navit_add_callback(nav, this->navit_init_cb =
-                                callback_new_attr_1(callback_cast(osd_button_init), attr_graphics_ready, opc));
+    this->init_cb = callback_new_attr_1(callback_cast(osd_button_init), attr_graphics_ready, opc);
+    navit_add_callback(nav, this->init_cb);
 
     if (b_commandtable_added == 0) {
         navit_command_add_table(nav, commands, sizeof(commands) / sizeof(struct command_table));
@@ -1770,8 +1977,8 @@ static void osd_image_init(struct osd_priv_common *opc, struct navit *nav) {
         osd_set_std_config(nav, &opc->osd_item);
         opc->osd_item.gr = gra;
         opc->osd_item.graphic_bg = graphics_gc_new(opc->osd_item.gr);
-        graphics_add_callback(gra, this->draw_cb =
-                                       callback_new_attr_2(callback_cast(osd_button_draw), attr_postdraw, opc, nav));
+        this->draw_cb = callback_new_attr_2(callback_cast(osd_button_draw), attr_postdraw, opc, nav);
+        graphics_add_callback(gra, this->draw_cb);
     }
     osd_button_draw(opc, nav, NULL);
 }
@@ -1789,6 +1996,7 @@ static struct osd_priv *osd_image_new(struct navit *nav, struct osd_methods *met
     opc->osd_item.rel_w = ATTR_REL_RELSHIFT;
     opc->osd_item.rel_h = ATTR_REL_RELSHIFT;
     meth->set_attr = set_std_osd_attr;
+    meth->destroy = osd_button_destroy;
     opc->spec_set_attr_func = osd_button_set_attr;
 
     attr = attr_search(attrs, attr_use_overlay);
@@ -1805,8 +2013,8 @@ static struct osd_priv *osd_image_new(struct navit *nav, struct osd_methods *met
 
     this->src = graphics_icon_path(attr->u.str);
 
-    navit_add_callback(nav, this->navit_init_cb =
-                                callback_new_attr_1(callback_cast(osd_image_init), attr_graphics_ready, opc));
+    this->init_cb = callback_new_attr_1(callback_cast(osd_image_init), attr_graphics_ready, opc);
+    navit_add_callback(nav, this->init_cb);
 
     return (struct osd_priv *)opc;
 error:
@@ -1825,6 +2033,8 @@ struct navigation_status {
     int last_status; /**< Last status displayed.
                        Apart from the usual values of {@code nav_status}, -2 is used to
                        indicate we have not yet received a status. */
+    struct callback *nav_status_cb;
+    struct callback *graphics_ready_cb; /**< Callback for the graphics initialization */
 };
 
 /**
@@ -1911,6 +2121,7 @@ static void osd_navigation_status_draw(struct osd_priv *osd, struct navit *navit
  */
 static void osd_navigation_status_init(struct osd_priv_common *opc, struct navit *navit) {
     struct navigation *nav = NULL;
+    struct navigation_status *this = (struct navigation_status *)opc->data;
     struct attr attr;
 
     dbg(lvl_debug, "enter, opc=%p", opc);
@@ -1918,15 +2129,36 @@ static void osd_navigation_status_init(struct osd_priv_common *opc, struct navit
     if (navit)
         nav = navit_get_navigation(navit);
     if (nav) {
-        navigation_register_callback(
-            nav, attr_nav_status,
-            callback_new_attr_1(callback_cast(osd_navigation_status_draw_do), attr_nav_status, opc));
+        this->nav_status_cb = callback_new_attr_1(callback_cast(osd_navigation_status_draw_do), attr_nav_status, opc);
+        navigation_register_callback(nav, attr_nav_status, this->nav_status_cb);
         if (navigation_get_attr(nav, attr_nav_status, &attr, NULL))
             osd_navigation_status_draw_do(opc, attr.u.num);
     } else
         dbg(lvl_error, "navigation instance is NULL, OSD will never update");
     // navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item)); // FIXME
     // do we need this?
+}
+
+static void osd_navigation_status_destroy(struct osd_priv *priv) {
+    struct osd_priv_common *opc = (struct osd_priv_common *)priv;
+    struct navigation_status *this = (struct navigation_status *)opc->data;
+    struct navigation *nav = NULL;
+
+    if (opc->osd_item.navit) {
+        nav = navit_get_navigation(opc->osd_item.navit);
+    }
+    osd_remove_callback(opc->osd_item.navit, &this->graphics_ready_cb);
+    osd_destroy_std_graphic(&opc->osd_item, opc->osd_item.navit);
+    if (this->nav_status_cb) {
+        if (nav) {
+            navigation_unregister_callback(nav, attr_nav_status, this->nav_status_cb);
+        }
+        callback_destroy(this->nav_status_cb);
+        this->nav_status_cb = NULL;
+    }
+    g_free(this->icon_src);
+    g_free(this);
+    g_free(opc);
 }
 
 /**
@@ -1957,6 +2189,7 @@ static struct osd_priv *osd_navigation_status_new(struct navit *nav, struct osd_
     opc->osd_item.font_size = 200;  // FIXME may not be needed
     opc->osd_item.meth.draw = osd_draw_cast(osd_navigation_status_draw);
     meth->set_attr = set_std_osd_attr;
+    meth->destroy = osd_navigation_status_destroy;
     osd_set_std_attr(attrs, &opc->osd_item, 0);
 
     this->icon_w = -1;
@@ -1983,7 +2216,8 @@ static struct osd_priv *osd_navigation_status_new(struct navit *nav, struct osd_
         this->icon_src = graphics_icon_path("%s_wh.svg");
     }
 
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_navigation_status_init), attr_graphics_ready, opc));
+    this->graphics_ready_cb = callback_new_attr_1(callback_cast(osd_navigation_status_init), attr_graphics_ready, opc);
+    navit_add_callback(nav, this->graphics_ready_cb);
     return (struct osd_priv *)opc;
 }
 
@@ -1993,6 +2227,9 @@ struct nav_next_turn {
     int icon_h, icon_w, active;
     char *last_name;
     int level;
+    struct callback *draw_cb;           /*!< Callback for the position update */
+    struct callback *click_cb;          /*!< Callback for the click on the osd */
+    struct callback *graphics_ready_cb; /*!< Callback for the graphics initialization */
 };
 
 static void osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *v) {
@@ -2062,10 +2299,32 @@ static void osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *na
 }
 
 static void osd_nav_next_turn_init(struct osd_priv_common *opc, struct navit *nav) {
+    struct nav_next_turn *this = (struct nav_next_turn *)opc->data;
+
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_next_turn_draw), attr_position_coord_geo, opc));
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item));
+    if (!this->draw_cb) {
+        this->draw_cb = callback_new_attr_1(callback_cast(osd_nav_next_turn_draw), attr_position_coord_geo, opc);
+        navit_add_callback(nav, this->draw_cb);
+    }
+    if (!this->click_cb) {
+        this->click_cb = callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item);
+        navit_add_callback(nav, this->click_cb);
+    }
     osd_nav_next_turn_draw(opc, nav, NULL);
+}
+
+static void osd_nav_next_turn_destroy(struct osd_priv *priv) {
+    struct osd_priv_common *opc = (struct osd_priv_common *)priv;
+    struct nav_next_turn *this = (struct nav_next_turn *)opc->data;
+    struct navit *nav = opc->osd_item.navit;
+
+    osd_remove_callback(nav, &this->draw_cb);
+    osd_remove_callback(nav, &this->click_cb);
+    osd_remove_callback(nav, &this->graphics_ready_cb);
+    osd_destroy_std_graphic(&opc->osd_item, nav);
+    g_free(this->icon_src);
+    g_free(this);
+    g_free(opc);
 }
 
 static struct osd_priv *osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
@@ -2082,6 +2341,7 @@ static struct osd_priv *osd_nav_next_turn_new(struct navit *nav, struct osd_meth
     opc->osd_item.font_size = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_nav_next_turn_draw);
     meth->set_attr = set_std_osd_attr;
+    meth->destroy = osd_nav_next_turn_destroy;
 
     osd_set_std_attr(attrs, &opc->osd_item, 0);
 
@@ -2114,14 +2374,16 @@ static struct osd_priv *osd_nav_next_turn_new(struct navit *nav, struct osd_meth
     if (attr)
         this->level = attr->u.num;
 
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_next_turn_init), attr_graphics_ready, opc));
+    this->graphics_ready_cb = callback_new_attr_1(callback_cast(osd_nav_next_turn_init), attr_graphics_ready, opc);
+    navit_add_callback(nav, this->graphics_ready_cb);
     return (struct osd_priv *)opc;
 }
 
 struct nav_toggle_announcer {
     int w, h;
-    /* FIXME this is actually the click callback, which is set once but never read. Do we need this? */
-    struct callback *navit_init_cb;
+    struct callback *click_cb;
+    struct callback *speech_cb;
+    struct callback *graphics_ready_cb;
     char *icon_src;
     int active, last_state;
 };
@@ -2189,10 +2451,29 @@ static void osd_nav_toggle_announcer_init(struct osd_priv_common *opc, struct na
     struct nav_toggle_announcer *this = (struct nav_toggle_announcer *)opc->data;
 
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_toggle_announcer_draw), attr_speech, opc));
-    navit_add_callback(nav, this->navit_init_cb =
-                                callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item));
+    if (!this->speech_cb) {
+        this->speech_cb = callback_new_attr_1(callback_cast(osd_nav_toggle_announcer_draw), attr_speech, opc);
+        navit_add_callback(nav, this->speech_cb);
+    }
+    if (!this->click_cb) {
+        this->click_cb = callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item);
+        navit_add_callback(nav, this->click_cb);
+    }
     osd_nav_toggle_announcer_draw(opc, nav, NULL);
+}
+
+static void osd_nav_toggle_announcer_destroy(struct osd_priv *priv) {
+    struct osd_priv_common *opc = (struct osd_priv_common *)priv;
+    struct nav_toggle_announcer *this = (struct nav_toggle_announcer *)opc->data;
+    struct navit *nav = opc->osd_item.navit;
+
+    osd_destroy_std_graphic(&opc->osd_item, nav);
+    osd_remove_callback(nav, &this->speech_cb);
+    osd_remove_callback(nav, &this->click_cb);
+    osd_remove_callback(nav, &this->graphics_ready_cb);
+    g_free(this->icon_src);
+    g_free(this);
+    g_free(opc);
 }
 
 static struct osd_priv *osd_nav_toggle_announcer_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
@@ -2228,8 +2509,10 @@ static struct osd_priv *osd_nav_toggle_announcer_new(struct navit *nav, struct o
 
     opc->osd_item.command = g_strdup(command);
 
-    navit_add_callback(nav,
-                       callback_new_attr_1(callback_cast(osd_nav_toggle_announcer_init), attr_graphics_ready, opc));
+    this->graphics_ready_cb =
+        callback_new_attr_1(callback_cast(osd_nav_toggle_announcer_init), attr_graphics_ready, opc);
+    navit_add_callback(nav, this->graphics_ready_cb);
+    meth->destroy = osd_nav_toggle_announcer_destroy;
     return (struct osd_priv *)opc;
 }
 
@@ -2273,7 +2556,9 @@ struct osd_speed_cam {
 
     int announce_on;
     enum osd_speed_warner_eAnnounceState announce_state;
-    char *text;  // text of label attribute for this osd
+    char *text;                         // text of label attribute for this osd
+    struct callback *draw_cb;           /*!< Callback for the position update */
+    struct callback *graphics_ready_cb; /*!< Callback for the graphics initialization */
 };
 
 static double angle_diff(int firstAngle, int secondAngle) {
@@ -2477,13 +2762,36 @@ static void osd_speed_cam_init(struct osd_priv_common *opc, struct navit *nav) {
     graphics_gc_set_foreground(this->orange, &this->idle_color);
     graphics_gc_set_linewidth(this->orange, this->width);
 
+    graphics_gc_destroy(opc->osd_item.graphic_fg);
     opc->osd_item.graphic_fg = graphics_gc_new(opc->osd_item.gr);
     graphics_gc_set_foreground(opc->osd_item.graphic_fg, &opc->osd_item.text_color);
     graphics_gc_set_linewidth(opc->osd_item.graphic_fg, this->width);
 
     graphics_gc_set_linewidth(opc->osd_item.graphic_fg, this->width);
 
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_cam_draw), attr_position_coord_geo, opc));
+    if (!this->draw_cb) {
+        this->draw_cb = callback_new_attr_1(callback_cast(osd_speed_cam_draw), attr_position_coord_geo, opc);
+        navit_add_callback(nav, this->draw_cb);
+    }
+}
+
+static void osd_speed_cam_destroy(struct osd_priv *priv) {
+    struct osd_priv_common *opc = (struct osd_priv_common *)priv;
+    struct osd_speed_cam *this = (struct osd_speed_cam *)opc->data;
+    struct navit *nav = opc->osd_item.navit;
+
+    osd_remove_callback(nav, &this->draw_cb);
+    osd_remove_callback(nav, &this->graphics_ready_cb);
+    osd_destroy_std_graphic(&opc->osd_item, nav);
+    if (this->red) {
+        graphics_gc_destroy(this->red);
+    }
+    if (this->orange) {
+        graphics_gc_destroy(this->orange);
+    }
+    g_free(this->text);
+    g_free(this);
+    g_free(opc);
 }
 
 static struct osd_priv *osd_speed_cam_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
@@ -2503,6 +2811,7 @@ static struct osd_priv *osd_speed_cam_new(struct navit *nav, struct osd_methods 
     opc->osd_item.font_size = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_speed_cam_draw);
     meth->set_attr = set_std_osd_attr;
+    meth->destroy = osd_speed_cam_destroy;
 
     osd_set_std_attr(attrs, &opc->osd_item, ITEM_HAS_TEXT);
     attr = attr_search(attrs, attr_width);
@@ -2530,7 +2839,8 @@ static struct osd_priv *osd_speed_cam_new(struct navit *nav, struct osd_methods 
         this->flags = -1;  // every cam type is on by default
     }
 
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_cam_init), attr_graphics_ready, opc));
+    this->graphics_ready_cb = callback_new_attr_1(callback_cast(osd_speed_cam_init), attr_graphics_ready, opc);
+    navit_add_callback(nav, this->graphics_ready_cb);
     return (struct osd_priv *)opc;
 }
 
@@ -2552,6 +2862,8 @@ struct osd_speed_warner {
     int timeout;
     int wait_before_warn;
     struct callback *click_cb;
+    struct callback *draw_cb;           /*!< Callback for the position update */
+    struct callback *graphics_ready_cb; /*!< Callback for the graphics initialization */
 };
 
 static void osd_speed_warner_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *v) {
@@ -2692,9 +3004,14 @@ static void osd_speed_warner_init(struct osd_priv_common *opc, struct navit *nav
     struct color black_color = {0x1111, 0x1111, 0x1111, 0x9999};
 
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_warner_draw), attr_position_coord_geo, opc));
-    navit_add_callback(nav,
-                       this->click_cb = callback_new_attr_1(callback_cast(osd_speed_warner_click), attr_button, opc));
+    if (!this->draw_cb) {
+        this->draw_cb = callback_new_attr_1(callback_cast(osd_speed_warner_draw), attr_position_coord_geo, opc);
+        navit_add_callback(nav, this->draw_cb);
+    }
+    if (!this->click_cb) {
+        this->click_cb = callback_new_attr_1(callback_cast(osd_speed_warner_click), attr_button, opc);
+        navit_add_callback(nav, this->click_cb);
+    }
 
     this->d = opc->osd_item.w;
     if (opc->osd_item.h < this->d)
@@ -2748,6 +3065,31 @@ static void osd_speed_warner_init(struct osd_priv_common *opc, struct navit *nav
     osd_speed_warner_draw(opc, nav, NULL);
 }
 
+static void osd_speed_warner_destroy(struct osd_priv *priv) {
+    struct osd_priv_common *opc = (struct osd_priv_common *)priv;
+    struct osd_speed_warner *this = (struct osd_speed_warner *)opc->data;
+    struct navit *nav = opc->osd_item.navit;
+
+    osd_remove_callback(nav, &this->draw_cb);
+    osd_remove_callback(nav, &this->click_cb);
+    osd_remove_callback(nav, &this->graphics_ready_cb);
+    osd_destroy_std_graphic(&opc->osd_item, nav);
+    if (this->red) {
+        graphics_gc_destroy(this->red);
+    }
+    if (this->green) {
+        graphics_gc_destroy(this->green);
+    }
+    if (this->grey) {
+        graphics_gc_destroy(this->grey);
+    }
+    if (this->black) {
+        graphics_gc_destroy(this->black);
+    }
+    g_free(this);
+    g_free(opc);
+}
+
 static struct osd_priv *osd_speed_warner_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
     struct osd_speed_warner *this = g_new0(struct osd_speed_warner, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common, 1);
@@ -2762,6 +3104,7 @@ static struct osd_priv *osd_speed_warner_new(struct navit *nav, struct osd_metho
     this->active = -1;
     opc->osd_item.meth.draw = osd_draw_cast(osd_speed_warner_draw);
     meth->set_attr = set_std_osd_attr;
+    meth->destroy = osd_speed_warner_destroy;
 
     attr = attr_search(attrs, attr_speed_exceed_limit_offset);
     if (attr) {
@@ -2796,7 +3139,8 @@ static struct osd_priv *osd_speed_warner_new(struct navit *nav, struct osd_metho
         this->announce_on = 1;  // announce by default
 
     osd_set_std_attr(attrs, &opc->osd_item, ITEM_HAS_TEXT);
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_warner_init), attr_graphics_ready, opc));
+    this->graphics_ready_cb = callback_new_attr_1(callback_cast(osd_speed_warner_init), attr_graphics_ready, opc);
+    navit_add_callback(nav, this->graphics_ready_cb);
     return (struct osd_priv *)opc;
 }
 
@@ -2818,6 +3162,9 @@ struct osd_text {
     int align;
     char *last;
     struct osd_text_item *items;
+    struct callback *draw_cb;           /*!< Callback for the position update */
+    struct callback *click_cb;          /*!< Callback for the click on the osd */
+    struct callback *graphics_ready_cb; /*!< Callback for the graphics initialization */
 };
 
 /**
@@ -3269,6 +3616,7 @@ static void osd_text_prepare(struct osd_priv_common *opc, struct navit *nav) {
 
     char *absbegin, *str, *start, *end, *key, *subkey, *index;
     struct osd_text_item *oti;
+    int needs_draw_cb = 0;
 
     oti = NULL;
     str = g_strdup(this->text);
@@ -3325,7 +3673,8 @@ static void osd_text_prepare(struct osd_priv_common *opc, struct navit *nav) {
 
         switch (oti->attr_typ) {
         default:
-            navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_text_draw), attr_position_coord_geo, opc));
+            /* The text has to be updated whenever the position changes */
+            needs_draw_cb = 1;
             break;
         }
 
@@ -3343,12 +3692,25 @@ static void osd_text_prepare(struct osd_priv_common *opc, struct navit *nav) {
     else
         this->items = NULL;
 
+    /* Register the draw callback only once, no matter how many placeholders
+     * the text contains or how often the text is prepared.
+     */
+    if (needs_draw_cb && !this->draw_cb) {
+        this->draw_cb = callback_new_attr_1(callback_cast(osd_text_draw), attr_position_coord_geo, opc);
+        navit_add_callback(nav, this->draw_cb);
+    }
+
     g_free(absbegin);
 }
 
 static void osd_text_init(struct osd_priv_common *opc, struct navit *nav) {
+    struct osd_text *this = (struct osd_text *)opc->data;
+
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item));
+    if (!this->click_cb) {
+        this->click_cb = callback_new_attr_1(callback_cast(osd_std_click), attr_button, &opc->osd_item);
+        navit_add_callback(nav, this->click_cb);
+    }
     osd_text_prepare(opc, nav);
     osd_text_draw(opc, nav, NULL);
 }
@@ -3382,6 +3744,30 @@ static int osd_text_set_attr(struct osd_priv_common *opc, struct attr *attr) {
     return 0;
 }
 
+static void osd_text_destroy(struct osd_priv *priv) {
+    struct osd_priv_common *opc = (struct osd_priv_common *)priv;
+    struct osd_text *this = (struct osd_text *)opc->data;
+    struct osd_text_item *item;
+    struct navit *nav = opc->osd_item.navit;
+
+    osd_remove_callback(nav, &this->draw_cb);
+    osd_remove_callback(nav, &this->click_cb);
+    osd_remove_callback(nav, &this->graphics_ready_cb);
+    osd_destroy_std_graphic(&opc->osd_item, nav);
+    g_free(this->text);
+    g_free(this->last);
+    item = this->items;
+    while (item) {
+        struct osd_text_item *next = item->next;
+        g_free(item->text);
+        g_free(item->format);
+        g_free(item);
+        item = next;
+    }
+    g_free(this);
+    g_free(opc);
+}
+
 static struct osd_priv *osd_text_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
     struct osd_text *this = g_new0(struct osd_text, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common, 1);
@@ -3396,6 +3782,7 @@ static struct osd_priv *osd_text_new(struct navit *nav, struct osd_methods *meth
     opc->osd_item.font_size = 200;
     opc->osd_item.meth.draw = osd_draw_cast(osd_text_draw);
     meth->set_attr = set_std_osd_attr;
+    meth->destroy = osd_text_destroy;
     opc->spec_set_attr_func = osd_text_set_attr;
     osd_set_std_attr(attrs, &opc->osd_item, ITEM_HAS_TEXT);
 
@@ -3411,14 +3798,25 @@ static struct osd_priv *osd_text_new(struct navit *nav, struct osd_methods *meth
     if (attr)
         this->align = attr->u.num;
 
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_text_init), attr_graphics_ready, opc));
+    this->graphics_ready_cb = callback_new_attr_1(callback_cast(osd_text_init), attr_graphics_ready, opc);
+    navit_add_callback(nav, this->graphics_ready_cb);
     return (struct osd_priv *)opc;
 }
+
+enum {
+    GPS_STATUS_CB_COORD_GEO,
+    GPS_STATUS_CB_FIX_TYPE,
+    GPS_STATUS_CB_SATS_USED,
+    GPS_STATUS_CB_HDOP,
+    GPS_STATUS_CB_COUNT,
+};
 
 struct gps_status {
     char *icon_src;
     int icon_h, icon_w, active;
     int strength;
+    struct callback *graphics_ready_cb;
+    struct callback *callbacks[GPS_STATUS_CB_COUNT];
 };
 
 static void osd_gps_status_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *v) {
@@ -3480,12 +3878,54 @@ static void osd_gps_status_draw(struct osd_priv_common *opc, struct navit *navit
 }
 
 static void osd_gps_status_init(struct osd_priv_common *opc, struct navit *nav) {
+    struct gps_status *this = (struct gps_status *)opc->data;
+
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_gps_status_draw), attr_position_coord_geo, opc));
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_gps_status_draw), attr_position_fix_type, opc));
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_gps_status_draw), attr_position_sats_used, opc));
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_gps_status_draw), attr_position_hdop, opc));
+    if (!this->callbacks[GPS_STATUS_CB_COORD_GEO]) {
+        this->callbacks[GPS_STATUS_CB_COORD_GEO] =
+            callback_new_attr_1(callback_cast(osd_gps_status_draw), attr_position_coord_geo, opc);
+        navit_add_callback(nav, this->callbacks[GPS_STATUS_CB_COORD_GEO]);
+    }
+    if (!this->callbacks[GPS_STATUS_CB_FIX_TYPE]) {
+        this->callbacks[GPS_STATUS_CB_FIX_TYPE] =
+            callback_new_attr_1(callback_cast(osd_gps_status_draw), attr_position_fix_type, opc);
+        navit_add_callback(nav, this->callbacks[GPS_STATUS_CB_FIX_TYPE]);
+    }
+    if (!this->callbacks[GPS_STATUS_CB_SATS_USED]) {
+        this->callbacks[GPS_STATUS_CB_SATS_USED] =
+            callback_new_attr_1(callback_cast(osd_gps_status_draw), attr_position_sats_used, opc);
+        navit_add_callback(nav, this->callbacks[GPS_STATUS_CB_SATS_USED]);
+    }
+    if (!this->callbacks[GPS_STATUS_CB_HDOP]) {
+        this->callbacks[GPS_STATUS_CB_HDOP] =
+            callback_new_attr_1(callback_cast(osd_gps_status_draw), attr_position_hdop, opc);
+        navit_add_callback(nav, this->callbacks[GPS_STATUS_CB_HDOP]);
+    }
     osd_gps_status_draw(opc, nav, NULL);
+}
+
+static void osd_gps_status_destroy(struct osd_priv *priv) {
+    struct osd_priv_common *opc = (struct osd_priv_common *)priv;
+    struct gps_status *this = (struct gps_status *)opc->data;
+    struct navit *nav = opc->osd_item.navit;
+    int i;
+
+    osd_destroy_std_graphic(&opc->osd_item, nav);
+    if (this->graphics_ready_cb) {
+        navit_remove_callback(nav, this->graphics_ready_cb);
+        callback_destroy(this->graphics_ready_cb);
+        this->graphics_ready_cb = NULL;
+    }
+    for (i = 0; i < GPS_STATUS_CB_COUNT; i++) {
+        if (this->callbacks[i]) {
+            navit_remove_callback(nav, this->callbacks[i]);
+            callback_destroy(this->callbacks[i]);
+            this->callbacks[i] = NULL;
+        }
+    }
+    g_free(this->icon_src);
+    g_free(this);
+    g_free(opc);
 }
 
 static struct osd_priv *osd_gps_status_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
@@ -3529,7 +3969,9 @@ static struct osd_priv *osd_gps_status_new(struct navit *nav, struct osd_methods
     } else
         this->icon_src = graphics_icon_path("gui_strength_%d_32_32.png");
 
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_gps_status_init), attr_graphics_ready, opc));
+    this->graphics_ready_cb = callback_new_attr_1(callback_cast(osd_gps_status_init), attr_graphics_ready, opc);
+    navit_add_callback(nav, this->graphics_ready_cb);
+    meth->destroy = osd_gps_status_destroy;
     return (struct osd_priv *)opc;
 }
 
@@ -3538,6 +3980,7 @@ struct volume {
     int icon_h, icon_w, active;
     int strength;
     struct callback *click_cb;
+    struct callback *graphics_ready_cb;
 };
 
 static void osd_volume_draw(struct osd_priv_common *opc, struct navit *navit, struct vehicle *unused) {
@@ -3586,8 +4029,24 @@ static void osd_volume_init(struct osd_priv_common *opc, struct navit *nav) {
     struct volume *this = (struct volume *)opc->data;
 
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
-    navit_add_callback(nav, this->click_cb = callback_new_attr_1(callback_cast(osd_volume_click), attr_button, opc));
+    if (!this->click_cb) {
+        this->click_cb = callback_new_attr_1(callback_cast(osd_volume_click), attr_button, opc);
+        navit_add_callback(nav, this->click_cb);
+    }
     osd_volume_draw(opc, nav, NULL);
+}
+
+static void osd_volume_destroy(struct osd_priv *priv) {
+    struct osd_priv_common *opc = (struct osd_priv_common *)priv;
+    struct volume *this = (struct volume *)opc->data;
+    struct navit *nav = opc->osd_item.navit;
+
+    osd_remove_callback(nav, &this->click_cb);
+    osd_remove_callback(nav, &this->graphics_ready_cb);
+    osd_destroy_std_graphic(&opc->osd_item, nav);
+    g_free(this->icon_src);
+    g_free(this);
+    g_free(opc);
 }
 
 static struct osd_priv *osd_volume_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
@@ -3631,7 +4090,9 @@ static struct osd_priv *osd_volume_new(struct navit *nav, struct osd_methods *me
     } else
         this->icon_src = graphics_icon_path("gui_strength_%d_32_32.png");
 
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_volume_init), attr_graphics_ready, opc));
+    this->graphics_ready_cb = callback_new_attr_1(callback_cast(osd_volume_init), attr_graphics_ready, opc);
+    navit_add_callback(nav, this->graphics_ready_cb);
+    meth->destroy = osd_volume_destroy;
     return (struct osd_priv *)opc;
 }
 
@@ -3747,10 +4208,32 @@ static void osd_scale_init(struct osd_priv_common *opc, struct navit *nav) {
 
     osd_set_std_graphic(nav, &opc->osd_item, (struct osd_priv *)opc);
 
-    graphics_add_callback(gra,
-                          this->draw_cb = callback_new_attr_2(callback_cast(osd_scale_draw), attr_postdraw, opc, nav));
+    this->draw_cb = callback_new_attr_2(callback_cast(osd_scale_draw), attr_postdraw, opc, nav);
+    graphics_add_callback(gra, this->draw_cb);
     if (navit_get_ready(nav) == 3)
         osd_scale_draw(opc, nav, NULL);
+}
+
+static void osd_scale_destroy(struct osd_priv *priv) {
+    struct osd_priv_common *opc = (struct osd_priv_common *)priv;
+    struct osd_scale *this = (struct osd_scale *)opc->data;
+    struct navit *nav = opc->osd_item.navit;
+
+    osd_destroy_std_graphic(&opc->osd_item, nav);
+    if (this->draw_cb) {
+        if (nav) {
+            graphics_remove_callback(navit_get_graphics(nav), this->draw_cb);
+        }
+        callback_destroy(this->draw_cb);
+        this->draw_cb = NULL;
+    }
+    if (this->navit_init_cb) {
+        navit_remove_callback(nav, this->navit_init_cb);
+        callback_destroy(this->navit_init_cb);
+        this->navit_init_cb = NULL;
+    }
+    g_free(this);
+    g_free(opc);
 }
 
 static struct osd_priv *osd_scale_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
@@ -3783,8 +4266,9 @@ static struct osd_priv *osd_scale_new(struct navit *nav, struct osd_methods *met
         }
     }
 
-    navit_add_callback(nav, this->navit_init_cb =
-                                callback_new_attr_1(callback_cast(osd_scale_init), attr_graphics_ready, opc));
+    this->navit_init_cb = callback_new_attr_1(callback_cast(osd_scale_init), attr_graphics_ready, opc);
+    navit_add_callback(nav, this->navit_init_cb);
+    meth->destroy = osd_scale_destroy;
 
     return (struct osd_priv *)opc;
 }
@@ -3795,6 +4279,7 @@ struct auxmap {
     struct transformation *trans;
     struct layout *layout;
     struct callback *postdraw_cb;
+    struct callback *navit_init_cb;
     struct graphics_gc *red;
     struct navit *nav;
 };
@@ -3854,7 +4339,8 @@ static void osd_auxmap_init(struct osd_priv_common *opc, struct navit *nav) {
     if (!navit_get_attr(nav, attr_graphics, &attr, NULL))
         return;
     gra = attr.u.graphics;
-    graphics_add_callback(gra, callback_new_attr_1(callback_cast(osd_auxmap_draw), attr_postdraw, opc));
+    this->postdraw_cb = callback_new_attr_1(callback_cast(osd_auxmap_draw), attr_postdraw, opc);
+    graphics_add_callback(gra, this->postdraw_cb);
     if (!navit_get_attr(nav, attr_transformation, &attr, NULL))
         return;
     this->ntrans = attr.u.transformation;
@@ -3880,6 +4366,41 @@ static void osd_auxmap_init(struct osd_priv_common *opc, struct navit *nav) {
 #endif
 }
 
+static void osd_auxmap_destroy(struct osd_priv *priv) {
+    struct osd_priv_common *opc = (struct osd_priv_common *)priv;
+    struct auxmap *this = (struct auxmap *)opc->data;
+    struct graphics *gra = NULL;
+
+    if (this->nav) {
+        gra = navit_get_graphics(this->nav);
+    }
+    if (this->navit_init_cb) {
+        if (this->nav) {
+            navit_remove_callback(this->nav, this->navit_init_cb);
+        }
+        callback_destroy(this->navit_init_cb);
+        this->navit_init_cb = NULL;
+    }
+    if (this->postdraw_cb) {
+        if (gra) {
+            graphics_remove_callback(gra, this->postdraw_cb);
+        }
+        callback_destroy(this->postdraw_cb);
+        this->postdraw_cb = NULL;
+    }
+    if (this->nav) {
+        osd_destroy_std_graphic(&opc->osd_item, this->nav);
+    }
+    if (this->trans) {
+        transform_destroy(this->trans);
+    }
+    if (this->red) {
+        graphics_gc_destroy(this->red);
+    }
+    g_free(this);
+    g_free(opc);
+}
+
 static struct osd_priv *osd_auxmap_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs) {
     struct auxmap *this = g_new0(struct auxmap, 1);
     struct osd_priv_common *opc = g_new0(struct osd_priv_common, 1);
@@ -3890,11 +4411,14 @@ static struct osd_priv *osd_auxmap_new(struct navit *nav, struct osd_methods *me
     opc->osd_item.rel_w = 60;
     opc->osd_item.rel_h = 40;
     opc->osd_item.font_size = 200;
+    opc->osd_item.navit = nav;
     meth->set_attr = set_std_osd_attr;
+    meth->destroy = osd_auxmap_destroy;
 
     osd_set_std_attr(attrs, &opc->osd_item, 0);
 
-    navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_auxmap_init), attr_navit, opc));
+    this->navit_init_cb = callback_new_attr_1(callback_cast(osd_auxmap_init), attr_navit, opc);
+    navit_add_callback(nav, this->navit_init_cb);
     return (struct osd_priv *)opc;
 }
 
