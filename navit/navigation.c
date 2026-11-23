@@ -171,6 +171,7 @@ struct navigation {
     struct navigation_command *cmd_last;
     struct callback_list *callback_speech;
     struct callback_list *callback;
+    struct callback_list *attr_cbl;
     struct navit *navit;
     struct speech *speech;
     int level_last;
@@ -783,10 +784,15 @@ int navigation_set_attr(struct navigation *this_, struct attr *attr) {
 struct navigation *navigation_new(struct attr *parent, struct attr **attrs) {
     int i, j;
     struct attr *attr;
+    struct attr cbl;
     struct navigation *ret = (struct navigation *)navit_object_new(attrs, &navigation_func, sizeof(struct navigation));
     ret->hash = item_hash_new();
     ret->callback = callback_list_new();
     ret->callback_speech = callback_list_new();
+    ret->attr_cbl = callback_list_new();
+    cbl.type = attr_callback_list;
+    cbl.u.callback_list = ret->attr_cbl;
+    ret->attrs = attr_generic_prepend_attr(ret->attrs, &cbl);
     ret->level_last = 4;
     ret->distance_turn = 50;
     ret->turn_around_limit = 3;
@@ -3849,6 +3855,7 @@ void navigation_destroy(struct navigation *this_) {
     item_hash_destroy(this_->hash);
     callback_list_destroy(this_->callback);
     callback_list_destroy(this_->callback_speech);
+    callback_list_destroy(this_->attr_cbl);
     attr_list_free(this_->attrs);
     g_free(this_);
 }

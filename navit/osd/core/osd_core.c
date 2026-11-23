@@ -2035,6 +2035,7 @@ struct navigation_status {
                        indicate we have not yet received a status. */
     struct callback *nav_status_cb;
     struct callback *graphics_ready_cb; /**< Callback for the graphics initialization */
+    struct navigation *navigation;
 };
 
 /**
@@ -2065,8 +2066,11 @@ static void osd_navigation_status_draw_do(struct osd_priv_common *opc, int statu
     }
 
     if (do_draw) {
+        char *status_text = nav_status_to_text(status2);
+
         osd_fill_with_bgcolor(&opc->osd_item);
-        image = g_strdup_printf(this->icon_src, nav_status_to_text(status2));
+        image = g_strdup_printf(this->icon_src, status_text);
+        g_free(status_text);
         dbg(lvl_debug, "image=%s", image);
         gr_image = graphics_image_new_scaled(opc->osd_item.gr, image, this->icon_w, this->icon_h);
         if (!gr_image) {
@@ -2130,8 +2134,14 @@ static void osd_navigation_status_init(struct osd_priv_common *opc, struct navit
         nav = navit_get_navigation(navit);
     if (nav) {
         this->nav_status_cb = callback_new_attr_1(callback_cast(osd_navigation_status_draw_do), attr_nav_status, opc);
-        navigation_register_callback(nav, attr_nav_status, this->nav_status_cb);
-        if (navigation_get_attr(nav, attr_nav_status, &attr, NULL))
+        navit_object_ref((struct navit_object *)nav);
+        this->navigation = nav;
+        if (!navigation_register_callback(nav, attr_nav_status, this->nav_status_cb)) {
+            navit_object_unref((struct navit_object *)nav);
+            this->navigation = NULL;
+            callback_destroy(this->nav_status_cb);
+            this->nav_status_cb = NULL;
+        } else if (navigation_get_attr(nav, attr_nav_status, &attr, NULL))
             osd_navigation_status_draw_do(opc, attr.u.num);
     } else
         dbg(lvl_error, "navigation instance is NULL, OSD will never update");
@@ -2142,16 +2152,14 @@ static void osd_navigation_status_init(struct osd_priv_common *opc, struct navit
 static void osd_navigation_status_destroy(struct osd_priv *priv) {
     struct osd_priv_common *opc = (struct osd_priv_common *)priv;
     struct navigation_status *this = (struct navigation_status *)opc->data;
-    struct navigation *nav = NULL;
 
-    if (opc->osd_item.navit) {
-        nav = navit_get_navigation(opc->osd_item.navit);
-    }
     osd_remove_callback(opc->osd_item.navit, &this->graphics_ready_cb);
     osd_destroy_std_graphic(&opc->osd_item, opc->osd_item.navit);
     if (this->nav_status_cb) {
-        if (nav) {
-            navigation_unregister_callback(nav, attr_nav_status, this->nav_status_cb);
+        if (this->navigation) {
+            navigation_unregister_callback(this->navigation, attr_nav_status, this->nav_status_cb);
+            navit_object_unref((struct navit_object *)this->navigation);
+            this->navigation = NULL;
         }
         callback_destroy(this->nav_status_cb);
         this->nav_status_cb = NULL;

@@ -147,11 +147,15 @@ const char *bookmarks_item_cwd(struct bookmarks *this_) {
 }
 
 static void bookmarks_clear_item(struct bookmark_item_priv *b_item) {
-    b_item->children = g_list_first(b_item->children);
-    while (b_item->children) {
-        bookmarks_clear_item((struct bookmark_item_priv *)b_item->children->data);
-        b_item->children = g_list_next(b_item->children);
+    GList *child = g_list_first(b_item->children);
+
+    while (child) {
+        GList *next = g_list_next(child);
+        bookmarks_clear_item((struct bookmark_item_priv *)child->data);
+        g_list_free_1(child);
+        child = next;
     }
+    b_item->children = NULL;
     g_free(b_item->label);
     g_free(b_item);
 }
@@ -523,7 +527,6 @@ int bookmarks_copy_bookmark(struct bookmarks *this_, const char *label) {
             this_->clipboard->c = data->c;
             this_->clipboard->type = data->type;
             this_->clipboard->item = data->item;
-            this_->clipboard->children = data->children;
             if (!this_->clipboard->label) {
                 g_free(this_->clipboard->label);
             }
@@ -549,7 +552,6 @@ int bookmarks_paste_bookmark(struct bookmarks *this_) {
     b_item->type = this_->clipboard->type;
     b_item->item = this_->clipboard->item;
     b_item->parent = this_->current;
-    b_item->children = this_->clipboard->children;
 
     g_hash_table_insert(this_->bookmarks_hash, b_item->label, b_item);
     this_->bookmarks_list = g_list_append(this_->bookmarks_list, b_item);
