@@ -29,7 +29,7 @@
 #include "search.h"
 #include "track.h"
 #include <fcntl.h>
-#include <gtk/gtk.h>
+#include <gtk/gtkx.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>

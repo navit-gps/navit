@@ -34,7 +34,7 @@
 #include <cairo.h>
 #include <errno.h>
 #include <gdk/gdkkeysyms.h>
-#include <gtk/gtk.h>
+#include <gtk/gtkx.h>
 #include <locale.h> /* For WIN32 */
 #include <math.h>
 #include <signal.h>
@@ -590,7 +590,7 @@ static void overlay_rect(struct graphics_priv *parent, struct graphics_priv *ove
 
 static void overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *re,
                          cairo_t *cairo) {
-    GdkRectangle or, ir;
+    GdkRectangle or;
     if (parent->overlay_disabled || overlay->overlay_disabled || overlay->overlay_autodisabled)
         return;
     overlay_rect(parent, overlay, &or);
@@ -1018,7 +1018,8 @@ static void *get_data(struct graphics_priv *this, char const *type) {
         return this->widget;
 #ifndef _WIN32
     if (!strcmp(type, "xwindow_id"))
-        return (void *)GDK_WINDOW_XID(this->win ? gtk_widget_get_window(this->win) : gtk_widget_get_window(this->widget));
+        return (void *)GDK_WINDOW_XID(this->win ? gtk_widget_get_window(this->win)
+                                                : gtk_widget_get_window(this->widget));
 #endif
     if (!strcmp(type, "window")) {
         char *cp = getenv("NAVIT_XID");

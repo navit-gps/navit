@@ -21,7 +21,7 @@
 #define NAVIT_GUI_GTK_GUI_GTK_H
 
 #include "coord.h"
-#include <gtk/gtk.h>
+#include <gtk/gtkx.h>
 
 struct menu_methods;
 struct datawindow_methods;

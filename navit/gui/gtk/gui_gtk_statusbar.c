@@ -29,7 +29,7 @@
 #include "route.h"
 #include "transform.h"
 #include "vehicle.h"
-#include <gtk/gtk.h>
+#include <gtk/gtkx.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>

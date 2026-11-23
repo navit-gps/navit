@@ -32,7 +32,7 @@
 #include "popup.h"
 #include "transform.h"
 #include "util.h"
-#include <gtk/gtk.h>
+#include <gtk/gtkx.h>
 #include <stdlib.h>
 
 #include "navigation.h" /* for FEET_PER_METER and other conversion factors. */
