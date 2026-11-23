@@ -154,7 +154,7 @@ allowed
 - *(qt)* crash prevented when transformation is not possible # 1553
 - *(qt)* delete syntax corrected
 - *(vehicleprofile bike)* unused parameter distance_metric removed
-- *(graphics_svg_debug): plugin_init syntax fixed
+- *(graphics_svg_debug)*: plugin_init syntax fixed
 
 ### 💼 Other
 
