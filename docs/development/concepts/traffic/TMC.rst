@@ -73,7 +73,7 @@ information about the protocol is available here:
 Other Ideas
 ~~~~~~~~~~~
 
-Traffic is currently being implemented, see :doc:`Traffic in Navit`. The traffic branch works with a universal
+Traffic is currently being implemented, see :doc:`Traffic in Navit </development/concepts/traffic/Traffic_in_Navit>`. The traffic branch works with a universal
 format called TraFF. TMC is received with an external app, converted to
 TraFF and fed into the plugin (Android only at the moment). The external
 app handles all location decoding; the TraFF data contains coordinates
