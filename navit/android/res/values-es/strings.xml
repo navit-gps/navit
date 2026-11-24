@@ -14,7 +14,7 @@
     <string name="optionsmenu_download_maps">Descargar mapas</string>
     <string name="optionsmenu_exit_navit">Salir de Navit</string>
     <string name="optionsmenu_backup_restore">Respaldar o restaurar</string>
-    <string name="initial_info_box_message">¡Gracias por instalar Navit!\n\nPara comenzar, seleccione «Descargar mapas» en el menú para instalar un mapa. Nota: el mapa puede ser grande (&gt; 50 MB); se recomienda usar una conexión wifi.\n\nDatos cartográficos: © contribuidores de OpenStreetMap\n\n¡Disfrute de Navit!</string>
+    <string name="initial_info_box_message">¡Gracias por instalar Navit!\n\nPara comenzar, seleccione «Descargar mapas» en el menú para instalar un mapa. Nota: el mapa puede ser grande (&gt; 50 MB); se recomienda usar una conexión wifi.\n\nDatos cartográficos: © contribuidores de OpenStreetMap\n\n¡Disfrute de Navit!</string>
     <string name="optionsmenu_toggle_poi">Activar o desactivar PDI</string>
     <string name="map_download_eta">Tiempo estimado</string>
     <string name="map_download_download_error">Error al descargar el mapa.</string>
