@@ -43,13 +43,14 @@
 # Ettore Atalan <atalanttore@googlemail.com>, 2024, 2025.
 # Patrick Höhn <hoehnp@gmx.de>, 2025.
 # Christof Schulze <christof.schulze@gmx.net>, 2025, 2026.
+# Anonymous <anonymous@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-18 21:46+0100\n"
-"PO-Revision-Date: 2026-02-09 18:25+0000\n"
-"Last-Translator: jkoan <jkoan@gmx.de>\n"
+"PO-Revision-Date: 2026-11-24 19:57+0000\n"
+"Last-Translator: Anonymous <anonymous@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/navit/navit-core/"
 "de/>\n"
 "Language: de\n"
@@ -57,7 +58,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 2026.12.dev0\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 msgid "Running from source directory\n"
@@ -1781,8 +1782,7 @@ msgid "_Keep orientation to the North"
 msgstr "_Nordorientierung"
 
 msgid "Switches map orientation to the north or the vehicle"
-msgstr ""
-"Die Kartenorientierung zwischen Norden und Fahrzeugausrichtung wechseln"
+msgstr "Die Kartenorientierung zwischen Norden und Fahrzeugausrichtung wechseln"
 
 msgid "_Roadbook"
 msgstr "_Wegbeschreibung"
