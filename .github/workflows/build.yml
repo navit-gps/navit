@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: sanity_check
     container:
-      image: debian:trixie@sha256:bfc36aecdece0387418759dba474aa856c026ca8087da3606b41b90ab0509c99
+      image: debian:trixie@sha256:1c2fd3096624441883bc13fd646c376664b3ee8a990fde0f6246e567349512e9
     steps:
       - name: Install git and ca-certificates for checkout
         run: |
@@ -103,7 +103,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/trunk'
     container:
-      image: debian:trixie@sha256:bfc36aecdece0387418759dba474aa856c026ca8087da3606b41b90ab0509c99
+      image: debian:trixie@sha256:1c2fd3096624441883bc13fd646c376664b3ee8a990fde0f6246e567349512e9
     steps:
       - name: Install doxygen and essentials
         run: |
@@ -137,7 +137,7 @@ jobs:
   check_spelling:
     runs-on: ubuntu-latest
     container:
-      image: debian:trixie@sha256:bfc36aecdece0387418759dba474aa856c026ca8087da3606b41b90ab0509c99
+      image: debian:trixie@sha256:1c2fd3096624441883bc13fd646c376664b3ee8a990fde0f6246e567349512e9
     steps:
       - name: Install git, jq and wget for checkout and typos
         run: |
