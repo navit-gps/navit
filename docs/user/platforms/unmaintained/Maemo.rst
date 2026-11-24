@@ -191,7 +191,6 @@ Some of us are not content with using pre-compiled packages. Here then
 are links to building Navit from source using Scratchbox and
 OpenEmbedded/bitbake:
 
-#. `OpenEmbedded development <OpenEmbedded_development>`__
 #. `Scratchbox development <Scratchbox_development>`__
 
 .. _configuration_options:
