@@ -457,7 +457,7 @@ char *attr_to_text_ext(struct attr *attr, char *sep, enum attr_format fmt, enum 
     if (type >= attr_type_int_begin && type <= attr_type_int_end)
         return g_strdup_printf("%ld", attr->u.num);
     if (type >= attr_type_int64_begin && type <= attr_type_int64_end)
-        return g_strdup_printf(LONGLONG_FMT, *attr->u.num64);
+        return g_strdup_printf(PRId64, *attr->u.num64);
     if (type >= attr_type_double_begin && type <= attr_type_double_end)
         return g_strdup_printf("%f", *attr->u.numd);
     if (type >= attr_type_object_begin && type <= attr_type_object_end)

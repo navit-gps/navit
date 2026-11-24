@@ -2551,7 +2551,7 @@ static struct coord *get_way(FILE *way, FILE *ways_index, struct coord *c, long 
     while (item_bin_read(ret, way)) {
         currid=item_bin_get_wayid(ret);
         if (debug)
-            fprintf(stderr,LONGLONG_FMT":",currid);
+            fprintf(stderr,PRId64":",currid);
         if (currid != wayid)
             return NULL;
         ic=(struct coord *)(ret+1);
@@ -3852,9 +3852,9 @@ void process_turn_restrictions_old(FILE *in, FILE *coords, FILE *ways, FILE *way
 
         }
 #    if 0
-        fprintf(stderr,"via "LONGLONG_FMT" vs %d\n",viam.id, ni.id);
+        fprintf(stderr,"via "PRId64" vs %d\n",viam.id, ni.id);
         fprintf(stderr,"coord 0x%x,0x%x\n",ni.c.x,ni.c.y);
-        fprintf(stderr,"Lookup "LONGLONG_FMT"\n",fromm.id);
+        fprintf(stderr,"Lookup "PRId64"\n",fromm.id);
 #    endif
         if (!(fromc=get_way(ways, ways_index, viafrom, fromm.id, from, 0))) {
             if (viam.type == 1 || !(fromc=get_way(ways, ways_index, viato, fromm.id, from, 0))) {
@@ -3929,7 +3929,7 @@ static void process_countries(FILE *way, FILE *ways_index) {
         if (!seg) {
             fprintf(stderr,"is null\n");
         } else {
-            fprintf(stderr,"segment %p %s area "LONGLONG_FMT"\n",sort_segments,coord_is_equal(*seg->first,
+            fprintf(stderr,"segment %p %s area "PRId64"\n",sort_segments,coord_is_equal(*seg->first,
                     *seg->last) ? "closed":"open",geom_poly_area(seg->first,seg->last-seg->first+1));
         }
 #    if 0

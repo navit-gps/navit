@@ -43,7 +43,7 @@ void gui_internal_gesture_ring_add(struct gui_priv *this, struct point *p) {
     }
     this->gesture_ring[this->gesture_ring_last].p = *p;
     this->gesture_ring[this->gesture_ring_last].msec = msec;
-    dbg(lvl_info, "msec=" LONGLONG_FMT " x=%d y=%d", msec, p->x, p->y);
+    dbg(lvl_info, "msec=" PRId64 " x=%d y=%d", msec, p->x, p->y);
 };
 
 int gui_internal_gesture_get_vector(struct gui_priv *this, long long msec, struct point *p0, int *dx, int *dy) {
@@ -71,7 +71,7 @@ int gui_internal_gesture_get_vector(struct gui_priv *this, long long msec, struc
         *p0 = g->p;
     }
     msec = g->msec;
-    dbg(lvl_info, LONGLONG_FMT " %d %d", g->msec, g->p.x, g->p.y);
+    dbg(lvl_info, PRId64 " %d %d", g->msec, g->p.x, g->p.y);
     for (i = 1; (g = gui_internal_gesture_ring_get(this, i)) != NULL; i++) {
         if (msec - g->msec > 1000)
             break;
@@ -83,7 +83,7 @@ int gui_internal_gesture_get_vector(struct gui_priv *this, long long msec, struc
         if (p0) {
             *p0 = g->p;
         }
-        dbg(lvl_info, LONGLONG_FMT " %d %d", g->msec, g->p.x, g->p.y);
+        dbg(lvl_info, PRId64 " %d %d", g->msec, g->p.x, g->p.y);
     }
     return dt;
 }

@@ -238,7 +238,7 @@ static struct zip64_eoc *binfile_read_eoc64(struct file *fi) {
             dbg(lvl_warning, "map file %s: eoc wrong", fi->name);
             eoc = NULL;
         }
-        dbg(lvl_debug, "eoc64 ok 0x" LONGLONG_HEX_FMT " 0x" LONGLONG_HEX_FMT "", eoc->zip64eofst, eoc->zip64ecsz);
+        dbg(lvl_debug, "eoc64 ok 0x" PRIx64 " 0x" PRIx64 "", eoc->zip64eofst, eoc->zip64ecsz);
     }
     file_data_free(fi, (unsigned char *)eocl);
     return eoc;
@@ -259,7 +259,7 @@ static struct zip_cd *binfile_read_cd(struct map_priv *m, int offset, int len) {
     }
     cd = (struct zip_cd *)file_data_read(m->fi, cdoffset + offset, sizeof(*cd) + len);
     if (cd) {
-        dbg(lvl_debug, "cd at " LONGLONG_FMT " %zu bytes", cdoffset + offset, sizeof(*cd) + len);
+        dbg(lvl_debug, "cd at " PRId64 " %zu bytes", cdoffset + offset, sizeof(*cd) + len);
         cd_to_cpu(cd);
         dbg(lvl_debug, "sig 0x%x", cd->zipcensig);
         if (cd->zipcensig != zip_cd_sig) {
@@ -755,7 +755,7 @@ static int zipfile_to_tile(struct map_priv *m, struct zip_cd *cd, struct tile *t
     char *zipfn;
     struct file *fi;
     dbg(lvl_debug, "enter %p %p %p", m, cd, t);
-    dbg(lvl_debug, "cd->zipofst=0x" LONGLONG_HEX_FMT "", binfile_cd_offset(cd));
+    dbg(lvl_debug, "cd->zipofst=0x" PRIx64 "", binfile_cd_offset(cd));
     t->start = NULL;
     t->mode = 1;
     if (m->fis)
@@ -804,7 +804,7 @@ static int push_zipfile_tile(struct map_rect_priv *mr, int zipfile, int offset, 
     struct file *f = m->fi;
     long long cdoffset = m->eoc64 ? m->eoc64->zip64eofst : m->eoc->zipeofst;
     struct zip_cd *cd = (struct zip_cd *)(file_data_read(f, cdoffset + zipfile * m->cde_size, m->cde_size));
-    dbg(lvl_debug, "read from " LONGLONG_FMT " %d bytes", cdoffset + zipfile * m->cde_size, m->cde_size);
+    dbg(lvl_debug, "read from " PRId64 " %d bytes", cdoffset + zipfile * m->cde_size, m->cde_size);
     if (!cd)
         return 1;
     cd_to_cpu(cd);
