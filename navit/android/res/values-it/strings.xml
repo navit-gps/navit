@@ -283,4 +283,8 @@
     <string name="TTS_qery_install_data">Navit può usare qualsiasi motore di sintesi vocale installato nel dispositivo. Il motore attualmente selezionato non è in grado di parlare nella tua lingua. Vuoi visualizzare la finestra di dialogo download sintesi vocale?</string>
     <string name="hessen">Assia</string>
     <string name="TTS_title_data_missing">Mancano i dati del motore di sintesi vocale del sistema</string>
+    <string name="map_download_cancelling"></string>
+    <string name="map_metadata_loading"></string>
+    <string name="map_download_cancel"></string>
+    <string name="map_metadata_failed"></string>
 </resources>
