@@ -1,7 +1,11 @@
 Openmoko
 ========
 
-`320px|thumb|Navit on the Neo1973 <image:Navit_neo.jpg>`__
+.. figure:: Navit_neo.jpg
+   :alt: Navit on the Neo1973
+   :width: 320px
+
+   Navit on the Neo1973
 
 An article about navit can be found in the
 `OpenMoko-Wiki <http://wiki.openmoko.org/wiki/Navit>`__. Further detail
