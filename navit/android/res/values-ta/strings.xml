@@ -283,4 +283,8 @@
     <string name="kazakhstan">கசகிச்தான்</string>
     <string name="kyrgyzsyan">கிரைகிசுத்தான்</string>
     <string name="malaysia">மலேசியா</string>
+    <string name="map_download_cancelling"></string>
+    <string name="map_metadata_loading"></string>
+    <string name="map_download_cancel"></string>
+    <string name="map_metadata_failed"></string>
 </resources>
