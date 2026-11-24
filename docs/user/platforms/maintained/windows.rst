@@ -21,10 +21,6 @@ many in the link target location.
 Tips and Tricks
 ---------------
 
-.. warning::
-
-   The [[Win32 GUI]] build is broken, so use [[Gui internal]] instead!
-
 Compiling, configuring and running Navit on Windows can be a challenge
 at times. Below are a few hints, in addition to the more detailed
 instructions following.
