@@ -1,7 +1,11 @@
 WinCE
 =====
 
-`320px|thumb|Navit on Windows CE <image:Navit0.2.0-2.png>`__
+.. figure:: ../../configuration/navit0.2.0-2.png
+   :alt: Navit on Windows CE
+   :width: 320px
+
+   Navit on Windows CE
 
 This is a tutorial for running Navit on a machine with Windows Core
 Embedded Systems and Mobile. If you want to build Navit on your machine
