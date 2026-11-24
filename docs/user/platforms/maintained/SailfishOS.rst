@@ -20,72 +20,28 @@ Installing ready compiled Navit from openrepos
 
 .. _compiling_latest_version_from_github:
 
-Compiling latest version from github
+Compiling latest version from GitHub
 ------------------------------------
 
-The procedure is tested on Ubuntu 16.04 LTS
+The build is tested on Ubuntu 24.04 LTS with the Sailfish OS Platform SDK
+5.0.0.43. The `build workflow <https://github.com/navit-gps/navit/blob/trunk/.github/workflows/build.yml>`__
+runs the SDK in the ``coderus/sailfishos-platform-sdk:5.0.0.43`` container and
+calls `build_sailfish_ci.sh <https://github.com/navit-gps/navit/blob/trunk/contrib/sailfish/build_sailfish_ci.sh>`__.
+It produces ``armv7hl`` and ``aarch64`` RPMs, which are uploaded as the
+``Sailfish RPMs`` artifact.
 
-.. _sailfishossdk_beta_1611_qt5:
+To reproduce the CI build locally:
 
-SailfishOSSDK-Beta-1611-Qt5
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. code:: console
 
-I assume, that Sailfish SDK is installed. Virtual machines 'Sailfish
-SDK' and 'MerSDK' are running.
+   mkdir -p /tmp/rpmbuild && chmod 777 /tmp/rpmbuild
+   docker run -e VERSION_ID=5.0.0.43 \
+     -v "$PWD:/home/nemo/navit" \
+     -v "/tmp/rpmbuild:/home/nemo/rpmbuild:rw" \
+     coderus/sailfishos-platform-sdk:5.0.0.43 \
+     /bin/bash -lxc "git config --global --add safe.directory /home/nemo/navit; /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh"
 
-.. _step_1___compiling_in_sailfish_sdk:
-
-Step 1 - Compiling in Sailfish SDK
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-| Clone the sources from Github to your home directory
-| cd ~
-
-| ``git clone ``\ ```https://github.com/navit-gps/navit.git`` <https://github.com/navit-gps/navit.git>`__\ ``''``
-
-Connect to mer sdk
-
-| ``ssh mersdk@localhost -p 2222 -i ~/SailfishOS/vmshare/ssh/private_keys/engine/mersdk``
-
-| Now, we are logged in the Sailfish SDK.
-| Install dependencies
-| arm7hl is for installing at your Jolla
-
-| ``sb2 -t SailfishOS-armv7hl -m sdk-install -R zypper in cmake glib2-devel gettext-devel qt5-qtmultimedia-gsttools qt5-qtmultimedia-plugin-mediaservice-gstaudiodecoder qt5-qtmultimedia-plugin-mediaservice-gstcamerabin qt5-qtmultimedia-plugin-mediaservice-gstmediaplayer qt5-qtmultimedia-plugin-resourcepolicy-resourceqt qt5-qtmultimedia-plugin-audio-alsa qt5-qtmultimedia-plugin-playlistformats-m3u qt5-qtmultimedia-plugin-audio-pulseaudio qt5-qtmultimedia-plugin-mediaservice-gstmediacapture''``
-
-i486 is for running in SDK
-
-| ``sb2 -t SailfishOS-i486 -m sdk-install -R zypper in cmake glib2-devel gettext-devel qt5-qtmultimedia-gsttools qt5-qtmultimedia-plugin-mediaservice-gstaudiodecoder qt5-qtmultimedia-plugin-mediaservice-gstcamerabin qt5-qtmultimedia-plugin-mediaservice-gstmediaplayer qt5-qtmultimedia-plugin-resourcepolicy-resourceqt qt5-qtmultimedia-plugin-audio-alsa qt5-qtmultimedia-plugin-playlistformats-m3u qt5-qtmultimedia-plugin-audio-pulseaudio qt5-qtmultimedia-plugin-mediaservice-gstmediacapture''``
-
-| create directory 'rpmbuild' /home/src1/
-| mkdir /home/src1/rpmbuild
-
-| go to the directory '/home/src1/navit/contrib/sailfish/' and start the
-  building process with
-| ./build_on_sailfish_sdk.sh
-
-.. _step_2___copy_the_rpm:
-
-Step 2 - Copy the rpm
-~~~~~~~~~~~~~~~~~~~~~
-
-Back to Ubuntu, copy the rpm to SailfishOS Emulator
-
-``scp -P 2223 -i ~/SailfishOS/vmshare/ssh/private_keys/SailfishOS_Emulator/root /home/'username'/rpmbuild/RPMS/i586/harbour-navit-'builtversion'.i586.rpm root@localhost:``
-
-.. _step_3___log_into_sailfishos_emulator:
-
-Step 3 - Log into SailfishOS Emulator
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-``ssh -p 2223 -i ~/SailfishOS/vmshare/ssh/private_keys/SailfishOS_Emulator/root root@localhost''``
-
-.. _step_4___install_navit_in_sailfishos_emulator:
-
-Step 4 - Install Navit in SailfishOS Emulator
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-``rpm -i harbour-navit-'builtversion'.i586.rpm``
+The resulting packages are written to ``/tmp/rpmbuild/RPMS/``.
 
 .. _running_on_jolla_2.0.1.11:
 
@@ -97,7 +53,7 @@ Running on Jolla 2.0.1.11
 Step 1 - Copy the rpm
 ~~~~~~~~~~~~~~~~~~~~~
 
-``scp rpmbuild/RPMS/i586/harbour-navit-'builtversion'.armv7hl.rpm nemo@'IP of your device':``
+``scp rpmbuild/RPMS/armv7hl/harbour-navit-'builtversion'.armv7hl.rpm nemo@'IP of your device':``
 
 .. _step_2___install_required_libs:
 
@@ -111,7 +67,7 @@ pkcon install gettext
 Step 3 - Install as root
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-devel-su rpm -i navit-'builtversion'-metalstrolch.armv7hl.rpm
+devel-su rpm -i harbour-navit-'builtversion'.armv7hl.rpm
 
 .. _screenshots_and_pictures:
 
