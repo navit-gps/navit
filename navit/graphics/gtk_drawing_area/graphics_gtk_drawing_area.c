@@ -589,7 +589,7 @@ static void overlay_rect(struct graphics_priv *parent, struct graphics_priv *ove
 }
 
 static void overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, cairo_t *cairo) {
-    GdkRectangle or;
+    GdkRectangle or ;
     if (parent->overlay_disabled || overlay->overlay_disabled || overlay->overlay_autodisabled)
         return;
     overlay_rect(parent, overlay, &or);

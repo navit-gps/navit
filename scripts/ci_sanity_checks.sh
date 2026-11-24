@@ -50,6 +50,7 @@ check_diff(){
     git --no-pager diff --exit-code --stat
     code=$?
     if [[ $code -ne 0 ]]; then
+        cat "${GIT_DIFF_OUTPUT}"
         echo "[ERROR] You may need to do some cleanup in the file $*, see the git diff output above." >&2
     fi
     return_code=$(($return_code + $code))
