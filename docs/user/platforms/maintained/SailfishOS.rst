@@ -196,7 +196,7 @@ Vendor check
 ~~~~~~~~~~~~
 
 | ``OK [No vendor set!]``
-| `` PASSED``
+| ``PASSED``
 
 .. |Navit-sailfish-output320.jpg| image:: Navit-sailfish-output320.jpg
 .. |Jolla_map_withoutGPS_20161014.jpg| image:: Jolla_map_withoutGPS_20161014.jpg
