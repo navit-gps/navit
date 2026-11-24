@@ -60,6 +60,13 @@ aside. So it may differ a bit.**
 
    Update your configuration accordingly.
 
+.. code:: xml
+
+   <mapset enabled="yes">
+      <map type="mg" enabled="yes" data="/path/dirlan_ger/dem.map" />
+      <map type="mg" enabled="yes" data="/path/dirlan_ger/dem.map/smp3.smp" />
+   </mapset>
+
 Optional: You can save some space (up to 2G) by deleting all the \*d60\*
 files. They are not needed.
 

@@ -32,9 +32,11 @@ of the default navit.xml
 **Note : you need to disable any other mapset that could be already
 enabled**
 
-|
-| `` ``
-|
+.. code:: xml
+
+   <mapset enabled="yes">
+      <map type="shapefile" enabled="yes" data="$NAVIT_SHAREDIR/maps/shapefile/gis.osm_roads_free_1" />
+   </mapset>
 
 **Note : do not include the ".shp" extension** otherwise Navit will
 complain with
