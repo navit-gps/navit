@@ -12,10 +12,8 @@ Windows
 Download the binary distribution package of Navit
 -------------------------------------------------
 
-The Win32 binary distribution of Navit can be downloaded via the
-`Download Navit <Download_Navit>`__ page, or download the `Win32
-bleeding edge <http://download.navit-project.org/navit/win32/svn/>`__
-compiled daily from SVN.
+The Win32 binary distribution of Navit can be downloaded from the
+`Navit download center <https://download.navit-project.org/>`__.
 
 If the created start menu entry does not work, check if a 'bin' is too
 many in the link target location.
