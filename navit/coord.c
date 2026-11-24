@@ -370,40 +370,46 @@ void coord_format_with_sep(float lat, float lng, enum coord_format fmt, char *bu
      * minutes and degrees instead of being printed as 60. */
     switch (fmt) {
     case DEGREES_MINUTES:
-        lat_units = lround(lat * 600000.0); /* 1/10000 of a minute */
-        lng_units = lround(lng * 600000.0);
-        if (lat < 360)
+        if (lat < 360) {
+            lat_units = lround(lat * 600000.0); /* 1/10000 of a minute */
             size_used += g_snprintf(buffer + size_used, size - size_used, "%02ld°%07.4f' %c", lat_units / 600000,
                                     (lat_units % 600000) / 10000.0, lat_c);
+        }
         if ((lat < 360) && (lng < 360))
             size_used += g_snprintf(buffer + size_used, size - size_used, "%s", sep);
-        if (lng < 360)
+        if (lng < 360) {
+            lng_units = lround(lng * 600000.0);
             size_used += g_snprintf(buffer + size_used, size - size_used, "%03ld°%07.4f' %c", lng_units / 600000,
                                     (lng_units % 600000) / 10000.0, lng_c);
+        }
         break;
     case DEGREES_MINUTES_SECONDS:
-        lat_units = lround(lat * 360000.0); /* 1/100 of a second */
-        lng_units = lround(lng * 360000.0);
-        if (lat < 360)
+        if (lat < 360) {
+            lat_units = lround(lat * 360000.0); /* 1/100 of a second */
             size_used += g_snprintf(buffer + size_used, size - size_used, "%02ld°%02ld'%05.2f\" %c", lat_units / 360000,
                                     lat_units / 6000 % 60, (lat_units % 6000) / 100.0, lat_c);
+        }
         if ((lat < 360) && (lng < 360))
             size_used += g_snprintf(buffer + size_used, size - size_used, "%s", sep);
-        if (lng < 360)
+        if (lng < 360) {
+            lng_units = lround(lng * 360000.0);
             size_used += g_snprintf(buffer + size_used, size - size_used, "%03ld°%02ld'%05.2f\" %c", lng_units / 360000,
                                     lng_units / 6000 % 60, (lng_units % 6000) / 100.0, lng_c);
+        }
         break;
     case DEGREES_MINUTES_SECONDS_BRIEF:
-        lat_units = lround(lat * 3600.0); /* seconds */
-        lng_units = lround(lng * 3600.0);
-        if (lat < 360)
+        if (lat < 360) {
+            lat_units = lround(lat * 3600.0); /* seconds */
             size_used += g_snprintf(buffer + size_used, size - size_used, "%ld°%ld'%ld\"%c", lat_units / 3600,
                                     lat_units / 60 % 60, lat_units % 60, lat_c);
+        }
         if ((lat < 360) && (lng < 360))
             size_used += g_snprintf(buffer + size_used, size - size_used, "%s", sep);
-        if (lng < 360)
+        if (lng < 360) {
+            lng_units = lround(lng * 3600.0);
             size_used += g_snprintf(buffer + size_used, size - size_used, "%ld°%ld'%ld\"%c", lng_units / 3600,
                                     lng_units / 60 % 60, lng_units % 60, lng_c);
+        }
         break;
     /* compiler warned about those not being handled. What to do with them?*/
     case DEGREES_DECIMAL_ABSOLUTE:
