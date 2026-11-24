@@ -22,7 +22,7 @@ the sake of making this tutorial simple to follow. You can save that
 directory anywhere you want, but you will have to adapt the rest of the
 instructions of this guide to your particular case.
 
-``cd ~ ``
+``cd ~``
 
 Now, let's grab the code from Git. This assumes that you have git
 binaries installed.
@@ -56,8 +56,8 @@ compilation errors (though installing new libraries should be ok). If
 you install or remove libraries/packages and subsequently run into
 errors, do a clean CMake run:
 
-| `` rm -r ~/navit-build/*``
-| `` cmake ~/navit``
+| ``rm -r ~/navit-build/*``
+| ``cmake ~/navit``
 
 .. _running_the_compiled_binary:
 

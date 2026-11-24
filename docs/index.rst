@@ -72,7 +72,6 @@ Main Features
    user/configuration/QML_GUI
    user/configuration/QML2_GUI
    user/configuration/QML2_GUI_WIP
-   user/configuration/Skinning_the_SDL_GUI
    user/configuration/Speech
 
 
