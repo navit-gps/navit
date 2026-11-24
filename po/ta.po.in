@@ -7,13 +7,14 @@
 # தமிழ்நேரம் <anishprabu.t@gmail.com>, 2025.
 # jkoan <jkoan@gmx.de>, 2025.
 # தமிழ்நேரம் <tamilneram247@gmail.com>, 2026.
+# jkoan <jkoan@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.5.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-18 21:46+0100\n"
 "PO-Revision-Date: 2026-11-24 19:59+0000\n"
-"Last-Translator: தமிழ்நேரம் <tamilneram247@gmail.com>\n"
+"Last-Translator: jkoan <jkoan@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/navit/navit-core/"
 "ta/>\n"
 "Language: ta\n"
@@ -1568,8 +1569,8 @@ msgstr ""
 "\tகடற்படை [விருப்பங்கள்] [கட்டமைப்பு]\n"
 "\t-c <file>: இயல்புநிலை கோப்பைப் பயன்படுத்துவதற்குப் பதிலாக <file> கட்டமைப்பு கோப்பாக "
 "பயன்படுத்தவும்.\n"
-"\t-d <n>: உலகளாவிய பிழைத்திருத்த வெளியீட்டு அளவை <n> (0 = பிழை, 1 = எச்சரிக்கை, 2 "
-"= செய்தி, 3 = பிழைத்திருத்தம்) என அமைக்கவும்.\n"
+"\t-d <n>: உலகளாவிய பிழைத்திருத்த வெளியீட்டு அளவை <n> (0 = பிழை, 1 = எச்சரிக்கை, 2 = "
+"செய்தி, 3 = பிழைத்திருத்தம்) என அமைக்கவும்.\n"
 "\tகட்டமைப்பு கோப்பிலிருந்து அமைப்புகள் இன்னும் உயர் மட்டத்தை நிர்ணயிக்கும் இடத்தில் "
 "நடைமுறைக்கு வரும்.\n"
 "\t-H: இந்த பயன்பாட்டு தகவலை அச்சிட்டு வெளியேறவும்.\n"
