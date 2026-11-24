@@ -3,8 +3,11 @@
 Windows
 =======
 
-`320px|thumb|Navit under Windows, GTK Gui, Dutch
-translation <image:Navit_win32_dutch.JPG>`__
+.. figure:: Navit_win32_dutch.JPG
+   :alt: Navit under Windows, GTK GUI, Dutch translation
+   :width: 320px
+
+   Navit under Windows, GTK GUI, Dutch translation
 
 Download the binary distribution package of Navit
 -------------------------------------------------
