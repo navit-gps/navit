@@ -200,7 +200,15 @@ My final GOCE.c31 script for the C210 looks like:
 Finally, you might as well hardcode your language and force fullscreen
 mode, by setting the following in ``navit.xml``:
 
+.. code:: xml
+
+   <config xmlns:xi="http://www.w3.org/2001/XInclude" language="fr_FR">
+
 And also
+
+.. code:: xml
+
+   <gui type="internal" enabled="yes" fullscreen="1">
 
 See also
 --------
