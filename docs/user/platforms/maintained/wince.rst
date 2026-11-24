@@ -151,6 +151,10 @@ Language detection may not work on WinCE devices, so you may have to
 manually configure your language by manually setting it in
 ``navit.xml``. Here is an example for Austrian German:
 
+.. code:: xml
+
+   <config xmlns:xi="http://www.w3.org/2001/XInclude" language="de_AT">
+
 .. _download_a_map_from_openstreetmap:
 
 Download a Map from OpenStreetmap
@@ -181,7 +185,7 @@ Linux, Mac, ... "/".
 .. code:: xml
 
    <mapset enabled="yes">
-      <map type="binfile" enabled="yes" data="\StorageCard\maps\\specificmapfilename.bin"/>
+      <map type="binfile" enabled="yes" data="\StorageCard\maps\specificmapfilename.bin"/>
    </mapset>
 
 | It seems you need to specify the bin name in newer versions of navit.
