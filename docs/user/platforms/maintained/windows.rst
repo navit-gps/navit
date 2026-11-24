@@ -43,4 +43,4 @@ instructions following.
 See also
 --------
 
--  `Windows development <Windows_development>`__
+-  :doc:`/development/targets/windows_development`
