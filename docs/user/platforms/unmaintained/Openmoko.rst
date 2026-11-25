@@ -46,10 +46,10 @@ http://qtmoko.sourceforge.net/apps/qtmoko-navit.html
 Android on Freerunner
 ---------------------
 
-See `Android <Android>`__; instructions are the same as for other
-Android phones.
+See :doc:`Android </user/platforms/maintained/android>`; instructions are
+the same as for other Android phones.
 
 See also
 --------
 
--  `Openmoko development <Openmoko_development>`__
+-  Openmoko development

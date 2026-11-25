@@ -188,4 +188,4 @@ and multilingual speech.
 See also
 ''''''''
 
--  `TomTom development <TomTom_development>`__
+-  :doc:`TomTom development </development/targets/TomTom_development>`

@@ -14,7 +14,7 @@ OpenPandora
 -  get `a default
    navit.xml <http://navit.svn.sourceforge.net/viewvc/navit/trunk/navit/navit/navit_shipped.xml?view=log>`__
    and place it at /mnt/mmc2/pandora/appdata/navit/navit.xml
--  download `Maps <Maps>`__ and put the .bin file at
+-  download :doc:`Maps </user/configuration/maps/index>` and put the .bin file at
    /mnt/mmc2/pandora/appdata/navit/maps/test.bin
 -  get espeak:
 
@@ -117,7 +117,7 @@ Todo
 See also
 --------
 
--  `OpenPandora development <OpenPandora_development>`__
+-  OpenPandora development
 -  `Discussion on
    board.openpandora.org <http://boards.openpandora.org/index.php/topic/11559-navit/>`__
 -  `GPS on the pandorawiki.org <http://pandorawiki.org/GPS>`__
