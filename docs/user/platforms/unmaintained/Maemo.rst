@@ -474,15 +474,13 @@ Notes
    since this was activated for Click To Install from the daily SVN,
    there were already 7 downloads!
 
-osd enabled="yes" type="text" label="In
-${navigation.item[1].length[named]} " x="-320" y="-86"
+.. code:: xml
 
-``   font_size="650" w="235" h="45" align="4" background_color="#1b0877cc"/>``
+   <osd enabled="yes" type="text" label="In ${navigation.item[1].length[named]} " x="-320" y="-86"
+      font_size="650" w="235" h="45" align="4" background_color="#1b0877cc"/>
+   <osd enabled="yes" type="text" label="${navigation.item.destination_time[remaining]}" x="-200"
+      y="169" font_size="550" w="195" h="40" align="4" background_color="#1b0877cc"/>
 
-osd enabled="yes" type="text"
-label="${navigation.item.destination_time[remaining]}" x="-200"
-
-``   y="169" font_size="550" w="195" h="40" align="4" background_color="#1b0877cc"/>``
 
 .. |Screenshot-2009-02-06-21-59-28.png| image:: ../../configuration/Screenshot-2009-02-06-21-59-28.png
 .. |osd2.png| image:: ../../configuration/osd2.png
