@@ -3384,6 +3384,10 @@ static void osd_text_draw(struct osd_priv_common *opc, struct navit *navit, stru
     int yspacing = height / 2;
     int xspacing = height / 4;
     int imperial = 0;
+    char *destination_description;
+    char *destination_town;
+    char *destination_street;
+    char *destination_house_number;
 
     if (navit_get_attr(navit, attr_imperial, &imperial_attr, NULL))
         imperial = imperial_attr.u.num;
@@ -4033,6 +4037,7 @@ static void osd_volume_click(struct osd_priv_common *opc, struct navit *nav, int
         osd_volume_draw(opc, nav, NULL);
     }
 }
+
 static void osd_volume_init(struct osd_priv_common *opc, struct navit *nav) {
     struct volume *this = (struct volume *)opc->data;
 

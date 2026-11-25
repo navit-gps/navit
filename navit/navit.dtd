@@ -28,6 +28,12 @@
 <!ATTLIST navit tunnel_nightlayout CDATA #IMPLIED>
 <!ATTLIST navit nightlayout_auto CDATA #IMPLIED>
 <!ATTLIST navit sunrise_degrees CDATA #IMPLIED>
+<!ATTLIST navit destination_description CDATA #IMPLIED>
+<!ATTLIST navit destination_town_level CDATA #IMPLIED>
+<!ATTLIST navit destination_town CDATA #IMPLIED>
+<!ATTLIST navit destination_street CDATA #IMPLIED>
+<!ATTLIST navit destination_house_number CDATA #IMPLIED>
+<!ATTLIST navit address_format CDATA #IMPLIED>
 <!ELEMENT gui ANY>
 <!ATTLIST gui type CDATA #REQUIRED>
 <!ATTLIST gui menubar CDATA #IMPLIED>
