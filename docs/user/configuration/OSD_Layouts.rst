@@ -1706,8 +1706,6 @@ free to contact me here.
 .. |image12| image:: Speedcam_mobile.png
 .. |image13| image:: Speedcam.png
 .. |image14| image:: Redlight.png
-.. |image15| image:: 3d.png
-.. |image16| image:: 2d.png
 .. |image17| image:: Route.png
 .. |image18| image:: North.png
 .. |image19| image:: North2.png
