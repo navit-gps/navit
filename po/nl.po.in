@@ -3065,6 +3065,15 @@ msgstr "Zuid- en Midden-Amerika"
 msgid "Guyane Francaise"
 msgstr "Frans Guyana"
 
+msgid "destination"
+msgstr "bestemming"
+
+msgid "set to"
+msgstr "ingesteld op"
+
+msgid "no destination"
+msgstr "geen bestemming"
+
 #~ msgid ""
 #~ "Thank you for installing Navit!\n"
 #~ "\n"
