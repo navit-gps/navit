@@ -654,7 +654,7 @@ allowed
 * Make sure industry, sport, meadow, scrub, and cemetery render in correct order (#1021) [Johan Fitié]
 * Refactor Member Ignoring Method smell in NavitMapDownloader class. [emaiannone]
 * Treat sports\_centres as building if building=yes. [Stefan Wildemann]
-* Refactoring:GTK: use GDK\_KEY for keys instead of GDK\_ [David Heidelberg]
+* Refactoring:GTK: use `GDK_KEY` for keys instead of `GDK_` [David Heidelberg]
 * Improve layout (#1002) [Johan Fitié]
 * Use debian:latest in the CI to get more up-to-date tools (#971) [Joseph Herlant]
 
