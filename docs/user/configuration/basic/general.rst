@@ -121,3 +121,40 @@ The ``default_layout`` attribute of the navit tag allows to specify which layout
 This string should match the ``name`` attribute of the required ``<layout>`` tag.
 
 See :doc:`layout options </user/configuration/basic/layout>` for more details.
+
+.. _language_preference:
+
+Language preference for labels
+------------------------------
+Navit can display map labels in your preferred language using OSM
+``name:<lang>`` tags (e.g. ``name:en``, ``name:fr``). Add a
+``lang_pref`` attribute to the ``<navit>`` tag with a comma-separated
+list of language codes:
+
+.. code-block:: xml
+
+	lang_pref="de,en"
+
+The list is checked left-to-right. For each label, Navit looks for a
+matching ``name:<lang>`` tag and shows the first one found. If no
+translation matches any preferred language, the OSM ``name`` tag is
+shown as fallback. A ``lang_pref`` entry matches the primary language
+subtag only, so ``de`` matches ``name:de`` as well as ``name:de-DE``
+or ``name:de_AT``. If several translations match a preference, the one
+appearing first in the map data is used. Absence of ``lang_pref`` is
+equivalent to showing the native ``name`` tag (backwards-compatible).
+
+Translated names are also used for town and district search: a town can
+be found by its native name or by any of its translated names. Even
+though a town is indexed under several names, it is returned only once
+per search. ``lang_pref`` does not restrict which names are searchable;
+it only influences which name is displayed when several are available.
+A search result shows a translated name in a preferred language that
+matches the query first, then any translated name matching the query,
+then the first name in a preferred language, and falls back to the
+native name.
+
+Maps must be rebuilt with a recent version of ``maptool`` for the
+translated names to be included in the map's search index. Maps built
+with older tools only support searching by native names, and labels stay
+in the native language.
