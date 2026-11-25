@@ -375,6 +375,18 @@ int item_coord_is_node(struct item *it) {
     return 0;
 }
 
+/* Default access of a barrier without access tags; -1 for non-barrier types. */
+int item_barrier_default_flags(enum item_type type) {
+    switch (type) {
+    case type_barrier_bollard:
+    case type_barrier_cycle:
+    case type_barrier_lift_gate:
+        return AF_PBH;
+    default:
+        return -1;
+    }
+}
+
 /**
  * @brief Resets the "attribute pointer" of an item
  *
