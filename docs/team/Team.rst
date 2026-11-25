@@ -100,35 +100,35 @@ guys!
      - TomTom, WinCE
      - Android, Manajaro, Windows
      -
-   * - `User:Mineque <User:Mineque>`__
+   * - Mineque
      - Design `Internal GUI <Internal_GUI>`__ / `OSD <OSD>`__
      - Michael Madej
      -
      - Vista 32bit, Ubuntu 64bit
      -
      -
-   * - `User:rphlx <User:rphlx>`__ / bcr
+   * - rphlx / bcr
      -
      - Bryan Rittmeyer
      -
      -
      -
      -
-   * - `user:Zaxl <user:Zaxl>`__
+   * - Zaxl
      -
      - Alexander Atanasov
      -
      -
      -
      -
-   * - `User:Zilux <User:Zilux>`__
+   * - Zilux
      - `Openmoko <Openmoko>`__ port
      - Gilles Casse
      -
      -
      -
      -
-   * - `User:Afaber <User:Afaber>`__
+   * - Afaber
      - `Windows <Windows>`__ port
      -
      -
@@ -144,52 +144,87 @@ Hall of fame
 
 This had been contributors for a long time, but the had to quit
 
-+-----------+-----------+-----------+----------+-----------+----+
-| nick      | Tasks     | Full Name | SVN name | Devices   | OS |
-+===========+===========+===========+==========+===========+====+
-| `User:Mineque <User:Mineque>`__ | Design `Internal GUI <Internal_GUI>`__ / `OSD <OSD>`__ | Michael Madej | | Vista 32bit, Ubuntu 64bit | | |
-+-----------+-----------+-----------+----------+-----------+----+
-| `User:rphlx <User:rphlx>`__ / bcr | | Bryan Rittmeyer | | | | |
-+-----------+-----------+-----------+----------+-----------+----+
-| `user:Zaxl <user:Zaxl>`__ | | Alexander Atanasov | | | | |
-+-----------+-----------+-----------+----------+-----------+----+
-| `User:Zilux <User:Zilux>`__ | `Openmoko <Openmoko>`__ port | Gilles Casse | | | | |
-+-----------+-----------+-----------+----------+-----------+----+
-| `User:Afaber <User:Afaber>`__ | `Windows <Windows>`__ port | | | | | |
-+-----------+-----------+-----------+----------+-----------+----+
-| `Us       | `MacOS <  | Andrea    |          |           |    |
-| er:Sanzog | MacOS>`__ | Ghensi    |          |           |    |
-| henzo <Us | port      |           |          |           |    |
-| er:Sanzog |           |           |          |           |    |
-| henzo>`__ |           |           |          |           |    |
-+-----------+-----------+-----------+----------+-----------+----+
-| `User:    | `MacOS <  |           |          |           |    |
-| ThibThib  | MacOS>`__ |           |          |           |    |
-| <User:Thi | port      |           |          |           |    |
-| bThib>`__ |           |           |          |           |    |
-+-----------+-----------+-----------+----------+-----------+----+
-| `User:h   | `WebOS <  |           | PalmPre  | WebOS     |    |
-| ape <User | WebOS>`__ |           |          |           |    |
-| :hape>`__ | port      |           |          |           |    |
-+-----------+-----------+-----------+----------+-----------+----+
-|           | patches   | Naurelien |          |           |    |
-|           |           | Jacobs    |          |           |    |
-+-----------+-----------+-----------+----------+-----------+----+
-|           | patches   | Matt      |          |           |    |
-|           |           | Callow    |          |           |    |
-+-----------+-----------+-----------+----------+-----------+----+
-| `user:    | debian    | vincent   |          |           |    |
-| latouche  | packages  | touchard  |          |           |    |
-| <user:lat |           |           |          |           |    |
-| ouche>`__ |           |           |          |           |    |
-+-----------+-----------+-----------+----------+-----------+----+
-| `u        | OSD       |           | tegzed   | Ubuntu    |    |
-| ser:Dando | spee      |           |          |           |    |
-| r <user:D | d-warner, |           |          |           |    |
-| andor>`__ | odometer  |           |          |           |    |
-|           | and       |           |          |           |    |
-|           | stopwatch |           |          |           |    |
-+-----------+-----------+-----------+----------+-----------+----+
+.. list-table::
+   :header-rows: 1
+
+   * - nick
+     - Tasks
+     - Full Name
+     - SVN name
+     - Devices
+     - OS
+   * - Mineque
+     - Design `Internal GUI <Internal_GUI>`__ / `OSD <OSD>`__
+     - Michael Madej
+     -
+     - Vista 32bit, Ubuntu 64bit
+     -
+   * - rphlx / bcr
+     -
+     - Bryan Rittmeyer
+     -
+     -
+     -
+   * - Zaxl
+     -
+     - Alexander Atanasov
+     -
+     -
+     -
+   * - Zilux
+     - `Openmoko <Openmoko>`__ port
+     - Gilles Casse
+     -
+     -
+     -
+   * - Afaber
+     - `Windows <Windows>`__ port
+     -
+     -
+     -
+     -
+   * - Sanzoghenzo
+     - `MacOS <MacOS>`__ port
+     - Andrea Ghensi
+     -
+     -
+     -
+   * - ThibThib
+     - `MacOS <MacOS>`__ port
+     -
+     -
+     -
+     -
+   * - hape
+     - `WebOS <WebOS>`__ port
+     -
+     - PalmPre
+     - WebOS
+     -
+   * -
+     - patches
+     - Naurelien Jacobs
+     -
+     -
+     -
+   * -
+     - patches
+     - Matt Callow
+     -
+     -
+     -
+   * - `user:latouche <user:latouche>`__
+     - debian packages
+     - vincent touchard
+     -
+     -
+     -
+   * - `user:Dandor <user:Dandor>`__
+     - OSD speed-warner, odometer and stopwatch
+     -
+     - tegzed
+     - Ubuntu
+     -
 
 See also
 --------
