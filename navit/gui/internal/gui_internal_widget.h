@@ -40,6 +40,12 @@ struct widget {
     void (*on_resize)(struct gui_priv *priv, struct widget *widget, void *data, int neww, int newh);
     enum gui_internal_reason reason;
     int datai;
+    /**
+     * Distance used to break ties between equally good address search matches,
+     * scaled so that only the ordering is meaningful.  G_MAXINT means "not
+     * applicable / unknown", which keeps it sorting last.
+     */
+    int sort_distance_sq;
     void *data;
     /**
      * @brief A function to deallocate data

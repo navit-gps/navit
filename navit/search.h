@@ -26,6 +26,7 @@
 struct attr;
 struct mapset;
 struct search_list;
+struct coord_geo;
 
 #ifdef __cplusplus
 extern "C" {
@@ -80,6 +81,8 @@ struct search_list_result {
 
 /* prototypes */
 struct search_list *search_list_new(struct mapset *ms);
+void search_list_set_reference_position(struct search_list *this_, const struct coord_geo *pos);
+int search_list_result_distance_sq(struct search_list *this_, struct search_list_result *res);
 int search_list_level(enum attr_type attr_type);
 void search_list_search(struct search_list *this_, struct attr *search_attr, int partial);
 char *search_postal_merge(char *mask, char *new_);
