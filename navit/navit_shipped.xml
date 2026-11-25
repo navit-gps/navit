@@ -338,7 +338,9 @@ Waypoint</text></img>
 			<roadprofile item_types="track_paved" speed="5"/>
 			<roadprofile item_types="cycleway" speed="5"/>
 			<roadprofile item_types="street_0,street_1_city,street_2_city" speed="5"/>
-			<roadprofile item_types="street_3_city,street_4_city,street_service,street_parking_lane" speed="5"/>
+			<!-- serviceways etc. are OK but lower preference -->
+			<roadprofile item_types="street_service,street_parking_lane" speed="2" />
+			<roadprofile item_types="street_3_city,street_4_city" speed="5"/>
 			<roadprofile item_types="street_1_land,street_2_land" speed="5"/>
 			<roadprofile item_types="street_3_land,street_4_land" speed="5"/>
 			<!--roundabout does not apply to OSMaps -->
@@ -415,6 +417,9 @@ Waypoint</text></img>
 			<announce type="cycleway,track_paved,track_gravelled,street_pedestrian,footway" level0="30" level1="100" level2="200"/>
 			<announce type="path,track_ground" level0="20" level1="75" level2="150"/>
 			<announce type="steps" level0="10" level1="30" level2="50"/>
+			<announce type="bridleway,hiking,hiking_mountain,track_unpaved,track_grass" level0="20" level1="75" level2="150"/>
+			<announce type="roundabout" level0="25" level1="100" level2="200"/>
+			<announce type="ferry" level0="50" level1="200" level2="500"/>
 		</navigation>
 
 		<!--
