@@ -41,26 +41,20 @@ aside. So it may differ a bit.**
 
 #. Now, you should get a directory named like DIRLAN_GER. It contains:
 
-    - The ``dem.map`` folder with all the major roads and towns of
+   -  The ``dem.map`` folder with all the major roads and towns of
       Europe...
+   -  Five ``smpX.smp`` folders, which contain the details of countries:
 
-    ...and five ``smpX.smp`` folders, which contain the details of
-    countries:
-
-    -  ``smp1``: DK,S,N,IS,FIN,N
-
-    -  ``smp2``: F,E,GBZ,P,AND,MC
-
-    -  ``smp3``: Germany
-
-    -  ``smp4``:
-       CZ,SK,RSM,EST,GEO,LV,LT,MD,RUS,UA,BY,GR,H,I,RO,CH,A,PL,AL,MT,CY,BG,FL,SRB,MNE,HR,SLO,BIH,MK,TR,AZ,AM,V
-
-    -  ``smp5``: NL,B,GB,L,IRL
+      -  ``smp1``: DK,S,N,IS,FIN,N
+      -  ``smp2``: F,E,GBZ,P,AND,MC
+      -  ``smp3``: Germany
+      -  ``smp4``: CZ,SK,RSM,EST,GEO,LV,LT,MD,RUS,UA,BY,GR,H,I,RO,CH,
+         A,PL,AL,MT,CY,BG,FL,SRB,MNE,HR,SLO,BIH,MK,TR,AZ,AM,V
+      -  ``smp5``: NL,B,GB,L,IRL
 
    Update your configuration accordingly.
 
-.. code:: xml
+.. code-block:: xml
 
    <mapset enabled="yes">
       <map type="mg" enabled="yes" data="/path/dirlan_ger/dem.map" />

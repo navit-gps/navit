@@ -29,7 +29,7 @@ Connect GPS
 -----------
 Now connect your GPS. The exact procedure for this varies depending on the type of GPS device you are using and how you connect it to your computer. On Linux / Unix systems, your GPS should typically show up as a character device, i.e., you will find an entry in the /dev folder corresponding to your GPS device. Again, the file name depends on the type and connection method of your GPS receiver. See [[Connecting a GPS receiver]] for details.
 
-Most GPS receiver will output the position in [[NMEA]] format, which can be used directly in Navit or using a GPS daemon program such as **gpsd**. A simple way to test whether your GPS receiver works and outputs NMEA data is to dump its output to a console. For example, if your GPS receiver can be found at **/dev/rfcomm0**, you can dump its output using
+Most GPS receiver will output the position in ``NMEA`` format, which can be used directly in Navit or using a GPS daemon program such as **gpsd**. A simple way to test whether your GPS receiver works and outputs NMEA data is to dump its output to a console. For example, if your GPS receiver can be found at **/dev/rfcomm0**, you can dump its output using
 
 .. code-block:: bash
 

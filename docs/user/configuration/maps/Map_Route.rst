@@ -16,7 +16,7 @@ should go (about 1.2 GB) update your navit.xml file accordingly.
 
 e.g.:
 
-.. code:: xml
+.. code-block:: xml
 
    <mapset enabled="yes">
       <map type="mg" enabled="yes" data="/usr/local/share/navit/maps/d7.map" />
