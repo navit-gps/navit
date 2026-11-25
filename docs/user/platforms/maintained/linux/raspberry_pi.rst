@@ -8,8 +8,8 @@ Raspberry Pi
 Compiling for the Raspberry Pi
 ------------------------------
 
-Compiling for the Pi is (of course) mostly like `Compiling for
-Linux <linux_development>`__.
+Compiling for the Pi is (of course) mostly like
+:doc:`Compiling for Linux </development/targets/linux_development>`.
 
 (Thanks to Angelus88, who posted it here:
 `1 <https://forum.navit-project.org/viewtopic.php?f=11&t=405>`__.)
@@ -30,7 +30,7 @@ Prefer to install yourself on Raspian?
 ''''''''''''''''''''''''''''''''''''''
 
 First of all, we will have to deal with the
-`dependencies <dependencies>`__:
+:doc:`dependencies </development/targets/Dependencies>`:
 
 .. code:: bash
 

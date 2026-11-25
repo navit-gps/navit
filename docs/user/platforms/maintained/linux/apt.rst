@@ -1,7 +1,8 @@
 Debian / Ubuntu / Raspbian / apt based
 ======================================
 
-Installing Navit is easy using the distributions package manager using apt:
+Installing Navit is easy using the distribution's package manager with apt:
+
 .. code-block:: bash
 
    apt install navit
@@ -9,14 +10,13 @@ Installing Navit is easy using the distributions package manager using apt:
 .. warning::
     The package repository of your distribution might not have the latest and greatest version of Navit available.
 
-    Cou can check with :code:`navit -v` to see which version you got installed
+    You can check with :code:`navit -v` to see which version you got installed.
 
-    The following sections will dicribe alternative ways to install Navit with a more recent version.
-
-Using a PPA
------------
-TBD
+    The following section describes an alternative way to install Navit with a more recent version.
 
 Building yourself
 -----------------
-TBD
+
+See :doc:`/development/targets/linux_development` for instructions to build
+Navit from source on Linux, and :doc:`/development/targets/Debian_dependencies`
+for the packages to install first.

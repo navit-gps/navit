@@ -5,7 +5,8 @@ Unlocking Mio C310 and C210 for Navit
 
 This is a tutorial for unlocking Mio C310 and C210 devices in order to
 have them run Navit. For instructions on how to run and configure Navit
-for WinCE, please refer to the `Windows CE <WinCE>`__ page. Mio C210 and
+for WinCE, please refer to the
+:doc:`Windows CE </user/platforms/maintained/wince>` page. Mio C210 and
 Mio C310 devices run Windows CE 4.2, and can be unlocked to execute any
 custom Windows CE application, including navit.exe.
 
@@ -149,7 +150,8 @@ Mio Map icon on the desktop.
 Install navit on your unlock SD card
 ------------------------------------
 
-Follow the instructions on the `WinCE <WinCE>`__ page. Once your navit
+Follow the instructions on the
+:doc:`WinCE </user/platforms/maintained/wince>` page. Once your navit
 binary is on the SD card, you can run it by clicking on the CEcmd
 utility on the desktop, navigate to the ``\Storage Card\navit`` folder,
 and execute ``navit.exe`` Once this is working properly, you can add
@@ -185,7 +187,7 @@ My final GOCE.c31 script for the C210 looks like:
 | ``Favorites RegEdit "\Storage Card\Programs\Utils\RegEdit.exe"``
 | ``Favorites Restart "\Storage Card\Programs\Utils\Restart.exe"``
 | ``Favorites TaskMgr "\Storage Card\Programs\Utils\ITaskMgr.exe"``
-| ``#Here you can create your shortcuts to the programs ``
+| ``#Here you can create your shortcuts to the programs``
 | ``Programs  RegEdit "\Storage Card\Programs\Utils\RegEdit.exe"``
 | ``Programs  ResInfo "\Storage Card\Programs\Utils\ResInfo.exe"``
 | ``#Set the taskbar to AutoHide``
@@ -200,9 +202,17 @@ My final GOCE.c31 script for the C210 looks like:
 Finally, you might as well hardcode your language and force fullscreen
 mode, by setting the following in ``navit.xml``:
 
+.. code:: xml
+
+   <config xmlns:xi="http://www.w3.org/2001/XInclude" language="fr_FR">
+
 And also
+
+.. code:: xml
+
+   <gui type="internal" enabled="yes" fullscreen="1">
 
 See also
 --------
 
--  `WinCE development <WinCE_development>`__
+-  :doc:`WinCE development </development/targets/wince_development>`

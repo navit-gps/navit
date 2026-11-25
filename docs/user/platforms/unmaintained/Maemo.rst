@@ -1,11 +1,14 @@
 Maemo
 =====
 
-.. raw:: mediawiki
+.. note::
+   Currently we don't provide an official Maemo build!
 
-   {{note|Currently we don't provide an official Maemo build!}}
+.. figure:: GuiInternalWithMapOnMaemo.png
+   :alt: Navit on Maemo
+   :width: 320px
 
-`320px|thumb|Navit on Maemo <image:GuiInternalWithMapOnMaemo.png>`__
+   Navit on Maemo
 
 | The following instructions are a basic translation of this german
   tutorial `1 <http://ccc.zerties.org/index.php/Navit_auf_n900>`__.
@@ -43,7 +46,7 @@ Dont forget about the additional packages, to use all features:
 Map download
 ------------
 
-You need to get `OpenStreetMap <OpenStreetMap>`__ packages for map
+You need to get :doc:`OpenStreetMap </user/configuration/maps/osm>` packages for map
 support. Place them for example in a navit folder at your SD card.
 
 Configuration
@@ -52,7 +55,7 @@ Configuration
 Copy /etc/navit/navit.xml to /home/user/.navit/navit.xml and adapt this
 file below the home directory.
 
-This basically follows the `Configuration <Configuration>`__
+This basically follows the :doc:`Configuration </user/configuration/basic>`
 instructions. But there are a few platform specific changes necessary:
 
 -
@@ -160,7 +163,7 @@ appears in the list, click on it. This will bring up a sub menu from
 which you should be able to select "View on Map".
 
 For information on the internal gui using the above example files refer
-to `Internal GUI <Internal_GUI>`__
+to :doc:`Internal GUI </user/configuration/Internal_GUI>`
 
 .. _keep_display_lit:
 
@@ -191,7 +194,7 @@ Some of us are not content with using pre-compiled packages. Here then
 are links to building Navit from source using Scratchbox and
 OpenEmbedded/bitbake:
 
-#. `Scratchbox development <Scratchbox_development>`__
+#. Scratchbox development
 
 .. _configuration_options:
 
@@ -322,7 +325,8 @@ Here is a third option. This is designed for full screen mode but will
 work okay in windowed mode with some minor overlap of the compass. Note
 that the text sizes for all map labels was increased by 4 points to make
 the street names easier to read on the tablet. To accomplish this please
-reference the following link `Configuration <Configuration>`__. The link
+reference the following link
+:doc:`Configuration </user/configuration/basic>`. The link
 also shows how you can change the font types used for labels for easier
 reading.
 
@@ -373,7 +377,7 @@ thread <http://talk.maemo.org/showthread.php?p=1253609>`__.
 
 gives:|N900-OSD.png|
 
-`Sup <User:Sup>`__ (`talk <User_talk:Sup>`__) 16:41, 9 January 2013
+Sup (talk) 16:41, 9 January 2013
 (CET)
 
 .. _icon_source_setting_for_osd:
@@ -470,15 +474,13 @@ Notes
    since this was activated for Click To Install from the daily SVN,
    there were already 7 downloads!
 
-osd enabled="yes" type="text" label="In
-${navigation.item[1].length[named]} " x="-320" y="-86"
+.. code:: xml
 
-``   font_size="650" w="235" h="45" align="4" background_color="#1b0877cc"/>``
+   <osd enabled="yes" type="text" label="In ${navigation.item[1].length[named]} " x="-320" y="-86"
+      font_size="650" w="235" h="45" align="4" background_color="#1b0877cc"/>
+   <osd enabled="yes" type="text" label="${navigation.item.destination_time[remaining]}" x="-200"
+      y="169" font_size="550" w="195" h="40" align="4" background_color="#1b0877cc"/>
 
-osd enabled="yes" type="text"
-label="${navigation.item.destination_time[remaining]}" x="-200"
-
-``   y="169" font_size="550" w="195" h="40" align="4" background_color="#1b0877cc"/>``
 
 .. |Screenshot-2009-02-06-21-59-28.png| image:: ../../configuration/Screenshot-2009-02-06-21-59-28.png
 .. |osd2.png| image:: ../../configuration/osd2.png

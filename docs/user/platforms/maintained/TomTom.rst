@@ -123,9 +123,6 @@ for you.
 | Install       | WIP            | WIP            | WIP            |
 +---------------+----------------+----------------+----------------+
 
-OLD/WIP
--------
-
 .. _tomtom_gps_settings:
 
 TomTom GPS settings
@@ -191,4 +188,4 @@ and multilingual speech.
 See also
 ''''''''
 
--  `TomTom development <TomTom_development>`__
+-  :doc:`TomTom development </development/targets/TomTom_development>`

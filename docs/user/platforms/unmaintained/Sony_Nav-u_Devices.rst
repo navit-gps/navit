@@ -5,7 +5,8 @@ Sony Nav-u Devices
 
 This is a tutorial for unlocking Sony Nav-u devices in order to have
 them run Navit. For instructions on how to run and configure Navit for
-WinCE, please refer to the `Windows CE <WinCE>`__ page. Sony Nav-u
+WinCE, please refer to the
+:doc:`Windows CE </user/platforms/maintained/wince>` page. Sony Nav-u
 devices run Windows CE, and can be tweaked to execute navit.exe.
 
 In order to run Navit on your Sony nav-u device, follow the steps below:
@@ -31,8 +32,9 @@ Upload unlock scripts to the device
    (alternatively you can go to "Mobile device" in Explorer).
 -  Browse to "``Mounted Volume``".
 -  Create a folder called "navit" and copy the contents of the Navit
-   package for WinCE (``navit.zip``, see the `Windows CE <WinCE>`__
-   page) into that folder.
+   package for WinCE (``navit.zip``, see the
+   :doc:`Windows CE </user/platforms/maintained/wince>` page) into that
+   folder.
 -  Copy ``sirftech.exe`` into "``Mounted Volume``".
 -  Copy the contents of the ``bin/PPC`` from ``mortscript.zip`` into
    "``Mounted Volume\Sony\nav-u``"

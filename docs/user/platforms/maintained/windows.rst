@@ -3,26 +3,23 @@
 Windows
 =======
 
-`320px|thumb|Navit under Windows, GTK Gui, Dutch
-translation <image:Navit_win32_dutch.JPG>`__
+.. figure:: Navit_win32_dutch.JPG
+   :alt: Navit under Windows, GTK GUI, Dutch translation
+   :width: 320px
+
+   Navit under Windows, GTK GUI, Dutch translation
 
 Download the binary distribution package of Navit
 -------------------------------------------------
 
-The Win32 binary distribution of Navit can be downloaded via the
-`Download Navit <Download_Navit>`__ page, or download the `Win32
-bleeding edge <http://download.navit-project.org/navit/win32/svn/>`__
-compiled daily from SVN.
+The Win32 binary distribution of Navit can be downloaded from the
+`Navit download center <https://download.navit-project.org/>`__.
 
 If the created start menu entry does not work, check if a 'bin' is too
 many in the link target location.
 
 Tips and Tricks
 ---------------
-
-.. warning::
-
-   The [[Win32 GUI]] build is broken, so use [[Gui internal]] instead!
 
 Compiling, configuring and running Navit on Windows can be a challenge
 at times. Below are a few hints, in addition to the more detailed
@@ -42,4 +39,4 @@ instructions following.
 See also
 --------
 
--  `Windows development <Windows_development>`__
+-  :doc:`/development/targets/windows_development`
