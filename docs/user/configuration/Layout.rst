@@ -101,7 +101,7 @@ layout, and all associated icons and POI image files.
 Snow
 ~~~~
 
-.. figure:: Snow.png
+.. figure:: snow.png
    :alt: Snow-style map layout
    :width: 300px
 
