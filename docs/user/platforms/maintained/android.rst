@@ -6,9 +6,10 @@ Android
 .. note::
    Developers wanted! To maintain this port, the build and implementing new features. See :doc:`/development/targets/android`
 
-|First run of Navit| Navit is available on Android! Using the `Internal
-GUI <Internal_GUI>`__, Navit enables complete offline routing anywhere
-in the world using map data from `OpenStreetMap <OpenStreetMap>`__. Note
+|First run of Navit| Navit is available on Android! Using the
+:doc:`Internal GUI </user/configuration/Internal_GUI>`, Navit enables
+complete offline routing anywhere in the world using map data from
+:doc:`OpenStreetMap </user/configuration/maps/osm>`. Note
 that this is not an Android app in the traditional sense - it is a
 direct port of Navit (with a couple of extra features for Android), so
 isn't as integrated with Android as you may expect from other apps -
@@ -76,7 +77,7 @@ the data directory.
    automatically center on your position if the on-board GPS has a fix)
    change the **<navit center=...** attribute to your home coordinates.
 
--  See `Configuration <Configuration>`__ for additional settings.
+-  See :doc:`Configuration </user/configuration/basic>` for additional settings.
 
 Layouts
 ~~~~~~~
@@ -161,7 +162,7 @@ There are two options here:
 See also
 --------
 
--  `Android development <Android_development>`__
+-  :doc:`Android development </development/targets/android>`
 
 .. |First run of Navit| image:: Andoidscreenshot_001.png
    :width: 150px

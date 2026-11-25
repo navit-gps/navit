@@ -10,7 +10,7 @@ WinCE
 This is a tutorial for running Navit on a machine with Windows Core
 Embedded Systems and Mobile. If you want to build Navit on your machine
 please follow the instruction on the page
-`WinCE_development <WinCE_development>`__.
+:doc:`WinCE development </development/targets/wince_development>`.
 
 =================== =======
 Version             Support
@@ -34,7 +34,7 @@ Make sure your device is compatible
 First, you will have to make sure that your device is compatible, that
 is to say, to make sure you can install arbitrary cab files or run
 arbitrary exe files on it. For some devices, there are unlock procedures
-(`Mio C310 and C210 <Unlocking_Mio_C310_and_C210_for_Navit>`__) that
+(:doc:`Mio C310 and C210 </user/platforms/unmaintained/mio_CX10>`) that
 will allow to escape from the main program and get a Windows CE desktop.
 
 Download cab or zip Navit package
@@ -121,7 +121,7 @@ port (eg: "COM5") to get it work (added by Killerhippy, hope it helps)
 Using Navigation Next Turn OSD item
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To use the `navigation_next_turn <OSD#navigation_next_turn>`__ OSD item
+To use the :ref:`navigation_next_turn <osd_navigation_next_turn>` OSD item
 on WinCE, the icon must be explicitly sourced. In ``navit.xml`` it
 should something like:
 
@@ -235,14 +235,13 @@ Vehicle settings for various devices
 +-------------------------------------------------------+-------------+
 | Navigon 70/71 Easy                                    |             |
 +-------------------------------------------------------+-------------+
-| `DigiWalker Mio                                       |             |
-| C210 <Unlocking_Mio_C310_and_C210_for_Navit>`__       |             |
+| :doc:`Mio C210 <../unmaintained/mio_CX10>`            |             |
 +-------------------------------------------------------+-------------+
-| `Sony Nav-u <Sony_Nav-u_Devices>`__                   |             |
+| :ref:`Sony Nav-u <sony_nav_u_devices>`                |             |
 +-------------------------------------------------------+-------------+
 
 
 See also
 --------
 
--  `WinCE development <WinCE_development>`__
+-  :doc:`WinCE development </development/targets/wince_development>`
