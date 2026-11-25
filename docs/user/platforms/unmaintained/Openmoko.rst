@@ -22,19 +22,21 @@ opkg.
 SHR
 ---
 
-An other option without compiling navit is to follow the instructions in
+Another option without compiling navit is to follow the instructions in
 the `SHR User Manual <http://wiki.openmoko.org/wiki/SHR_User_Manual>`__
 of the SHR distribution for your freerunner. SHR is one of the available
 `distributions <http://wiki.openmoko.org/wiki/Distribution>`__ on your
 freerunner.
 
--  You can flash the memory of your freerunner with the SHR distribution
-   and install Navit with the installer opkg
+#. Flash the memory of your freerunner with the SHR distribution and
+   install Navit with the installer opkg:
 
-`` opkg install navit ``
+   .. code:: bash
 
--  For further details follow the instructions in the `SHR User
-   Manual <http://wiki.openmoko.org/wiki/SHR_User_Manual>`__
+      opkg install navit
+
+#. For further details, follow the instructions in the `SHR User
+   Manual <http://wiki.openmoko.org/wiki/SHR_User_Manual>`__.
 
 QTMoko
 ------
