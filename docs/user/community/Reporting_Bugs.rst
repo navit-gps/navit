@@ -11,7 +11,7 @@ that the developers receive a clear and helpful bug report.
 .. _reporting_a_bug:
 
 Reporting a bug
-~~~~~~~~~~~~~~~
+---------------
 
 .. note::
 
@@ -28,7 +28,7 @@ Reporting a bug
 
 
 Reporting a segfault
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 If Navit crashes with a segmentation fault, a backtrace is the most
 valuable information you can provide.
@@ -46,7 +46,7 @@ valuable information you can provide.
 
 
 Information you should provide
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------
 
 The following information for each type of problem will enable the
 developers to very quickly isolate the section of code which is causing
@@ -55,7 +55,7 @@ in your bug report.
 
 
 For usage problems
-------------------
+^^^^^^^^^^^^^^^^^^
 
 -  Which version of navit you are using, and whether you have compiled
    it yourself or where you downloaded the install file from or how you
@@ -74,8 +74,10 @@ For usage problems
 In addition, please provide the following (where appropriate):
 
 
+.. _reporting_coordinates_for_problems:
+
 Reporting coordinates for problems
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------
 
 Assuming you are using :doc:`../configuration/maps/osm` map packages:
 
@@ -85,21 +87,23 @@ Assuming you are using :doc:`../configuration/maps/osm` map packages:
 
 
 Routing errors
-~~~~~~~~~~~~~~
+--------------
 
 Problems may include illegal routes (such as the wrong way on a one-way
 road), routes which are sub-optimum or no route found at all!
 
--  `Report the coordinates of your position and your
-   destination <#Reporting_coordinates_for_problems>`__.
+-  :ref:`Report the coordinates of your position and your
+   destination <reporting_coordinates_for_problems>`.
 -  Try routing to a point between your position and destination and
    report the coordinates at which point the route fails.
 -  If you are able to route, but there is something wrong with the
    route, report what Navit gave you and what you expected.
 
 
+.. _navigation_errors:
+
 Navigation errors
-~~~~~~~~~~~~~~~~~
+-----------------
 
 Problems may include missing announcements, wrong and/or misleading
 announcements, and unnecessary announcements. Please enable the
@@ -121,10 +125,10 @@ required. If the map looks correct, but Navit provided an incorrect
 announcement, the problem is most likely tracking and/or announcement
 related
 
--  `Report the coordinates of your position and your
-   destination <#Reporting_coordinates_for_problems>`__.
--  `Report the coordinate(s) where the incident
-   occurs <#Reporting_coordinates_for_problems>`__.
+-  :ref:`Report the coordinates of your position and your
+   destination <reporting_coordinates_for_problems>`.
+-  :ref:`Report the coordinate(s) where the incident
+   occurs <reporting_coordinates_for_problems>`.
 -  Report what Navit gave you and what you expected.
 
 Note that quite a few navigation problems occur due to bad map data -
@@ -133,18 +137,18 @@ this can only be solved by improving the data in
 
 
 Announcement errors
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 Problems may include announcements too early, announcements too late,
 incorrect announcements, repeated announcements, missing announcements
 etc.
 
 -  First try to determine whether this isn't a
-   `tracking <#Tracking_errors>`__ and or `navigation <#Navigation>`__
-   problem.
--  \* `Report the coordinate(s) where the error occurs, where you came
+   :ref:`tracking <tracking_errors>` and or
+   :ref:`navigation <navigation_errors>` problem.
+-  :ref:`Report the coordinate(s) where the error occurs, where you came
    from and your destination (if routing was
-   enabled) <#Reporting_coordinates_for_problems>`__.
+   enabled) <reporting_coordinates_for_problems>`.
 -  If possible, provide an NMEA log (see
    :doc:`../configuration/basic`) and add the time at which the
    problem occurred.
@@ -152,15 +156,17 @@ etc.
    real-life, and where Navit indicated you to be.
 
 
+.. _tracking_errors:
+
 Tracking errors
-~~~~~~~~~~~~~~~
+---------------
 
 Problems may include the indication of an incorrect vehicle position, or
 jumping between correct and incorrect positions.
 
--  `Report the coordinate(s) where the error occurs, where you came from
-   and your destination (if routing was
-   enabled) <#Reporting_coordinates_for_problems>`__.
+-  :ref:`Report the coordinate(s) where the error occurs, where you came
+   from and your destination (if routing was
+   enabled) <reporting_coordinates_for_problems>`.
 -  If possible, provide an NMEA log (see
    :doc:`../configuration/basic`) and add the time at which the
    problem occurred.
@@ -169,7 +175,7 @@ jumping between correct and incorrect positions.
 
 
 For compile/install problems
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 First, please perform a "clean" build: Delete and recreate your build
 directory, then perform a complete build (cmake + make). Normally,

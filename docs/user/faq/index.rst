@@ -15,9 +15,9 @@ Flooded land
 ~~~~~~~~~~~~
 
 Sometimes areas appear to be covered with water, even if there is just
-land. This is a result of defective `OpenStreetMap <OpenStreetMap>`__
-data, here esp. the `coastline
-borders <http://wiki.openstreetmap.org/wiki/Coastline>`__.
+land. This is a result of defective
+:doc:`OpenStreetMap <../configuration/maps/osm>` data, here esp. the
+`coastline borders <http://wiki.openstreetmap.org/wiki/Coastline>`__.
 
 Düdingen_flood.png|flooded Düdingen_ok.png|ok
 
@@ -43,7 +43,8 @@ Permanently wrong announcements
 
 A strange bug, where you get every few seconds the direction to turn,
 even if there is no obvious reason to do so. This can happen, if you
-have (accidentally?) multiple `binfile <binfile>`__ maps enabled.
+have (accidentally?) multiple :doc:`binfile <../configuration/maps/binfile>`
+maps enabled.
 
 Tickets `#1039 <http://trac.navit-project.org/ticket/1039>`__,
 `#1046 <http://trac.navit-project.org/ticket/1046>`__
@@ -57,8 +58,9 @@ Address not found
   (not at mapdata, wrong data/data format, internal bugs, ...), it is a
   specific behaviour, if Navit couldn't recognize any of your local
   addresses.
-| This is caused how `maptool <maptool>`__ recognizes
-  `OpenStreetMap <OpenStreetMap>`__ addresses and how they are modelled
+| This is caused how ``maptool`` recognizes
+  :doc:`OpenStreetMap <../configuration/maps/osm>` addresses and how they
+  are modelled
   `2 <http://wiki.openstreetmap.org/wiki/Address>`__
   `3 <http://wiki.openstreetmap.org/wiki/Boundaries>`__
   `4 <http://wiki.openstreetmap.org/wiki/Key:is_in>`__. In short: we do
@@ -342,7 +344,7 @@ released and committed revisions are available.
 My compilation fails, complaining about GL/glc.h
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You are missing the `quesoglc <quesoglc>`__ package. We may switch to
+You are missing the ``quesoglc`` package. We may switch to
 another more common library at some point. It isn't widely used, so
 maybe it isn't available via your distro's repository. If you can't find
 it, try to compile it from sources, available on the quesoGLC website

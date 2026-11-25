@@ -4,7 +4,7 @@ Textfile
 Apart from the various map formats it can read, Navit also supports its
 own textual map format. This is useful for converting some data sources
 (gpx, OSM) into something Navit can read without too much work. An
-example is given in `Other maps <Other_maps>`__
+example is given in :doc:`Other maps <Other_maps>`
 
 Overview
 ========
@@ -65,7 +65,7 @@ And here is one to display a point of interest:
 | ``type=poi_custom1 icon_src=car_sharing label="Some car sharing place"``
 | ``0.02527076695 47.22659264``
 
-For a list of usable types see `Item_def.h <Item_def.h>`__.
+For a list of usable types see ``item_def.h``.
 
 .. _creating_it_out_of_an_osm_map:
 
