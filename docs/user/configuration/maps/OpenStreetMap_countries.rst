@@ -2,16 +2,17 @@ OpenStreetMap/countries
 =======================
 
 In order for search to work properly, Navit assigns
-villages/towns/cities (anything with a
-`place tag <https://wiki.openstreetmap.org/wiki/Key:place>`__ OSM tag)
-to a country. It does this by looking at the
+villages/towns/cities (anything with a `place tag
+<https://wiki.openstreetmap.org/wiki/Key:place>`__) to a country. It
+does this by looking at the
 ```is_in`` <http://wiki.openstreetmap.org/wiki/Key:is_in>`__ or
 ``is_in:country`` tag attached to the same ``place`` node for
 information on what country it is in. Navit will compare the country
 name in the ``is_in`` or ``is_in:country`` against a list defined in the
 code. The following table is the list which Navit compares with - if you
 feel that a country is missing, or a translation for a particular
-country should be added, add a ticket to `trac <Contacts#Trac>`__.
+country should be added, add a ticket to `GitHub issues
+<https://github.com/navit-gps/navit/issues>`__.
 
 +-------------+-------------+-------------+-------------+-------------+
 | **Name 1**  | **Name 2**  | **Name 3**  | **Name 4**  | **Name 5**  |
