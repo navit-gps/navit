@@ -444,6 +444,11 @@ if (Qt5Widgets_FOUND OR Qt5Quick_FOUND)
 	if (Qt5Multimedia_FOUND)
 		if (espeak_FOUND)
 			set_with_reason(support/espeak "native espeak found" FALSE)
+			set(speech_qt5_espeak_INCLUDES ${espeak_INCLUDE_DIRS})
+			set(speech_qt5_espeak_LIBRARY_DIRS ${espeak_LIBRARY_DIRS})
+			if (espeak_IS_NG)
+				set(HAVE_ESPEAK_NG 1)
+			endif()
 			set_with_reason(speech/qt5_espeak "Qt5Multimedia and libespeak found" TRUE
 				${Qt5Multimedia_LIBRARIES}
 				${espeak_LIBRARIES})
