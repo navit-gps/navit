@@ -61,11 +61,20 @@ struct traffic_message **traffic_null_get_messages(struct traffic_priv *this_) {
 }
 
 /**
+ * @brief Destroys a null traffic plugin instance
+ *
+ * @param this_ The plugin instance
+ */
+static void traffic_null_destroy(struct traffic_priv *this_) {
+    g_free(this_);
+}
+
+/**
  * @brief The methods implemented by this plugin
  */
 static struct traffic_methods traffic_null_meth = {
     traffic_null_get_messages,
-    NULL,
+    traffic_null_destroy,
 };
 
 /**

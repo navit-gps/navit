@@ -411,7 +411,7 @@ void navit_draw_async(struct navit *this_, int async) {
 }
 
 void navit_draw(struct navit *this_) {
-    if (this_->ready == 3)
+    if (this_->ready == NAVIT_READY_FULL)
         navit_draw_async(this_, 0);
 }
 
@@ -420,7 +420,7 @@ int navit_get_ready(struct navit *this_) {
 }
 
 void navit_draw_displaylist(struct navit *this_) {
-    if (this_->ready == 3)
+    if (this_->ready == NAVIT_READY_FULL)
         graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current,
                                   this_->graphics_flags | 1);
 }
@@ -431,7 +431,7 @@ static void navit_map_progress(struct navit *this_) {
     struct mapset_handle *msh;
     struct attr attr;
     struct point p;
-    if (this_->ready != 3)
+    if (this_->ready != NAVIT_READY_FULL)
         return;
     p.x = 10;
     p.y = 32;
@@ -456,7 +456,7 @@ static void navit_redraw_route(struct navit *this_, struct route *route, struct 
     if (attr->type != attr_route_status)
         return;
     updated = attr->u.num;
-    if (this_->ready != 3)
+    if (this_->ready != NAVIT_READY_FULL)
         return;
     if (updated != route_status_path_done_new)
         return;
@@ -502,7 +502,7 @@ void navit_handle_resize(struct navit *this_, int w, int h) {
     graphics_set_rect(this_->gra, &sel.u.p_rect);
     if (callback)
         callback_list_call_attr_1(this_->attr_cbl, attr_graphics_ready, this_);
-    if (this_->ready == 3) {
+    if (this_->ready == NAVIT_READY_FULL) {
         /* About to resize. Cancel drawing whatever it is */
         graphics_draw_cancel(this_->gra, this_->displaylist);
         /* Prefetch during start so first pan has off-screen map data */
@@ -1667,7 +1667,7 @@ void navit_set_destination(struct navit *this_, struct pcoord *c, const char *de
 
     callback_list_call_attr_0(this_->attr_cbl, attr_destination);
 
-    if (this_->route && this_->ready == 3 && !(this_->flags & 4))
+    if (this_->route && this_->ready == NAVIT_READY_FULL && !(this_->flags & 4))
         navit_draw(this_);
 }
 
@@ -1716,7 +1716,7 @@ void navit_set_destinations(struct navit *this_, struct pcoord *c, int count, co
         route_set_destinations(this_->route, c, count, async);
 
     callback_list_call_attr_0(this_->attr_cbl, attr_destination);
-    if (this_->route && this_->ready == 3)
+    if (this_->route && this_->ready == NAVIT_READY_FULL)
         navit_draw(this_);
 }
 
@@ -2258,7 +2258,7 @@ int navit_init(struct navit *this_) {
     callback = (this_->ready == 2);
     this_->ready |= 1;
     dbg(lvl_info, "ready=%d", this_->ready);
-    if (this_->ready == 3) {
+    if (this_->ready == NAVIT_READY_FULL) {
         this_->pan_prefetch = 1;
         navit_draw_async(this_, 1);
     }
@@ -2290,7 +2290,7 @@ void navit_zoom_to_rect(struct navit *this_, struct coord_rect *r) {
             break;
     }
     dbg(lvl_debug, "scale=%d (0x%x) of %d (0x%x)", scale, scale, 1 << 20, 1 << 20);
-    if (this_->ready == 3)
+    if (this_->ready == NAVIT_READY_FULL)
         navit_draw_async(this_, 0);
 }
 
@@ -2357,7 +2357,7 @@ void navit_set_center(struct navit *this_, struct pcoord *center, int set_timeou
     *c = c2;
     if (set_timeout)
         navit_set_timeout(this_);
-    if (this_->ready == 3)
+    if (this_->ready == NAVIT_READY_FULL)
         navit_draw(this_);
 }
 
@@ -2543,7 +2543,7 @@ void navit_drag_map(struct navit *this_, struct point *origin, struct point *des
  */
 void navit_set_center_cursor_draw(struct navit *this_) {
     navit_set_center_cursor(this_, 1, 0);
-    if (this_->ready == 3)
+    if (this_->ready == NAVIT_READY_FULL)
         navit_draw_async(this_, 1);
 }
 
@@ -2635,7 +2635,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
              */
             graphics_font_invalidate(this_->gra);
             navit_set_cursors(this_);
-            if (this_->ready == 3)
+            if (this_->ready == NAVIT_READY_FULL)
                 navit_draw(this_);
             graphics_font_validate(this_->gra);
             attr_updated = 1;
@@ -2677,12 +2677,12 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
             transform_set_yaw(this_->trans, dir);
             if (orient_old != this_->orientation) {
 #if 0
-                if (this_->ready == 3)
+                if (this_->ready == NAVIT_READY_FULL)
                     navit_draw(this_);
 #endif
                 attr_updated = 1;
             }
-            if (attr_updated && this_->ready == 3)
+            if (attr_updated && this_->ready == NAVIT_READY_FULL)
                 navit_draw(this_);
         }
         break;
@@ -2696,7 +2696,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init) {
         this_->pitch = attr->u.num;
         transform_set_pitch(this_->trans, round(this_->pitch * sqrt(240 * 320)
                                                 / sqrt(this_->w * this_->h)));  // Pitch corrected for window resolution
-        if (!init && attr_updated && this_->ready == 3)
+        if (!init && attr_updated && this_->ready == NAVIT_READY_FULL)
             navit_draw(this_);
         break;
     case attr_projection:
@@ -3299,7 +3299,7 @@ static void navit_vehicle_update_position(struct navit *this_, struct navit_vehi
     char *description;
 
     profile(0, NULL);
-    if (this_->ready == 3)
+    if (this_->ready == NAVIT_READY_FULL)
         navit_layout_switch(this_);
     if (this_->vehicle == nv && this_->tracking_flag)
         tracking = this_->tracking;
@@ -3324,7 +3324,7 @@ static void navit_vehicle_update_position(struct navit *this_, struct navit_vehi
     nv->speed = *attr_speed.u.numd;
     transform_from_geo(pro, attr_pos.u.coord_geo, &nv->coord);
     if (nv != this_->vehicle) {
-        if (this_->ready == 3)
+        if (this_->ready == NAVIT_READY_FULL)
             navit_vehicle_draw(this_, nv, NULL);
         profile(0, "return 3\n");
         return;
@@ -3340,7 +3340,7 @@ static void navit_vehicle_update_position(struct navit *this_, struct navit_vehi
     }
     callback_list_call_attr_0(this_->attr_cbl, attr_position);
     navit_textfile_debug_log(this_, "type=trackpoint_tracked");
-    if (this_->ready == 3) {
+    if (this_->ready == NAVIT_READY_FULL) {
         if (this_->gui && nv->speed > 2)
             navit_disable_suspend();
 
@@ -3428,7 +3428,7 @@ void navit_set_position(struct navit *this_, struct pcoord *c) {
         route_set_position(this_->route, c);
         callback_list_call_attr_0(this_->attr_cbl, attr_position);
     }
-    if (this_->ready == 3)
+    if (this_->ready == NAVIT_READY_FULL)
         navit_draw(this_);
 }
 
@@ -3845,6 +3845,16 @@ int navit_get_blocked(struct navit *this_) {
     return this_->blocked;
 }
 
+static void navit_shutdown_traffic(struct navit *this_) {
+    struct attr_iter *iter;
+    struct attr attr;
+
+    iter = navit_attr_iter_new(NULL);
+    while (navit_get_attr(this_, attr_traffic, &attr, iter))
+        traffic_shutdown((struct traffic *)attr.u.navit_object);
+    navit_attr_iter_destroy(iter);
+}
+
 static void navit_destroy_traffic_maps(struct navit *this_) {
     GList *mapsets;
     GList *m;
@@ -3970,6 +3980,7 @@ static void navit_attrs_free_navigation_last(struct attr **attrs) {
 void navit_destroy(struct navit *this_) {
     graphics_draw_cancel(this_->gra, this_->displaylist);
 
+    navit_shutdown_traffic(this_);
     navit_destroy_traffic_maps(this_);
 
     callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);

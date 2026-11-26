@@ -28,11 +28,6 @@ Thi = "Thi"
 Nam = "Nam"
 # proper nouns and identifiers
 pn = "pn"
-# German wording in the OSD_Layouts page
-als = "als"
-Staus = "Staus"
-Konfiguration = "Konfiguration"
-explizit = "explizit"
 # fragments of long identifiers split by row wrapping in listings
 estination = "estination"
 navigatio = "navigatio"

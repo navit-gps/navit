@@ -44,7 +44,7 @@ android {
         }
         externalNativeBuild {
             cmake {
-                arguments '-DDISABLE_CXX=y', '-DUSE_PLUGINS=n', '-DBUILD_MAPTOOL=n', '-DXSL_PROCESSING=y', '-DSAMPLE_MAP=n', '-DGRADLE_BUILD_DIR='+layout.buildDirectory.file('generated/navit_generated').get().getAsFile(),"-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+                arguments '-DUSE_PLUGINS=n', '-DBUILD_MAPTOOL=n', '-DXSL_PROCESSING=y', '-DSAMPLE_MAP=n', '-DGRADLE_BUILD_DIR='+layout.buildDirectory.file('generated/navit_generated').get().getAsFile(),"-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON", '-DANDROID_STL=c++_static'
             }
         }
     }
@@ -111,6 +111,7 @@ android {
         disable 'UnusedResources'
     }
     buildFeatures {
+        prefab = true
         renderScript = true
     }
 
@@ -134,4 +135,5 @@ dependencies {
     })
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.android.support:support-v4:28.0.0'
+    implementation("io.github.vvb2060.ndk:curl:8.18.0")
 }
