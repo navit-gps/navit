@@ -16,7 +16,7 @@ Notes:
 Absolute minimum requirements
 -----------------------------
 
-**gcc cmake zlib1g-dev libpng12-dev libgtk2.0-dev librsvg2-bin**
+**gcc cmake zlib1g-dev libpng12-dev libgtk-3-dev librsvg2-bin**
 
 *Note:* Not all these packages are strictly required (for example,
 maptool can be built without installing GTK+), but this is the smallest

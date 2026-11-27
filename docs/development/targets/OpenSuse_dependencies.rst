@@ -25,7 +25,7 @@ To build maptool:
 GTK Gui
 =======
 
--  gtk2-devel
+-  gtk3-devel
 
 
 OpenGL Gui

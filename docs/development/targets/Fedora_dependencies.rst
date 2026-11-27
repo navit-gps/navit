@@ -28,7 +28,7 @@ gpsd-devel
 GTK Gui
 -------
 
--  gtk2-devel
+-  gtk3-devel
 
 
 Speech support
@@ -44,7 +44,7 @@ Installing all dependencies
    su -
 
    yum install gettext-devel libtool glib2-devel cegui-devel freeglut-devel \
-   quesoglc-devel SDL-devel libXmu-devel gpsd-devel gtk2-devel \
+   quesoglc-devel SDL-devel libXmu-devel gpsd-devel gtk3-devel \
    speech-dispatcher-devel cvs python-devel saxon-scripts
 
    exit

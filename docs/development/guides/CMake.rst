@@ -46,7 +46,7 @@ newer. FreeType is a used library (but not really required, Stand 4.
 August 2011), so get it from the http://www.gtk.org/download/win32.php
 (32 bit) or http://www.gtk.org/download/win64.php (64 bit). It is
 recommended to download a pkc-config and gettext from the site,
-mentioned above. You may get full GTK2 download too, as you will be able
+mentioned above. You may get full GTK3 download too, as you will be able
 to use a gtk graphics and gui. Qt graphics modules works fine too, but
 Qml gui have issues.
 
