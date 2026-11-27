@@ -28,7 +28,7 @@ example:
 
 .. code:: xml
 
-   <speech type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" cps="15"/>
+   <speech type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' %s" cps="15"/>
 
 This configuration tag holds four attributes. One for the object
 (speech) and three for the objects configurable attributes. These

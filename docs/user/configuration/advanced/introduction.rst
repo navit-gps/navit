@@ -47,7 +47,7 @@ speech2wave
 
 .. code-block:: xml
 
-        <speech type="cmdline" data="/home/mobian/bin/speech2text '%s'" cps="15"/>
+        <speech type="cmdline" data="/home/mobian/bin/speech2text %s" cps="15"/>
 
 
 .. code-block:: sh
@@ -75,7 +75,7 @@ piper-tts
 
 .. code-block:: xml
 
-        <speech type="cmdline" data="/home/mobian/bin/speech2text '%s'" cps="5"/>
+        <speech type="cmdline" data="/home/mobian/bin/speech2text %s" cps="5"/>
 
 
 .. code-block:: sh
@@ -102,7 +102,7 @@ Mbrola
 
 .. code-block:: xml
 
-        <speech type="cmdline" data="espeak-ng -s 170 -a 150 -p 40 -v mb-de7 '%s'" cps="15"/>
+        <speech type="cmdline" data="espeak-ng -s 170 -a 150 -p 40 -v mb-de7 %s" cps="15"/>
 
 
 Android

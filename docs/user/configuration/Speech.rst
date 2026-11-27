@@ -174,7 +174,7 @@ could substitute the default speech definition:
 
 .. code:: xml
 
-    <speech type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" />
+    <speech type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' %s" />
 
 with an appropriate one, that uses festival:
 

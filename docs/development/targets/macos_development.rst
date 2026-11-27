@@ -75,7 +75,7 @@ If you want (spoken) directions, get espeak from http://espeak.sourceforge.net, 
 
 .. code-block:: xml
 
-           <speech type="cmdline" data="speak -vde+f4 '%s'"/>
+           <speech type="cmdline" data="speak -vde+f4 %s"/>
 
 This will tell speak to use a female (f) german (de) voice.
 

@@ -103,7 +103,7 @@ Adapt configuration
 
 .. code:: xml
 
-   <speech type="cmdline" data="espeak -v german '%s'" cps="15" />
+   <speech type="cmdline" data="espeak -v german %s" cps="15" />
 
 Todo
 ----

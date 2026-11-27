@@ -298,7 +298,15 @@ your speech configuration in "/var/mobile/.navit/navit.xml" to
 
 .. code:: xml
 
-   <speech type="cmdline" data="flite -t '%s' -o /var/mobile/tmp.wav &amp;&amp; play /var/mobile/tmp.wav &amp;"/>
+   <speech type="cmdline" data="/usr/local/bin/speak.sh %s" />
+
+Use an executable ``/usr/local/bin/speak.sh`` containing:
+
+.. code:: sh
+
+   #!/bin/sh
+   flite -t "$1" -o /var/mobile/tmp.wav
+   play /var/mobile/tmp.wav
 
 .. _test_feedback:
 
