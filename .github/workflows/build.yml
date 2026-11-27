@@ -69,8 +69,14 @@ jobs:
         run: bash scripts/build_linux.sh
       - uses: actions/upload-artifact@v7
         with:
-           name: Linux Artifacts
-           path: linux/_CPack_Packages
+           path: linux/_CPack_Packages/Linux/TGZ/navit.tar.gz
+           archive: false
+           if-no-files-found: error
+      - uses: actions/upload-artifact@v7
+        with:
+           path: linux/_CPack_Packages/Linux/STGZ/navit.sh
+           archive: false
+           if-no-files-found: error
       - name: Update Navit-Download-Center
         run: |
             bash scripts/update_download_center.sh
@@ -97,8 +103,9 @@ jobs:
         run: scripts/build_fdroid.sh
       - uses: actions/upload-artifact@v7
         with:
-          name: F-Droid APK
-          path: unsigned
+          path: unsigned/*.apk
+          archive: false
+          if-no-files-found: error
   run_doxygen:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/trunk'
@@ -168,8 +175,14 @@ jobs:
           /bin/bash -lxc "git config --global --add safe.directory /home/nemo/navit; /home/nemo/navit/contrib/sailfish/build_sailfish_ci.sh"
       - uses: actions/upload-artifact@v7
         with:
-          name: Sailfish RPMs
-          path: ${{ runner.temp }}/rpmbuild/RPMS/
+          path: ${{ runner.temp }}/rpmbuild/RPMS/aarch64/*.rpm
+          archive: false
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v7
+        with:
+          path: ${{ runner.temp }}/rpmbuild/RPMS/armv7hl/*.rpm
+          archive: false
+          if-no-files-found: error
   build_android:
     runs-on: ubuntu-latest
     needs: sanity_check
@@ -206,8 +219,14 @@ jobs:
       #      ./gradlew lint test
       - uses: actions/upload-artifact@v7
         with:
-          name: Store APK
-          path: build/outputs/apk
+          path: build/outputs/apk/release/*.apk
+          archive: false
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v7
+        with:
+          path: build/outputs/apk/debug/*.apk
+          archive: false
+          if-no-files-found: error
       - uses: actions/upload-artifact@v7
         with:
           name: Store logs
@@ -244,8 +263,9 @@ jobs:
             bash scripts/build_win32.sh
       - uses: actions/upload-artifact@v7
         with:
-          name: Win32
           path: win32/navit.exe
+          archive: false
+          if-no-files-found: error
       - name: Update Navit-Download-Center
         run: |
             bash scripts/update_download_center.sh
@@ -271,15 +291,14 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           path: wince/output/navit.cab
-          name: WinCE CAB
-
-      - run: |
-          rm -rf wince/output/navit.cab
+          archive: false
+          if-no-files-found: error
 
       - uses: actions/upload-artifact@v7
         with:
-          path: wince/output
-          name: WinCE Archive
+          path: wince/output/navit.zip
+          archive: false
+          if-no-files-found: error
 
       - name: Update Navit-Download-Center
         run: bash scripts/update_download_center.sh
@@ -302,8 +321,9 @@ jobs:
         run: bash scripts/build_tomtom_minimal.sh
       - uses: actions/upload-artifact@v7
         with:
-          name: Tomtom Minimal
-          path: /output
+          path: /output/navitom_minimal.zip
+          archive: false
+          if-no-files-found: error
       - name: Update Navit-Download-Center
         run: |
             bash scripts/update_download_center.sh
@@ -326,8 +346,9 @@ jobs:
             bash scripts/build_tomtom_plugin.sh
       - uses: actions/upload-artifact@v7
         with:
-          name: Tomtom Plugin
-          path: /output
+          path: /output/navitom_plugin.zip
+          archive: false
+          if-no-files-found: error
       - name: Update Navit-Download-Center
         run: |
             bash scripts/update_download_center.sh
