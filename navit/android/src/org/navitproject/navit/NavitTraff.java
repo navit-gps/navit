@@ -30,6 +30,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -124,8 +125,13 @@ public class NavitTraff extends BroadcastReceiver {
             e.printStackTrace();
         }
 
-        this.context.registerReceiver(this, traffFilter07);
-        this.context.registerReceiver(this, traffFilter08);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            this.context.registerReceiver(this, traffFilter07, Context.RECEIVER_EXPORTED);
+            this.context.registerReceiver(this, traffFilter08, Context.RECEIVER_EXPORTED);
+        } else {
+            this.context.registerReceiver(this, traffFilter07);
+            this.context.registerReceiver(this, traffFilter08);
+        }
 
         /* Broadcast a poll intent to all TraFF 0.7-only receivers */
         Intent outIntent = new Intent(ACTION_TRAFF_POLL);
