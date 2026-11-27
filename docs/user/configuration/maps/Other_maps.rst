@@ -18,9 +18,12 @@ map-Files. It is possible to convert waypoints and tracks.
 
 Insert the text map Files into the navit.xml like this:
 
-| ``        ``\
-| ``               ``\
-| ``               ``\
+.. code-block:: xml
+
+   <mapset enabled="yes">
+      <map type="textfile" enabled="yes" data="/home/andi/osm_maps/navit_poi.txt"/>
+      <map type="binfile" enabled="yes" data="$NAVIT_SHAREDIR/maps/osm_bbox_11.3,47.9,11.7,48.2.bin"/>
+   </mapset>
 
 and you will get the poi-data on the map.
 

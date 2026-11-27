@@ -15,9 +15,9 @@ Flooded land
 ~~~~~~~~~~~~
 
 Sometimes areas appear to be covered with water, even if there is just
-land. This is a result of defective `OpenStreetMap <OpenStreetMap>`__
-data, here esp. the `coastline
-borders <http://wiki.openstreetmap.org/wiki/Coastline>`__.
+land. This is a result of defective
+:doc:`OpenStreetMap <../configuration/maps/osm>` data, here esp. the
+`coastline borders <http://wiki.openstreetmap.org/wiki/Coastline>`__.
 
 Düdingen_flood.png|flooded Düdingen_ok.png|ok
 
@@ -43,7 +43,8 @@ Permanently wrong announcements
 
 A strange bug, where you get every few seconds the direction to turn,
 even if there is no obvious reason to do so. This can happen, if you
-have (accidentally?) multiple `binfile <binfile>`__ maps enabled.
+have (accidentally?) multiple :doc:`binfile <../configuration/maps/binfile>`
+maps enabled.
 
 Tickets `#1039 <http://trac.navit-project.org/ticket/1039>`__,
 `#1046 <http://trac.navit-project.org/ticket/1046>`__
@@ -57,8 +58,9 @@ Address not found
   (not at mapdata, wrong data/data format, internal bugs, ...), it is a
   specific behaviour, if Navit couldn't recognize any of your local
   addresses.
-| This is caused how `maptool <maptool>`__ recognizes
-  `OpenStreetMap <OpenStreetMap>`__ addresses and how they are modelled
+| This is caused how ``maptool`` recognizes
+  :doc:`OpenStreetMap <../configuration/maps/osm>` addresses and how they
+  are modelled
   `2 <http://wiki.openstreetmap.org/wiki/Address>`__
   `3 <http://wiki.openstreetmap.org/wiki/Boundaries>`__
   `4 <http://wiki.openstreetmap.org/wiki/Key:is_in>`__. In short: we do
@@ -157,7 +159,7 @@ Configuration
 Navit speaks! But it's all English...
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-How do you configure Navit to speak one of the other 22 languages? How
+How do you configure Navit to speak a language other than English? How
 do you do that on Windows? How on Linux?
 
 .. _espeak_on_linux:
@@ -166,32 +168,44 @@ espeak on Linux
 ^^^^^^^^^^^^^^^
 
 To get Navit to speak with espeak you can add the following XML to your
-navit.xml file:
+navit.xml file. See :doc:`Speech configuration
+</user/configuration/advanced/introduction>` for the general setup:
 
-`` ``\
+.. code:: xml
+
+   <speech type="cmdline" data="espeak -ven+f4 %s" cps="15" />
 
 This tells espeak to output in the English language (-ven) using female
-voice #4 (+f4).
+voice #4 (+f4). Do not quote ``%s``: Navit passes the announcement as one
+argument and does not use a shell. See :doc:`Speech
+</user/configuration/Speech>` for wrapper-script examples.
 
-To change the spoken language - say to Dutch - there are two things that
-need to change: the words that are to be spoken need to be translated to
-Dutch, and the speech pronunciation has to change to Dutch too.
+To use another language, two things need to change: the spoken text has
+to be translated, and the speech engine must pronounce it with the right
+voice.
 
-For the first, you can change the LANG variable but much better solution
-is to use language attribute of the config tag:
+The wording of announcements comes from Navit's translations (see
+:doc:`Translations </user/community/Translations>`). Set the locale
+before starting Navit, for example ``LANG=nl_NL navit``. The
+``<config>`` element also accepts a ``language`` attribute:
 
-`` ``\
+.. code:: xml
 
-Here "nl" tells Navit to display its interface and announce directions
-in Dutch and "NL" to default town searching to the Netherlands. Change
-"nl_NL" to your preferred locale if you want something else. Note that
-the country and language do not need to be the same so "de_FR" is a
-perfectly valid combination for German in France.
+   <config xmlns:xi="http://www.w3.org/2001/XInclude" language="nl_NL">
 
-To change the pronunciation -- I'll use Dutch again as an example -- use
-this in your navit.xml instead:
+This sets ``LANG`` when the configuration is loaded and uses the last two
+letters (``NL`` here) as the default country for address search, so use
+an uppercase ISO country code. The language and country do not need to
+match, so ``de_FR`` is a valid combination for German in France. Because
+Navit initializes its locale before reading navit.xml, set ``LANG`` in
+the environment as well to get translated interface text and directions.
 
-`` ``\
+To change the pronunciation -- I'll use Dutch again as an example --
+select the Dutch voice in the speech command:
+
+.. code:: xml
+
+   <speech type="cmdline" data="espeak -vnl+f4 %s" cps="15" />
 
 For different eSpeak language codes see `the eSpeak language
 documentation <http://espeak.sourceforge.net/languages.html>`__.
@@ -342,7 +356,7 @@ released and committed revisions are available.
 My compilation fails, complaining about GL/glc.h
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You are missing the `quesoglc <quesoglc>`__ package. We may switch to
+You are missing the ``quesoglc`` package. We may switch to
 another more common library at some point. It isn't widely used, so
 maybe it isn't available via your distro's repository. If you can't find
 it, try to compile it from sources, available on the quesoGLC website

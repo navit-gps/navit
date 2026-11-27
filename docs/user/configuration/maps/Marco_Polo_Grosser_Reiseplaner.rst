@@ -37,33 +37,29 @@ aside. So it may differ a bit.**
 #. Change directory to where DVD is mounted
 #. Unpack data2.cab with
 
-      ``unshield x travel/data2.cab``
+   ``unshield x travel/data2.cab``
 
 #. Now, you should get a directory named like DIRLAN_GER. It contains:
-   :\* The dem.map folder with all the majors roads and towns of
-   Europe...
 
-   :\* ...and five smpX.smp folders, which contain the details of
-   countries:
+   -  The ``dem.map`` folder with all the major roads and towns of
+      Europe...
+   -  Five ``smpX.smp`` folders, which contain the details of countries:
 
-   :*\* smp1: DK,S,N,IS,FIN,N
+      -  ``smp1``: DK,S,N,IS,FIN,N
+      -  ``smp2``: F,E,GBZ,P,AND,MC
+      -  ``smp3``: Germany
+      -  ``smp4``: CZ,SK,RSM,EST,GEO,LV,LT,MD,RUS,UA,BY,GR,H,I,RO,CH,
+         A,PL,AL,MT,CY,BG,FL,SRB,MNE,HR,SLO,BIH,MK,TR,AZ,AM,V
+      -  ``smp5``: NL,B,GB,L,IRL
 
-   :*\* smp2: F,E,GBZ,P,AND,MC
+   Update your configuration accordingly.
 
-   :*\* smp3: Germany
+.. code-block:: xml
 
-   :*\* smp4:
-   CZ,SK,RSM,EST,GEO,LV,LT,MD,RUS,UA,BY,GR,H,I,RO,CH,A,PL,AL,MT,CY,BG,FL,SRB,MNE,HR,SLO,BIH,MK,TR,AZ,AM,V
-
-   :*\* smp5: NL,B,GB,L,IRL
-
-      Update your `Configuration <Configuration>`__ accordingly. A sample
-      for Germany would be:
-
-|
-| ``        ``\
-| ``        ``\
-|
+   <mapset enabled="yes">
+      <map type="mg" enabled="yes" data="/path/dirlan_ger/dem.map" />
+      <map type="mg" enabled="yes" data="/path/dirlan_ger/dem.map/smp3.smp" />
+   </mapset>
 
 Optional: You can save some space (up to 2G) by deleting all the \*d60\*
 files. They are not needed.

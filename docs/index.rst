@@ -38,8 +38,6 @@ Main Features
    user/community/index
    user/faq/index
 
-.. __: https://github.com/navit-gps/navit/
-
 .. toctree::
    :hidden:
    :maxdepth: 2
