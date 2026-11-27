@@ -189,6 +189,16 @@ jobs:
           packages: ''
       - name: Build and upload Android
         run: fastlane github_actions
+      - name: Verify APK signatures
+        run: |
+          apksigner_bin="$(command -v apksigner || true)"
+          if [[ -z "$apksigner_bin" ]]; then
+            sdk_root="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
+            apksigner_bin="$(find "$sdk_root/build-tools" -type f -name apksigner -print | sort -V | tail -n 1)"
+          fi
+          for apk in build/outputs/apk/*/*.apk; do
+            "$apksigner_bin" verify --verbose "$apk"
+          done
       #- name: Run Lint Test
       #  run: |
       #      ln -sf navit/navit.dtd navit.dtd

@@ -19,13 +19,18 @@ allprojects {
     }
 }
 
+def releaseKeystore = file(System.getenv("KEYSTORE") ?: "/store")
+def hasReleaseSigning = releaseKeystore.exists() &&
+        System.getenv("KEY_ALIAS") &&
+        System.getenv("STORE_PASS")
+
 android {
     namespace = "org.navitproject.navit"
     ndkVersion = "27.3.13750724"
     signingConfigs {
         release {
             // We can leave these in environment variables
-            storeFile file(System.getenv("KEYSTORE")  ?: "/store")
+            storeFile releaseKeystore
             keyAlias System.getenv("KEY_ALIAS")
             storePassword System.getenv("STORE_PASS")
             keyPassword System.getenv("STORE_PASS")
@@ -52,7 +57,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            if(file(System.getenv("KEYSTORE")  ?: "/store").exists()){
+            if(hasReleaseSigning){
                 signingConfig signingConfigs.release
             }
         }
