@@ -17,7 +17,7 @@ See `Mac-How <http://www.mac-how.net/>`_
 
 Make sure you don't have fink installed on your system, it can confuse MacPorts package building and installation.
 
- * GTK Gui: You should only need gtk2 and glib2 via macPorts
+ * GTK Gui: You should only need gtk3 and glib2 via macPorts
  * SDL Gui: Untested yet.
 
 Installation instruction
@@ -40,11 +40,11 @@ make sure your PATH variables has `/opt/local/bin` and `/opt/local/sbin` in it:
     echo $PATH
 
 
-Install automake, wget, libtool, gpsd (if you want gps support), gtk2 and glib2 (for gkt GUI) with
+Install automake, wget, libtool, gpsd (if you want gps support), gtk3 and glib2 (for gkt GUI) with
 
 .. code-block:: bash
 
-    sudo port install automake wget gpsd gtk2 glib2 libtool
+    sudo port install automake wget gpsd gtk3 glib2 libtool
 
 Download navit or checkout it from Git
 

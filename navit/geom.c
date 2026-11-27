@@ -104,7 +104,7 @@ int geom_poly_centroid(struct coord *p, int count, struct coord *c) {
     int i, j;
     long long x0 = p[0].x, y0 = p[0].y, xi, yi, xj, yj;
 
-    /*fprintf(stderr,"area="LONGLONG_FMT"\n", area );*/
+    /*fprintf(stderr,"area="PRId64"\n", area );*/
     for (i = 0, j = 0; i < count; i++) {
         if (++j == count)
             j = 0;

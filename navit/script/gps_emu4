@@ -1,6 +1,6 @@
 #! /usr/bin/perl
 use Glib qw/TRUE FALSE/;
-use Gtk2 '-init';
+use Gtk3 '-init';
 
 sub exit_with_error
 {
@@ -57,6 +57,7 @@ sub backward
 
 sub add_timeout
 {
+        print "$timeout";
 	my ($interval,$dir)=@_;
 
 	if ($timeout > 0) {
@@ -70,6 +71,9 @@ sub add_timeout
 		backward();
 		$timeout=Glib::Timeout->add ($interval, \&backward);
 	}
+	if ($dir == 0) {
+		undef $timeout
+	}
 }
 
 sub entry
@@ -80,47 +84,47 @@ sub entry
 }
 
 $oldfh = select(STDOUT); $| = 1; select($oldfh);
-$window = Gtk2::Window->new('toplevel');
-$box = Gtk2::HBox->new();
+$window = Gtk3::Window->new('toplevel');
+$box = Gtk3::HBox->new();
 $window->add($box);
-$button = Gtk2::Button->new("Stop");
+$button = Gtk3::Button->new("Stop");
 $button->signal_connect(clicked => sub { add_timeout(0,0) });
 $box->add($button);
-$button = Gtk2::Button->new("100 Hz");
+$button = Gtk3::Button->new("100 Hz");
 $button->signal_connect(clicked => sub { add_timeout(10,-1); });
 $box->add($button);
-$button = Gtk2::Button->new("10 Hz");
+$button = Gtk3::Button->new("10 Hz");
 $button->signal_connect(clicked => sub { add_timeout(100,-1); });
 $box->add($button);
-$button = Gtk2::Button->new("4 Hz");
+$button = Gtk3::Button->new("4 Hz");
 $button->signal_connect(clicked => sub { add_timeout(250,-1); });
 $box->add($button);
-$button = Gtk2::Button->new("1 Hz");
+$button = Gtk3::Button->new("1 Hz");
 $button->signal_connect(clicked => sub { add_timeout(1000,-1); });
 $box->add($button);
-$button = Gtk2::Button->new("-");
+$button = Gtk3::Button->new("-");
 $button->signal_connect(clicked => sub { add_timeout(0,0) ; backward() });
 $box->add($button);
-$entry = Gtk2::Entry->new();
+$entry = Gtk3::Entry->new();
 $entry->set_text("???");
 $entry->signal_connect(activate => \&entry);
 $box->add($entry);
-$button = Gtk2::Button->new("+");
+$button = Gtk3::Button->new("+");
 $button->signal_connect(clicked => sub { add_timeout(0,0) ; forward() });
 $box->add($button);
-$button = Gtk2::Button->new("1 Hz");
+$button = Gtk3::Button->new("1 Hz");
 $button->signal_connect(clicked => sub { add_timeout(1000,1); });
 $box->add($button);
-$button = Gtk2::Button->new("4 Hz");
+$button = Gtk3::Button->new("4 Hz");
 $button->signal_connect(clicked => sub { add_timeout(250,1); });
 $box->add($button);
-$button = Gtk2::Button->new("10 Hz");
+$button = Gtk3::Button->new("10 Hz");
 $button->signal_connect(clicked => sub { add_timeout(100,1); });
 $box->add($button);
-$button = Gtk2::Button->new("100 Hz");
+$button = Gtk3::Button->new("100 Hz");
 $button->signal_connect(clicked => sub { add_timeout(10,1); });
 $box->add($button);
-$button = Gtk2::Button->new("Max");
+$button = Gtk3::Button->new("Max");
 $button->signal_connect(clicked => sub { add_timeout(1,1); });
 $box->add($button);
 $window->show_all;
@@ -132,5 +136,5 @@ if ($ARGV[0]) {
 	$match=$ARGV[0];
 	process_one_packet();
 }
-Gtk2->main;
+Gtk3->main;
 0;

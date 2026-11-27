@@ -9,7 +9,7 @@ WORKDIR /app
 COPY . .
 
 # Install dependencies
-RUN ./scripts/setup_common_requirements.sh && apt-get install -y libpng-dev libfreetype6-dev libdbus-glib-1-dev libgtk2.0-dev curl
+RUN ./scripts/setup_common_requirements.sh && apt-get install -y libpng-dev libfreetype6-dev libdbus-glib-1-dev libgtk-3-dev curl
 
 # Build the project
 RUN mkdir build && cd build && \

@@ -112,7 +112,7 @@ vehicle_gpsd_callback(struct gps_data_t *data, const char *buf, size_t len, int 
         }
     }
 
-    dbg(lvl_debug, "data->set=" LONGLONG_HEX_FMT "", (unsigned long long)data->set);
+    dbg(lvl_debug, "data->set=" PRIx64 "", (unsigned long long)data->set);
     if (data->set & SPEED_SET) {
         priv->speed = data->fix.speed * MPS_TO_KPH;
         if (!isnan(data->fix.speed))

@@ -37,7 +37,7 @@ Minimum requirements
 -  libprotobuf-c-dev
 -  zlib1g-dev
 -  libpng12-dev
--  libgtk2.0-dev
+-  libgtk-3-dev
 -  librsvg2-bin
 -  g++ (not really required, but installing it avoids `Navit bug
    1041 <http://trac.navit-project.org/ticket/1041>`__).
@@ -108,7 +108,7 @@ versions):
 Everything in one command
 =========================
 
-| ``sudo apt-get install cmake zlib1g-dev libpng12-dev libgtk2.0-dev librsvg2-bin \``
+| ``sudo apt-get install cmake zlib1g-dev libpng12-dev libgtk-3-dev librsvg2-bin \``
 | ``g++ gpsd gpsd-clients libgps-dev libdbus-glib-1-dev freeglut3-dev libxft-dev \``
 | ``libglib2.0-dev libfreeimage-dev gettext protobuf-c-compiler  libprotobuf-c-dev``
 

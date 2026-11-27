@@ -46,7 +46,7 @@
 #include "transform.h"
 #include "vehicle.h"
 #include "xmlconfig.h"
-#include <gtk/gtk.h>
+#include <gtk/gtkx.h>
 
 #ifdef USE_HILDON
 #    include "hildon/hildon-defines.h"

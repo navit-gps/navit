@@ -34,7 +34,7 @@
 #include <cairo.h>
 #include <errno.h>
 #include <gdk/gdkkeysyms.h>
-#include <gtk/gtk.h>
+#include <gtk/gtkx.h>
 #include <locale.h> /* For WIN32 */
 #include <math.h>
 #include <signal.h>
@@ -588,16 +588,11 @@ static void overlay_rect(struct graphics_priv *parent, struct graphics_priv *ove
         r->height += parent->height;
 }
 
-static void overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *re,
-                         cairo_t *cairo) {
-    GdkRectangle or, ir;
+static void overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, cairo_t *cairo) {
+    GdkRectangle or ;
     if (parent->overlay_disabled || overlay->overlay_disabled || overlay->overlay_autodisabled)
         return;
     overlay_rect(parent, overlay, &or);
-    if (!gdk_rectangle_intersect(re, &or, &ir))
-        return;
-    or.x -= re->x;
-    or.y -= re->y;
     cairo_surface_t *overlay_surface = cairo_get_target(overlay->cairo);
     cairo_set_source_surface(cairo, overlay_surface, or.x, or.y);
     cairo_paint(cairo);
@@ -647,7 +642,7 @@ static gint configure(GtkWidget *widget, GdkEventConfigure *event, gpointer user
     return TRUE;
 }
 
-static gint expose(GtkWidget *widget, GdkEventExpose *event, gpointer user_data) {
+static gboolean expose(GtkWidget *widget, cairo_t *cairo, gpointer user_data) {
     struct graphics_priv *gra = user_data;
     struct graphics_gc_priv *background_gc = gra->background_gc;
     struct graphics_priv *overlay;
@@ -656,7 +651,6 @@ static gint expose(GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
     if (!gra->cairo)
         configure(widget, NULL, user_data);
 
-    cairo_t *cairo = gdk_cairo_create(gtk_widget_get_window(widget));
     if (gra->p.x || gra->p.y) {
         set_drawing_color(cairo, background_gc->c);
         cairo_paint(cairo);
@@ -666,11 +660,9 @@ static gint expose(GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
 
     overlay = gra->overlays;
     while (overlay) {
-        overlay_draw(gra, overlay, &event->area, cairo);
+        overlay_draw(gra, overlay, cairo);
         overlay = overlay->next;
     }
-
-    cairo_destroy(cairo);
     return FALSE;
 }
 
@@ -1018,7 +1010,8 @@ static void *get_data(struct graphics_priv *this, char const *type) {
         return this->widget;
 #ifndef _WIN32
     if (!strcmp(type, "xwindow_id"))
-        return (void *)GDK_WINDOW_XID(this->win ? gtk_widget_get_window(this->win) : gtk_widget_get_window(this->widget));
+        return (void *)GDK_WINDOW_XID(this->win ? gtk_widget_get_window(this->win)
+                                                : gtk_widget_get_window(this->widget));
 #endif
     if (!strcmp(type, "window")) {
         char *cp = getenv("NAVIT_XID");
@@ -1141,7 +1134,7 @@ static struct graphics_priv *graphics_gtk_drawing_area_new(struct navit *nav, st
     this->cbl = cbl;
     gtk_widget_set_events(draw, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK
                                     | GDK_KEY_PRESS_MASK);
-    g_signal_connect(G_OBJECT(draw), "expose_event", G_CALLBACK(expose), this);
+    g_signal_connect(G_OBJECT(draw), "draw", G_CALLBACK(expose), this);
     g_signal_connect(G_OBJECT(draw), "configure_event", G_CALLBACK(configure), this);
     g_signal_connect(G_OBJECT(draw), "button_press_event", G_CALLBACK(button_press), this);
     g_signal_connect(G_OBJECT(draw), "button_release_event", G_CALLBACK(button_release), this);

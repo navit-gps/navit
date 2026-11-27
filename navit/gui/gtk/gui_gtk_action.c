@@ -28,7 +28,7 @@
 #include "item.h"
 #include "navit.h"
 #include "navit_nls.h"
-#include <gtk/gtk.h>
+#include <gtk/gtkx.h>
 #include <string.h>
 
 #ifdef __APPLE__

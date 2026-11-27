@@ -34,7 +34,7 @@ First of all, we will have to deal with the
 
 .. code:: bash
 
-   sudo apt-get install subversion git imagemagick libdbus-1-dev libdbus-glib-1-dev libfontconfig1-dev libfreetype6-dev libfribidi-dev libimlib2-dev librsvg2-bin libspeechd-dev libxml2-dev ttf-liberation libgtk2.0-dev
+   sudo apt-get install subversion git imagemagick libdbus-1-dev libdbus-glib-1-dev libfontconfig1-dev libfreetype6-dev libfribidi-dev libimlib2-dev librsvg2-bin libspeechd-dev libxml2-dev ttf-liberation libgtk-3-dev
 
 This is for the compiling process:
 

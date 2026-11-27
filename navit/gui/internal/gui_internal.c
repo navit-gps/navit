@@ -753,13 +753,13 @@ static void gui_internal_cmd_view_attribute_details(struct gui_priv *this, struc
             url = NULL;
             switch (attr.type) {
             case attr_osm_nodeid:
-                url = g_strdup_printf("http://www.openstreetmap.org/browse/node/" LONGLONG_FMT "\n", *attr.u.num64);
+                url = g_strdup_printf("http://www.openstreetmap.org/browse/node/" PRId64 "\n", *attr.u.num64);
                 break;
             case attr_osm_wayid:
-                url = g_strdup_printf("http://www.openstreetmap.org/browse/way/" LONGLONG_FMT "\n", *attr.u.num64);
+                url = g_strdup_printf("http://www.openstreetmap.org/browse/way/" PRId64 "\n", *attr.u.num64);
                 break;
             case attr_osm_relationid:
-                url = g_strdup_printf("http://www.openstreetmap.org/browse/relation/" LONGLONG_FMT "\n", *attr.u.num64);
+                url = g_strdup_printf("http://www.openstreetmap.org/browse/relation/" PRId64 "\n", *attr.u.num64);
                 break;
             default:
                 break;

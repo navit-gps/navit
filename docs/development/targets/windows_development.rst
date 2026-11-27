@@ -240,7 +240,7 @@ Get all the dependencies for Ubuntu in one command:
 
 .. code-block:: bash
 
-  sudo apt-get install cmake zlib1g-dev libpng12-dev libgtk2.0-dev librsvg2-bin \
+  sudo apt-get install cmake zlib1g-dev libpng12-dev libgtk-3-dev librsvg2-bin \
     g++ gpsd gpsd-clients libgps-dev libdbus-glib-1-dev freeglut3-dev libxft-dev \
     libglib2.0-dev libfreeimage-dev gettext
 

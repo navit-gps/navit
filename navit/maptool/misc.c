@@ -504,10 +504,10 @@ int phase5(FILE **in, FILE **references, int in_count, int with_range, char *suf
     th = tile_head_root;
     size = 0;
     slices = 0;
-    fprintf(stderr, "Maximum slice size " LONGLONG_FMT "\n", slice_size);
+    fprintf(stderr, "Maximum slice size " PRId64 "\n", slice_size);
     while (th) {
         if (size + th->total_size > slice_size) {
-            fprintf(stderr, "Slice %d is of size " LONGLONG_FMT "\n", slices, size);
+            fprintf(stderr, "Slice %d is of size " PRId64 "\n", slices, size);
             size = 0;
             slices++;
         }
@@ -515,7 +515,7 @@ int phase5(FILE **in, FILE **references, int in_count, int with_range, char *suf
         th = th->next;
     }
     if (size)
-        fprintf(stderr, "Slice %d is of size " LONGLONG_FMT "\n", slices, size);
+        fprintf(stderr, "Slice %d is of size " PRId64 "\n", slices, size);
     tile_worker_pool_init(thread_count, zip_info);
 
     th = tile_head_root;

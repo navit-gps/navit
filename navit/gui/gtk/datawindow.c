@@ -23,7 +23,7 @@
 #include "gui_gtk.h"
 #include "param.h"
 #include <gdk/gdkkeysyms.h>
-#include <gtk/gtk.h>
+#include <gtk/gtkx.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

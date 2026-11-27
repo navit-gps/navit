@@ -217,7 +217,7 @@ struct file *file_create(char *name, struct attr **options) {
         file->size = lseek(file->fd, 0, SEEK_END);
         if (file->size < 0)
             file->size = 0;
-        dbg(lvl_debug, "size=" LONGLONG_FMT "", file->size);
+        dbg(lvl_debug, "size=" PRId64 "", file->size);
         file->name_id = (long)atom(name);
     }
 #ifdef CACHE_SIZE
@@ -441,7 +441,7 @@ void file_data_flush(struct file *file, long long offset, int size) {
     if (file->cache) {
         struct file_cache_id id = {offset, size, file->name_id, 0};
         cache_flush(file_cache, &id);
-        dbg(lvl_debug, "Flushing " LONGLONG_FMT " %d bytes", offset, size);
+        dbg(lvl_debug, "Flushing " PRId64 " %d bytes", offset, size);
     }
 }
 
