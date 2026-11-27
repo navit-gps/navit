@@ -142,7 +142,7 @@ guys!
 Hall of fame
 ------------
 
-This had been contributors for a long time, but the had to quit
+These contributors supported Navit for years but have since moved on.
 
 .. list-table::
    :header-rows: 1
