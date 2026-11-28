@@ -263,13 +263,11 @@ jobs:
         with:
           name: Android native debug symbols archive (release)
           path: build/outputs/native-debug-symbols/release/native-debug-symbols.zip
-          archive: false
           if-no-files-found: error
       - uses: actions/upload-artifact@v7
         with:
           name: Android native debug symbols archive (debug)
           path: build/outputs/native-debug-symbols/debug/native-debug-symbols.zip
-          archive: false
           if-no-files-found: error
       - uses: actions/upload-artifact@v7
         with:
