@@ -66,6 +66,9 @@ android {
         }
         debug {
             applicationIdSuffix ".debug"
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
         }
     }
     sourceSets {
@@ -86,6 +89,14 @@ android {
         cmake {
             buildStagingDirectory "./android-builddir"
             path 'CMakeLists.txt'
+        }
+    }
+
+    ["Debug", "Release"].each { variant ->
+        tasks.matching {
+            it.name in ["generate${variant}Resources", "merge${variant}Resources", "merge${variant}Assets"]
+        }.configureEach {
+            dependsOn "externalNativeBuild${variant}"
         }
     }
 

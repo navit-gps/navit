@@ -26,6 +26,16 @@
 JNIEnv *jnienv;
 jobject *android_activity = NULL;
 
+static int android_get_navit_attr(struct attr *attr) {
+    struct config *config = config_get();
+
+    if (!config || !config_get_attr(config, attr_navit, attr, NULL) || !attr->u.navit) {
+        dbg(lvl_warning, "Navit is not initialized");
+        return 0;
+    }
+    return 1;
+}
+
 struct android_search_priv {
     struct jni_object search_result_obj;
     struct event_idle *idle_ev;
@@ -236,7 +246,8 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getDefaultCo
     struct attr attr;
     dbg(lvl_debug, "enter %d %p", channel, str);
 
-    config_get_attr(config_get(), attr_navit, &attr, NULL);
+    if (!android_get_navit_attr(&attr))
+        return NULL;
 
     country_attr = country_default();
     tracking = navit_get_tracking(attr.u.navit);
@@ -276,7 +287,8 @@ JNIEXPORT jobjectArray JNICALL Java_org_navitproject_navit_NavitGraphics_getAllC
     struct attr attr;
     dbg(lvl_debug, "enter");
 
-    config_get_attr(config_get(), attr_navit, &attr, NULL);
+    if (!android_get_navit_attr(&attr))
+        return (*env)->NewObjectArray(env, 0, (*env)->FindClass(env, "java/lang/String"), NULL);
 
     struct mapset *ms = navit_get_mapset(attr.u.navit);
     struct search_list *search_list = search_list_new(ms);
@@ -324,7 +336,8 @@ JNIEXPORT jstring JNICALL Java_org_navitproject_navit_NavitGraphics_getCoordForP
     jstring return_string = NULL;
 
     struct attr attr;
-    config_get_attr(config_get(), attr_navit, &attr, NULL);
+    if (!android_get_navit_attr(&attr))
+        return NULL;
 
     struct transformation *transform = navit_get_trans(attr.u.navit);
     struct point p;
@@ -359,7 +372,8 @@ JNIEXPORT jobject JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callb
     struct attr attr;
     const char *s;
     dbg(lvl_debug, "enter %d\n", command);
-    config_get_attr(config_get(), attr_navit, &attr, NULL);
+    if (!android_get_navit_attr(&attr))
+        return NULL;
 
     switch (command) {
     case 1:
@@ -398,7 +412,8 @@ JNIEXPORT jint JNICALL Java_org_navitproject_navit_NavitCallbackHandler_callback
     const char *s;
     jint ret = 0;
     dbg(lvl_debug, "enter %d %p", channel, str);
-    config_get_attr(config_get(), attr_navit, &attr, NULL);
+    if (!android_get_navit_attr(&attr))
+        return 0;
 
     switch (channel) {
     case 6: {  // add a map to the current mapset, return 1 on success
@@ -737,10 +752,11 @@ static void start_search(struct android_search_priv *search_priv, const char *se
 JNIEXPORT jlong JNICALL Java_org_navitproject_navit_NavitAddressSearchActivity_callbackStartAddressSearch(
     JNIEnv *env, jobject thiz, jint partial, jstring country, jstring str) {
     struct attr attr;
+    if (!android_get_navit_attr(&attr))
+        return 0;
+
     const char *search_string = (*env)->GetStringUTFChars(env, str, NULL);
     dbg(lvl_debug, "search '%s'", search_string);
-
-    config_get_attr(config_get(), attr_navit, &attr, NULL);
 
     jclass cls = (*env)->GetObjectClass(env, thiz);
     jmethodID aMethodID = (*env)->GetMethodID(env, cls, "receiveAddress", "(IFFLjava/lang/String;)V");

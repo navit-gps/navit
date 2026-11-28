@@ -212,26 +212,38 @@ jobs:
           for apk in build/outputs/apk/*/*.apk; do
             "$apksigner_bin" verify --verbose "$apk"
           done
-      - name: Verify native debug symbols
+      - name: Verify APK config assets
         run: |
-          symbols_zip=build/outputs/native-debug-symbols/release/native-debug-symbols.zip
-          rm -rf build/native-symbols
-          mkdir -p build/native-symbols
-          unzip -q "$symbols_zip" -d build/native-symbols
-          found=0
-          while IFS= read -r dbg; do
-            readelf -S "$dbg" | grep -q '\.debug_info' || {
-              echo "Missing debug_info in $dbg"
+          for apk in build/outputs/apk/*/*.apk; do
+            apk_listing="$(unzip -l "$apk")"
+            grep -q 'assets/config/.*/navit.xml' <<< "$apk_listing" || {
+              echo "Missing config assets in $apk"
               exit 1
             }
-            cp "$dbg" "${dbg%.dbg}"
-            found=1
-          done < <(find build/native-symbols -type f -name '*.dbg' -print)
-          if [ "$found" -eq 0 ]; then
-            echo "No libnavit.so.dbg found in $symbols_zip"
-            unzip -l "$symbols_zip"
-            exit 1
-          fi
+          done
+      - name: Verify native debug symbols
+        run: |
+          rm -rf build/native-symbols
+          for build_type in release debug; do
+            symbols_zip="build/outputs/native-debug-symbols/${build_type}/native-debug-symbols.zip"
+            symbols_dir="build/native-symbols/${build_type}"
+            mkdir -p "$symbols_dir"
+            unzip -q "$symbols_zip" -d "$symbols_dir"
+            found=0
+            while IFS= read -r dbg; do
+              readelf -S "$dbg" | grep -q '\.debug_info' || {
+                echo "Missing debug_info in $dbg"
+                exit 1
+              }
+              cp "$dbg" "${dbg%.dbg}"
+              found=1
+            done < <(find "$symbols_dir" -type f -name '*.dbg' -print)
+            if [ "$found" -eq 0 ]; then
+              echo "No libnavit.so.dbg found in $symbols_zip"
+              unzip -l "$symbols_zip"
+              exit 1
+            fi
+          done
       #- name: Run Lint Test
       #  run: |
       #      ln -sf navit/navit.dtd navit.dtd
@@ -249,8 +261,14 @@ jobs:
           if-no-files-found: error
       - uses: actions/upload-artifact@v7
         with:
-          name: Android native debug symbols archive
+          name: Android native debug symbols archive (release)
           path: build/outputs/native-debug-symbols/release/native-debug-symbols.zip
+          archive: false
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Android native debug symbols archive (debug)
+          path: build/outputs/native-debug-symbols/debug/native-debug-symbols.zip
           archive: false
           if-no-files-found: error
       - uses: actions/upload-artifact@v7
