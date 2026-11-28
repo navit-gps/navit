@@ -212,6 +212,26 @@ jobs:
           for apk in build/outputs/apk/*/*.apk; do
             "$apksigner_bin" verify --verbose "$apk"
           done
+      - name: Verify native debug symbols
+        run: |
+          symbols_zip=build/outputs/native-debug-symbols/release/native-debug-symbols.zip
+          rm -rf build/native-symbols
+          mkdir -p build/native-symbols
+          unzip -q "$symbols_zip" -d build/native-symbols
+          found=0
+          while IFS= read -r dbg; do
+            readelf -S "$dbg" | grep -q '\.debug_info' || {
+              echo "Missing debug_info in $dbg"
+              exit 1
+            }
+            cp "$dbg" "${dbg%.dbg}"
+            found=1
+          done < <(find build/native-symbols -type f -name '*.dbg' -print)
+          if [ "$found" -eq 0 ]; then
+            echo "No libnavit.so.dbg found in $symbols_zip"
+            unzip -l "$symbols_zip"
+            exit 1
+          fi
       #- name: Run Lint Test
       #  run: |
       #      ln -sf navit/navit.dtd navit.dtd
@@ -226,6 +246,17 @@ jobs:
         with:
           path: build/outputs/apk/debug/*.apk
           archive: false
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Android native debug symbols archive
+          path: build/outputs/native-debug-symbols/release/native-debug-symbols.zip
+          archive: false
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Android native debug symbols
+          path: build/native-symbols/**/libnavit.so
           if-no-files-found: error
       - uses: actions/upload-artifact@v7
         with:

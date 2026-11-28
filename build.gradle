@@ -49,13 +49,16 @@ android {
         }
         externalNativeBuild {
             cmake {
-                arguments '-DDISABLE_CXX=y', '-DUSE_PLUGINS=n', '-DBUILD_MAPTOOL=n', '-DXSL_PROCESSING=y', '-DSAMPLE_MAP=n', '-DGRADLE_BUILD_DIR='+layout.buildDirectory.file('generated/navit_generated').get().getAsFile(),"-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+                arguments '-DDISABLE_CXX=y', '-DUSE_PLUGINS=n', '-DBUILD_MAPTOOL=n', '-DXSL_PROCESSING=y', '-DSAMPLE_MAP=n', '-DGRADLE_BUILD_DIR='+layout.buildDirectory.file('generated/navit_generated').get().getAsFile(),"-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON", '-DCMAKE_C_FLAGS_RELEASE=-O2 -g -DNDEBUG -fno-omit-frame-pointer', '-DCMAKE_CXX_FLAGS_RELEASE=-O2 -g -DNDEBUG -fno-omit-frame-pointer', '-DCMAKE_C_FLAGS_RELWITHDEBINFO=-O2 -g -DNDEBUG -fno-omit-frame-pointer', '-DCMAKE_CXX_FLAGS_RELWITHDEBINFO=-O2 -g -DNDEBUG -fno-omit-frame-pointer'
             }
         }
     }
     buildTypes {
         release {
             minifyEnabled false
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             if(hasReleaseSigning){
                 signingConfig signingConfigs.release
