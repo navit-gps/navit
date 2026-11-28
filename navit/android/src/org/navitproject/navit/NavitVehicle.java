@@ -244,7 +244,12 @@ public class NavitVehicle {
         mVehicleScbid = scbid;
         mVehicleFcbid = fcbid;
 
-        context.registerReceiver(sPreciseLocationListener, new IntentFilter(GPS_FIX_CHANGE));
+        IntentFilter preciseFilter = new IntentFilter(GPS_FIX_CHANGE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(sPreciseLocationListener, preciseFilter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            context.registerReceiver(sPreciseLocationListener, preciseFilter);
+        }
         sLocationManager.requestLocationUpdates(mPreciseProvider, 0, 0, sPreciseLocationListener);
         //sLocationManager.registerGnssStatusCallback(sPreciseLocationListener);
 
